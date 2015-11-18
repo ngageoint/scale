@@ -1,4 +1,4 @@
-##What is Does##
+##What it Does##
 Scale is a general algorithm processing framework for remote sensing data based on open source software components.  Scale acts as a scheduler for Apache Mesos focused on algorithm processing.  Scale leverages Docker for project management of algorithms and algorithm versions.  Scale provides heavy processing of terabytes of remote sensing data per day and decreases algorithm integration time from years to days.  
 
 ### Contributing
