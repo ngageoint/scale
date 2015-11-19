@@ -1,0 +1,11 @@
+---
+# site.yml
+# NOTE: just a test for now, please wait for a real playbook
+- hosts: all
+  tasks:
+    - name: install docker
+      yum: name=docker state=latest
+      become: true
+    - name: start docker
+      service: name=docker state=started enabled=yes
+      become: true

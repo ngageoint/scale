@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+##
+# This will provision a couple of machines for a test cluster.
+# One will act as zookeeper, master, scheduler, and web server.
+# The other will be an execution slave.
+
+RAM = 1024
+NETWORK = "10.4.4."
+NETMASK = "255.255.255.0"
+
+HOSTS = {
+   "master" => [NETWORK+"10", RAM],
+   "slave1" => [NETWORK+"20", RAM]
+}
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+   HOSTS.each do | (name, cfg) |
+     ipaddr, ram = cfg
+
+     config.vm.define name do |machine|
+       machine.vm.box = "centos/7"
+       machine.vm.provider "virtualbox" do |vbox|
+         vbox.memory = ram
+       end
+
+       machine.vm.hostname = name
+       machine.vm.network 'private_network', ip: ipaddr, netmask: NETMASK
+     end # HOSTS-each
+
+     config.vm.provision "ansible" do |ansible|
+       ansible.playbook = '../ansible/site.yml'
+       ansible.groups = {
+          'zookeeper' => ["master"],
+          'mesos-masters' => ["master"],
+          'mesos-slaves' => ["slave1"],
+          'framework' => ["master"]
+       }
+     end
+   end
+end
