@@ -1,0 +1,19 @@
+---
+# db-init/tasks/main.yml
+# work around a bug
+- name: Pull image
+  command: 'docker pull {{ docker_registry }}postgres'
+  become: true
+
+- name: Initialize postgres database
+  tags: db-init
+  docker:
+    name: postgis
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}postgres'
+    state: started
+    detach: no
+    links:
+      - "postgis:postgis"
+    command: sh -c 'createdb -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres test_db'
+  become: true

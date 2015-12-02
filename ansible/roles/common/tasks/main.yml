@@ -1,0 +1,21 @@
+---
+# roles/common/tasks/main.yml
+- name: Disable firewall
+  service: name=firewalld state=stopped
+  become: true
+
+- name: Install python-pip
+  yum: name=python-pip
+  become: true
+
+- name: Install docker-py
+  pip: name=docker-py
+  become: true
+
+- name: Install docker
+  yum: name=docker
+  become: true
+
+- name: docker service
+  service: name=docker state=started
+  become: true

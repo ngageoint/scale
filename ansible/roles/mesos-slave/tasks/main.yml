@@ -1,0 +1,26 @@
+---
+# mesos-slave/tasks/main.yml
+# work around a bug
+- name: Pull image
+  command: 'docker pull {{ docker_registry }}mesoscloud/mesos-slave:0.24.1'
+  become: true
+
+- name: docker slave container
+  tags: mesos-slave
+  docker:
+    name: mesos-slave
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}mesoscloud/mesos-slave:0.24.1'
+    state: reloaded
+    restart_policy: always
+    privileged: true
+    net: host
+    env:
+      MESOS_MASTER: '{{ mesos_zk }}'
+      MESOS_RESOURCES: '{{ mesos_slave_resources }}'
+      MESOS_LOG_DIR: '/var/log/mesos'
+      MESOS_IP: '{{ mesos_slave_ip }}'
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - /var/run/docker.sock:/var/run/docker.sock
+  become: true

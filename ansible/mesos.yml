@@ -1,0 +1,13 @@
+---
+# mesos.yml
+- hosts: zookeeper
+  roles:
+    - zookeeper
+
+- hosts: mesos-masters
+  roles:
+    - mesos-master
+
+- hosts: mesos-slaves
+  roles:
+    - mesos-slave

@@ -3,7 +3,7 @@
 
 ##
 # This will provision a couple of machines for a test cluster.
-# One will act as zookeeper, master, scheduler, and web server.
+# One will act as zookeeper, master, db, scheduler, and web server.
 # The other will be an execution slave.
 
 RAM = 1024
@@ -12,7 +12,7 @@ NETMASK = "255.255.255.0"
 
 HOSTS = {
    "master" => [NETWORK+"10", RAM],
-   "slave1" => [NETWORK+"20", RAM]
+   "slave1" => [NETWORK+"20", RAM],
 }
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -24,23 +24,32 @@ Vagrant.configure(2) do |config|
      ipaddr, ram = cfg
 
      config.vm.define name do |machine|
-       machine.vm.box = "centos/7"
+       # centos7 with virtualbox guest additions
+       machine.vm.box = "jaredhocutt/centos7"
+       # set machine's ram
        machine.vm.provider "virtualbox" do |vbox|
          vbox.memory = ram
        end
 
+       # setup network
        machine.vm.hostname = name
        machine.vm.network 'private_network', ip: ipaddr, netmask: NETMASK
-     end # HOSTS-each
-
-     config.vm.provision "ansible" do |ansible|
-       ansible.playbook = '../ansible/site.yml'
-       ansible.groups = {
-          'zookeeper' => ["master"],
-          'mesos-masters' => ["master"],
-          'mesos-slaves' => ["slave1"],
-          'framework' => ["master"]
-       }
      end
+
+   end # HOSTS-each
+
+   # run the ansible provisioner. rerun with "vagrant provision"
+   config.vm.provision :ansible, run: "always" do |ansible|
+     ansible.playbook = '../ansible/vagrant.yml'
+     ansible.groups = {
+        'zookeeper' => ["master"],
+        'mesos-masters' => ["master"],
+        'mesos-slaves' => ["slave1"],
+        'db' => ["master"],
+        'scale-scheduler' => ["master"],
+        'scale-web' => ["master"],
+        'mesos:children' => ["mesos-masters", "mesos-slaves"],
+        'scale-framework:children' => ["scale-scheduler", "scale-web"]
+     }
    end
 end

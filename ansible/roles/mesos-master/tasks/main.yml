@@ -1,0 +1,21 @@
+---
+# mesos-master/tasks/main.yml
+# work around a bug
+- name: Pull image
+  command: 'docker pull {{ docker_registry }}mesoscloud/mesos-master:0.24.1'
+  become: true
+
+- name: mesos master container
+  docker:
+    name: mesos-master
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}mesoscloud/mesos-master:0.24.1'
+    state: reloaded
+    restart_policy: always
+    net: host
+    env:
+      MESOS_QUORUM: '{{ mesos_quorum }}'
+      MESOS_ZK: '{{ mesos_zk }}'
+      MESOS_IP: '{{ mesos_master_ip }}'
+      MESOS_LOG_DIR: '/var/log/mesos'
+  become: true
