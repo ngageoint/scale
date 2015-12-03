@@ -1,0 +1,11 @@
+[
+    {
+        "model": "scheduler.Scheduler",
+        "pk": 1,
+        "fields": {
+            "is_paused": false,
+            "master_hostname": "",
+            "master_port": 5050
+         }
+     }
+ ]

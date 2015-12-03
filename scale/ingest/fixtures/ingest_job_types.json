@@ -1,0 +1,106 @@
+[
+	{
+		"model": "job.JobType",
+		"pk": null,
+		"fields": {
+			"name": "scale-ingest",
+			"version": "1.0",
+			"title": "Scale Ingest",
+			"description": "Ingests a source file into a workspace",
+            "category": "system",
+			"is_system": true,
+			"is_long_running": false,
+			"is_active": true,
+			"is_paused": false,
+			"requires_cleanup": true,
+			"uses_docker": false,
+			"docker_privileged": false,
+			"docker_image": null,
+			"interface": {
+			     "version": "1.0",
+			     "command": "scale_ingest",
+			     "command_arguments": "${-i :Ingest ID} ${-m :Mount}",
+			     "input_data": [ { "name": "Ingest ID", "type": "property" },
+			                     { "name": "Mount", "type": "property" } ]
+			},
+            "error_mapping": null,
+			"priority": 10,
+			"timeout": 3600,
+			"max_tries": 3,
+			"cpus_required": 0.5,
+			"mem_required": 5120.0,
+			"disk_out_const_required": 0.0,
+			"disk_out_mult_required": 0.0,
+			"created": "2015-03-11T00:00:00.0Z",
+			"last_modified": "2015-03-11T00:00:00.0Z",
+			"icon_code": "f0f5"
+		}
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-ingest", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_ingest",
+                 "command_arguments": "${-i :Ingest ID} ${-m :Mount}",
+                 "input_data": [ { "name": "Ingest ID", "type": "property" },
+                                 { "name": "Mount", "type": "property" } ]
+            },
+            "created": "2015-11-06T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-strike",
+            "version": "1.0",
+            "title": "Scale Strike",
+            "description": "Monitors a directory for incoming source files to ingest",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": true,
+            "is_active": true,
+            "is_paused": false,
+            "requires_cleanup": true,
+            "uses_docker": false,
+            "docker_privileged": false,
+            "docker_image": null,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_strike",
+                 "command_arguments": "${-i :Strike ID}",
+                 "input_data": [ { "name": "Strike ID", "type": "property" } ]
+            },
+            "error_mapping": null,
+            "priority": 5,
+            "timeout": 0,
+            "max_tries": 0,
+            "cpus_required": 1.0,
+            "mem_required": 1024.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2015-03-11T00:00:00.0Z",
+            "last_modified": "2015-03-11T00:00:00.0Z",
+            "icon_code": "f0e7"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-strike", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_strike",
+                 "command_arguments": "${-i :Strike ID}",
+                 "input_data": [ { "name": "Strike ID", "type": "property" } ]
+            },
+            "created": "2015-11-06T00:00:00.0Z"
+        }
+    }
+]

@@ -1,0 +1,41 @@
+[
+    {
+        "model": "trigger.TriggerRule",
+        "pk": null,
+        "fields": {
+            "name": "scale-queue-depth",
+            "type": "CLOCK",
+            "title": "Queue Depth",
+            "description": "Calculates queue depth metrics every hour.",
+            "configuration": {
+                "version": "1.0",
+                "event_type": "QUEUE_DEPTH",
+                "schedule": "PT1H0M0S"
+            },
+            "is_active": true,
+            "created": "2015-09-22T00:00:00.0Z",
+            "archived": null,
+            "last_modified": "2015-09-22T00:00:00.0Z"
+        }
+    },
+
+	{
+		"model": "trigger.TriggerRule",
+		"pk": null,
+		"fields": {
+            "name": "scale-job-load",
+            "type": "CLOCK",
+            "title": "Job Load",
+            "description": "Calculates job load metrics every hour.",
+			"configuration": {
+                "version": "1.0",
+                "event_type": "JOB_LOAD",
+                "schedule": "PT1H0M0S"
+			},
+			"is_active": true,
+			"created": "2015-09-22T00:00:00.0Z",
+			"archived": null,
+			"last_modified": "2015-09-22T00:00:00.0Z"
+		}
+    }
+]

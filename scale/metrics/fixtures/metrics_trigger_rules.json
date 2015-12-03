@@ -1,0 +1,40 @@
+[
+	{
+		"model": "trigger.TriggerRule",
+		"pk": null,
+		"fields": {
+            "name": "scale-resource-metrics",
+			"type": "CLOCK",
+            "title": "Resource Metrics",
+            "description": "Calculates hardware resource metrics for the entire cluster every minute.",
+			"configuration": {
+                "version": "1.0",
+                "event_type": "RESOURCE_METRICS",
+                "schedule": "PT1H0M0S"
+			},
+			"is_active": false,
+			"created": "2015-09-22T00:00:00.0Z",
+			"archived": null,
+			"last_modified": "2015-09-22T00:00:00.0Z"
+		}
+    },
+    {
+        "model": "trigger.TriggerRule",
+        "pk": null,
+        "fields": {
+            "name": "scale-daily-metrics",
+            "type": "CLOCK",
+            "title": "Daily Metrics",
+            "description": "Calculates overall system metrics every day.",
+            "configuration": {
+                "version": "1.0",
+                "event_type": "DAILY_METRICS",
+                "schedule": "PT24H0M0S"
+            },
+            "is_active": true,
+            "created": "2015-09-22T00:00:00.0Z",
+            "archived": null,
+            "last_modified": "2015-09-22T00:00:00.0Z"
+        }
+    }
+]

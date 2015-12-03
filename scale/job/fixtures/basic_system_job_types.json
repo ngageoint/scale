@@ -1,0 +1,102 @@
+[
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-cleanup",
+            "version": "1.0",
+            "title": "Scale Cleanup",
+            "description": "Performs cleanup on a node for a previous job execution",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "requires_cleanup": false,
+            "uses_docker": false,
+            "docker_privileged": false,
+            "docker_image": null,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_cleanup",
+                 "command_arguments": "${-i :Job Exe ID}",
+                 "input_data": [ { "name": "Job Exe ID", "type": "property" } ]
+            },
+            "error_mapping": null,
+            "priority": 2,
+            "timeout": 600,
+            "max_tries": 1,
+            "cpus_required": 0.5,
+            "mem_required": 128.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2015-06-01T00:00:00.0Z",
+            "last_modified": "2015-06-01T00:00:00.0Z",
+            "icon_code": "f1b8"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-cleanup", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_cleanup",
+                 "command_arguments": "${-i :Job Exe ID}",
+                 "input_data": [ { "name": "Job Exe ID", "type": "property" } ]
+            },
+            "created": "2015-11-06T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-clock",
+            "version": "1.0",
+            "title": "Scale Clock",
+            "description": "Performs Scale system functions that need to be executed on regular time intervals",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": true,
+            "is_active": true,
+            "is_paused": false,
+            "requires_cleanup": false,
+            "uses_docker": false,
+            "docker_privileged": false,
+            "docker_image": null,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_clock",
+                 "command_arguments": ""
+            },
+            "error_mapping": null,
+            "priority": 1,
+            "timeout": 0,
+            "max_tries": 0,
+            "cpus_required": 1.0,
+            "mem_required": 1024.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2015-03-11T00:00:00.0Z",
+            "last_modified": "2015-03-11T00:00:00.0Z",
+            "icon_code": "f017"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-clock", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_clock",
+                 "command_arguments": ""
+            },
+            "created": "2015-11-06T00:00:00.0Z"
+        }
+    }
+]

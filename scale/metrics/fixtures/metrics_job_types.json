@@ -1,0 +1,52 @@
+[
+	{
+		"model": "job.JobType",
+		"pk": null,
+		"fields": {
+			"name": "scale-daily-metrics",
+			"version": "1.0",
+			"title": "Scale Daily Metrics",
+			"description": "Generates Scale metrics for a given date",
+            "category": "system",
+			"is_system": true,
+			"is_long_running": false,
+			"is_active": true,
+			"is_paused": false,
+			"uses_docker": false,
+			"docker_privileged": false,
+			"docker_image": null,
+			"interface": {
+			     "version": "1.0",
+			     "command": "scale_daily_metrics",
+			     "command_arguments": "${:Day}",
+			     "input_data": [{ "name": "Day", "type": "property" }]
+			},
+            "error_mapping": null,
+			"priority": 20,
+			"timeout": 3600,
+			"max_tries": 3,
+			"cpus_required": 0.5,
+			"mem_required": 1024.0,
+			"disk_out_const_required": 0.0,
+			"disk_out_mult_required": 0.0,
+			"created": "2015-06-01T00:00:00.0Z",
+			"last_modified": "2015-06-01T00:00:00.0Z",
+			"icon_code": "f201"
+		}
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-daily-metrics", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "scale_daily_metrics",
+                 "command_arguments": "${:Day}",
+                 "input_data": [{ "name": "Day", "type": "property" }]
+            },
+            "created": "2015-11-06T00:00:00.0Z"
+        }
+    }
+]
