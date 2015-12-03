@@ -447,7 +447,7 @@ class ScaleJobExecution(object):
         logger.info("Invoking docker with %r", invoke)
 
         proc = subprocess.Popen(invoke, stdout=stdout, stderr=stderr)
-        return proc.stdout, proc.stderr, proc.wait()
+        return proc.stdout, proc.stderr, proc.wait()
 
     def _create_command_task(self, job_exe):
         '''Creates and returns a command line task for this job execution
