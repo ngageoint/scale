@@ -15,4 +15,6 @@
     - postgis
     - db-init
   vars:
-    postgis_password: 'vagrant_postgis'
+    db_username: 'postgres'
+    db_password: 'vagrant_postgis'
+    db_host: '10.4.4.10'

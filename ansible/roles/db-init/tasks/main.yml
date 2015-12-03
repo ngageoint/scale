@@ -8,12 +8,11 @@
 - name: Initialize postgres database
   tags: db-init
   docker:
-    name: postgis
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}postgres'
     state: started
     detach: no
-    links:
-      - "postgis:postgis"
-    command: sh -c 'createdb -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres test_db'
+    env:
+      'PGPASSWORD': '{{ db_password }}'
+    command: sh -c 'createdb -h {{ db_host }} -U {{ db_username }} -T template_postgis {{ db_name }}'
   become: true

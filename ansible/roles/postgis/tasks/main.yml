@@ -16,5 +16,5 @@
     ports:
       - "5432:5432"
     env:
-      POSTGRES_PASSWORD: '{{ postgis_password }}'
+      POSTGRES_PASSWORD: '{{ db_password }}'
   become: true
