@@ -18,3 +18,9 @@
     db_username: 'postgres'
     db_password: 'vagrant_postgis'
     db_host: '10.4.4.10'
+
+- hosts: scale-framework
+  roles:
+    - build-scale
+  vars:
+    django_build_dir: "/scale/scale"

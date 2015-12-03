@@ -1,0 +1,9 @@
+---
+# build-scale/tasks/main.yml
+- name: Create database migrations.
+  tags: build-scale
+  django_manage: command=makemigrations app_path={{ django_build_dir }}
+
+- name: Collect static files.
+  tags: build-scale
+  django_manage: command=collectstatic app_path={{ django_build_dir }}
