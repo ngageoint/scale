@@ -3,7 +3,7 @@
 
    angular.module('scaleApp').constant('scaleConfigLocal', {
       urls: {
-         prefixDev: 'http://127.0.0.1:9000/', //dev
+         prefixDev: '{{ scale_url_prefix}}/api/', //dev
          prefixV3: '{{ scale_url_prefix }}/api/', //scale3
          documentation: '{{ scale_url_prefix }}/docs/'
       }

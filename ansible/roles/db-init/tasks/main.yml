@@ -5,6 +5,10 @@
   command: 'docker pull {{ docker_registry }}postgres'
   become: true
 
+- name: Wait for the postgis database to initialize itself
+  tags: db-init
+  wait_for: port='{{ db_port }}' host='{{ db_host }}' delay=10
+
 - name: Initialize postgres database
   tags: db-init
   docker:
