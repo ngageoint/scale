@@ -1,0 +1,17 @@
+<div ng-show="jobLogError" class="alert alert-danger text-center"><strong>{{ jobLogError }}</strong> {{ jobLogErrorStatus }}</div>
+<div ng-show="!jobLogError">
+    <div class="row">
+        <div class="col-xs-6">
+            <div ng-show="execLog.stdout" class="log">
+                <h4>stdout <span class="label label-success" ng-show="execLog.is_finished">Finished</span></h4>
+                <pre class="bash">{{ execLog.stdout }}</pre>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div ng-show="execLog.stderr" class="log">
+                <h4>stderr <span class="label label-success" ng-show="execLog.is_finished">Finished</span></h4>
+                <pre class="bash">{{ execLog.stderr }}</pre>
+            </div>
+        </div>
+    </div>
+</div>

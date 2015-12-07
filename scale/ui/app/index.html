@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Scale - Distributed File Processing</title>
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+    <link rel="stylesheet" href="bower_components/c3/c3.min.css" />
+    <link rel="stylesheet" href="bower_components/toastr/toastr.min.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-additions/dist/bootstrap-additions.css" />
+    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css({build,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/components/aisDataFeed.css" />
+    <link rel="stylesheet" href="styles/components/aisDonut.css" />
+    <link rel="stylesheet" href="styles/components/aisRadial.css" />
+    <link rel="stylesheet" href="styles/components/aisRecipe.css" />
+    <link rel="stylesheet" href="styles/components/aisTimeline.css" />
+    <link rel="stylesheet" href="styles/components/chart.css" />
+    <link rel="stylesheet" href="styles/components/navigation.css" />
+    <link rel="stylesheet" href="styles/components/tooltip.css" />
+    <link rel="stylesheet" href="styles/pages/overview.css" />
+    <link rel="stylesheet" href="styles/components/modal.css" />
+    <link rel="stylesheet" href="styles/components/grid.css" />
+    <link rel="stylesheet" href="styles/components/masterdetail.css" />
+    <link rel="stylesheet" href="styles/components/aisHealth.css" />
+    <link rel="stylesheet" href="styles/components/logs.css" />
+    <link rel="stylesheet" href="styles/components/d3-tip.css" />
+    <!-- endbuild -->
+
+</head>
+
+    <body ng-app="scaleApp">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-1 nav-ctr tall">
+                    <scale-navigation></scale-navigation>
+                </div>
+                <div class="col-xs-11 view tall">
+                    <ng-view></ng-view>
+                </div>
+            </div>
+        </div>
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/angularjs/angular.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+        <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+        <script src="bower_components/momentjs/moment.js"></script>
+        <script src="bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
+        <script src="bower_components/d3/d3.min.js"></script>
+        <script src="bower_components/lodash/lodash.js"></script>
+        <script src="bower_components/c3/c3.min.js"></script>
+        <script src="bower_components/graphlib/dist/graphlib.core.js"></script>
+        <script src="bower_components/dagre/dist/dagre.core.js"></script>
+        <script src="bower_components/dagre-d3/dist/dagre-d3.core.js"></script>
+        <script src="bower_components/angular-poller/angular-poller.js"></script>
+        <script src="bower_components/toastr/toastr.min.js"></script>
+        <script src="bower_components/d3-tip/index.js"></script>
+        <script src="bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+        <script src="bower_components/innersvg-polyfill/innersvg.js"></script>
+        <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+        <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+        <!-- endbower -->
+        <!-- 3rdparty:js -->
+        <script src="scripts/gantt-chart-d3.js"></script>
+        <script src="scripts/hotkeys.min.js"></script>
+        <!-- end3rdparty -->
+        <!-- endbuild -->
+
+        <!-- build:js(app) scripts/scripts.js -->
+        <script src="modules/app.js"></script>
+        <script src="modules/common/factories/pollerFactory.js"></script>
+        <script src="modules/about/controllers/aboutController.js"></script>
+        <script src="modules/admin/controllers/adminLoginController.js"></script>
+        <script src="modules/admin/controllers/logoutController.js"></script>
+        <script src="modules/charts/donut/donutController.js"></script>
+        <script src="modules/charts/donut/donutDirective.js"></script>
+        <script src="modules/charts/health/healthDirective.js"></script>
+        <script src="modules/charts/health/healthController.js"></script>
+        <script src="modules/charts/radialPercentage/radialPercentageController.js"></script>
+        <script src="modules/charts/radialPercentage/radialPercentageDirective.js"></script>
+        <script src="modules/charts/dataFeed/dataFeedDirective.js"></script>
+        <script src="modules/charts/timeline/timelineDirective.js"></script>
+        <script src="modules/charts/jobLoad/jobLoadDirective.js"></script>
+        <script src="modules/charts/jobLoad/jobLoadController.js"></script>
+        <script src="modules/header/headerDirective.js"></script>
+        <script src="modules/navigation/controllers/navController.js"></script>
+        <script src="modules/navigation/navDirective.js"></script>
+        <script src="modules/navigation/services/navService.js"></script>
+        <script src="modules/navigation/services/subnavService.js"></script>
+        <script src="modules/overview/controllers/ovController.js"></script>
+        <script src="modules/common/factories/gridFactory.js"></script>
+        <script src="modules/common/directives/aisMultiselect.js"></script>
+        <script src="modules/common/models/Status.js"></script>
+        <script src="modules/common/models/StatusMaster.js"></script>
+        <script src="modules/common/models/StatusResource.js"></script>
+        <script src="modules/common/models/StatusResources.js"></script>
+        <script src="modules/common/models/StatusScheduler.js"></script>
+        <script src="modules/common/services/statusService.js"></script>
+        <script src="modules/common/services/scaleService.js"></script>
+        <script src="modules/common/services/userService.js"></script>
+        <script src="modules/common/services/schedulerService.js"></script>
+        <script src="modules/common/factories/gaugeFactory.js"></script>
+        <script src="modules/feed/controllers/feedDetailsController.js"></script>
+        <script src="modules/feed/controllers/ingestRecordsController.js"></script>
+        <script src="modules/feed/services/feedService.js"></script>
+        <script src="modules/feed/models/Feed.js"></script>
+        <script src="modules/feed/models/FeedStatus.js"></script>
+        <script src="modules/metrics/controllers/metricsController.js"></script>
+        <script src="modules/metrics/services/metricsService.js"></script>
+        <script src="modules/nodes/controllers/nodesController.js"></script>
+        <script src="modules/nodes/controllers/nodeDetailsController.js"></script>
+        <script src="modules/nodes/services/nodeService.js"></script>
+        <script src="modules/nodes/services/nodeUpdateService.js"></script>
+        <script src="modules/nodes/models/Node.js"></script>
+        <script src="modules/nodes/models/NodeResources.js"></script>
+        <script src="modules/nodes/models/NodeStatus.js"></script>
+        <script src="modules/nodes/directives/nodeHealthDirective.js"></script>
+        <script src="modules/load/controllers/loadController.js"></script>
+        <script src="modules/load/controllers/queueRunningController.js"></script>
+        <script src="modules/load/controllers/loadDepthController.js"></script>
+        <script src="modules/load/models/QueueStatus.js"></script>
+        <script src="modules/load/services/loadService.js"></script>
+        <script src="modules/recipes/controllers/recipeTypesController.js"></script>
+        <script src="modules/recipes/controllers/recipeEditorController.js"></script>
+        <script src="modules/recipes/controllers/recipesController.js"></script>
+        <script src="modules/recipes/controllers/recipeDetailsController.js"></script>
+        <script src="modules/recipes/directives/recipeGraphViewerDirective.js"></script>
+        <script src="modules/recipes/models/RecipeType.js"></script>
+        <script src="modules/recipes/models/RecipeTypeDefinition.js"></script>
+        <script src="modules/recipes/models/RecipeTypeDefinitionJob.js"></script>
+        <script src="modules/recipes/models/RecipeTypeDetail.js"></script>
+        <script src="modules/recipes/models/RecipeTypeValidation.js"></script>
+        <script src="modules/recipes/models/Recipe.js"></script>
+        <script src="modules/recipes/models/RecipeDetails.js"></script>
+        <script src="modules/recipes/models/RecipeJob.js"></script>
+        <script src="modules/recipes/models/RecipeJobContainer.js"></script>
+        <script src="modules/recipes/models/RecipeData.js"></script>
+        <script src="modules/recipes/services/recipeService.js"></script>
+        <script src="modules/jobs/controllers/jobsController.js"></script>
+        <script src="modules/jobs/controllers/jobDetailController.js"></script>
+        <script src="modules/jobs/controllers/jobExecutionDetailController.js"></script>
+        <script src="modules/jobs/controllers/jobExecutionsController.js"></script>
+        <script src="modules/jobs/controllers/jobTypesController.js"></script>
+        <script src="modules/jobs/directives/jobExecutionLogDirective.js"></script>
+        <script src="modules/jobs/directives/jobHealthDirective.js"></script>
+        <script src="modules/jobs/directives/jobTypeInterfaceDirective.js"></script>
+        <script src="modules/jobs/models/Job.js"></script>
+        <script src="modules/jobs/models/JobDetails.js"></script>
+        <script src="modules/jobs/models/JobExecution.js"></script>
+        <script src="modules/jobs/models/JobExecutionLog.js"></script>
+        <script src="modules/jobs/models/JobType.js"></script>
+        <script src="modules/jobs/models/JobTypeDetails.js"></script>
+        <script src="modules/jobs/models/JobTypeInputData.js"></script>
+        <script src="modules/jobs/models/JobTypeInterface.js"></script>
+        <script src="modules/jobs/models/JobTypeOutputData.js"></script>
+        <script src="modules/jobs/models/JobTypeStatus.js"></script>
+        <script src="modules/jobs/models/JobTypeErrorMapping.js"></script>
+        <script src="modules/jobs/models/JobTypeError.js"></script>
+        <script src="modules/jobs/models/RunningJob.js"></script>
+        <script src="modules/jobs/models/SystemFailure.js"></script>
+        <script src="modules/jobs/models/Product.js"></script>
+        <script src="modules/jobs/models/JobDetailInputData.js"></script>
+        <script src="modules/jobs/models/JobDetailOutputData.js"></script>
+        <script src="modules/jobs/models/JobDetailEvent.js"></script>
+        <script src="modules/jobs/models/JobDetailEventRule.js"></script>
+        <script src="modules/jobs/services/jobService.js"></script>
+        <script src="modules/jobs/services/jobExecutionService.js"></script>
+        <script src="modules/jobs/services/jobTypeService.js"></script>
+        <script src="modules/charts/grid/gridChartDirective.js"></script>
+        <script src="modules/charts/grid/gridChartController.js"></script>
+        <!-- endbuild -->
+
+        <!-- Scale App Configuration File. Do NOT minify or concat! We
+             will need to change this one on deploy -->
+        <script src="modules/scaleConfig.local.js"></script>
+        <script src="modules/scaleConfig.js"></script>
+
+    </body>
+</html>

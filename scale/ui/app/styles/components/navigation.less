@@ -1,0 +1,79 @@
+@import 'colors';
+
+.nav {
+    color: @nav_txt;
+    min-height: 100%;
+}
+
+.nav hr {
+    border: 0;
+    border-bottom: 1px solid lighten(@nav_bg, 25%);
+    height: 1px;
+    background: darken(@nav_bg, 25%);
+    margin: 1.0em auto;
+    width: 90%;
+}
+
+.nav-ctr {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.nav-logo {
+    border-bottom: 12px solid @accent_blue;
+    margin: 0;
+    width: 100%;
+    padding: 2px;
+    font-size: 20px;
+    a {
+        color: #fff;
+    }
+    text-align: center;
+}
+
+.nav-link {
+    color: darken(@nav_txt, 35%);
+    cursor: pointer;
+    height: 100%;
+    padding: 1.5em 1.5em;
+    text-align: right;
+    width: 100%;
+
+    // From Hover.css - hvr-fade
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: color, background-color;
+    transition-property: color, background-color;
+}
+.nav-link:hover, .nav-link:focus, .nav-link:active {
+    // From Hover.css - hvr-fade
+    background-color: @accent_blue;
+    color: @nav_txt;
+    text-decoration: none;
+}
+
+.selected {
+    background: @view_bg;
+    cursor: default;
+    //color: @view_txt;
+    color: @nav_bg;
+    font-weight: bold;
+    text-shadow: none;
+}
+.selected:hover {
+    background: @view_bg;
+    color: @view_txt;
+}
+
+.nav-section {
+    border-bottom: 1px solid lighten(@nav_bg, 15%);
+    border-top: 1px solid darken(@nav_bg, 15%);
+}

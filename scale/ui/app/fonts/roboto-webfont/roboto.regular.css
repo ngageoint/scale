@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://themes.googleusercontent.com/font?kit=biUEjW7P-lfzIZFXrcy-wQ') format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://themes.googleusercontent.com/font?kit=grlryt2bdKIyfMSOhzd1eA') format('woff');
+}

@@ -1,0 +1,29 @@
+{
+  "name": "innersvg-polyfill",
+  "version": "0.0.2",
+  "description": "innerHTML polyfill for SVGElement",
+  "main": "innersvg.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnozay/innersvg-polyfill.git"
+  },
+  "keywords": [
+    "innerHTML",
+    "polyfill",
+    "SVG",
+    "SVGElement"
+  ],
+  "author": "Jeff Schiller <codedread@gmail.com> (https://github.com/codedread)",
+  "maintainer": "Damien Nozay <damien.nozay@gmail.com> (https://github.com/dnozay)",
+  "license": "Apache License, version 2",
+  "bugs": {
+    "url": "https://github.com/dnozay/innersvg-polyfill/issues"
+  },
+  "homepage": "https://github.com/dnozay/innersvg-polyfill"
+}

@@ -1,0 +1,68 @@
+@import 'colors';
+
+.master-controls {
+    padding-bottom: 10px;
+}
+
+.master-container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+
+    ul {
+        li {
+            display: block;
+            background: #fff;
+            padding: 10px 5px;
+            font-size: 15px;
+            border-bottom: 1px solid #e7e7e7;
+
+            &:hover {
+                background: #efefef;
+                cursor: pointer;
+            }
+
+            &.active {
+                background: #efefef;
+                cursor: default;
+            }
+        }
+    }
+}
+
+.detail-container {
+    background: #fff;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+
+    &.no-tabs {
+        border-top: 1px solid #ddd;
+        padding: 10px;
+
+        h3 {
+            padding: 0;
+        }
+
+        #details, #performance, #errors {
+            padding: 0;
+        }
+    }
+
+    h3 {
+        margin: 0;
+        padding: 20px 10px 0 10px;
+    }
+
+    h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    #details, #performance, #errors {
+        padding: 0 10px;
+    }
+
+    .tab-content {
+        border: none;
+    }
+}

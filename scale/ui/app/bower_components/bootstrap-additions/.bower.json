@@ -1,0 +1,48 @@
+{
+  "name": "bootstrap-additions",
+  "description": "BootstrapAdditions - CSS extension kit for Twitter Bootstrap 3.0+",
+  "version": "0.3.1",
+  "keywords": [
+    "bootstrap",
+    "additions"
+  ],
+  "homepage": "https://github.com/mgcrea/bootstrap-additions",
+  "bugs": "https://github.com/mgcrea/bootstrap-additions/issues",
+  "author": {
+    "name": "Olivier Louvignes",
+    "email": "olivier@mg-crea.com",
+    "url": "https://github.com/mgcrea"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgcrea/bootstrap-additions.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/mgcrea/bootstrap-additions/blob/master/LICENSE.md"
+    }
+  ],
+  "main": [
+    "dist/bootstrap-additions.css"
+  ],
+  "ignore": [
+    "docs",
+    "test",
+    "CONTRIBUTING.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "^3.3.4"
+  },
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.3.1",
+    "commit": "e0ce1871fe1c88f7d395ba4849ef77c8bd80d1fb"
+  },
+  "_source": "git://github.com/mgcrea/bootstrap-additions.git",
+  "_target": "~0.3.1",
+  "_originalSource": "bootstrap-additions",
+  "_direct": true
+}

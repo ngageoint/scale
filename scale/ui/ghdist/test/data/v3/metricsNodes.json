@@ -1,0 +1,62 @@
+{
+    "name": "nodes",
+    "title": "Nodes",
+    "description": "Node metrics",
+    "choices": [
+        {
+            "id": 1,
+            "hostname": "node1.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S2",
+            "is_paused": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T17:18:52.414Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T17:18:52.414Z"
+        },{
+            "id": 2,
+            "hostname": "node2.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S4",
+            "is_paused": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T17:18:52.414Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T17:18:52.414Z"
+        },{
+            "id": 3,
+            "hostname": "node3.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        }
+    ],
+    "filters": [],
+    "columns": [
+        {
+            "name": "completed_count",
+            "title": "Completed Count",
+            "description": "",
+            "units": "count"
+        },
+        {
+            "name": "total_count",
+            "title": "Total Count",
+            "description": "",
+            "units": "count"
+        },
+        {
+            "name": "error_count",
+            "title": "Error Count",
+            "description": "",
+            "units": "count"
+        }
+    ]
+}

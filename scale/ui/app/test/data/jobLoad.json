@@ -1,0 +1,25 @@
+{
+    "count": 3,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "time": "2015-11-13T00:00:26.227Z",
+            "pending_count": 37,
+            "queued_count": 46,
+            "running_count": 1564
+        },
+        {
+            "time": "2015-11-13T01:00:29.930Z",
+            "pending_count": 789,
+            "queued_count": 354,
+            "running_count": 4684
+        },
+        {
+            "time": "2015-11-13T02:00:33.520Z",
+            "pending_count": 357,
+            "queued_count": 148,
+            "running_count": 3541
+        }
+    ]
+}
