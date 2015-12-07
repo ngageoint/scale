@@ -13,7 +13,7 @@ USE_X_FORWARDED_HOST = True
 
 ALLOWED_HOSTS = [{{ allowed_hosts }}]
 
-STATIC_ROOT = 'ui'
+STATIC_ROOT = 'static'
 STATIC_URL = '/{{ scale_url_prefix }}/static/'
 
 # Local time zone for this installation. Choices can be found here:

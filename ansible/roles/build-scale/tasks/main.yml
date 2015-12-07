@@ -1,9 +1,115 @@
 ---
 # build-scale/tasks/main.yml
+- name: Install unzip
+  tags: build-scale
+  yum: name=unzip
+  become: true
+
+- name: Install postgresql client and libs
+  tags: build-scale
+  yum: name=postgresql
+  become: true
+
+- name: Install gdal python
+  tags: build-scale
+  yum: name=gdal-python
+  become: true
+
+- name: Install psycopg2
+  tags: build-scale
+  yum: name=python-psycopg2
+  become: true
+
+- name: Install geos
+  tags: build-scale
+  yum: name=geos
+  become: true
+
+- name: Install subversion libs
+  tags: build-scale
+  yum: name=subversion-libs
+  become: true
+
+- name: Install protobuf
+  tags: build-scale
+  yum: name=protobuf
+  become: true
+
+- name: Install npm
+  tags: build-scale
+  yum: name=npm
+  become: true
+
+- name: Install node-gyp
+  tags: build-scale
+  yum: name=node-gyp
+  become: true
+
+- name: Install grunt-cli
+  tags: build-scale
+  yum: name=nodejs-grunt-cli
+  become: true
+
+- name: Install python build libraries
+  tags: build-scale
+  pip: requirements=/scale/scale/pip/build_linux.txt
+  become: true
+
+- name: Install npm ui dependencies
+  tags: build-scale
+  npm: path=/scale/scale-ui
+
+- name: Build ui with grunt
+  tags: build-scale
+  command: grunt dist chdir=/scale/scale-ui
+
+- name: Create ui target
+  tags: build-scale
+  file: path=/scale/scale/ui state=directory
+
+- name: Install ui files
+  tags: build-scale
+  unarchive: copy=no src=/scale/scale-ui/dist/scale-ui.zip dest=/scale/scale/ui
+
+- name: Install default local_settings.py
+  tags: build-scale
+  template: src=local_settings.py dest=/scale/scale/scale/local_settings.py
+
 - name: Create database migrations.
   tags: build-scale
-  django_manage: command=makemigrations app_path={{ django_build_dir }}
+  django_manage: command=makemigrations app_path='{{ django_build_dir }}'
 
 - name: Collect static files.
   tags: build-scale
-  django_manage: command=collectstatic app_path={{ django_build_dir }}
+  django_manage: command=collectstatic app_path='{{ django_build_dir }}'
+
+- name: Copy built files to the docker directory
+  tags: build-scale
+  command: cp -R /scale/scale /scale/dockerfiles/framework/scale
+
+- name: Build scale docker image
+  tags: build-scale
+  docker_image:
+    path: "/scale/dockerfiles/framework/scale"
+    name: "scale"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+
+- name: Build scale-web docker image
+  tags: build-scale
+  docker_image:
+    path: "/scale/dockerfiles/framework/scale-web"
+    name: "scale-web"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+
+- name: Build scale-web-static docker image
+  tags: build-scale
+  docker_image:
+    path: "/scale/dockerfiles/framework/scale-web-static"
+    name: "scale-web-static"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true

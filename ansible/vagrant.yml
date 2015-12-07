@@ -1,26 +1,13 @@
 ---
 # vagrant.yml
-# site file for vagrant cluster..configures vars differently and sets up the database
+# site file for vagrant cluster
 - include: mesos.yml
-  vars:
-    mesos_zk: 'zk://10.4.4.10:2181/mesos'
-    scale_docker_version: '3-dev'
-    mesos_master_ip: '{{ ansible_all_ipv4_addresses[-1] }}'
-    mesos_slave_ip: '{{ ansible_all_ipv4_addresses[-1] }}'
-    zookeeper_servers: '{{ mesos_master_ip }}'
-    mesos_slave_resources: 'cpus:1;mem:1024'
 
 - hosts: db
   roles:
     - postgis
     - db-init
-  vars:
-    db_username: 'postgres'
-    db_password: 'vagrant_postgis'
-    db_host: '10.4.4.10'
 
 - hosts: scale-framework
   roles:
     - build-scale
-  vars:
-    django_build_dir: "/scale/scale"

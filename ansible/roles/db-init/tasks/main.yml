@@ -11,6 +11,7 @@
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}postgres'
     state: started
+    tty: true
     detach: no
     env:
       'PGPASSWORD': '{{ db_password }}'

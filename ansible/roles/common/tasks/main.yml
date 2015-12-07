@@ -9,7 +9,7 @@
   become: true
 
 - name: Install docker-py
-  pip: name=docker-py
+  pip: name=docker-py version=1.5.0
   become: true
 
 - name: Install docker
