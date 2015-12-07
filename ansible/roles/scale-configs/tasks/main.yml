@@ -1,0 +1,16 @@
+---
+# scale-configs/tasks/main.yml
+- name: Create settings directory
+  tags: scale-configs
+  file: path='{{ scale_config_path }}' state=directory
+  become: true
+
+- name: Install local_settings.py
+  tags: scale-configs
+  template: src=local_settings.py.j2 dest='{{ scale_config_path }}/local_settings.py'
+  become: true
+
+- name: Install scaleConfig.local.js
+  tags: scale-configs
+  template: src=scaleConfig.local.js.j2 dest='{{ scale_config_path}}/scaleConfig.local.js'
+  become: true

@@ -1,0 +1,11 @@
+(function () {
+   'use struct';
+
+   angular.module('scaleApp').constant('scaleConfigLocal', {
+      urls: {
+         prefixDev: 'http://127.0.0.1:9000/', //dev
+         prefixV3: '{{ scale_url_prefix }}/api/', //scale3
+         documentation: '{{ scale_url_prefix }}/docs/'
+      }
+   });
+}) ();
