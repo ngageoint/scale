@@ -1,6 +1,6 @@
 ---
 # scale.yml
-- hosts: scale-scaheduler
+- hosts: scale-scheduler
   roles:
     - scale-scheduler
 

@@ -1,5 +1,17 @@
 ---
 # scale-scheduler/tasks/main.yml
+- name: migrate db changes
+  tags: scale-scheduler
+  docker:
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}scale:{{ scale_docker_version }}'
+    state: started
+    tty: true
+    command: 'migrate --noinput'
+    volumes:
+      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
+  become: true
+
 - name: scale scheduler
   tags: scale-scheduler
   docker:

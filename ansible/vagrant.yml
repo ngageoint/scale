@@ -11,3 +11,9 @@
 - hosts: scale-framework
   roles:
     - build-scale
+
+- include: scale.yml
+
+- hosts: scale-framework
+  roles:
+    - load-initial-data

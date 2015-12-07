@@ -45,7 +45,6 @@ Vagrant.configure(2) do |config|
    # run the ansible provisioner. rerun with "vagrant provision"
    config.vm.provision :ansible, run: "always" do |ansible|
      ansible.playbook = '../ansible/vagrant.yml'
-     ansible.verbose = 'v'
      ansible.groups = {
         'zookeeper' => ["master"],
         'mesos-masters' => ["master"],
