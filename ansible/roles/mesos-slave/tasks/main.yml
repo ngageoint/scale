@@ -6,7 +6,7 @@
   docker:
     name: mesos-slave
     docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}mesoscloud/mesos-slave:0.24.1'
+    image: '{{ docker_registry }}scale-slave:3'
     state: reloaded
     restart_policy: always
     privileged: true
