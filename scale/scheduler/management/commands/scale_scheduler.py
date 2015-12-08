@@ -13,12 +13,17 @@ logger = logging.getLogger(__name__)
 # Try to import production Mesos bindings, fall back to stubs
 try:
     from mesos.interface import mesos_pb2
-    from mesos.native import MesosSchedulerDriver
-    logger.info(u'Successfully imported native Mesos bindings')
+    from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
+    logger.info(u'Successfully imported pesos bindings')
 except ImportError:
-    logger.info(u'No native Mesos bindings, falling back to stubs')
-    import mesos_api.mesos_pb2 as mesos_pb2
-    from mesos_api.mesos import MesosSchedulerDriver
+    try:
+       from mesos.interface import mesos_pb2
+       from mesos.native import MesosSchedulerDriver
+       logger.info(u'Successfully imported native Mesos bindings')
+    except ImportError:
+       logger.info(u'No native Mesos bindings, falling back to stubs')
+       import mesos_api.mesos_pb2 as mesos_pb2
+       from mesos_api.mesos import MesosSchedulerDriver
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False

@@ -91,6 +91,8 @@
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
+  notify:
+    - restart scheduler
 
 - name: Build scale-web docker image
   tags: build-scale
@@ -100,6 +102,8 @@
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
+  notify:
+    - restart restapi
 
 - name: Build scale-web-static docker image
   tags: build-scale
@@ -109,3 +113,5 @@
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
+  notify:
+    - restart static web

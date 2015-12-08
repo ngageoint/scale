@@ -11,6 +11,8 @@
 - hosts: scale-framework
   roles:
     - build-scale
+    - scale-scheduler
+    - scale-web
 
 - include: scale.yml
 
