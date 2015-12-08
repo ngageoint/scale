@@ -1,3 +1,4 @@
 ---
 dependencies:
   - { role: common }
+  - { role: scale-configs }

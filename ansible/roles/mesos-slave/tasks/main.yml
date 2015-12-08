@@ -19,5 +19,5 @@
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/scale:/opt/scale
+      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
   become: true
