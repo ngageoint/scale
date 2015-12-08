@@ -94,6 +94,17 @@
   notify:
     - restart scheduler
 
+- name: Build scale-slave docker image
+  tags: build-scale
+  docker_image:
+    path: "/scale/dockerfiles/framework/scale-slave"
+    name: "scale-slave"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+  notify:
+    - restart mesos-slave
+
 - name: Build scale-web docker image
   tags: build-scale
   docker_image:

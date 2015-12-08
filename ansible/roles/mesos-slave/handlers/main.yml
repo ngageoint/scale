@@ -1,8 +1,6 @@
 ---
-# mesos-slave/tasks/main.yml
-# work around a bug
-- name: docker slave container
-  tags: mesos-slave
+# scale-scheduler/handlers/main.yml
+- name: restart mesos-slave
   docker:
     name: mesos-slave
     docker_api_version: '{{ docker_api_version }}'
@@ -19,5 +17,4 @@
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/scale:/opt/scale
   become: true

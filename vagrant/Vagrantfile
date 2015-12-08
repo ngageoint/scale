@@ -6,13 +6,14 @@
 # One will act as zookeeper, master, db, scheduler, and web server.
 # The other will be an execution slave.
 
-RAM = 1024
+RAM = 2048
+CPUS = 2
 NETWORK = "10.4.4."
 NETMASK = "255.255.255.0"
 
 HOSTS = {
-   "master" => [NETWORK+"10", RAM],
-   "slave1" => [NETWORK+"20", RAM],
+   "master" => [NETWORK+"10", RAM, CPUS],
+   "slave1" => [NETWORK+"20", RAM, CPUS],
 }
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -21,14 +22,15 @@ HOSTS = {
 # you're doing.
 Vagrant.configure(2) do |config|
    HOSTS.each do | (name, cfg) |
-     ipaddr, ram = cfg
+     ipaddr, ram, cpus = cfg
 
      config.vm.define name do |machine|
        # centos7 with virtualbox guest additions
        machine.vm.box = "jaredhocutt/centos7"
-       # set machine's ram
+       # set machine's ram and cpu
        machine.vm.provider "virtualbox" do |vbox|
          vbox.memory = ram
+         vbox.cpus = cpus
        end
 
        # setup network
