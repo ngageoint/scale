@@ -1,12 +1,16 @@
 ---
 # mesos-slave/tasks/main.yml
 # work around a bug
+- name: Pull image
+  command: 'docker pull {{ docker_registry }}scale-slave:{{ scale_docker_version }}'
+  become: true
+
 - name: docker slave container
   tags: mesos-slave
   docker:
     name: mesos-slave
     docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale-slave:3'
+    image: '{{ docker_registry }}scale-slave:{{ scale_docker_version }}'
     state: reloaded
     restart_policy: always
     privileged: true

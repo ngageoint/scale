@@ -1,0 +1,18 @@
+---
+# build-scale/handlers/main.yml
+- name: push scale
+  command: 'docker push {{ docker_registry }}scale:{{ scale_docker_version }}'
+  become: true
+
+- name: push scale-slave
+  command: 'docker push {{ docker_registry }}scale-slave:{{ scale_docker_version }}'
+  become: true
+
+- name: push scale-web
+  command: 'docker push {{ docker_registry }}scale-web:{{ scale_docker_version }}'
+  become: true
+
+- name: push scale-web-static
+  command: 'docker push {{ docker_registry }}scale-web-static:{{ scale_docker_version }}'
+  become: true
+

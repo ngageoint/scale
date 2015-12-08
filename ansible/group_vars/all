@@ -1,4 +1,5 @@
 # group_vars/all
+external_docker_registry: ''
 docker_registry: ''
 docker_api_version: '1.20'
 host_http_port: 80

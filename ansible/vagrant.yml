@@ -10,10 +10,11 @@
 
 - hosts: scale-framework
   roles:
+    - docker-registry
+
+- hosts: scale-framework
+  roles:
     - build-scale
-    - scale-scheduler
-    - scale-web
-    - mesos-slave
 
 - include: scale.yml
 

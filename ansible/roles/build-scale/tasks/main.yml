@@ -81,48 +81,48 @@
 
 - name: Copy built files to the docker directory
   tags: build-scale
-  command: cp -R /scale/scale /scale/dockerfiles/framework/scale
+  command: cp -R /scale/scale /scale/dockerfiles/framework/scale/
 
 - name: Build scale docker image
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale"
-    name: "scale"
+    name: "{{ docker_registry }}scale"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
   notify:
-    - restart scheduler
+    - push scale
 
 - name: Build scale-slave docker image
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-slave"
-    name: "scale-slave"
+    name: "{{ docker_registry }}scale-slave"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
   notify:
-    - restart mesos-slave
+    - push scale-slave
 
 - name: Build scale-web docker image
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-web"
-    name: "scale-web"
+    name: "{{ docker_registry }}scale-web"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
   notify:
-    - restart restapi
+    - push scale-web
 
 - name: Build scale-web-static docker image
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-web-static"
-    name: "scale-web-static"
+    name: "{{ docker_registry }}scale-web-static"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
   notify:
-    - restart static web
+    - push scale-web-static

@@ -16,6 +16,10 @@
   yum: name=docker
   become: true
 
+- name: Setup docker
+  template: src=docker.j2 dest='/etc/sysconfig/docker'
+  become: true
+
 - name: docker service
   service: name=docker state=started
   become: true

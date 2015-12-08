@@ -1,5 +1,10 @@
 ---
 # scale-scheduler/tasks/main.yml
+# work around a bug
+- name: Pull image
+  command: 'docker pull {{ docker_registry }}scale:{{ scale_docker_version }}'
+  become: true
+
 - name: migrate db changes
   tags: scale-scheduler
   docker:

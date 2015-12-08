@@ -2,7 +2,7 @@
 # db-init/tasks/main.yml
 # work around a bug
 - name: Pull image
-  command: 'docker pull {{ docker_registry }}postgres'
+  command: 'docker pull {{ external_docker_registry }}postgres'
   become: true
 
 - name: Wait for the postgis database to initialize itself
@@ -13,7 +13,7 @@
   tags: db-init
   docker:
     docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}postgres'
+    image: '{{ external_docker_registry }}postgres'
     state: started
     tty: true
     detach: no
