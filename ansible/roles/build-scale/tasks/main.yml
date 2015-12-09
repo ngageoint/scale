@@ -87,7 +87,7 @@
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale"
-    name: "{{ docker_registry }}scale"
+    name: "scale"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
@@ -98,7 +98,7 @@
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-slave"
-    name: "{{ docker_registry }}scale-slave"
+    name: "scale-slave"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
@@ -109,7 +109,7 @@
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-web"
-    name: "{{ docker_registry }}scale-web"
+    name: "scale-web"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true
@@ -120,7 +120,7 @@
   tags: build-scale
   docker_image:
     path: "/scale/dockerfiles/framework/scale-web-static"
-    name: "{{ docker_registry }}scale-web-static"
+    name: "scale-web-static"
     tag: "{{ scale_docker_version }}"
     state: build
   become: true

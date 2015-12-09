@@ -14,6 +14,7 @@
     state: restarted
     restart_policy: always
     command: 'scale_scheduler'
+    hostname: '{{ inventory_hostname }}'
     volumes:
       - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
   become: true

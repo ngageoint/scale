@@ -13,6 +13,7 @@
     state: reloaded
     restart_policy: always
     net: host
+    hostname: '{{ inventory_hostname }}'
     env:
       MESOS_QUORUM: '{{ mesos_quorum }}'
       MESOS_ZK: '{{ mesos_zk }}'

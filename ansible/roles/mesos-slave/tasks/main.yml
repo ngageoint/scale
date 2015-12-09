@@ -15,6 +15,7 @@
     restart_policy: always
     privileged: true
     net: host
+    hostname: '{{ inventory_hostname }}'
     env:
       MESOS_MASTER: '{{ mesos_zk }}'
       MESOS_RESOURCES: '{{ mesos_slave_resources }}'
