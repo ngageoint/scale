@@ -11,6 +11,7 @@
 - hosts: scale-framework
   roles:
     - docker-registry
+    - nfs-server
 
 - hosts: scale-framework
   roles:
@@ -21,3 +22,4 @@
 - hosts: scale-framework
   roles:
     - load-initial-data
+    - init-examples

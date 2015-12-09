@@ -16,6 +16,7 @@ ENV MESOS_EXECUTOR_REGISTRATION_TIMEOUT 5mins
 
 VOLUME /tmp/mesos
 
+COPY sudoers /etc/sudoers
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
