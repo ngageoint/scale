@@ -2,10 +2,12 @@
 # mesos-master/tasks/main.yml
 # work around a bug
 - name: Pull image
+  tags: mesos-master
   command: 'docker pull {{ external_docker_registry }}mesoscloud/mesos-master:0.24.1'
   become: true
 
 - name: mesos master container
+  tags: mesos-master
   docker:
     name: mesos-master
     docker_api_version: '{{ docker_api_version }}'
@@ -19,4 +21,5 @@
       MESOS_ZK: '{{ mesos_zk }}'
       MESOS_IP: '{{ mesos_master_ip }}'
       MESOS_LOG_DIR: '/var/log/mesos'
+      MESOS_CLUSTER: 'scale'
   become: true

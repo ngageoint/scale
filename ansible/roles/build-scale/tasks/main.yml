@@ -75,6 +75,10 @@
   tags: build-scale
   django_manage: command=makemigrations app_path='{{ django_build_dir }}'
 
+- name: Create docs
+  tags: build-scale
+  command: make code_docs html chdir=/scale/scale/docs
+
 - name: Collect static files.
   tags: build-scale
   django_manage: command=collectstatic app_path='{{ django_build_dir }}'

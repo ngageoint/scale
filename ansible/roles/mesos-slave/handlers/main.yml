@@ -20,6 +20,7 @@
       MESOS_RESOURCES: '{{ mesos_slave_resources }}'
       MESOS_LOG_DIR: '/var/log/mesos'
       MESOS_IP: '{{ mesos_slave_ip }}'
+      MESOS_HOSTNAME: '{{ inventory_hostname }}'
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
       - /var/run/docker.sock:/var/run/docker.sock
