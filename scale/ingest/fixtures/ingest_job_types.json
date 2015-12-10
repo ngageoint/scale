@@ -28,7 +28,7 @@
 			"timeout": 3600,
 			"max_tries": 3,
 			"cpus_required": 0.5,
-			"mem_required": 5120.0,
+			"mem_required": 512.0,
 			"disk_out_const_required": 0.0,
 			"disk_out_mult_required": 0.0,
 			"created": "2015-03-11T00:00:00.0Z",

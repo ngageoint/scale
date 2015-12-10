@@ -2,11 +2,12 @@
 # init-examples/tasks/main.yml
 - name: Install initialization script
   tags: init-examples
-  copy: src=example_data.json dest=/tmp/example_data.json
+  copy: src=example_data.py dest=/tmp/example_data.py
 
 - name: Initialize example database
   tags: init-examples
-  django_manage: command=loaddata app_path='{{ django_build_dir }}' fixtures=/tmp/example_data.json
+#  django_manage: command=loaddata app_path='{{ django_build_dir }}' fixtures=/tmp/example_data.json
+  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | /scale/scale/manage.py shell"
 
 - name: Build landsat-parse docker image
   tags: init-examples
