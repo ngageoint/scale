@@ -71,6 +71,10 @@
   tags: build-scale
   unarchive: copy=no src=/scale/scale-ui/dist/scale-ui.zip dest=/scale/scale/ui
 
+- name: Install local_settings.py
+  tags: build-scale
+  template: src=local_settings.py.j2 dest='/scale/scale/scale/local_settings.py'
+
 - name: Create database migrations.
   tags: build-scale
   django_manage: command=makemigrations app_path='{{ django_build_dir }}'
