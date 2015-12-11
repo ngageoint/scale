@@ -40,7 +40,7 @@ Add a `<script>` to your `index.html`:
 
 Or use [cdnjs](https://cdnjs.com/libraries/angular-poller) files:
 ```html
-<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-poller/0.3.3/angular-poller.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-poller/0.3.4/angular-poller.js"></script>
 ```
 
 ## Quick configuration
@@ -66,6 +66,9 @@ myModule.controller('myController', function($scope, $resource, poller) {
 
     // Restart poller.
     myPoller.restart();
+
+    // Remove poller.
+    myPoller.remove();
 });
 ```
 
@@ -274,6 +277,16 @@ var myPoller = poller.get(myTarget, {
         }
     ],
     smart: true
+});
+```
+
+You can also use `pollerConfig` to set `smart` globally for all pollers.
+
+```javascript
+var myModule = angular.module('myApp', ['emguo.poller']);
+
+myModule.config(function (pollerConfig) {
+    pollerConfig.smart = true;
 });
 ```
 

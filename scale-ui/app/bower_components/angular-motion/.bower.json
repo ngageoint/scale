@@ -44,6 +44,5 @@
   },
   "_source": "git://github.com/mgcrea/angular-motion.git",
   "_target": "~0.4.3",
-  "_originalSource": "angular-motion",
-  "_direct": true
+  "_originalSource": "angular-motion"
 }
