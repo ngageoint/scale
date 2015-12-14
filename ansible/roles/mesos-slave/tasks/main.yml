@@ -1,30 +1,125 @@
 ---
 # mesos-slave/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ docker_registry }}scale-slave:{{ scale_docker_version }}'
+- name: Install postgresql
+  yum: name=postgresql
   become: true
 
-- name: docker slave container
-  tags: mesos-slave
-  docker:
-    name: mesos-slave
-    docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale-slave:{{ scale_docker_version }}'
-    state: reloaded
-    restart_policy: always
-    privileged: true
-    tty: true
-    net: host
-    hostname: '{{ inventory_hostname }}'
-    env:
-      MESOS_MASTER: '{{ mesos_zk }}'
-      MESOS_RESOURCES: '{{ mesos_slave_resources }}'
-      MESOS_LOG_DIR: '/var/log/mesos'
-      MESOS_IP: '{{ mesos_slave_ip }}'
-      ENABLE_NFS: '1'
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-      - /var/run/docker.sock:/var/run/docker.sock
-      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
+- name: Install gdal-python
+  yum: name=gdal-python
   become: true
+
+- name: Install python-psycopg2
+  yum: name=python-psycopg2
+  become: true
+
+- name: Install geos
+  yum: name=geos
+  become: true
+
+- name: Install subversion-libs
+  yum: name=subversion-libs
+  become: true
+
+- name: Install nfs-utils
+  yum: name=nfs-utils
+  become: true
+
+- name: Install python-pip
+  yum: name=python-pip
+  become: true
+
+- name: Install sudo
+  yum: name=sudo
+  become: true
+
+- name: Install unzip
+  yum: name=unzip
+  become: true
+
+- name: Install protobuf
+  yum: name=protobuf
+  become: true
+
+- name: Install rsync
+  yum: name=rsync
+  become: true
+
+- name: Install docker
+  yum: name=docker
+  become: true
+
+- name: Copy mesos
+  copy: src=mesos-0.24.1-0.2.35.centos701406.x86_64.rpm dest=/tmp/mesos-0.24.1-0.2.35.centos701406.x86_64.rpm
+
+- name: Install mesos
+  yum: name=/tmp/mesos-0.24.1-0.2.35.centos701406.x86_64.rpm
+  become: true
+
+- name: Disable mesos master
+  service: name=mesos-master state=stopped enabled=false
+  become: true
+
+- name: Enable mesos slave
+  service: name=mesos-slave state=started enabled=true
+  become: true
+
+- name: Start rpcbind
+  service: name=rpcbind state=started enabled=true
+  become: true
+
+- name: Copy mesos python bindings
+  copy: src=mesos-0.24.1-py2.7-linux-x86_64.egg dest=/tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
+
+# easy_install plugin doesn't seem to work right with eggs
+- name: Install mesos python bindings
+  command: easy_install /tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
+  become: true
+
+- name: Create node workdir
+  file: path='{{ node_work_dir }}' state=directory mode=0777
+  become: true
+
+- name: Create scale user
+  user: name=scale
+  become: true
+
+- name: Create scale dest dir
+  file: path=/opt/scale owner=scale state=directory
+  become: true
+
+- name: Install scale
+  synchronize: src=../scale dest=/opt delete=yes rsync_path="sudo -u scale rsync"
+
+- name: Install python dependencies
+  pip: requirements=/opt/scale/pip/prod_linux.txt
+  become: true
+
+- name: Setup sudoers
+  copy: dest=/etc/sudoers.d/scale src=scale.sudoers
+  become: true
+
+# Need to do this or anisble will complain that we're trying to change a normal file to a symlink
+- name: Remove existing local_settings
+  file: path=/opt/scale/scale/local_settings.py state=absent
+  become: true
+  become_user: scale
+
+- name: Setup local_settings
+  file: src=/etc/scale/local_settings.py dest=/opt/scale/scale/local_settings.py state=link
+  become: true
+  become_user: scale
+
+- name: Setup mesos zk
+  template: src=zk.j2 dest=/etc/mesos/zk
+  become: true
+
+- name: Setup mesos resources
+  template: src=resources.j2 dest=/etc/mesos-slave/resources
+  become: true
+
+- name: Setup mesos slave config
+  tags: mesos-slave
+  template: src=mesos-slave.j2 dest=/etc/default/mesos-slave
+  become: true
+  notify:
+    - restart mesos-slave

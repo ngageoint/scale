@@ -41,6 +41,7 @@ Quick Start
 We've provided a vagrant and ansible setup to get you going quickly. Make sure vagrant, virtualbox, and ansible are installed then.
 ```
 cd vagrant
+vagrant plugin install vagrant-hostmanager
 vagrant up
 ```
 This will download a centos7 base image and start 3 virtual machines, a master and two slaves. You can add additional slaves by editing `Vagrantfile` and adding them to the `HOSTS` and `mesos-slaves` sections before doing the `vagrant up`. Ansible will be used to push the configuration out and can take a while to run. You make need to modify `ansible/group_vars/vagrant` or `ansible/vagrant.yml` if you need to specify a local docker index, etc.

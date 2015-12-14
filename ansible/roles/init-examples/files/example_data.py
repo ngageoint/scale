@@ -1,6 +1,8 @@
 import storage.models
 import job.models
 import ingest.models
+from ingest.triggers.ingest_rule import IngestTriggerRule
+import trigger.models
 
 # Workspaces
 if not storage.models.Workspace.objects.filter(name="raw").exists():
@@ -13,7 +15,7 @@ if not storage.models.Workspace.objects.filter(name="products").exists():
 
 # Job types
 if not job.models.JobType.objects.filter(name="landsat-parse").exists():
-    job.models.JobType.objects.create_job_type("landsat-parse", "1.0", "Parse landsat multi-tif files in tar.gz archives",
+    jt = job.models.JobType.objects.create_job_type("landsat-parse", "1.0", "Parse landsat multi-tif files in tar.gz archives",
         "10.4.4.10:5000/landsat-parse_1.0:dev",
             {"output_data": [
                 {"media_type": "image/tiff", "required": True, "type": "file", "name": "geo_image"}],
@@ -22,7 +24,33 @@ if not job.models.JobType.objects.filter(name="landsat-parse").exists():
             "input_data": [
                 {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
             "version": "1.0", "command": "./parse_landsat.sh"
-        }, 200, 300, 3, 0.25, 512., 2048., None).save()
+        }, 200, 300, 3, 0.25, 512., 2048., None)
+    jt.title = "Landsat Parse"
+    jt.save()
+
+# Triggers
+if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
+    tr = IngestTriggerRule({
+        "version": "1.0",
+        "trigger": {
+            "media_type": "application/x-tar",
+            "data_types": ["landsat"]
+        },
+        "create": {
+            "jobs": [
+                {
+                    "job_type": {
+                        "name": "landsat-parse",
+                        "version": "1.0"
+                    },
+                    "file_input_name": "infile",
+                    "workspace_name": "products"
+                }
+            ]
+        }
+    }).save_to_db()
+    tr.name="landsat-parse"
+    tr.save()
 
 # Strike process
 if not ingest.models.Strike.objects.filter(name="landsat").exists():

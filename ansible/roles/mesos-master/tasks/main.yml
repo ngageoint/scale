@@ -22,4 +22,5 @@
       MESOS_IP: '{{ mesos_master_ip }}'
       MESOS_LOG_DIR: '/var/log/mesos'
       MESOS_CLUSTER: 'scale'
+      MESOS_NO_HOSTNAME_LOOKUP: 'true'
   become: true

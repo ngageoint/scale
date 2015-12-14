@@ -22,6 +22,11 @@ HOSTS = {
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+   config.hostmanager.enabled = true
+   config.hostmanager.manage_host = false
+   config.hostmanager.ignore_private_ip = false
+   config.hostmanager.include_offline = true
+
    HOSTS.each do | (name, cfg) |
      ipaddr, ram, cpus = cfg
 

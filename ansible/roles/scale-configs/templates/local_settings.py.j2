@@ -8,13 +8,13 @@ DEBUG = {{ django_debug }}
 TEMPLATE_DEBUG = DEBUG
 
 # Set the external URL context here
-FORCE_SCRIPT_NAME = '/{{ scale_url_prefix }}/api'
+FORCE_SCRIPT_NAME = '{{ scale_url_prefix }}/api'
 USE_X_FORWARDED_HOST = True
 
 ALLOWED_HOSTS = [{{ allowed_hosts }}]
 
 STATIC_ROOT = 'static'
-STATIC_URL = '/{{ scale_url_prefix }}/static/'
+STATIC_URL = '{{ scale_url_prefix }}/static/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

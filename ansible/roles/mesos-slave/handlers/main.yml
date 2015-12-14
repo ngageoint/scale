@@ -1,29 +1,5 @@
 ---
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ docker_registry }}scale-slave:{{ scale_docker_version }}'
-  become: true
-
-# scale-scheduler/handlers/main.yml
+# mesos-slave/handlers/main.yml
 - name: restart mesos-slave
-  docker:
-    name: mesos-slave
-    docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale-slave:{{ scale_docker_version }}'
-    state: reloaded
-    restart_policy: always
-    privileged: true
-    tty: true
-    net: host
-    hostname: '{{ inventory_hostname }}'
-    env:
-      MESOS_MASTER: '{{ mesos_zk }}'
-      MESOS_RESOURCES: '{{ mesos_slave_resources }}'
-      MESOS_LOG_DIR: '/var/log/mesos'
-      MESOS_IP: '{{ mesos_slave_ip }}'
-      ENABLE_NFS: '1'
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-      - /var/run/docker.sock:/var/run/docker.sock
-      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
+  service: name=mesos-slave state=restarted
   become: true

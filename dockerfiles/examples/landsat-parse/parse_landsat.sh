@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
+echo "Running landsat_parse.sh " $*
 mkdir /tmp/data
 tar -zxvf $1 -C /tmp/data
 NM=$(basename -s _MTL.txt /tmp/data/*_MTL.txt)

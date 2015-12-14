@@ -1,8 +1,6 @@
 ---
 # vagrant.yml
 # site file for vagrant cluster
-- include: mesos.yml
-
 - hosts: db
   roles:
     - postgis
@@ -10,8 +8,15 @@
 
 - hosts: scale-framework
   roles:
+    - dns-server
     - docker-registry
     - nfs-server
+
+- hosts: all
+  tasks:
+    - name: Setup resolv.conf
+      command: sh -c 'echo "nameserver 10.4.4.10" > /etc/resolv.conf'
+      become: true
 
 - hosts: scale-framework
   roles:
@@ -22,4 +27,5 @@
     - load-initial-data
     - init-examples
 
+- include: mesos.yml
 - include: scale.yml
