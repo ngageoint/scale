@@ -48,6 +48,10 @@
   yum: name=docker
   become: true
 
+- name: Install protobuf bindings
+  pip: name="protobuf<3.0.0b1.post1"
+  become: true
+
 - name: Copy mesos
   copy: src=mesos-0.24.1-0.2.35.centos701406.x86_64.rpm dest=/tmp/mesos-0.24.1-0.2.35.centos701406.x86_64.rpm
 
@@ -115,6 +119,10 @@
 
 - name: Setup mesos resources
   template: src=resources.j2 dest=/etc/mesos-slave/resources
+  become: true
+
+- name: Setup mesos containerizers
+  copy: src=containerizers dest=/etc/mesos-slave/containerizers
   become: true
 
 - name: Setup mesos slave config

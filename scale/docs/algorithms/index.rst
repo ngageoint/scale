@@ -19,3 +19,8 @@ of a Dockerfile:
 **Dockerfile example**
 
 Example removed, we need a good, general example here
+
+.. toctree::
+   :maxdepth: 1
+
+   results_manifest

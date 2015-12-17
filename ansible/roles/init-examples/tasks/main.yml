@@ -19,3 +19,14 @@
   become: true
   notify:
     - push landsat-parse
+
+- name: Build landsat-ndwi docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-ndwi"
+    name: "landsat-ndwi_1.0"
+    tag: "dev"
+    state: build
+  become: true
+  notify:
+    - push landsat-ndwi
