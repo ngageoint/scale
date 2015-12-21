@@ -54,6 +54,8 @@ ln /exports/ingest/LC80170302015307LGN00.tar.gz_tmp /export/ingest/LC80170302015
 rm /export/ingest/LC80170302015307LGN00.tar.gz_tmp
 ```
 
+NOTE: Country borders shapefile courtesy of [Bjorn Sandvik](http://thematicmapping.org/downloads/world_borders.php)
+
 Setting up a development environment
 ====================================
 1. Install a clean version of Python 2.7 with virtualenv.

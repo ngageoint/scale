@@ -4,9 +4,12 @@
   tags: init-examples
   copy: src=example_data.py dest=/tmp/example_data.py
 
+- name: Install the countries shapefile
+  tags: init-examples
+  unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
+
 - name: Initialize example database
   tags: init-examples
-#  django_manage: command=loaddata app_path='{{ django_build_dir }}' fixtures=/tmp/example_data.json
   command: sh -c "echo \"execfile('/tmp/example_data.py')\" | /scale/scale/manage.py shell"
 
 - name: Build landsat-parse docker image

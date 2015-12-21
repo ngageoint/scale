@@ -4,6 +4,7 @@ import ingest.models
 from ingest.triggers.ingest_rule import IngestTriggerRule
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 import recipe.models
+import storage.models
 import trigger.models
 
 # Workspaces
@@ -132,3 +133,31 @@ if not ingest.models.Strike.objects.filter(name="landsat").exists():
 	    "transfer_suffix": "_tmp",
 	    "version": "1.0"
 	}).save()
+
+# Country Data
+if storage.models.CountryData.objects.count() == 0:
+    from osgeo import ogr
+    import os
+    from django.contrib.gis.geos.geometry import GEOSGeometry
+    from datetime import datetime
+
+    driver = ogr.GetDriverByName('ESRI Shapefile')
+    ds = driver.Open('/tmp/TM_WORLD_BORDERS-0.3.shp', 0)
+    mtime = datetime.utcfromtimestamp(os.stat('/tmp/TM_WORLD_BORDERS-0.3.shp').st_mtime)
+    layer = ds.GetLayer()
+    for feature in layer:
+        name = feature.GetFieldAsString('NAME')
+        print('Importing %s' % name)
+        fips = feature.GetFieldAsString('FIPS')
+        iso2 = feature.GetFieldAsString('ISO2')
+        iso3 = feature.GetFieldAsString('ISO3')
+        iso_num = feature.GetFieldAsString('UN')
+        geom = feature.GetGeometryRef()
+        wkt = geom.ExportToWkt()
+        storage.models.CountryData.objects.create(name=name,
+                                                  fips=fips,
+                                                  iso2=iso2,
+                                                  iso3=iso3,
+                                                  iso_num=iso_num,
+                                                  border=GEOSGeometry(wkt),
+                                                  effective=mtime).save()
