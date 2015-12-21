@@ -2,7 +2,8 @@ import storage.models
 import job.models
 import ingest.models
 from ingest.triggers.ingest_rule import IngestTriggerRule
-from source.triggers.parse_rule import ParseTriggerRule
+from recipe.configuration.definition.recipe_definition import RecipeDefinition
+import recipe.models
 import trigger.models
 
 # Workspaces
@@ -37,13 +38,57 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
             {"output_data": [
                 {"media_type": "image/tiff", "required": True, "type": "file", "name": "ndwi"}],
             "shared_resources": [],
-            "command_arguments": "${infile} ${job_output_dir}",
+            "command_arguments": "${msi} ${job_output_dir}",
             "input_data": [
-                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "infile"}],
+                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "msi"}],
             "version": "1.0", "command": "python landsat_ndwi.py"
         }, 250, 300, 3, 0.5, 512., 2048., None)
     jt.title = "Landsat NDWI"
     jt.save()
+
+# Recipes
+if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
+    r = recipe.models.RecipeType.objects.create_recipe_type("landsat", "1.0.0", "Landsat processing",
+            "Perform standard Landsat ingest processing", RecipeDefinition({
+                "version": "1.0",
+                "input_data": [
+                    {
+                        "name": "infile",
+                        "type": "file",
+                        "media_types": ["application/x-tar"]
+                    }
+                ],
+                "jobs": [
+                    {
+                        "name": "parse",
+                        "job_type": {
+                            "name": "landsat-parse",
+                            "version": "1.0.0"
+                        },
+                        "recipe_inputs": [
+                            {
+                                "recipe_input": "infile",
+                                "job_input": "infile"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ndwi",
+                        "job_type": {
+                            "name": "landsat-ndwi",
+                            "version": "1.0.0"
+                        },
+                        "dependencies": [
+                            {
+                                "name": "parse",
+                                "connections": [
+                                    {"output": "multispectral", "input": "msi"}
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }), None)
 
 # Triggers
 if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
@@ -54,10 +99,10 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
             "data_types": ["landsat"]
         },
         "create": {
-            "jobs": [
+            "recipes": [
                 {
-                    "job_type": {
-                        "name": "landsat-parse",
+                    "recipe_type": {
+                        "name": "landsat",
                         "version": "1.0.0"
                     },
                     "file_input_name": "infile",
@@ -67,28 +112,6 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
         }
     }).save_to_db()
     tr.name="landsat-parse"
-    tr.save()
-if not trigger.models.TriggerRule.objects.filter(name="landsat-ndwi").exists():
-    tr = ParseTriggerRule({
-       "version": "1.0",
-       "trigger": {
-          "media_type": "image/tiff",
-          "data_types": ["landsat"]
-       },
-       "create": {
-          "jobs": [
-             {
-                "job_type": {
-                   "name": "landsat-ndwi",
-                   "version": "1.0.0"
-                },
-                "file_input_name": "infile",
-                "workspace_name": "products"
-             }
-          ]
-       }
-    }).save_to_db()
-    tr.name="landsat-ndwi"
     tr.save()
 
 # Strike process
