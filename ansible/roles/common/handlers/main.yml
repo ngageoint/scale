@@ -1,0 +1,5 @@
+---
+# common/handlers/main.yml
+- name: set permissive mode
+  command: setenforce 0
+  become: true

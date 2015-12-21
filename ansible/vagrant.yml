@@ -1,31 +1,61 @@
 ---
 # vagrant.yml
 # site file for vagrant cluster
+# common requirements
+- hosts: all
+  roles:
+    - common
+
+# start a DNS server
+- hosts: dns
+  roles:
+    - dns-server
+
+# start and initialize the postgis server
 - hosts: db
   roles:
     - postgis
     - db-init
 
-- hosts: scale-framework
+# start an nfs server
+- hosts: nfs
   roles:
-    - dns-server
-    - docker-registry
     - nfs-server
 
+# setup resolv.conf to point to the new DNS server
 - hosts: all
   tasks:
     - name: Setup resolv.conf
-      command: sh -c 'echo "nameserver 10.4.4.10" > /etc/resolv.conf'
+      lineinfile: dest=/etc/resolv.conf line="nameserver 10.4.4.10"
       become: true
 
-- hosts: scale-framework
+# setup a docker registry
+- hosts: registry
+  roles:
+    - docker-registry
+
+# start mesos master and slaves
+- include: mesos.yml
+
+# build scale
+- hosts: build
   roles:
     - build-scale
 
-- hosts: scale-framework
+# migrate database changes
+- hosts: build
+  roles:
+    - migrate
+
+# load initial database data
+- hosts: build
   roles:
     - load-initial-data
+
+# initialize example data
+- hosts: build
+  roles:
     - init-examples
 
-- include: mesos.yml
+# start scale components
 - include: scale.yml

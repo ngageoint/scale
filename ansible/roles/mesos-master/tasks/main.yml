@@ -1,11 +1,5 @@
 ---
 # mesos-master/tasks/main.yml
-# work around a bug
-- name: Pull image
-  tags: mesos-master
-  command: 'docker pull {{ external_docker_registry }}mesoscloud/mesos-master:0.24.1'
-  become: true
-
 - name: mesos master container
   tags: mesos-master
   docker:

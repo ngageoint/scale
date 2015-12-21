@@ -61,7 +61,7 @@
 
 - name: Build ui with grunt
   tags: build-scale
-  command: grunt dist chdir=/scale/scale-ui
+  command: grunt dist chdir=/scale/scale-ui creates=/scale/scale-ui/dist/scale-ui.zip
 
 - name: Create ui target
   tags: build-scale

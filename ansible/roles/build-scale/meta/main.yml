@@ -1,6 +1,5 @@
 ---
 dependencies:
-  - { role: common }
   - role: scale-configs
     vars:
       - scale_config_path: '/scale/scale/scale'

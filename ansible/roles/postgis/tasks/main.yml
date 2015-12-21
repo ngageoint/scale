@@ -1,10 +1,5 @@
 ---
 # postgis/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ external_docker_registry }}mdillon/postgis'
-  become: true
-
 - name: PostGIS database
   tags: postgis
   docker:

@@ -1,10 +1,5 @@
 ---
 # scale-web/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ docker_registry }}scale-web:{{ scale_docker_version }}'
-  become: true
-
 - name: scale rest api server
   tags: scale-web
   docker:
@@ -16,11 +11,6 @@
     volumes:
       - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
       - '/etc/scale/scaleConfig.local.js:/opt/scale/ui/scale-ui/modules/scaleConfig.local.js'
-  become: true
-
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ docker_registry }}scale-web-static:{{ scale_docker_version }}'
   become: true
 
 - name: static scale web server

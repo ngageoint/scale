@@ -1,23 +1,18 @@
 ---
 # db-init/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ external_docker_registry }}postgres'
-  become: true
-
 - name: Wait for the postgis database to initialize itself
   tags: db-init
   wait_for: port=5432 host='{{ db_host }}' delay=10
 
+- name: Install psycopg2
+  tags: db-init
+  yum: name=python-psycopg2
+  become: true
+
 - name: Initialize postgres database
   tags: db-init
-  docker:
-    docker_api_version: '{{ docker_api_version }}'
-    image: '{{ external_docker_registry }}postgres'
-    state: started
-    tty: true
-    detach: no
-    env:
-      'PGPASSWORD': '{{ db_password }}'
-    command: sh -c 'createdb -h {{ db_host }} -U {{ db_username }} -T template_postgis {{ db_name }}'
-  become: true
+  postgresql_db: name='{{ db_name }}'
+                 template=template_postgis
+                 login_host='{{ db_host }}'
+                 login_user='{{ db_username }}'
+                 login_password='{{ db_password }}'
