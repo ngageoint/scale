@@ -1,10 +1,5 @@
 ---
 # zookeeper/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ external_docker_registry }}mesoscloud/zookeeper:3.4.6-centos-7'
-  become: true
-
 - name: zookeeper container
   tags: zookeeper
   docker:

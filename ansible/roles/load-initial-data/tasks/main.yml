@@ -1,20 +1,4 @@
 ---
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ docker_registry }}scale:{{ scale_docker_version }}'
-  become: true
-
-- name: migrate db changes
-  docker:
-    docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale:{{ scale_docker_version }}'
-    state: started
-    tty: true
-    command: 'migrate --noinput'
-    volumes:
-      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
-  become: true
-
 # load-initial-data/tasks/main.yml
 - name: load initial db data
   tags: load-initial-data

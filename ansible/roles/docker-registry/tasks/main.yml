@@ -1,10 +1,5 @@
 ---
 # docker-registry/tasks/main.yml
-# work around a bug
-- name: Pull image
-  command: 'docker pull {{ external_docker_registry }}registry:2'
-  become: true
-
 - name: Docker registry
   tags: registry
   docker:
