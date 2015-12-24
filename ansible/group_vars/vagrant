@@ -10,5 +10,5 @@ db_username: 'postgres'
 db_password: 'vagrant_postgis'
 db_host: '10.4.4.10'
 django_build_dir: "/scale/scale"
-scale_url_prefix: "http://10.4.4.10"
+scale_url_prefix: "/api/"
 allowed_hosts: '"*"'
