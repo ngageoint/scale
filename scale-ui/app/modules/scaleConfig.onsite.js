@@ -118,7 +118,7 @@
             urls: {
                 prefixDev: 'http://127.0.0.1:9000/', // dev
                 prefixV2: '',
-                prefixV3: 'http://www.giat.wpafb.ic.gov/scale-dev/api/',
+                prefixV3: 'http://www.host.gov/scale-dev/api/',
                 documentation: '/docs',
 
                 getQueueStatus: function () {
