@@ -11,8 +11,7 @@
         'ui.grid.selection',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
-        'cfp.hotkeys',
-        'mgcrea.ngStrap'
+        'cfp.hotkeys'
     ]);
 
     app.config(function($routeProvider, $resourceProvider, pollerConfig) {
