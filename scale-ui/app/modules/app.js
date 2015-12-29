@@ -97,7 +97,8 @@
             })
             .when('/jobs', {
                 controller: 'jobsController',
-                templateUrl: 'modules/jobs/partials/jobsTemplate.html'
+                templateUrl: 'modules/jobs/partials/jobsTemplate.html',
+                reloadOnSearch: false
             })
             .when('/jobs/job/:id', {
                 controller: 'jobDetailController',

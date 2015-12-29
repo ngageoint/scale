@@ -25,7 +25,8 @@
     "topojson": "~1.6.18",
     "moment-duration-format": "~1.3.0",
     "bootstrap-multiselect": "~0.9.13",
-    "innersvg-polyfill": "~0.0.2"
+    "innersvg-polyfill": "~0.0.2",
+    "angular-motion": "~0.4.3"
   },
   "devDependencies": {},
   "resolutions": {

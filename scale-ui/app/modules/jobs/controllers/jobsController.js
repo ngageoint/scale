@@ -192,6 +192,7 @@
             _.forEach(_.pairs(jobsParams), function (param) {
                 $location.search(param[0], param[1]);
             });
+            getJobs();
         };
 
         $scope.requeueJob = function (job) {
