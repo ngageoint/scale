@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Scale Job Execution handles running Scale jobs within Mesos'''
 from __future__ import unicode_literals
 
@@ -376,10 +377,8 @@ class ScaleJobExecution(object):
         returns: The Docker Mesos task
         rtype: :class:`mesos_pb2.TaskInfo`
         '''
-
-        node_work_dir = settings.NODE_WORK_DIR
-        input_dir = get_job_exe_input_dir(self.job_exe_id, node_work_dir)
-        output_dir = get_job_exe_output_dir(self.job_exe_id, node_work_dir)
+        input_dir = get_job_exe_input_dir(self.job_exe_id)
+        output_dir = get_job_exe_output_dir(self.job_exe_id)
 
         task_name = 'Job Execution %i (%s)' % (self.job_exe_id, self._cached_job_type_name)
         task = self._create_base_task(task_name)

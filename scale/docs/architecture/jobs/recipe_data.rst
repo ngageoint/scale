@@ -17,8 +17,16 @@ creating a recipe with that example definition could be defined as follows:
 
    {
       "version": "1.0",
-      "input_data": [ {"name": "image", "file_id": 1234},
-                      {"name": "georeference_data", "file_id": 1235} ],
+      "input_data": [
+         {
+            "name": "image",
+            "file_id": 1234
+         },
+         {
+            "name": "georeference_data",
+            "file_id": 1235
+         }
+      ],
       "workspace_id": 12
    }
 
@@ -40,9 +48,23 @@ A valid recipe data is a JSON document with the following structure:
 
    {
       "version": STRING,
-      "input_data": [ {"name": STRING, "value": STRING},
-                      {"name": STRING, "file_id": INTEGER},
-                      {"name": STRING, "file_ids": [INTEGER, INTEGER]} ],
+      "input_data": [
+         {
+            "name": STRING,
+            "value": STRING
+         },
+         {
+            "name": STRING,
+            "file_id": INTEGER
+         },
+         {
+            "name": STRING,
+            "file_ids": [
+               INTEGER,
+               INTEGER
+            ]
+         }
+      ],
       "workspace_id": INTEGER
    }
 

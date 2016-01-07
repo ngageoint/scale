@@ -17,9 +17,22 @@ queuing and running a make_geotiff.py job could be defined as follows:
 
    {
       "version": "1.0",
-      "input_data": [ {"name": "image", "file_id": 1234},
-                      {"name": "georeference_data", "file_id": 1235} ],
-      "output_data": [ {"name": "geo_image", "workspace_id": 12} ]
+      "input_data": [
+         {
+            "name": "image",
+            "file_id": 1234
+         },
+         {
+            "name": "georeference_data",
+            "file_id": 1235
+         }
+      ],
+      "output_data": [
+         {
+            "name": "geo_image",
+            "workspace_id": 12
+         }
+      ]
    }
 
 The *input_data* value is a list detailing the data to pass to each input to the job. In this case the input called
@@ -41,10 +54,29 @@ A valid job data is a JSON document with the following structure:
 
    {
       "version": STRING,
-      "input_data": [ {"name": STRING, "value": STRING},
-                      {"name": STRING, "file_id": INTEGER},
-                      {"name": STRING, "file_ids": [INTEGER, INTEGER]} ],
-      "output_data": [ {"name": STRING, "workspace_id": INTEGER} ]
+      "input_data": [
+         {
+            "name": STRING,
+            "value": STRING
+         },
+         {
+            "name": STRING,
+            "file_id": INTEGER
+         },
+         {
+            "name": STRING,
+            "file_ids": [
+               INTEGER,
+               INTEGER
+            ]
+         }
+      ],
+      "output_data": [
+         {
+            "name": STRING,
+            "workspace_id": INTEGER
+         }
+      ]
    }
 
 **version**: JSON string

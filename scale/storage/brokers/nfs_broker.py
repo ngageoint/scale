@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines an NFS broker that utilizes a network file system as its backend storage'''
 from __future__ import unicode_literals
 
@@ -29,19 +30,13 @@ class NfsBroker(Broker):
         '''See :meth:`storage.brokers.broker.Broker.cleanup_download_dir`
         '''
 
-        if os.path.exists(download_dir):
-            logger.info('Deleting %s', download_dir)
-            shutil.rmtree(download_dir)
-
         nfs_umount(work_dir)
 
     def cleanup_upload_dir(self, upload_dir, work_dir):
         '''See :meth:`storage.brokers.broker.Broker.cleanup_upload_dir`
         '''
 
-        if os.path.exists(upload_dir):
-            logger.info('Deleting %s', upload_dir)
-            shutil.rmtree(upload_dir)
+        nfs_umount(work_dir)
 
     def delete_files(self, work_dir, workspace_paths):
         '''See :meth:`storage.brokers.broker.Broker.delete_files`
@@ -116,6 +111,7 @@ class NfsBroker(Broker):
 
                 logger.info('Moving %s to %s', full_old_workspace_path, full_new_workspace_path)
                 shutil.move(full_old_workspace_path, full_new_workspace_path)
+                os.chmod(full_new_workspace_path, 0644)
         finally:
             nfs_umount(work_dir)
 
@@ -129,8 +125,7 @@ class NfsBroker(Broker):
         '''See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
         '''
 
-        logger.info('Creating %s', upload_dir)
-        os.mkdir(upload_dir, 0755)
+        pass
 
     def upload_files(self, upload_dir, work_dir, files_to_upload):
         '''See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
@@ -150,6 +145,7 @@ class NfsBroker(Broker):
                     logger.info('Creating %s', full_workspace_dir)
                     os.makedirs(full_workspace_dir, mode=0755)
                 self._copy_file(full_src_path, full_workspace_path)
+                os.chmod(full_workspace_path, 0644)
         finally:
             nfs_umount(work_dir)
 

@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
@@ -16,18 +17,23 @@ class RecipeTypeSerializer(RecipeTypeBaseSerializer):
     '''Converts recipe type model fields to REST output.'''
     is_active = serializers.BooleanField()
     definition = serializers.CharField()
+    revision_num = serializers.IntegerField()
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
     archived = serializers.DateTimeField()
+
+    trigger_rule = ModelIdSerializer()
 
 
 class RecipeTypeDetailsSerializer(RecipeTypeSerializer):
     '''Converts recipe type model fields to REST output.'''
     from job.serializers import JobTypeBaseSerializer
+    from trigger.serializers import TriggerRuleDetailsSerializer
 
     class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializer):
         interface = serializers.CharField()
 
+    trigger_rule = TriggerRuleDetailsSerializer()
     job_types = RecipeTypeDetailsJobSerializer()
 
 
@@ -78,6 +84,13 @@ class RecipeJobsSerializer(serializers.Serializer):
     recipe = ModelIdSerializer()
 
 
+class RecipeJobsDetailsSerializer(RecipeJobsSerializer):
+    '''Converts related recipe model fields to REST output.'''
+    from job.serializers import JobRevisionSerializer
+
+    job = JobRevisionSerializer()
+
+
 class RecipeDetailsSerializer(RecipeSerializer):
     '''Converts related recipe model fields to REST output.'''
     from storage.serializers import ScaleFileBaseSerializer
@@ -89,7 +102,7 @@ class RecipeDetailsSerializer(RecipeSerializer):
     data = serializers.CharField()
 
     input_files = ScaleFileBaseSerializer()
-    jobs = RecipeJobsSerializer()
+    jobs = RecipeJobsDetailsSerializer()
 
 
 class RecipeListSerializer(pagination.PaginationSerializer):

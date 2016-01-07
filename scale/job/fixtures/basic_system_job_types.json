@@ -22,6 +22,7 @@
                  "command_arguments": "${-i :Job Exe ID}",
                  "input_data": [ { "name": "Job Exe ID", "type": "property" } ]
             },
+            "revision_num": 1,
             "error_mapping": null,
             "priority": 2,
             "timeout": 600,
@@ -72,6 +73,7 @@
                  "command": "scale_clock",
                  "command_arguments": ""
             },
+            "revision_num": 1,
             "error_mapping": null,
             "priority": 1,
             "timeout": 0,

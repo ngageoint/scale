@@ -3,10 +3,8 @@
         "model": "trigger.TriggerRule",
         "pk": null,
         "fields": {
-            "name": "scale-queue-depth",
             "type": "CLOCK",
-            "title": "Queue Depth",
-            "description": "Calculates queue depth metrics every hour.",
+            "name": "scale-queue-depth",
             "configuration": {
                 "version": "1.0",
                 "event_type": "QUEUE_DEPTH",
@@ -23,10 +21,8 @@
 		"model": "trigger.TriggerRule",
 		"pk": null,
 		"fields": {
-            "name": "scale-job-load",
             "type": "CLOCK",
-            "title": "Job Load",
-            "description": "Calculates job load metrics every hour.",
+            "name": "scale-job-load",
 			"configuration": {
                 "version": "1.0",
                 "event_type": "JOB_LOAD",

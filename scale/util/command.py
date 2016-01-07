@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines utility functions for executing commands on the command line.'''
 import logging
 import subprocess
@@ -10,6 +11,7 @@ class CommandError(Exception):
     def __init__(self, msg, returncode=None):
         super(CommandError, self).__init__(msg)
         self.returncode = returncode
+
 
 def execute_command_line(cmd_list):
     '''Executes the given command list on the command line

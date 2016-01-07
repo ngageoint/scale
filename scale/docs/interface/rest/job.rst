@@ -97,7 +97,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -217,7 +217,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -492,7 +492,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 201 CREATED                                                                                        |
+| **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -607,7 +607,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -790,7 +790,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

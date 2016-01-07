@@ -4,12 +4,10 @@
 Results Manifest
 ===============================================================================
 
-The results manifest is a json document that defines the output of an algorithm's run. Using the results
-manifest, you can specifiy your outputs, parse information, run_information and errors.  In addition, you can register
-artifacts by printing a line to stdout with the following format "ARTIFACT:<output_name>:<path_to_file>".  The artifact
-string must be on a separate line, and if there are any conflicts with the manifest file, the manifest file takes
-precedence.
-
+The results manifest is a JSON document that defines the output of an algorithm's run. Using the results manifest, you
+can specify your outputs, parse information, run_information and errors. In addition, you can register artifacts by
+printing a line to stdout with the following format "ARTIFACT:<output_name>:<path_to_file>". The artifact string must be
+on a separate line, and if there are any conflicts with the manifest file, the manifest file takes precedence.
 
 The following are some example output manifest files:
 
@@ -17,43 +15,43 @@ The following are some example output manifest files:
 
 .. code-block:: javascript
 
-    {
-        "version": "1.1",
-        "output_data": [
-            {
-                "name" : "output_file",
-                "file":
-                {  
-                    "path" : "/tmp/job_exe_231/outputs/output.csv"
-                }
+   {
+      "version": "1.1",
+      "output_data": [
+         {
+            "name" : "output_file",
+            "file": {  
+               "path" : "/tmp/job_exe_231/outputs/output.csv"
             }
-        ]
-    }
+         }
+      ]
+   }
 
-The above manifest simply says that the output with the name "output_file" can be found on the local computer
-at the location "/tmp/job_exe_231/outputs/output.csv".
+The above manifest simply says that the output with the name "output_file" can be found on the local computer at the
+location "/tmp/job_exe_231/outputs/output.csv".
 
 **Results manifest with a parsed input**
 
 .. code-block:: javascript
 
-    {
-        "version": "1.1",
-        "parse_results": [
-            {
-                "filename" : "myfile.h5",
-                "file_types" : ["H5", "VEG"],
-                "geo_metadata":
-                {
-                    "data_started" : "2015-05-15T10:34:12Z",
-                    "data_ended" : "2015-05-15T10:36:12Z",
-                }
+   {
+      "version": "1.1",
+      "parse_results": [
+         {
+            "filename" : "myfile.h5",
+            "data_types" : [
+               "H5",
+               "VEG"
+            ],
+            "geo_metadata": {
+               "data_started" : "2015-05-15T10:34:12Z",
+               "data_ended" : "2015-05-15T10:36:12Z",
             }
-        ]
-    }
+         }
+      ]
+   }
 
-This example is the result of one of the inputs (myfile.h5) being parsed. The data-started, data-ended
-and file-types were determined by the algorithm.
+This example is the result of one of the inputs (myfile.h5) being parsed.
 
 Results Manifest Specification Version 1.1
 ----------------------------------------------------------------------------------
@@ -62,50 +60,49 @@ A valid results manifest is a JSON document with the following structure:
 
 .. code-block:: javascript
 
-    {
-        "version": STRING,
-        "output_data": [
-            {
-                "name": STRING,
-                "file":
-                {
-                    "path": STRING,
-                    "geo_metadata":
-                    {
-                        "data_started": STRING(ISO-8601),
-                        "data_ended": STRING(ISO-8601),
-                        "geo_json": JSON
-                    }
-                }
-                "files": [
-                    {
-                        "path": STRING,
-                        "geo_metadata":
-                        {
-                            "data_started": STRING(ISO-8601),
-                            "data_ended": STRING(ISO-8601),
-                            "geo_json": JSON
-                        }
-                    }
-                ]
+   {
+      "version": STRING,
+      "output_data": [
+         {
+            "name": STRING,
+            "file": {
+               "path": STRING,
+               "geo_metadata": {
+                  "data_started": STRING(ISO-8601),
+                  "data_ended": STRING(ISO-8601),
+                  "geo_json": JSON
+               }
+            },
+            "files": [
+               {
+                  "path": STRING,
+                  "geo_metadata": {
+                     "data_started": STRING(ISO-8601),
+                     "data_ended": STRING(ISO-8601),
+                     "geo_json": JSON
+                  }
+               }
+            ]
+         }
+      ],
+      "parse_results": [
+         {
+            "filename": STRING,
+            "new_workspace_path": STRING,
+            "data_types": [
+               STRING,
+               STRING
+            ],
+            "geo_metadata": {
+               "data_started": STRING(ISO-8601),
+               "data_ended": STRING(ISO-8601),
+               "geo_json": JSON
             }
-        ]
-        "parse_results": [
-            {
-                "filename": STRING,
-                "new_workspace_path": STRING,
-                "data_types": [STRING, STRING ...],
-                "geo_metadata":
-                {
-                    "data_started": STRING(ISO-8601),
-                    "data_ended": STRING(ISO-8601),
-                    "geo_json": JSON
-                }
-            }
-        ],
-        "info": {},  # TODO:document when completed
-        "errors": {}  # TODO: document when completed
-    }
+         }
+      ],
+      "info": {},  # TODO: document when completed
+      "errors": {}  # TODO: document when completed
+   }
 
 **version**: JSON string
 
@@ -190,7 +187,7 @@ A valid results manifest is a JSON document with the following structure:
 **parse_results**: JSON array
 
     The parse_results is an array of JSON objects that contain information from parsing inputs to your algorithm.
-    These results should be used to associate metadata with input files to the algorithm.  Each of the parse results
+    These results should be used to associate meta-data with input files to the algorithm.  Each of the parse results
     corresponds to a input from the job interface of the type "file".  Additionally, the file must be a "source" file.
     A "source" file is something that was not produced by an algorithm. Files produced by algorithms are known as
     "product" files. As an algorithm developer, this is not important, but when you are tying an algorithm to the
@@ -216,14 +213,14 @@ A valid results manifest is a JSON document with the following structure:
 
     **data_types**: JSON array
 
-        The *data_types* is an optional array of JSON strings.  Each of the strings is a file data type that
-        this input file can be associated with.
+        The *data_types* is an optional array of JSON strings. Each of the strings is a file data type that this input
+        file can be associated with.
 
     **gis_data_path**: JSON string
 
-        The *gis_data_path* is an optional path to a geojson file. The contents of the this file will be set in the meta_data
-        for the given input file.  The geometry will also be set for the file.
-        In addition to storing the extents of the data, a center point is auto calculated.
+        The *gis_data_path* is an optional path to a GeoJSON file. The contents of the this file will be set in the
+        meta_data for the given input file. The geometry will also be set for the file. In addition to storing the
+        extents of the data, a center point is auto calculated.
 
         
 Results Manifest Specification Version 1.0
@@ -233,24 +230,36 @@ A valid version 1.0 results manifest is a JSON document with the following struc
 
 .. code-block:: javascript
 
-    {
-        "version": STRING,
-        "files": [
-            {"name":STRING, "path": STRING},
-            {"name":STRING, "paths": [STRING, STRING ...]
-        ],
-        "parse_results": [
-            {
-                "filename": STRING,
-                "data_started": STRING(ISO-8601),
-                "data_ended": STRING(ISO-8601),
-                "data_types": [STRING, STRING ...],
-                "gis_data_path": STRING,
-            }
-        ],
-        "info": {},  # TODO:document when completed
-        "errors": {}  # TODO: document when completed
-    }
+   {
+      "version": STRING,
+      "files": [
+         {
+            "name": STRING,
+            "path": STRING
+         },
+         {
+            "name": STRING,
+            "paths": [
+               STRING,
+               STRING
+            ]
+         }
+      ],
+      "parse_results": [
+         {
+            "filename": STRING,
+            "data_started": STRING(ISO-8601),
+            "data_ended": STRING(ISO-8601),
+            "data_types": [
+               STRING,
+               STRING
+            ],
+            "gis_data_path": STRING
+         }
+      ],
+      "info": {},  # TODO: document when completed
+      "errors": {}  # TODO: document when completed
+   }
 
 **version**: JSON string
 
@@ -285,7 +294,7 @@ A valid version 1.0 results manifest is a JSON document with the following struc
 **parse_results**: JSON array
 
     The parse_results is an array of JSON objects that contain information from parsing inputs to your algorithm.
-    These results should be used to associate metadata with input files to the algorithm.  Each of the parse results
+    These results should be used to associate meta-data with input files to the algorithm.  Each of the parse results
     corresponds to a input from the job interface of the type "file".  Additionally, the file must be a "source" file.
     A "source" file is something that was not produced by an algorithm. Files produced by algorithms are known as
     "product" files. As an algorithm developer, this is not important, but when you are tying an algorithm to the
@@ -307,11 +316,11 @@ A valid version 1.0 results manifest is a JSON document with the following struc
 
     **data_types**: JSON array
 
-        The *data_types* is an optional array of JSON strings.  Each of the strings is a file data type that
-        this input file can be associated with.
+        The *data_types* is an optional array of JSON strings. Each of the strings is a file data type that this input
+        file can be associated with.
 
     **gis_data_path**: JSON string
 
-        The *gis_data_path* is an optional path to a geojson file. The contents of the this file will be set in the meta_data
-        for the given input file.  The geometry will also be set for the file.
-        In addition to storing the extents of the data, a center point is auto calculated.
+        The *gis_data_path* is an optional path to a GeoJSON file. The contents of the this file will be set in the
+        meta_data for the given input file. The geometry will also be set for the file. In addition to storing the
+        extents of the data, a center point is auto calculated.

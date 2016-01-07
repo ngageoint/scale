@@ -337,7 +337,7 @@ class ScaleScheduler(Scheduler):
                     logger.debug('No tasks to schedule on node: %s', scale_offer.hostname)
 
                 driver.launchTasks(scale_offer.offer_id, scale_offer.tasks)
-        except: # we must accept or decline all offers so there's a catch all here to ensure this happens
+        except:  # we must accept or decline all offers so there's a catch all here to ensure this happens
             for scale_offer in scale_offers:
                 driver.launchTasks(scale_offer.offer_id, [])
 
@@ -760,28 +760,31 @@ class ScaleScheduler(Scheduler):
             try:
                 right_now = now()
                 for job_exe_model in JobExecution.objects.filter(id__in=job_exe_ids):
-                    for job_exe in job_exes:
-                        if job_exe.job_exe_id == job_exe_model.id:
-                            this_job_exe = job_exe
-                            break
-                    kill_task = False
-                    delete_job_exe = False
-                    if job_exe_model.status == 'CANCELED':
-                        kill_task = True
-                        delete_job_exe = True
-                    elif job_exe_model.is_timed_out(right_now):
-                        kill_task = True
-                        delete_job_exe = True
-                        error = get_timeout_error()
-                        Queue.objects.handle_job_failure(job_exe_model.id, right_now, error)
-                    if kill_task:
-                        task_to_kill_id = this_job_exe.current_task()
-                        pb_task_to_kill = mesos_pb2.TaskID()
-                        pb_task_to_kill.value = task_to_kill_id
-                        logger.info('About to kill task: %s', task_to_kill_id)
-                        self.driver.killTask(pb_task_to_kill)
-                    if delete_job_exe:
-                        self._delete_job_exe(this_job_exe)
+                    try:
+                        for job_exe in job_exes:
+                            if job_exe.job_exe_id == job_exe_model.id:
+                                this_job_exe = job_exe
+                                break
+                        kill_task = False
+                        delete_job_exe = False
+                        if job_exe_model.status == 'CANCELED':
+                            kill_task = True
+                            delete_job_exe = True
+                        elif job_exe_model.is_timed_out(right_now):
+                            kill_task = True
+                            delete_job_exe = True
+                            error = get_timeout_error()
+                            Queue.objects.handle_job_failure(job_exe_model.id, right_now, error)
+                        if kill_task:
+                            task_to_kill_id = this_job_exe.current_task()
+                            pb_task_to_kill = mesos_pb2.TaskID()
+                            pb_task_to_kill.value = task_to_kill_id
+                            logger.info('About to kill task: %s', task_to_kill_id)
+                            self.driver.killTask(pb_task_to_kill)
+                        if delete_job_exe:
+                            self._delete_job_exe(this_job_exe)
+                    except Exception:
+                        logger.exception('Error syncing scheduler with database for job_exe %s', job_exe_model.id)
             except Exception:
                 logger.exception('Error syncing scheduler with database')
 

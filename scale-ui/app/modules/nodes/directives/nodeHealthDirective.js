@@ -19,13 +19,41 @@
             nodeService.getNodeStatus(null, null, $scope.duration, null).then(null, null, function (data) {
                 if (data.$resolved) {
                     $scope.totalNodes = data.results.length;
-                    $scope.nodesOffline = _.where(data.results, { 'is_online': false }).length;
-                    $scope.nodesPausedErrors = _.where(data.results, { node: { 'is_paused_errors': true }}).length;
-                    $scope.nodesPaused = _.where(data.results, { node: { 'is_paused': true }}).length;
-                    $scope.nodesOfflineAndPausedErrors = _.where(data.results, { 'is_online': false, 'is_paused_errors': true }).length;
-                    $scope.nodesOfflineAndPaused = _.where(data.results, { 'is_online': false, 'is_paused': true }).length;
+
+                    var nodesOffline = [],
+                        nodesPausedErrors = [],
+                        nodesPaused = [],
+                        nodesOfflineAndPausedErrors = [],
+                        nodesOfflineAndPaused = [];
+
+                    _.forEach(data.results, function (n) {
+                        if (!n.is_online) {
+                            // node is offline
+                            if (n.node.is_paused_errors) {
+                                nodesOfflineAndPausedErrors.push(n);
+                            } else if (n.node.is_paused) {
+                                nodesOfflineAndPaused.push(n);
+                            } else {
+                                nodesOffline.push(n);
+                            }
+                        } else {
+                            // node is online
+                            if (n.node.is_paused_errors) {
+                                nodesPausedErrors.push(n);
+                            } else if (n.node.is_paused) {
+                                nodesPaused.push(n);
+                            }
+                        }
+                    });
+
+                    $scope.nodesOffline = nodesOffline.length;
+                    $scope.nodesPausedErrors = nodesPausedErrors.length;
+                    $scope.nodesPaused = nodesPaused.length;
+                    $scope.nodesOfflineAndPausedErrors = nodesOfflineAndPausedErrors.length;
+                    $scope.nodesOfflineAndPaused = nodesOfflineAndPaused.length;
+
                     // add the length of nodes both offline and paused to produce an accurate healthy count
-                    $scope.healthyNodes = $scope.totalNodes - $scope.nodesOffline - $scope.nodesPausedErrors - $scope.nodesPaused + $scope.nodesOfflineAndPaused + $scope.nodesOfflineAndPausedErrors;
+                    $scope.healthyNodes = $scope.totalNodes - $scope.nodesOffline - $scope.nodesPausedErrors - $scope.nodesPaused - $scope.nodesOfflineAndPaused - $scope.nodesOfflineAndPausedErrors;
 
                     var donutData = [];
 

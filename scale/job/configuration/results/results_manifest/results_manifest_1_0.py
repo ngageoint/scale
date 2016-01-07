@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''This module is concerned with the scale output manifest. Scale jobs are expected to produce an output manifest.
 Scale needs to parse this manifest to bring the information into the system. The output files should match
 the job interface
@@ -79,7 +80,7 @@ RESULTS_MANIFEST_SCHEMA = {
                 "data_ended": {
                     "type": "string"
                 },
-                "file-types": {
+                "data_types": {
                     "type": "array",
                     "items": {
                         "type": "string"

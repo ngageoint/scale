@@ -60,6 +60,16 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
     jt.title = "Landsat Tiles"
     jt.save()
 
+try:
+    ingest = job.models.JobType.objects.filter(name="scale-ingent")
+    if ingest.exists():
+        ingest = ingest.first()
+        if ingest.mem_required != 512.:
+            ingest.mem_required = 512.
+            ingest.save()
+except:
+    print("scale-ingest not found! did you load_all_data?")
+
 # Recipes
 if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
     r = recipe.models.RecipeType.objects.create_recipe_type("landsat", "1.0.0", "Landsat processing",

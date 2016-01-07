@@ -66,11 +66,16 @@ These services provide access to information about recipe types.
 | .definition        | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
 |                    |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .revision_num      | Integer           | The current revision number of the recipe type, incremented for each edit.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .archived          | ISO-8601 Datetime | When the recipe type was archived (no longer active).                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .trigger_rule      | JSON Object       | The linked trigger rule that automatically invokes the recipe type.            |
+|                    |                   | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -113,9 +118,13 @@ These services provide access to information about recipe types.
 |                        }                                                                                                |
 |                    ]                                                                                                    |
 |                },                                                                                                       |
+|                "revision_num": 1,                                                                                       |
 |                "created": "2015-06-15T19:03:26.346Z",                                                                   |
 |                "last_modified": "2015-06-15T19:03:26.346Z",                                                             |
-|                "archived": null                                                                                         |
+|                "archived": null,                                                                                        |
+|                "trigger_rule": {                                                                                        |
+|                    "id": 12                                                                                             |
+|                }                                                                                                        |
 |            },                                                                                                           |
 |            ...                                                                                                          |
 |        ]                                                                                                                |
@@ -134,18 +143,23 @@ These services provide access to information about recipe types.
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| name               | String            | The stable name of recipe job type used for queries.                           |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| version            | String            | The version of the recipe type.                                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| title              | String            | The human-readable name of the recipe type.                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| description        | String            | An optional description of the recipe type.                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| definition         | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
-|                    |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| name               | String            | Required | The stable name of recipe type used for queries.                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| version            | String            | Required | The version of the recipe type.                                     |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| title              | String            | Optional | The human-readable name of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| description        | String            | Optional | An optional description of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| definition         | JSON Object       | Required | JSON description of the interface for running a recipe of this type.|
+|                    |                   |          | (See :ref:`architecture_jobs_recipe_definition_spec`)               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
+|                    |                   |          | The type and configuration fields are required if setting a rule.   |
+|                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
+|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -153,41 +167,58 @@ These services provide access to information about recipe types.
 |        "version": "1.0",                                                                                                |
 |        "title": "My Recipe",                                                                                            |
 |        "description": "This is a description of the recipe",                                                            |
-|        "input_data": [                                                                                                  |
-|            {                                                                                                            |
-|                "media_types": ["plain/text"],                                                                           |
-|                "type": "file",                                                                                          |
-|                "name": "input_file"                                                                                     |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "jobs": [                                                                                                        |
-|            {                                                                                                            |
-|                "recipe_inputs": [                                                                                       |
-|                    {                                                                                                    |
-|                        "job_input": "input_file",                                                                       |
-|                        "recipe_input": "input_file"                                                                     |
-|                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "name": "MyJob1",                                                                                        |
-|                "job_type": {                                                                                            |
-|                    "name": "my-job1",                                                                                   |
-|                    "version": "1.2.3"                                                                                   |
+|        "definition": {                                                                                                  |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "media_types": ["text/plain"],                                                                       |
+|                    "type": "file",                                                                                      |
+|                    "name": "input_file"                                                                                 |
 |                }                                                                                                        |
-|            },                                                                                                           |
-|            {                                                                                                            |
-|                "recipe_inputs": [                                                                                       |
-|                    {                                                                                                    |
-|                        "job_input": "input_file",                                                                       |
-|                        "recipe_input": "input_file"                                                                     |
+|            ],                                                                                                           |
+|            "jobs": [                                                                                                    |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "MyJob1",                                                                                    |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job1",                                                                               |
+|                        "version": "1.2.3"                                                                               |
 |                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "name": "MyJob2",                                                                                        |
-|                "job_type": {                                                                                            |
-|                    "name": "my-job2",                                                                                   |
-|                    "version": "4.5.6"                                                                                   |
+|                },                                                                                                       |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "MyJob2",                                                                                    |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job2",                                                                               |
+|                        "version": "4.5.6"                                                                               |
+|                    }                                                                                                    |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|        },                                                                                                               |
+|        "trigger_rule": {                                                                                                |
+|            "type": "PARSE",                                                                                             |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "condition": {                                                                                           |
+|                    "media_type": "text/plain",                                                                          |
+|                    "data_types": []                                                                                     |
+|                },                                                                                                       |
+|                "data": {                                                                                                |
+|                    "input_data_name": "input_file",                                                                     |
+|                    "workspace_name": "rs"                                                                               |
 |                }                                                                                                        |
 |            }                                                                                                            |
-|        ]                                                                                                                |
+|        }                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -198,12 +229,108 @@ These services provide access to information about recipe types.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| id                 | Integer           | The ID of the new recipe type that was created                                 |
+|                    | JSON Object       | All fields are the same as the recipe type details model.                      |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
-|        "id": 123                                                                                                        |
+|        "id": 1,                                                                                                         |
+|        "name": "my-recipe",                                                                                             |
+|        "version": "1.0.0",                                                                                              |
+|        "title": "My Recipe",                                                                                            |
+|        "description": "This is a description of the recipe",                                                            |
+|        "is_active": true,                                                                                               |
+|        "definition": {                                                                                                  |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "media_types": [                                                                                     |
+|                        "image/png"                                                                                      |
+|                    ],                                                                                                   |
+|                    "type": "file",                                                                                      |
+|                    "name": "input_file"                                                                                 |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "version": "1.0",                                                                                            |
+|            "jobs": [                                                                                                    |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "my_job_type",                                                                               |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job-type",                                                                           |
+|                        "version": "1.2.3"                                                                               |
+|                    }                                                                                                    |
+|                }                                                                                                        |
+|            ]                                                                                                            |
+|        },                                                                                                               |
+|        "revision_num": 1,                                                                                               |
+|        "created": "2015-06-15T19:03:26.346Z",                                                                           |
+|        "last_modified": "2015-06-15T19:03:26.346Z",                                                                     |
+|        "archived": null,                                                                                                |
+|        "trigger_rule": {                                                                                                |
+|            "id": 12,                                                                                                    |
+|            "type": "PARSE",                                                                                             |
+|            "name": "my-job-type-recipe",                                                                                |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "data": {                                                                                                |
+|                    "workspace_name": "products",                                                                        |
+|                    "input_data_name": "input_file"                                                                      |
+|                },                                                                                                       |
+|                "condition": {                                                                                           |
+|                    "media_type": "image/png",                                                                           |
+|                    "data_types": [                                                                                      |
+|                        "My-Type"                                                                                        |
+|                    ]                                                                                                    |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "job_types": [                                                                                                   |
+|            {                                                                                                            |
+|                "id": 35,                                                                                                |
+|                "name": "my-job-type",                                                                                   |
+|                "version": "1.2.3",                                                                                      |
+|                "title": "Job Type",                                                                                     |
+|                "description": "This is a job type",                                                                     |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": false,                                                                                      |
+|                "is_long_running": false,                                                                                |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f1c5",                                                                                     |
+|                "interface": {                                                                                           |
+|                    "input_data": [                                                                                      |
+|                        {                                                                                                |
+|                            "media_types": [                                                                             |
+|                                "image/png"                                                                              |
+|                            ],                                                                                           |
+|                            "type": "file",                                                                              |
+|                            "name": "input_file"                                                                         |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "version": "1.0",                                                                                    |
+|                    "command": "command_to_run.sh",                                                                      |
+|                    "output_data": [                                                                                     |
+|                        {                                                                                                |
+|                            "media_type": "image/png",                                                                   |
+|                            "type": "file",                                                                              |
+|                            "name": "my_file_name"                                                                       |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "command_arguments": "${input_file} ${job_output_dir}"                                               |
+|                }                                                                                                        |
+|            },                                                                                                           |
+|            ...                                                                                                          |
+|        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 
@@ -219,18 +346,23 @@ These services provide access to information about recipe types.
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| name               | String            | The stable name of recipe job type used for queries.                           |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| version            | String            | The version of the recipe type.                                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| title              | String            | The human-readable name of the recipe type.                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| description        | String            | An optional description of the recipe type.                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| definition         | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
-|                    |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| name               | String            | Required | The stable name of recipe job type used for queries.                |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| version            | String            | Required | The version of the recipe type.                                     |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| title              | String            | Optional | The human-readable name of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| description        | String            | Optional | An optional description of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| definition         | JSON Object       | Required | JSON description defining the interface for running the recipe type.|
+|                    |                   |          | (See :ref:`architecture_jobs_recipe_definition_spec`)               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
+|                    |                   |          | The type and configuration fields are required if setting a rule.   |
+|                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
+|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -240,7 +372,7 @@ These services provide access to information about recipe types.
 |        "description": "This is a description of the recipe",                                                            |
 |        "input_data": [                                                                                                  |
 |            {                                                                                                            |
-|                "media_types": ["plain/text"],                                                                           |
+|                "media_types": ["text/plain"],                                                                           |
 |                "type": "file",                                                                                          |
 |                "name": "input_file"                                                                                     |
 |            }                                                                                                            |
@@ -272,7 +404,22 @@ These services provide access to information about recipe types.
 |                    "version": "4.5.6"                                                                                   |
 |                }                                                                                                        |
 |            }                                                                                                            |
-|        ]                                                                                                                |
+|        ],                                                                                                               |
+|        "trigger_rule": {                                                                                                |
+|            "type": "PARSE",                                                                                             |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "condition": {                                                                                           |
+|                    "media_type": "text/plain",                                                                          |
+|                    "data_types": []                                                                                     |
+|                },                                                                                                       |
+|                "data": {                                                                                                |
+|                    "input_data_name": "input_file",                                                                     |
+|                    "workspace_name": "rs"                                                                               |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        }                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -330,11 +477,16 @@ These services provide access to information about recipe types.
 | definition         | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
 |                    |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| revision_num       | Integer           | The current revision number of the recipe type, incremented for each edit.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | archived           | ISO-8601 Datetime | When the recipe type was archived (no longer active).                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| trigger_rule       | JSON Object       | The associated trigger rule that automatically invokes this recipe type.       |
+|                    |                   | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_types          | Array             | List of all job_types that are referenced by this recipe type's definition     |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
@@ -375,9 +527,228 @@ These services provide access to information about recipe types.
 |                }                                                                                                        |
 |            ]                                                                                                            |
 |        },                                                                                                               |
+|        "revision_num": 1,                                                                                               |
 |        "created": "2015-06-15T19:03:26.346Z",                                                                           |
 |        "last_modified": "2015-06-15T19:03:26.346Z",                                                                     |
 |        "archived": null,                                                                                                |
+|        "trigger_rule": {                                                                                                |
+|            "id": 12,                                                                                                    |
+|            "type": "PARSE",                                                                                             |
+|            "name": "my-job-type-recipe",                                                                                |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "data": {                                                                                                |
+|                    "workspace_name": "products",                                                                        |
+|                    "input_data_name": "input_file"                                                                      |
+|                },                                                                                                       |
+|                "condition": {                                                                                           |
+|                    "media_type": "image/png",                                                                           |
+|                    "data_types": [                                                                                      |
+|                        "My-Type"                                                                                        |
+|                    ]                                                                                                    |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "job_types": [                                                                                                   |
+|            {                                                                                                            |
+|                "id": 35,                                                                                                |
+|                "name": "my-job-type",                                                                                   |
+|                "version": "1.2.3",                                                                                      |
+|                "title": "Job Type",                                                                                     |
+|                "description": "This is a job type",                                                                     |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": false,                                                                                      |
+|                "is_long_running": false,                                                                                |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f1c5",                                                                                     |
+|                "interface": {                                                                                           |
+|                    "input_data": [                                                                                      |
+|                        {                                                                                                |
+|                            "media_types": [                                                                             |
+|                                "image/png"                                                                              |
+|                            ],                                                                                           |
+|                            "type": "file",                                                                              |
+|                            "name": "input_file"                                                                         |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "version": "1.0",                                                                                    |
+|                    "command": "command_to_run.sh",                                                                      |
+|                    "output_data": [                                                                                     |
+|                        {                                                                                                |
+|                            "media_type": "image/png",                                                                   |
+|                            "type": "file",                                                                              |
+|                            "name": "my_file_name"                                                                       |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "command_arguments": "${input_file} ${job_output_dir}"                                               |
+|                }                                                                                                        |
+|            },                                                                                                           |
+|            ...                                                                                                          |
+|        ]                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_recipe_type_edit:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Edit Recipe Type**                                                                                                    |
++=========================================================================================================================+
+| Edits an existing recipe type with associated definition                                                                |
++-------------------------------------------------------------------------------------------------------------------------+
+| **PATCH** /recipe-types/{id}/                                                                                           |
+|         Where {id} is the unique identifier of an existing model.                                                       |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| title              | String            | Optional | The human-readable name of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| description        | String            | Optional | An optional description of the recipe type.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| definition         | JSON Object       | Optional | JSON description of the interface for running a recipe of this type.|
+|                    |                   |          | (See :ref:`architecture_jobs_recipe_definition_spec`)               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
+|                    |                   |          | The type and configuration fields are required if setting a rule.   |
+|                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
+|                    |                   |          | Set this field to null to remove the existing trigger rule.         |
+|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "title": "My Recipe",                                                                                            |
+|        "description": "This is a description of the recipe",                                                            |
+|        "definition": {                                                                                                  |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "media_types": ["text/plain"],                                                                       |
+|                    "type": "file",                                                                                      |
+|                    "name": "input_file"                                                                                 |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "jobs": [                                                                                                    |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "MyJob1",                                                                                    |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job1",                                                                               |
+|                        "version": "1.2.3"                                                                               |
+|                    }                                                                                                    |
+|                },                                                                                                       |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "MyJob2",                                                                                    |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job2",                                                                               |
+|                        "version": "4.5.6"                                                                               |
+|                    }                                                                                                    |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|        },                                                                                                               |
+|        "trigger_rule": {                                                                                                |
+|            "type": "PARSE",                                                                                             |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "condition": {                                                                                           |
+|                    "media_type": "text/plain",                                                                          |
+|                    "data_types": []                                                                                     |
+|                },                                                                                                       |
+|                "data": {                                                                                                |
+|                    "input_data_name": "input_file",                                                                     |
+|                    "workspace_name": "rs"                                                                               |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        }                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+|                    | JSON Object       | All fields are the same as the recipe type details model.                      |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "id": 1,                                                                                                         |
+|        "name": "my-recipe",                                                                                             |
+|        "version": "1.0.0",                                                                                              |
+|        "title": "My Recipe",                                                                                            |
+|        "description": "This is a description of the recipe",                                                            |
+|        "is_active": true,                                                                                               |
+|        "definition": {                                                                                                  |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "media_types": [                                                                                     |
+|                        "image/png"                                                                                      |
+|                    ],                                                                                                   |
+|                    "type": "file",                                                                                      |
+|                    "name": "input_file"                                                                                 |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "version": "1.0",                                                                                            |
+|            "jobs": [                                                                                                    |
+|                {                                                                                                        |
+|                    "recipe_inputs": [                                                                                   |
+|                        {                                                                                                |
+|                            "job_input": "input_file",                                                                   |
+|                            "recipe_input": "input_file"                                                                 |
+|                        }                                                                                                |
+|                    ],                                                                                                   |
+|                    "name": "my_job_type",                                                                               |
+|                    "job_type": {                                                                                        |
+|                        "name": "my-job-type",                                                                           |
+|                        "version": "1.2.3"                                                                               |
+|                    }                                                                                                    |
+|                }                                                                                                        |
+|            ]                                                                                                            |
+|        },                                                                                                               |
+|        "revision_num": 2,                                                                                               |
+|        "created": "2015-06-15T19:03:26.346Z",                                                                           |
+|        "last_modified": "2015-06-15T19:03:26.346Z",                                                                     |
+|        "archived": null,                                                                                                |
+|        "trigger_rule": {                                                                                                |
+|            "id": 12,                                                                                                    |
+|            "type": "PARSE",                                                                                             |
+|            "name": "my-job-type-recipe",                                                                                |
+|            "is_active": true,                                                                                           |
+|            "configuration": {                                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "data": {                                                                                                |
+|                    "workspace_name": "products",                                                                        |
+|                    "input_data_name": "input_file"                                                                      |
+|                },                                                                                                       |
+|                "condition": {                                                                                           |
+|                    "media_type": "image/png",                                                                           |
+|                    "data_types": [                                                                                      |
+|                        "My-Type"                                                                                        |
+|                    ]                                                                                                    |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        },                                                                                                               |
 |        "job_types": [                                                                                                   |
 |            {                                                                                                            |
 |                "id": 35,                                                                                                |

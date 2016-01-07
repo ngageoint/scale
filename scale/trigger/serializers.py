@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the serializers for trigger events and rules'''
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
@@ -7,10 +8,8 @@ from util.rest import ModelIdSerializer
 
 class TriggerRuleBaseSerializer(ModelIdSerializer):
     '''Converts trigger rule model fields to REST output.'''
-    name = serializers.CharField()
     type = serializers.CharField()
-    title = serializers.CharField()
-    description = serializers.CharField()
+    name = serializers.CharField()
     is_active = serializers.BooleanField()
 
 

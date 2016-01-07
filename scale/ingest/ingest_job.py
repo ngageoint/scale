@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the functions necessary to perform the ingest of a source file'''
 from __future__ import unicode_literals
 
@@ -5,16 +6,18 @@ import logging
 import os
 import shutil
 
-import django.utils.timezone as timezone
 from django.db import transaction
 
+import django.utils.timezone as timezone
 from ingest.file_system import get_ingest_work_dir
 from ingest.models import Ingest
-from ingest.triggers.ingest_rule import get_ingest_rules
+from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
 from job.execution.cleanup import cleanup_job_exe
+from job.execution.file_system import create_job_exe_dir
 from job.models import JobExecution
 from source.models import SourceFile
 from storage.exceptions import DuplicateFile
+from storage.models import ScaleFile
 from storage.nfs import nfs_mount
 
 
@@ -35,6 +38,7 @@ def perform_ingest(ingest_id, mount):
     try:
         ingest = Ingest.objects.select_related().get(id=ingest_id)
         job_exe_id = JobExecution.objects.get_latest([ingest.job])[ingest.job.id].id
+        create_job_exe_dir(job_exe_id)
         ingest_work_dir = get_ingest_work_dir(job_exe_id)
         dup_path = os.path.join(ingest_work_dir, 'duplicate', ingest.file_name)
         ingest_path = os.path.join(ingest_work_dir, ingest.ingest_path)
@@ -43,6 +47,9 @@ def perform_ingest(ingest_id, mount):
             logger.info('Creating %s', ingest_work_dir)
             os.makedirs(ingest_work_dir, mode=0755)
         nfs_mount(mount, ingest_work_dir, read_only=False)
+        if not os.path.exists(upload_work_dir):
+            logger.info('Creating %s', upload_work_dir)
+            os.makedirs(upload_work_dir, mode=0755)
 
         # Check condition of the ingest
         ingest = _set_ingesting_status(ingest, ingest_path, dup_path)
@@ -64,8 +71,7 @@ def perform_ingest(ingest_id, mount):
                 ingest.ingest_ended = timezone.now()
                 ingest.save()
                 logger.debug('Checking ingest trigger rules')
-                for ingest_rule in get_ingest_rules():
-                    ingest_rule.process_ingest(ingest, src_file.id)
+                IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
             # Delete ingest file
             _delete_ingest_file(ingest_path)
@@ -82,15 +88,29 @@ def perform_ingest(ingest_id, mount):
             raise  # File remains where it is so it can be processed again
     finally:
         try:
+            # Try to clean up the upload directory
             if upload_work_dir and os.path.exists(upload_work_dir):
+                upload_dir = os.path.join(upload_work_dir, 'upload')
+                workspace_work_dir = os.path.join(upload_work_dir, 'work')
+                if os.path.exists(workspace_work_dir):
+                    ScaleFile.objects.cleanup_upload_dir(upload_dir, workspace_work_dir, ingest.workspace)
+                    logger.info('Deleting %s', workspace_work_dir)
+                    os.rmdir(workspace_work_dir)
+                if os.path.exists(upload_dir):
+                    logger.info('Deleting %s', upload_dir)
+                    # Delete everything in upload dir
+                    shutil.rmtree(upload_dir)
                 logger.info('Deleting %s', upload_work_dir)
-                shutil.rmtree(upload_work_dir)
+                os.rmdir(upload_work_dir)
         except:
             # Swallow exception so error from main try block isn't covered up
             logger.exception('Failed to delete upload work dir %s', upload_work_dir)
 
+    try:
         if job_exe_id:
             cleanup_job_exe(job_exe_id)
+    except Exception:
+        logger.exception('Job Execution %i: Error cleaning up', job_exe_id)
 
 
 def _delete_ingest_file(ingest_path):

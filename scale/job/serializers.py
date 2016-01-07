@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the serializers for jobs and job types'''
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
@@ -29,6 +30,7 @@ class JobTypeSerializer(JobTypeBaseSerializer):
     uses_docker = serializers.BooleanField()
     docker_privileged = serializers.BooleanField()
     docker_image = serializers.CharField()
+    revision_num = serializers.IntegerField()
 
     priority = serializers.IntegerField()
     timeout = serializers.IntegerField()
@@ -55,10 +57,13 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 class JobTypeDetailsSerializer(JobTypeSerializer):
     '''Converts job type model fields to REST output.'''
     from error.serializers import ErrorSerializer
+    from trigger.serializers import TriggerRuleDetailsSerializer
 
     interface = serializers.CharField()
     error_mapping = serializers.CharField()
     errors = ErrorSerializer()
+    trigger_rule = TriggerRuleDetailsSerializer()
+
     job_counts_6h = JobTypeStatusCountsSerializer()
     job_counts_12h = JobTypeStatusCountsSerializer()
     job_counts_24h = JobTypeStatusCountsSerializer()
@@ -159,6 +164,11 @@ class JobSerializer(JobBaseSerializer):
     ended = serializers.DateTimeField()
     last_status_change = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
+
+
+class JobRevisionSerializer(JobSerializer):
+    '''Converts job model fields to REST output.'''
+    job_type_rev = JobTypeRevisionSerializer()
 
 
 class JobExecutionBaseSerializer(ModelIdSerializer):

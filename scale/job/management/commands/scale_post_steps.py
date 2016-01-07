@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the command that performs the post-job steps'''
 from __future__ import unicode_literals
 
@@ -9,11 +10,11 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 from django.db.utils import DatabaseError
 
+import job.execution.file_system as file_system
+import job.settings as settings
 from error.models import Error
 from job.execution.cleanup import cleanup_job_exe
-import job.execution.file_system as file_system
 from job.models import JobExecution
-import job.settings as settings
 from storage.exceptions import NfsError
 
 
@@ -48,8 +49,7 @@ class Command(BaseCommand):
 
         logger.info('Command starting: scale_post_steps - Job Execution ID: %i', exe_id)
         try:
-            node_work_dir = settings.NODE_WORK_DIR
-            output_dir = file_system.get_job_exe_output_dir(exe_id, node_work_dir)
+            output_dir = file_system.get_job_exe_output_dir(exe_id)
 
             # TODO: remove when we can
             # This shouldn't be necessary once we have user namespaces in docker

@@ -3,10 +3,8 @@
 		"model": "trigger.TriggerRule",
 		"pk": null,
 		"fields": {
-            "name": "scale-resource-metrics",
 			"type": "CLOCK",
-            "title": "Resource Metrics",
-            "description": "Calculates hardware resource metrics for the entire cluster every minute.",
+            "name": "scale-resource-metrics",
 			"configuration": {
                 "version": "1.0",
                 "event_type": "RESOURCE_METRICS",
@@ -22,10 +20,8 @@
         "model": "trigger.TriggerRule",
         "pk": null,
         "fields": {
-            "name": "scale-daily-metrics",
             "type": "CLOCK",
-            "title": "Daily Metrics",
-            "description": "Calculates overall system metrics every day.",
+            "name": "scale-daily-metrics",
             "configuration": {
                 "version": "1.0",
                 "event_type": "DAILY_METRICS",

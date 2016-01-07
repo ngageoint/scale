@@ -1,13 +1,10 @@
+# UNCLASSIFIED
 '''error models'''
 import logging
 
 from django.db import models, transaction
 
 logger = logging.getLogger(__name__)
-
-
-class InvalidData(BaseException):
-    pass
 
 
 class ErrorManager(models.Manager):
@@ -98,20 +95,14 @@ class ErrorManager(models.Manager):
         :type description: str
         :param category: The category of the error
         :type: str in Error.CATEGORIES
-        :raises: InvalidData is any of the data items are not valid
         '''
 
         error = Error()
-        try:
-            error.name = name
-            error.title = title
-            error.description = description
-            error.category = category
-        except:
-            raise InvalidData()
-
+        error.name = name
+        error.title = title
+        error.description = description
+        error.category = category
         error.save()
-
         return error
 
     def _get_system_error(self, name):
@@ -156,7 +147,7 @@ class Error(models.Model):
 
     name = models.CharField(db_index=True, max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, null=True)
     category = models.CharField(db_index=True, choices=CATEGORIES, default=u'SYSTEM', max_length=50)
 
     created = models.DateTimeField(auto_now_add=True)

@@ -1,4 +1,5 @@
 #@PydevCodeAnalysisIgnore
+# UNCLASSIFIED
 import django
  
 from django.test import TestCase
@@ -101,7 +102,7 @@ class TestResultsManifestConstructor(TestCase):
                     "filename" : "myfile.h5",
                     "data_started" : "2015-05-15T10:34:12Z",
                     "data_ended" : "2015-05-15T10:36:12Z",
-                    "file_types" : ["H5", "VEG"]
+                    "data_types" : ["H5", "VEG"]
                 }
             ]
         }
@@ -231,7 +232,7 @@ class TestResultsManifestConversion(TestCase):
                     "filename" : "myfile.h5",
                     "data_started" : "2015-05-15T10:34:12Z",
                     "data_ended" : "2015-05-15T10:36:12Z",
-                    "file_types" : ["H5", "VEG"]
+                    "data_types" : ["H5", "VEG"]
                 }
             ],
             "errors": []
@@ -263,7 +264,7 @@ class TestResultsManifestConversion(TestCase):
                     "filename" : "myfile.h5",
                     "data_started" : "2015-05-15T10:34:12Z",
                     "data_ended" : "2015-05-15T10:36:12Z",
-                    "file_types" : ["H5", "VEG"]
+                    "data_types" : ["H5", "VEG"]
                 }
             ],
             "errors": []

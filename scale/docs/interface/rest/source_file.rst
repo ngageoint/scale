@@ -73,7 +73,7 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .url               | URL               | The absolute URL to use for downloading the file.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .deleted           | ISO-8601 Datetime | When the source file was deleted.                                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -202,7 +202,7 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .url               | URL               | The absolute URL to use for downloading the file.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .deleted           | ISO-8601 Datetime | When the source file was deleted.                                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
