@@ -46,6 +46,19 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
         }, 250, 300, 3, 0.5, 512., 2048., None)
     jt.title = "Landsat NDWI"
     jt.save()
+if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
+    jt = job.models.JobType.objects.create_job_type("landsat-tiles", "1.0.0", "Generate map tiles for a landsat 8 product.",
+        "10.4.4.10:5000/landsat-tiles_1.0:dev",
+            {"output_data": [
+                {"required": True, "type": "files", "name": "tiles"}],
+            "shared_resources": [],
+            "command_arguments": "${image} ${job_output_dir}",
+            "input_data": [
+                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
+            "version": "1.0", "command": "./landsat_tiles.sh"
+        }, 250, 300, 3, 0.5, 512., 2048., None)
+    jt.title = "Landsat Tiles"
+    jt.save()
 
 try:
     ingest = job.models.JobType.objects.filter(name="scale-ingent")
@@ -94,6 +107,21 @@ if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
                                 "name": "parse",
                                 "connections": [
                                     {"output": "multispectral", "input": "msi"}
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "tiles",
+                        "job_type": {
+                            "name": "landsat-tiles",
+                            "version": "1.0.0"
+                        },
+                        "dependencies": [
+                            {
+                                "name": "ndwi",
+                                "connections": [
+                                    {"output": "ndwi", "input": "image"}
                                 ]
                             }
                         ]

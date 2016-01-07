@@ -44,10 +44,6 @@
   yum: name=rsync
   become: true
 
-- name: Install docker
-  yum: name=docker
-  become: true
-
 - name: Install protobuf bindings
   pip: name="protobuf<3.0.0b1.post1"
   become: true

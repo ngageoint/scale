@@ -12,6 +12,14 @@
   tags: init-examples
   command: sh -c "echo \"execfile('/tmp/example_data.py')\" | /scale/scale/manage.py shell"
 
+- name: Build landsat-base docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-base"
+    name: "landsat-base"
+    state: build
+  become: true
+
 - name: Build landsat-parse docker image
   tags: init-examples
   docker_image:
@@ -33,3 +41,27 @@
   become: true
   notify:
     - push landsat-ndwi
+
+- name: Build landsat-tiles docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-tiles"
+    name: "landsat-tiles_1.0"
+    tag: "dev"
+    state: build
+  become: true
+  notify:
+    - push landsat-tiles
+
+- name: Static example product web server
+  docker:
+    name: example-web
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ external_docker_registry }}httpd'
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - '/exports/products/landsat-tiles:/usr/local/apache2/htdocs'
+    ports:
+      - '8080:80'
+  become: true
