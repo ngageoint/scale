@@ -1,14 +1,12 @@
+# UNCLASSIFIED
 '''Defines methods for cleaning up job executions'''
 from __future__ import unicode_literals
 
 import logging
-import os
-import shutil
 
 from django.utils.timezone import now
 
-import job.settings as settings
-from job.execution.file_system import get_job_exe_dir
+from job.execution.file_system import delete_job_exe_dir
 from job.execution.job_exe_cleaner import NormalJobExecutionCleaner
 from job.models import JobExecution
 
@@ -33,8 +31,6 @@ def cleanup_job_exe(job_exe_id):
 
     logger.info('Cleaning up job execution %s', str(job_exe_id))
 
-    node_work_dir = settings.NODE_WORK_DIR
-    job_exe_dir = get_job_exe_dir(job_exe_id, node_work_dir)
     job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
     job_type_name = job_exe.job.job_type.name
 
@@ -46,9 +42,7 @@ def cleanup_job_exe(job_exe_id):
     cleaner.cleanup_job_execution(job_exe)
 
     # Delete job execution directory
-    if os.path.exists(job_exe_dir):
-        logger.info('Deleting %s', job_exe_dir)
-        shutil.rmtree(job_exe_dir)
+    delete_job_exe_dir(job_exe_id)
 
     JobExecution.objects.cleanup_completed(job_exe_id, now())
     logger.info('Successfully cleaned up job execution %s', str(job_exe_id))

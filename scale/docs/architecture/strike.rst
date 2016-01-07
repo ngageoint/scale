@@ -58,7 +58,10 @@ A valid Strike configuration is a JSON document with the following structure:
       "files_to_ingest": [
           {
               "filename_regex": STRING,
-              "data_types": [STRING, STRING],
+              "data_types": [
+                 STRING,
+                 STRING
+              ],
               "workspace_path": STRING,
               "workspace_name": STRING
           }

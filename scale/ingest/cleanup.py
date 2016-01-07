@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the abstract base class used for cleaning up job executions'''
 from __future__ import unicode_literals
 
@@ -26,3 +27,5 @@ class IngestJobExecutionCleaner(JobExecutionCleaner):
 
         if os.path.exists(ingest_work_dir):
             nfs_umount(ingest_work_dir)
+            logger.info('Deleting %s', ingest_work_dir)
+            os.rmdir(ingest_work_dir)

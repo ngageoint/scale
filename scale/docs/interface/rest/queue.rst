@@ -217,7 +217,7 @@ place jobs and recipes on the queue for processing.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type_id        | Integer           | The ID of the job type for the new job                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_data           | Object            | JSON defining the data to run the job on, see :ref:`architecture_jobs_job_data`|
+| job_data           | JSON Object       | JSON defining the data to run the job on, see :ref:`architecture_jobs_job_data`|
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -254,7 +254,7 @@ place jobs and recipes on the queue for processing.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | Object            | All fields are the same as the job details model.                              |
+|                    | JSON Object       | All fields are the same as the job details model.                              |
 |                    |                   | The status will always be QUEUED and a new job_exe will be included.           |
 |                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -496,7 +496,7 @@ place jobs and recipes on the queue for processing.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | recipe_type_id     | Integer           | The ID of the recipe type to queue                                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_data        | Object            | Defines the data to run the recipe, see :ref:`architecture_jobs_recipe_data`   |
+| recipe_data        | JSON Object       | Defines the data to run the recipe, see :ref:`architecture_jobs_recipe_data`   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -528,7 +528,7 @@ place jobs and recipes on the queue for processing.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | Object            | All fields are the same as the recipe details model.                           |
+|                    | JSON Object       | All fields are the same as the recipe details model.                           |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
@@ -580,23 +580,15 @@ place jobs and recipes on the queue for processing.
 |                "type": "PARSE",                                                                                         |
 |                "is_active": true,                                                                                       |
 |                "configuration": {                                                                                       |
-|                    "trigger": {                                                                                         |
+|                    "version": "1.0",                                                                                    |
+|                    "condition": {                                                                                       |
 |                        "media_type": "image/png",                                                                       |
 |                        "data_types": []                                                                                 |
 |                    },                                                                                                   |
-|                    "create": {                                                                                          |
-|                        "recipes": [                                                                                     |
-|                            {                                                                                            |
-|                                "recipe_type": {                                                                         |
-|                                    "name": "my_parse",                                                                  |
-|                                    "version": "1.0.0"                                                                   |
-|                                }                                                                                        |
-|                                "file_input_name": "input_file",                                                         |
-|                                "workspace_name": "products",                                                            |
-|                            }                                                                                            |
-|                        ]                                                                                                |
-|                    },                                                                                                   |
-|                    "version": "1.0"                                                                                     |
+|                    "data": {                                                                                            |
+|                        "input_data_name": "input_file",                                                                 |
+|                        "workspace_name": "products"                                                                     |
+|                    }                                                                                                    |
 |                }                                                                                                        |
 |            },                                                                                                           |
 |            "occurred": "2015-08-28T19:03:59.054Z",                                                                      |
@@ -727,7 +719,7 @@ place jobs and recipes on the queue for processing.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | Object            | All fields are the same as the job details model.                              |
+|                    | JSON Object       | All fields are the same as the job details model.                              |
 |                    |                   | The status will be PENDING or BLOCKED if the job has never been queued.        |
 |                    |                   | The status will be QUEUED if the job has been previously queued.               |
 |                    |                   | There will be an additional job_exe if the job was immediately queued.         |

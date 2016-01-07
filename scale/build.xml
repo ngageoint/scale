@@ -19,17 +19,6 @@
         <isset property="env.DEPLOY_FRAMEWORKS" />
     </condition>
 
-    <!-- Docker image names -->
-    <condition property="docker.scale" value="${env.DOCKER_SCALE}" else="scale:3">
-        <isset property="env.DOCKER_SCALE" />
-    </condition>
-    <condition property="docker.scale-web" value="${env.DOCKER_SCALE_WEB}" else="scale-web:3">
-        <isset property="env.DOCKER_SCALE_WEB" />
-    </condition>
-    <condition property="docker.scale-web-static" value="${env.DOCKER_SCALE_WEB_STATIC}" else="scale-web-static">
-        <isset property="env.DOCKER_SCALE_WEB_STATIC" />
-    </condition>
-
     <!-- Jenkins workspace -->
     <condition property="workspace.dir" value="${env.WORKSPACE}" else="${basedir}">
         <isset property="env.WORKSPACE" />
@@ -323,7 +312,7 @@
     
     <!-- DEPRECATED -->
     <target name="start-master" depends="deploy">
-        <sshexec host="${deploy.master}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl start mesos-master" />
+        <sshexec trust="true" host="${deploy.master}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl start mesos-master" />
     </target>
     
     <!-- DEPRECATED -->
@@ -331,11 +320,11 @@
         <for param="deploy.slave" list="${deploy.slaves}" parallel="${deploy.parallel}">
             <sequential>
                 <!-- make sure the slave is shut down, and clear out docker and before starting up again -->
-                <sshexec failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl stop mesos-slave" />
-                <sshexec failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo docker rm $(sudo docker ps -a | grep Dead | awk '{print $1}')" />
-                <sshexec failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo docker rm $(sudo docker ps -a | grep Exited | awk '{print $1}')" />
+                <sshexec trust="true" failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl stop mesos-slave" />
+                <sshexec trust="true" failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo docker rm $(sudo docker ps -a | grep Dead | awk '{print $1}')" />
+                <sshexec trust="true" failonerror="false" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo docker rm $(sudo docker ps -a | grep Exited | awk '{print $1}')" />
 
-                <sshexec host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl start mesos-slave" />
+                <sshexec trust="true" host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo systemctl start mesos-slave" />
             </sequential>
         </for>
     </target>
@@ -344,7 +333,7 @@
     <target name="start-frameworks" depends="deploy">
         <for param="deploy.framework" list="${deploy.frameworks}" parallel="${deploy.parallel}">
             <sequential>
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="${deploy.to}/scripts/startFramework.sh" />
+                <sshexec trust="true" host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="${deploy.to}/scripts/startFramework.sh" />
             </sequential>
         </for>
     </target>
@@ -380,47 +369,15 @@
         <fail message="deploy.to required" unless="deploy.to"/>
         <fail message="deploy.scale.user required" unless="deploy.scale.user"/>
         
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo mkdir -p ${stage.to}" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chown ${ssh.user}:users ${stage.to}" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="rm -rf ${stage.to}/*" />
-        <scp localFile="${dist.dir}/${distfile}" keyfile="${ssh.key}" remoteTodir="${ssh.user}@${deploy.host}:${stage.to}" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="tar xf ${stage.to}/${distfile} -C ${stage.to}" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chown -R ${ssh.user} ${stage.to}/scale" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chmod 775 ${stage.to}/scale/scripts/*" />
-    	<sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sleep $[ ( $RANDOM % 60 ) + 1 ]" />
-        <sshexec host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="${stage.to}/scale/scripts/deploy.sh ${deploy.to} ${deploy.scale.user}" />
-    </target>
-
-    <target name="deploy-docker">
-        <!-- Pull the updated scale images -->
-        <for param="deploy.slave" list="${deploy.slaves}" parallel="${deploy.parallel}">
-            <sequential>
-                <sshexec host="@{deploy.slave}" keyfile="${ssh.key}" username="${ssh.user}" command="docker pull ${docker.scale}" />
-            </sequential>
-        </for>
-        <for param="deploy.framework" list="${deploy.frameworks}" parallel="${deploy.parallel}">
-            <sequential>
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker pull ${docker.scale}" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker pull ${docker.scale-web}" />
-            </sequential>
-        </for>
-
-        <!-- Restart the scheduler and RESTapi servers migrating the database and rebuilding static files -->
-        <for param="deploy.framework" list="${deploy.frameworks}" parallel="${deploy.parallel}">
-            <sequential>
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker kill scale-scheduler" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker kill scale-web" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker kill scale-web-static" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker rm scale-scheduler" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker rm scale-web" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker rm scale-web-static" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker run --rm -v /etc/scale/local_settings.py:/opt/scale/scale/local_settings.py ${docker.scale} migrate" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker run -d --restart=always --name=scale-scheduler -v /etc/scale/local_settings.py:/opt/scale/scale/local_settings.py ${docker.scale} scale_scheduler" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker run -d --restart=always --name=scale-web -v /etc/scale/local_settings.py:/opt/scale/scale/local_settings.py -v /etc/scale/scaleConfig.local.js:/opt/scale/ui/scale-ui/modules/scaleConfig.local.js ${docker.scale-web}" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker run --rm -v /etc/scale/local_settings.py:/opt/scale/scale/local_settings.py --volumes-from=scale-web --user=root ${docker.scale} collectstatic --setings=scale.local_settings --noinput" />
-                <sshexec host="@{deploy.framework}" keyfile="${ssh.key}" username="${ssh.user}" command="docker run -d --restart=always --name=scale-web-static -p 80:80 --volumes-from=scale-web --link scale-web:scale-web ${docker.scale-web-static}" />
-            </sequential>
-        </for>
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo mkdir -p ${stage.to}" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chown ${ssh.user}:users ${stage.to}" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="rm -rf ${stage.to}/*" />
+        <scp trust="true" localFile="${dist.dir}/${distfile}" keyfile="${ssh.key}" remoteTodir="${ssh.user}@${deploy.host}:${stage.to}" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="tar xf ${stage.to}/${distfile} -C ${stage.to}" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chown -R ${ssh.user} ${stage.to}/scale" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sudo chmod 775 ${stage.to}/scale/scripts/*" />
+    	<sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="sleep $[ ( $RANDOM % 60 ) + 1 ]" />
+        <sshexec trust="true" host="${deploy.host}" keyfile="${ssh.key}" username="${ssh.user}" command="${stage.to}/scale/scripts/deploy.sh ${deploy.to} ${deploy.scale.user}" />
     </target>
 
 </project>

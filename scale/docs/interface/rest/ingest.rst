@@ -86,7 +86,7 @@ These services provide access to information about ingested files processed by t
 | .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -195,7 +195,7 @@ These services provide access to information about ingested files processed by t
 | source_file        | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

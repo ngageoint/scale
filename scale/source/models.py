@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the database model for source files'''
 import logging
 import os
@@ -7,7 +8,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
-from source.triggers.parse_rule import get_parse_rules
+from source.triggers.parse_trigger_handler import ParseTriggerHandler
 from storage.exceptions import DuplicateFile
 from storage.models import ScaleFile
 from util.command import execute_command_line
@@ -113,10 +114,18 @@ class SourceFileManager(models.GeoManager):
 
         # Move the source file if a new workspace path is provided
         if new_workspace_path:
+            old_workspace_path = src_file.file_path
             ScaleFile.objects.move_files(work_dir, [(src_file, new_workspace_path)])
 
-        for parse_rule in get_parse_rules():
-            parse_rule.process_parse(src_file)
+        try:
+            # Check trigger rules for parsed source files
+            ParseTriggerHandler().process_parsed_source_file(src_file)
+        except Exception:
+            # Move file back if there was an error
+            if new_workspace_path:
+                ScaleFile.objects.move_files(work_dir, [(src_file, old_workspace_path)])
+
+            raise
 
     def store_file(self, work_dir, local_path, data_types, workspace, remote_path):
         '''Stores the given local source file in the workspace
@@ -138,6 +147,12 @@ class SourceFileManager(models.GeoManager):
         file_name = os.path.basename(local_path)
         upload_dir = os.path.join(work_dir, 'upload')
         workspace_work_dir = os.path.join(work_dir, 'work')
+        if not os.path.exists(upload_dir):
+            logger.info('Creating %s', upload_dir)
+            os.mkdir(upload_dir, 0755)
+        if not os.path.exists(workspace_work_dir):
+            logger.info('Creating %s', workspace_work_dir)
+            os.mkdir(workspace_work_dir, 0755)
         upload_file_path = os.path.join(upload_dir, file_name)
 
         ScaleFile.objects.setup_upload_dir(upload_dir, workspace_work_dir, workspace)
@@ -160,8 +175,9 @@ class SourceFileManager(models.GeoManager):
                 src_file.add_data_type_tag(tag)
 
             # Link source file into upload directory and upload it
-            logger.info('Creating link %s -> %s', upload_file_path, local_path)
-            execute_command_line(['ln', '-s', local_path, upload_file_path])
+            if not os.path.exists(upload_file_path):
+                logger.info('Creating link %s -> %s', upload_file_path, local_path)
+                execute_command_line(['ln', '-s', local_path, upload_file_path])
             return ScaleFile.objects.upload_files(upload_dir, workspace_work_dir, workspace,
                                                   [(src_file, file_name, remote_path)])[0]
         finally:

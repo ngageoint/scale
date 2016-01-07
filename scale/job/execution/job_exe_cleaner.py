@@ -1,11 +1,14 @@
+# UNCLASSIFIED
 '''Defines the abstract base class used for cleaning up job executions'''
 from __future__ import unicode_literals
 
-import logging
 from abc import ABCMeta, abstractmethod
+import logging
+import os
 
 from job.execution.file_system import get_job_exe_input_data_dir, get_job_exe_input_work_dir, \
-    get_job_exe_output_data_dir, get_job_exe_output_work_dir
+    get_job_exe_output_data_dir, get_job_exe_output_work_dir, \
+    delete_normal_job_exe_dir_tree
 from job.execution.metrics import save_job_exe_metrics
 from storage.models import ScaleFile, Workspace
 
@@ -54,5 +57,14 @@ class NormalJobExecutionCleaner(JobExecutionCleaner):
         for workspace in Workspace.objects.filter(id__in=workspace_ids):
             logger.info('Cleaning up upload directory for workspace %s', workspace.name)
             ScaleFile.objects.cleanup_upload_dir(upload_dir, upload_work_dir, workspace)
+
+        move_work_dir = os.path.join(upload_work_dir, 'move_source_file_in_workspace')
+        if os.path.exists(move_work_dir):
+            logger.info('Cleaning up work directory for moving parsed source files')
+            ScaleFile.objects.cleanup_move_dir(move_work_dir)
+            logger.info('Deleting %s', move_work_dir)
+            os.rmdir(move_work_dir)
+
+        delete_normal_job_exe_dir_tree(job_exe.id)
 
         save_job_exe_metrics(job_exe)

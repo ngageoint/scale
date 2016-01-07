@@ -1,3 +1,4 @@
+# UNCLASSIFIED
 '''Defines the database models for jobs and job types'''
 from __future__ import unicode_literals
 
@@ -17,7 +18,12 @@ from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
+from job.exceptions import InvalidJobField
+from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile
+from trigger.configuration.exceptions import InvalidTriggerType
+from trigger.models import TriggerRule
+from util.exceptions import RollbackTransaction
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +37,7 @@ MIN_DISK = 0.0
 
 # Important note: when acquiring select_for_update() locks on related models,
 # be sure to acquire them in the following
-# order: JobExecution, Job, JobType
+# order: JobExecution, Job, JobType, TriggerRule
 
 
 class JobManager(models.Manager):
@@ -58,7 +64,7 @@ class JobManager(models.Manager):
 
         job = Job()
         job.job_type = job_type
-        job.job_type_rev = JobTypeRevision.objects.get_latest_revision(job_type.id)
+        job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.id, job_type.revision_num)
         job.event = event
         job.priority = job_type.priority
         job.timeout = job_type.timeout
@@ -83,6 +89,9 @@ class JobManager(models.Manager):
 
         job_qry = Job.objects.all()
 
+        if lock and related:
+            # Don't mix select_for_update() and select_related(), grab lock and then requery for related
+            Job.objects.select_for_update().get(id=job_id)
         if related:
             job_qry = job_qry.select_related('job_type', 'job_type_rev')
         if lock:
@@ -287,6 +296,29 @@ class JobManager(models.Manager):
                     job.input_files.append(input_file_map[input_file_id])
 
     @transaction.atomic
+    def update_jobs_to_running(self, job_ids, when):
+        '''Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
+        select_for_update() and their related job_type and job_type_rev models populated.
+
+        :param job_ids: The list of job IDs to update
+        :type job_ids: list[int]
+        :param when: The time that the jobs began running
+        :type when: :class:`datetime.datetime`
+        :returns: The updated job models with a lock and related job_type and job_type_rev models populated
+        :rtype: list[:class:`job.models.Job`]
+        '''
+
+        # Acquire model lock for jobs
+        list(Job.objects.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
+
+        # Update jobs
+        modified = timezone.now()
+        Job.objects.filter(id__in=job_ids).update(status='RUNNING', started=when, ended=None, last_status_change=when,
+                                                  last_modified=modified)
+
+        return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
+
+    @transaction.atomic
     def update_status(self, job, status, when, error=None):
         '''Updates the given job with the new status. The given job model must have already been saved in the database
         (it must have an ID) and the caller must have obtained a lock on the job model using select_for_update(). All of
@@ -304,6 +336,8 @@ class JobManager(models.Manager):
 
         if status == 'QUEUED':
             raise Exception('Changing status to queued must use the queue_job() method.')
+        if status == 'RUNNING':
+            raise Exception('Changing status to running must use the update_jobs_to_running() method.')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
@@ -312,12 +346,7 @@ class JobManager(models.Manager):
         job.status = status
         job.error = error
         job.last_status_change = when
-
-        if status == 'RUNNING':
-            job.started = when
-            job.ended = None
-        else:
-            job.ended = when
+        job.ended = when
         job.save()
 
 
@@ -919,49 +948,60 @@ class JobExecutionManager(models.Manager):
         return job_exe
 
     @transaction.atomic
-    def schedule_job_exe(self, job_exe_id, node, resources):
-        '''Schedules the given job execution (and its job) to run on the given node. All of the job_exe and job model
-        changes will be saved in the database in an atomic transaction. The updated job_exe model is returned with a
-        lock from select_for_update() and will have its related job, job_type, job_type_rev and node models populated.
+    def schedule_job_executions(self, job_executions):
+        '''Schedules the given job executions. The given job_exe models must have a lock from select_for_update(). All
+        of the job_exe and job model changes will be saved in the database in an atomic transaction. The updated job_exe
+        models are returned with their related job, job_type, job_type_rev and node models populated.
 
-        :param job_exe_id: The job execution ID to schedule
-        :type job_exe_id: int
-        :param node: The node on which the job execution is to be scheduled to run
-        :type node: :class:`node.models.Node`
-        :param resources: The resources that are being scheduled on the node for this job execution
-        :type resources: :class:`job.resources.JobResources`
-        :returns: The job_exe model (with lock)
-        :rtype: :class:`job.models.JobExecution`
+        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
+            schedule it on, and the resources it will be given
+        :type job_executions: list[(:class:`job.models.JobExecution`, :class:`node.models.Node`,
+            :class:`job.resources.JobResources`)]
+        :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
+        :rtype: list[:class:`job.models.JobExecution`]
         '''
 
-        if node is None:
-            raise Exception('Cannot schedule job execution without node')
-        if resources is None:
-            raise Exception('Cannot schedule job execution without resources')
-
-        # Acquire model lock to update job execution
-        job_exe_qry = JobExecution.objects.select_for_update().select_related('job__job_type', 'job__job_type_rev')
-        job_exe = job_exe_qry.defer('stdout', 'stderr').get(pk=job_exe_id)
-        if not job_exe.status == 'QUEUED':
-            raise Exception('Job execution is %s, must be in QUEUED status to be scheduled' % job_exe.status)
-
         started = timezone.now()
-        job_exe.status = 'RUNNING'
-        job_exe.started = started
-        job_exe.node = node
-        job_exe.environment = JobEnvironment({}).get_dict()
-        job_exe.cpus_scheduled = resources.cpus
-        job_exe.mem_scheduled = resources.mem
-        job_exe.disk_in_scheduled = resources.disk_in
-        job_exe.disk_out_scheduled = resources.disk_out
-        job_exe.disk_total_scheduled = resources.disk_total
-        job_exe.requires_cleanup = job_exe.job.job_type.requires_cleanup
-        job_exe.save()
+        job_ids = []
+        for job_execution in job_executions:
+            job_exe = job_execution[0]
+            job_ids.append(job_exe.job_id)
 
-        # Acquire model lock to update job
-        job = Job.objects.select_for_update().get(pk=job_exe.job_id)
-        Job.objects.update_status(job, 'RUNNING', started)
-        return job_exe
+        # Lock corresponding jobs, update them to RUNNING, and query for related job_type and job_type_rev models
+        jobs = {}
+        for job in Job.objects.update_jobs_to_running(job_ids, started):
+            jobs[job.id] = job
+
+        # Update each job execution
+        job_exes = []
+        for job_execution in job_executions:
+            job_exe = job_execution[0]
+            node = job_execution[1]
+            resources = job_execution[2]
+
+            if node is None:
+                raise Exception('Cannot schedule job execution %i without node' % job_exe.id)
+            if resources is None:
+                raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
+            if job_exe.status != 'QUEUED':
+                msg = 'Job execution %i is %s, must be in QUEUED status to be scheduled'
+                raise Exception(msg % (job_exe.id, job_exe.status))
+
+            job_exe.job = jobs[job_exe.job_id]
+            job_exe.status = 'RUNNING'
+            job_exe.started = started
+            job_exe.node = node
+            job_exe.environment = JobEnvironment({}).get_dict()
+            job_exe.cpus_scheduled = resources.cpus
+            job_exe.mem_scheduled = resources.mem
+            job_exe.disk_in_scheduled = resources.disk_in
+            job_exe.disk_out_scheduled = resources.disk_out
+            job_exe.disk_total_scheduled = resources.disk_total
+            job_exe.requires_cleanup = job_exe.job.job_type.requires_cleanup
+            job_exe.save()
+            job_exes.append(job_exe)
+
+        return job_exes
 
     @transaction.atomic
     def set_log_urls(self, job_exe_id, stdout, stderr):
@@ -1019,7 +1059,7 @@ class JobExecutionManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
         :type error: :class:`error.models.Error`
-        :returns: The job model with lock and related job_type model
+        :returns: The job model with lock and related job_type and job_type_rev models
         :rtype: :class:`job.models.Job`
         '''
 
@@ -1037,8 +1077,9 @@ class JobExecutionManager(models.Manager):
         job_exe.ended = when
         job_exe.save()
 
-        # Acquire model lock
-        job = Job.objects.select_for_update().select_related('job_type', 'job_type_rev').get(pk=job_exe.job_id)
+        # Acquire model lock first, then query for related
+        Job.objects.select_for_update().get(pk=job_exe.job_id)
+        job = Job.objects.select_related('job_type', 'job_type_rev').get(pk=job_exe.job_id)
         Job.objects.update_status(job, status, when, error)
         return job
 
@@ -1409,76 +1450,147 @@ class JobTypeManager(models.Manager):
     '''
 
     @transaction.atomic
-    def create_job_type(self, name, version, description, docker_image, interface, priority, timeout, max_tries,
-                        cpus_required, mem_required, disk_out_const_required, trigger_rule):
-        '''Creates a new job type and saves it in the database. The new job type must be a non-system job type that
-        utilizes Docker.
+    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, **kwargs):
+        '''Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
+        transaction.
 
-        :param name: The human-readable name of the job type
+        :param name: The stable name of the job type used by clients for queries
         :type name: str
         :param version: The version of the job type
         :type version: str
-        :param description: An optional description of the job type
-        :type description: str
-        :param docker_image: This is the Docker image to run
-        :type docker_image: str
-        :param interface: JSON description defining the job interface
-        :type interface: dict
-        :param priority: The priority of the job type (lower number is higher priority)
-        :type priority: int
-        :param timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
-        :type timeout: int
-        :param max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
-        :type max_tries: int
-        :param cpus_required: The number of CPUs required for a job of this type
-        :type cpus_required: float
-        :param mem_required: The amount of RAM in MiB needed for a job of this type
-        :type mem_required: float
-        :param disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
-            products) for a job of this type
-        :type disk_out_const_required: :class:`django.db.models.FloatField`
-        :param trigger_rule: The trigger rule that creates recipes of this type
+        :param interface: The interface for running a job of this type
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
         :type trigger_rule: :class:`trigger.models.TriggerRule`
+        :param error_mapping: Mapping for translating an exit code to an error type
+        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
-        :raises InvalidInterfaceDefinition: If the interface is invalid
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
         '''
 
-        # TODO: need to figure out how trigger rule validation works with this
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
 
-        job_type = JobType()
+        # Validate the trigger rule
+        if trigger_rule:
+            trigger_config = trigger_rule.get_configuration()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
+            trigger_config.validate_trigger_for_job(interface)
+
+        # Create the new recipe type
+        job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
-        job_type.description = description
-        job_type.docker_image = docker_image
-
-        # Validate the job interface
-        JobInterface(interface)
-        job_type.interface = interface
-
+        job_type.interface = interface.get_dict()
         job_type.trigger_rule = trigger_rule
-        if not priority > 100:
-            raise Exception('Non-system priorities must be greater than 100')
-        job_type.priority = priority
-        if not timeout > 0:
-            raise Exception('timeout must be greater than zero')
-        job_type.timeout = timeout
-        if not max_tries > 0:
-            raise Exception('max_tries must be greater than zero')
-        job_type.max_tries = max_tries
-        if not cpus_required > 0:
-            raise Exception('cpus_required must be greater than zero')
-        job_type.cpus_required = cpus_required
-        if not mem_required > 0:
-            raise Exception('mem_required must be greater than zero')
-        job_type.mem_required = mem_required
-        job_type.disk_out_const_required = disk_out_const_required
-
+        if error_mapping:
+            error_mapping.validate()
+            job_type.error_mapping = error_mapping.get_dict()
+        if 'is_active' in kwargs:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
         job_type.save()
 
+        # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
 
         return job_type
+
+    @transaction.atomic
+    def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
+                      error_mapping=None, **kwargs):
+        '''Edits the given job type and saves the changes in the database. The caller must provide the related
+        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
+        indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
+        no change to the trigger rule (False) and removing the trigger rule (True) when trigger_rule is None.
+
+        :param job_type_id: The unique identifier of the job type to edit
+        :type job_type_id: int
+        :param interface: The interface for running a job of this type, possibly None
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
+        :type trigger_rule: :class:`trigger.models.TriggerRule`
+        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
+            when trigger_rule is None
+        :type remove_trigger_rule: bool
+        :param error_mapping: Mapping for translating an exit code to an error type
+        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface change
+        invalidates any existing recipe type definitions
+        '''
+
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
+
+        recipe_types = []
+        if interface:
+            # Lock all recipe types so they can be validated after changing job type interface
+            from recipe.models import RecipeType
+            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
+
+        # Acquire model lock for job type
+        job_type = JobType.objects.select_for_update().get(pk=job_type_id)
+        if job_type.is_system:
+            raise Exception('Cannot edit a system job type')
+
+        if interface:
+            # New job interface, validate all existing recipes
+            job_type.interface = interface.get_dict()
+            job_type.revision_num = job_type.revision_num + 1
+            job_type.save()
+            for recipe_type in recipe_types:
+                recipe_type.get_recipe_definition().validate_job_interfaces()
+
+        if trigger_rule or remove_trigger_rule:
+            if job_type.trigger_rule:
+                # Archive old trigger rule since we are changing to a new one
+                TriggerRule.objects.archive_trigger_rule(job_type.trigger_rule_id)
+            job_type.trigger_rule = trigger_rule
+
+        # Validate updated trigger rule against updated interface
+        if job_type.trigger_rule:
+            trigger_config = job_type.trigger_rule.get_configuration()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                msg = '%s is an invalid trigger rule type for creating jobs'
+                raise InvalidTriggerType(msg % job_type.trigger_rule.type)
+            trigger_config.validate_trigger_for_job(job_type.get_job_interface())
+
+        if error_mapping:
+            error_mapping.validate()
+            job_type.error_mapping = error_mapping.get_dict()
+        if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        for field_name in kwargs:
+            setattr(job_type, field_name, kwargs[field_name])
+        job_type.save()
+
+        if interface:
+            # Create new revision of the job type for new interface
+            JobTypeRevision.objects.create_job_type_revision(job_type)
 
     def get_by_natural_key(self, name, version):
         '''Django method to retrieve a job type for the given natural key
@@ -1561,7 +1673,7 @@ class JobTypeManager(models.Manager):
         '''
 
         # Attempt to get the job type
-        job_type = JobType.objects.get(pk=job_type_id)
+        job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
 
         # Add associated error information
         error_names = job_type.get_error_interface().get_error_names()
@@ -1710,19 +1822,78 @@ class JobTypeManager(models.Manager):
             results.append(status)
         return results
 
-    @transaction.atomic
-    def update_error_mapping(self, error_mapping, job_type_id):
-        '''Update the data for the scheduler.
+    def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None):
+        '''Validates a new job type prior to attempting a save
 
-        :param error_mapping: Updated data for the job type
-        :type error_mapping: dict
-        :param job_type_id: Updated data for the job type
-        :type job_type_id: integer
+        :param name: The system name of the job type
+        :type name: str
+        :param version: The version of the job type
+        :type version: str
+        :param interface: The interface for running a job of this type
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param error_mapping: The interface for mapping error exit codes
+        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param trigger_config: The trigger rule configuration, possibly None
+        :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+            type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+            invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+            type interface is invalid
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface invalidates any
+            existing recipe type definitions
         '''
-        query = self.select_for_update().filter(id=job_type_id)
-        job_type = query.first()
-        job_type.error_mapping = error_mapping
-        job_type.save()
+
+        warnings = []
+
+        if trigger_config:
+            trigger_config.validate()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                msg = '%s is an invalid trigger rule type for creating jobs'
+                raise InvalidTriggerType(msg % trigger_config.trigger_rule_type)
+            warnings.extend(trigger_config.validate_trigger_for_job(interface))
+
+        if error_mapping:
+            warnings.extend(error_mapping.validate())
+
+        try:
+            # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
+            # type definitions
+            with transaction.atomic():
+                job_type = JobType.objects.get(name=name, version=version)
+                job_type.interface = interface.get_dict()
+                job_type.save()
+
+                from recipe.models import RecipeType
+                for recipe_type in RecipeType.objects.all():
+                    warnings.extend(recipe_type.get_recipe_definition().validate_job_interfaces())
+
+                # Explicitly roll back transaction so job type isn't changed
+                raise RollbackTransaction()
+        except (JobType.DoesNotExist, RollbackTransaction):
+            # Swallow exceptions
+            pass
+
+        return warnings
+
+    def _validate_job_type_fields(self, **kwargs):
+        '''Validates the given keyword argument fields for job types
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        '''
+
+        if 'timeout' in kwargs:
+            timeout = kwargs['timeout']
+            if not timeout > 0:
+                raise InvalidJobField('timeout must be greater than zero')
+        if 'max_tries' in kwargs:
+            max_tries = kwargs['max_tries']
+            if not max_tries > 0:
+                raise InvalidJobField('max_tries must be greater than zero')
 
 
 class JobType(models.Model):
@@ -1769,8 +1940,9 @@ class JobType(models.Model):
     :type docker_image: :class:`django.db.models.CharField`
     :keyword interface: JSON description defining the interface for running a job of this type
     :type interface: :class:`djorm_pgjson.fields.JSONField`
-    :keyword error_mapping: JSON description defining the interface for translating an exit code or stderr/stdout
-        expression to an error type
+    :keyword revision_num: The current revision number of the interface, starts at one
+    :type revision_num: :class:`django.db.models.IntegerField`
+    :keyword error_mapping: Mapping for translating an exit code to an error type
     :type error_mapping: :class:`djorm_pgjson.fields.JSONField`
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
@@ -1805,6 +1977,9 @@ class JobType(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     '''
 
+    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
+                         'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')
+
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     title = models.CharField(blank=True, max_length=50, null=True)
@@ -1824,12 +1999,13 @@ class JobType(models.Model):
     docker_privileged = models.BooleanField(default=False)
     docker_image = models.CharField(blank=True, null=True, max_length=500)
     interface = djorm_pgjson.fields.JSONField()
+    revision_num = models.IntegerField(default=1)
     error_mapping = djorm_pgjson.fields.JSONField()
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
-    priority = models.IntegerField()
-    timeout = models.IntegerField()
-    max_tries = models.IntegerField()
+    priority = models.IntegerField(default=100)
+    timeout = models.IntegerField(default=1800)
+    max_tries = models.IntegerField(default=3)
     cpus_required = models.FloatField(default=1.0)
     mem_required = models.FloatField(default=64.0)
     disk_out_const_required = models.FloatField(default=64.0)
@@ -1879,21 +2055,16 @@ class JobTypeRevisionManager(models.Manager):
     '''
 
     def create_job_type_revision(self, job_type):
-        '''Creates a new revision for the given job type. The caller must have obtained a lock using select_for_update()
-        on the given job type model.
+        '''Creates a new revision for the given job type. The job type's interface and revision number must already be
+        updated. The caller must have obtained a lock using select_for_update() on the given job type model.
 
         :param job_type: The job type
         :type job_type: :class:`job.models.JobType`
         '''
 
-        last_rev = self.get_latest_revision(job_type.id)
-        new_rev_num = 1
-        if last_rev:
-            new_rev_num = last_rev.revision_num + 1
-
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
-        new_rev.revision_num = new_rev_num
+        new_rev.revision_num = job_type.revision_num
         new_rev.interface = job_type.interface
         new_rev.save()
 
@@ -1910,16 +2081,18 @@ class JobTypeRevisionManager(models.Manager):
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
 
-    def get_latest_revision(self, job_type_id):
-        '''Returns the latest revision for the given job type
+    def get_revision(self, job_type_id, revision_num):
+        '''Returns the revision for the given job type and revision number
 
         :param job_type_id: The ID of the job type
         :type job_type_id: int
-        :returns: The latest revision for the job type
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The revision
         :rtype: :class:`job.models.JobTypeRevision`
         '''
 
-        return JobTypeRevision.objects.filter(job_type_id=job_type_id).order_by('-revision_num').first()
+        return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
 
 
 class JobTypeRevision(models.Model):

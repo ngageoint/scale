@@ -21,6 +21,7 @@
 			     "command_arguments": "${:Day}",
 			     "input_data": [{ "name": "Day", "type": "property" }]
 			},
+			"revision_num": 1,
             "error_mapping": null,
 			"priority": 20,
 			"timeout": 3600,

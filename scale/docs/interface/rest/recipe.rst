@@ -70,7 +70,7 @@ These services provide access to information about recipes.
 | .event             | JSON Object       | The trigger event that is associated with the recipe.                          |
 |                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .completed         | ISO-8601 Datetime | When every job in the recipe was completed successfully.                       |
 |                    |                   | This field will remain null if a job in the recipe is blocked or failed.       |
@@ -88,7 +88,7 @@ These services provide access to information about recipes.
 |                "id": 72,                                                                                                |
 |                "recipe_type": {                                                                                         |
 |                    "id": 1,                                                                                             |
-|                    "name": "MyRecipe",                                                                                  |
+|                    "name": "my-recipe",                                                                                 |
 |                    "version": "1.0.0",                                                                                  |
 |                    "description": "Does some stuff"                                                                     |
 |                },                                                                                                       |
@@ -146,7 +146,7 @@ These services provide access to information about recipes.
 | event              | JSON Object       | The trigger event that is associated with the recipe.                          |
 |                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | completed          | ISO-8601 Datetime | When every job in the recipe was completed successfully.                       |
 |                    |                   | This field will remain null if a job in the recipe is blocked or failed.       |
@@ -248,25 +248,18 @@ These services provide access to information about recipes.
 |            "rule": {                                                                                                    |
 |                "id": 8,                                                                                                 |
 |                "type": "PARSE",                                                                                         |
+|                "name": "parse-png",                                                                                     |
 |                "is_active": true,                                                                                       |
 |                "configuration": {                                                                                       |
-|                    "trigger": {                                                                                         |
+|                    "version": "1.0",                                                                                    |
+|                    "data": {                                                                                            |
+|                        "workspace_name": "products",                                                                    |
+|                        "input_data_name": "input_file"                                                                  |
+|                    },                                                                                                   |
+|                    "condition": {                                                                                       |
 |                        "media_type": "image/png",                                                                       |
 |                        "data_types": []                                                                                 |
-|                    },                                                                                                   |
-|                    "create": {                                                                                          |
-|                        "recipes": [                                                                                     |
-|                            {                                                                                            |
-|                                "recipe_type": {                                                                         |
-|                                    "name": "my_parse",                                                                  |
-|                                    "version": "1.0.0"                                                                   |
-|                                }                                                                                        |
-|                                "file_input_name": "input_file",                                                         |
-|                                "workspace_name": "products",                                                            |
-|                            }                                                                                            |
-|                        ]                                                                                                |
-|                    },                                                                                                   |
-|                    "version": "1.0"                                                                                     |
+|                    }                                                                                                    |
 |                }                                                                                                        |
 |            },                                                                                                           |
 |            "occurred": "2015-08-28T19:03:59.054Z",                                                                      |
@@ -339,7 +332,9 @@ These services provide access to information about recipes.
 |                        "job_type": {                                                                                    |
 |                            "id": 8                                                                                      |
 |                        },                                                                                               |
-|                        "revision_num": 1                                                                                |
+|                        "revision_num": 1,                                                                               |
+|                        "interface": {...},                                                                              |
+|                        "created": "2015-11-06T21:30:34.622Z"                                                            |
 |                    },                                                                                                   |
 |                    "event": {                                                                                           |
 |                        "id": 7,                                                                                         |

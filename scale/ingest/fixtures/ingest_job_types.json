@@ -23,12 +23,13 @@
 			     "input_data": [ { "name": "Ingest ID", "type": "property" },
 			                     { "name": "Mount", "type": "property" } ]
 			},
+			"revision_num": 1,
             "error_mapping": null,
 			"priority": 10,
 			"timeout": 3600,
 			"max_tries": 3,
 			"cpus_required": 0.5,
-			"mem_required": 512.0,
+			"mem_required": 5120.0,
 			"disk_out_const_required": 0.0,
 			"disk_out_mult_required": 0.0,
 			"created": "2015-03-11T00:00:00.0Z",
@@ -75,6 +76,7 @@
                  "command_arguments": "${-i :Strike ID}",
                  "input_data": [ { "name": "Strike ID", "type": "property" } ]
             },
+            "revision_num": 1,
             "error_mapping": null,
             "priority": 5,
             "timeout": 0,

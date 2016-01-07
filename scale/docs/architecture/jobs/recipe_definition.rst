@@ -25,12 +25,16 @@ could be defined as follows (see :ref:`architecture_jobs_interface` for how to d
          {
             "name": "image",
             "type": "file",
-            "media_types": ["image/png"]
+            "media_types": [
+               "image/png"
+            ]
          },
          {
             "name": "georeference_data",
             "type": "file",
-            "media_types": ["text/csv"]
+            "media_types": [
+               "text/csv"
+            ]
          }
       ],
       "output_data": [
@@ -52,7 +56,9 @@ could be defined as follows (see :ref:`architecture_jobs_interface` for how to d
          {
             "name": "image",
             "type": "file",
-            "media_types": ["image/tiff"]
+            "media_types": [
+               "image/tiff"
+            ]
          }
       ],
       "output_data": [
@@ -78,12 +84,16 @@ algorithm. The recipe definition could be described as follows:
          {
             "name": "image",
             "type": "file",
-            "media_types": ["image/png"]
+            "media_types": [
+               "image/png"
+            ]
          },
          {
             "name": "georeference_data",
             "type": "file",
-            "media_types": ["text/csv"]
+            "media_types": [
+               "text/csv"
+            ]
          }
       ],
       "jobs": [
@@ -159,13 +169,17 @@ A valid recipe definition is a JSON document with the following structure:
             "name": STRING,
             "type": "file",
             "required": true|false,
-            "media_types": [STRING, STRING]
+            "media_types": [
+               STRING, STRING
+            ]
          },
          {
             "name": STRING,
             "type": "files",
             "required": true|false,
-            "media_types": [STRING, STRING]
+            "media_types": [
+               STRING, STRING
+            ]
          }
       ],
       "jobs": [
@@ -204,7 +218,7 @@ A valid recipe definition is a JSON document with the following structure:
     latest version, which is currently 1.0. It is recommended, though not required, that you include the *version* so
     that future changes to the specification will still accept the recipe definition.
 
-    If scale does not recognize the version number as valid, the recipe cannot be used.  Currently, the only valid version is "1.0".
+    Scale must recognize the version number as valid for the recipe to work. Currently, "1.0" is the only valid version.
 
 **input_data**: JSON array
 

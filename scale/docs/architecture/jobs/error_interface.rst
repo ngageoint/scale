@@ -14,8 +14,10 @@ Consider the following example error definition, which adds one exit code (1) to
 .. code-block:: javascript
 
     {
-        "version": u"1.0",
-        "exit_codes": {"1": "unknown"}
+        "version": "1.0",
+        "exit_codes": {
+            "1": "unknown"
+        }
     }
 
    
@@ -30,7 +32,10 @@ A valid error interface is a JSON document with the following structure:
 
     {
         "version": STRING,
-        "exit_codes": {STRING: STRING, STRING: STRING}
+        "exit_codes": {
+            STRING: STRING,
+            STRING: STRING
+        }
    }
    
 **version**: JSON string

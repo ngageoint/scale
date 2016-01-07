@@ -75,7 +75,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .archived          | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_offer        | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -145,7 +145,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | archived           | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -337,7 +337,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -403,7 +403,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
