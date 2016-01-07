@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
 
        # setup network
        machine.vm.hostname = name
-       machine.vm.network 'private_network', ip: ipaddr, netmask: NETMASK
+       machine.vm.network 'private_network', ip: ipaddr, netmask: NETMASK, :adapter => 2
 
        if name === "master"
           machine.vm.synced_folder "..", "/scale/"

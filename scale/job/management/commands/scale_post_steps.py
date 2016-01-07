@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the command that performs the post-job steps'''
 from __future__ import unicode_literals
 
