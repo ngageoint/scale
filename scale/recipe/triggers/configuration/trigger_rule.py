@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the base configuration class for a trigger rule that triggers recipe creation'''
 from __future__ import unicode_literals
 

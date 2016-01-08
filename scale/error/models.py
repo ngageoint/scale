@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''error models'''
 import logging
 

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines utility methods for testing trigger rules and events.'''
 import django.utils.timezone as timezone
 

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the database model for product files'''
 from __future__ import unicode_literals
 

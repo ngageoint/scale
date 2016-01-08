@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the URLs for the RESTful job services'''
 from django.conf.urls import patterns, url
 

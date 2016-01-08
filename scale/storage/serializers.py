@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the serializers for Scale files and workspaces'''
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers

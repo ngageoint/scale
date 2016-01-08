@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the views for the RESTful storage services'''
 from __future__ import unicode_literals
 

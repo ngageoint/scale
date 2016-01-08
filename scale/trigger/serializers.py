@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the serializers for trigger events and rules'''
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers

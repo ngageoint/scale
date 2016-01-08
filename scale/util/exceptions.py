@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines utility exceptions'''
 
 

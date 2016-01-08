@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the models for trigger rules and events'''
 from __future__ import unicode_literals
 

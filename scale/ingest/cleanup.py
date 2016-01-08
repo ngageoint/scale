@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the abstract base class used for cleaning up job executions'''
 from __future__ import unicode_literals
 

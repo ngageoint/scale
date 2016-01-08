@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Scale Job Execution handles running Scale jobs within Mesos'''
 from __future__ import unicode_literals
 

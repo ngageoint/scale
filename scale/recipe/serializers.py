@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 

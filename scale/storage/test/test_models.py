@@ -1,5 +1,4 @@
 #@PydevCodeAnalysisIgnore
-# UNCLASSIFIED
 import os
 
 import django

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the URLs for the RESTful import/export services'''
 from django.conf.urls import patterns, url
 

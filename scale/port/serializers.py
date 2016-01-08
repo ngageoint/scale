@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the serializers for import/export configuration'''
 import rest_framework.serializers as serializers
 

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the database models for file information and workspaces'''
 from __future__ import unicode_literals
 

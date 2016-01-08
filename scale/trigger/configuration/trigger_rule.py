@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the base configuration class for a trigger rule'''
 from __future__ import unicode_literals
 

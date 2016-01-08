@@ -1,5 +1,4 @@
 #@PydevCodeAnalysisIgnore
-# UNCLASSIFIED
 import datetime
 import time
 

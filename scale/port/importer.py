@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the functions used to import configuration'''
 from __future__ import unicode_literals
 

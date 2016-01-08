@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the data needed for executing a recipe'''
 from __future__ import unicode_literals
 

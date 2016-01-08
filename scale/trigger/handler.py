@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the base class for handling trigger rules and provides apps a way to register handler sub-classes'''
 from __future__ import unicode_literals
 

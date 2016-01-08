@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines utility functions for executing commands on the command line.'''
 import logging
 import subprocess

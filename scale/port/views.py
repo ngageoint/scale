@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the views for the RESTful import/export services'''
 from __future__ import unicode_literals
 

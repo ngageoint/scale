@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines an NFS broker that utilizes a network file system as its backend storage'''
 from __future__ import unicode_literals
 

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the class for managing a configuration export.'''
 from __future__ import unicode_literals
 

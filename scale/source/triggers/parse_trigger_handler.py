@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the class that handles parse trigger rules'''
 from __future__ import unicode_literals
 

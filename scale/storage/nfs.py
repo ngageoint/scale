@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines methods and classes for handling network file systems'''
 from __future__ import unicode_literals
 

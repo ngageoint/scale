@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines exceptions that can occur when interacting with recipe data'''
 
 

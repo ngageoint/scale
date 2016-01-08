@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the database model for source files'''
 import logging
 import os

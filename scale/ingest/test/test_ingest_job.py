@@ -1,5 +1,4 @@
 #@PydevCodeAnalysisIgnore
-# UNCLASSIFIED
 
 import django
 import django.utils.timezone as timezone

@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the base broker class'''
 from abc import ABCMeta, abstractmethod
 

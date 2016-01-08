@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines connections that will provide data to execute recipes'''
 from __future__ import unicode_literals
 

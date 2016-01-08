@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the application configuration for the source application'''
 from django.apps import AppConfig
 

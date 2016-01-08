@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 """
 Django settings for scale_test project.
 

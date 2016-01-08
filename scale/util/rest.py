@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines utilities for building RESTful APIs.'''
 from __future__ import unicode_literals
 

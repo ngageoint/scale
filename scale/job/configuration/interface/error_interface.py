@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the interface for translating a job's exit codes to error types'''
 from __future__ import unicode_literals
 

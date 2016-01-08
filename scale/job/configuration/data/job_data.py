@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the data needed for executing a job'''
 import logging
 import os

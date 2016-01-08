@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines methods for necessary file system interactions to perform file ingests'''
 from __future__ import unicode_literals
 

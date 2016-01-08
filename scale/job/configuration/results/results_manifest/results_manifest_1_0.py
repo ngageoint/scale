@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''This module is concerned with the scale output manifest. Scale jobs are expected to produce an output manifest.
 Scale needs to parse this manifest to bring the information into the system. The output files should match
 the job interface

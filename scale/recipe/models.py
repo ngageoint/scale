@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Defines the database models for recipes and recipe types'''
 from __future__ import unicode_literals
 

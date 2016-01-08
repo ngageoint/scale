@@ -1,4 +1,3 @@
-# UNCLASSIFIED
 '''Contains the functionality of the Scale clock process'''
 from __future__ import unicode_literals
 import abc
