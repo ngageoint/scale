@@ -169,6 +169,9 @@ class NfsBroker(Broker):
                         apply(os.path.join, srv_dest_path) if srv_dest_path[0] is not None else srv_dest_path[1]]
             execute_command_line(cmd_list)
             return
+        except OSError, e:
+            if e.errno != 2: # errno 2 is No such file or directory..bbcp not installed. We'll be quiet about it but fallback
+                logger.exception("NFS Broker bbcp copy_file") # ignore the error and attempt a regular cp
         except:
             logger.exception("NFS Broker bbcp copy_file") # ignore the error and attempt a regular cp
         logger.info('Fall back to cp for %s', src_path)

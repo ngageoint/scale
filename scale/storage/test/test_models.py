@@ -483,11 +483,11 @@ class TestScaleFileManagerUploadFiles(TestCase):
                                                        [(local_path_1, remote_path_1), (local_path_2, remote_path_2)])
         self.assertListEqual(workspace.delete_files.call_args_list, [])
 
-        self.assertEqual(u'file.txt', models[0].file_name)
+        self.assertEqual(u'my/local/path/file.txt', models[0].file_name)
         self.assertEqual(remote_path_1, models[0].file_path)
         self.assertEqual(u'text/plain', models[0].media_type)
         self.assertEqual(workspace.id, models[0].workspace_id)
-        self.assertEqual(u'file.json', models[1].file_name)
+        self.assertEqual(u'my/local/path/2/file.json', models[1].file_name)
         self.assertEqual(remote_path_2, models[1].file_path)
         self.assertEqual(u'application/json', models[1].media_type)
         self.assertEqual(workspace.id, models[1].workspace_id)

@@ -84,13 +84,16 @@
   become: true
 
 - name: Create scale dest dir
+  tags: mesos-slave
   file: path=/opt/scale owner=scale state=directory
   become: true
 
 - name: Install scale
+  tags: mesos-slave
   synchronize: src=../scale dest=/opt delete=yes rsync_path="sudo -u scale rsync"
 
 - name: Install python dependencies
+  tags: mesos-slave
   pip: requirements=/opt/scale/pip/prod_linux.txt
   become: true
 
@@ -100,24 +103,29 @@
 
 # Need to do this or anisble will complain that we're trying to change a normal file to a symlink
 - name: Remove existing local_settings
+  tags: mesos-slave
   file: path=/opt/scale/scale/local_settings.py state=absent
   become: true
   become_user: scale
 
 - name: Setup local_settings
+  tags: mesos-slave
   file: src=/etc/scale/local_settings.py dest=/opt/scale/scale/local_settings.py state=link
   become: true
   become_user: scale
 
 - name: Setup mesos zk
+  tags: mesos-slave
   template: src=zk.j2 dest=/etc/mesos/zk
   become: true
 
 - name: Setup mesos resources
+  tags: mesos-slave
   template: src=resources.j2 dest=/etc/mesos-slave/resources
   become: true
 
 - name: Setup mesos containerizers
+  tags: mesos-slave
   copy: src=containerizers dest=/etc/mesos-slave/containerizers
   become: true
 

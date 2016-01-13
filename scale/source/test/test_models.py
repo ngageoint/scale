@@ -146,10 +146,10 @@ class TestSourceFileManagerStoreFile(TestCase):
 
         src_file = SourceFile.objects.store_file(work_dir, local_path, [], workspace, remote_path)
 
-        workspace.upload_files.assert_called_once_with(wksp_upload_dir, wksp_work_dir, [('file.txt', remote_path)])
+        workspace.upload_files.assert_called_once_with(wksp_upload_dir, wksp_work_dir, [('my/local/path/file.txt', remote_path)])
         self.assertListEqual(workspace.delete_files.call_args_list, [])
 
-        self.assertEqual(u'file.txt', src_file.file_name)
+        self.assertEqual(u'my/local/path/file.txt', src_file.file_name)
         self.assertEqual(u'3d8e577bddb17db339eae0b3d9bcf180', src_file.uuid)
         self.assertEqual(remote_path, src_file.file_path)
         self.assertEqual(u'text/plain', src_file.media_type)

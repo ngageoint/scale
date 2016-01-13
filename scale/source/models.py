@@ -143,7 +143,8 @@ class SourceFileManager(models.GeoManager):
         :rtype: :class:`source.models.SourceFile`
         '''
 
-        file_name = os.path.basename(local_path)
+        ##file_name = os.path.basename(local_path)
+        file_name = local_path
         upload_dir = os.path.join(work_dir, 'upload')
         workspace_work_dir = os.path.join(work_dir, 'work')
         if not os.path.exists(upload_dir):

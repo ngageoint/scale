@@ -61,7 +61,7 @@
     state: reloaded
     restart_policy: always
     volumes:
-      - '/exports/products/landsat-tiles:/usr/local/apache2/htdocs'
+      - '/exports:/usr/local/apache2/htdocs'
     ports:
       - '8080:80'
   become: true

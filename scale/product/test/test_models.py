@@ -358,14 +358,14 @@ class TestProductFileManagerUploadFiles(TestCase):
         )
         self.assertListEqual(self.workspace.delete_files.call_args_list, [])
 
-        self.assertEqual(u'file.txt', products[0].file_name)
+        self.assertEqual(u'local/1/file.txt', products[0].file_name)
         self.assertEqual(u'remote/1/file.txt', products[0].file_path)
         self.assertEqual(u'text/plain', products[0].media_type)
         self.assertEqual(self.workspace.id, products[0].workspace_id)
         self.assertIsNotNone(products[0].uuid)
         self.assertTrue(products[0].is_operational)
 
-        self.assertEqual(u'file.json', products[1].file_name)
+        self.assertEqual(u'local/2/file.json', products[1].file_name)
         self.assertEqual(u'remote/2/file.json', products[1].file_path)
         self.assertEqual(u'application/x-custom-json', products[1].media_type)
         self.assertEqual(self.workspace.id, products[1].workspace_id)
@@ -406,7 +406,7 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                             [(u'local/1/file.txt', u'remote/1/file.txt')])
         self.assertListEqual(self.workspace.delete_files.call_args_list, [])
 
-        self.assertEqual(u'file.txt', products[0].file_name)
+        self.assertEqual(u'local/1/file.txt', products[0].file_name)
         self.assertEqual(u'remote/1/file.txt', products[0].file_path)
         self.assertEqual(u'text/plain', products[0].media_type)
         self.assertEqual(self.workspace.id, products[0].workspace_id)
