@@ -25,6 +25,9 @@ MANAGE_FILE = os.path.join(BASE_DIR, 'manage.py')
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = None
 
+# Zookeeper URL for scheduler leader election. If this is None, only a single not is used and election isn't performed.
+SCHEDULER_ZK = None
+
 # Directory for rotating metrics storage
 METRICS_DIR = None
 

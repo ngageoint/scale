@@ -4,10 +4,6 @@
   command: sh -c 'docker tag -f scale:{{ scale_docker_version }} {{ docker_registry }}scale:{{ scale_docker_version }}; docker push {{ docker_registry }}scale:{{ scale_docker_version }}'
   become: true
 
-- name: push scale-slave
-  command: sh -c 'docker tag -f scale-slave:{{ scale_docker_version }} {{ docker_registry }}scale-slave:{{ scale_docker_version }}; docker push {{ docker_registry }}scale-slave:{{ scale_docker_version }}'
-  become: true
-
 - name: push scale-web
   command: sh -c 'docker tag -f scale-web:{{ scale_docker_version }} {{ docker_registry }}scale-web:{{ scale_docker_version }}; docker push {{ docker_registry }}scale-web:{{ scale_docker_version }}'
   become: true

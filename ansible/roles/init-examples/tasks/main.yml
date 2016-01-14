@@ -65,3 +65,17 @@
     ports:
       - '8080:80'
   become: true
+
+- name: Example file uploader
+  docker:
+    name: file-uploader
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ external_docker_registry }}yaasita/docker-jquery-file-upload'
+    state: started
+    restart_policy: always
+    volumes:
+      - '/exports/ingest:/var/www/upload/server/php/files'
+    ports:
+      - '8081:80'
+      - '22'
+  become: true

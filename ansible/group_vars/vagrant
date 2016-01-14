@@ -1,5 +1,6 @@
 # group_vars/vagrant
 mesos_zk: 'zk://10.4.4.10:2181/mesos'
+scheduler_zk: 'zk://10.4.4.10:2181/scale'
 docker_registry: '10.4.4.10:5000/'
 scale_docker_version: '3'
 mesos_master_ip: '10.4.4.10' #'{{ ansible_all_ipv4_addresses[-1] }}'
