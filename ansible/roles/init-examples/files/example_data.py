@@ -34,7 +34,6 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
 
 # Job types
 if not job.models.JobType.objects.filter(name="landsat-parse").exists():
-    trigger_rule = trigger.models.TriggerRule.objects.get(name="landsat-parse")
     jt = job.models.JobType.objects.create_job_type("landsat-parse", "1.0.0",
             JobInterface({"output_data": [
                 {"media_type": "image/tiff", "required": True, "type": "file", "name": "multispectral"},
@@ -46,7 +45,6 @@ if not job.models.JobType.objects.filter(name="landsat-parse").exists():
             "input_data": [
                 {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
             "version": "1.0", "command": "./parse_landsat.sh"}),
-        trigger_rule,
         description="Parse landsat multi-tif files in tar.gz archives",
         docker_image="10.4.4.10:5000/landsat-parse_1.0:dev",
         priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
@@ -82,7 +80,7 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
     jt.save()
 
 try:
-    ingest_jt = job.models.JobType.objects.filter(name="scale-ingent")
+    ingest_jt = job.models.JobType.objects.filter(name="scale-ingest")
     if ingest_jt.exists():
         ingest_jt = ingest_jt.first()
         if ingest_jt.mem_required != 512.:
@@ -93,6 +91,8 @@ except:
 
 # Recipes
 if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
+    trigger_rule = trigger.models.TriggerRule.objects.get(name="landsat-parse")
+    assert(trigger_rule is not None)
     r = recipe.models.RecipeType.objects.create_recipe_type("landsat", "1.0.0", "Landsat processing",
             "Perform standard Landsat ingest processing", RecipeDefinition({
                 "version": "1.0",
@@ -148,7 +148,7 @@ if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
                         ]
                     }
                 ]
-            }), None)
+            }), trigger_rule)
 
 # Strike process
 if not ingest.models.Strike.objects.filter(name="landsat").exists():
