@@ -268,6 +268,8 @@ class ScaleScheduler(Scheduler):
         See documentation for :meth:`mesos_api.mesos.Scheduler.resourceOffers`.
         '''
 
+        start_time = now()
+
         if self.debug:
             connect_remote_debug()
 
@@ -341,6 +343,9 @@ class ScaleScheduler(Scheduler):
             for scale_offer in scale_offers:
                 driver.launchTasks(scale_offer.offer_id, [])
 
+        end_time = now()
+        logger.debug('Time for resourceOffers: %s', str(end_time - start_time))
+
     def offerRescinded(self, driver, offerId):
         '''
         Invoked when an offer is no longer valid (e.g., the slave was lost or
@@ -370,6 +375,8 @@ class ScaleScheduler(Scheduler):
 
         See documentation for :meth:`mesos_api.mesos.Scheduler.statusUpdate`.
         '''
+
+        start_time = now()
 
         if self.debug:
             connect_remote_debug()
@@ -414,6 +421,9 @@ class ScaleScheduler(Scheduler):
                 self.recon_set.add(task_id)
             finally:
                 self.recon_lock.release()
+
+        end_time = now()
+        logger.debug('Time for statusUpdate: %s', str(end_time - start_time))
 
     def frameworkMessage(self, driver, executorId, slaveId, message):
         '''
