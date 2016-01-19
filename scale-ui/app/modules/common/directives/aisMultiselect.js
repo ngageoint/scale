@@ -3,28 +3,39 @@
 
     angular.module('scaleApp').directive('aisMultiselect', function () {
         return {
+            restrict: 'A',
+            require: '^ngModel',
             scope: {
                 multiselectDataProvider: '=',
                 enableFiltering: '=',
                 maxHeight: '=',
                 numberDisplayed: '=',
                 includeSelectAllOption: '=',
-                nonSelectedText: '='
+                nonSelectedText: '=',
+                ngModel: '='
             },
             link: function(scope, element, attributes) {
+                element = $(element[0]);
+
                 element.multiselect({
                     enableFiltering: scope.enableFiltering,
                     enableCaseInsensitiveFiltering: true,
                     maxHeight: scope.maxHeight || 300,
                     numberDisplayed: scope.numberDisplayed || 3,
                     includeSelectAllOption: scope.includeSelectAllOption,
-                    nonSelectedText: scope.nonSelectedText || 'None Selected'
+                    nonSelectedText: scope.nonSelectedText || 'None Selected',
+                    onChange: function (optionElement, checked) {
+                        scope.$apply(function () {
+                            scope.ngModel = element.val();
+                        });
+                    }
                 });
 
-                scope.$watchCollection('multiselectDataProvider', function (newValue) {
-                    if (newValue) {
-                        element.multiselect('dataprovider', newValue);
+                scope.$watchCollection('multiselectDataProvider', function (newValue, oldValue) {
+                    if (angular.equals(newValue, oldValue)) {
+                        return;
                     }
+                    element.multiselect('dataprovider', newValue);
                 });
 
                 /*

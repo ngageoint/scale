@@ -72,12 +72,21 @@
                 var d = $q.defer();
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
-                $http.post(scaleConfig.urls.saveRecipeType(),cleanRecipeType).success(function(result){
-                    recipeType.id = result;
-                    d.resolve(recipeType);
-                }).error(function(error){
-                    d.reject(error);
-                });
+                if(!cleanRecipeType.id){
+                    $http.post(scaleConfig.urls.saveRecipeType(),cleanRecipeType).success(function(result){
+                        recipeType.id = result;
+                        d.resolve(recipeType);
+                    }).error(function(error){
+                        d.reject(error);
+                    });
+                } else {
+                    $http.patch(scaleConfig.urls.saveRecipeType() + cleanRecipeType.id + '/',cleanRecipeType).success(function(result){
+                        recipeType = result;
+                        d.resolve(recipeType);
+                    }).error(function(error){
+                        d.reject(error);
+                    });
+                }
 
                 return d.promise;
             },

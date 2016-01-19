@@ -6,10 +6,11 @@
         var RecipeTypeDefinitionJob = function (recipe_inputs, name, job_type, dependencies) {
             this.recipe_inputs = recipe_inputs;
             this.name = name;
-            this.job_type = {
-                name: job_type.name,
-                version: job_type.version
-            };
+            this.job_type = job_type;
+            //this.job_type = {
+            //    name: job_type.name,
+            //    version: job_type.version
+            //};
             this.dependencies = dependencies || [];
         };
 

@@ -121,6 +121,8 @@
                 {mimeType: 'video/mp4', icon: 'fa-file-video-o'}
             ],
 
+            triggerTypes: ['PARSE', 'INGEST'],
+
             taskStatusStyles: {
                 "SUCCEEDED" : "bar",
                 "FAILED" : "bar-failed",
@@ -257,6 +259,9 @@
                 },
                 updateScheduler: function () {
                     return this.prefixProd + 'scheduler/';
+                },
+                getWorkspaces: function() {
+                    return this.prefixProd + 'workspaces/';
                 }
             },
             defaultGaugeWidth: 160,
@@ -279,7 +284,7 @@
                     { path: 'jobs', label: 'Jobs' },
                     { path: 'jobs/types', label: 'Job Types' }
                 ],
-                queue: [
+                load: [
                     { path: 'load', label: 'Queued' },
                     { path: 'load/running', label: 'Running' },
                     { path: 'load/depth', label: 'Job Load' }

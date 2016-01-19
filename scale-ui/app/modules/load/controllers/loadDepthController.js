@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').controller('loadDepthController', function ($scope, $location, navService, scaleConfig, subnavService) {
-        $scope.subnavLinks = scaleConfig.subnavLinks.queue;
+        $scope.subnavLinks = scaleConfig.subnavLinks.load;
         subnavService.setCurrentPath('load/depth');
 
         $scope.loading = false;

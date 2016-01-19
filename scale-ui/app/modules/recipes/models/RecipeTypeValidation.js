@@ -2,27 +2,29 @@
     'use strict';
 
     angular.module('scaleApp').factory('RecipeTypeValidation', function (RecipeTypeDefinition) {
-        var RecipeTypeValidation = function (name, version, title, description, definition, trigger_type, trigger_config) {
+        var RecipeTypeValidation = function (id, name, version, title, description, definition, trigger_rule) {
+            if(id){
+                this.id = id;
+            }
             this.name = name;
             this.version = version;
             this.title = title;
             this.description = description;
             this.definition = definition ? RecipeTypeDefinition.transformer(definition) : new RecipeTypeDefinition();
-            this.trigger_type = trigger_type;
-            this.trigger_config = trigger_config;
+            this.trigger_rule = trigger_rule;
         };
 
         // static methods, assigned to class
         RecipeTypeValidation.build = function (data) {
             if (data) {
                 return new RecipeTypeValidation(
+                    data.id,
                     data.name,
                     data.version,
                     data.title,
                     data.description,
                     data.definition,
-                    data.trigger_type,
-                    data.trigger_config
+                    data.trigger_rule
                 );
             }
             return new RecipeTypeValidation();

@@ -105,6 +105,7 @@
             _.forEach(_.pairs(recipesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
+            getRecipes();
         };
 
         var getRecipes = function () {

@@ -7,7 +7,7 @@
         $scope.queueStatusErrorStatus = null;
         $scope.totalQueued = 0;
         $scope.gridStyle = '';
-        $scope.subnavLinks = scaleConfig.subnavLinks.queue;
+        $scope.subnavLinks = scaleConfig.subnavLinks.load;
         subnavService.setCurrentPath('load');
 
         $scope.getPage = function (pageNumber, pageSize) {

@@ -2,7 +2,7 @@
  * <ais-scale-recipe-viewer />
  */
 (function () {
-    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $modal, scaleService, jobTypeService, recipeService) {
+    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $modal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService) {
         $scope.vertices = [];
         $scope.edges = [];
         $scope.isUpdate = false;
@@ -23,9 +23,11 @@
         $scope.warnings = [];
         $scope.readonly = true;
         $scope.detailMaxHeight = 0;
+        $scope.recipeTypeTrigger = { dataTypes: '' };
         $scope.detailContainerStyle = '';
         $scope.containerClass = $scope.hasContainer ? '' : 'detail-container no-tabs';
         $scope.lastStatusChange = '';
+        $scope.availableWorkspaces = [];
         $scope.recipeInputTypes = [
             {
                 name: 'property',
@@ -55,6 +57,7 @@
                 ]
             }
         ];
+        $scope.availableTriggerTypes = scaleConfig.triggerTypes;
         $scope.selectedRecipeInputType = {};
         $scope.recipeInput = {
             name: '',
@@ -139,6 +142,7 @@
             var getRecipeDetail = function () {
                 recipeService.getRecipeTypeDetail(id).then(function (data) {
                     $scope.recipeType = data;
+
                 });
             };
 
@@ -240,7 +244,7 @@
             $rootScope.$broadcast('toggleEdit', $scope.mode);
         };
 
-        $scope.openAddJob = function (size) {
+        $scope.openAddJob = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'addJobContent.html',
@@ -249,13 +253,45 @@
             });
 
             modalInstance.result.then(function () {
-                jobTypeService.getJobTypeDetails($scope.selectedItem.id).then(function(data){
-                    $scope.addJobType(data);
-                    enableSaveRecipe();
-                });
+                if($scope.selectedItem){
+                    jobTypeService.getJobTypeDetails($scope.selectedItem.id).then(function(data){
+                        $scope.addJobType(data);
+                        enableSaveRecipe();
+                    });
+                }
             }, function () {
 
             });
+        };
+
+        $scope.openEditTrigger = function () {
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'editTrigger.html',
+                scope: $scope,
+                size: 'md'
+            });
+
+            modalInstance.result.then(function () {
+                if( $scope.mode === 'edit' || $scope.mode === 'add' ) {
+                    $scope.recipeType.trigger_rule.configuration.condition.data_types = $scope.recipeTypeTrigger.dataTypes ? $scope.recipeTypeTrigger.dataTypes.split(',') : [];
+                    enableSaveRecipe();
+                }
+            }, function () {
+
+            });
+
+
+        };
+
+        $scope.deleteRecipeInput = function(inputName){
+            var removedRecipeInput = _.remove($scope.recipeType.definition.input_data, function (recipeInput) {
+                return recipeInput.name === inputName;
+            });
+            console.log('removed ' + removedRecipeInput.length + ' recipe inputs.');
+            enableSaveRecipe();
+            $scope.redraw();
+
         };
 
         $scope.openAddInput = function(){
@@ -343,7 +379,10 @@
                     $scope.savingRecipe = false;
                 } else {
                     recipeService.saveRecipeType($scope.recipeType).then(function(saveResult){
-                        $location.path('/recipes/types/' + saveResult.id);
+                        $scope.savingRecipe = false;
+                        $scope.recipeType = saveResult;
+                        $scope.redraw();
+                        //$location.path('/recipes/types/' + saveResult.id);
                     });
                 }
             }).catch(function(error){
@@ -386,6 +425,28 @@
             $scope.selectedInputProvider = null;
             enableSaveRecipe();
             $scope.redraw();
+        };
+
+        $scope.mapInputRecipeInput = function(recipeInput){
+            console.log('map selected job to recipe input ' + recipeInput);
+            var existingInput = _.find($scope.selectedJob.recipe_inputs, { job_input: $scope.selectedJobInput.name });
+            if( existingInput && existingInput.recipe_name !== recipeInput){
+                // update it
+                existingInput.recipe_input = recipeInput;
+                enableSaveRecipe();
+                $scope.redraw();
+            } else if( !existingInput ){
+                // create it
+                $scope.selectedJob.recipe_inputs.push({
+                    job_input: $scope.selectedJobInput.name,
+                    recipe_input: recipeInput
+                });
+                enableSaveRecipe();
+                $scope.redraw();
+            }
+            $scope.editMode = '';
+            $scope.selectedJobInput = null;
+            $scope.selectedInputProvider = null;
         };
 
         $scope.mapOutput = function (receiverName, receiverInput) {
@@ -459,20 +520,43 @@
         };
 
         $scope.removeInputMapping = function (depName, depOutput) {
-            var dep = _.find($scope.selectedJob.dependencies, {name: depName});
-            if (dep && dep.connections) {
-                var removedCon = _.remove(dep.connections, function (conn) {
-                    return conn.output === depOutput;
-                });
-                console.log('removed ' + removedCon.length + ' input connections.');
+            if( depName === 'recipe' ){
+                // remove it from selectedJob.recipe_inputs
+                var dep = _.remove($scope.selectedJob.recipe_inputs, { recipe_input: depOutput });
                 enableSaveRecipe();
                 $scope.redraw();
+            } else {
+                var dep = _.find($scope.selectedJob.dependencies, {name: depName});
+                if (dep && dep.connections) {
+                    // it's an input from another job
+                    var removedCon = _.remove(dep.connections, function (conn) {
+                        return conn.output === depOutput;
+                    });
+                    console.log('removed ' + removedCon.length + ' input connections.');
+                    enableSaveRecipe();
+                    $scope.redraw();
+                }
             }
+
+        };
+
+        $scope.deleteRecipeJob = function(jobName){
+            // remove dependent connections
+            _.forEach($scope.recipeType.definition.jobs, function(job){
+                _.remove(job.dependencies, {name: jobName});
+            });
+            // remove job from definition.jobs
+            _.remove($scope.recipeType.definition.jobs, { name: jobName });
+            // enable save and redraw
+            $scope.selectedJob = null;
+            enableSaveRecipe();
+            $scope.redraw();
         };
 
         $scope.removeOutputMapping = function (jobName, depOutput) {
             // we have to remove output mapping from the job where the dependency is defined
             var receiver = _.find($scope.recipeType.definition.jobs,{name: jobName});
+            // remove it from receiver.dependencies
             var dep = _.find(receiver.dependencies, {name: $scope.selectedJob.name});
             if (dep && dep.connections) {
                 var removedCon = _.remove(dep.connections, function (conn) {
@@ -561,6 +645,10 @@
                 $scope.jobTypeValues = data.results;
             });
 
+            workspacesService.getWorkspaces().then(function(data){
+                $scope.availableWorkspaces = data
+            });
+
             $scope.$watch('recipeType', function (newValue, oldValue) {
                 if ($scope.recipeType) {
                     if (!$scope.recipeType.id || $scope.recipeType.id === 0) {
@@ -573,6 +661,12 @@
                         }
 
                     });
+
+                    // setup string to bind comma delimited list of trigger rule configuration condition data types
+                    if($scope.recipeType.trigger_rule && $scope.recipeType.trigger_rule.configuration && $scope.recipeType.trigger_rule.configuration.condition && $scope.recipeType.trigger_rule.configuration.condition.data_types){
+                        $scope.recipeTypeTrigger.dataTypes = $scope.recipeType.trigger_rule.configuration.condition.data_types.join(',');
+                    }
+
                     initGraph();
                     getIoMappings();
                     drawGraph($scope.isUpdate);
@@ -625,6 +719,21 @@
         };
 
         drawGraph = function (isUpdate) {
+            // globals because dagre needs a reference to angular scope
+            window.nodeClick = function(name) {
+                var scope = angular.element(document.getElementById('recipeviewer')).scope();
+                scope.$apply(function () {
+                    scope.nodeClick(name);
+                });
+            };
+
+            window.mapInput = function(jobName, jobOutput){
+                var scope = angular.element(document.getElementById('recipeviewer')).scope();
+                scope.$apply(function () {
+                    scope.mapInput(jobName, jobOutput);
+                });
+            };
+
             $scope.isUpdate = true;
             if($scope.recipe){
                 $scope.lastStatusChange = $scope.recipe.last_modified ? moment.duration(moment.utc($scope.recipe.last_modified).diff(moment.utc())).humanize(true) : '';
@@ -693,16 +802,17 @@
             // set start node and edges
             graph.setNode('start', {
                 labelType: 'html',
-                label: '<div id="Start" class="recipeNode" onclick="nodeClick(\'start\')"><span class=name>Start</span></div>',
+                label: '<div id="start" class="recipeNode" onclick="nodeClick(\'start\')"><span class=name>Start</span></div>',
                 rx: 5,
                 ry: 5,
                 padding: 0
             });
             startJob = {
-                name: 'Start',
+                name: 'start',
                 job_type: {
                     title: 'Start'
-                }
+                },
+                input_data: $scope.recipeType.input_data
             };
             var noDeps = _.filter(jobs, 'depStart', true);
             for (var n in noDeps) {

@@ -4,10 +4,10 @@
     angular.module('scaleApp').factory('RecipeType', function (scaleConfig, RecipeTypeDefinition) {
         var RecipeType = function (id, name, version, title, description, is_active, definition, revision_num, created,  last_modified, archived, trigger_rule) {
             this.id = id;
-            this.name = name || 'new-recipe';
-            this.version = version || '1.0';
-            this.title = title || 'New Recipe';
-            this.description = description || 'New Recipe';
+            this.name = name;
+            this.version = version;
+            this.title = title;
+            this.description = description;
             this.is_active = is_active;
             this.definition = definition ? RecipeTypeDefinition.transformer(definition) : new RecipeTypeDefinition();
             this.revision_num = revision_num;

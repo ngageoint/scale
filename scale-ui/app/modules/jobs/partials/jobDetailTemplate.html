@@ -32,7 +32,7 @@
                         </thead>
                         <tbody>
                             <tr><td>Type:</td><td><span ng-bind-html="job.job_type.getIcon()"></span> {{ job.job_type.title }} {{ job.job_type.version }}</td></tr>
-                            <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].id }}</a></td></tr>
+                            <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].title }} {{ job.recipes[0].version }}</a></td></tr>
                             <tr><td>Status:</td><td><div class="label {{job.getStatusClass()}}">{{ job.status }}</div></td></tr>
                             <tr><td>Trigger:</td><td>{{ job.event.type }} {{ triggerOccurred }}</td></tr>
                             <tr><td>Priority:</td><td>{{ job.priority }}</td></tr>

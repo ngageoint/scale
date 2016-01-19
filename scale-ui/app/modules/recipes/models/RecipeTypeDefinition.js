@@ -15,6 +15,7 @@
         RecipeTypeDefinition.prototype = {
             addJob: function (jobType) {
                 var job = {
+                    dependencies: [],
                     recipe_inputs: [],
                     name: jobType.name,
                     job_type_id: jobType.id,

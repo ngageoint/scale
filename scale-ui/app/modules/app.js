@@ -77,7 +77,8 @@
             })
             .when('/recipes', {
                 controller: 'recipesController',
-                templateUrl: 'modules/recipes/partials/recipesTemplate.html'
+                templateUrl: 'modules/recipes/partials/recipesTemplate.html',
+                reloadOnSearch: false
             })
             .when('/recipes/recipe/:id', {
                 controller: 'recipeDetailsController',

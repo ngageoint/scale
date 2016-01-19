@@ -109,6 +109,9 @@
             },
             updateScheduler: function () {
                 console.log('Test data unavailable for updateScheduler');
+            },
+            getWorkspaces: function(){
+                return this.prefixDev + 'test/data/workspaces.json';
             }
         }
     });

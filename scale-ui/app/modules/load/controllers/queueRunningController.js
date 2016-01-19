@@ -7,7 +7,7 @@
         $scope.runningJobsErrorStatus = null;
         $scope.totalRunning = 0;
         $scope.gridStyle = '';
-        $scope.subnavLinks = scaleConfig.subnavLinks.queue;
+        $scope.subnavLinks = scaleConfig.subnavLinks.load;
         subnavService.setCurrentPath('load/running');
 
         $scope.getPage = function (pageNumber, pageSize){

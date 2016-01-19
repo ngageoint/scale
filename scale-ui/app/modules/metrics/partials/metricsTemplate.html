@@ -5,14 +5,14 @@
         <div class="form-group">
             <label for="startDate">Start Date</label>
             <div class="input-group">
-                <input id="startDate" type="text" class="form-control" ng-model="inputStartDate" name="startDate" data-timezone="UTC" data-date-format="yyyy-MM-dd" data-date-type="iso" bs-datepicker>
+                <input id="startDate" type="text" class="form-control" ng-click="openInputStart($event)" datepicker-popup="yyyy-MM-dd" ng-model="inputStartDate" is-open="inputStartOpened" close-text="Close" />
                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
         </div>
         <div class="form-group">
             <label for="endDate">End Date</label>
             <div class="input-group">
-                <input id="endDate" type="text" class="form-control" ng-model="inputEndDate" name="endDate" data-timezone="UTC" data-date-format="yyyy-MM-dd" data-date-type="iso" bs-datepicker>
+                <input id="endDate" type="text" class="form-control" ng-click="openInputEnd($event)" datepicker-popup="yyyy-MM-dd" ng-model="inputEndDate" is-open="inputEndOpened" close-text="Close" />
                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
         </div>

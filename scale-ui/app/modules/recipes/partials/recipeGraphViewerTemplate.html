@@ -1,19 +1,3 @@
-<script type="text/javascript">
-    var nodeClick = function(name) {
-        var scope = angular.element(document.getElementById('recipeviewer')).scope();
-        scope.$apply(function () {
-            scope.nodeClick(name);
-        });
-    };
-
-    var mapInput = function(jobName, jobOutput){
-        var scope = angular.element(document.getElementById('recipeviewer')).scope();
-        scope.$apply(function () {
-            scope.mapInput(jobName, jobOutput);
-        });
-    };
-</script>
-
 <div ng-show="isIE"><h4>The recipe viewer is not compatible with Internet Explorer.</h4></div>
 <div ng-class="containerClass" ng-show="!isIE">
     <div class="recipe-viewer">
@@ -63,9 +47,9 @@
             <div class="col-xs-3 text-right">
                 <div ng-show="allowEdit && !readonly">
                     <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="openAddJob()" ng-show="mode === 'edit' || mode === 'add'">Add Job</button>
-                    <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-enabled="isRecipeModified" ng-show="mode === 'edit' || mode === 'add'"><i class="fa fa-check"></i> Validate</button>
+                    <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-show="mode === 'edit' || mode === 'add'"><i class="fa fa-check"></i> Validate</button>
                     <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-show="mode === 'edit' || mode === 'add'"><i class="fa fa-save"></i> Save Recipe</button>
-                    <!--<button class="btn btn-sm" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-show="mode !== 'add'"><i class="fa" ng-class="editBtnIcon"></i> {{ editBtnText }}</button>-->
+                    <button class="btn btn-sm" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-show="mode !== 'add'"><i class="fa" ng-class="editBtnIcon"></i> {{ editBtnText }}</button>
                 </div>
             </div>
         </div>
@@ -85,21 +69,29 @@
                                 <svg style="{{ detailContainerStyle }}"><g/></svg>
                             </div>
                             <div id="output-selector" ng-show="selectedInputProvider">
-                                <div id="output-selector-container" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
+                                <div id="output-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
                                     <div>Select provider/output</div>
                                     <ul ng-show="selectedInputProvider.job_type.job_type_interface.output_data.length > 0" class="list-group">
                                         <li ng-repeat="joboutput in selectedInputProvider.job_type.job_type_interface.output_data" class="list-group-item">
                                             <a ng-click="mapInput(selectedInputProvider.name, joboutput.name)">{{ joboutput.name }}</a>
+                                            <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
+                                        </li>
+                                    </ul>
+                                    <ul ng-show="selectedInputProvider.name === 'start'" class="list-group">
+                                        <li ng-repeat="recipeInput in recipeType.definition.input_data" class="list-group-item">
+                                            <a ng-click="mapInputRecipeInput(recipeInput.name)">{{ recipeInput.name }}</a>
+                                            <div class="input-media-types" ng-show="recipeInput.media_types">{{ recipeInput.media_types.join(',') }}</div>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <div id="input-selector" ng-show="selectedOutputReceiver">
-                                <div id="input-selector-container" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
+                                <div id="input-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
                                     <div>Select receiver/input</div>
                                     <ul ng-show="selectedOutputReceiver.job_type.job_type_interface.input_data.length > 0" class="list-group">
                                         <li ng-repeat="jobinput in selectedOutputReceiver.job_type.job_type_interface.input_data" class="list-group-item">
                                             <a ng-click="mapOutput(selectedOutputReceiver.name, jobinput.name)">{{ jobinput.name }}</a>
+                                            <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -111,7 +103,7 @@
                             </div>
                             <div class="col-details panel panel-primary" ng-show="selectedJob">
                                 <div class="panel-heading">
-                                    <h4>{{selectedJob.job_type.title}} {{selectedJob.job_type.version}}</h4>
+                                    <h4>{{selectedJob.job_type.title}} {{selectedJob.job_type.version}} <button ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="btn btn-default btn-xs pull-right" ng-click="deleteRecipeJob(selectedJob.name)"><i class="fa fa-remove"></i></button></h4>
                                 </div>
                                 <div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>
                                 <div id="jobdetail" class="job-details" ng-if="selectedJob.job_type.id">
@@ -128,7 +120,8 @@
                                     <div ng-show="selectedJob.job_type.job_type_interface.input_data.length > 0"><h4>Inputs</h4>
                                          <ul class="list-group">
                                              <li ng-repeat="jobinput in selectedJob.job_type.job_type_interface.input_data" class="list-group-item">
-                                                 {{ jobinput.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)"><i class="fa fa-link"></i></button>
+                                                 {{ jobinput.name }}<span ng-show="jobinput.required">*</span> <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)"><i class="fa fa-link"></i></button>
+                                                 <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
                                                  <div ng-show="jobinput.dependencies.length > 0">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
@@ -144,6 +137,7 @@
                                          <ul class="list-group">
                                              <li ng-repeat="joboutput in selectedJob.job_type.job_type_interface.output_data" class="list-group-item">
                                                  {{ joboutput.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddOutput(joboutput)"><i class="fa fa-link"></i></button>
+                                                 <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
                                                  <div ng-show="joboutput.dependents.length > 0">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
@@ -158,10 +152,20 @@
                                  </div>
                                 <div id="startDetail" class="job-details panel-body" ng-if="selectedJob && !selectedJob.job_type.id">
                                     <div>
+                                        <h4>Trigger <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs" ng-click="openEditTrigger()"><i class="fa fa-edit"></i></button></h4>
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <div class="input-name">{{recipeType.trigger_rule.name}} <span ng-show="!recipeType.trigger_rule.is_active" class="input-media-types pull-right">Inactive</span></div>
+                                                <div class="input-name">{{recipeType.trigger_rule.type}}</div>
+                                                <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.media_type">media_type: {{ recipeType.trigger_rule.configuration.condition.media_type }}</div>
+                                                <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.data_types">data_types: {{ recipeType.trigger_rule.configuration.condition.data_types.join(", ") }}</div>
+                                            </li>
+                                        </ul>
+                                    </div><div>
                                         <h4>Recipe Inputs <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs" ng-click="openAddInput()"><i class="fa fa-plus"></i></button></h4>
                                         <ul class="list-group">
                                             <li ng-repeat="input in recipeType.definition.input_data" class="list-group-item">
-                                                <div class="input-name">{{input.name}}</div>
+                                                <div class="input-name">{{input.name}}<span ng-show="input.required">*</span> <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs pull-right" ng-click="deleteRecipeInput(input.name)"><i class="fa fa-remove"></i></button></div>
                                                 <div class="input-media-types">{{ input.media_types.join(", ") }}</div>
                                             </li>
                                         </ul>
@@ -176,21 +180,78 @@
     </div>
 </div>
 
+<script type="text/ng-template" id="editTrigger.html">
+    <div>
+        <div class="modal-header">
+            <h3>Edit Trigger</h3>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--<div class="col-xs-1">ID: {{ recipeType.trigger_rule.id }}</div>-->
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="triggerType">Type</label>
+                        <select id="triggerType" class="form-control input-sm" ng-model="recipeType.trigger_rule.type" ng-options="t as t for t in availableTriggerTypes">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <label for="triggerName">Name</label>
+                    <input id="triggerName" type="text" class="form-control" ng-model="recipeType.trigger_rule.name">
+                </div>
+                <div class="col-xs-4">
+                    <label for="triggerActive">Active</label>
+                    <input id="triggerActive" type="checkbox" class="form-control" ng-model="recipeType.trigger_rule.is_active">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <h5 colspan="2">Condition</h5>
+                    <div class="form-group">
+                        <label for="triggerConditionMediaType">Media Type</label>
+                        <input id="triggerConditionMediaType" type="text" class="form-control" ng-model="recipeType.trigger_rule.configuration.condition.media_type">
+                    </div>
+                    <div class="form-group">
+                        <label for="triggerConditionDataTypes">Data Types</label>
+                        <input id="triggerConditionDataTypes" type="text" class="form-control" ng-model="recipeTypeTrigger.dataTypes">
+
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <h5 colspan="2">Data</h5>
+                    <div class="form-group">
+                        <label for="triggerWorkspaceName">Workspace</label>
+                        <select id="triggerWorkspaceName" class="form-control input-sm" ng-model="recipeType.trigger_rule.configuration.data.workspace_name">
+                            <option ng-repeat="workspace in availableWorkspaces" value="{{workspace.name}}" ng-selected="recipeType.trigger_rule.configuration.data.workspace_name === workspace.name">{{workspace.title}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="triggerInputDataName">Recipe Input Name</label>
+                        <select id="triggerInputDataName" class="form-control input-sm" ng-model="recipeType.trigger_rule.configuration.data.input_data_name">
+                            <option ng-repeat="recipeInput in recipeType.definition.input_data" value="{{recipeInput.name}}" ng-selected="recipeType.trigger_rule.configuration.data.input_data_name === recipeInput.name">{{recipeInput.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="$close()">OK</button>
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="addJobContent.html">
     <div>
         <div class="modal-header">
             <h3>Select a Job Type</h3>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="master-container">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedItem.name === jobType.name }" ng-click="selectItem(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
-                        </ul>
-                    </div>
-                    Selected: <b>{{ selectedItem.name }}</b>
+            <div class="master-container">
+                <div class="add-job-list">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedItem.name === jobType.name }" ng-click="selectItem(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
+                    </ul>
                 </div>
+                Selected: <b>{{ selectedItem.name }}</b>
             </div>
         </div>
         <div class="modal-footer">

@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').factory('RecipeTypeDetail', function (scaleConfig, RecipeTypeDefinition, JobTypeDetails) {
-        var RecipeTypeDetail = function (id, name, version, title, description, is_active, definition, created, last_modified, archived, job_types) {
+        var RecipeTypeDetail = function (id, name, version, title, description, is_active, definition, created, last_modified, archived, trigger_rule, job_types) {
             this.id = id;
             this.name = name;
             this.version = version;
@@ -13,6 +13,7 @@
             this.created = created;
             this.last_modified = last_modified;
             this.archived = archived;
+            this.trigger_rule = trigger_rule;
             this.job_types = JobTypeDetails.transformer(job_types);
             this.modified = false;
         };
@@ -31,6 +32,7 @@
                     data.created,
                     data.last_modified,
                     data.archived,
+                    data.trigger_rule,
                     data.job_types
                 );
             }

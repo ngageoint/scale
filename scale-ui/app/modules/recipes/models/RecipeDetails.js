@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').factory('RecipeDetails', function (RecipeData, RecipeTypeDefinition, RecipeType, RecipeJobContainer, scaleConfig) {
-        var RecipeDetails = function (id, created, completed, last_modified, data, recipe_type, jobs) {
+    angular.module('scaleApp').factory('RecipeDetails', function (RecipeData, RecipeTypeDefinition, RecipeType, RecipeTypeDetail, RecipeJobContainer, scaleConfig) {
+        var RecipeDetails = function (id, created, completed, last_modified, data, recipe_type, recipe_type_rev, jobs) {
             this.id = id;
             this.created = created;
             this.completed = completed;
@@ -10,6 +10,7 @@
             this.last_modified = last_modified;
             this.data = RecipeData.transformer(data);
             this.recipe_type = RecipeType.transformer(recipe_type);
+            this.recipe_type_rev = RecipeTypeDetail.transformer(recipe_type_rev);
             this.jobs = RecipeJobContainer.transformer(jobs);
         };
 
@@ -23,6 +24,7 @@
                     data.last_modified,
                     data.data,
                     data.recipe_type,
+                    data.recipe_type_rev,
                     data.jobs
                 );
             }

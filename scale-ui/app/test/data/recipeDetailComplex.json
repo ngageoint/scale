@@ -103,6 +103,25 @@
     "created": "2015-06-15T19:03:26.346Z",
     "last_modified": "2015-06-15T19:03:26.346Z",
     "archived": null,
+    "trigger_rule": {
+        "id": 1,
+        "type": "PARSE",
+        "name": "my-job-type-recipe",
+        "is_active": true,
+        "configuration": {
+            "version": "1.0",
+            "data": {
+                "workspace_name": "products",
+                "input_data_name": "input_file"
+            },
+            "condition": {
+                "media_type": "image/png",
+                "data_types": [
+                    "My-Type"
+                ]
+            }
+        }
+    },
     "job_types": [
         {
             "id": 1,

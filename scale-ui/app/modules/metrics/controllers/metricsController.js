@@ -21,6 +21,16 @@
         $scope.selectedDataType = {};
         $scope.inputStartDate = moment.utc().subtract(1, 'M').toISOString();
         $scope.inputEndDate = moment.utc().toISOString();
+        $scope.openInputStart = function ($event) {
+            $event.stopPropagation();
+            $scope.inputStartOpened = true;
+        };
+        $scope.inputStartOpened = false;
+        $scope.openInputEnd = function ($event) {
+            $event.stopPropagation();
+            $scope.inputEndOpened = true;
+        };
+        $scope.inputEndOpened = false;
         $scope.dataTypeFilterText = '';
         $scope.filtersApplied = [];
         $scope.filteredChoices = [];
@@ -96,8 +106,8 @@
 
                 _.forEach($scope.chartArr, function (obj) {
                     var params = getPlotDataParams(obj);
-                    //metricsService.getPlotData(params).then(function (data) {
-                    metricsService.getGeneratedPlotData({query: obj, params: params}).then(function (data) {
+                    metricsService.getPlotData(params).then(function (data) {
+                    //metricsService.getGeneratedPlotData({query: obj, params: params}).then(function (data) {
                         $scope.chartData.push({
                             query: obj,
                             results: data.results
