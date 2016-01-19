@@ -119,10 +119,10 @@ class TestProductDataFileStoreStoreFiles(TestCase):
 
         parent_ids = set([98, 99])
         local_path_1 = os.path.join('my', 'path', 'one', 'my_test.txt')
-        remote_path_1 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), 'my_test.txt')
+        remote_path_1 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_1)
         media_type_1 = 'text/plain'
         local_path_2 = os.path.join('my', 'path', 'one', 'my_test.json')
-        remote_path_2 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), 'my_test.json')
+        remote_path_2 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_2)
         media_type_2 = 'application/json'
 
         data_files = {self.workspace_1.id: [(local_path_1, media_type_1, geo_metadata), (local_path_2, media_type_2)]}
