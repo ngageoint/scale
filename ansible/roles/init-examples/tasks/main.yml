@@ -54,6 +54,7 @@
     - push landsat-tiles
 
 - name: Static example product web server
+  tags: init-examples
   docker:
     name: example-web
     docker_api_version: '{{ docker_api_version }}'
@@ -67,15 +68,20 @@
   become: true
 
 - name: Example file uploader
+  tags:
+    - init-examples
+    - file-upload
   docker:
     name: file-uploader
     docker_api_version: '{{ docker_api_version }}'
-    image: '{{ external_docker_registry }}yaasita/docker-jquery-file-upload'
-    state: started
+    image: '{{ external_docker_registry }}bigdatauniversity/file-upload'
+    state: reloaded
     restart_policy: always
+    env:
+      SITE_NAME: 'Scale Sample Site'
+      SITE_PASSWORD: 'admin'
     volumes:
       - '/exports/ingest:/var/www/upload/server/php/files'
     ports:
       - '8081:80'
-      - '22'
   become: true

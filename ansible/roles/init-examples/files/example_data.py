@@ -96,6 +96,7 @@ except:
 # Recipes
 if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
     trigger_rule = trigger.models.TriggerRule.objects.get(name="landsat-parse")
+    assert(trigger_rule is not None)
     r = recipe.models.RecipeType.objects.create_recipe_type("landsat", "1.0.0", "Landsat processing",
             "Perform standard Landsat ingest processing", RecipeDefinition({
                 "version": "1.0",

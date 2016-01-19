@@ -1,85 +1,106 @@
 ---
 # mesos-slave/tasks/main.yml
 - name: Install postgresql
+  tags: mesos-slave
   yum: name=postgresql
   become: true
 
 - name: Install gdal-python
+  tags: mesos-slave
   yum: name=gdal-python
   become: true
 
 - name: Install python-psycopg2
+  tags: mesos-slave
   yum: name=python-psycopg2
   become: true
 
 - name: Install geos
+  tags: mesos-slave
   yum: name=geos
   become: true
 
 - name: Install subversion-libs
+  tags: mesos-slave
   yum: name=subversion-libs
   become: true
 
 - name: Install nfs-utils
+  tags: mesos-slave
   yum: name=nfs-utils
   become: true
 
 - name: Install python-pip
+  tags: mesos-slave
   yum: name=python-pip
   become: true
 
 - name: Install sudo
+  tags: mesos-slave
   yum: name=sudo
   become: true
 
 - name: Install unzip
+  tags: mesos-slave
   yum: name=unzip
   become: true
 
 - name: Install protobuf
+  tags: mesos-slave
   yum: name=protobuf
   become: true
 
 - name: Install rsync
+  tags: mesos-slave
   yum: name=rsync
   become: true
 
 - name: Install protobuf bindings
+  tags: mesos-slave
   pip: name="protobuf<3.0.0b1.post1"
   become: true
 
 - name: Copy mesos
+  tags: mesos-slave
   copy: src=mesos-0.24.1-0.2.35.centos701406.x86_64.rpm dest=/tmp/mesos-0.24.1-0.2.35.centos701406.x86_64.rpm
 
 - name: Install mesos
+  tags: mesos-slave
   yum: name=/tmp/mesos-0.24.1-0.2.35.centos701406.x86_64.rpm
   become: true
 
 - name: Disable mesos master
+  tags: mesos-slave
   service: name=mesos-master state=stopped enabled=false
   become: true
 
 - name: Enable mesos slave
+  tags: mesos-slave
   service: name=mesos-slave state=started enabled=true
   become: true
 
 - name: Start rpcbind
+  tags: mesos-slave
   service: name=rpcbind state=started enabled=true
   become: true
 
 - name: Copy mesos python bindings
+  tags: mesos-slave
   copy: src=mesos-0.24.1-py2.7-linux-x86_64.egg dest=/tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
 
 # easy_install plugin doesn't seem to work right with eggs
 - name: Install mesos python bindings
+  tags: mesos-slave
   command: easy_install /tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
   become: true
 
 - name: Create node workdir
+  tags: mesos-slave
   file: path='{{ node_work_dir }}' state=directory mode=0777
   become: true
 
 - name: Create scale user
+  tags: mesos-slave
   user: name=scale
   become: true
 
@@ -98,6 +119,7 @@
   become: true
 
 - name: Setup sudoers
+  tags: mesos-slave
   copy: dest=/etc/sudoers.d/scale src=scale.sudoers
   become: true
 
