@@ -45,10 +45,9 @@
   yum: name=node-gyp
   become: true
 
-- name: Install grunt-cli
+- name: Install gulp
   tags: build-scale
-  yum: name=nodejs-grunt-cli
-  become: true
+  command: sudo npm install gulp -g
 
 - name: Install python build libraries
   tags: build-scale
@@ -59,9 +58,9 @@
   tags: build-scale
   npm: path=/scale/scale-ui
 
-- name: Build ui with grunt
+- name: Build ui with gulp
   tags: build-scale
-  command: grunt dist chdir=/scale/scale-ui creates=/scale/scale-ui/dist/scale-ui.zip
+  command: gulp deploy chdir=/scale/scale-ui creates=/scale/scale-ui/deploy/scale-ui.tar.gz
 
 - name: Create ui target
   tags: build-scale
@@ -69,7 +68,7 @@
 
 - name: Install ui files
   tags: build-scale
-  unarchive: copy=no src=/scale/scale-ui/dist/scale-ui.zip dest=/scale/scale/ui
+  unarchive: copy=no src=/scale/scale-ui/deploy/scale-ui.tar.gz dest=/scale/scale/ui
 
 - name: Install local_settings.py
   tags: build-scale
@@ -101,6 +100,17 @@
   become: true
   notify:
     - push scale
+
+- name: Build scale-slave docker image
+  tags: build-scale
+  docker_image:
+    path: "/scale/dockerfiles/framework/scale-slave"
+    name: "scale-slave"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+  notify:
+    - push scale-slave
 
 - name: Build scale-web docker image
   tags: build-scale
