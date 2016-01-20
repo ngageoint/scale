@@ -47,7 +47,8 @@
 
 - name: Install gulp
   tags: build-scale
-  command: sudo npm install gulp -g
+  npm: name=gulp global=true
+  become: true
 
 - name: Install python build libraries
   tags: build-scale
@@ -60,7 +61,7 @@
 
 - name: Build ui with gulp
   tags: build-scale
-  command: gulp deploy chdir=/scale/scale-ui creates=/scale/scale-ui/deploy/scale-ui.tar.gz
+  command: gulp deploy chdir=/scale/scale-ui creates=/scale/scale-ui/deploy/
 
 - name: Create ui target
   tags: build-scale
@@ -68,7 +69,8 @@
 
 - name: Install ui files
   tags: build-scale
-  unarchive: copy=no src=/scale/scale-ui/deploy/scale-ui.tar.gz dest=/scale/scale/ui
+  unarchive: copy=no src=$archive dest=/scale/scale/ui
+  with_fileglob: "/scale/scale-ui/deplot/scale*.tar.gz"
 
 - name: Install local_settings.py
   tags: build-scale
@@ -100,17 +102,6 @@
   become: true
   notify:
     - push scale
-
-- name: Build scale-slave docker image
-  tags: build-scale
-  docker_image:
-    path: "/scale/dockerfiles/framework/scale-slave"
-    name: "scale-slave"
-    tag: "{{ scale_docker_version }}"
-    state: build
-  become: true
-  notify:
-    - push scale-slave
 
 - name: Build scale-web docker image
   tags: build-scale
