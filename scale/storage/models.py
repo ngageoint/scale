@@ -400,8 +400,7 @@ class ScaleFileManager(models.Manager):
             media_type = scale_file.media_type
 
             # Determine file properties
-            ##file_name = os.path.basename(full_upload_path)
-            file_name = upload_path
+            file_name = os.path.basename(full_upload_path)
             if not media_type:
                 media_type = get_media_type(file_name)
             file_size = os.path.getsize(full_upload_path)

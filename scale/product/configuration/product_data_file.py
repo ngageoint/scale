@@ -44,10 +44,7 @@ class ProductDataFileStore(AbstractDataFileStore):
                 for file_tuple in file_list:
                     local_path = file_tuple[0]
                     media_type = file_tuple[1]
-                    file_name = local_path
-                    ## this ignores all subdirs. should already be relative
-                    #file_name = os.path.basename(local_path)
-                    remote_file_path = os.path.join(remote_path, file_name)
+                    remote_file_path = os.path.join(remote_path, local_path)
 
                     # Pass along geospatial information if available
                     if len(file_tuple) > 2:

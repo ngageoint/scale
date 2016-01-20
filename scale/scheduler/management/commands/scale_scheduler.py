@@ -8,8 +8,6 @@ from django.core.management.base import BaseCommand
 
 from scheduler.scale_scheduler import ScaleScheduler
 
-from scheduler import cluster_utils
-
 logger = logging.getLogger(__name__)
 
 # Try to import production Mesos bindings, fall back to stubs
@@ -64,10 +62,16 @@ class Command(BaseCommand):
         executor.command.value = '%s %s scale_executor' % (settings.PYTHON_EXECUTABLE, settings.MANAGE_FILE)
         executor.name = 'Scale Executor (Python)'
 
-        if settings.SCHEDULER_ZK is not None:
+        try:
+            scheduler_zk = settings.SCHEDULER_ZK
+        except:
+            scheduler_zk = None
+
+        if scheduler_zk is not None:
             import socket
+            from scheduler import cluster_utils
             my_id = socket.gethostname()
-            cluster_utils.wait_for_leader(settings.SCHEDULER_ZK, my_id, self.run_scheduler, mesos_master, executor)
+            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master, executor)
         else:
             # leader election is disabled
             self.run_scheduler(mesos_master, executor)
