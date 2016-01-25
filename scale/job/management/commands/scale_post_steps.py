@@ -7,6 +7,7 @@ import sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.db.utils import DatabaseError
 
 import job.execution.file_system as file_system
@@ -15,9 +16,11 @@ from error.models import Error
 from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from storage.exceptions import NfsError
+from util.retry import retry_database_query
 
 
 logger = logging.getLogger(__name__)
+
 
 # Exit codes that map to specific job errors
 DB_EXIT_CODE = 1001
@@ -56,14 +59,9 @@ class Command(BaseCommand):
                 subprocess.call(['sudo', 'chmod', '-R', '777', output_dir])
 
             # Get the pre-loaded job_exe for efficiency
-            job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(exe_id)
+            job_exe = self._get_job_exe(exe_id)
 
-            job_interface = job_exe.get_job_interface()
-            job_data = job_exe.job.get_job_data()
-            stdout_and_stderr = (job_exe.stdout or '') + '\n' + (job_exe.stderr or '')
-            job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)
-
-            JobExecution.objects.post_steps_results(exe_id, job_results, results_manifest)
+            self._perform_post_steps(job_exe)
 
             if not settings.settings.SKIP_CLEANUP_JOB_DIR:
                 self._cleanup(exe_id)
@@ -92,3 +90,31 @@ class Command(BaseCommand):
             cleanup_job_exe(exe_id)
         except Exception:
             logger.exception('Job Execution %i: Error cleaning up', exe_id)
+
+    @retry_database_query
+    def _get_job_exe(self, job_exe_id):
+        '''Returns the job execution for the ID with its related job and job type models
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :returns: The job execution model
+        :rtype: :class:`job.models.JobExecution`
+        '''
+
+        return JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
+
+    @retry_database_query
+    def _perform_post_steps(self, job_exe):
+        '''Populates the full set of command arguments for the job execution
+
+        :param job_exe: The job execution
+        :type job_exe: :class:`job.models.JobExecution`
+        '''
+
+        job_interface = job_exe.get_job_interface()
+        job_data = job_exe.job.get_job_data()
+        stdout_and_stderr = (job_exe.stdout or '') + '\n' + (job_exe.stderr or '')
+
+        with transaction.atomic():
+            job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)
+            JobExecution.objects.post_steps_results(job_exe.id, job_results, results_manifest)

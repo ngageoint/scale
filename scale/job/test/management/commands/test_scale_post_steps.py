@@ -45,6 +45,7 @@ class TestPostJobSteps(TestCase):
 
         # Set up mocks
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
         cmd = PostCommand()
@@ -111,6 +112,7 @@ class TestPostJobSteps(TestCase):
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stdout = 'something'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stderr = None
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
         cmd = PostCommand()

@@ -75,5 +75,5 @@ def retry_database_query(no_arg_func=None, max_tries=5, base_ms_delay=1000, max_
     :type max_ms_delay: int
     '''
 
-    return retry(no_arg_func=None, ex_class=OperationalError, max_tries=max_tries, base_ms_delay=base_ms_delay,
+    return retry(no_arg_func=no_arg_func, ex_class=OperationalError, max_tries=max_tries, base_ms_delay=base_ms_delay,
                  max_ms_delay=max_ms_delay)

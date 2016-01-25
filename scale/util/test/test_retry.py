@@ -4,7 +4,7 @@ from django.db.utils import OperationalError
 from django.test import SimpleTestCase
 from mock import MagicMock, call, patch
 
-from util.retry import retry
+from util.retry import retry, retry_database_query
 
 
 class TestRetry(SimpleTestCase):
@@ -105,11 +105,11 @@ class TestRetry(SimpleTestCase):
 class TestRetryDatabaseQuery(SimpleTestCase):
     '''Tests the retry_database_query decorator function'''
 
-    @retry
+    @retry_database_query
     def success_with_return(self):
         return 2
 
-    @retry(max_tries=5, base_ms_delay=1000, max_ms_delay=30000)
+    @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=30000)
     def always_fail(self):
         raise OperationalError
 

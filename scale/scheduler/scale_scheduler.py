@@ -248,7 +248,6 @@ class ScaleScheduler(Scheduler):
                          self.master_hostname, self.master_port)
         else:
             logger.error('Scale scheduler disconnected from the Mesos master')
-        models.Scheduler.objects.update_master('', 0)
 
     def resourceOffers(self, driver, offers):
         '''
