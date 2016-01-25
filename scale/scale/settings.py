@@ -179,7 +179,7 @@ LOG_HANDLERS = {
         'class': 'django.utils.log.NullHandler',
     },
     'console': {
-        'level': 'INFO',
+        'level': 'DEBUG',
         'class': 'logging.StreamHandler',
         'formatter': 'standard',
         'stream': sys.stdout
@@ -237,8 +237,8 @@ LOG_CONSOLE_FILE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err', 'file-debug', 'file-info', 'file-error', 'log-db'],
-            'level': 'DEBUG',
+            'handlers': ['console', 'console-err', 'file-info', 'file-error', 'log-db'],
+            'level': 'INFO',
         },
     },
 }
