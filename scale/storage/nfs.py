@@ -40,7 +40,7 @@ def nfs_umount(mounted_on):
 
     logger.info('Unmounting %s', mounted_on)
 
-    cmd_list = ['sudo', 'umount', '-lf', mounted_on]
+    cmd_list = ['sudo', 'umount', '-f', mounted_on]
     try:
         execute_command_line(cmd_list)
     except CommandError as ex:
