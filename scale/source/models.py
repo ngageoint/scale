@@ -174,7 +174,7 @@ class SourceFileManager(models.GeoManager):
                 src_file.add_data_type_tag(tag)
 
             # Link source file into upload directory and upload it
-            if not os.path.exists(upload_file_path):
+            if not os.path.islink(upload_file_path):
                 logger.info('Creating link %s -> %s', upload_file_path, local_path)
                 execute_command_line(['ln', '-s', local_path, upload_file_path])
             return ScaleFile.objects.upload_files(upload_dir, workspace_work_dir, workspace,
