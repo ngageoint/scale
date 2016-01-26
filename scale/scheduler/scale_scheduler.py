@@ -786,10 +786,11 @@ class ScaleScheduler(Scheduler):
                             Queue.objects.handle_job_failure(job_exe_model.id, right_now, error)
                         if kill_task:
                             task_to_kill_id = this_job_exe.current_task()
-                            pb_task_to_kill = mesos_pb2.TaskID()
-                            pb_task_to_kill.value = task_to_kill_id
-                            logger.info('About to kill task: %s', task_to_kill_id)
-                            self.driver.killTask(pb_task_to_kill)
+                            if task_to_kill_id:
+                                pb_task_to_kill = mesos_pb2.TaskID()
+                                pb_task_to_kill.value = task_to_kill_id
+                                logger.info('About to kill task: %s', task_to_kill_id)
+                                self.driver.killTask(pb_task_to_kill)
                         if delete_job_exe:
                             self._delete_job_exe(this_job_exe)
                     except Exception:
