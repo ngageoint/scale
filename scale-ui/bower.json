@@ -24,7 +24,8 @@
     "moment-duration-format": "~1.3.0",
     "bootstrap-multiselect": "~0.9.13",
     "innersvg-polyfill": "~0.0.2",
-    "font-awesome": "fontawesome#~4.5.0"
+    "font-awesome": "fontawesome#~4.5.0",
+    "angular-mocks": "~1.4.9"
   },
   "devDependencies": {},
   "overrides": {

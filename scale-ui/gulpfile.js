@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     mainBowerFiles = require('main-bower-files'),
     less = require('gulp-less'),
     jshint = require('gulp-jshint'),
+    karma = require('karma').Server,
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
     uglify = require('gulp-uglify'),
@@ -16,11 +17,12 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js'],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
-    testData: ['./app/test/data/**/*']
+    testData: ['./app/test/data/**/*'],
+    tests: ['./tests/*.js']
 };
 
 // clean
@@ -123,7 +125,7 @@ gulp.task('glyphicons', ['clean'], function () {
 gulp.task('ui-grid', ['clean'], function () {
     return gulp.src('./app/bower_components/angular-ui-grid/**/*.{otf,eot,woff,woff2,svg,ttf}')
         .pipe(gulp.dest('./build/stylesheets'));
-})
+});
 
 gulp.task('vendor-fonts', ['fontawesome','glyphicons', 'ui-grid']);
 
@@ -188,6 +190,14 @@ gulp.task('lint', function () {
         .pipe(jshint({ devel: true, debug: true }))
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
+});
+
+// tests
+gulp.task('test', function (done) {
+    new karma({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
 });
 
 // uglify
