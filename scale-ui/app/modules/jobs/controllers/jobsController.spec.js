@@ -9,8 +9,14 @@ describe('jobsController', function() {
         jobsController = $controller('jobsController', { $scope: $scope });
     }));
 
-    it(' is defined', function() {
+    it('should be defined.', function() {
         expect(jobsController).toBeDefined();
     });
+
+    it('should not have a job execution upon startup', function() {
+        expect($scope.jobExecution).toBe(null);
+    });
+
+    it('')
 
 });

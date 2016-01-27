@@ -23,6 +23,7 @@
         $scope.jobsData = {};
         $scope.loading = true;
         $scope.jobTypeValues = [];
+        $scope.jobExecution = null;
         $scope.selectedJobType = jobsParams.job_type_id || 0;
         $scope.jobStatusValues = scaleConfig.jobStatus;
         $scope.selectedJobStatus = jobsParams.status || $scope.jobStatusValues[0];
