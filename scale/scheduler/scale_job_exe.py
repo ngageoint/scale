@@ -292,7 +292,7 @@ class ScaleJobExecution(object):
                     status='FAILED', error__category='SYSTEM', ended__gte=check_time, node=node).distinct('job').count()
                 max_node_errors = Scheduler.objects.first().max_node_errors
                 if num_node_errors >= max_node_errors:
-                    logger.warning('%s failed %d jobs in %d minutes, pausing the host' % (node.hostname, num_node_errors, node_sleep))
+                    logger.warning('%s failed %d jobs in %d minutes, pausing the host' % (node.hostname, num_node_errors, node_error_period))
                     with transaction.atomic():
                         node.is_paused = True
                         node.is_paused_errors = True

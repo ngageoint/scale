@@ -158,68 +158,83 @@ if not os.path.exists(LOG_DIR):
 LOG_NAME = 'scale'  # This environment var can be set
 if 'LOG_NAME' in os.environ:
     LOG_NAME = os.environ['LOG_NAME']
-LOGGING = {
+LOG_FORMATTERS = {
+    'standard': {
+        'format': ('%(asctime)s %(levelname)s ' +
+                   '[%(name)s(%(lineno)s)] %(message)s'),
+        'datefmt': '%Y-%m-%d %H:%M:%S',
+    },
+    'db-standard': {
+        'format': ('[%(name)s(%(lineno)s)] %(message)s'),
+    }
+}
+LOG_FILTERS = {
+    'require_debug_false': {
+        '()': 'django.utils.log.RequireDebugFalse'
+    }
+}
+LOG_HANDLERS = {
+    'null': {
+        'level': 'DEBUG',
+        'class': 'django.utils.log.NullHandler',
+    },
+    'console': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stdout
+    },
+    'console-err': {
+        'level': 'WARNING',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stderr
+    },
+    'file-debug': {
+        'level': 'DEBUG',
+        'class': 'logging.handlers.TimedRotatingFileHandler',
+        'formatter': 'standard',
+        'filename': os.path.join(LOG_DIR, '%s_debug.log' % LOG_NAME),
+        'when': 'midnight'
+    },
+    'file-info': {
+        'level': 'INFO',
+        'class': 'logging.handlers.TimedRotatingFileHandler',
+        'formatter': 'standard',
+        'filename': os.path.join(LOG_DIR, '%s_info.log' % LOG_NAME),
+        'when': 'midnight'
+    },
+    'file-error': {
+        'level': 'ERROR',
+        'class': 'logging.handlers.TimedRotatingFileHandler',
+        'formatter': 'standard',
+        'filename': os.path.join(LOG_DIR, '%s_errors.log' % LOG_NAME),
+        'when': 'midnight'
+    },
+    'log-db': {
+        'level': 'WARNING',
+        'class': 'error.handlers.DatabaseLogHandler',
+        'formatter': 'db-standard',
+        'model': 'error.models.LogEntry',
+    },
+}
+LOG_CONSOLE_FILE_DEBUG = {
     'version': 1,
-    'formatters': {
-        'standard': {
-            'format': ('%(asctime)s %(levelname)s ' +
-                       '[%(name)s(%(lineno)s)] %(message)s'),
-            'datefmt': '%Y-%m-%d %H:%M:%S',
-        },
-        'db-standard': {
-            'format': ('[%(name)s(%(lineno)s)] %(message)s'),
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'null': {
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console', 'console-err', 'file-debug', 'file-info', 'file-error', 'log-db'],
             'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'standard',
-            'stream': sys.stdout
-        },
-        'console-err': {
-            'level': 'WARNING',
-            'class': 'logging.StreamHandler',
-            'formatter': 'standard',
-            'stream': sys.stderr
-        },
-        'file-debug': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(LOG_DIR, '%s_debug.log' % LOG_NAME),
-            'when': 'midnight'
-        },
-        'file-info': {
-            'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(LOG_DIR, '%s_info.log' % LOG_NAME),
-            'when': 'midnight'
-        },
-        'file-error': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(LOG_DIR, '%s_errors.log' % LOG_NAME),
-            'when': 'midnight'
-        },
-        'log-db': {
-            'level': 'WARNING',
-            'class': 'error.handlers.DatabaseLogHandler',
-            'formatter': 'db-standard',
-            'model': 'error.models.LogEntry',
         },
     },
+}
+LOG_CONSOLE_FILE_INFO = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
             'handlers': ['console', 'console-err', 'file-info', 'file-error', 'log-db'],
@@ -227,6 +242,7 @@ LOGGING = {
         },
     },
 }
+LOGGING = LOG_CONSOLE_FILE_INFO
 
 
 # Hack to fix ISO8601 for datetime filters.

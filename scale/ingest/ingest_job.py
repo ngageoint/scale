@@ -18,6 +18,7 @@ from source.models import SourceFile
 from storage.exceptions import DuplicateFile
 from storage.models import ScaleFile
 from storage.nfs import nfs_mount
+from util.retry import retry_database_query
 
 
 logger = logging.getLogger(__name__)
@@ -35,8 +36,10 @@ def perform_ingest(ingest_id, mount):
     job_exe_id = None
     upload_work_dir = None
     try:
-        ingest = Ingest.objects.select_related().get(id=ingest_id)
-        job_exe_id = JobExecution.objects.get_latest([ingest.job])[ingest.job.id].id
+        # TODO: refactor to combine _get_ingest(), _get_job_exe_id(), and _set_ingesting_status() in one database
+        # transaction with as few queries as possible, include retries
+        ingest = _get_ingest(ingest_id)
+        job_exe_id = _get_job_exe_id(ingest)
         create_job_exe_dir(job_exe_id)
         ingest_work_dir = get_ingest_work_dir(job_exe_id)
         dup_path = os.path.join(ingest_work_dir, 'duplicate', ingest.file_name)
@@ -57,33 +60,25 @@ def perform_ingest(ingest_id, mount):
 
         logger.info('Storing %s into %s on %s', ingest_path, ingest.file_path, ingest.workspace.name)
         try:
+            # TODO: future refactor: before copying file, grab existing source file (no lock) or create and save model
+            # This guarantees that source file exists and can be used to check if file is duplicate
+            # After this step, the source file should be marked as is_deleted so that it can't be used yet
             src_file = SourceFile.objects.store_file(upload_work_dir, ingest_path, ingest.get_data_type_tags(),
                                                      ingest.workspace, ingest.file_path)
-            # Atomically store file, mark INGESTED, and run ingest trigger rules
-            with transaction.atomic():
-                # TODO: It's possible that the file will be successfully moved into the workspace but this database
-                # transaction might fail. This will result in a file that is in a workspace but doesn't have database
-                # entries. Attempts to re-ingest will result in duplicate file errors.
-                logger.info('Marking file as INGESTED: %i', ingest_id)
-                ingest.source_file = src_file
-                ingest.status = 'INGESTED'
-                ingest.ingest_ended = timezone.now()
-                ingest.save()
-                logger.debug('Checking ingest trigger rules')
-                IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
 
-            # Delete ingest file
+            _complete_ingest(ingest, 'INGESTED', src_file)
             _delete_ingest_file(ingest_path)
             logger.info('Ingest successful: %s', ingest_path)
         except DuplicateFile:
             logger.warning('Duplicate file detected: %i', ingest_id, exc_info=True)
-            ingest.status = 'DUPLICATE'
-            ingest.save()
+            # TODO: future refactor: pass source file model in so source files have duplicate ingests tied to them
+            _complete_ingest(ingest, 'DUPLICATE', None)
             _move_ingest_file(ingest_path, dup_path)
         except Exception:
             # TODO: have this delete the stored source file using some SourceFile.objects.delete_file method
-            ingest.status = 'ERRORED'
-            ingest.save()
+            # TODO: future refactor: pass source file model in so source files have errored ingests tied to them
+            # TODO: change ERRORED to FAILED
+            _complete_ingest(ingest, 'ERRORED', None)
             raise  # File remains where it is so it can be processed again
     finally:
         try:
@@ -112,6 +107,32 @@ def perform_ingest(ingest_id, mount):
         logger.exception('Job Execution %i: Error cleaning up', job_exe_id)
 
 
+@retry_database_query
+def _complete_ingest(ingest, status, source_file):
+    '''Completes the given ingest by marking its
+
+    :param ingest: The ingest model
+    :type ingest: :class:`ingest.models.Ingest`
+    :param status: The final status of the ingest
+    :type status: str
+    :param source_file: The model of the source file that was ingested
+    :type source_file: :class:`source.models.SourceFile`
+    '''
+
+    # TODO: future refactor: this will also be responsible for saving the source file model
+
+    # Atomically mark ingest status and run ingest trigger rules
+    with transaction.atomic():
+        logger.info('Marking ingest %i as %s', ingest.id, status)
+        ingest.source_file = source_file
+        ingest.status = status
+        if status == 'INGESTED':
+            ingest.ingest_ended = timezone.now()
+        ingest.save()
+        if status == 'INGESTED':
+            IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+
+
 def _delete_ingest_file(ingest_path):
     '''Deletes the given ingest file
 
@@ -121,6 +142,32 @@ def _delete_ingest_file(ingest_path):
     if os.path.exists(ingest_path):
         logger.info('Deleting %s', ingest_path)
         os.remove(ingest_path)
+
+
+@retry_database_query
+def _get_ingest(ingest_id):
+    '''Returns the ingest for the given ID
+
+    :param ingest_id: The ingest ID
+    :type ingest_id: int
+    :returns: The ingest model
+    :rtype: :class:`ingest.models.Ingest`
+    '''
+
+    return Ingest.objects.select_related().get(id=ingest_id)
+
+
+@retry_database_query
+def _get_job_exe_id(ingest):
+    '''Returns the latest job execution ID for the given ingest
+
+    :param ingest: The ingest model
+    :type ingest: :class:`ingest.models.Ingest`
+    :returns: The latest job execution ID
+    :rtype: int
+    '''
+
+    return JobExecution.objects.get_latest([ingest.job])[ingest.job.id].id
 
 
 def _move_ingest_file(ingest_path, dest_path):
@@ -140,6 +187,7 @@ def _move_ingest_file(ingest_path, dest_path):
         os.rename(ingest_path, dest_path)
 
 
+@retry_database_query
 def _set_ingesting_status(ingest, ingest_path, dup_path):
     '''Checks the condition of the ingest and if good, updates its status in the database to INGESTING and returns the
     model. If None is returned, then the ingest process should stop.

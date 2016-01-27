@@ -32,7 +32,7 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
         },
         "data": {
             "input_data_name": "infile",
-            "workspace_name": "products"
+            "workspace_name": "raw"
         }
     }, "landsat-parse", True)
 
