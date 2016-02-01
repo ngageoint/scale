@@ -134,7 +134,7 @@ class Scheduler(models.Model):
 
     is_paused = models.BooleanField(default=False)
     node_error_period = models.IntegerField(default=1)
-    max_node_errors = models.FloatField(default=5.)
+    max_node_errors = models.FloatField(default=50.)
 
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
