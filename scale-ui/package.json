@@ -23,6 +23,7 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-jasmine": "^0.3.6",
     "karma-read-json": "^1.1.0",
+    "karma-spec-reporter": "0.0.23",
     "main-bower-files": "^2.11.1"
   },
   "engines": {
