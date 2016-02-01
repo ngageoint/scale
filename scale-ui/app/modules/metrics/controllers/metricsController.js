@@ -10,7 +10,8 @@
             yUnits = [],
             locationParams = {
                 chart: null
-            };
+            },
+            self = this;
 
         $scope._ = _;
         $scope.moment = moment;
@@ -71,7 +72,7 @@
         }
         */
 
-        var getPlotDataParams = function (obj) {
+        self.getPlotDataParams = function (obj) {
             return {
                 page: null,
                 page_size: null,
@@ -84,14 +85,14 @@
             };
         };
 
-        var resetSelections = function () {
+        self.resetSelections = function () {
             $scope.inputStartDate = moment.utc().subtract(1, 'M').toISOString();
             $scope.inputEndDate = moment.utc().toISOString();
             $scope.selectedDataType = {};
             $scope.changeDataTypeSelection();
         };
 
-        var updateChart = function () {
+        self.updateChart = function () {
             $scope.chartData = [];
             if ($scope.chartArr.length === 0) {
                 // nothing to show on chart
@@ -101,11 +102,11 @@
                 var callInit = _.after($scope.chartArr.length, function () {
                     // only initChart after this function has been called for all datasets in chartArr
                     $scope.loadingMetrics = false;
-                    initChart();
+                    self.initChart();
                 });
 
                 _.forEach($scope.chartArr, function (obj) {
-                    var params = getPlotDataParams(obj);
+                    var params = self.getPlotDataParams(obj);
                     metricsService.getPlotData(params).then(function (data) {
                     //metricsService.getGeneratedPlotData({query: obj, params: params}).then(function (data) {
                         $scope.chartData.push({
@@ -152,15 +153,15 @@
                 filtersApplied: filteredChoices,
                 selectedMetrics: selectedColumns
             });
-            updateChart();
-            //resetSelections();
+            self.updateChart();
+            //self.resetSelections();
         };
 
         $scope.deleteFromChart = function (objToDelete) {
             _.remove($scope.chartArr, function (obj) {
                 return JSON.stringify(obj) === JSON.stringify(objToDelete);
             });
-            updateChart();
+            self.updateChart();
         };
 
         $scope.getFilterOptions = function (param) {
@@ -179,9 +180,9 @@
 
             if (!$scope.selectedDataType.name || $scope.selectedDataType.name === '') {
                 $scope.selectedDataType = {};
-                getDataTypes();
+                self.getDataTypes();
             } else {
-                getDataTypeOptions($scope.selectedDataType);
+                self.getDataTypeOptions($scope.selectedDataType);
             }
         };
 
@@ -210,7 +211,7 @@
             $scope.chartDisplay = display;
             $scope.stackedClass = display === 'stacked' ? 'btn-primary' : 'btn-default';
             $scope.groupedClass = display === 'grouped' ? 'btn-primary' : 'btn-default';
-            initChart();
+            self.initChart();
         };
 
         $scope.updateChartType = function (type) {
@@ -221,7 +222,7 @@
             $scope.lineClass = type === 'line' ? 'btn-primary' : 'btn-default';
             $scope.splineClass = type === 'spline' ? 'btn-primary' : 'btn-default';
             $scope.scatterClass = type === 'scatter' ? 'btn-primary' : 'btn-default';
-            initChart();
+            self.initChart();
         };
 
         $scope.toggleSubchart = function () {
@@ -233,12 +234,12 @@
             }
         };
 
-        var initialize = function () {
+        self.initialize = function () {
             navService.updateLocation('metrics');
-            getDataTypes();
+            self.getDataTypes();
             /*
             if ($scope.chartArr.length > 0) {
-                updateChart();
+                self.updateChart();
             }
             */
         };
@@ -249,7 +250,7 @@
             $scope.filteredChoices = filteredChoices;
         };*/
 
-        var getDataTypes = function () {
+        self.getDataTypes = function () {
             metricsService.getDataTypes().then(function (result) {
                 $scope.availableDataTypes = result.results;
             }).catch(function (error) {
@@ -258,7 +259,7 @@
             });
         };
 
-        var getDataType = function (id) {
+        self.getDataType = function (id) {
             metricsService.getDataTypeMetrics(id).then(function (result) {
                 $scope.selectedDataTypeAvailableMetrics = result.metrics;
             }).catch(function (error) {
@@ -266,7 +267,7 @@
             });
         };
 
-        var getDataTypeOptions = function (dataType) {
+        self.getDataTypeOptions = function (dataType) {
             metricsService.getDataTypeOptions(dataType.name).then(function (result) {
                 $scope.selectedDataTypeOptions = result;
                 _.forEach(result.filters, function (filter) {
@@ -316,14 +317,14 @@
             });
         };
 
-        initialize();
+        self.initialize();
 
         $scope.$watch('inputEndDate', function (value) {
             console.log(value)
         });
 
         // set up chart
-        var initChart = function () {
+        self.initChart = function () {
             // mark any existing data for removal
             // compare currCols (columns currently in the chart) with displayCols (columns to display)
             removeIds = [];

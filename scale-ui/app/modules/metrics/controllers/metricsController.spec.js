@@ -23,12 +23,16 @@ describe('metricsController', function () {
             }
         };
 
-        $scope = $injector.get('$rootScope');
+        $scope = $injector.get('$rootScope').$new();
         $controller = $injector.get('$controller');
         metricsController = $controller('metricsController', { $scope: $scope, metricsService: ms });
 
-        initChart = jasmine.createSpy().and.callFake(initChart);
+        spyOn(metricsController, 'initChart');
     }));
+
+    afterEach(function () {
+        metricsController.initChart.calls.reset();
+    });
 
     it ('is defined', function () {
         expect(metricsController).toBeDefined();
@@ -63,7 +67,7 @@ describe('metricsController', function () {
             // call digest to execute callbacks
             $scope.$digest();
 
-            //expect(initChart).toHaveBeenCalled();
+            expect(metricsController.initChart).toHaveBeenCalled();
             expect($scope.chartArr.length).toEqual(1);
             expect($scope.chartData.length).toEqual(1);
         });
