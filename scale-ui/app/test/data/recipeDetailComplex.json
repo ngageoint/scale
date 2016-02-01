@@ -4,6 +4,9 @@
     "version": "1.0",
     "description": "Data mockup of a complex Scale recipe",
     "is_active": true,
+    "recipe_type": {
+        "id": 2
+    },
     "definition": {
         "input_data": [
             {

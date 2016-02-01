@@ -2,6 +2,9 @@
     'use strict';
 
     angular.module('scaleApp').controller('recipeDetailsController', function ($rootScope, $scope, $location, $routeParams, navService, recipeService, scaleConfig, subnavService, userService) {
+
+        var self = this;
+
         $scope.recipe = {};
         $scope.recipeId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
@@ -10,7 +13,7 @@
         $scope.activeTab = 'status';
         $scope.lastStatusChange = '';
 
-        var getRecipeDetail = function (recipeId) {
+        self.getRecipeDetail = function (recipeId) {
             $scope.loadingRecipeDetail = true;
             recipeService.getRecipeDetails(recipeId).then(function (data) {
                 $scope.recipe = data;
@@ -26,11 +29,11 @@
             });
         };
 
-        var initialize = function () {
+        self.initialize = function () {
             navService.updateLocation('recipes');
             $rootScope.user = userService.getUserCreds();
 
-            getRecipeDetail($scope.recipeId);
+            self.getRecipeDetail($scope.recipeId);
         };
 
 
@@ -41,6 +44,6 @@
             $('#' + $scope.activeTab).show();
         };
 
-        initialize();
+        self.initialize();
     });
 })();
