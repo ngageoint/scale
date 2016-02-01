@@ -195,8 +195,7 @@ gulp.task('lint', function () {
 // tests
 gulp.task('test', function (done) {
     new karma({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
+        configFile: __dirname + '/karma.conf.js'
     }, done).start();
 });
 

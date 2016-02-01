@@ -16,9 +16,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'build/scripts/vendor.js',
+      'node_modules/karma-read-json/karma-read-json.js',
       'app/modules/*.js',
       'app/modules/**/*.js',
-      'app/scripts/**/*.js'
+      'app/scripts/**/*.js',
+      {pattern: 'app/test/data/*.json', watched: true, served: true, included: false}
     ],
 
 
