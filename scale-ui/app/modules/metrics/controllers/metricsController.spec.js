@@ -26,13 +26,7 @@ describe('metricsController', function () {
         $scope = $injector.get('$rootScope').$new();
         $controller = $injector.get('$controller');
         metricsController = $controller('metricsController', { $scope: $scope, metricsService: ms });
-
-        spyOn(metricsController, 'initChart');
     }));
-
-    afterEach(function () {
-        metricsController.initChart.calls.reset();
-    });
 
     it ('is defined', function () {
         expect(metricsController).toBeDefined();
@@ -54,6 +48,11 @@ describe('metricsController', function () {
     describe('afterActivation', function () {
         beforeEach(function () {
             $scope.$apply();
+            spyOn(metricsController, 'initChart');
+        });
+
+        afterEach(function () {
+            metricsController.initChart.calls.reset();
         });
 
         it ('should have availableDataTypes', function () {
