@@ -2,6 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $modal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService) {
+        var self = this;
 
         var jobsParams = {
             page: null, page_size: null, started: null, ended: null, order: $rootScope.jobsControllerOrder || '-last_modified', status: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
@@ -105,7 +106,7 @@
                     _.forEach(sortColumns, function (col) {
                         sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
                     });
-                    updateJobOrder(sortArr);
+                    self.updateJobOrder(sortArr);
                 });
             };
 
@@ -114,7 +115,7 @@
             return _.includes($scope.jobStatusValues, status);
         };
 
-        var updateJobType = function (value) {
+        self.updateJobType = function (value) {
             if (value != jobsParams.job_type_id) {
                 jobsParams.page = 1;
             }
@@ -129,15 +130,15 @@
         $scope.$watch('selectedJobType', function (value) {
             if ($scope.loading) {
                 if (filteredByJobType) {
-                    updateJobType(value);
+                    self.updateJobType(value);
                 }
             } else {
                 filteredByJobType = value != 0;
-                updateJobType(value);
+                self.updateJobType(value);
             }
         });
 
-        var updateJobStatus = function (value) {
+        self.updateJobStatus = function (value) {
             if (value != jobsParams.status) {
                 jobsParams.page = 1;
             }
@@ -152,15 +153,15 @@
         $scope.$watch('selectedJobStatus', function (value) {
             if ($scope.loading) {
                 if (filteredByJobStatus) {
-                    updateJobStatus(value);
+                    self.updateJobStatus(value);
                 }
             } else {
                 filteredByJobStatus = value !== 'VIEW ALL';
-                updateJobStatus(value);
+                self.updateJobStatus(value);
             }
         });
 
-        var updateJobOrder = function (sortArr) {
+        self.updateJobOrder = function (sortArr) {
             jobsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
             $scope.filterResults();
@@ -193,7 +194,7 @@
             _.forEach(_.pairs(jobsParams), function (param) {
                 $location.search(param[0], param[1]);
             });
-            getJobs();
+            self.getJobs();
         };
 
         $scope.requeueJob = function (job) {
@@ -229,7 +230,7 @@
             });
         };
 
-        var getJobs = function () {
+        self.getJobs = function () {
             jobService.getJobsOnce(jobsParams).then(function (data) {
                 $scope.jobsData = data.results;
                 $scope.gridOptions.totalItems = data.count;
@@ -241,25 +242,25 @@
             });
         };
 
-        var getJobTypes = function () {
+        self.getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
                 $scope.jobTypeValues = data.results;
                 $scope.jobTypeValues.unshift({ name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 });
                 /*if (!filteredByJobType && !filteredByJobStatus && !filteredByOrder) {
-                    getJobs();
+                    self.getJobs();
                 } else {
                     if (filteredByOrder) {
-                        updateJobOrder(jobsParams.order);
+                        self.updateJobOrder(jobsParams.order);
                     }
                 }*/
-                getJobs(jobsParams);
+                self.getJobs(jobsParams);
             }).catch(function (error) {
                 $scope.loading = false;
                 console.log(error);
             });
         };
 
-        var initialize = function () {
+        self.initialize = function () {
             if (typeof $rootScope.colDefs === 'undefined') {
                 // root column defs have not been altered by user, so set up defaults
                 if (!jobsParams.order) {
@@ -271,16 +272,16 @@
                     $location.search('page_size', jobsParams.page_size).replace();
                 }
             }
-            getJobTypes();
+            self.getJobTypes();
             $rootScope.user = userService.getUserCreds();
 
-            if($rootScope.user){
+            if ($rootScope.user) {
                 $scope.readonly = false;
             }
             navService.updateLocation('jobs');
         };
 
-        initialize();
+        self.initialize();
 
         angular.element(document).ready(function () {
             // set container heights equal to available page height
