@@ -211,7 +211,6 @@
             }
         });
 
-        getJobLoad();
 
         if ($scope.autoHeight) {
             // set chart height
@@ -221,10 +220,11 @@
                     offset = scaleConfig.headerOffset,
                     headerOffset = $('.job-load-header').height(),
                     legendOffset = $('.job-load-legend-label').height(),
-                    filterOffset = $('.job-load-filter').height(),
+                    filterOffset = $('.job-load-filter').outerHeight(true),
                     chartMaxHeight = viewport.height - offset - headerOffset - legendOffset - filterOffset - 5;
 
                 $scope.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
+                getJobLoad();
             });
         }
     });
