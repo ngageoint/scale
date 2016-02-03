@@ -5,15 +5,17 @@ describe('jobsController', function () {
     var $scope;
     var $controller;
     var $modal;
+    var $location;
 
-    beforeEach(inject(function ($injector, $q, JobDetails) {
+    beforeEach(inject(function ($injector, $q, Job, JobDetails) {
         var jobs = readJSON('app/test/data/jobs.json'),
             jobTypes = readJSON('app/test/data/jobTypes.json'),
             jobDetail = readJSON('app/test/data/jobDetails.json');
 
         $scope = $injector.get('$rootScope').$new();
         $controller = $injector.get('$controller');
-        $modal = $injector.get('$modal');
+        $location = $injector.get('$location');
+        $modal = jasmine.createSpyObj('modal', ['open']);
 
         var _jobService_  = {
             getJobsOnce: function () {
@@ -30,7 +32,7 @@ describe('jobsController', function () {
             }
         };
 
-        jobsController = $controller('jobsController', { $scope: $scope, jobService: _jobService_, jobTypeService: _jobTypeService_ });
+        jobsController = $controller('jobsController', { $scope: $scope, jobService: _jobService_, jobTypeService: _jobTypeService_, $modal: $modal, $location: $location });
     }));
 
     it ('should be defined.', function () {
@@ -48,7 +50,6 @@ describe('jobsController', function () {
     describe('afterActivation', function () {
         beforeEach(function () {
             $scope.$apply();
-            //spyOn($modal, 'open');
             //spyOn(jobsController, 'getJobTypes');
         });
 
@@ -63,14 +64,44 @@ describe('jobsController', function () {
             expect($scope.jobsData.length).toBeGreaterThan(0);
         });
 
-        //it ('should show a log', function () {
-        //    $scope.showLog();
-        //    $scope.$digest();
-        //
-        //    expect($scope.selectedJob).toBeDefined();
-        //    expect($scope.jobExecution).not.toBeNull();
-        //    expect($modal).toHaveBeenCalled();
-        //});
+        it ('should update the job type filter and get filtered results', function () {
+            spyOn(jobsController, 'getJobs');
+            $scope.selectedJobType = 73;
 
+            $scope.$digest();
+
+            expect(jobsController.jobsParams.job_type_id).toEqual(73);
+            expect(jobsController.jobsParams.page).toEqual(1);
+            expect($location.search().job_type_id).toEqual(73);
+            expect(jobsController.getJobs).toHaveBeenCalled();
+
+            jobsController.getJobs.calls.reset();
+        });
+
+        it ('should update the job status filter and get filtered results', function () {
+            spyOn(jobsController, 'getJobs');
+            $scope.selectedJobStatus = 'COMPLETED';
+
+            $scope.$digest();
+
+            expect(jobsController.jobsParams.status).toEqual('COMPLETED');
+            expect(jobsController.jobsParams.page).toEqual(1);
+            expect($location.search().status).toEqual('COMPLETED');
+            expect(jobsController.getJobs).toHaveBeenCalled();
+
+            jobsController.getJobs.calls.reset();
+        });
+
+        it ('should show a log', function () {
+            $scope.showLog();
+
+            // since we're calling the function directly (and not relying on the controller lifecycle for execution),
+            // call digest to execute callbacks
+            $scope.$digest();
+
+            expect($scope.selectedJob).toBeDefined();
+            expect($scope.jobExecution).not.toBeNull();
+            expect($modal.open).toHaveBeenCalled();
+        });
     });
 });

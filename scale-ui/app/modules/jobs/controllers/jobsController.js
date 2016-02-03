@@ -4,30 +4,30 @@
     angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $modal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService) {
         var self = this;
 
-        var jobsParams = {
+        self.jobsParams = {
             page: null, page_size: null, started: null, ended: null, order: $rootScope.jobsControllerOrder || '-last_modified', status: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
         };
 
         // check for jobsParams in query string, and update as necessary
-        _.forEach(_.pairs(jobsParams), function (param) {
+        _.forEach(_.pairs(self.jobsParams), function (param) {
             var value = _.at($location.search(), param[0]);
             if (value.length > 0) {
-                jobsParams[param[0]] = value.length > 1 ? value : value[0];
+                self.jobsParams[param[0]] = value.length > 1 ? value : value[0];
             }
         });
 
-        var gridPageNumber = jobsParams.page || 1,
-            filteredByJobType = jobsParams.job_type_id ? true : false,
-            filteredByJobStatus = jobsParams.status ? true : false,
-            filteredByOrder = jobsParams.order ? true : false;
+        var gridPageNumber = self.jobsParams.page || 1,
+            filteredByJobType = self.jobsParams.job_type_id ? true : false,
+            filteredByJobStatus = self.jobsParams.status ? true : false,
+            filteredByOrder = self.jobsParams.order ? true : false;
 
         $scope.jobsData = {};
         $scope.loading = true;
         $scope.jobTypeValues = [];
         $scope.jobExecution = null;
-        $scope.selectedJobType = jobsParams.job_type_id || 0;
+        $scope.selectedJobType = self.jobsParams.job_type_id || 0;
         $scope.jobStatusValues = scaleConfig.jobStatus;
-        $scope.selectedJobStatus = jobsParams.status || $scope.jobStatusValues[0];
+        $scope.selectedJobStatus = self.jobsParams.status || $scope.jobStatusValues[0];
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
         $scope.actionClicked = false;
         $scope.gridStyle = '';
@@ -72,10 +72,10 @@
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();
-        $scope.gridOptions.paginationCurrentPage = parseInt(jobsParams.page || 1);
-        $scope.gridOptions.paginationPageSize = parseInt(jobsParams.page_size) || $scope.gridOptions.paginationPageSize;
+        $scope.gridOptions.paginationCurrentPage = parseInt(self.jobsParams.page || 1);
+        $scope.gridOptions.paginationPageSize = parseInt(self.jobsParams.page_size) || $scope.gridOptions.paginationPageSize;
         var colDefs = $rootScope.colDefs ? $rootScope.colDefs : defaultColumnDefs;
-        $scope.gridOptions.columnDefs = gridFactory.applySortConfig(colDefs, jobsParams);
+        $scope.gridOptions.columnDefs = gridFactory.applySortConfig(colDefs, self.jobsParams);
         $scope.gridOptions.data = [];
         $scope.gridOptions.onRegisterApi = function (gridApi) {
                 //set gridApi on scope
@@ -91,8 +91,8 @@
 
                 });
                 $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                    jobsParams.page = currentPage;
-                    jobsParams.page_size = pageSize;
+                    self.jobsParams.page = currentPage;
+                    self.jobsParams.page_size = pageSize;
                     console.log('gridApi');
                     $scope.filterResults();
                 });
@@ -116,11 +116,11 @@
         };
 
         self.updateJobType = function (value) {
-            if (value != jobsParams.job_type_id) {
-                jobsParams.page = 1;
+            if (value != self.jobsParams.job_type_id) {
+                self.jobsParams.page = 1;
             }
-            jobsParams.job_type_id = value == 0 ? null : value;
-            jobsParams.page_size = $scope.gridOptions.paginationPageSize;
+            self.jobsParams.job_type_id = value == 0 ? null : value;
+            self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
             console.log('selectedJobType');
             if (!$scope.loading) {
                 $scope.filterResults();
@@ -139,11 +139,11 @@
         });
 
         self.updateJobStatus = function (value) {
-            if (value != jobsParams.status) {
-                jobsParams.page = 1;
+            if (value != self.jobsParams.status) {
+                self.jobsParams.page = 1;
             }
-            jobsParams.status = value === 'VIEW ALL' ? null : value;
-            jobsParams.page_size = $scope.gridOptions.paginationPageSize;
+            self.jobsParams.status = value === 'VIEW ALL' ? null : value;
+            self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
             console.log('selectedJobStatus');
             if (!$scope.loading) {
                 $scope.filterResults();
@@ -162,7 +162,7 @@
         });
 
         self.updateJobOrder = function (sortArr) {
-            jobsParams.order = sortArr.length > 0 ? sortArr : null;
+            self.jobsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
             $scope.filterResults();
         };
@@ -191,7 +191,7 @@
         };
 
         $scope.filterResults = function () {
-            _.forEach(_.pairs(jobsParams), function (param) {
+            _.forEach(_.pairs(self.jobsParams), function (param) {
                 $location.search(param[0], param[1]);
             });
             self.getJobs();
@@ -231,7 +231,7 @@
         };
 
         self.getJobs = function () {
-            jobService.getJobsOnce(jobsParams).then(function (data) {
+            jobService.getJobsOnce(self.jobsParams).then(function (data) {
                 $scope.jobsData = data.results;
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
@@ -250,10 +250,10 @@
                     self.getJobs();
                 } else {
                     if (filteredByOrder) {
-                        self.updateJobOrder(jobsParams.order);
+                        self.updateJobOrder(self.jobsParams.order);
                     }
                 }*/
-                self.getJobs(jobsParams);
+                self.getJobs(self.jobsParams);
             }).catch(function (error) {
                 $scope.loading = false;
                 console.log(error);
@@ -263,13 +263,13 @@
         self.initialize = function () {
             if (typeof $rootScope.colDefs === 'undefined') {
                 // root column defs have not been altered by user, so set up defaults
-                if (!jobsParams.order) {
-                    jobsParams.order = '-last_modified';
-                    $location.search('order', jobsParams.order).replace();
+                if (!self.jobsParams.order) {
+                    self.jobsParams.order = '-last_modified';
+                    $location.search('order', self.jobsParams.order).replace();
                 }
-                if (!jobsParams.page_size) {
-                    jobsParams.page_size = $scope.gridOptions.paginationPageSize;
-                    $location.search('page_size', jobsParams.page_size).replace();
+                if (!self.jobsParams.page_size) {
+                    self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
+                    $location.search('page_size', self.jobsParams.page_size).replace();
                 }
             }
             self.getJobTypes();
