@@ -106,5 +106,11 @@
                 }
             }
         });
+
+        window.onresize = function() {
+          var width = $($element[0]).width();
+          console.log(width);
+          genChart();
+        }
     });
 })();

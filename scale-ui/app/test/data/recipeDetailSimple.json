@@ -43,6 +43,9 @@
             }
         ]
     },
+    "recipe_type": {
+        "id": 1
+    },
     "created": "2015-06-15T19:03:26.346Z",
     "last_modified": "2015-06-15T19:03:26.346Z",
     "archived": null,

@@ -1,0 +1,232 @@
+{
+    "id": 2,
+    "name": "landsat8",
+    "version": "1.0.0",
+    "title": "Landsat 8",
+    "description": "Process Landsat 8 sensor data",
+    "is_active": true,
+    "definition": {
+        "input_data": [
+            {
+                "media_types": [
+                    "application/octet-stream"
+                ],
+                "required": true,
+                "type": "file",
+                "name": "input_file"
+            }
+        ],
+        "version": "1.0",
+        "jobs": [
+            {
+                "dependencies": [],
+                "job_type": {
+                    "version": "1.0.0",
+                    "name": "landsat-parse"
+                },
+                "name": "landsat-parse",
+                "recipe_inputs": [
+                    {
+                        "job_input": "infile",
+                        "recipe_input": "input_file"
+                    }
+                ]
+            },
+            {
+                "dependencies": [
+                    {
+                        "connections": [
+                            {
+                                "output": "thermal",
+                                "input": "thermal"
+                            }
+                        ],
+                        "name": "landsat-parse"
+                    }
+                ],
+                "job_type": {
+                    "version": "1.0.0",
+                    "name": "landsat-hotspots"
+                },
+                "name": "landsat-hotspots",
+                "recipe_inputs": []
+            },
+            {
+                "dependencies": [
+                    {
+                        "connections": [
+                            {
+                                "output": "multispectral",
+                                "input": "multispectral"
+                            }
+                        ],
+                        "name": "landsat-parse"
+                    }
+                ],
+                "job_type": {
+                    "version": "1.0",
+                    "name": "landsat-ndwi"
+                },
+                "name": "landsat-ndwi",
+                "recipe_inputs": []
+            }
+        ]
+    },
+    "revision_num": 16,
+    "created": "2016-01-13T01:29:38.299Z",
+    "last_modified": "2016-01-14T17:37:43.656Z",
+    "archived": null,
+    "trigger_rule": {
+        "id": 63,
+        "type": "INGEST",
+        "name": "",
+        "is_active": true,
+        "configuration": {
+            "version": "1.0",
+            "data": {
+                "workspace_name": "products",
+                "input_data_name": "input_file"
+            },
+            "condition": {
+                "media_type": "",
+                "data_types": [
+                    "landsat"
+                ]
+            }
+        }
+    },
+    "job_types": [
+        {
+            "id": 8,
+            "name": "landsat-hotspots",
+            "version": "1.0.0",
+            "title": "Landsat Hotspots",
+            "description": "Detects hot spots in Landsat 8 data",
+            "category": "Landsat",
+            "author_name": "Tony Wolf, Applied Information Sciences",
+            "author_url": "http://www.appliedis.com",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f06d",
+            "interface": {
+                "output_data": [
+                    {
+                        "media_type": "image/tiff",
+                        "required": true,
+                        "type": "file",
+                        "name": "hotspots"
+                    }
+                ],
+                "shared_resources": [],
+                "command_arguments": "${thermal} ${job_output_dir}",
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/tiff"
+                        ],
+                        "required": true,
+                        "type": "file",
+                        "name": "thermal"
+                    }
+                ],
+                "version": "1.0",
+                "command": "python landsat-hotspots.py"
+            }
+        },
+        {
+            "id": 20,
+            "name": "landsat-ndwi",
+            "version": "1.0",
+            "title": "Landsat NDWI",
+            "description": "Detects water index in Landsat 8 data",
+            "category": "Landsat",
+            "author_name": null,
+            "author_url": null,
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f043",
+            "interface": {
+                "output_data": [
+                    {
+                        "media_type": "image/tiff",
+                        "required": true,
+                        "type": "file",
+                        "name": "ndwi"
+                    }
+                ],
+                "shared_resources": [],
+                "command_arguments": "${multispectral} ${job_output_dir}",
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/tiff"
+                        ],
+                        "required": true,
+                        "type": "file",
+                        "name": "multispectral"
+                    }
+                ],
+                "version": "1.0",
+                "command": "python landsat_ndwi.py"
+            }
+        },
+        {
+            "id": 15,
+            "name": "landsat-parse",
+            "version": "1.0.0",
+            "title": "Landsat Parse",
+            "description": "Parse landsat multi-tif files in tar.gz archives",
+            "category": "Landsat",
+            "author_name": null,
+            "author_url": null,
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f248",
+            "interface": {
+                "output_data": [
+                    {
+                        "media_type": "image/tiff",
+                        "required": true,
+                        "type": "file",
+                        "name": "multispectral"
+                    },
+                    {
+                        "media_type": "image/tiff",
+                        "required": true,
+                        "type": "file",
+                        "name": "panchromatic"
+                    },
+                    {
+                        "media_type": "image/tiff",
+                        "required": true,
+                        "type": "file",
+                        "name": "thermal"
+                    }
+                ],
+                "shared_resources": [],
+                "command_arguments": "${infile} ${job_output_dir}",
+                "input_data": [
+                    {
+                        "media_types": [
+                            "application/octet-stream"
+                        ],
+                        "required": true,
+                        "type": "file",
+                        "name": "infile"
+                    }
+                ],
+                "version": "1.0",
+                "command": "./parse_landsat.sh"
+            }
+        }
+    ]
+}
