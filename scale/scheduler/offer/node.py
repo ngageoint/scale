@@ -51,6 +51,17 @@ class NodeOffers(object):
         with self._lock:
             self._node = value
 
+    @property
+    def offer_ids(self):
+        """Returns the list of offer IDs
+
+        :returns: The offer IDs
+        :rtype: [str]
+        """
+
+        with self._lock:
+            return list(self._offers)
+
     def add_offer(self, offer):
         """Adds the given offer to this node set
 
