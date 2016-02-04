@@ -226,6 +226,8 @@
                 $scope.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
                 getJobLoad();
             });
+        } else {
+            getJobLoad();
         }
     });
 })();
