@@ -12,20 +12,60 @@ class QueuedJobExecution(object):
         :type queue: :class:`queue.models.Queue`
         """
 
-        self.queue = queue
+        self._queue = queue
 
-        cpus = self.queue.cpus_required
-        mem = self.queue.mem_required
-        disk_in = self.queue.disk_in_required
-        disk_out = self.queue.disk_out_required
-        disk_total = self.queue.disk_total_required
-        self.required_resources = JobResources(cpus=cpus, mem=mem, disk_in=disk_in, disk_out=disk_out,
-                                               disk_total=disk_total)
+        cpus = self._queue.cpus_required
+        mem = self._queue.mem_required
+        disk_in = self._queue.disk_in_required
+        disk_out = self._queue.disk_out_required
+        disk_total = self._queue.disk_total_required
+        self._required_resources = JobResources(cpus=cpus, mem=mem, disk_in=disk_in, disk_out=disk_out,
+                                                disk_total=disk_total)
         # TODO: populate this from queue model
-        self.required_node_ids = []
+        self._required_node_ids = []
 
-        self.provided_node = None
-        self.provided_resources = None
+        self._provided_node = None
+        self._provided_resources = None
+
+    @property
+    def id(self):
+        """Returns the ID of this job execution
+
+        :returns: The ID of this job execution
+        :rtype: int
+        """
+
+        return self._queue.job_exe_id
+
+    @property
+    def provided_node(self):
+        """Returns the node that has been provided to run this job execution
+
+        :returns: The node that has been provided to run this job execution
+        :rtype: :class:`node.models.Node`
+        """
+
+        return self._provided_node
+
+    @property
+    def provided_resources(self):
+        """Returns the resources that have been provided to run this job execution
+
+        :returns: The resources that have been provided to run this job execution
+        :rtype: :class:`job.resources.JobResources`
+        """
+
+        return self._provided_resources
+
+    @property
+    def required_resources(self):
+        """Returns the resources required by this job execution
+
+        :returns: The resources required by this job execution
+        :rtype: :class:`job.resources.JobResources`
+        """
+
+        return self._required_resources
 
     def accepted(self, node, resources):
         """Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
@@ -37,5 +77,5 @@ class QueuedJobExecution(object):
         :type resources: :class:`job.resources.JobResources`
         """
 
-        self.provided_node = node
-        self.provided_resources = resources
+        self._provided_node = node
+        self._provided_resources = resources

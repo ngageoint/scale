@@ -17,13 +17,35 @@ class RunningJobExecution(object):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
+        self._id = job_exe.id
         self._lock = threading.Lock()
+        self._node_id = job_exe.node.id
 
         # TODO: Future refactor: replace ScaleJobExecution with the new task system, add unit tests
         from scheduler.scale_job_exe import ScaleJobExecution
         self.scale_job_exe = ScaleJobExecution(job_exe, job_exe.cpus_scheduled, job_exe.mem_scheduled,
                                                job_exe.disk_in_scheduled, job_exe.disk_out_scheduled,
                                                job_exe.disk_total_scheduled)
+
+    @property
+    def id(self):
+        """Returns the ID of this job execution
+
+        :returns: The ID of the job execution
+        :rtype: int
+        """
+
+        return self._id
+
+    @property
+    def node_id(self):
+        """Returns the ID of this job execution's node
+
+        :returns: The ID of the node
+        :rtype: int
+        """
+
+        return self._node_id
 
     # TODO: Future refactor: have current_task() method
     def current_task_id(self):
