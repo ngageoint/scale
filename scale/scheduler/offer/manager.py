@@ -99,7 +99,7 @@ class OfferManager(object):
         offers_list = []
 
         with self._lock:
-            for node_offers in self._nodes_by_offer_id.values():
+            for node_offers in self._nodes_by_node_id.values():
                 if node_offers.has_accepted_job_exes():
                     self._remove_node_offers(node_offers)
                     self._create_node_offers(node_offers.node)
@@ -117,6 +117,7 @@ class OfferManager(object):
                 if offer.agent_id in self._nodes_by_agent_id:
                     node_offers = self._nodes_by_agent_id[offer.agent_id]
                     node_offers.add_offer(offer)
+                    self._nodes_by_offer_id[offer.id] = node_offers
 
     def remove_offers(self, offer_ids):
         """Removes the offers with the given IDs from the manager
@@ -132,7 +133,7 @@ class OfferManager(object):
                 if offer_id in self._nodes_by_offer_id:
                     node_offers = self._nodes_by_offer_id[offer_id]
                     node_offers.remove_offer(offer_id)
-                    del self._nodes_by_offer_id[offer_id]
+                    self._remove_node_offers(node_offers)
 
     def update_nodes(self, nodes):
         """Updates the manager with the latest copies of the node models
