@@ -28,6 +28,13 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.add_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.lost_node(self.node_agent_2)
         manager.sync_with_database('master_host', 5050)
 
-        self.assertEqual(len(manager.get_nodes()), 2)
+        nodes = manager.get_nodes()
+        self.assertEqual(len(nodes), 2)
+        for node in nodes:
+            if node.slave_id == self.node_agent_1:
+                self.assertTrue(node.is_online)
+            else:
+                self.assertFalse(node.is_online)
