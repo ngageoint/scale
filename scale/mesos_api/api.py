@@ -83,6 +83,8 @@ class SchedulerInfo(object):
 class SlaveInfo(object):
     '''Represents information about a host system.
 
+    :keyword slave_id: The ID of the slave.
+    :type slave_id: str
     :keyword hostname: The network name of the host.
     :type hostname: float
     :keyword port: The network port of the host.
@@ -94,7 +96,8 @@ class SlaveInfo(object):
     :keyword used: The hardware resources actively being used by the host.
     :type used: :class:`mesos_api.api.HardwareResources`
     '''
-    def __init__(self, hostname=None, port=0, total=None, scheduled=None, used=None):
+    def __init__(self, slave_id=None, hostname=None, port=0, total=None, scheduled=None, used=None):
+        self.slave_id = slave_id
         self.hostname = hostname
         self.port = port
         self.total = total
@@ -347,6 +350,7 @@ def _parse_slave_info(slave_dict):
     '''
 
     # Extract the general host attributes
+    slave_id = slave_dict['id']
     hostname = slave_dict['hostname']
     match = PORT_REGEX.search(slave_dict['pid'])
     port = int(match.group(1))
@@ -355,7 +359,7 @@ def _parse_slave_info(slave_dict):
     total_dict = slave_dict['resources']
     total = HardwareResources(float(total_dict['cpus']), float(total_dict['mem']), float(total_dict['disk']))
 
-    return SlaveInfo(hostname, port, total)
+    return SlaveInfo(slave_id, hostname, port, total)
 
 
 def _parse_slave_resources(hostname, port):
@@ -380,7 +384,7 @@ def _parse_slave_resources(hostname, port):
     # TODO Mesos only provides true real-time usage if we query each slave individually
     used = HardwareResources()
 
-    return SlaveInfo(hostname, port, total, scheduled, used)
+    return SlaveInfo(None, hostname, port, total, scheduled, used)
 
 
 def _get_framework(state_dict):

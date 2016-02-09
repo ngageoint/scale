@@ -13,7 +13,7 @@ from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
 
 
-class TestNodeManager(TestCase):
+class TestOfferManager(TestCase):
 
     def setUp(self):
         django.setup()
