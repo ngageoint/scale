@@ -225,7 +225,7 @@ LOG_CONSOLE_FILE_DEBUG = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err', 'file-debug', 'file-info', 'file-error', 'log-db'],
+            'handlers': ['console', 'console-err', 'file-debug', 'file-info', 'file-error'],
             'level': 'DEBUG',
         },
     },
@@ -237,7 +237,7 @@ LOG_CONSOLE_FILE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err', 'file-info', 'file-error', 'log-db'],
+            'handlers': ['console', 'console-err', 'file-info', 'file-error'],
             'level': 'INFO',
         },
     },
