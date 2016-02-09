@@ -16,6 +16,7 @@ class NodeManager(object):
 
         self._new_agent_ids = set()
         self._nodes = {}  # {Agent ID: Node}
+        self._online_nodes = set()  # {Agent ID}
         self._lock = threading.Lock()
 
     def add_agent_ids(self, agent_ids):
@@ -29,6 +30,7 @@ class NodeManager(object):
             for agent_id in agent_ids:
                 if agent_id not in self._nodes:
                     self._new_agent_ids.add(agent_id)
+                self._online_nodes.add(agent_id)
 
     def get_node(self, agent_id):
         """Returns the node with the given agent ID, possibly None
@@ -53,6 +55,16 @@ class NodeManager(object):
 
         with self._lock:
             return list(self._nodes.values())
+
+    def lost_node(self, agent_id):
+        """Informs the manager that the node with the given agent ID was lost and has gone offline
+
+        :param agent_id: The agent ID of the lost node
+        :type agent_id: str
+        """
+
+        with self._lock:
+            self._online_nodes.discard(agent_id)
 
     def sync_with_database(self, master_hostname, master_port):
         """Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs
@@ -86,4 +98,5 @@ class NodeManager(object):
             self._new_agent_ids -= new_agent_ids
             self._nodes = {}
             for node in updated_nodes:
+                node.is_online = node.slave_id in self._online_nodes
                 self._nodes[node.slave_id] = node
