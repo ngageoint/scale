@@ -11,9 +11,10 @@ class OfferManager(object):
     NOT_ENOUGH_CPUS = NodeOffers.NOT_ENOUGH_CPUS
     NOT_ENOUGH_MEM = NodeOffers.NOT_ENOUGH_MEM
     NOT_ENOUGH_DISK = NodeOffers.NOT_ENOUGH_DISK
+    NO_OFFERS = NodeOffers.NO_OFFERS
     NODE_PAUSED = NodeOffers.NODE_PAUSED
-    NODE_OFFLINE = 5
-    NO_NODES_AVAILABLE = 6
+    NODE_OFFLINE = 6
+    NO_NODES_AVAILABLE = 7
 
     def __init__(self):
         """Constructor

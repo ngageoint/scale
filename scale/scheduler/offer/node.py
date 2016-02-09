@@ -11,7 +11,8 @@ class NodeOffers(object):
     NOT_ENOUGH_CPUS = 1
     NOT_ENOUGH_MEM = 2
     NOT_ENOUGH_DISK = 3
-    NODE_PAUSED = 4
+    NO_OFFERS = 4
+    NODE_PAUSED = 5
 
     def __init__(self, node):
         """Constructor
@@ -97,6 +98,8 @@ class NodeOffers(object):
                 return NodeOffers.ACCEPTED
             if self._node.is_paused:
                 return NodeOffers.NODE_PAUSED
+            if len(self._offers) == 0:
+                return NodeOffers.NO_OFFERS
 
             required_resources = job_exe.required_resources
             if self._available_cpus < required_resources.cpus:
@@ -127,6 +130,8 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_running_job_exes:
                 return NodeOffers.ACCEPTED
+            if len(self._offers) == 0:
+                return NodeOffers.NO_OFFERS
 
             required_resources = job_exe.next_task_resources()
             if self._available_cpus < required_resources.cpus:

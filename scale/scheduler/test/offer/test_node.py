@@ -212,6 +212,26 @@ class TestNodeOffers(TestCase):
         self.assertEqual(node_offers._available_mem, 1536.0)
         self.assertEqual(node_offers._available_disk, 2222.0)
 
+    def test_no_offers(self):
+        """Tests adding job executions when there are no offers"""
+
+        node_offers = NodeOffers(self.node)
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
+        self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
+
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
+        result = node_offers.consider_next_task(job_exe_1)
+        self.assertEqual(result, NodeOffers.NO_OFFERS)
+
+        job_exe_new = QueuedJobExecution(self.queue_1)
+        result = node_offers.consider_new_job_exe(job_exe_new)
+        self.assertEqual(result, NodeOffers.NO_OFFERS)
+
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
+        self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
+
     def test_remove_offer(self):
         """Tests remove_offer()"""
 
