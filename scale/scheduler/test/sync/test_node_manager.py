@@ -22,7 +22,7 @@ class TestNodeManager(TestCase):
 
     @patch('scheduler.sync.node_manager.api.get_slaves')
     def test_successful_update(self, mock_get_slaves):
-        """Tests do a successful database update"""
+        """Tests doing a successful database update"""
 
         mock_get_slaves.return_value = self.slave_infos
 
