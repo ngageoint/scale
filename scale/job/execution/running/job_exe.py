@@ -58,6 +58,38 @@ class RunningJobExecution(object):
         with self._lock:
             return self.scale_job_exe.current_task()
 
+    def execution_canceled(self):
+        """Cancels this job execution and returns the ID of the current task
+
+        :returns: The ID of the current task, possibly None
+        :rtype: str
+        """
+
+        with self._lock:
+            task_id = self.scale_job_exe.current_task_id
+            self.scale_job_exe.current_task_id = None
+            self.scale_job_exe.remaining_task_ids = []
+            return task_id
+
+    def execution_timed_out(self, when):
+        """Fails this job execution for timing out and returns the ID of the current task
+
+        :param when: The time that the job execution timed out
+        :type when: :class:`datetime.datetime`
+        :returns: The ID of the current task, possibly None
+        :rtype: str
+        """
+
+        with self._lock:
+            from scheduler.scheduler_errors import get_timeout_error
+            error = get_timeout_error()
+            from queue.models import Queue
+            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
+            task_id = self.scale_job_exe.current_task_id
+            self.scale_job_exe.current_task_id = None
+            self.scale_job_exe.remaining_task_ids = []
+            return task_id
+
     def is_finished(self):
         """Indicates whether this job execution is finished with all tasks
 
@@ -115,7 +147,7 @@ class RunningJobExecution(object):
             return self.scale_job_exe
 
     def task_completed(self, task_id, status):
-        """Indicates that a Mesos task for this job execution has completed
+        """Completes a Mesos task for this job execution
 
         :param task_id: The ID of the task that was completed
         :type task_id: str
@@ -127,7 +159,7 @@ class RunningJobExecution(object):
             self.scale_job_exe.task_completed(task_id, status)
 
     def task_failed(self, task_id, status):
-        """Indicates that a Mesos task for this job execution has failed
+        """Fails a Mesos task for this job execution
 
         :param task_id: The ID of the task that failed
         :type task_id: str
@@ -139,7 +171,7 @@ class RunningJobExecution(object):
             self.scale_job_exe.task_failed(task_id, status)
 
     def task_running(self, task_id, status):
-        """Indicates that a Mesos task for this job execution has started running
+        """Tells this job execution that one of its tasks has started running
 
         :param task_id: The ID of the task that has started running
         :type task_id: str

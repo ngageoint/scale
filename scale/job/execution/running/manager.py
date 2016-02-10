@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import threading
 
 
-class RunningJobExecution(object):
+class RunningJobExecutionManager(object):
     """This class manages all currently running job execution. This class is thread-safe."""
 
     def __init__(self):
