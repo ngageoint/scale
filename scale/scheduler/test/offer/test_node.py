@@ -212,6 +212,39 @@ class TestNodeOffers(TestCase):
         self.assertEqual(node_offers._available_mem, 1536.0)
         self.assertEqual(node_offers._available_disk, 2222.0)
 
+    def test_lost_node(self):
+        """Tests when the node is lost"""
+
+        node_offers = NodeOffers(self.node)
+        offer_1 = ResourceOffer('offer_1',  self.node_agent, NodeResources(cpus=24.0, mem=1024.0, disk=1024.0))
+        node_offers.add_offer(offer_1)
+        offer_2 = ResourceOffer('offer_2',  self.node_agent, NodeResources(cpus=50.0, mem=2048.0, disk=2048.0))
+        node_offers.add_offer(offer_2)
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
+        self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
+
+        # Accept a couple job executions
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
+        result = node_offers.consider_next_task(job_exe_1)
+        self.assertEqual(result, NodeOffers.ACCEPTED)
+
+        job_exe_2 = QueuedJobExecution(self.queue_1)
+        result = node_offers.consider_new_job_exe(job_exe_2)
+        self.assertEqual(result, NodeOffers.ACCEPTED)
+
+        self.assertTrue(node_offers.has_accepted_job_exes())
+        self.assertGreater(node_offers._available_cpus, 0.0)
+        self.assertGreater(node_offers._available_mem, 0.0)
+        self.assertGreater(node_offers._available_disk, 0.0)
+
+        # Node is lost
+        node_offers.lost_node()
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertEqual(node_offers._available_cpus, 0.0)
+        self.assertEqual(node_offers._available_mem, 0.0)
+        self.assertEqual(node_offers._available_disk, 0.0)
+
     def test_no_offers(self):
         """Tests adding job executions when there are no offers"""
 

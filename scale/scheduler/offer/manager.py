@@ -13,7 +13,7 @@ class OfferManager(object):
     NOT_ENOUGH_DISK = NodeOffers.NOT_ENOUGH_DISK
     NO_OFFERS = NodeOffers.NO_OFFERS
     NODE_PAUSED = NodeOffers.NODE_PAUSED
-    NODE_OFFLINE = 6
+    NODE_OFFLINE = NodeOffers.NODE_OFFLINE
     NO_NODES_AVAILABLE = 7
 
     def __init__(self):
@@ -89,6 +89,18 @@ class OfferManager(object):
 
             node_offers = self._nodes_by_node_id[job_exe.node_id]
             return node_offers.consider_next_task(job_exe)
+
+    def lost_node(self, agent_id):
+        """Informs the manager that the node with the given agent ID was lost and has gone offline
+
+        :param agent_id: The agent ID of the lost node
+        :type agent_id: str
+        """
+
+        with self._lock:
+            if agent_id in self._nodes_by_agent_id:
+                node_offers = self._nodes_by_agent_id[agent_id]
+                node_offers.lost_node()
 
     def pop_offers_with_accepted_job_exes(self):
         """Removes and returns all sets of node offers that have accepted job executions

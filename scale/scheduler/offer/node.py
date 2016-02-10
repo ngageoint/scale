@@ -13,6 +13,7 @@ class NodeOffers(object):
     NOT_ENOUGH_DISK = 3
     NO_OFFERS = 4
     NODE_PAUSED = 5
+    NODE_OFFLINE = 6
 
     def __init__(self, node):
         """Constructor
@@ -23,6 +24,10 @@ class NodeOffers(object):
 
         self._node = node
         self._lock = threading.Lock()
+
+        # TODO: remove this once the Node model has an is_online field
+        if not hasattr(self._node, 'is_online'):
+            self._node.is_online = True
 
         self._available_cpus = 0.0
         self._available_mem = 0.0
@@ -52,6 +57,10 @@ class NodeOffers(object):
         with self._lock:
             self._node = value
 
+            # TODO: remove this once the Node model has an is_online field
+            if not hasattr(self._node, 'is_online'):
+                self._node.is_online = True
+
     @property
     def offer_ids(self):
         """Returns the list of offer IDs
@@ -77,6 +86,7 @@ class NodeOffers(object):
             if offer.id in self._offers:
                 return
 
+            self._node.is_online = True
             resources = offer.node_resources
             self._available_cpus += resources.cpus
             self._available_mem += resources.mem
@@ -96,6 +106,8 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_new_job_exes:
                 return NodeOffers.ACCEPTED
+            if not self._node.is_online:
+                return NodeOffers.NODE_OFFLINE
             if self._node.is_paused:
                 return NodeOffers.NODE_PAUSED
             if len(self._offers) == 0:
@@ -130,6 +142,8 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_running_job_exes:
                 return NodeOffers.ACCEPTED
+            if not self._node.is_online:
+                return NodeOffers.NODE_OFFLINE
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
 
@@ -182,6 +196,21 @@ class NodeOffers(object):
 
         with self._lock:
             return len(self._accepted_new_job_exes) or len(self._accepted_running_job_exes)
+
+    def lost_node(self):
+        """Informs the set of offers that the node was lost and has gone offline
+        """
+
+        with self._lock:
+            self._node.is_online = False
+
+            # All offers and accepted job executions are lost
+            self._available_cpus = 0.0
+            self._available_mem = 0.0
+            self._available_disk = 0.0
+            self._offers = {}
+            self._accepted_new_job_exes = {}
+            self._accepted_running_job_exes = {}
 
     def remove_offer(self, offer_id):
         """Removes the offer with the given ID from this node set, resetting any accepted job executions if there are no

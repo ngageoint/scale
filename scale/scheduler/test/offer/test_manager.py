@@ -30,6 +30,12 @@ class TestOfferManager(TestCase):
         self.running_job_exe_1.disk_in_scheduled = 100.0
         self.running_job_exe_1.disk_out_scheduled = 200.0
         self.running_job_exe_1.disk_total_scheduled = 300.0
+        self.running_job_exe_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node)
+        self.running_job_exe_2.cpus_scheduled = 2.0
+        self.running_job_exe_2.mem_scheduled = 512.0
+        self.running_job_exe_2.disk_in_scheduled = 100.0
+        self.running_job_exe_2.disk_out_scheduled = 200.0
+        self.running_job_exe_2.disk_total_scheduled = 300.0
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                      disk_out_required=200.0, disk_total_required=300.0)
@@ -122,6 +128,29 @@ class TestOfferManager(TestCase):
         self.assertEqual(result, OfferManager.ACCEPTED)
 
         manager.remove_offers([offer_2.id, offer_1.id])
+        node_offers = manager.pop_offers_with_accepted_job_exes()
+        self.assertEqual(len(node_offers), 0)
+
+    def test_lost_node(self):
+        """Tests accepting a running and queued job execution and then the node being lost"""
+
+        offer_1 = ResourceOffer('offer_1',  self.node_agent, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
+        offer_2 = ResourceOffer('offer_2',  self.node_agent, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
+
+        manager = OfferManager()
+        manager.add_new_offers([offer_1, offer_2])
+        manager.update_nodes([self.node, self.paused_node])
+        manager.ready_new_offers()
+
+        job_exe_1 = QueuedJobExecution(self.queue_1)
+        result = manager.consider_new_job_exe(job_exe_1)
+        self.assertEqual(result, OfferManager.ACCEPTED)
+
+        job_exe_2 = RunningJobExecution(self.running_job_exe_2)
+        result = manager.consider_next_task(job_exe_2)
+        self.assertEqual(result, OfferManager.ACCEPTED)
+
+        manager.lost_node(self.node_agent)
         node_offers = manager.pop_offers_with_accepted_job_exes()
         self.assertEqual(len(node_offers), 0)
 
