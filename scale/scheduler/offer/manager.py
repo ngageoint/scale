@@ -159,13 +159,13 @@ class OfferManager(object):
             for node in nodes:
                 if node.id in self._nodes_by_node_id:
                     node_offers = self._nodes_by_node_id[node.id]
-                    if node_offers.node.slave_id == node.slave_id:
+                    if node_offers.node.slave_id == node.slave_id and node.is_active:
                         # No change in agent ID, just update node model
                         node_offers.node = node
                     else:
-                        # Agent ID changed, so delete old node offers
+                        # Agent ID changed or node no longer active, so delete old node offers
                         self._remove_node_offers(node_offers)
-                if node.id not in self._nodes_by_node_id:
+                if node.id not in self._nodes_by_node_id and node.is_active:
                     # Create new node offers
                     self._create_node_offers(node)
 
