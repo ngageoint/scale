@@ -5,6 +5,7 @@ import logging
 import math
 import time
 
+from django.db import DatabaseError
 from django.utils.timezone import now
 
 from job.models import JobExecution
@@ -55,22 +56,19 @@ class DatabaseSyncThread(object):
         logger.info('Database sync thread started')
 
         while self._running:
-            try:
-                secs_passed = 0
-                started = now()
 
-                self._perform_sync()
+            started = now()
 
-                ended = now()
-                secs_passed = (ended - started).total_seconds()
-            except Exception:
-                logger.exception('Database sync thread encountered error')
-            finally:
-                # If time takes less than a minute, throttle
-                if secs_passed < DatabaseSyncThread.THROTTLE:
-                    # Delay until full throttle time reached
-                    delay = math.ceil(DatabaseSyncThread.THROTTLE - secs_passed)
-                    time.sleep(delay)
+            self._perform_sync()
+
+            ended = now()
+            secs_passed = (ended - started).total_seconds()
+
+            # If time takes less than a minute, throttle
+            if secs_passed < DatabaseSyncThread.THROTTLE:
+                # Delay until full throttle time reached
+                delay = math.ceil(DatabaseSyncThread.THROTTLE - secs_passed)
+                time.sleep(delay)
 
         logger.info('Database sync thread stopped')
 
@@ -107,19 +105,19 @@ class DatabaseSyncThread(object):
             running_job_exe = running_job_exes[job_exe_model.id]
             task_id_to_kill = None
 
-            try:
-                if job_exe_model.status == 'CANCELED':
-                    task_id_to_kill = running_job_exe.execution_canceled()
-                elif job_exe_model.is_timed_out(right_now):
+            if job_exe_model.status == 'CANCELED':
+                task_id_to_kill = running_job_exe.execution_canceled()
+            elif job_exe_model.is_timed_out(right_now):
+                try:
                     task_id_to_kill = running_job_exe.execution_timed_out(right_now)
+                except DatabaseError:
+                    logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 
-                if task_id_to_kill:
-                    pb_task_to_kill = mesos_pb2.TaskID()
-                    pb_task_to_kill.value = task_id_to_kill
-                    logger.info('Killing task %s', task_id_to_kill)
-                    self._driver.killTask(pb_task_to_kill)
+            if task_id_to_kill:
+                pb_task_to_kill = mesos_pb2.TaskID()
+                pb_task_to_kill.value = task_id_to_kill
+                logger.info('Killing task %s', task_id_to_kill)
+                self._driver.killTask(pb_task_to_kill)
 
-                if running_job_exe.is_finished():
-                    self._job_exe_manager.remove_job_exe(running_job_exe.id)
-            except Exception:
-                logger.exception('Error handling job execution %i', running_job_exe.id)
+            if running_job_exe.is_finished():
+                self._job_exe_manager.remove_job_exe(running_job_exe.id)

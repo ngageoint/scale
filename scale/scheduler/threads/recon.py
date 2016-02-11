@@ -54,21 +54,19 @@ class ReconciliationThread(object):
         logger.info('Reconciliation thread started')
 
         while self._running:
-            try:
-                secs_passed = 0
-                started = now()
 
-                ended = now()
-                secs_passed = (ended - started).total_seconds()
-            except Exception:
-                logger.exception('Reconciliation thread encountered error')
-            finally:
-                # TODO: Mesos docs recommend truncated exponential backoff
-                # If time takes less than a minute, throttle
-                if secs_passed < ReconciliationThread.THROTTLE:
-                    # Delay until full throttle time reached
-                    delay = math.ceil(ReconciliationThread.THROTTLE - secs_passed)
-                    time.sleep(delay)
+            started = now()
+
+            self._perform_reconciliation()
+
+            ended = now()
+            secs_passed = (ended - started).total_seconds()
+
+            # If time takes less than a minute, throttle
+            if secs_passed < ReconciliationThread.THROTTLE:
+                # Delay until full throttle time reached
+                delay = math.ceil(ReconciliationThread.THROTTLE - secs_passed)
+                time.sleep(delay)
 
         logger.info('Reconciliation thread stopped')
 
