@@ -21,8 +21,10 @@ class QueuedJobExecution(object):
         disk_total = self._queue.disk_total_required
         self._required_resources = JobResources(cpus=cpus, mem=mem, disk_in=disk_in, disk_out=disk_out,
                                                 disk_total=disk_total)
-        # TODO: populate this from queue model
-        self._required_node_ids = []
+
+        self._required_node_ids = None
+        if self._queue.node_id:
+            self._required_node_ids = {self._queue.node_id}
 
         self._provided_node = None
         self._provided_resources = None
@@ -58,6 +60,16 @@ class QueuedJobExecution(object):
         return self._provided_resources
 
     @property
+    def queue(self):
+        """Returns the queue model for this job execution
+
+        :returns: The queue model for this job execution
+        :rtype: :class:`queue.models.Queue`
+        """
+
+        return self._queue
+
+    @property
     def required_resources(self):
         """Returns the resources required by this job execution
 
@@ -79,3 +91,14 @@ class QueuedJobExecution(object):
 
         self._provided_node = node
         self._provided_resources = resources
+
+    def is_node_acceptable(self, node_id):
+        """Indicates whether the node with the given ID is acceptable to this job execution
+
+        :param node_id: The node ID
+        :type node_id: int
+        :returns: True if the node is acceptable, False otherwise
+        :rtype: bool
+        """
+
+        return self._required_node_ids is None or node_id in self._required_node_ids

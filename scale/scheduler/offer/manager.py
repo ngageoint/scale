@@ -53,6 +53,8 @@ class OfferManager(object):
             num_not_enough_disk = 0
 
             for node_offers in self._nodes_by_node_id.values():
+                if not job_exe.is_node_acceptable(node_offers.node.id):
+                    continue
                 result = node_offers.consider_new_job_exe(job_exe)
                 if result == OfferManager.ACCEPTED:
                     return result
@@ -102,10 +104,27 @@ class OfferManager(object):
                 node_offers = self._nodes_by_agent_id[agent_id]
                 node_offers.lost_node()
 
+    def pop_all_offers(self):
+        """Removes and returns all sets of node offers
+
+        :returns: The list of all sets of node offers
+        :rtype: [:class:`scheduler.offer.node.NodeOffers`]
+        """
+
+        offers_list = []
+
+        with self._lock:
+            for node_offers in self._nodes_by_node_id.values():
+                self._remove_node_offers(node_offers)
+                self._create_node_offers(node_offers.node)
+                offers_list.append(node_offers)
+
+        return offers_list
+
     def pop_offers_with_accepted_job_exes(self):
         """Removes and returns all sets of node offers that have accepted job executions
 
-        :returns: One of the OfferManager constants indicating if the next task was accepted or why it was not accepted
+        :returns: The list of all sets of node offers that have accepted job executions
         :rtype: [:class:`scheduler.offer.node.NodeOffers`]
         """
 

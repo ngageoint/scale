@@ -70,7 +70,7 @@ class NodeOffers(object):
         """
 
         with self._lock:
-            return list(self._offers)
+            return list(self._offers.keys())
 
     def add_offer(self, offer):
         """Adds the given offer to this node set

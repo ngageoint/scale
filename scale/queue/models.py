@@ -8,6 +8,7 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 
 from job.configuration.data.exceptions import InvalidData, StatusError
+from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.resources import JobResources
 from job.models import JobExecution
@@ -283,6 +284,15 @@ class QueueManager(models.Manager):
 
         return {'job_types': job_types, 'priorities': priorities, 'queue_depths': queue_depths}
 
+    def get_queue(self):
+        '''Returns the list of queue models sorted according to their scheduling priority
+
+        :returns: The list of queue models
+        :rtype: list[:class:`queue.models.Queue`]
+        '''
+
+        return Queue.objects.order_by('priority', 'queued').iterator()
+
     def get_queue_status(self):
         '''Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
         version with overall stats for that type
@@ -481,6 +491,8 @@ class QueueManager(models.Manager):
         queue.job_exe = job_exe
         queue.job_type = job.job_type
         queue.priority = job.priority
+        if job.job_type.name == 'scale-cleanup':
+            queue.node_required_id = job.event.description['node_id']
         queue.cpus_required = job.cpus_required
         queue.mem_required = job.mem_required
         queue.disk_in_required = job.disk_in_required if job.disk_in_required else 0
@@ -633,6 +645,73 @@ class QueueManager(models.Manager):
         return job_exe_id
 
     @transaction.atomic
+    def schedule_job_executions(self, job_executions):
+        """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
+        be deleted from the database. All database changes occur in an atomic transaction.
+
+        :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
+            run
+        :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
+        :returns: The scheduled job executions
+        :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
+        """
+
+        if not job_executions:
+            return []
+
+        job_exe_ids = []
+        for job_execution in job_executions:
+            job_exe_ids.append(job_execution.id)
+
+        # Lock corresponding job executions
+        job_exes = {}
+        for job_exe in JobExecution.objects.select_for_update().filter(id__in=job_exe_ids).order_by('id'):
+            job_exes[job_exe.id] = job_exe
+
+        # Set up job executions to schedule
+        executions_to_schedule = []
+        for job_execution in job_executions:
+            queue = job_execution.queue
+            node = job_execution.provided_node
+            resources = job_execution.provided_resources
+            job_exe = job_exes[job_execution.id]
+
+            # Ignore executions that are no longer queued (executions may have been changed since queue model was last
+            # queried)
+            if job_exe.status != 'QUEUED':
+                continue
+
+            # Check that resources are sufficient
+            if resources.cpus < queue.cpus_required:
+                msg = 'Job execution requires %s CPUs and only %s were provided'
+                raise Exception(msg % (str(resources.cpus), str(queue.cpus_required)))
+            if resources.mem < queue.mem_required:
+                msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
+                raise Exception(msg % (str(resources.mem), str(queue.mem_required)))
+            if resources.disk_in < queue.disk_in_required:
+                msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_in), str(queue.disk_in_required)))
+            if resources.disk_out < queue.disk_out_required:
+                msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_out), str(queue.disk_out_required)))
+            if resources.disk_total < queue.disk_total_required:
+                msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_total), str(queue.disk_total_required)))
+
+            executions_to_schedule.append((job_exe, node, resources))
+
+        # Schedule job executions
+        scheduled_job_exes = []
+        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule):
+            scheduled_job_exes.append(RunningJobExecution(job_exe))
+
+        # Clear the job executions from the queue
+        Queue.objects.filter(job_exe_id__in=job_exe_ids).delete()
+
+        return scheduled_job_exes
+
+    # TODO: deprecated, delete this
+    @transaction.atomic
     def schedule_jobs_on_node(self, cpus, mem, disk, node):
         '''Schedules and returns a list of the highest priority job executions that can be executed with the given
         resources on the given node. Each returned job execution model will have a lock from select_for_update() and its
@@ -712,7 +791,7 @@ class QueueManager(models.Manager):
                 'version': '1.0',
                 'input_data': [{'name': 'Job Exe ID', 'value': str(job_exe.id)}]
             }
-            desc = {'job_exe_id': job_exe.id}
+            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node.id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
             cleanup_job_id, _cleanup_job_exe_id = Queue.objects.queue_new_job(cleanup_type, data, event)
             job_exe.cleanup_job_id = cleanup_job_id
@@ -853,6 +932,7 @@ class QueueManager(models.Manager):
             recipe.completed = last_completed
             recipe.save()
 
+    # TODO: deprecated, delete this
     @transaction.atomic
     def _schedule_job_executions(self, job_executions):
         '''Schedules the given job executions (tied to the queue models) on the given nodes with the given resources and
@@ -967,6 +1047,8 @@ class Queue(models.Model):
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
+    :keyword node_required: The specific node on which this job is required to run
+    :type node_required: :class:`django.db.models.ForeignKey`
     :keyword cpus_required: The number of CPUs required for this job
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_required: The amount of RAM in MiB required for this job
@@ -991,6 +1073,7 @@ class Queue(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
 
     priority = models.IntegerField(db_index=True)
+    node_required = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     cpus_required = models.FloatField()
     mem_required = models.FloatField()
     disk_in_required = models.FloatField()

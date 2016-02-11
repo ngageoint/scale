@@ -135,16 +135,15 @@ class RunningJobExecution(object):
         """Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
         tasks remain.
 
-        :returns: The task that was just started, possibly None
-        :rtype: :class:`scheduler.scale_job_exe.ScaleJobExecution`
+        :returns: The next Mesos task to schedule
+        :rtype: :class:`mesos_pb2.TaskInfo`
         """
 
         with self._lock:
             if not self.is_next_task_ready():
                 return None
 
-            self.scale_job_exe.start_next_task()
-            return self.scale_job_exe
+            return self.scale_job_exe.start_next_task()
 
     def task_completed(self, task_id, status):
         """Completes a Mesos task for this job execution
