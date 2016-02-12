@@ -18,7 +18,8 @@ class TestNodeManager(TestCase):
         self.node_agent_2 = 'agent_2'
         self.node_1 = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent_1)
 
-        self.slave_infos = [SlaveInfo(self.node_agent_1, 'host_1'), SlaveInfo(self.node_agent_2, 'host_2')]
+        self.slave_infos = [SlaveInfo('host_1', slave_id=self.node_agent_1),
+                            SlaveInfo('host_2', slave_id=self.node_agent_2)]
 
     @patch('scheduler.sync.node_manager.api.get_slaves')
     def test_successful_update(self, mock_get_slaves):

@@ -38,7 +38,8 @@ class TestSchedulingThread(TransactionTestCase):
         self.node_agent_2 = 'agent_2'
         self.node_1 = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent_1)
         self.node_2 = node_test_utils.create_node(hostname='host_2', slave_id=self.node_agent_2)
-        self.slave_infos = [SlaveInfo(self.node_agent_1, 'host_1'), SlaveInfo(self.node_agent_2, 'host_2')]
+        self.slave_infos = [SlaveInfo('host_1', slave_id=self.node_agent_1),
+                            SlaveInfo('host_2', slave_id=self.node_agent_2)]
         self._node_manager.add_agent_ids([self.node_agent_1, self.node_agent_2])
         with patch('scheduler.sync.node_manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
