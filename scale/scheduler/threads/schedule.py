@@ -100,6 +100,9 @@ class SchedulingThread(object):
         """Considers any queued job executions for scheduling
         """
 
+        if self._scheduler_manager.is_paused():
+            return
+
         num_job_exes = 0
         for queue in Queue.objects.get_queue():
 
@@ -109,9 +112,8 @@ class SchedulingThread(object):
             queued_job_exe = QueuedJobExecution(queue)
             if self._offer_manager.consider_new_job_exe(queued_job_exe) == OfferManager.ACCEPTED:
                 num_job_exes += 1
-
-            if num_job_exes >= SchedulingThread.MAX_NEW_JOB_EXES:
-                break
+                if num_job_exes >= SchedulingThread.MAX_NEW_JOB_EXES:
+                    break
 
     def _consider_running_job_exes(self):
         """Considers any tasks for currently running job executions that are ready for the next task to run
