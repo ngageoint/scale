@@ -37,15 +37,46 @@ class ReconciliationThread(object):
         self._running = True
         self._task_ids_to_reconcile = set()
 
-    def add_task_id(self, task_id):
-        """Adds the ID of a task that needs to be reconciled
+    @property
+    def driver(self):
+        """Returns the driver
 
-        :param task_id: The ID of the task to reconcile
+        :returns: The driver
+        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        return self._driver
+
+    @driver.setter
+    def driver(self, value):
+        """Sets the driver
+
+        :param value: The driver
+        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        self._driver = value
+
+    def add_task_ids(self, task_ids):
+        """Adds a list of task IDs that need to be reconciled
+
+        :param task_ids: The list of task IDs to reconcile
+        :type task_ids: [str]
+        """
+
+        with self._lock:
+            for task_id in task_ids:
+                self._task_ids_to_reconcile.add(task_id)
+
+    def remove_task_id(self, task_id):
+        """Removes the task ID from the reconciliation set
+
+        :param task_id: The task ID to remove
         :type task_id: str
         """
 
         with self._lock:
-            self._task_ids_to_reconcile.add(task_id)
+            self._task_ids_to_reconcile.discard(task_id)
 
     def run(self):
         """The main run loop of the thread
@@ -57,7 +88,10 @@ class ReconciliationThread(object):
 
             started = now()
 
-            self._perform_reconciliation()
+            try:
+                self._perform_reconciliation()
+            except Exception:
+                logger.exception('Critical error in reconciliation thread')
 
             ended = now()
             secs_passed = (ended - started).total_seconds()

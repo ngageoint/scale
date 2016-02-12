@@ -10,7 +10,7 @@ class SchedulerManager(object):
     """This class manages the syncing of the scheduler with the scheduler model that contains cluster-wide scheduling
     configuration. This class is thread-safe."""
 
-    def __init__(self, scheduler):
+    def __init__(self, scheduler=None):
         """Constructor
 
         :param scheduler: The scheduler model

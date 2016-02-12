@@ -71,6 +71,25 @@ class RunningJobExecution(object):
             self.scale_job_exe.remaining_task_ids = []
             return task_id
 
+    def execution_lost(self, when):
+        """Fails this job execution for its node becoming lost and returns the ID of the current task
+
+        :param when: The time that the node was lost
+        :type when: :class:`datetime.datetime`
+        :returns: The ID of the current task, possibly None
+        :rtype: str
+        """
+
+        with self._lock:
+            from scheduler.scheduler_errors import get_node_lost_error
+            error = get_node_lost_error()
+            from queue.models import Queue
+            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
+            task_id = self.scale_job_exe.current_task_id
+            self.scale_job_exe.current_task_id = None
+            self.scale_job_exe.remaining_task_ids = []
+            return task_id
+
     def execution_timed_out(self, when):
         """Fails this job execution for timing out and returns the ID of the current task
 

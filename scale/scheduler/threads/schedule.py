@@ -59,6 +59,26 @@ class SchedulingThread(object):
         self._job_types = {}
         self._running = True
 
+    @property
+    def driver(self):
+        """Returns the driver
+
+        :returns: The driver
+        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        return self._driver
+
+    @driver.setter
+    def driver(self, value):
+        """Sets the driver
+
+        :param value: The driver
+        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        self._driver = value
+
     def run(self):
         """The main run loop of the thread
         """
@@ -69,7 +89,11 @@ class SchedulingThread(object):
 
             started = now()
 
-            num_tasks = self._perform_scheduling()
+            num_tasks = 0
+            try:
+                num_tasks = self._perform_scheduling()
+            except Exception:
+                logger.exception('Critical error in scheduling thread')
 
             duration = now() - started
             msg = 'Scheduling thread loop took %.3f seconds'
@@ -82,7 +106,9 @@ class SchedulingThread(object):
                 # Since we didn't schedule anything, give resources back to Mesos and pause a moment
                 for node_offers in self._offer_manager.pop_all_offers():
                     for offer_id in node_offers.offer_ids:
-                        self._driver.declineOffer(offer_id)
+                        mesos_offer_id = mesos_pb2.OfferID()
+                        mesos_offer_id.value = offer_id
+                        self._driver.declineOffer(mesos_offer_id)
 
                 logger.debug('Scheduling thread is pausing for %i second(s)', SchedulingThread.DELAY)
                 time.sleep(SchedulingThread.DELAY)
@@ -177,7 +203,12 @@ class SchedulingThread(object):
         for node_offers in node_offers_list:
             task_list = tasks_to_launch[node_offers.node.id]
             num_tasks += len(task_list)
-            self._driver.launchTasks(node_offers.offer_ids, task_list)
+            mesos_offer_ids = []
+            for offer_id in node_offers.offer_ids:
+                mesos_offer_id = mesos_pb2.OfferID()
+                mesos_offer_id.value = offer_id
+                mesos_offer_ids.append(mesos_offer_id)
+            self._driver.launchTasks(mesos_offer_ids, task_list)
         return num_tasks
 
     @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)

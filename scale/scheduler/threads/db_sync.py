@@ -49,6 +49,26 @@ class DatabaseSyncThread(object):
         self._scheduler_manager = scheduler_manager
         self._running = True
 
+    @property
+    def driver(self):
+        """Returns the driver
+
+        :returns: The driver
+        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        return self._driver
+
+    @driver.setter
+    def driver(self, value):
+        """Sets the driver
+
+        :param value: The driver
+        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        self._driver = value
+
     def run(self):
         """The main run loop of the thread
         """
@@ -59,7 +79,10 @@ class DatabaseSyncThread(object):
 
             started = now()
 
-            self._perform_sync()
+            try:
+                self._perform_sync()
+            except Exception:
+                logger.exception('Critical error in database sync thread')
 
             ended = now()
             secs_passed = (ended - started).total_seconds()
@@ -112,6 +135,8 @@ class DatabaseSyncThread(object):
                     task_id_to_kill = running_job_exe.execution_timed_out(right_now)
                 except DatabaseError:
                     logger.exception('Error failing timed out job execution %i', running_job_exe.id)
+            elif job_exe_model.status != 'RUNNING':
+                logger.error('Job execution has unexpected status: %s', job_exe_model.status)
 
             if task_id_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()
