@@ -140,7 +140,7 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            if not self.is_next_task_ready():
+            if self.scale_job_exe.current_task_id is not None or len(self.scale_job_exe.remaining_task_ids) < 1:
                 return None
 
             return self.scale_job_exe.start_next_task()
