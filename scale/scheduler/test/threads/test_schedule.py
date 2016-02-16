@@ -108,4 +108,4 @@ class TestSchedulingThread(TransactionTestCase):
         self._offer_manager.add_new_offers([offer_1, offer_2])
 
         num_tasks = self._scheduling_thread._perform_scheduling()
-        self.assertEqual(num_tasks, 3)
+        self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more
