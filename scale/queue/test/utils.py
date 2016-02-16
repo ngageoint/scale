@@ -23,10 +23,12 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
                                   total_count=pending_count + queued_count + running_count)
 
 
-def create_queue(priority=1, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0, disk_out_required=100.0,
-                 disk_total_required=300.0):
+def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
+                 disk_out_required=100.0, disk_total_required=300.0):
     """Creates a queue model for unit testing
 
+    :param job_type: The job type
+    :type job_type: :class:`job.models.JobType`
     :param priority: The priority
     :type priority: int
     :param cpus_required: The CPUs required in MiB
@@ -41,7 +43,7 @@ def create_queue(priority=1, cpus_required=1.0, mem_required=512.0, disk_in_requ
     :type disk_total_required: float
     """
 
-    job_exe = job_test_utils.create_job_exe(status='QUEUED')
+    job_exe = job_test_utils.create_job_exe(job_type=job_type, status='QUEUED')
 
     return Queue.objects.create(job_exe=job_exe, job_type=job_exe.job.job_type, priority=priority,
                                 cpus_required=cpus_required, mem_required=mem_required,

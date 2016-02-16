@@ -1,4 +1,4 @@
-'''Defines the database models for jobs and job types'''
+"""Defines the database models for jobs and job types"""
 from __future__ import unicode_literals
 
 import datetime
@@ -40,11 +40,11 @@ MIN_DISK = 0.0
 
 
 class JobManager(models.Manager):
-    '''Provides additional methods for handling jobs
-    '''
+    """Provides additional methods for handling jobs
+    """
 
     def create_job(self, job_type, event):
-        '''Creates a new job for the given type and returns the job model. The given job_type model must have already
+        """Creates a new job for the given type and returns the job model. The given job_type model must have already
         been saved in the database (it must have an ID). The given event model must have already been saved in the
         database (it must have an ID). The returned job model will have not yet been saved in the database.
 
@@ -54,7 +54,7 @@ class JobManager(models.Manager):
         :type event: :class:`trigger.models.TriggerEvent`
         :returns: The new job
         :rtype: :class:`job.models.Job`
-        '''
+        """
 
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
@@ -74,7 +74,7 @@ class JobManager(models.Manager):
         return job
 
     def get_job(self, job_id, related=False, lock=False):
-        '''Gets the job model with the given ID, optionally with related fields and/or with a model lock obtained
+        """Gets the job model with the given ID, optionally with related fields and/or with a model lock obtained
 
         :param job_id: The ID of the job
         :type job_id: int
@@ -84,7 +84,7 @@ class JobManager(models.Manager):
         :type lock: bool
         :returns: The job model
         :rtype: :class:`job.models.Job`
-        '''
+        """
 
         job_qry = Job.objects.all()
 
@@ -100,7 +100,7 @@ class JobManager(models.Manager):
 
     def get_jobs(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, order=None):
-        '''Returns a list of jobs within the given time range.
+        """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -118,7 +118,7 @@ class JobManager(models.Manager):
         :type order: list[str]
         :returns: The list of jobs that match the time range.
         :rtype: list[:class:`job.models.Job`]
-        '''
+        """
 
         # Fetch a list of jobs
         jobs = Job.objects.all().select_related('job_type', 'job_type_rev', 'event', 'error')
@@ -147,7 +147,7 @@ class JobManager(models.Manager):
         return jobs
 
     def get_details(self, job_id):
-        '''Gets additional details for the given job model based on related model attributes.
+        """Gets additional details for the given job model based on related model attributes.
 
         The additional fields include: input files, recipe, job executions, and generated products.
 
@@ -155,7 +155,7 @@ class JobManager(models.Manager):
         :type job_id: int
         :returns: The job with extra related attributes.
         :rtype: :class:`job.models.Job`
-        '''
+        """
 
         # Attempt to fetch the requested job
         job = Job.objects.all()
@@ -189,7 +189,7 @@ class JobManager(models.Manager):
 
     def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                         job_type_categories=None, order=None):
-        '''Returns a list of jobs that changed status within the given time range.
+        """Returns a list of jobs that changed status within the given time range.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -207,14 +207,14 @@ class JobManager(models.Manager):
         :type order: list[str]
         :returns: The list of jobs that match the time range.
         :rtype: list[:class:`job.models.Job`]
-        '''
+        """
         if not order:
             order = ['last_status_change']
         return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
 
     @transaction.atomic
     def queue_job(self, job, data, when):
-        '''Puts the given job into the QUEUED state with the given arguments. The data should be set to None if this is
+        """Puts the given job into the QUEUED state with the given arguments. The data should be set to None if this is
         not the first time the job has been queued. The given job model must have already been saved in the database (it
         must have an ID), it must have its related job type and job type revision fields, and the caller must have
         obtained a lock on the job model using select_for_update(). The changes to the job will be saved in the database
@@ -227,7 +227,7 @@ class JobManager(models.Manager):
         :param when: The time that the job was queued
         :type when: :class:`datetime.datetime`
         :raises InvalidData: If the job data is invalid
-        '''
+        """
 
         if not job.is_ready_to_queue:
             raise Exception('Job cannot be queued with current status %s' % job.status)
@@ -263,11 +263,11 @@ class JobManager(models.Manager):
         job.save()
 
     def populate_input_files(self, jobs):
-        '''Populates each of the given jobs with its input file references in a field called "input_files".
+        """Populates each of the given jobs with its input file references in a field called "input_files".
 
         :param jobs: The list of jobs to augment with input files.
         :type jobs: list[:class:`job.models.Job`]
-        '''
+        """
 
         # Build a unique set of all input file identifiers
         # Build a mapping of job to its input file identifiers
@@ -296,7 +296,7 @@ class JobManager(models.Manager):
 
     @transaction.atomic
     def update_jobs_to_running(self, job_ids, when):
-        '''Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
+        """Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
         select_for_update() and their related job_type and job_type_rev models populated.
 
         :param job_ids: The list of job IDs to update
@@ -305,7 +305,7 @@ class JobManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :returns: The updated job models with a lock and related job_type and job_type_rev models populated
         :rtype: list[:class:`job.models.Job`]
-        '''
+        """
 
         # Acquire model lock for jobs
         list(Job.objects.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
@@ -319,7 +319,7 @@ class JobManager(models.Manager):
 
     @transaction.atomic
     def update_status(self, job, status, when, error=None):
-        '''Updates the given job with the new status. The given job model must have already been saved in the database
+        """Updates the given job with the new status. The given job model must have already been saved in the database
         (it must have an ID) and the caller must have obtained a lock on the job model using select_for_update(). All of
         the job model changes will be saved in the database in an atomic transaction.
 
@@ -331,7 +331,7 @@ class JobManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
         :type error: :class:`error.models.Error`
-        '''
+        """
 
         if status == 'QUEUED':
             raise Exception('Changing status to queued must use the queue_job() method.')
@@ -350,7 +350,7 @@ class JobManager(models.Manager):
 
 
 class Job(models.Model):
-    '''Represents a job to be run on the cluster. Any updates to a job model requires obtaining a lock on the model
+    """Represents a job to be run on the cluster. Any updates to a job model requires obtaining a lock on the model
     using select_for_update().
 
     :keyword job_type: The type of this job
@@ -401,7 +401,7 @@ class Job(models.Model):
     :type last_status_change: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
     JOB_STATUSES = (
         ('PENDING', 'PENDING'),
         ('BLOCKED', 'BLOCKED'),
@@ -440,80 +440,80 @@ class Job(models.Model):
     objects = JobManager()
 
     def get_job_data(self):
-        '''Returns the data for this job
+        """Returns the data for this job
 
         :returns: The data for this job
         :rtype: :class:`job.configuration.data.job_data.JobData`
-        '''
+        """
 
         return JobData(self.data)
 
     def get_job_interface(self):
-        '''Returns the interface for this job
+        """Returns the interface for this job
 
         :returns: The interface for this job
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
-        '''
+        """
 
         return JobInterface(self.job_type_rev.interface)
 
     def get_job_results(self):
-        '''Returns the results for this job
+        """Returns the results for this job
 
         :returns: The results for this job
         :rtype: :class:`job.configuration.results.job_results.JobResults`
-        '''
+        """
 
         return JobResults(self.results)
 
     def increase_max_tries(self):
-        '''Increase the total max_tries based on the current number of executions and job type max_tries.
+        """Increase the total max_tries based on the current number of executions and job type max_tries.
         Callers must save the model to persist the change.
-        '''
+        """
 
         self.max_tries = self.num_exes + self.job_type.max_tries
 
     def _can_be_canceled(self):
-        '''Indicates whether this job can be canceled.
+        """Indicates whether this job can be canceled.
 
         :returns: True if the job status allows the job to be canceled, false otherwise.
         :rtype: bool
-        '''
+        """
 
         return self.status not in ['COMPLETED', 'CANCELED']
     can_be_canceled = property(_can_be_canceled)
 
     def _is_ready_to_queue(self):
-        '''Indicates whether this job can be added to the queue.
+        """Indicates whether this job can be added to the queue.
 
         :returns: True if the job status allows the job to be queued, false otherwise.
         :rtype: bool
-        '''
+        """
 
         return self.status in ['PENDING', 'CANCELED', 'FAILED']
     is_ready_to_queue = property(_is_ready_to_queue)
 
     def _is_ready_to_requeue(self):
-        '''Indicates whether this job can be added to the queue after being attempted previously.
+        """Indicates whether this job can be added to the queue after being attempted previously.
 
         :returns: True if the job status allows the job to be queued, false otherwise.
         :rtype: bool
-        '''
+        """
 
         return self.status in ['CANCELED', 'FAILED']
     is_ready_to_requeue = property(_is_ready_to_requeue)
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'job'
 
 
 class JobExecutionManager(models.Manager):
-    '''Provides additional methods for handling job executions.'''
+    """Provides additional methods for handling job executions."""
 
     @transaction.atomic
     def cleanup_completed(self, job_exe_id, when):
-        '''Updates the given job execution to reflect that its cleanup has completed successfully.
+        """Updates the given job execution to reflect that its cleanup has completed successfully.
 
         All database changes occur in an atomic transaction.
 
@@ -521,7 +521,7 @@ class JobExecutionManager(models.Manager):
         :type job_exe_id: int
         :param when: The time that the cleanup was completed
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -531,7 +531,7 @@ class JobExecutionManager(models.Manager):
 
     def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
-        '''Returns a list of jobs within the given time range.
+        """Returns a list of jobs within the given time range.
 
         :param started: Query job executions updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -551,7 +551,7 @@ class JobExecutionManager(models.Manager):
         :type order: list[str]
         :returns: The list of job executions that match the time range.
         :rtype: list[:class:`job.models.JobExecution`]
-        '''
+        """
 
         # Fetch a list of job executions
         job_exes = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
@@ -582,13 +582,13 @@ class JobExecutionManager(models.Manager):
         return job_exes
 
     def get_details(self, job_exe_id):
-        '''Gets additional details for the given job execution model based on related model attributes.
+        """Gets additional details for the given job execution model based on related model attributes.
 
         :param job_exe_id: The unique identifier of the job execution.
         :type job_exe_id: int
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
-        '''
+        """
         job_exe = JobExecution.objects.all().select_related(
             'job', 'job__job_type', 'job__error', 'job__event', 'job__event__rule', 'node', 'error'
         )
@@ -597,13 +597,13 @@ class JobExecutionManager(models.Manager):
         return job_exe
 
     def get_logs(self, job_exe_id):
-        '''Gets additional details for the given job execution model based on related model attributes.
+        """Gets additional details for the given job execution model based on related model attributes.
 
         :param job_exe_id: The unique identifier of the job execution.
         :type job_exe_id: int
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
-        '''
+        """
         job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
         job_exe = job_exe.get(pk=job_exe_id)
 
@@ -636,24 +636,24 @@ class JobExecutionManager(models.Manager):
         return job_exe
 
     def get_job_exe_with_job_and_job_type(self, job_exe_id):
-        '''Gets a job execution with its related job and job_type models populated using only one database query
+        """Gets a job execution with its related job and job_type models populated using only one database query
 
         :param job_exe_id: The ID of the job execution to retrieve
         :type job_exe_id: int
         :returns: The job execution model with related job and job_type models populated
         :rtype: :class:`job.models.JobExecution`
-        '''
+        """
 
         return self.select_related('job__job_type', 'job__job_type_rev').defer('stdout', 'stderr').get(pk=job_exe_id)
 
     def get_latest(self, jobs):
-        '''Gets the latest job execution associated with each given job.
+        """Gets the latest job execution associated with each given job.
 
         :param jobs: The jobs to populate with latest execution models.
         :type jobs: list[class:`job.models.Job`]
         :returns: A dictionary that maps each job identifier to its latest execution.
         :rtype: dict of int -> class:`job.models.JobExecution`
-        '''
+        """
         job_exes = JobExecution.objects.filter(job__in=jobs).defer('stdout', 'stderr')
 
         results = {}
@@ -664,18 +664,18 @@ class JobExecutionManager(models.Manager):
         return results
 
     def get_running_job_exes(self):
-        '''Returns all job executions that are currently RUNNING on a node
+        """Returns all job executions that are currently RUNNING on a node
 
         :returns: The list of RUNNING job executions
         :rtype: list of :class:`job.models.JobExecution`
-        '''
+        """
 
         job_exe_qry = JobExecution.objects.defer('stdout', 'stderr')
         return job_exe_qry.filter(status='RUNNING')
 
     @transaction.atomic
     def job_completed(self, job_exe_id, when, exit_code, stdout, stderr, mesos_run_id):
-        '''Updates the given job execution to reflect that the job process has completed successfully.
+        """Updates the given job execution to reflect that the job process has completed successfully.
 
         All changes occur in an atomic database transaction.
 
@@ -689,7 +689,7 @@ class JobExecutionManager(models.Manager):
         :type stderr: str
         :param mesos_run_id: The ID for the mesos run (sort of like a job execution).
         :type mesos_run_id: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -702,7 +702,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def job_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        '''Updates the given job execution to reflect that the job process has failed.
+        """Updates the given job execution to reflect that the job process has failed.
 
         All changes occur in an atomic database transaction.
 
@@ -716,7 +716,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str
         :param stderr: The stderr contents of the job process, possibly None
         :type stderr: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -727,7 +727,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def job_started(self, job_exe_id, when):
-        '''Updates the given job execution to reflect that the job process has started.
+        """Updates the given job execution to reflect that the job process has started.
 
         All changes occur in an atomic database transaction.
 
@@ -735,7 +735,7 @@ class JobExecutionManager(models.Manager):
         :type job_exe_id: int
         :param when: The time that the job was started
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
         job_exe.job_started = when
@@ -743,7 +743,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def post_steps_completed(self, job_exe_id, when, exit_code, stdout, stderr):
-        '''Updates the given job execution to reflect that the post-job steps have completed successfully.
+        """Updates the given job execution to reflect that the post-job steps have completed successfully.
 
         All database changes occur in an atomic transaction.
 
@@ -757,7 +757,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str
         :param stderr: The post-job stderr contents, possibly None
         :type stderr: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -769,7 +769,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def post_steps_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        '''Updates the given job execution to reflect that the post-job steps have failed.
+        """Updates the given job execution to reflect that the post-job steps have failed.
 
         All database changes occur in an atomic transaction.
 
@@ -783,7 +783,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str
         :param stderr: The post-job stderr contents, possibly None
         :type stderr: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -794,7 +794,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def post_steps_results(self, job_exe_id, results, results_manifest):
-        '''Updates the given job execution to reflect that the post-job steps have finished calculating the results.
+        """Updates the given job execution to reflect that the post-job steps have finished calculating the results.
 
         All database changes occur in an atomic transaction.
 
@@ -804,7 +804,7 @@ class JobExecutionManager(models.Manager):
         :type results: :class:`job.configuration.results.job_results.JobResults`
         :param results_manifest: The results manifest generated by the job execution
         :type results_manifest: :class:`job.configuration.results.results_manifest.results_manifest.ResultsManifest`
-        '''
+        """
 
         if not results or not results_manifest:
             raise Exception('Job execution results and results manifest are required')
@@ -817,7 +817,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def post_steps_started(self, job_exe_id, when):
-        '''Updates the given job execution to reflect that the post-job steps have started.
+        """Updates the given job execution to reflect that the post-job steps have started.
 
         All database changes occur in an atomic transaction.
 
@@ -825,7 +825,7 @@ class JobExecutionManager(models.Manager):
         :type job_exe_id: int
         :param when: The time that the post-steps were started
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
@@ -834,7 +834,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def pre_steps_command_arguments(self, job_exe_id, command_arguments):
-        '''Updates the given job execution after the job command argument string has been filled out.
+        """Updates the given job execution after the job command argument string has been filled out.
 
         This typically includes pre-job step information (e.g. location of file paths). All database changes occur in an
         atomic transaction.
@@ -843,7 +843,7 @@ class JobExecutionManager(models.Manager):
         :type job_exe_id: int
         :param command_arguments: The new job execution command argument string with pre-job step information filled in
         :type command_arguments: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
@@ -852,7 +852,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def pre_steps_completed(self, job_exe_id, when, exit_code, stdout, stderr):
-        '''Updates the given job execution to reflect that the pre-job steps have completed successfully.
+        """Updates the given job execution to reflect that the pre-job steps have completed successfully.
 
         All database changes occur in an atomic transaction.
 
@@ -866,7 +866,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str
         :param stderr: The pre-job stderr contents, possibly None
         :type stderr: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -878,7 +878,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def pre_steps_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        '''Updates the given job execution to reflect that the pre-job steps have failed.
+        """Updates the given job execution to reflect that the pre-job steps have failed.
 
         All database changes occur in an atomic transaction.
 
@@ -892,7 +892,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str
         :param stderr: The pre-job stderr contents, possibly None
         :type stderr: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
@@ -904,7 +904,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def pre_steps_started(self, job_exe_id, when):
-        '''Updates the given job execution to reflect that the pre-job steps have started.
+        """Updates the given job execution to reflect that the pre-job steps have started.
 
         All database changes occur in an atomic transaction.
 
@@ -912,7 +912,7 @@ class JobExecutionManager(models.Manager):
         :type job_exe_id: int
         :param when: The time that the pre-steps were started
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
@@ -920,7 +920,7 @@ class JobExecutionManager(models.Manager):
         job_exe.save()
 
     def queue_job_exe(self, job, when):
-        '''Creates a new job execution for a queued job and returns the job_exe model. The given job model must have
+        """Creates a new job execution for a queued job and returns the job_exe model. The given job model must have
         already been saved in the database (it must have an ID), it must have its related job_type and job_type_rev
         models, and the caller must have obtained a lock on the job model using select_for_update(). The returned
         job_exe model will have not yet been saved in the database.
@@ -931,7 +931,7 @@ class JobExecutionManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :returns: The new job execution
         :rtype: :class:`job.models.JobExecution`
-        '''
+        """
 
         job_exe = JobExecution()
         job_exe.job = job
@@ -948,7 +948,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def schedule_job_executions(self, job_executions):
-        '''Schedules the given job executions. The given job_exe models must have a lock from select_for_update(). All
+        """Schedules the given job executions. The given job_exe models must have a lock from select_for_update(). All
         of the job_exe and job model changes will be saved in the database in an atomic transaction. The updated job_exe
         models are returned with their related job, job_type, job_type_rev and node models populated.
 
@@ -958,7 +958,7 @@ class JobExecutionManager(models.Manager):
             :class:`job.resources.JobResources`)]
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
         :rtype: list[:class:`job.models.JobExecution`]
-        '''
+        """
 
         started = timezone.now()
         job_ids = []
@@ -1004,7 +1004,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def set_log_urls(self, job_exe_id, stdout, stderr):
-        '''Set the URLs to the job execution's stdout/stderr, possibly None. All database changes occur in an atomic
+        """Set the URLs to the job execution's stdout/stderr, possibly None. All database changes occur in an atomic
         transaction.
 
         :param job_exe_id: The job execution whose URLs to update
@@ -1013,7 +1013,7 @@ class JobExecutionManager(models.Manager):
         :type stdout: str or None
         :param stderr: URL for the stderr log file
         :type stderr: str or None
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
@@ -1023,7 +1023,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
-        '''Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
+        """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
 
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
@@ -1033,7 +1033,7 @@ class JobExecutionManager(models.Manager):
         :type job_task_id: str
         :param post_task_id: The post-task ID, possibly None
         :type post_task_id: str
-        '''
+        """
 
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
@@ -1044,7 +1044,7 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def update_status(self, job_exe, status, when, error=None):
-        '''Updates the given job execution (and its job) with the new status. The given job_exe model must have already
+        """Updates the given job execution (and its job) with the new status. The given job_exe model must have already
         been saved in the database (it must have an ID) and the caller must have obtained a lock on the job_exe model
         using select_for_update(). All of the job_exe and job model changes will be saved in the database. The updated
         job model is returned with a lock from select_for_update() and its related job_type and job_type_rev models. All
@@ -1060,7 +1060,7 @@ class JobExecutionManager(models.Manager):
         :type error: :class:`error.models.Error`
         :returns: The job model with lock and related job_type and job_type_rev models
         :rtype: :class:`job.models.Job`
-        '''
+        """
 
         if status in ['QUEUED', 'RUNNING']:
             raise Exception('Invalid status transition for a job execution')
@@ -1084,7 +1084,7 @@ class JobExecutionManager(models.Manager):
 
 
 class JobExecution(models.Model):
-    '''Represents an instance of a job being queued and executed on a cluster node. Any updates to a job execution model
+    """Represents an instance of a job being queued and executed on a cluster node. Any updates to a job execution model
     requires obtaining a lock on the model using select_for_update().
 
     :keyword job: The job that is being executed
@@ -1176,7 +1176,7 @@ class JobExecution(models.Model):
     :type cleaned_up: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job execution was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
     JOB_EXE_STATUSES = (
         ('QUEUED', 'QUEUED'),
         ('RUNNING', 'RUNNING'),
@@ -1238,116 +1238,116 @@ class JobExecution(models.Model):
     objects = JobExecutionManager()
 
     def get_docker_image(self):
-        '''Gets the Docker image for the job execution
+        """Gets the Docker image for the job execution
 
         :returns: The Docker image for the job execution
         :rtype: str
-        '''
+        """
 
         return self.job.job_type.docker_image
 
     def get_error_interface(self):
-        '''Returns the error interface for this job execution
+        """Returns the error interface for this job execution
 
         :returns: The error interface for this job execution
         :rtype: :class:`job.configuration.interface.job_interface.ErrorInterface`
-        '''
+        """
 
         return self.job.job_type.get_error_interface()
 
     def get_job_environment(self):
-        '''Returns the environment data for this job
+        """Returns the environment data for this job
 
         :returns: The environment data for this job
         :rtype: :class:`job.configuration.environment.job_environment.JobEnvironment`
-        '''
+        """
 
         return JobEnvironment(self.environment)
 
     def get_job_interface(self):
-        '''Returns the job interface for executing this job
+        """Returns the job interface for executing this job
 
         :returns: The interface for this job execution
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
-        '''
+        """
 
         return self.job.get_job_interface()
 
     def get_job_results(self):
-        '''Returns the results for this job execution
+        """Returns the results for this job execution
 
         :returns: The results for this job execution
         :rtype: :class:`job.configuration.results.job_results.JobResults`
-        '''
+        """
 
         return JobResults(self.results)
 
     def get_job_type_name(self):
-        '''Returns the name of this job's type
+        """Returns the name of this job's type
 
         :returns: The name of this job's type
         :rtype: str
-        '''
+        """
 
         return self.job.job_type.name
 
     def is_docker_privileged(self):
-        '''Indicates whether this job execution uses Docker in privileged mode
+        """Indicates whether this job execution uses Docker in privileged mode
 
         :returns: True if this job execution uses Docker in privileged mode, False otherwise
         :rtype: bool
-        '''
+        """
 
         return self.job.job_type.docker_privileged
 
     @property
     def is_finished(self):
-        '''Indicates if this job execution has completed (success or failure)
+        """Indicates if this job execution has completed (success or failure)
 
         :returns: True if the job execution is in an final state, False otherwise
         :rtype: bool
-        '''
+        """
         return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
 
     def is_system(self):
-        '''Indicates whether this job execution is for a system job
+        """Indicates whether this job execution is for a system job
 
         :returns: True if this job execution is for a system job, False otherwise
         :rtype: bool
-        '''
+        """
 
         return self.job.job_type.is_system
 
     def is_timed_out(self, when):
-        '''Indicates whether this job execution is timed out based on the given current time
+        """Indicates whether this job execution is timed out based on the given current time
 
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: True if this job execution is for a system job, False otherwise
         :rtype: bool
-        '''
+        """
 
         running_with_timeout_set = self.status == 'RUNNING' and self.timeout
         timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
         return running_with_timeout_set and timeout_exceeded
 
     def uses_docker(self):
-        '''Indicates whether this job execution uses Docker
+        """Indicates whether this job execution uses Docker
 
         :returns: True if this job execution uses Docker, False otherwise
         :rtype: bool
-        '''
+        """
 
         return self.job.job_type.uses_docker
 
     def append_stdout(self, stdout):
-        '''Appends the given string content to the standard output field.
+        """Appends the given string content to the standard output field.
 
         :param stdout: The standard output content to append.
         :type stdout: str
         :returns: The new standard output log after appending new content.
         :rtype: str
-        '''
+        """
         if stdout:
             if self.stdout:
                 self.stdout += stdout
@@ -1356,13 +1356,13 @@ class JobExecution(models.Model):
         return self.stdout
 
     def append_stderr(self, stderr):
-        '''Appends the given string content to the standard error field.
+        """Appends the given string content to the standard error field.
 
         :param stderr: The standard error content to append.
         :type stderr: str
         :returns: The new standard error log after appending new content.
         :rtype: str
-        '''
+        """
         if stderr:
             if self.stderr:
                 self.stderr += stderr
@@ -1371,12 +1371,12 @@ class JobExecution(models.Model):
         return self.stderr
 
     class Meta(object):
-        '''Meta information for the database'''
+        """Meta information for the database"""
         db_table = 'job_exe'
 
 
 class JobTypeStatusCounts(object):
-    '''Represents job counts for a job type.
+    """Represents job counts for a job type.
 
     :keyword status: The job execution status being counted.
     :type status: str
@@ -1387,7 +1387,7 @@ class JobTypeStatusCounts(object):
     :keyword category: The category of the job execution status being counted. Note that currently this will only be
         populated for types of ERROR status values.
     :type category: str
-    '''
+    """
     def __init__(self, status, count=0, most_recent=None, category=None):
         self.status = status
         self.count = count
@@ -1396,20 +1396,20 @@ class JobTypeStatusCounts(object):
 
 
 class JobTypeStatus(object):
-    '''Represents job type statistics.
+    """Represents job type statistics.
 
     :keyword job_type: The job type being counted.
     :type job_type: :class:`job.models.JobType`
     :keyword job_counts: A list of counts for the jobs of the given job type organized by status.
     :type job_counts: list[:class:`job.models.JobTypeStatusCounts`]
-    '''
+    """
     def __init__(self, job_type, job_counts=None):
         self.job_type = job_type
         self.job_counts = job_counts
 
 
 class JobTypeRunningStatus(object):
-    '''Represents job type running statistics.
+    """Represents job type running statistics.
 
     :keyword job_type: The job type being counted.
     :type job_type: :class:`job.models.JobType`
@@ -1417,7 +1417,7 @@ class JobTypeRunningStatus(object):
     :type count: int
     :keyword longest_running: The date/time of the last job execution for the associated job type.
     :type longest_running: datetime.datetime
-    '''
+    """
     def __init__(self, job_type, count=0, longest_running=None):
         self.job_type = job_type
         self.count = count
@@ -1425,7 +1425,7 @@ class JobTypeRunningStatus(object):
 
 
 class JobTypeFailedStatus(object):
-    '''Represents job type system failure statistics.
+    """Represents job type system failure statistics.
 
     :keyword job_type: The job type being counted.
     :type job_type: :class:`job.models.JobType`
@@ -1435,7 +1435,7 @@ class JobTypeFailedStatus(object):
     :type first_error: datetime.datetime
     :keyword last_error: The date/time of the last job execution failed for the associated job type.
     :type last_error: datetime.datetime
-    '''
+    """
     def __init__(self, job_type, error, count=0, first_error=None, last_error=None):
         self.job_type = job_type
         self.error = error
@@ -1445,12 +1445,12 @@ class JobTypeFailedStatus(object):
 
 
 class JobTypeManager(models.Manager):
-    '''Provides additional methods for handling job types
-    '''
+    """Provides additional methods for handling job types
+    """
 
     @transaction.atomic
     def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, **kwargs):
-        '''Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
+        """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
         :param name: The stable name of the job type used by clients for queries
@@ -1473,7 +1473,7 @@ class JobTypeManager(models.Manager):
         invalid
         :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
         type interface is invalid
-        '''
+        """
 
         for field_name in kwargs:
             if field_name in JobType.UNEDITABLE_FIELDS:
@@ -1510,7 +1510,7 @@ class JobTypeManager(models.Manager):
     @transaction.atomic
     def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
                       error_mapping=None, **kwargs):
-        '''Edits the given job type and saves the changes in the database. The caller must provide the related
+        """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
         no change to the trigger rule (False) and removing the trigger rule (True) when trigger_rule is None.
@@ -1536,7 +1536,7 @@ class JobTypeManager(models.Manager):
         type interface is invalid
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface change
         invalidates any existing recipe type definitions
-        '''
+        """
 
         for field_name in kwargs:
             if field_name in JobType.UNEDITABLE_FIELDS:
@@ -1592,7 +1592,7 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
     def get_by_natural_key(self, name, version):
-        '''Django method to retrieve a job type for the given natural key
+        """Django method to retrieve a job type for the given natural key
 
         :param name: The human-readable name of the job type
         :type name: str
@@ -1600,29 +1600,29 @@ class JobTypeManager(models.Manager):
         :type version: str
         :returns: The job type defined by the natural key
         :rtype: :class:`job.models.JobType`
-        '''
+        """
         return self.get(name=name, version=version)
 
     def get_cleanup_job_type(self):
-        '''Returns the Scale Cleanup job type
+        """Returns the Scale Cleanup job type
 
         :returns: The cleanup job type
         :rtype: :class:`job.models.JobType`
-        '''
+        """
 
         return JobType.objects.get(name='scale-cleanup', version='1.0')
 
     def get_clock_job_type(self):
-        '''Returns the Scale Clock job type
+        """Returns the Scale Clock job type
 
         :returns: The clock job type
         :rtype: :class:`job.models.JobType`
-        '''
+        """
 
         return JobType.objects.get(name='scale-clock', version='1.0')
 
     def get_job_types(self, started=None, ended=None, names=None, categories=None, order=None):
-        '''Returns a list of job types within the given time range.
+        """Returns a list of job types within the given time range.
 
         :param started: Query job types updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -1636,7 +1636,7 @@ class JobTypeManager(models.Manager):
         :type order: list[str]
         :returns: The list of job types that match the time range.
         :rtype: list[:class:`job.models.JobType`]
-        '''
+        """
 
         # Fetch a list of job types
         job_types = JobType.objects.all()
@@ -1661,7 +1661,7 @@ class JobTypeManager(models.Manager):
         return job_types
 
     def get_details(self, job_type_id):
-        '''Returns the job type for the given ID with all detail fields included.
+        """Returns the job type for the given ID with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
 
@@ -1669,7 +1669,7 @@ class JobTypeManager(models.Manager):
         :type job_type_id: int
         :returns: The job type with all detail fields included.
         :rtype: :class:`job.models.JobType`
-        '''
+        """
 
         # Attempt to get the job type
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
@@ -1687,13 +1687,13 @@ class JobTypeManager(models.Manager):
         return job_type
 
     def get_performance(self, job_type_id, started, ended=None):
-        '''Returns the job count statistics for a given job type and time range.
+        """Returns the job count statistics for a given job type and time range.
 
         :param job_type_id: The unique identifier of the job type.
         :type job_type_id: int
         :returns: A list of job counts organized by status.
         :rtype: list[:class:`job.models.JobTypeStatusCounts`]
-        '''
+        """
         count_dicts = Job.objects.values('job_type__id', 'status', 'error__category')
         count_dicts = count_dicts.filter(job_type_id=job_type_id, last_status_change__gte=started)
         if ended:
@@ -1708,7 +1708,7 @@ class JobTypeManager(models.Manager):
         return results
 
     def get_status(self, started, ended=None):
-        '''Returns a list of job types with counts broken down by job status.
+        """Returns a list of job types with counts broken down by job status.
 
         Note that all running job types are counted regardless of date/time filters.
 
@@ -1718,7 +1718,7 @@ class JobTypeManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :returns: The list of job types with supplemented statistics.
         :rtype: list[:class:`job.models.JobTypeStatus`]
-        '''
+        """
 
         # Build a mapping of all job type identifier -> status model
         job_types = JobType.objects.all().defer('interface', 'error_mapping').order_by('last_modified')
@@ -1746,14 +1746,14 @@ class JobTypeManager(models.Manager):
         return [status_dict[job_type.id] for job_type in job_types]
 
     def get_running_status(self):
-        '''Returns a status overview of all currently running job types.
+        """Returns a status overview of all currently running job types.
 
         The results consist of standard job type models, plus additional computed statistics fields including a total
         count of associated jobs and the longest running job.
 
         :returns: The list of each job type with additional statistic fields.
         :rtype: list[:class:`job.models.JobTypeRunningStatus`]
-        '''
+        """
 
         # Make a list of all the basic job type fields to fetch
         job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
@@ -1778,14 +1778,14 @@ class JobTypeManager(models.Manager):
         return results
 
     def get_failed_status(self):
-        '''Returns all job types that have failed due to system errors.
+        """Returns all job types that have failed due to system errors.
 
         The results consist of standard job type models, plus additional computed statistics fields including a total
         count of associated jobs and the last status change of a running job.
 
         :returns: The list of each job type with additional statistic fields.
         :rtype: list[:class:`job.models.JobTypeFailedStatus`]
-        '''
+        """
 
         # Make a list of all the basic job type fields to fetch
         job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
@@ -1822,7 +1822,7 @@ class JobTypeManager(models.Manager):
         return results
 
     def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None):
-        '''Validates a new job type prior to attempting a save
+        """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
         :type name: str
@@ -1845,7 +1845,7 @@ class JobTypeManager(models.Manager):
             type interface is invalid
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface invalidates any
             existing recipe type definitions
-        '''
+        """
 
         warnings = []
 
@@ -1880,10 +1880,10 @@ class JobTypeManager(models.Manager):
         return warnings
 
     def _validate_job_type_fields(self, **kwargs):
-        '''Validates the given keyword argument fields for job types
+        """Validates the given keyword argument fields for job types
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        '''
+        """
 
         if 'timeout' in kwargs:
             timeout = kwargs['timeout']
@@ -1896,7 +1896,7 @@ class JobTypeManager(models.Manager):
 
 
 class JobType(models.Model):
-    '''Represents a type of job that can be run on the cluster. Any updates to
+    """Represents a type of job that can be run on the cluster. Any updates to
     a job type model requires obtaining a lock on the model using
     select_for_update().
 
@@ -1948,6 +1948,8 @@ class JobType(models.Model):
 
     :keyword priority: The priority of the job type (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
+    :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
+    :type max_scheduled: :class:`django.db.models.IntegerField`
     :keyword timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
     :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
@@ -1974,7 +1976,7 @@ class JobType(models.Model):
     :type paused: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
                          'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')
@@ -2003,6 +2005,7 @@ class JobType(models.Model):
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     priority = models.IntegerField(default=100)
+    max_scheduled = models.IntegerField(blank=True, null=True)
     timeout = models.IntegerField(default=1800)
     max_tries = models.IntegerField(default=3)
     cpus_required = models.FloatField(default=1.0)
@@ -2020,46 +2023,46 @@ class JobType(models.Model):
     objects = JobTypeManager()
 
     def get_job_interface(self):
-        '''Returns the interface for running jobs of this type
+        """Returns the interface for running jobs of this type
 
         :returns: The job interface for this type
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
-        '''
+        """
 
         return JobInterface(self.interface)
 
     def get_error_interface(self):
-        '''Returns the interface for mapping a job's exit code or
-        stderr/stdout expression to an error type'''
+        """Returns the interface for mapping a job's exit code or
+        stderr/stdout expression to an error type"""
 
         return ErrorInterface(self.error_mapping)
 
     def natural_key(self):
-        '''Django method to define the natural key for a job type as the
+        """Django method to define the natural key for a job type as the
         combination of name and version
 
         :returns: A tuple representing the natural key
         :rtype: tuple(str, str)
-        '''
+        """
         return (self.name, self.version)
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'job_type'
         unique_together = ('name', 'version')
 
 
 class JobTypeRevisionManager(models.Manager):
-    '''Provides additional methods for handling job type revisions
-    '''
+    """Provides additional methods for handling job type revisions
+    """
 
     def create_job_type_revision(self, job_type):
-        '''Creates a new revision for the given job type. The job type's interface and revision number must already be
+        """Creates a new revision for the given job type. The job type's interface and revision number must already be
         updated. The caller must have obtained a lock using select_for_update() on the given job type model.
 
         :param job_type: The job type
         :type job_type: :class:`job.models.JobType`
-        '''
+        """
 
         new_rev = JobTypeRevision()
         new_rev.job_type = job_type
@@ -2068,7 +2071,7 @@ class JobTypeRevisionManager(models.Manager):
         new_rev.save()
 
     def get_by_natural_key(self, job_type, revision_num):
-        '''Django method to retrieve a job type revision for the given natural key
+        """Django method to retrieve a job type revision for the given natural key
 
         :param job_type: The job type
         :type job_type: :class:`job.models.JobType`
@@ -2076,12 +2079,12 @@ class JobTypeRevisionManager(models.Manager):
         :type revision_num: int
         :returns: The job type revision defined by the natural key
         :rtype: :class:`job.models.JobTypeRevision`
-        '''
+        """
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
 
     def get_revision(self, job_type_id, revision_num):
-        '''Returns the revision for the given job type and revision number
+        """Returns the revision for the given job type and revision number
 
         :param job_type_id: The ID of the job type
         :type job_type_id: int
@@ -2089,13 +2092,13 @@ class JobTypeRevisionManager(models.Manager):
         :type revision_num: int
         :returns: The revision
         :rtype: :class:`job.models.JobTypeRevision`
-        '''
+        """
 
         return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
 
 
 class JobTypeRevision(models.Model):
-    '''Represents a revision of a job type. New revisions are created when the interface of a job type changes. Any
+    """Represents a revision of a job type. New revisions are created when the interface of a job type changes. Any
     inserts of a job type revision model requires obtaining a lock using select_for_update() on the corresponding job
     type model.
 
@@ -2107,7 +2110,7 @@ class JobTypeRevision(models.Model):
     :type interface: :class:`djorm_pgjson.fields.JSONField`
     :keyword created: When this revision was created
     :type created: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
@@ -2117,25 +2120,25 @@ class JobTypeRevision(models.Model):
     objects = JobTypeRevisionManager()
 
     def get_job_interface(self):
-        '''Returns the job type interface for this revision
+        """Returns the job type interface for this revision
 
         :returns: The job type interface for this revision
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
-        '''
+        """
 
         return JobInterface(self.interface)
 
     def natural_key(self):
-        '''Django method to define the natural key for a job type revision as the combination of job type and revision
+        """Django method to define the natural key for a job type revision as the combination of job type and revision
         number
 
         :returns: A tuple representing the natural key
         :rtype: tuple(str, int)
-        '''
+        """
 
         return (self.job_type, self.revision_num)
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'job_type_revision'
         unique_together = ('job_type', 'revision_num')

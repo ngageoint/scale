@@ -109,9 +109,10 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     return job
 
 
-def create_job_exe(job=None, status='RUNNING', error=None, command_arguments='test_arg', timeout=None, node=None,
-                   created=None, queued=None, started=None, pre_started=None, pre_completed=None, job_started=None,
-                   job_completed=None, post_started=None, post_completed=None, ended=None, last_modified=None):
+def create_job_exe(job_type=None, job=None, status='RUNNING', error=None, command_arguments='test_arg', timeout=None,
+                   node=None, created=None, queued=None, started=None, pre_started=None, pre_completed=None,
+                   job_started=None, job_completed=None, post_started=None, post_completed=None, ended=None,
+                   last_modified=None):
     '''Creates a job execution model for unit testing
 
     :returns: The job execution model
@@ -120,7 +121,7 @@ def create_job_exe(job=None, status='RUNNING', error=None, command_arguments='te
 
     when = timezone.now()
     if not job:
-        job = create_job()
+        job = create_job(job_type=job_type)
     if not timeout:
         timeout = job.timeout
     if not node:

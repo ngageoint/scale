@@ -18,6 +18,7 @@ class RunningJobExecution(object):
         """
 
         self._id = job_exe.id
+        self._job_type_id = job_exe.job.job_type_id
         self._lock = threading.Lock()
         self._node_id = job_exe.node.id
 
@@ -36,6 +37,16 @@ class RunningJobExecution(object):
         """
 
         return self._id
+
+    @property
+    def job_type_id(self):
+        """Returns the job type ID of this job execution
+
+        :returns: The job type ID of the job execution
+        :rtype: int
+        """
+
+        return self._job_type_id
 
     @property
     def node_id(self):

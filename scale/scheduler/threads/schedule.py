@@ -56,7 +56,8 @@ class SchedulingThread(object):
         self._node_manager = node_manager
         self._offer_manager = offer_manager
         self._scheduler_manager = scheduler_manager
-        self._job_types = {}
+        self._job_types = {}  # {Job Type ID: Job Type}
+        self._job_type_limit_available = {}  # {Job Type ID: Number still available to be scheduled}
         self._running = True
 
     @property
@@ -131,13 +132,19 @@ class SchedulingThread(object):
 
         num_job_exes = 0
         for queue in Queue.objects.get_queue():
+            job_type_id = queue.job_type_id
 
-            if queue.job_type_id not in self._job_types or self._job_types[queue.job_type_id].is_paused:
+            if job_type_id not in self._job_types or self._job_types[job_type_id].is_paused:
+                continue
+
+            if job_type_id in self._job_type_limit_available and self._job_type_limit_available[job_type_id] < 1:
                 continue
 
             queued_job_exe = QueuedJobExecution(queue)
             if self._offer_manager.consider_new_job_exe(queued_job_exe) == OfferManager.ACCEPTED:
                 num_job_exes += 1
+                if job_type_id in self._job_type_limit_available:
+                    self._job_type_limit_available[job_type_id] -= 1
                 if num_job_exes >= SchedulingThread.MAX_NEW_JOB_EXES:
                     break
 
@@ -159,6 +166,15 @@ class SchedulingThread(object):
         self._offer_manager.update_nodes(self._node_manager.get_nodes())
         self._offer_manager.ready_new_offers()
         self._job_types = self._job_type_manager.get_job_types()
+
+        # Look at job type limits and determine number available to be scheduled
+        self._job_type_limit_available = {}
+        for job_type in self._job_types.values():
+            if job_type.max_scheduled:
+                self._job_type_limit_available[job_type.id] = job_type.max_scheduled
+        for running_job_exe in self._job_exe_manager.get_all_job_exes():
+            if running_job_exe.job_type_id in self._job_type_limit_available:
+                self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
         self._consider_running_job_exes()
         self._consider_new_job_exes()
