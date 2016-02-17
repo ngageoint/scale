@@ -9,3 +9,4 @@ db_username: scale
 db_password: scale
 db_host: localhost
 django_debug: 'False'
+scale_build_root: '/scale'
