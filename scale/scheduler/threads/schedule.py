@@ -179,9 +179,7 @@ class SchedulingThread(object):
         self._consider_running_job_exes()
         self._consider_new_job_exes()
 
-        num_tasks = self._schedule_accepted_tasks()
-        logger.info('Launched %i Mesos tasks' % num_tasks)
-        return num_tasks
+        return self._schedule_accepted_tasks()
 
     def _schedule_accepted_tasks(self):
         """Schedules all of the tasks that have been accepted
@@ -215,17 +213,23 @@ class SchedulingThread(object):
             logger.exception('Failed to schedule queued job executions')
 
         # Launch tasks on Mesos
-        num_tasks = 0
+        total_num_tasks = 0
+        total_num_nodes = 0
         for node_offers in node_offers_list:
             task_list = tasks_to_launch[node_offers.node.id]
-            num_tasks += len(task_list)
+            num_tasks = len(task_list)
+            total_num_tasks += num_tasks
+            if num_tasks:
+                total_num_nodes += 1
             mesos_offer_ids = []
             for offer_id in node_offers.offer_ids:
                 mesos_offer_id = mesos_pb2.OfferID()
                 mesos_offer_id.value = offer_id
                 mesos_offer_ids.append(mesos_offer_id)
             self._driver.launchTasks(mesos_offer_ids, task_list)
-        return num_tasks
+        if total_num_tasks:
+            logger.info('Launched %i Mesos task(s) on %i node(s)', total_num_tasks, total_num_nodes)
+        return total_num_tasks
 
     @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
     def _schedule_queued_job_executions(self, job_executions):
