@@ -1,7 +1,6 @@
 ---
 # roles/common/tasks/main.yml
 - name: Disable firewall
-  tags: common
   service: name=firewalld state=stopped enabled=false
   become: true
 
@@ -11,7 +10,6 @@
   become: true
 
 - name: Disable selinux
-  copy: src=config dest=/etc/selinux/config
   become: true
   notify:
     - set permissive mode
