@@ -166,7 +166,7 @@ class OfferManager(object):
                 if offer_id in self._nodes_by_offer_id:
                     node_offers = self._nodes_by_offer_id[offer_id]
                     node_offers.remove_offer(offer_id)
-                    self._remove_node_offers(node_offers)
+                    del self._nodes_by_offer_id[offer_id]
 
     def update_nodes(self, nodes):
         """Updates the manager with the latest copies of the node models
