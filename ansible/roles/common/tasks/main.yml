@@ -1,10 +1,12 @@
 ---
 # roles/common/tasks/main.yml
 - name: Disable firewall
+  tags: common
   service: name=firewalld state=stopped enabled=false
   become: true
 
 - name: Install python-pip
+  tags: common
   yum: name=python-pip
   become: true
 
@@ -15,12 +17,19 @@
     - set permissive mode
 
 - name: Install docker-py
+  tags: common
   pip: name=docker-py version=1.5.0
   become: true
 
+- name: Install rsync
+  tags: common
+  yum: name=rsync
+  become: true
+
 # seems to be a conflict with this and device-mapper. Just showed up 12/15 so it might be bug with a recent yum repo update?
-- name: Remove lvm2
-  yum: name=lvm2 state=absent
+- name: Update lvm2
+  tags: common
+  yum: name=lvm2 state=latest
   become: true
 
 - name: Install docker
