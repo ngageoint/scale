@@ -151,6 +151,7 @@ class OfferManager(object):
                     node_offers = self._nodes_by_agent_id[offer.agent_id]
                     node_offers.add_offer(offer)
                     self._nodes_by_offer_id[offer.id] = node_offers
+                    del self._new_offers[offer.id]
 
     def remove_offers(self, offer_ids):
         """Removes the offers with the given IDs from the manager
