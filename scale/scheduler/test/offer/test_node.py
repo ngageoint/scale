@@ -265,6 +265,27 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
+    def test_job_exe_canceled(self):
+        """Tests adding a job execution that becomes canceled while scheduling"""
+
+        node_offers = NodeOffers(self.node)
+        offer_1 = ResourceOffer('offer_1',  self.node_agent, NodeResources(cpus=24.0, mem=1024.0, disk=1024.0))
+        node_offers.add_offer(offer_1)
+        offer_2 = ResourceOffer('offer_2',  self.node_agent, NodeResources(cpus=50.0, mem=2048.0, disk=2048.0))
+        node_offers.add_offer(offer_2)
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
+        self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
+
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
+        job_exe_1.execution_canceled()
+        result = node_offers.consider_next_task(job_exe_1)
+        self.assertEqual(result, NodeOffers.TASK_INVALID)
+
+        self.assertFalse(node_offers.has_accepted_job_exes())
+        self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
+        self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
+
     def test_remove_offer(self):
         """Tests remove_offer()"""
 

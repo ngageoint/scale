@@ -8,12 +8,13 @@ class NodeOffers(object):
     """This class represents the set of all resource offers for a node. This class is thread-safe."""
 
     ACCEPTED = 0
-    NOT_ENOUGH_CPUS = 1
-    NOT_ENOUGH_MEM = 2
-    NOT_ENOUGH_DISK = 3
-    NO_OFFERS = 4
-    NODE_PAUSED = 5
-    NODE_OFFLINE = 6
+    TASK_INVALID = 1
+    NOT_ENOUGH_CPUS = 2
+    NOT_ENOUGH_MEM = 3
+    NOT_ENOUGH_DISK = 4
+    NO_OFFERS = 5
+    NODE_PAUSED = 6
+    NODE_OFFLINE = 7
 
     def __init__(self, node):
         """Constructor
@@ -148,6 +149,8 @@ class NodeOffers(object):
                 return NodeOffers.NO_OFFERS
 
             required_resources = job_exe.next_task_resources()
+            if not required_resources:
+                return NodeOffers.TASK_INVALID
             if self._available_cpus < required_resources.cpus:
                 return NodeOffers.NOT_ENOUGH_CPUS
             if self._available_mem < required_resources.mem:

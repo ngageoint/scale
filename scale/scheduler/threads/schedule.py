@@ -152,7 +152,7 @@ class SchedulingThread(object):
         """Considers any tasks for currently running job executions that are ready for the next task to run
         """
 
-        for running_job_exe in self._job_exe_manager.get_all_job_exes():
+        for running_job_exe in self._job_exe_manager.get_ready_job_exes():
             self._offer_manager.consider_next_task(running_job_exe)
 
     def _perform_scheduling(self):

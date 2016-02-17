@@ -24,7 +24,7 @@ class QueuedJobExecution(object):
 
         self._required_node_ids = None
         if self._queue.node_required_id:
-            self._required_node_ids = {self._queue.node_id}
+            self._required_node_ids = {self._queue.node_required_id}
 
         self._provided_node = None
         self._provided_resources = None

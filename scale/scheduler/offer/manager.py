@@ -8,13 +8,14 @@ class OfferManager(object):
     """This class manages all offers of resources from the cluster nodes. This class is thread-safe."""
 
     ACCEPTED = NodeOffers.ACCEPTED
+    TASK_INVALID = NodeOffers.TASK_INVALID
     NOT_ENOUGH_CPUS = NodeOffers.NOT_ENOUGH_CPUS
     NOT_ENOUGH_MEM = NodeOffers.NOT_ENOUGH_MEM
     NOT_ENOUGH_DISK = NodeOffers.NOT_ENOUGH_DISK
     NO_OFFERS = NodeOffers.NO_OFFERS
     NODE_PAUSED = NodeOffers.NODE_PAUSED
     NODE_OFFLINE = NodeOffers.NODE_OFFLINE
-    NO_NODES_AVAILABLE = 7
+    NO_NODES_AVAILABLE = 8
 
     def __init__(self):
         """Constructor
