@@ -6,8 +6,9 @@
     name: scale-scheduler
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}scale:{{ scale_docker_version }}'
-    state: restarted
+    state: reloaded
     restart_policy: always
+    pull: always
     command: 'scale_scheduler'
     net: host
     volumes:
