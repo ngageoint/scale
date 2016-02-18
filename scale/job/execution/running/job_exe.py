@@ -3,30 +3,52 @@ from __future__ import unicode_literals
 
 import threading
 
-from job.resources import NodeResources
+from job.execution.running.tasks.factory import TaskFactory
 
 
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    def __init__(self, job_exe):
+    def __init__(self, job_exe, task_factory=None):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type and
             job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param task_factory: The factory to use for creating the job execution tasks
+        :type task_factory: :class:`job.execution.running.tasks.factory.TaskFactory`
         """
 
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
-        self._lock = threading.Lock()
         self._node_id = job_exe.node.id
 
-        # TODO: Future refactor: replace ScaleJobExecution with the new task system, add unit tests
-        from scheduler.scale_job_exe import ScaleJobExecution
-        self.scale_job_exe = ScaleJobExecution(job_exe, job_exe.cpus_scheduled, job_exe.mem_scheduled,
-                                               job_exe.disk_in_scheduled, job_exe.disk_out_scheduled,
-                                               job_exe.disk_total_scheduled)
+        self._lock = threading.Lock()
+        self._current_task = None
+        self._remaining_tasks = []
+
+        # Create tasks
+        if not task_factory:
+            task_factory = TaskFactory()
+        if not job_exe.is_system:
+            pre_task = task_factory.create_pre_task(job_exe)
+            self._remaining_tasks.append(pre_task.get_id())
+        job_task = task_factory.create_job_task(job_exe)
+        self._remaining_tasks.append(job_task.get_id())
+        if not job_exe.is_system:
+            post_task = task_factory.create_post_task(job_exe)
+            self._remaining_tasks.append(post_task.get_id())
+
+    @property
+    def current_task(self):
+        """Returns the currently running task of the job execution, or None if no task is currently running
+
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        """
+
+        with self._lock:
+            return self._current_task
 
     @property
     def id(self):
@@ -58,67 +80,60 @@ class RunningJobExecution(object):
 
         return self._node_id
 
-    # TODO: Future refactor: have current_task() method
-    def current_task_id(self):
-        """Returns the ID of the current task
-
-        :returns: The ID of the current task, possibly None
-        :rtype: str
-        """
-
-        with self._lock:
-            return self.scale_job_exe.current_task()
-
     def execution_canceled(self):
-        """Cancels this job execution and returns the ID of the current task
+        """Cancels this job execution and returns the current task
 
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
 
     def execution_lost(self, when):
-        """Fails this job execution for its node becoming lost and returns the ID of the current task
+        """Fails this job execution for its node becoming lost and returns the current task
 
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
+            # TODO: move error into job app
             from scheduler.scheduler_errors import get_node_lost_error
             error = get_node_lost_error()
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+            Queue.objects.handle_job_failure(self._id, when, error)
+
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
 
     def execution_timed_out(self, when):
-        """Fails this job execution for timing out and returns the ID of the current task
+        """Fails this job execution for timing out and returns the current task
 
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
+            # TODO: move error into job app
             from scheduler.scheduler_errors import get_timeout_error
             error = get_timeout_error()
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+            Queue.objects.handle_job_failure(self._id, when, error)
+
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
 
     def is_finished(self):
         """Indicates whether this job execution is finished with all tasks
@@ -128,7 +143,7 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            return self.scale_job_exe.is_finished()
+            return not self._current_task and not self._remaining_tasks
 
     def is_next_task_ready(self):
         """Indicates whether the next task in this job execution is ready
@@ -138,7 +153,7 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            return self.scale_job_exe.current_task_id is None and len(self.scale_job_exe.remaining_task_ids) > 0
+            return not self._current_task and self._remaining_tasks
 
     def next_task_resources(self):
         """Returns the resources that are required by the next task in this job execution. Returns None if there are no
@@ -149,31 +164,26 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            if len(self.scale_job_exe.remaining_task_ids) == 0:
+            if not self._remaining_tasks:
                 return None
 
-            cpus = self.scale_job_exe.cpus
-            mem = self.scale_job_exe.mem
-            if not self.scale_job_exe.remaining_task_ids:
-                disk = 0.0
-            else:
-                disk = self.scale_job_exe._get_task_disk_required(self.scale_job_exe.remaining_task_ids[0])
-
-            return NodeResources(cpus=cpus, mem=mem, disk=disk)
+            next_task = self._remaining_tasks[0]
+            return next_task.get_resources()
 
     def start_next_task(self):
         """Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
         tasks remain.
 
-        :returns: The next Mesos task to schedule
-        :rtype: :class:`mesos_pb2.TaskInfo`
+        :returns: The new task that was started, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
-            if self.scale_job_exe.current_task_id is not None or len(self.scale_job_exe.remaining_task_ids) < 1:
+            if self._current_task or not self._remaining_tasks:
                 return None
 
-            return self.scale_job_exe.start_next_task()
+            self._current_task = self._remaining_tasks.pop(0)
+            return self._current_task
 
     def task_completed(self, task_id, status):
         """Completes a Mesos task for this job execution

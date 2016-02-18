@@ -1021,6 +1021,7 @@ class JobExecutionManager(models.Manager):
         job_exe.current_stderr_url = stderr
         job_exe.save()
 
+    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed.
     @transaction.atomic
     def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
         """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
@@ -1309,6 +1310,7 @@ class JobExecution(models.Model):
         """
         return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
 
+    @property
     def is_system(self):
         """Indicates whether this job execution is for a system job
 

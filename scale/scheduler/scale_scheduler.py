@@ -335,9 +335,9 @@ class ScaleScheduler(MesosScheduler):
                 except DatabaseError:
                     logger.exception('Error failing lost job execution: %s', running_job_exe.id)
                     # Error failing execution, add task so it can be reconciled
-                    task_id = running_job_exe.current_task_id
-                    if task_id:
-                        self._recon_thread.add_task_ids([task_id])
+                    task = running_job_exe.current_task
+                    if task:
+                        self._recon_thread.add_task_ids([task.id])
                 if running_job_exe.is_finished():
                     self._job_exe_manager.remove_job_exe(running_job_exe.id)
 
@@ -408,9 +408,9 @@ class ScaleScheduler(MesosScheduler):
         for job_exe in job_exes:
             running_job_exe = self._job_exe_manager.get_job_exe(job_exe.id)
             if running_job_exe:
-                task_id = running_job_exe.current_task_id()
-                if task_id:
-                    task_ids.append(task_id)
+                task = running_job_exe.current_task
+                if task:
+                    task_ids.append(task.id)
             else:
                 # Fail any executions that the scheduler has lost
                 error = get_scheduler_error()
