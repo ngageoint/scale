@@ -1,0 +1,152 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>migrations Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="product Package" href="product.html" />
+    <link rel="next" title="test Package" href="product.test.html" />
+    <link rel="prev" title="configuration Package" href="product.configuration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.test.html" title="test Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="product.configuration.html" title="configuration Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="product.html" accesskey="U">product Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="migrations-package">
+<h1>migrations Package<a class="headerlink" href="#migrations-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-product.migrations.0001_initial">
+<span id="initial-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0001_initial</span></tt> Module<a class="headerlink" href="#module-product.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.migrations.0001_initial.Migration">
+<em class="property">class </em><tt class="descclassname">product.migrations.0001_initial.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#product.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<dl class="attribute">
+<dt id="product.migrations.0001_initial.Migration.dependencies">
+<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0001_initial'), (u'storage', u'0001_initial'), (u'recipe', u'0001_initial')]</em><a class="headerlink" href="#product.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="product.migrations.0001_initial.Migration.operations">
+<tt class="descname">operations</tt><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'file_ancestry_link'}, name=u'FileAncestryLink'&gt;, &lt;CreateModel  fields=[(u'file', &lt;django.db.models.fields.related.OneToOneField&gt;), (u'is_operational', &lt;django.db.models.fields.BooleanField&gt;), (u'has_been_published', &lt;django.db.models.fields.BooleanField&gt;), (u'is_published', &lt;django.db.models.fields.BooleanField&gt;), (u'published', &lt;django.db.models.fields.DateTimeField&gt;), (u'unpublished', &lt;django.db.models.fields.DateTimeField&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'job_exe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(u'storage.scalefile',), options={u'db_table': u'product_file'}, name=u'ProductFile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'ancestor', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'ancestor_job', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'ancestor_job_exe', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'descendant', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_exe', model_name=u'fileancestrylink'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'recipe', model_name=u'fileancestrylink'&gt;]</em><a class="headerlink" href="#product.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">migrations Package</a><ul>
+<li><a class="reference internal" href="#module-product.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="product.configuration.html"
+                        title="previous chapter">configuration Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="product.test.html"
+                        title="next chapter">test Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/product.migrations.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.test.html" title="test Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="product.configuration.html" title="configuration Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="product.html" >product Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

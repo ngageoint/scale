@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="node Package" href="node.html" />
+    <link rel="next" title="port Package" href="port.html" />
+    <link rel="prev" title="migrations Package" href="node.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="port.html" title="port Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="node.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="node.html" accesskey="U">node Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-node.test"></span></div>
+<div class="section" id="module-node.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-node.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="node.test.test_views.TestNodeDetailsView">
+<em class="property">class </em><tt class="descclassname">node.test.test_views.</tt><tt class="descname">TestNodeDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_master_disconnected">
+<tt class="descname">test_get_node_master_disconnected</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_master_disconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Get Node method with a disconnected master.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_not_found">
+<tt class="descname">test_get_node_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Get Node method with a bad node id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_success">
+<tt class="descname">test_get_node_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Get Node method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_replace_node_extra_fields">
+<tt class="descname">test_replace_node_extra_fields</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_replace_node_extra_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Replace Node method with extra fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_replace_node_missing_fields">
+<tt class="descname">test_replace_node_missing_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_replace_node_missing_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Replace Node method with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_replace_node_not_found">
+<tt class="descname">test_replace_node_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_replace_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Replace Node method with a bad node id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_replace_node_success">
+<tt class="descname">test_replace_node_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_replace_node_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Replace Node method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_active">
+<tt class="descname">test_update_active</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully deactivating a node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_extra_fields">
+<tt class="descname">test_update_node_extra_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_extra_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with extra fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_no_fields">
+<tt class="descname">test_update_node_no_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_no_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with no fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_not_found">
+<tt class="descname">test_update_node_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with a bad node id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_success">
+<tt class="descname">test_update_node_success</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Update Node method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_unpause">
+<tt class="descname">test_update_node_unpause</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_unpause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unpausing the node and specifying a reason.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesStatusView">
+<em class="property">class </em><tt class="descclassname">node.test.test_views.</tt><tt class="descname">TestNodesStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<p>Test class to test the REST service to retrieve the node status for all the nodes in the cluster.</p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesStatusView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesStatusView.test_nodes_stats">
+<tt class="descname">test_nodes_stats</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.test_nodes_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tests retrieving all the nodes statistics
+for the three hour duration requested</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesStatusView.test_nodes_system_stats">
+<tt class="descname">test_nodes_system_stats</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.test_nodes_system_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tests for when a node has not processed any jobs for the duration of time requested.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesView">
+<em class="property">class </em><tt class="descclassname">node.test.test_views.</tt><tt class="descname">TestNodesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesView.test_nodes_view">
+<tt class="descname">test_nodes_view</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesView.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the REST call to retrieve a list of nodes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesViewEmpty">
+<em class="property">class </em><tt class="descclassname">node.test.test_views.</tt><tt class="descname">TestNodesViewEmpty</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewEmpty.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewEmpty.test_nodes_view">
+<tt class="descname">test_nodes_view</tt><big>(</big><big>)</big><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>test the REST call to retrieve an empty list of nodes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-node.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-node.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing nodes</p>
+<dl class="function">
+<dt id="node.test.utils.create_node">
+<tt class="descclassname">node.test.utils.</tt><tt class="descname">create_node</tt><big>(</big><em>hostname=None</em>, <em>port=5051</em>, <em>slave_id=None</em><big>)</big><a class="headerlink" href="#node.test.utils.create_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a node model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-node.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-node.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="node.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="port.html"
+                        title="next chapter">port Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/node.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="port.html" title="port Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="node.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="node.html" >node Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

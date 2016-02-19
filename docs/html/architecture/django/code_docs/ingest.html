@@ -1,0 +1,1121 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ingest Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="fixtures Package" href="ingest.fixtures.html" />
+    <link rel="prev" title="test Package" href="error.test.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.fixtures.html" title="fixtures Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="error.test.html" title="test Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ingest-package">
+<h1>ingest Package<a class="headerlink" href="#ingest-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-ingest" title="ingest"><tt class="xref py py-mod docutils literal"><span class="pre">ingest</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ingest"></span><p>This model handles the ingestion of new data into scale</p>
+</div>
+<div class="section" id="module-ingest.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-ingest.apps" title="Permalink to this headline">¶</a></h2>
+<p>The scale ingest application</p>
+<dl class="class">
+<dt id="ingest.apps.IngestConfig">
+<em class="property">class </em><tt class="descclassname">ingest.apps.</tt><tt class="descname">IngestConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#ingest.apps.IngestConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the ingest app</p>
+<dl class="attribute">
+<dt id="ingest.apps.IngestConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'ingest'</em><a class="headerlink" href="#ingest.apps.IngestConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.apps.IngestConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'ingest'</em><a class="headerlink" href="#ingest.apps.IngestConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.apps.IngestConfig.ready">
+<tt class="descname">ready</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.apps.IngestConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method in subclasses to run code when Django starts.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.apps.IngestConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Ingest'</em><a class="headerlink" href="#ingest.apps.IngestConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.cleanup">
+<span id="cleanup-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cleanup</span></tt> Module<a class="headerlink" href="#module-ingest.cleanup" title="Permalink to this headline">¶</a></h2>
+<p>Defines the abstract base class used for cleaning up job executions</p>
+<dl class="class">
+<dt id="ingest.cleanup.IngestJobExecutionCleaner">
+<em class="property">class </em><tt class="descclassname">ingest.cleanup.</tt><tt class="descname">IngestJobExecutionCleaner</tt><a class="headerlink" href="#ingest.cleanup.IngestJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner" title="job.execution.job_exe_cleaner.JobExecutionCleaner"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner</span></tt></a></p>
+<p>Cleaner for the execution of ingest jobs</p>
+<dl class="method">
+<dt id="ingest.cleanup.IngestJobExecutionCleaner.cleanup_job_execution">
+<tt class="descname">cleanup_job_execution</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#ingest.cleanup.IngestJobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution"><tt class="xref py py-meth docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution()</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.file_system">
+<span id="file-system-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">file_system</span></tt> Module<a class="headerlink" href="#module-ingest.file_system" title="Permalink to this headline">¶</a></h2>
+<p>Defines methods for necessary file system interactions to perform file ingests</p>
+<dl class="function">
+<dt id="ingest.file_system.get_ingest_work_dir">
+<tt class="descclassname">ingest.file_system.</tt><tt class="descname">get_ingest_work_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#ingest.file_system.get_ingest_work_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the work directory that a job execution can use to perform an ingest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the ingest work directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.ingest_job">
+<span id="ingest-job-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ingest_job</span></tt> Module<a class="headerlink" href="#module-ingest.ingest_job" title="Permalink to this headline">¶</a></h2>
+<p>Defines the functions necessary to perform the ingest of a source file</p>
+<dl class="function">
+<dt id="ingest.ingest_job.perform_ingest">
+<tt class="descclassname">ingest.ingest_job.</tt><tt class="descname">perform_ingest</tt><big>(</big><em>ingest_id</em>, <em>mount</em><big>)</big><a class="headerlink" href="#ingest.ingest_job.perform_ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the ingest for the given ingest ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ingest_id</strong> (<em>long</em>) &#8211; The ID of the ingest to perform</li>
+<li><strong>mount</strong> (<em>str</em>) &#8211; The file system to mount in the form of host:/dir/path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.models">
+<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-ingest.models" title="Permalink to this headline">¶</a></h2>
+<p>Defines the database models related to ingesting files</p>
+<dl class="class">
+<dt id="ingest.models.Ingest">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">Ingest</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents an instance of a file being ingested into a workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The name of the file</li>
+<li><strong>strike</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The Strike process that handled this file&#8217;s transfer</li>
+<li><strong>job</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The ingest job that is processing this ingest</li>
+<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The status of the file ingest process</li>
+<li><strong>transfer_path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The relative path of the destination where the file is being transferred</li>
+<li><strong>bytes_transferred</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The total number of bytes transferred so far</li>
+<li><strong>transfer_started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the transfer was started</li>
+<li><strong>transfer_ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the transfer ended</li>
+<li><strong>media_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The IANA media type of the file</li>
+<li><strong>file_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The size of the file in bytes</li>
+<li><strong>data_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></tt>) &#8211; A comma-separated string listing the data type &#8220;tags&#8221; for the file</li>
+<li><strong>file_path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The relative path for where the file will be stored in the workspace</li>
+<li><strong>workspace</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The workspace that will store the file</li>
+<li><strong>ingest_path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The relative path of the file when it is ready to be ingested</li>
+<li><strong>ingest_started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the ingest was started</li>
+<li><strong>ingest_ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the ingest ended</li>
+<li><strong>source_file</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; A reference to the source file that was stored by this ingest</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the ingest model was created</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the ingest model was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="ingest.models.Ingest.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#ingest.models.Ingest.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.INGEST_STATUSES">
+<tt class="descclassname">Ingest.</tt><tt class="descname">INGEST_STATUSES</tt><em class="property"> = ((u'TRANSFERRING', u'TRANSFERRING'), (u'TRANSFERRED', u'TRANSFERRED'), (u'DEFERRED', u'DEFERRED'), (u'QUEUED', u'QUEUED'), (u'INGESTING', u'INGESTING'), (u'INGESTED', u'INGESTED'), (u'ERRORED', u'ERRORED'), (u'DUPLICATE', u'DUPLICATE'))</em><a class="headerlink" href="#ingest.models.Ingest.INGEST_STATUSES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="ingest.models.Ingest.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Ingest.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#ingest.models.Ingest.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.add_data_type_tag">
+<tt class="descclassname">Ingest.</tt><tt class="descname">add_data_type_tag</tt><big>(</big><em>tag</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
+spaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>str</em>) &#8211; The data type tag to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidDataTypeTag:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">If the given tag is invalid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_data_type_tags">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_data_type_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the set of data type tags associated with this file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The set of data type tags</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_next_by_created">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_next_by_last_modified">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_next_by_transfer_started">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_next_by_transfer_started</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_next_by_transfer_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_previous_by_created">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_previous_by_last_modified">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_previous_by_transfer_started">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_previous_by_transfer_started</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_transfer_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Ingest.get_status_display">
+<tt class="descclassname">Ingest.</tt><tt class="descname">get_status_display</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Ingest.get_status_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.job">
+<tt class="descclassname">Ingest.</tt><tt class="descname">job</tt><a class="headerlink" href="#ingest.models.Ingest.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.objects">
+<tt class="descclassname">Ingest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.IngestManager object at 0x3041050&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.source_file">
+<tt class="descclassname">Ingest.</tt><tt class="descname">source_file</tt><a class="headerlink" href="#ingest.models.Ingest.source_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.strike">
+<tt class="descclassname">Ingest.</tt><tt class="descname">strike</tt><a class="headerlink" href="#ingest.models.Ingest.strike" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.workspace">
+<tt class="descclassname">Ingest.</tt><tt class="descname">workspace</tt><a class="headerlink" href="#ingest.models.Ingest.workspace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.IngestCounts">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">IngestCounts</tt><big>(</big><em>time</em>, <em>files=0</em>, <em>size=0</em><big>)</big><a class="headerlink" href="#ingest.models.IngestCounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents ingest status values for a specific time slot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> (<em>datetime.datetime</em>) &#8211; The time slot being counted.</li>
+<li><strong>files</strong> (<em>int</em>) &#8211; The number of files ingested for the time slot.</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; The total size of all files ingested for the time slot in bytes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.IngestManager">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">IngestManager</tt><a class="headerlink" href="#ingest.models.IngestManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling ingests.</p>
+<dl class="method">
+<dt id="ingest.models.IngestManager.get_details">
+<tt class="descname">get_details</tt><big>(</big><em>ingest_id</em><big>)</big><a class="headerlink" href="#ingest.models.IngestManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets additional details for the given ingest model based on related model attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ingest_id</strong> (<em>int</em>) &#8211; The unique identifier of the ingest.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ingest with extra related attributes.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><tt class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestManager.get_ingest_job_type">
+<tt class="descname">get_ingest_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.models.IngestManager.get_ingest_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Scale Ingest job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ingest job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestManager.get_ingests">
+<tt class="descname">get_ingests</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>status=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#ingest.models.IngestManager.get_ingests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of ingests within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query ingests updated after this amount of time.</li>
+<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query ingests updated before this amount of time.</li>
+<li><strong>status</strong> (<em>str</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingests that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><tt class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></tt></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestManager.get_status">
+<tt class="descname">get_status</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>use_ingest_time=False</em><big>)</big><a class="headerlink" href="#ingest.models.IngestManager.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ingest status information within the given time range grouped by strike process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query ingests updated after this amount of time.</li>
+<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query ingests updated before this amount of time.</li>
+<li><strong>use_ingest_time</strong> (<em>bool</em>) &#8211; Whether or not to group the status values by ingest time (False) or data time (True).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingest status models that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.IngestStatus" title="ingest.models.IngestStatus"><tt class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestStatus</span></tt></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.IngestStatus">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">IngestStatus</tt><big>(</big><em>strike</em>, <em>most_recent=None</em>, <em>files=0</em>, <em>size=0</em>, <em>values=None</em><big>)</big><a class="headerlink" href="#ingest.models.IngestStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents ingest status values for a strike process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>strike</strong> (<tt class="xref py py-class docutils literal"><span class="pre">strike.models.Strike</span></tt>) &#8211; The strike process that generated the ingests being counted.</li>
+<li><strong>most_recent</strong> (<em>datetime.datetime</em>) &#8211; The date/time of the last ingest generated by the strike process.</li>
+<li><strong>files</strong> (<em>int</em>) &#8211; The total number of files ingested by the strike process.</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; The total size of all files ingested by the strike process in bytes.</li>
+<li><strong>values</strong> (list[<a class="reference internal" href="#ingest.models.IngestCounts" title="ingest.models.IngestCounts"><tt class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestCounts</span></tt></a>]) &#8211; A list of values that summarize work done by the strike process.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.Strike">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">Strike</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents an instance of a Strike process which will run and detect incoming files in a directory for ingest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The stable name of this Strike process</li>
+<li><strong>title</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; An optional description of this Strike process</li>
+<li><strong>configuration</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON configuration for this Strike process</li>
+<li><strong>job</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The job that is performing the Strike process</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the Strike process was created</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the Strike process was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="ingest.models.Strike.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#ingest.models.Strike.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.models.Strike.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Strike.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#ingest.models.Strike.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.configuration">
+<tt class="descclassname">Strike.</tt><tt class="descname">configuration</tt><a class="headerlink" href="#ingest.models.Strike.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_next_by_created">
+<tt class="descclassname">Strike.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Strike.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_next_by_last_modified">
+<tt class="descclassname">Strike.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Strike.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_previous_by_created">
+<tt class="descclassname">Strike.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Strike.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_previous_by_last_modified">
+<tt class="descclassname">Strike.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#ingest.models.Strike.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_strike_configuration">
+<tt class="descclassname">Strike.</tt><tt class="descname">get_strike_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration for this Strike process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this Strike process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="ingest.strike.configuration.strike_configuration.StrikeConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.StrikeConfiguration</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.ingest_set">
+<tt class="descclassname">Strike.</tt><tt class="descname">ingest_set</tt><a class="headerlink" href="#ingest.models.Strike.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.job">
+<tt class="descclassname">Strike.</tt><tt class="descname">job</tt><a class="headerlink" href="#ingest.models.Strike.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.metricsingest_set">
+<tt class="descclassname">Strike.</tt><tt class="descname">metricsingest_set</tt><a class="headerlink" href="#ingest.models.Strike.metricsingest_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.objects">
+<tt class="descclassname">Strike.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.StrikeManager object at 0x3041a50&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.StrikeManager">
+<em class="property">class </em><tt class="descclassname">ingest.models.</tt><tt class="descname">StrikeManager</tt><a class="headerlink" href="#ingest.models.StrikeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling Strike processes</p>
+<dl class="method">
+<dt id="ingest.models.StrikeManager.create_strike_process">
+<tt class="descname">create_strike_process</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.models.StrikeManager.create_strike_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
+will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
+the database will occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The stable name of this Strike process</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<em>str</em>) &#8211; A description of this Strike process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Strike process</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><tt class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidStrikeConfiguration:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the configuration is invalid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.get_strike_job_type">
+<tt class="descname">get_strike_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.models.StrikeManager.get_strike_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Scale Strike job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Strike job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.serializers">
+<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-ingest.serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for ingests</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestBaseSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts ingest model fields to REST output</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField">
+<em class="property">class </em><tt class="descname">DataTypeField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
+<p>Field for displaying the list of data type tags for a Scale file</p>
+<dl class="method">
+<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.to_native">
+<tt class="descname">to_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.to_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the model field to a list of data type tags</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; the comma-separated data types for the Scale file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of data type tags</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.type_label">
+<tt class="descname">type_label</tt><em class="property"> = 'datatype'</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.type_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.type_name">
+<tt class="descname">type_name</tt><em class="property"> = 'DataTypeField'</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestBaseSerializer.base_fields">
+<tt class="descclassname">IngestBaseSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;util.rest.ModelIdSerializer object at 0x3656790&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;util.rest.ModelIdSerializer object at 0x3656d10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestDetailsSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></tt></a></p>
+<p>Converts ingest model fields to REST output</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer">
+<em class="property">class </em><tt class="descname">SourceFileSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="source.html#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></tt></a></p>
+<p>Converts source file model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x3642790&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x3642890&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestDetailsSerializer.base_fields">
+<tt class="descclassname">IngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;ingest.serializers.StrikeDetailsSerializer object at 0x36598d0&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;source.serializers.SourceFileSerializer object at 0x3659990&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;, 'transfer_path': &lt;rest_framework.fields.CharField object at 0x3659750&gt;, 'file_path': &lt;rest_framework.fields.CharField object at 0x36597d0&gt;, 'ingest_path': &lt;rest_framework.fields.CharField object at 0x3659850&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestListSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestListSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
+<p>Converts a list of ingest models to paginated REST output.</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestListSerializer.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#ingest.serializers.IngestListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="ingest.serializers.IngestListSerializer.Meta.object_serializer_class">
+<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#ingest.serializers.IngestListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><tt class="xref py py-class docutils literal"><span class="pre">IngestSerializer</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestListSerializer.base_fields">
+<tt class="descclassname">IngestListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></tt></a></p>
+<p>Converts ingest model fields to REST output</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer">
+<em class="property">class </em><tt class="descname">SourceFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></tt></a></p>
+<p>Converts source file model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x3642790&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x3642890&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestSerializer.base_fields">
+<tt class="descclassname">IngestSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;ingest.serializers.StrikeBaseSerializer object at 0x3656f10&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;source.serializers.SourceFileBaseSerializer object at 0x3656fd0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestStatusListSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
+<p>Converts a list of ingest models to paginated REST output.</p>
+<dl class="class">
+<dt id="ingest.serializers.IngestStatusListSerializer.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="ingest.serializers.IngestStatusListSerializer.Meta.object_serializer_class">
+<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#ingest.serializers.IngestStatusSerializer" title="ingest.serializers.IngestStatusSerializer"><tt class="xref py py-class docutils literal"><span class="pre">IngestStatusSerializer</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.IngestStatusListSerializer.base_fields">
+<tt class="descclassname">IngestStatusListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestStatusSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<p>Converts ingest model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.IngestStatusSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'strike': &lt;ingest.serializers.StrikeSerializer object at 0x365b310&gt;, 'most_recent': &lt;rest_framework.fields.DateTimeField object at 0x365b3d0&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x365b610&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x365b690&gt;, 'values': &lt;ingest.serializers.IngestStatusValuesSerializer object at 0x365b710&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestStatusValuesSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusValuesSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<p>Converts ingest model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.IngestStatusValuesSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0x3659c50&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x365b210&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x365b290&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.StrikeBaseSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts strike model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.StrikeBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x3505b10&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.StrikeDetailsSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeSerializer" title="ingest.serializers.StrikeSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeSerializer</span></tt></a></p>
+<p>Converts strike model fields to REST output</p>
+<dl class="attribute">
+<dt id="ingest.serializers.StrikeDetailsSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x3505c50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656390&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656610&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x3656690&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.StrikeSerializer">
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeBaseSerializer" title="ingest.serializers.StrikeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeBaseSerializer</span></tt></a></p>
+<p>Converts strike model fields to REST output</p>
+<dl class="class">
+<dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer">
+<em class="property">class </em><tt class="descname">JobBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts job model fields to REST output.</p>
+<dl class="attribute">
+<dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x3518f90&gt;, 'job_type_rev': &lt;util.rest.ModelIdSerializer object at 0x351a0d0&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x351a550&gt;, 'error': &lt;util.rest.ModelIdSerializer object at 0x351a650&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x351a750&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x351a810&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x351a890&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.serializers.StrikeSerializer.base_fields">
+<tt class="descclassname">StrikeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x3505c50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656390&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656610&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.urls">
+<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-ingest.urls" title="Permalink to this headline">¶</a></h2>
+<p>Defines the URLs for the RESTful ingest and Strike services</p>
+</div>
+<div class="section" id="module-ingest.views">
+<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-ingest.views" title="Permalink to this headline">¶</a></h2>
+<p>Defines the views for the RESTful ingest and Strike services</p>
+<dl class="class">
+<dt id="ingest.views.CreateStrikeView">
+<em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">CreateStrikeView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.CreateStrikeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for creating a new Strike process.</p>
+<dl class="attribute">
+<dt id="ingest.views.CreateStrikeView.parser_classes">
+<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#ingest.views.CreateStrikeView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.CreateStrikeView.post">
+<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.CreateStrikeView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Strike process and returns its ID in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.CreateStrikeView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.CreateStrikeView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.IngestDetailsView">
+<em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving/updating details of an ingest.</p>
+<dl class="method">
+<dt id="ingest.views.IngestDetailsView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em>, <em>ingest_id</em><big>)</big><a class="headerlink" href="#ingest.views.IngestDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for an ingest and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>ingest_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the ingest</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.IngestDetailsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestDetailsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.IngestsStatusView">
+<em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestsStatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving summarized ingest status.</p>
+<dl class="method">
+<dt id="ingest.views.IngestsStatusView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsStatusView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the ingest status information and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.IngestsStatusView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestsStatusView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.IngestsView">
+<em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving the list of all ingests.</p>
+<dl class="method">
+<dt id="ingest.views.IngestsView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of all ingests and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.IngestsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.fixtures.html">fixtures Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.management.html">management Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#id1"><tt class="docutils literal"><span class="pre">management</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.management.commands.html">commands Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#id1"><tt class="docutils literal"><span class="pre">commands</span></tt> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_ingest"><tt class="docutils literal"><span class="pre">scale_ingest</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_strike"><tt class="docutils literal"><span class="pre">scale_strike</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.migrations.html">migrations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.strike.html">strike Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.cleanup"><tt class="docutils literal"><span class="pre">cleanup</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.strike_processor"><tt class="docutils literal"><span class="pre">strike_processor</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.strike.configuration.html">configuration Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration"><tt class="docutils literal"><span class="pre">strike_configuration</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_ingest_job"><tt class="docutils literal"><span class="pre">test_ingest_job</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.html">strike Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#module-ingest.test.strike.test_strike_processor"><tt class="docutils literal"><span class="pre">test_strike_processor</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.strike.configuration.html">configuration Package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration"><tt class="docutils literal"><span class="pre">test_strike_configuration</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.triggers.html">triggers Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition"><tt class="docutils literal"><span class="pre">test_ingest_trigger_condition</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler"><tt class="docutils literal"><span class="pre">test_ingest_trigger_handler</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.triggers.configuration.html">configuration Package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule"><tt class="docutils literal"><span class="pre">test_ingest_trigger_rule</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.triggers.html">triggers Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#id1"><tt class="docutils literal"><span class="pre">triggers</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition"><tt class="docutils literal"><span class="pre">ingest_trigger_condition</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler"><tt class="docutils literal"><span class="pre">ingest_trigger_handler</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.triggers.configuration.html">configuration Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.triggers.configuration.html#module-ingest.triggers.configuration.ingest_trigger_rule"><tt class="docutils literal"><span class="pre">ingest_trigger_rule</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ingest Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">ingest</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-ingest.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.cleanup"><tt class="docutils literal"><span class="pre">cleanup</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.file_system"><tt class="docutils literal"><span class="pre">file_system</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.ingest_job"><tt class="docutils literal"><span class="pre">ingest_job</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="error.test.html"
+                        title="previous chapter">test Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ingest.fixtures.html"
+                        title="next chapter">fixtures Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/ingest.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.fixtures.html" title="fixtures Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="error.test.html" title="test Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

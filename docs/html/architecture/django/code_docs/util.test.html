@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="util Package" href="util.html" />
+    <link rel="next" title="manage Module" href="manage.html" />
+    <link rel="prev" title="util Package" href="util.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manage.html" title="manage Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="util Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="util.html" accesskey="U">util Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-util.test"></span></div>
+<div class="section" id="module-util.test.test_parse">
+<span id="test-parse-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_parse</span></tt> Module<a class="headerlink" href="#module-util.test.test_parse" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.test.test_parse.TestParse">
+<em class="property">class </em><tt class="descclassname">util.test.test_parse.</tt><tt class="descname">TestParse</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_datetime">
+<tt class="descname">test_parse_datetime</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_datetime_invalid">
+<tt class="descname">test_parse_datetime_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_datetime_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an invalid ISO datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_datetime_missing_timezone">
+<tt class="descname">test_parse_datetime_missing_timezone</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_datetime_missing_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an ISO datetime missing a timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_duration">
+<tt class="descname">test_parse_duration</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO duration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_duration_invalid">
+<tt class="descname">test_parse_duration_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_duration_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an invalid ISO duration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_timestamp_datetime">
+<tt class="descname">test_parse_timestamp_datetime</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_timestamp_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_parse_timestamp_duration">
+<tt class="descname">test_parse_timestamp_duration</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse.test_parse_timestamp_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO duration.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.test.test_rest">
+<span id="test-rest-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_rest</span></tt> Module<a class="headerlink" href="#module-util.test.test_rest" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.test.test_rest.TestRest">
+<em class="property">class </em><tt class="descclassname">util.test.test_rest.</tt><tt class="descname">TestRest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_bad_param_type">
+<tt class="descname">test_check_bad_param_type</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_bad_param_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a white-list of invalid parameters allowed to be updated during a POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_time_range">
+<tt class="descname">test_check_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a time range is valid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_time_range_duration">
+<tt class="descname">test_check_time_range_duration</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_time_range_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a time range that is invalid due to max duration exceeded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_time_range_equal">
+<tt class="descname">test_check_time_range_equal</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_time_range_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a time range that is invalid due to being equal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_time_range_flipped">
+<tt class="descname">test_check_time_range_flipped</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_time_range_flipped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a time range that is invalid due to start being after end.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_time_range_partial">
+<tt class="descname">test_check_time_range_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_time_range_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a partial time range is valid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_together_all">
+<tt class="descname">test_check_together_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_together_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking multiple parameters together.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_together_empty">
+<tt class="descname">test_check_together_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_together_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking multiple parameters together when none are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_together_none">
+<tt class="descname">test_check_together_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_together_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking multiple parameters together when none are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_together_partial">
+<tt class="descname">test_check_together_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_together_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking multiple parameters together when some are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_together_single">
+<tt class="descname">test_check_together_single</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_together_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking multiple parameters together when one is given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_update">
+<tt class="descname">test_check_update</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a white-list of parameters allowed to be updated during a POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_check_update_invalid">
+<tt class="descname">test_check_update_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_check_update_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking a white-list of invalid parameters allowed to be updated during a POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_has_params_all">
+<tt class="descname">test_has_params_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_has_params_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking parameter presence when all are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_has_params_empty">
+<tt class="descname">test_has_params_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_has_params_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking parameter presence when none are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_has_params_none">
+<tt class="descname">test_has_params_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_has_params_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking parameter presence when none are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_has_params_partial">
+<tt class="descname">test_has_params_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_has_params_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking parameter presence when some are given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_has_params_single">
+<tt class="descname">test_has_params_single</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_has_params_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests checking parameter presence when one is given.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_default">
+<tt class="descname">test_parse_bool_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional bool parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_false">
+<tt class="descname">test_parse_bool_false</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_false" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required bool parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_missing">
+<tt class="descname">test_parse_bool_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required bool parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_optional">
+<tt class="descname">test_parse_bool_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional bool parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_post">
+<tt class="descname">test_parse_bool_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required bool parameter that is provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_bool_true">
+<tt class="descname">test_parse_bool_true</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_bool_true" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required bool parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime">
+<tt class="descname">test_parse_datetime</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime_default">
+<tt class="descname">test_parse_datetime_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO datetime parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime_invalid">
+<tt class="descname">test_parse_datetime_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO datetime parameter that is formatted incorrectly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime_missing">
+<tt class="descname">test_parse_datetime_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO datetime parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">
+<tt class="descname">test_parse_datetime_missing_timezone</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an ISO datetime missing a timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_datetime_optional">
+<tt class="descname">test_parse_datetime_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_datetime_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional ISO datetime parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_dict">
+<tt class="descname">test_parse_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a dictionary.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_dict_optional">
+<tt class="descname">test_parse_dict_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_dict_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional dict with no default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_duration">
+<tt class="descname">test_parse_duration</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO duration parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_duration_default">
+<tt class="descname">test_parse_duration_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_duration_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO duration parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_duration_invalid">
+<tt class="descname">test_parse_duration_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_duration_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO duration parameter that is formatted incorrectly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_duration_missing">
+<tt class="descname">test_parse_duration_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_duration_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required ISO duration parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_duration_optional">
+<tt class="descname">test_parse_duration_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_duration_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional ISO duration parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float">
+<tt class="descname">test_parse_float</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required float parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_accepted_none">
+<tt class="descname">test_parse_float_accepted_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_accepted_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a float parameter where the value is not acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_default">
+<tt class="descname">test_parse_float_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required float parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_invalid">
+<tt class="descname">test_parse_float_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required float parameter that is not a valid number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_missing">
+<tt class="descname">test_parse_float_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required float parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_optional">
+<tt class="descname">test_parse_float_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional float parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_post">
+<tt class="descname">test_parse_float_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required float parameter that is provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_valid">
+<tt class="descname">test_parse_float_valid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a float parameter where the value is acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_float_zero">
+<tt class="descname">test_parse_float_zero</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_float_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional float parameter zero instead of using the default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int">
+<tt class="descname">test_parse_int</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required int parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_accepted_all">
+<tt class="descname">test_parse_int_accepted_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_accepted_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an int parameter where the value is acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_accepted_none">
+<tt class="descname">test_parse_int_accepted_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_accepted_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an int parameter where the value is not acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_default">
+<tt class="descname">test_parse_int_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required int parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_invalid">
+<tt class="descname">test_parse_int_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required int parameter that is not a valid number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list">
+<tt class="descname">test_parse_int_list</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of int parameters that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_accepted_all">
+<tt class="descname">test_parse_int_list_accepted_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_accepted_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of int parameters where all values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_accepted_none">
+<tt class="descname">test_parse_int_list_accepted_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_accepted_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of int parameters where none of the values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_accepted_partial">
+<tt class="descname">test_parse_int_list_accepted_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_accepted_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of int parameters where only some values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_default">
+<tt class="descname">test_parse_int_list_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of int parameters that are provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_missing">
+<tt class="descname">test_parse_int_list_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of int parameters that are missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_optional">
+<tt class="descname">test_parse_int_list_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional list of int parameters that are missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_list_post">
+<tt class="descname">test_parse_int_list_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_list_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of int parameters that are provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_missing">
+<tt class="descname">test_parse_int_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required int parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_optional">
+<tt class="descname">test_parse_int_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional int parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_post">
+<tt class="descname">test_parse_int_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required int parameter that is provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_int_zero">
+<tt class="descname">test_parse_int_zero</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_int_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional int parameter zero instead of using the default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string">
+<tt class="descname">test_parse_string</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required string parameter that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_accepted_all">
+<tt class="descname">test_parse_string_accepted_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_accepted_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a string parameter where the value is acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_accepted_none">
+<tt class="descname">test_parse_string_accepted_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_accepted_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a string parameter where the value is not acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_default">
+<tt class="descname">test_parse_string_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional string parameter that is provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list">
+<tt class="descname">test_parse_string_list</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of string parameters that is provided via GET.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_accepted_all">
+<tt class="descname">test_parse_string_list_accepted_all</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_accepted_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of string parameters where all values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_accepted_none">
+<tt class="descname">test_parse_string_list_accepted_none</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_accepted_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of string parameters where none of the values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_accepted_partial">
+<tt class="descname">test_parse_string_list_accepted_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_accepted_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a list of string parameters where only some values are acceptable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_default">
+<tt class="descname">test_parse_string_list_default</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of string parameters that are provided via default value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_missing">
+<tt class="descname">test_parse_string_list_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of string parameters that are missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_optional">
+<tt class="descname">test_parse_string_list_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional list of string parameters that are missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_list_post">
+<tt class="descname">test_parse_string_list_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_list_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required list of string parameters that are provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_missing">
+<tt class="descname">test_parse_string_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required string parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_optional">
+<tt class="descname">test_parse_string_optional</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing an optional string parameter that is missing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_string_post">
+<tt class="descname">test_parse_string_post</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_string_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a required string parameter that is provided via POST.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_timestamp_datetime">
+<tt class="descname">test_parse_timestamp_datetime</tt><big>(</big><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_timestamp_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO datetime.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_rest.TestRest.test_parse_timestamp_duration">
+<tt class="descname">test_parse_timestamp_duration</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest.test_parse_timestamp_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests parsing a valid ISO duration.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.test.test_retry">
+<span id="test-retry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_retry</span></tt> Module<a class="headerlink" href="#module-util.test.test_retry" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.test.test_retry.TestRetry">
+<em class="property">class </em><tt class="descclassname">util.test.test_retry.</tt><tt class="descname">TestRetry</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.SimpleTestCase</span></tt></p>
+<p>Tests the retry decorator function</p>
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.always_fail">
+<tt class="descname">always_fail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.always_fail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.always_fail_10_times">
+<tt class="descname">always_fail_10_times</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.always_fail_10_times" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.always_fail_no_decorator_args">
+<tt class="descname">always_fail_no_decorator_args</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.always_fail_no_decorator_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.success">
+<tt class="descname">success</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.success_with_return">
+<tt class="descname">success_with_return</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.success_with_return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_always_fail">
+<tt class="descname">test_always_fail</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_always_fail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying always_fail()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_always_fail_10_times">
+<tt class="descname">test_always_fail_10_times</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_always_fail_10_times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying always_fail_10_times()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_always_fail_no_decorator_args">
+<tt class="descname">test_always_fail_no_decorator_args</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_always_fail_no_decorator_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying always_fail_no_decorator_args()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_success">
+<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying success()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_success_with_return">
+<tt class="descname">test_success_with_return</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_success_with_return" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying success_with_return()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.test_wrong_exception">
+<tt class="descname">test_wrong_exception</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.test_wrong_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying wrong_exception()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetry.wrong_exception">
+<tt class="descname">wrong_exception</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry.wrong_exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.test.test_retry.TestRetryDatabaseQuery">
+<em class="property">class </em><tt class="descclassname">util.test.test_retry.</tt><tt class="descname">TestRetryDatabaseQuery</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetryDatabaseQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.SimpleTestCase</span></tt></p>
+<p>Tests the retry_database_query decorator function</p>
+<dl class="method">
+<dt id="util.test.test_retry.TestRetryDatabaseQuery.always_fail">
+<tt class="descname">always_fail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetryDatabaseQuery.always_fail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetryDatabaseQuery.success_with_return">
+<tt class="descname">success_with_return</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetryDatabaseQuery.success_with_return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetryDatabaseQuery.test_always_fail">
+<tt class="descname">test_always_fail</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetryDatabaseQuery.test_always_fail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying always_fail</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_retry.TestRetryDatabaseQuery.test_success_with_return">
+<tt class="descname">test_success_with_return</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetryDatabaseQuery.test_success_with_return" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests retrying success_with_return()</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-util.test.test_parse"><tt class="docutils literal"><span class="pre">test_parse</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.test.test_rest"><tt class="docutils literal"><span class="pre">test_rest</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.test.test_retry"><tt class="docutils literal"><span class="pre">test_retry</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="util.html"
+                        title="previous chapter">util Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="manage.html"
+                        title="next chapter">manage Module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/util.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manage.html" title="manage Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="util Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="util.html" >util Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

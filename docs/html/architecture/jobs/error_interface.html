@@ -1,0 +1,168 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Errors Interface &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Jobs and Recipes" href="index.html" />
+    <link rel="next" title="Job Environment" href="job_environment.html" />
+    <link rel="prev" title="Jobs and Recipes" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job_environment.html" title="Job Environment"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jobs and Recipes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="errors-interface">
+<span id="architecture-errors-interface"></span><h1>Errors Interface<a class="headerlink" href="#errors-interface" title="Permalink to this headline">¶</a></h1>
+<p>The error interface is a JSON document that defines the interface for translating
+the job&#8217;s exit codes to errors.</p>
+<p>Consider the following example error definition, which adds one exit code (1) to map  to a Scale error (Unknown).</p>
+<p><strong>Example error interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;1&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="error-interface-specification-version-1-0">
+<span id="architecture-errors-interface-spec"></span><h2>Error Interface Specification Version 1.0<a class="headerlink" href="#error-interface-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid error interface is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre> <span class="p">{</span>
+     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+     <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="nx">STRING</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="nx">STRING</span><span class="o">:</span> <span class="nx">STRING</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the definition specification used. This allows
+updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
+older version and convert it to the current version. The default value for <em>version</em> if it is not included is the
+latest version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so
+that future changes to the specification will still accept the recipe definition.</div></blockquote>
+<p><strong>exit_codes</strong>: JSON object</p>
+<blockquote>
+<div>The <em>exit_codes</em> is a required object that defines what exit codes are mapped to the Scale errors in the database.
+It is a map of strings, which are the algorithm&#8217;s exit codes, to strings that are the name values of the errors in
+the database.</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Errors Interface</a><ul>
+<li><a class="reference internal" href="#error-interface-specification-version-1-0">Error Interface Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Jobs and Recipes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job_environment.html"
+                        title="next chapter">Job Environment</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/architecture/jobs/error_interface.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job_environment.html" title="Job Environment"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Jobs and Recipes"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" >Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

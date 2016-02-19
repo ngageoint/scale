@@ -1,0 +1,1441 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>storage Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="brokers Package" href="storage.brokers.html" />
+    <link rel="prev" title="configuration Package" href="source.triggers.configuration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="storage.brokers.html" title="brokers Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="source.triggers.configuration.html" title="configuration Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="storage-package">
+<h1>storage Package<a class="headerlink" href="#storage-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-storage" title="storage"><tt class="xref py py-mod docutils literal"><span class="pre">storage</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-storage"></span></div>
+<div class="section" id="module-storage.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-storage.apps" title="Permalink to this headline">¶</a></h2>
+<p>Defines the configuration for the storage app</p>
+<dl class="class">
+<dt id="storage.apps.StorageConfig">
+<em class="property">class </em><tt class="descclassname">storage.apps.</tt><tt class="descname">StorageConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#storage.apps.StorageConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the storage app</p>
+<dl class="attribute">
+<dt id="storage.apps.StorageConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'storage'</em><a class="headerlink" href="#storage.apps.StorageConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.apps.StorageConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'storage'</em><a class="headerlink" href="#storage.apps.StorageConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.apps.StorageConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Storage'</em><a class="headerlink" href="#storage.apps.StorageConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-storage.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines the exceptions related to files and storage methods</p>
+<dl class="exception">
+<dt id="storage.exceptions.ArchivedWorkspace">
+<em class="property">exception </em><tt class="descclassname">storage.exceptions.</tt><tt class="descname">ArchivedWorkspace</tt><a class="headerlink" href="#storage.exceptions.ArchivedWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating an attempt was made to store or retrieve a file with an archived (no longer active)
+workspace</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.exceptions.DeletedFile">
+<em class="property">exception </em><tt class="descclassname">storage.exceptions.</tt><tt class="descname">DeletedFile</tt><a class="headerlink" href="#storage.exceptions.DeletedFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating an attempt was made to retrieve a deleted file</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.exceptions.DuplicateFile">
+<em class="property">exception </em><tt class="descclassname">storage.exceptions.</tt><tt class="descname">DuplicateFile</tt><a class="headerlink" href="#storage.exceptions.DuplicateFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating an attempt was made to store a file with a duplicate name</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.exceptions.InvalidDataTypeTag">
+<em class="property">exception </em><tt class="descclassname">storage.exceptions.</tt><tt class="descname">InvalidDataTypeTag</tt><a class="headerlink" href="#storage.exceptions.InvalidDataTypeTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating an attempt to add an invalid data type tag to a file</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.exceptions.NfsError">
+<em class="property">exception </em><tt class="descclassname">storage.exceptions.</tt><tt class="descname">NfsError</tt><a class="headerlink" href="#storage.exceptions.NfsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that an error occurred with NFS (Network File System)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.geospatial_utils">
+<span id="geospatial-utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">geospatial_utils</span></tt> Module<a class="headerlink" href="#module-storage.geospatial_utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines functions for geospatial information</p>
+<dl class="function">
+<dt id="storage.geospatial_utils.get_center_point">
+<tt class="descclassname">storage.geospatial_utils.</tt><tt class="descname">get_center_point</tt><big>(</big><em>geom</em><big>)</big><a class="headerlink" href="#storage.geospatial_utils.get_center_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a center point for the given geometry object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>geom</strong> (<em>GEOSGeometry</em>) &#8211; The geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the center point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.geospatial_utils.parse_geo_json">
+<tt class="descclassname">storage.geospatial_utils.</tt><tt class="descname">parse_geo_json</tt><big>(</big><em>geo_json</em><big>)</big><a class="headerlink" href="#storage.geospatial_utils.parse_geo_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses GeoJSON and returns a geometry object and metadata.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>geo_json</strong> (<em>dict</em>) &#8211; The geo json to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">GEOSGeometry, dict</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the geometry and metadata</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.geospatial_utils.parse_geo_json_file">
+<tt class="descclassname">storage.geospatial_utils.</tt><tt class="descname">parse_geo_json_file</tt><big>(</big><em>geo_json_path</em><big>)</big><a class="headerlink" href="#storage.geospatial_utils.parse_geo_json_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses GeoJSON from a file and returns a geometry object and metadata.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>geo_json_path</strong> (<em>str</em>) &#8211; The absolute file path of the GeoJSON file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">GEOSGeometry, dict</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the geometry and metadata</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.media_type">
+<span id="media-type-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">media_type</span></tt> Module<a class="headerlink" href="#module-storage.media_type" title="Permalink to this headline">¶</a></h2>
+<p>Defines functions for determining the media type of a file</p>
+<dl class="function">
+<dt id="storage.media_type.get_media_type">
+<tt class="descclassname">storage.media_type.</tt><tt class="descname">get_media_type</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#storage.media_type.get_media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the media type of a file based upon the file&#8217;s name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> (<em>str</em>) &#8211; The name of the file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The media type of the file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.models">
+<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-storage.models" title="Permalink to this headline">¶</a></h2>
+<p>Defines the database models for file information and workspaces</p>
+<dl class="class">
+<dt id="storage.models.CountryData">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">CountryData</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents country borders and official abbreviations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The full name of the country</li>
+<li><strong>fips</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; FIPS digraph for the country</li>
+<li><strong>gmi</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; gmi trigraph for the country</li>
+<li><strong>iso2</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; ISO digraph for the country</li>
+<li><strong>iso3</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; ISO trigraph for the country</li>
+<li><strong>iso_num</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; ISO number for the country</li>
+<li><strong>border</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.geos.geometry.GEOSGeometry</span></tt>) &#8211; Border geometry of this country</li>
+<li><strong>effective</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the country information including the border are effective.</li>
+<li><strong>is_deleted</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the country has been deleted or not</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the country model was created</li>
+<li><strong>deleted</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the country model was deleted</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the country model was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="storage.models.CountryData.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#storage.models.CountryData.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.models.CountryData.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">CountryData.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#storage.models.CountryData.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.border">
+<tt class="descclassname">CountryData.</tt><tt class="descname">border</tt><a class="headerlink" href="#storage.models.CountryData.border" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_next_by_created">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_next_by_effective">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_next_by_effective</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_next_by_effective" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_next_by_last_modified">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_previous_by_created">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_previous_by_effective">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_previous_by_effective</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_previous_by_effective" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryData.get_previous_by_last_modified">
+<tt class="descclassname">CountryData.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryData.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.objects">
+<tt class="descclassname">CountryData.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.CountryDataManager object at 0x1b42050&gt;</em><a class="headerlink" href="#storage.models.CountryData.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.scalefile_set">
+<tt class="descclassname">CountryData.</tt><tt class="descname">scalefile_set</tt><a class="headerlink" href="#storage.models.CountryData.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.CountryDataManager">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">CountryDataManager</tt><a class="headerlink" href="#storage.models.CountryDataManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling country data</p>
+<dl class="method">
+<dt id="storage.models.CountryDataManager.get_effective">
+<tt class="descname">get_effective</tt><big>(</big><em>target_date</em>, <em>name=None</em>, <em>iso2=None</em><big>)</big><a class="headerlink" href="#storage.models.CountryDataManager.get_effective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the country data entry for a name or iso2 abbreviation and target date such that this is the most
+recent entry whose effective date is before the target.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_date</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The target date</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the country. Mutually exclusive with iso2. One of these is required.</li>
+<li><strong>iso2</strong> &#8211; The iso2 abbreviation of the country. Mutually exclusive with name. One of these is required.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Rval :</th><td class="field-body"><p class="first">A query set</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">django.db.models.query.QuerySet</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryDataManager.get_intersects">
+<tt class="descname">get_intersects</tt><big>(</big><em>geom</em>, <em>target_date</em><big>)</big><a class="headerlink" href="#storage.models.CountryDataManager.get_intersects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the countries whose borders intersect the specified geometry and whose effective date
+is before the target.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>geom</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.geos.geometry.GEOSGeometry</span></tt>) &#8211; The geometry (point, poly, etc.) to search.</li>
+<li><strong>target_date</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The target date</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Rval :</th><td class="field-body"><p class="first">A dict of intersected countries mapped to enties</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.CountryDataManager.update_border">
+<tt class="descname">update_border</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.models.CountryDataManager.update_border" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the country border geometry for an existing country, adding a new entry for the new effective date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of an existing country</li>
+<li><strong>border</strong> (<em>GEOSGeometry or str</em>) &#8211; The new border geometry. Either GEOSGeometry or geojson (which will be converted to GEOSGeometry)</li>
+<li><strong>effective</strong> &#8211; The effective date for the new border. If None, now() will be used</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.ScaleFile">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">ScaleFile</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents a file that is stored within a Scale workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">storage.models.BigAutoField</span></tt>) &#8211; The ID of the file</li>
+<li><strong>file_name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The name of the file</li>
+<li><strong>media_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The IANA media type of the file</li>
+<li><strong>file_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The size of the file in bytes</li>
+<li><strong>data_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></tt>) &#8211; A comma-separated string listing the data type &#8220;tags&#8221; for the file</li>
+<li><strong>file_path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The relative path of the file in its workspace</li>
+<li><strong>workspace</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The workspace that stores this file</li>
+<li><strong>is_deleted</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the file has been deleted or not</li>
+<li><strong>uuid</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; A universally unique identifier for the source record. It ensures that subsequent updates of the
+record will result in the same UUID, which can then be used as a stable permanent link in applications.</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the file model was created</li>
+<li><strong>deleted</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the file was deleted</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the file model was last modified</li>
+<li><strong>data_started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; The start time of the data in this file</li>
+<li><strong>data_ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; The end time of the data in this file</li>
+<li><strong>geometry</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.GeometryField</span></tt>) &#8211; Geometry representing the data in this file</li>
+<li><strong>center_point</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.PointField</span></tt>) &#8211; The center point of this file geometry</li>
+<li><strong>meta_data</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON meta-data about this file</li>
+<li><strong>countries</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ManyToManyField</span></tt> of <a class="reference internal" href="#storage.models.CountryData" title="storage.models.CountryData"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></tt></a>) &#8211; List of countries represented in this file as indicated by the file&#8217;s geometry.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="storage.models.ScaleFile.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#storage.models.ScaleFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.models.ScaleFile.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">ScaleFile.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#storage.models.ScaleFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.add_data_type_tag">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">add_data_type_tag</tt><big>(</big><em>tag</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
+spaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>str</em>) &#8211; The data type tag to add</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidDataTypeTag:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">If the given tag is invalid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.center_point">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">center_point</tt><a class="headerlink" href="#storage.models.ScaleFile.center_point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.countries">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">countries</tt><a class="headerlink" href="#storage.models.ScaleFile.countries" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.descendants">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">descendants</tt><a class="headerlink" href="#storage.models.ScaleFile.descendants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.geometry">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">geometry</tt><a class="headerlink" href="#storage.models.ScaleFile.geometry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.get_data_type_tags">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">get_data_type_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the set of data type tags associated with this file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The set of data type tags</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.get_next_by_created">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.get_next_by_last_modified">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.get_previous_by_created">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.get_previous_by_last_modified">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.meta_data">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">meta_data</tt><a class="headerlink" href="#storage.models.ScaleFile.meta_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.objects">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.ScaleFileManager object at 0x1b42bd0&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.productfile">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">productfile</tt><a class="headerlink" href="#storage.models.ScaleFile.productfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.set_countries">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">set_countries</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.set_countries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the countries list then recreates it from the CountryData table.
+If no geometry is available, this will remain empty.
+The country border effective date will use (in order or preference) data_started, data_ended, or created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.sourcefile">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">sourcefile</tt><a class="headerlink" href="#storage.models.ScaleFile.sourcefile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFile.update_uuid">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">update_uuid</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFile.update_uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes and sets a new UUID value for this file by hashing the given arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<em>list[str]</em>) &#8211; One or more input objects to hash.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The generated unique identifier.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.url">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">url</tt><a class="headerlink" href="#storage.models.ScaleFile.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the absolute URL used to download this file.</p>
+<p>Note that this property is only supported if the associated workspace supports HTTP downloads.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file download URL.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.workspace">
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">workspace</tt><a class="headerlink" href="#storage.models.ScaleFile.workspace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.ScaleFileManager">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">ScaleFileManager</tt><a class="headerlink" href="#storage.models.ScaleFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling Scale files</p>
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.cleanup_download_dir">
+<tt class="descname">cleanup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any cleanup necessary for a previous download_files() call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in downloading</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.cleanup_move_dir">
+<tt class="descname">cleanup_move_dir</tt><big>(</big><em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.cleanup_move_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any cleanup necessary for a previous move_files() call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in moving</li>
+<li><strong>workspace</strong> (<a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>) &#8211; The workspace to upload files into</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.cleanup_upload_dir">
+<tt class="descname">cleanup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>workspace</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any cleanup necessary for a previous setup_upload_dir() call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading</li>
+<li><strong>workspace</strong> (<a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>) &#8211; The workspace to upload files into</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.download_files">
+<tt class="descname">download_files</tt><big>(</big><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.download_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads the given Scale files into the given download directory. After all use of the downloaded files is
+complete, the caller should call cleanup_download_dir(). Each ScaleFile model should have its related workspace
+field populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in downloading. This directory must
+not be within the download directory.</li>
+<li><strong>files_to_download</strong> (list of (<a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a>, str)) &#8211; List of tuples (Scale file, destination path relative to download directory)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.get_total_file_size">
+<tt class="descname">get_total_file_size</tt><big>(</big><em>file_ids</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.get_total_file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total file size of the given file IDs in bytes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em>list[int]</em>) &#8211; List of file IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Total file size in bytes</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">long</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.move_files">
+<tt class="descname">move_files</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the given Scale files to the new workspace location. Each ScaleFile model should have its related
+workspace field populated and the caller must have obtained a model lock on each using select_for_update().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in moving</li>
+<li><strong>files_to_move</strong> (list of (<a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a>, str)) &#8211; List of tuples (Scale file, destination workspace path)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.setup_upload_dir">
+<tt class="descname">setup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>workspace</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the given upload directory to upload Scale files into the given workspace. Note that moving/copying
+files into an upload directory after this method has been called may be expensive as the setup upload directory
+may not be a local directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading. This directory must
+not be within the upload directory.</li>
+<li><strong>workspace</strong> (<a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>) &#8211; The workspace to upload files into</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.upload_files">
+<tt class="descname">upload_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>workspace</em>, <em>files_to_upload</em><big>)</big><a class="headerlink" href="#storage.models.ScaleFileManager.upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads the given files in the given upload directory into the workspace. This method assumes that
+setup_upload_dir() has already been called with the same upload and work directories. The ScaleFile models will
+be saved in an atomic database transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading</li>
+<li><strong>workspace</strong> (<a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>) &#8211; The workspace to upload files into</li>
+<li><strong>files_to_upload</strong> (list of (<a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a>, str, str)) &#8211; List of tuples (ScaleFile model, source path relative to upload directory, workspace
+path for storing the file)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of the saved file models</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of <a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.Workspace">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">Workspace</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.models.Workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents a storage location where files can be stored and retrieved
+for processing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The stable name of the workspace used by clients for queries</li>
+<li><strong>title</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The human-readable name of the workspace</li>
+<li><strong>description</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; An optional description of the workspace</li>
+<li><strong>base_url</strong> (<em>str</em>) &#8211; The base URL used to retrieve files from this workspace if supported.</li>
+<li><strong>is_active</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the workspace is active (can be used and displayed)</li>
+<li><strong>json_config</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON configuration describing how to store/retrieve files for this workspace</li>
+<li><strong>used_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The number of used bytes, may be None (unknown)</li>
+<li><strong>total_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The total size of the workspace file system in bytes, may be None (unknown)</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the workspace was created</li>
+<li><strong>archived</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the workspace was archived (no longer active)</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the workspace was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="storage.models.Workspace.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#storage.models.Workspace.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.models.Workspace.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Workspace.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#storage.models.Workspace.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.cleanup_download_dir">
+<tt class="descclassname">Workspace.</tt><tt class="descname">cleanup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any cleanup necessary for a previous setup_download_dir() call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.cleanup_upload_dir">
+<tt class="descclassname">Workspace.</tt><tt class="descname">cleanup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any cleanup necessary for a previous setup_upload_dir() call</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.delete_files">
+<tt class="descclassname">Workspace.</tt><tt class="descname">delete_files</tt><big>(</big><em>work_dir</em>, <em>workspace_paths</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the workspace files with the given workspace paths</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+<li><strong>workspace_paths</strong> (<em>list of str</em>) &#8211; The relative workspace paths of the files to delete</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.download_files">
+<tt class="descclassname">Workspace.</tt><tt class="descname">download_files</tt><big>(</big><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.download_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads the given workspace files into the given download directory. This method assumes that
+setup_download_dir() has already been called with the same download and work directories.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+<li><strong>files_to_download</strong> (<em>list of (str, str)</em>) &#8211; List of tuples (workspace path of a file to download, destination path relative to
+download directory)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_next_by_created">
+<tt class="descclassname">Workspace.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_next_by_last_modified">
+<tt class="descclassname">Workspace.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_previous_by_created">
+<tt class="descclassname">Workspace.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_previous_by_last_modified">
+<tt class="descclassname">Workspace.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.ingest_set">
+<tt class="descclassname">Workspace.</tt><tt class="descname">ingest_set</tt><a class="headerlink" href="#storage.models.Workspace.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.json_config">
+<tt class="descclassname">Workspace.</tt><tt class="descname">json_config</tt><a class="headerlink" href="#storage.models.Workspace.json_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.move_files">
+<tt class="descclassname">Workspace.</tt><tt class="descname">move_files</tt><big>(</big><em>work_dir</em>, <em>files_to_move</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Moves the workspace files to the new workspace paths</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+<li><strong>files_to_move</strong> (<em>list of (str, str)</em>) &#8211; List of tuples (current workspace path of a file to move, new workspace path for the file)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.objects">
+<tt class="descclassname">Workspace.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.WorkspaceManager object at 0x1b46ad0&gt;</em><a class="headerlink" href="#storage.models.Workspace.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.scalefile_set">
+<tt class="descclassname">Workspace.</tt><tt class="descname">scalefile_set</tt><a class="headerlink" href="#storage.models.Workspace.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.setup_download_dir">
+<tt class="descclassname">Workspace.</tt><tt class="descname">setup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.setup_download_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the given download directory to download files from the workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.setup_upload_dir">
+<tt class="descclassname">Workspace.</tt><tt class="descname">setup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the given upload directory to upload files into the workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.upload_files">
+<tt class="descclassname">Workspace.</tt><tt class="descname">upload_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>files_to_upload</em><big>)</big><a class="headerlink" href="#storage.models.Workspace.upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads the given files in the given upload directory into the workspace. This method assumes that
+setup_upload_dir() has already been called with the same upload and work directories.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to the workspace</li>
+<li><strong>files_to_upload</strong> (<em>list of (str, str)</em>) &#8211; List of tuples (source path relative to upload directory, workspace path for storing the
+file)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.WorkspaceManager">
+<em class="property">class </em><tt class="descclassname">storage.models.</tt><tt class="descname">WorkspaceManager</tt><a class="headerlink" href="#storage.models.WorkspaceManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling workspaces.</p>
+<dl class="method">
+<dt id="storage.models.WorkspaceManager.get_details">
+<tt class="descname">get_details</tt><big>(</big><em>workspace_id</em><big>)</big><a class="headerlink" href="#storage.models.WorkspaceManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace for the given ID with all detail fields included.</p>
+<p>There are currently no additional fields included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>workspace_id</strong> (<em>int</em>) &#8211; The unique identifier of the workspace.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The workspace with all detail fields included.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.WorkspaceManager.get_workspaces">
+<tt class="descname">get_workspaces</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#storage.models.WorkspaceManager.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of workspaces within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query workspaces updated after this amount of time.</li>
+<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query workspaces updated before this amount of time.</li>
+<li><strong>names</strong> (<em>list[str]</em>) &#8211; Query workspaces with the given name.</li>
+<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of workspaces that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.nfs">
+<span id="nfs-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">nfs</span></tt> Module<a class="headerlink" href="#module-storage.nfs" title="Permalink to this headline">¶</a></h2>
+<p>Defines methods and classes for handling network file systems</p>
+<dl class="function">
+<dt id="storage.nfs.nfs_mount">
+<tt class="descclassname">storage.nfs.</tt><tt class="descname">nfs_mount</tt><big>(</big><em>mount</em>, <em>mount_on</em>, <em>read_only=True</em><big>)</big><a class="headerlink" href="#storage.nfs.nfs_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a mount of a network file system</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mount</strong> (<em>str</em>) &#8211; The network file system to mount in the form of host:/dir/path</li>
+<li><strong>mount_on</strong> (<em>str</em>) &#8211; The absolute directory path to mount on (must already exist)</li>
+<li><strong>read_only</strong> (<em>bool</em>) &#8211; Whether the mount should be read-only</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.nfs.nfs_umount">
+<tt class="descclassname">storage.nfs.</tt><tt class="descname">nfs_umount</tt><big>(</big><em>mounted_on</em><big>)</big><a class="headerlink" href="#storage.nfs.nfs_umount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a umount of a network file system</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mounted_on</strong> (<em>str</em>) &#8211; The absolute directory path of the mounted file system</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.serializers">
+<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-storage.serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for Scale files and workspaces</p>
+<dl class="class">
+<dt id="storage.serializers.DataTypeField">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">DataTypeField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.DataTypeField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
+<p>Field for displaying the list of data type tags for a Scale file</p>
+<dl class="method">
+<dt id="storage.serializers.DataTypeField.to_native">
+<tt class="descname">to_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#storage.serializers.DataTypeField.to_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the model field to a list of data type tags</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; the comma-separated data types for the Scale file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of data type tags</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.DataTypeField.type_label">
+<tt class="descname">type_label</tt><em class="property"> = 'datatype'</em><a class="headerlink" href="#storage.serializers.DataTypeField.type_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.DataTypeField.type_name">
+<tt class="descname">type_name</tt><em class="property"> = 'DataTypeField'</em><a class="headerlink" href="#storage.serializers.DataTypeField.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.GeoJsonField">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">GeoJsonField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.GeoJsonField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
+<p>Field for displaying geometry objects as Well Known Text</p>
+<dl class="method">
+<dt id="storage.serializers.GeoJsonField.to_native">
+<tt class="descname">to_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#storage.serializers.GeoJsonField.to_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the model field to GeoJson</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>GEOSGeometry</em>) &#8211; the associated geometry info</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the GeoJson representation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.GeoJsonField.type_label">
+<tt class="descname">type_label</tt><em class="property"> = 'geojson'</em><a class="headerlink" href="#storage.serializers.GeoJsonField.type_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.GeoJsonField.type_name">
+<tt class="descname">type_name</tt><em class="property"> = 'GeoJsonField'</em><a class="headerlink" href="#storage.serializers.GeoJsonField.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileBaseSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">ScaleFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts Scale file model fields to REST output</p>
+<dl class="attribute">
+<dt id="storage.serializers.ScaleFileBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">ScaleFileSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.ScaleFileSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></tt></a></p>
+<p>Converts Scale file model fields to REST output</p>
+<dl class="attribute">
+<dt id="storage.serializers.ScaleFileSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceSerializer object at 0x3521a10&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WktField">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">WktField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.WktField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
+<p>Field for displaying geometry objects as Well Known Text</p>
+<dl class="method">
+<dt id="storage.serializers.WktField.to_native">
+<tt class="descname">to_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#storage.serializers.WktField.to_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the model field to WKT</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>GEOSGeometry</em>) &#8211; the associated geometry info</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the WKT representation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.WktField.type_label">
+<tt class="descname">type_label</tt><em class="property"> = 'wtk'</em><a class="headerlink" href="#storage.serializers.WktField.type_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.WktField.type_name">
+<tt class="descname">type_name</tt><em class="property"> = 'WktField'</em><a class="headerlink" href="#storage.serializers.WktField.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceBaseSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">WorkspaceBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.WorkspaceBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts workspace model fields to REST output</p>
+<dl class="attribute">
+<dt id="storage.serializers.WorkspaceBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceDetailsSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">WorkspaceDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializer" title="storage.serializers.WorkspaceSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializer</span></tt></a></p>
+<p>Converts workspace model fields to REST output</p>
+<dl class="attribute">
+<dt id="storage.serializers.WorkspaceDetailsSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x351e950&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x351ea10&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x351ea90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x351eb90&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x351ec10&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x351ec90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351ed10&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x351ed90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351ee10&gt;, 'json_config': &lt;rest_framework.fields.CharField object at 0x351ee90&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceListSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">WorkspaceListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
+<p>Converts a list of workspace models to paginated REST output.</p>
+<dl class="class">
+<dt id="storage.serializers.WorkspaceListSerializer.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="storage.serializers.WorkspaceListSerializer.Meta.object_serializer_class">
+<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#storage.serializers.WorkspaceSerializer" title="storage.serializers.WorkspaceSerializer"><tt class="xref py py-class docutils literal"><span class="pre">WorkspaceSerializer</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.serializers.WorkspaceListSerializer.base_fields">
+<tt class="descclassname">WorkspaceListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceSerializer">
+<em class="property">class </em><tt class="descclassname">storage.serializers.</tt><tt class="descname">WorkspaceSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.serializers.WorkspaceSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceBaseSerializer" title="storage.serializers.WorkspaceBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceBaseSerializer</span></tt></a></p>
+<p>Converts workspace model fields to REST output</p>
+<dl class="attribute">
+<dt id="storage.serializers.WorkspaceSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x351e950&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x351ea10&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x351ea90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x351eb90&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x351ec10&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x351ec90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351ed10&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x351ed90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351ee10&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.urls">
+<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-storage.urls" title="Permalink to this headline">¶</a></h2>
+<p>Defines the URLs for the RESTful storage services</p>
+</div>
+<div class="section" id="module-storage.views">
+<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-storage.views" title="Permalink to this headline">¶</a></h2>
+<p>Defines the views for the RESTful storage services</p>
+<dl class="class">
+<dt id="storage.views.WorkspaceDetailsView">
+<em class="property">class </em><tt class="descclassname">storage.views.</tt><tt class="descname">WorkspaceDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.views.WorkspaceDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving/updating details of a workspace.</p>
+<dl class="method">
+<dt id="storage.views.WorkspaceDetailsView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em>, <em>workspace_id</em><big>)</big><a class="headerlink" href="#storage.views.WorkspaceDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a workspace and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>workspace_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the workspace</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.views.WorkspaceDetailsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#storage.views.WorkspaceDetailsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.views.WorkspacesView">
+<em class="property">class </em><tt class="descclassname">storage.views.</tt><tt class="descname">WorkspacesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#storage.views.WorkspacesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving the list of all workspaces.</p>
+<dl class="method">
+<dt id="storage.views.WorkspacesView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#storage.views.WorkspacesView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of all workspaces and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.views.WorkspacesView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#storage.views.WorkspacesView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="storage.brokers.html">brokers Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.broker"><tt class="docutils literal"><span class="pre">broker</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.factory"><tt class="docutils literal"><span class="pre">factory</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.nfs_broker"><tt class="docutils literal"><span class="pre">nfs_broker</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.migrations.html">migrations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_geospatial_utils"><tt class="docutils literal"><span class="pre">test_geospatial_utils</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="storage.test.brokers.html">brokers Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker"><tt class="docutils literal"><span class="pre">test_nfs_broker</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">storage Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">storage</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-storage.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.geospatial_utils"><tt class="docutils literal"><span class="pre">geospatial_utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.media_type"><tt class="docutils literal"><span class="pre">media_type</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.nfs"><tt class="docutils literal"><span class="pre">nfs</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-storage.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="source.triggers.configuration.html"
+                        title="previous chapter">configuration Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="storage.brokers.html"
+                        title="next chapter">brokers Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/storage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="storage.brokers.html" title="brokers Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="source.triggers.configuration.html" title="configuration Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

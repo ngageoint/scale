@@ -1,0 +1,19 @@
+test Package
+============
+
+:mod:`tests` Module
+-------------------
+
+.. automodule:: trigger.test.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: trigger.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="port Package" href="port.html" />
+    <link rel="next" title="product Package" href="product.html" />
+    <link rel="prev" title="port Package" href="port.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.html" title="product Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="port.html" title="port Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="port.html" accesskey="U">port Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-port.test"></span></div>
+<div class="section" id="module-port.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-port.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="port.test.test_views.TestConfigurationDownloadView">
+<em class="property">class </em><tt class="descclassname">port.test.test_views.</tt><tt class="descname">TestConfigurationDownloadView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationDownloadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests related to the configuration export download endpoint</p>
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationDownloadView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationDownloadView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationDownloadView.test_download">
+<tt class="descname">test_download</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationDownloadView.test_download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting as a separate download file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="port.test.test_views.TestConfigurationUploadView">
+<em class="property">class </em><tt class="descclassname">port.test.test_views.</tt><tt class="descname">TestConfigurationUploadView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationUploadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests related to the configuration import upload endpoint</p>
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationUploadView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationUploadView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationUploadView.test_upload_missing_file">
+<tt class="descname">test_upload_missing_file</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationUploadView.test_upload_missing_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing as a separate upload file without any provided content.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="port.test.test_views.TestConfigurationValidationView">
+<em class="property">class </em><tt class="descclassname">port.test.test_views.</tt><tt class="descname">TestConfigurationValidationView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests related to the configuration import endpoint</p>
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationValidationView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationValidationView.test_errors">
+<tt class="descname">test_errors</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationValidationView.test_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating an edit of all types with a critical error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationValidationView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating an edit of all types successfully.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationValidationView.test_warnings">
+<tt class="descname">test_warnings</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating an edit of all types with only warnings.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="port.test.test_views.TestConfigurationViewExport">
+<em class="property">class </em><tt class="descclassname">port.test.test_views.</tt><tt class="descname">TestConfigurationViewExport</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests related to the configuration export endpoint</p>
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_all">
+<tt class="descname">test_all</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting all the relevant models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_cascaded_filters">
+<tt class="descname">test_cascaded_filters</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_cascaded_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting using a filter for recipes that is passed along to children filters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_combined_filters">
+<tt class="descname">test_combined_filters</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_combined_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting using multiple filters together.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_errors">
+<tt class="descname">test_errors</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting only errors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_errors_by_id">
+<tt class="descname">test_errors_by_id</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_errors_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting errors by id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_errors_by_name">
+<tt class="descname">test_errors_by_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_errors_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting errors by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_errors_system">
+<tt class="descname">test_errors_system</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_errors_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting errors without any system-level entries.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_job_types">
+<tt class="descname">test_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting only job types.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_job_types_by_category">
+<tt class="descname">test_job_types_by_category</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_job_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting job types by category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_job_types_by_id">
+<tt class="descname">test_job_types_by_id</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_job_types_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting job types by id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_job_types_by_name">
+<tt class="descname">test_job_types_by_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_job_types_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting job types by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_job_types_system">
+<tt class="descname">test_job_types_system</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_job_types_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting job types without any system-level entries.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_recipe_types">
+<tt class="descname">test_recipe_types</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_recipe_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting only recipe types.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_recipe_types_by_id">
+<tt class="descname">test_recipe_types_by_id</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_recipe_types_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting recipe types by id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewExport.test_recipe_types_by_name">
+<tt class="descname">test_recipe_types_by_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport.test_recipe_types_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests exporting recipe types by name.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="port.test.test_views.TestConfigurationViewImport">
+<em class="property">class </em><tt class="descclassname">port.test.test_views.</tt><tt class="descname">TestConfigurationViewImport</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests related to the configuration import endpoint</p>
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_all_create">
+<tt class="descname">test_all_create</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_all_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing all types that create new models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_all_edit">
+<tt class="descname">test_all_edit</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_all_edit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing all types that edit existing models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_all_mixed">
+<tt class="descname">test_all_mixed</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_all_mixed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing all types that create new models and edit existing models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_all_mixed_bad">
+<tt class="descname">test_all_mixed_bad</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_all_mixed_bad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing all types that invalidates the models as the imports are applied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_errors_bad_category">
+<tt class="descname">test_errors_bad_category</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_errors_bad_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting an error with an invalid category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_errors_bad_name">
+<tt class="descname">test_errors_bad_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_errors_bad_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting an error without a name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_errors_bad_system">
+<tt class="descname">test_errors_bad_system</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_errors_bad_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a system category error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_errors_create">
+<tt class="descname">test_errors_create</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_errors_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only errors that create new models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_errors_edit">
+<tt class="descname">test_errors_edit</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_errors_edit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only errors that update existing models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_error_mapping">
+<tt class="descname">test_job_types_bad_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_error_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a job type with invalid error mapping JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_field">
+<tt class="descname">test_job_types_bad_field</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting changes to read-only job type fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_interface">
+<tt class="descname">test_job_types_bad_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a job type with invalid interface JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_name">
+<tt class="descname">test_job_types_bad_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a job type without a name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_system">
+<tt class="descname">test_job_types_bad_system</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a system category job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_bad_trigger_rule">
+<tt class="descname">test_job_types_bad_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_bad_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a job type with an invalid trigger rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_create">
+<tt class="descname">test_job_types_create</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that create new models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_edit_error_mapping">
+<tt class="descname">test_job_types_edit_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_edit_error_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that update the error mapping JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_edit_interface">
+<tt class="descname">test_job_types_edit_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_edit_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that update the interface JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_edit_simple">
+<tt class="descname">test_job_types_edit_simple</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that update basic models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_edit_trigger_rule">
+<tt class="descname">test_job_types_edit_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that update the trigger rule configuration JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_missing_error">
+<tt class="descname">test_job_types_missing_error</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_missing_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a job type with missing error dependencies.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_job_types_remove_trigger_rule">
+<tt class="descname">test_job_types_remove_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_job_types_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only job types that remove the trigger rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_interface">
+<tt class="descname">test_recipe_types_bad_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a recipe type with invalid definition JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_name">
+<tt class="descname">test_recipe_types_bad_name</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a recipe type without a name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_trigger_rule">
+<tt class="descname">test_recipe_types_bad_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_bad_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a recipe type with an invalid trigger rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_create">
+<tt class="descname">test_recipe_types_create</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only recipe types that create new models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_definition">
+<tt class="descname">test_recipe_types_edit_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only recipe types that update the definition JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_simple">
+<tt class="descname">test_recipe_types_edit_simple</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only recipe types that update basic models.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_trigger_rule">
+<tt class="descname">test_recipe_types_edit_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only recipe types that update the trigger rule configuration JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_missing_job_type">
+<tt class="descname">test_recipe_types_missing_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_missing_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting a recipe type with missing job type dependencies.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="port.test.test_views.TestConfigurationViewImport.test_recipe_types_remove_trigger_rule">
+<tt class="descname">test_recipe_types_remove_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#port.test.test_views.TestConfigurationViewImport.test_recipe_types_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests importing only recipe types that remove the trigger rule.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-port.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="port.html"
+                        title="previous chapter">port Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="product.html"
+                        title="next chapter">product Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/port.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.html" title="product Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="port.html" title="port Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="port.html" >port Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

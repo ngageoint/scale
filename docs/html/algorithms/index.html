@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Algorithms &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../index.html" />
+    <link rel="next" title="Results Manifest" href="results_manifest.html" />
+    <link rel="prev" title="Workspace Services" href="../interface/rest/workspace.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="results_manifest.html" title="Results Manifest"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../interface/rest/workspace.html" title="Workspace Services"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="algorithms">
+<span id="id1"></span><h1>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h1>
+<p>This document explains the steps necessary to integrate an algorithm into the Scale system. The Scale system utilizes
+Docker containers to run algorithms in an isolated environment. The first step will be to build a Docker image that
+encapsulates an algorithm.</p>
+<p>To build the Docker image, Docker must be installed on the system and the Docker daemon running. Depending on the
+linux system, the following packages will need to be installed: docker-io and lxc for Centos6 and docker and lxc for Centos7.
+Next the Docker daemon service needs to be started by either the service command for Centos6 or the systemctl command for Centos7.
+(systemctl enable docker; systemctl start docker)</p>
+<p>Then create a Dockerfile file to execute the necessary Docker commands to build the image. The following is an example of the format
+of a Dockerfile:</p>
+<p><strong>Dockerfile example</strong></p>
+<p>Example removed, we need a good, general example here</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../interface/rest/workspace.html"
+                        title="previous chapter">Workspace Services</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="results_manifest.html"
+                        title="next chapter">Results Manifest</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/algorithms/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="results_manifest.html" title="Results Manifest"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../interface/rest/workspace.html" title="Workspace Services"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

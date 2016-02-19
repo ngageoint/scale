@@ -1,0 +1,10 @@
+triggers Package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.triggers.configuration
+

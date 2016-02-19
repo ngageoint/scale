@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sync Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="scheduler Package" href="scheduler.html" />
+    <link rel="next" title="test Package" href="scheduler.test.html" />
+    <link rel="prev" title="offer Package" href="scheduler.offer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scheduler.test.html" title="test Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="scheduler.offer.html" title="offer Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="scheduler.html" accesskey="U">scheduler Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sync-package">
+<h1>sync Package<a class="headerlink" href="#sync-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-scheduler.sync.job_type_manager">
+<span id="job-type-manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_type_manager</span></tt> Module<a class="headerlink" href="#module-scheduler.sync.job_type_manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages the syncing of the scheduler with the job type models</p>
+<dl class="class">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager">
+<em class="property">class </em><tt class="descclassname">scheduler.sync.job_type_manager.</tt><tt class="descname">JobTypeManager</tt><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class manages the syncing of the scheduler with the job type models. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager.get_job_type">
+<tt class="descname">get_job_type</tt><big>(</big><em>job_type_id</em><big>)</big><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.get_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job type with the given ID, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_id</strong> (<em>str</em>) &#8211; The ID of the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job type for the given ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager.get_job_types">
+<tt class="descname">get_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.get_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of all job types, stored by ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dict of all job types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{int: <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager.sync_with_database">
+<tt class="descname">sync_with_database</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with the database to retrieve updated job type models</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.sync.node_manager">
+<span id="node-manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">node_manager</span></tt> Module<a class="headerlink" href="#module-scheduler.sync.node_manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages the syncing of the scheduler with the node models</p>
+<dl class="class">
+<dt id="scheduler.sync.node_manager.NodeManager">
+<em class="property">class </em><tt class="descclassname">scheduler.sync.node_manager.</tt><tt class="descname">NodeManager</tt><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class manages the syncing of the scheduler with the node models. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.sync.node_manager.NodeManager.add_agent_ids">
+<tt class="descname">add_agent_ids</tt><big>(</big><em>agent_ids</em><big>)</big><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager.add_agent_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the list of agent IDs to the manager so they can be looked up and registered in the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agent_ids</strong> (<em>[str]</em>) &#8211; The list of agent IDs to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.node_manager.NodeManager.get_node">
+<tt class="descname">get_node</tt><big>(</big><em>agent_id</em><big>)</big><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager.get_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the node with the given agent ID, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agent_id</strong> (<em>str</em>) &#8211; The agent ID of the node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The node for the given agent ID or None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.node_manager.NodeManager.get_nodes">
+<tt class="descname">get_nodes</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager.get_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.node_manager.NodeManager.lost_node">
+<tt class="descname">lost_node</tt><big>(</big><em>agent_id</em><big>)</big><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager.lost_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the manager that the node with the given agent ID was lost and has gone offline</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agent_id</strong> (<em>str</em>) &#8211; The agent ID of the lost node</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.node_manager.NodeManager.sync_with_database">
+<tt class="descname">sync_with_database</tt><big>(</big><em>master_hostname</em>, <em>master_port</em><big>)</big><a class="headerlink" href="#scheduler.sync.node_manager.NodeManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>master_hostname</strong> (<em>str</em>) &#8211; The name of the Mesos master host</li>
+<li><strong>master_port</strong> (<em>int</em>) &#8211; The port used by the Mesos master</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.sync.scheduler_manager">
+<span id="scheduler-manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scheduler_manager</span></tt> Module<a class="headerlink" href="#module-scheduler.sync.scheduler_manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages the syncing of the scheduler with the scheduler model</p>
+<dl class="class">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager">
+<em class="property">class </em><tt class="descclassname">scheduler.sync.scheduler_manager.</tt><tt class="descname">SchedulerManager</tt><big>(</big><em>scheduler=None</em><big>)</big><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class manages the syncing of the scheduler with the scheduler model that contains cluster-wide scheduling
+configuration. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager.get_scheduler">
+<tt class="descname">get_scheduler</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.get_scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scheduler model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduler model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="scheduler.html#scheduler.models.Scheduler" title="scheduler.models.Scheduler"><tt class="xref py py-class docutils literal"><span class="pre">scheduler.models.Scheduler</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager.is_paused">
+<tt class="descname">is_paused</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.is_paused" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the scheduler is currently paused or not</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the scheduler is paused, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager.sync_with_database">
+<tt class="descname">sync_with_database</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with the database to retrieve an updated scheduler model</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">sync Package</a><ul>
+<li><a class="reference internal" href="#module-scheduler.sync.job_type_manager"><tt class="docutils literal"><span class="pre">job_type_manager</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.sync.node_manager"><tt class="docutils literal"><span class="pre">node_manager</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.sync.scheduler_manager"><tt class="docutils literal"><span class="pre">scheduler_manager</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scheduler.offer.html"
+                        title="previous chapter">offer Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scheduler.test.html"
+                        title="next chapter">test Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/scheduler.sync.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scheduler.test.html" title="test Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="scheduler.offer.html" title="offer Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="scheduler.html" >scheduler Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

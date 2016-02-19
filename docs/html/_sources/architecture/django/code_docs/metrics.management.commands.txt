@@ -1,0 +1,11 @@
+commands Package
+================
+
+:mod:`scale_daily_metrics` Module
+---------------------------------
+
+.. automodule:: metrics.management.commands.scale_daily_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

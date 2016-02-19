@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deploy Script &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Install" href="index.html" />
+    <link rel="next" title="Scale Configuration" href="scale_configuration.html" />
+    <link rel="prev" title="System Dependencies" href="system_dependencies.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scale_configuration.html" title="Scale Configuration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="system_dependencies.html" title="System Dependencies"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Install</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="deploy-script">
+<span id="id1"></span><h1>Deploy Script<a class="headerlink" href="#deploy-script" title="Permalink to this headline">¶</a></h1>
+<p>Scale provides a deploy script to make the process of deploying scale to a machine easier.
+To run the deploy script:
+Unzip the release tar.gz file
+run <tt class="docutils literal"><span class="pre">scale/scripts/deploy.sh</span> <span class="pre">&lt;mesos-master&gt;</span> <span class="pre">[&lt;deploy.to.directory&gt;</span> <span class="pre">[&lt;scale-user&gt;</span> <span class="pre">[&lt;scale-group&gt;]]]</span></tt></p>
+<p>The script will stop any scale or mesos services running, copy the files to the correct location, and retrive the python dependencies in a virtual environment.</p>
+<p>The deploy shuts down the following services before being run:</p>
+<ul class="simple">
+<li>mesos-master</li>
+<li>mesos-slave</li>
+<li>scale-web</li>
+<li>scale-scheduler</li>
+</ul>
+<p>After the script is run, you will need to restart the services manually.  This was split to a separate step since the deployed to system could be a master or a slave.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="system_dependencies.html"
+                        title="previous chapter">System Dependencies</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scale_configuration.html"
+                        title="next chapter">Scale Configuration</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/install/deploy_script.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scale_configuration.html" title="Scale Configuration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="system_dependencies.html" title="System Dependencies"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Install</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

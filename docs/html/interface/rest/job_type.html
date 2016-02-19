@@ -1,0 +1,1789 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Job Type Services &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="RESTful HTTP Interface" href="index.html" />
+    <link rel="next" title="Metrics Services" href="metrics.html" />
+    <link rel="prev" title="Job Execution Services" href="job_execution.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="metrics.html" title="Metrics Services"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job_execution.html" title="Job Execution Services"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Interface</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">RESTful HTTP Interface</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="job-type-services">
+<span id="rest-job-type"></span><h1>Job Type Services<a class="headerlink" href="#job-type-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about job types.</p>
+<table border="1" class="docutils" id="rest-job-type-list">
+<colgroup>
+<col width="17%" />
+<col width="4%" />
+<col width="11%" />
+<col width="4%" />
+<col width="3%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Job Type List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Returns a list of all job types.</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>GET</strong> /job-types/</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>Return only job types with a given name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>category</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>Return only job types with a given category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=name&amp;order=version).
+Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><strong>Status</strong></td>
+<td colspan="4">200 OK</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">count</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">next</td>
+<td colspan="2">URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td colspan="2">previous</td>
+<td colspan="2">URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">results</td>
+<td colspan="2">Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.id</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.name</td>
+<td colspan="2">String</td>
+<td colspan="2">The stable name of the job type used for queries.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.version</td>
+<td colspan="2">String</td>
+<td colspan="2">The version of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.title</td>
+<td colspan="2">String</td>
+<td colspan="2">The human readable display name of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.description</td>
+<td colspan="2">String</td>
+<td colspan="2">A longer description of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.category</td>
+<td colspan="2">String</td>
+<td colspan="2">An optional overall category of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.author_name</td>
+<td colspan="2">String</td>
+<td colspan="2">The name of the person or organization that created the job algorithm.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.author_url</td>
+<td colspan="2">String</td>
+<td colspan="2">The address to a home page about the author or associated algorithm.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.is_system</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this is a system type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.is_long_running</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this type is long running. A job of this type is intended to run
+for a long time, potentially indefinitely, without timing out and always
+being re-queued after a failure.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.is_active</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the job type is active (false once job type is archived).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.is_paused</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the job type is paused (while paused no jobs of this type will be
+scheduled off of the queue).</td>
+</tr>
+<tr class="row-even"><td colspan="2">.icon_code</td>
+<td colspan="2">String</td>
+<td colspan="2">A font-awesome icon code to use when representing this job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.uses_docker</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the job type uses Docker.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.docker_image</td>
+<td colspan="2">String</td>
+<td colspan="2">The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.revision_num</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The current revision number of the job type, incremented for each edit.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.priority</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The priority of the job type (lower number is higher priority).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.timeout</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The maximum amount of time to allow a job of this type to run
+before being killed (in seconds).</td>
+</tr>
+<tr class="row-even"><td colspan="2">.max_tries</td>
+<td colspan="2">Integer</td>
+<td colspan="2">The maximum number of times to try executing a job in case of errors.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.cpus_required</td>
+<td colspan="2">Decimal</td>
+<td colspan="2">The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.mem_required</td>
+<td colspan="2">Decimal</td>
+<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.disk_out_const_required</td>
+<td colspan="2">Decimal</td>
+<td colspan="2">A constant amount of disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.disk_out_mult_required</td>
+<td colspan="2">Decimal</td>
+<td colspan="2">A multiplier (2x = 2.0) applied to the size of the input files to
+determine additional disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.archived</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the job type was archived (no longer active).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.paused</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the job type was paused.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.last_modified</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-create">
+<colgroup>
+<col width="17%" />
+<col width="3%" />
+<col width="12%" />
+<col width="3%" />
+<col width="9%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Create Job Type</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Creates a new job type with associated interface and error mapping</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /job-types/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">name</td>
+<td colspan="2">String</td>
+<td>Required</td>
+<td>The stable name of job type used for queries.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">version</td>
+<td colspan="2">String</td>
+<td>Required</td>
+<td>The version of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">category</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional overall category of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">author_name</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The name of the person or organization that created the
+algorithm associated with the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">author_url</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The address to a home page about the author or associated
+algorithm run by the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">is_long_running</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether this type is long running. A job of this type is
+intended to run for a long time, potentially indefinitely,
+without timing out and always being re-queued after a failure.</td>
+</tr>
+<tr class="row-even"><td colspan="2">is_paused</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether the job type is paused (while paused no jobs of this
+type will be scheduled off of the queue).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">icon_code</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>A font-awesome icon code to use when displaying this job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">docker_image</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">priority</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The priority of the job type (lower number is higher priority).</td>
+</tr>
+<tr class="row-even"><td colspan="2">timeout</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The maximum amount of time to allow a job of this type to run
+before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">max_tries</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The maximum number of times to try executing a job when failed.</td>
+</tr>
+<tr class="row-even"><td colspan="2">cpus_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">mem_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">disk_out_const_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>A constant amount of disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">disk_out_mult_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>A multiplier (2x = 2.0) applied to the size of input files to
+determine additional disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-even"><td colspan="2">interface</td>
+<td colspan="2">JSON Object</td>
+<td>Required</td>
+<td>JSON description of the interface for running the job.
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">error_mapping</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description that maps exit codes to known error models.
+(See <a class="reference internal" href="../../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><em>Error Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">trigger_rule</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>A linked trigger rule that automatically invokes the job type.
+Type and configuration fields are required if setting a rule.
+The is_active field is optional and can be used to pause.
+(See <a class="reference internal" href="trigger.html#rest-trigger-rule-details"><em>Trigger Rule Details</em></a></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;test_cmd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;test_arg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;image/png&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;1&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="5">201 CREATED</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">All fields are the same as the job type details model.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_6h&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_12h&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_24h&quot;</span><span class="o">:</span> <span class="p">[...]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-validate">
+<colgroup>
+<col width="18%" />
+<col width="4%" />
+<col width="12%" />
+<col width="1%" />
+<col width="2%" />
+<col width="4%" />
+<col width="4%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="8"><strong>Validate Job Type</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="8">Validates a new job type without actually saving it</td>
+</tr>
+<tr class="row-odd"><td colspan="8"><strong>POST</strong> /job-types/validation/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="7"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="8"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="8">name                    | String            | Required | The stable name of job type used for queries.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">version</td>
+<td colspan="3">String</td>
+<td colspan="2">Required</td>
+<td>The version of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>The human-readable name of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>An optional description of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">category</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>An optional overall category of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">author_name</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>The name of the person or organization that created the
+algorithm associated with the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">author_url</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>The address to a home page about the author or associated
+algorithm run by the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">is_long_running</td>
+<td colspan="3">Boolean</td>
+<td colspan="2">Optional</td>
+<td>Whether this type is long running. A job of this type is
+intended to run for a long time, potentially indefinitely,
+without timing out and always being re-queued after a failure.</td>
+</tr>
+<tr class="row-even"><td colspan="2">is_paused</td>
+<td colspan="3">Boolean</td>
+<td colspan="2">Optional</td>
+<td>Whether the job type is paused (while paused no jobs of this
+type will be scheduled off of the queue).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">icon_code</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>A font-awesome icon code to use when displaying this job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">docker_image</td>
+<td colspan="3">String</td>
+<td colspan="2">Optional</td>
+<td>The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">priority</td>
+<td colspan="3">Integer</td>
+<td colspan="2">Optional</td>
+<td>The priority of the job type (lower number is higher priority).</td>
+</tr>
+<tr class="row-even"><td colspan="2">timeout</td>
+<td colspan="3">Integer</td>
+<td colspan="2">Optional</td>
+<td>The maximum amount of time to allow a job of this type to run
+before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">max_tries</td>
+<td colspan="3">Integer</td>
+<td colspan="2">Optional</td>
+<td>The maximum number of times to try executing a job when failed.</td>
+</tr>
+<tr class="row-even"><td colspan="2">cpus_required</td>
+<td colspan="3">Decimal</td>
+<td colspan="2">Optional</td>
+<td>The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">mem_required</td>
+<td colspan="3">Decimal</td>
+<td colspan="2">Optional</td>
+<td>The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">disk_out_const_required</td>
+<td colspan="3">Decimal</td>
+<td colspan="2">Optional</td>
+<td>A constant amount of disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">disk_out_mult_required</td>
+<td colspan="3">Decimal</td>
+<td colspan="2">Optional</td>
+<td>A multiplier (2x = 2.0) applied to the size of input files to
+determine additional disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-even"><td colspan="2">interface</td>
+<td colspan="3">JSON Object</td>
+<td colspan="2">Required</td>
+<td>JSON description of the interface for running the job.
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">error_mapping</td>
+<td colspan="3">JSON Object</td>
+<td colspan="2">Optional</td>
+<td>JSON description that maps exit codes to known error models.
+(See <a class="reference internal" href="../../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><em>Error Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">trigger_rule</td>
+<td colspan="3">JSON Object</td>
+<td colspan="2">Optional</td>
+<td>A linked trigger rule that automatically invokes the job type.
+Type and configuration fields are required if setting a rule.
+The is_active field is optional and can be used to pause.
+(See <a class="reference internal" href="trigger.html#rest-trigger-rule-details"><em>Trigger Rule Details</em></a></td>
+</tr>
+<tr class="row-odd"><td colspan="8"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;test_cmd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;test_arg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;image/png&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;1&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td colspan="8"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="7">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="7"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="8"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>warnings</td>
+<td colspan="3">Array</td>
+<td colspan="4">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td colspan="3">String</td>
+<td colspan="4">An identifier for the warning.</td>
+</tr>
+<tr class="row-even"><td>.details</td>
+<td colspan="3">String</td>
+<td colspan="4">A human-readable description of the problem.</td>
+</tr>
+<tr class="row-odd"><td colspan="8"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-details">
+<colgroup>
+<col width="22%" />
+<col width="16%" />
+<col width="8%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Type Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns job type details</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>GET</strong> /job-types/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model.</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td colspan="2">The stable name of the job type used for queries.</td>
+</tr>
+<tr class="row-even"><td>version</td>
+<td>String</td>
+<td colspan="2">The version of the job type.</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>String</td>
+<td colspan="2">The human readable display name of the job type.</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>String</td>
+<td colspan="2">A longer description of the job type.</td>
+</tr>
+<tr class="row-odd"><td>category</td>
+<td>String</td>
+<td colspan="2">An optional overall category of the job type.</td>
+</tr>
+<tr class="row-even"><td>author_name</td>
+<td>String</td>
+<td colspan="2">The name of the person or organization that created the job algorithm.</td>
+</tr>
+<tr class="row-odd"><td>author_url</td>
+<td>String</td>
+<td colspan="2">The address to a home page about the author or associated algorithm.</td>
+</tr>
+<tr class="row-even"><td>is_system</td>
+<td>Boolean</td>
+<td colspan="2">Whether this is a system type.</td>
+</tr>
+<tr class="row-odd"><td>is_long_running</td>
+<td>Boolean</td>
+<td colspan="2">Whether this type is long running. A job of this type is intended to run
+for a long time, potentially indefinitely, without timing out and always
+being re-queued after a failure.</td>
+</tr>
+<tr class="row-even"><td>is_active</td>
+<td>Boolean</td>
+<td colspan="2">Whether the job type is active (false once job type is archived).</td>
+</tr>
+<tr class="row-odd"><td>is_operational</td>
+<td>Boolean</td>
+<td colspan="2">Whether this job type is operational (True) or is still in a research &amp;
+development (R&amp;D) phase (False).</td>
+</tr>
+<tr class="row-even"><td>is_paused</td>
+<td>Boolean</td>
+<td colspan="2">Whether the job type is paused (while paused no jobs of this type will be
+scheduled off of the queue).</td>
+</tr>
+<tr class="row-odd"><td>icon_code</td>
+<td>String</td>
+<td colspan="2">A font-awesome icon code to use when representing this job type.</td>
+</tr>
+<tr class="row-even"><td>uses_docker</td>
+<td>Boolean</td>
+<td colspan="2">Whether the job type uses Docker.</td>
+</tr>
+<tr class="row-odd"><td>docker_image</td>
+<td>String</td>
+<td colspan="2">The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-even"><td>revision_num</td>
+<td>Integer</td>
+<td colspan="2">The current revision number of the job type, incremented for each edit.</td>
+</tr>
+<tr class="row-odd"><td>priority</td>
+<td>Integer</td>
+<td colspan="2">The priority of the job type (lower number is higher priority).</td>
+</tr>
+<tr class="row-even"><td>timeout</td>
+<td>Integer</td>
+<td colspan="2">The maximum amount of time to allow a job of this type to run
+before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>max_tries</td>
+<td>Integer</td>
+<td colspan="2">The maximum number of times to try executing a job in case of errors.</td>
+</tr>
+<tr class="row-even"><td>cpus_required</td>
+<td>Decimal</td>
+<td colspan="2">The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td>mem_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>disk_out_const_required</td>
+<td>Decimal</td>
+<td colspan="2">A constant amount of disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-odd"><td>disk_out_mult_required</td>
+<td>Decimal</td>
+<td colspan="2">A multiplier (2x = 2.0) applied to the size of the input files to
+determine additional disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>archived</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job type was archived (no longer active).</td>
+</tr>
+<tr class="row-even"><td>paused</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job type was paused.</td>
+</tr>
+<tr class="row-odd"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>interface</td>
+<td>JSON Object</td>
+<td colspan="2">JSON description defining the interface for running a job of this type.
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-odd"><td>error_mapping</td>
+<td>JSON Object</td>
+<td colspan="2">JSON description defining the error mappings for a job of this type.
+(See <a class="reference internal" href="../../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><em>Error Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-even"><td>trigger_rule</td>
+<td>JSON Object</td>
+<td colspan="2">A linked trigger rule that automatically invokes the job type.
+Type and configuration fields are required if setting a rule.
+The is_active field is optional and can be used to pause.
+(See <a class="reference internal" href="trigger.html#rest-trigger-rule-details"><em>Trigger Rule Details</em></a></td>
+</tr>
+<tr class="row-odd"><td>errors</td>
+<td>Array</td>
+<td colspan="2">List of all errors that are referenced by this job type&#8217;s error mapping.
+(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_counts_6h</td>
+<td>Array</td>
+<td colspan="2">List of job counts for the job type, grouped by status the past 6 hours.</td>
+</tr>
+<tr class="row-odd"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-even"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-odd"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-even"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+<tr class="row-odd"><td>.job_counts_12h</td>
+<td>Array</td>
+<td colspan="2">List of job counts for the job type, grouped by status the past 12 hours.</td>
+</tr>
+<tr class="row-even"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-odd"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-even"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-odd"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+<tr class="row-even"><td>.job_counts_24h</td>
+<td>Array</td>
+<td colspan="2">List of job counts for the job type, grouped by status the past 24 hours.</td>
+</tr>
+<tr class="row-odd"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-even"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-odd"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-even"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming files to ingest&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_6h&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T18:36:12.278Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;job_counts_12h&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T18:36:12.278Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">225</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T18:40:01.101Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;job_counts_24h&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T18:36:12.278Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">419</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T18:40:01.101Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-16T10:01:34.308Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-edit">
+<colgroup>
+<col width="17%" />
+<col width="3%" />
+<col width="12%" />
+<col width="3%" />
+<col width="9%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Edit Job Type</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Edits an existing job type with associated interface and error mapping</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><dl class="first last docutils">
+<dt><strong>PATCH</strong> /job-types/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">category</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional overall category of the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">author_name</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The name of the person or organization that created the
+algorithm associated with the job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">author_url</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The address to a home page about the author or associated
+algorithm run by the job type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">is_long_running</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether this type is long running. A job of this type is
+intended to run for a long time, potentially indefinitely,
+without timing out and always being re-queued after a failure.</td>
+</tr>
+<tr class="row-even"><td colspan="2">is_paused</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether the job type is paused (while paused no jobs of this
+type will be scheduled off of the queue).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">icon_code</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>A font-awesome icon code to use when displaying this job type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">docker_image</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">priority</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The priority of the job type (lower number is higher priority).</td>
+</tr>
+<tr class="row-even"><td colspan="2">timeout</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The maximum amount of time to allow a job of this type to run
+before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td colspan="2">max_tries</td>
+<td colspan="2">Integer</td>
+<td>Optional</td>
+<td>The maximum number of times to try executing a job when failed.</td>
+</tr>
+<tr class="row-even"><td colspan="2">cpus_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">mem_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td colspan="2">disk_out_const_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>A constant amount of disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">disk_out_mult_required</td>
+<td colspan="2">Decimal</td>
+<td>Optional</td>
+<td>A multiplier (2x = 2.0) applied to the size of input files to
+determine additional disk space in MiB required for job output.</td>
+</tr>
+<tr class="row-even"><td colspan="2">interface</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description of the interface for running the job.
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">error_mapping</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description that maps exit codes to known error models.
+(See <a class="reference internal" href="../../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><em>Error Interface Specification Version 1.0</em></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">trigger_rule</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>A linked trigger rule that automatically invokes the job type.
+Type and configuration fields are required if setting a rule.
+The is_active field is optional and can be used to pause.
+(See <a class="reference internal" href="trigger.html#rest-trigger-rule-details"><em>Trigger Rule Details</em></a></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;test_cmd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;test_arg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;image/png&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;1&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">All fields are the same as the job type details model.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_6h&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_12h&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+    <span class="s2">&quot;job_counts_24h&quot;</span><span class="o">:</span> <span class="p">[...]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-status">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Types Status</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of overall job type statistics, based on counts of jobs organized by status.
+Note that all jobs with a status of RUNNING are included regardless of date/time filters.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /job-types/status/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).
+Defaults to the past 3 hours.</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the statistics.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_counts</td>
+<td>Array</td>
+<td colspan="2">A list of recent job counts for the job type, grouped by status.</td>
+</tr>
+<tr class="row-odd"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-even"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-odd"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-even"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+<span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+<span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+         <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+             <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+             <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;job_counts&quot;</span><span class="o">:</span> <span class="p">[</span>
+             <span class="p">{</span>
+                 <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-31T22:09:12.674Z&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+                 <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-31T19:28:30.799Z&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span>
+             <span class="p">},</span>
+             <span class="p">{</span>
+                 <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+                 <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-31T21:51:40.900Z&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span>
+             <span class="p">}</span>
+         <span class="p">],</span>
+     <span class="p">},</span>
+     <span class="p">{</span>
+         <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+             <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming files to ingest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+             <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+             <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;job_counts&quot;</span><span class="o">:</span> <span class="p">[]</span>
+     <span class="p">},</span>
+     <span class="p">...</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-running">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Types Running</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that are running, ordered by the longest running job.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /job-types/running/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that are currently running.</td>
+</tr>
+<tr class="row-even"><td>.longest_running</td>
+<td>ISO-8601 Datetime</td>
+<td>The run start time of the job of this type that has been running the longest.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;longest_running&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-08T15:43:15.681Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-type-system-failures">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Type System Failures</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns counts of job types that have a critical system failure error, ordered by last error.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /job-types/system-failures/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The number of jobs of this type that are currently running.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td>The error that is associated with the count.
+(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+</tr>
+<tr class="row-odd"><td>.first_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error first occurred for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.last_error</td>
+<td>ISO-8601 Datetime</td>
+<td>When this error most recently occurred for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+           <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+            <span class="s2">&quot;first_error&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T23:29:28.719Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_error&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-08T16:27:42.243Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="rest-job-type-rev-details"></span></div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job_execution.html"
+                        title="previous chapter">Job Execution Services</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="metrics.html"
+                        title="next chapter">Metrics Services</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/interface/rest/job_type.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="metrics.html" title="Metrics Services"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job_execution.html" title="Job Execution Services"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Interface</a> &raquo;</li>
+          <li><a href="index.html" >RESTful HTTP Interface</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

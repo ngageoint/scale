@@ -1,0 +1,51 @@
+mesos_api Package
+=================
+
+:mod:`mesos_api` Package
+------------------------
+
+.. automodule:: mesos_api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`api` Module
+-----------------
+
+.. automodule:: mesos_api.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: mesos_api.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`mesos` Module
+-------------------
+
+.. automodule:: mesos_api.mesos
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`mesos_pb2` Module
+-----------------------
+
+.. automodule:: mesos_api.mesos_pb2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: mesos_api.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

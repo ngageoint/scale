@@ -1,0 +1,26 @@
+strike Package
+==============
+
+:mod:`cleanup` Module
+---------------------
+
+.. automodule:: ingest.strike.cleanup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`strike_processor` Module
+------------------------------
+
+.. automodule:: ingest.strike.strike_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.strike.configuration
+

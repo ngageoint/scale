@@ -1,0 +1,61 @@
+source Package
+==============
+
+:mod:`source` Package
+---------------------
+
+.. automodule:: source
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: source.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: source.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: source.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: source.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: source.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    source.configuration
+    source.migrations
+    source.test
+    source.triggers
+

@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>results Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="configuration Package" href="job.configuration.html" />
+    <link rel="next" title="results_manifest Package" href="job.configuration.results.results_manifest.html" />
+    <link rel="prev" title="interface Package" href="job.configuration.interface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.results_manifest.html" title="results_manifest Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.interface.html" title="interface Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" accesskey="U">configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="results-package">
+<h1>results Package<a class="headerlink" href="#results-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.configuration.results.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-job.configuration.results.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with a job results</p>
+<dl class="exception">
+<dt id="job.configuration.results.exceptions.InvalidResultsManifest">
+<em class="property">exception </em><tt class="descclassname">job.configuration.results.exceptions.</tt><tt class="descname">InvalidResultsManifest</tt><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided definition of a results_manifest</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch">
+<em class="property">exception </em><tt class="descclassname">job.configuration.results.exceptions.</tt><tt class="descname">ResultsManifestAndInterfaceDontMatch</tt><a class="headerlink" href="#job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>The result manifests outputs do not match the required outputs or given inputs of the job</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.results.job_results">
+<span id="job-results-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_results</span></tt> Module<a class="headerlink" href="#module-job.configuration.results.job_results" title="Permalink to this headline">¶</a></h2>
+<p>Defines the results obtained after executing a job</p>
+<dl class="class">
+<dt id="job.configuration.results.job_results.JobResults">
+<em class="property">class </em><tt class="descclassname">job.configuration.results.job_results.</tt><tt class="descname">JobResults</tt><big>(</big><em>results_dict=None</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the results obtained after executing a job</p>
+<dl class="method">
+<dt id="job.configuration.results.job_results.JobResults.add_file_list_parameter">
+<tt class="descname">add_file_list_parameter</tt><big>(</big><em>name</em>, <em>file_ids</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_list_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a list of files to the job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The output parameter name</li>
+<li><strong>file_ids</strong> (<em>list of long</em>) &#8211; The file IDs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.results.job_results.JobResults.add_file_parameter">
+<tt class="descname">add_file_parameter</tt><big>(</big><em>name</em>, <em>file_id</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a file to the job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The output parameter name</li>
+<li><strong>file_id</strong> (<em>long</em>) &#8211; The file ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.results.job_results.JobResults.add_output_to_data">
+<tt class="descname">add_output_to_data</tt><big>(</big><em>output_name</em>, <em>job_data</em>, <em>input_name</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_output_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output from the results as a new input in the given job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>str</em>) &#8211; The name of the results output to add to the data</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The name of the data input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.results.job_results.JobResults.get_dict">
+<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents these job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dictionary representing the results</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.configuration.results.results_manifest.html">results_manifest Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.results.results_manifest.html#module-job.configuration.results.results_manifest.results_manifest"><tt class="docutils literal"><span class="pre">results_manifest</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.results.results_manifest.html#module-job.configuration.results.results_manifest.results_manifest_1_0"><tt class="docutils literal"><span class="pre">results_manifest_1_0</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">results Package</a><ul>
+<li><a class="reference internal" href="#module-job.configuration.results.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.results.job_results"><tt class="docutils literal"><span class="pre">job_results</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.configuration.interface.html"
+                        title="previous chapter">interface Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.configuration.results.results_manifest.html"
+                        title="next chapter">results_manifest Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.configuration.results.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.results_manifest.html" title="results_manifest Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.interface.html" title="interface Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" >configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

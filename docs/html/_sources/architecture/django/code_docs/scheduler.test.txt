@@ -1,0 +1,44 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: scheduler.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_initialize` Module
+-----------------------------
+
+.. automodule:: scheduler.test.test_initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_scheduler` Module
+----------------------------
+
+.. automodule:: scheduler.test.test_scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: scheduler.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    scheduler.test.offer
+    scheduler.test.sync
+    scheduler.test.threads
+

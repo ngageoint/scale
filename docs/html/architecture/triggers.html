@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Triggers &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Architecture" href="index.html" />
+    <link rel="next" title="Workspaces" href="workspaces.html" />
+    <link rel="prev" title="Strike" href="strike.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="workspaces.html" title="Workspaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="strike.html" title="Strike"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Architecture</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="triggers">
+<span id="architecture-triggers"></span><h1>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h1>
+<p>Scale uses triggers for automatically generating jobs and recipes to execute as new source data enters the system. Rules
+are configured and when a (trigger) event occurs in Scale that matches an existing trigger rule, the job(s) and/or
+recipe(s) for the rule are created and placed on the queue. A given trigger event can trigger multiple rules. There are
+two different types of Scale triggers: ingest triggers and parse triggers.</p>
+<div class="section" id="ingest-triggers">
+<span id="architecture-triggers-ingest"></span><h2>Ingest Triggers<a class="headerlink" href="#ingest-triggers" title="Permalink to this headline">¶</a></h2>
+<p>Ingest triggers are triggers that can occur when a source file is ingested into Scale. A trigger event is generated for
+every file ingest and checked against all ingest trigger rules.</p>
+<p><strong>Example ingest trigger configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;bar&quot;</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_workspace&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>condition</em> field is used to define the conditions for when the ingest rule is triggered. The <em>media_type</em> field
+says that an ingested file must have a media type of <em>text/plain</em> (a plain text file) in order to trigger this rule. The
+<em>data_types</em> field specifies that the ingested file must also have the data types &#8220;foo&#8221; and &#8220;bar&#8221; tagged on it in order
+to trigger the rule. The <em>data</em> field specifies the information needed to create the applicable job/recipe (whatever the
+trigger rule is linked to) when the rule is triggered. The <em>input_data_name</em> field defines the input parameter name of
+the job/recipe that the ingested file should be passed to, and the <em>workspace_name</em> field gives the unique system name
+of the workspace for storing all of the products generated by the created job/recipe. To see all of the options for an
+ingest trigger rule&#8217;s configuration, please refer to the Ingest Trigger Configuration Specification below.</p>
+</div>
+<div class="section" id="ingest-trigger-configuration-specification-version-1-0">
+<span id="architecture-triggers-ingest-spec"></span><h2>Ingest Trigger Configuration Specification Version 1.0<a class="headerlink" href="#ingest-trigger-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid ingest trigger rule configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="nx">STRING</span><span class="p">,</span>
+         <span class="nx">STRING</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
+be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
+version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
+version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+future changes to the specification will still accept your ingest trigger rule configuration.</div></blockquote>
+<p><strong>condition</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>condition</em> field is optional and contains other fields that specify the conditions under which this ingest rule
+is triggered. If not provided, the rule is triggered by EVERY source file ingest.</p>
+<p><strong>media_type</strong>: JSON string</p>
+<blockquote>
+<div>The <em>media_type</em> field is an optional string that defines a media type. An ingested file must have the identical
+media type defined here in order to trigger this rule. If not provided, the field defaults to &#8220;&#8221; and all file
+media types are accepted by the rule.</div></blockquote>
+<p><strong>data_types</strong>: JSON array</p>
+<blockquote>
+<div>The <em>data_types</em> field is an optional list of data type strings. An ingested file must have all of the data
+types that are listed here tagged to the file in order to trigger this rule. If not provided, the field defaults
+to [] and no data types are required.</div></blockquote>
+</div></blockquote>
+<p><strong>data</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>data</em> field is required and contains other fields that specify the details for creating the job/recipe linked
+to this trigger rule.</p>
+<p><strong>input_data_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>input_data_name</em> field is a required string that specifies the input parameter name of the triggered
+job/recipe that the ingested file should be passed to when the job/recipe is created and placed on the queue.</div></blockquote>
+<p><strong>workspace_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>workspace_name</em> field is required and contains the unique system name of the workspace that should
+store the products created by the triggered job/recipe.</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="parse-triggers">
+<span id="architecture-triggers-parse"></span><h2>Parse Triggers<a class="headerlink" href="#parse-triggers" title="Permalink to this headline">¶</a></h2>
+<p>Parse triggers are triggers that can occur when a source file is parsed. This happens when a job completes with a
+<em>parse_results</em> section in its generated results manifest file, see <a class="reference internal" href="../algorithms/results_manifest.html#algorithms-results-manifest"><em>Results Manifest</em></a>. A trigger event
+is generated for every source file parse and checked against all parse trigger rules.</p>
+<p><strong>Example parse trigger configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;bar&quot;</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_workspace&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>condition</em> field is used to define the conditions for when the parse rule is triggered. The <em>media_type</em> field says
+that a parsed file must have a media type of <em>text/plain</em> (a plain text file) in order to trigger this rule. The
+<em>data_types</em> field specifies that the parsed file must also have the data types &#8220;foo&#8221; and &#8220;bar&#8221; tagged on it in order to
+trigger the rule. The <em>data</em> field specifies the information needed to create the applicable job/recipe (whatever the
+trigger rule is linked to) when the rule is triggered. The <em>input_data_name</em> field defines the input parameter name of
+the job/recipe that the parsed file should be passed to, and the <em>workspace_name</em> field gives the unique system name of
+the workspace for storing all of the products generated by the created job/recipe. To see all of the options for a parse
+trigger rule&#8217;s configuration, please refer to the Parse Trigger Configuration Specification below.</p>
+</div>
+<div class="section" id="parse-trigger-configuration-specification-version-1-0">
+<span id="architecture-triggers-parse-spec"></span><h2>Parse Trigger Configuration Specification Version 1.0<a class="headerlink" href="#parse-trigger-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid parse trigger rule configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="nx">STRING</span><span class="p">,</span>
+         <span class="nx">STRING</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
+be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
+version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
+version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+future changes to the specification will still accept your parse trigger rule configuration.</div></blockquote>
+<p><strong>condition</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>condition</em> field is optional and contains other fields that specify the conditions under which this parse rule
+is triggered. If not provided, the rule is triggered by EVERY source file parse.</p>
+<p><strong>media_type</strong>: JSON string</p>
+<blockquote>
+<div>The <em>media_type</em> field is an optional string that defines a media type. A parsed file must have the identical
+media type defined here in order to trigger this rule. If not provided, the field defaults to &#8220;&#8221; and all file
+media types are accepted by the rule.</div></blockquote>
+<p><strong>data_types</strong>: JSON array</p>
+<blockquote>
+<div>The <em>data_types</em> field is an optional list of data type strings. A parsed file must have all of the data types
+that are listed here tagged to the file in order to trigger this rule. If not provided, the field defaults to []
+and no data types are required.</div></blockquote>
+</div></blockquote>
+<p><strong>data</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>data</em> field is required and contains other fields that specify the details for creating the job/recipe linked
+to this trigger rule.</p>
+<p><strong>input_data_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>input_data_name</em> field is a required string that specifies the input parameter name of the triggered
+job/recipe that the parsed file should be passed to when the job/recipe is created and placed on the queue.</div></blockquote>
+<p><strong>workspace_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>workspace_name</em> field is required and contains the unique system name of the workspace that should
+store the products created by the triggered job/recipe.</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="clock-triggers">
+<span id="architecture-triggers-clock"></span><h2>Clock Triggers<a class="headerlink" href="#clock-triggers" title="Permalink to this headline">¶</a></h2>
+<p>Clock triggers are triggers that can occur on a pre-defined schedule. This happens when a the Scale Clock process fires
+every minute and looks at what clock trigger rules are due to be executed. A trigger event is generated for every clock
+tick that exceeds the threshold specified by a clock trigger rule. Each clock rule uses its own custom trigger event
+that is defined by the specification outlined below. Clock rules are useful for general system maintenance that cannot
+be associated to a normal event like file parsing. Calculating system metrics/performance or archiving old records are
+good cases for a clock rule.</p>
+<p><strong>Example clock trigger configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;event_type&quot;</span><span class="o">:</span> <span class="s2">&quot;MY_METRICS&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;schedule&quot;</span><span class="o">:</span> <span class="s2">&quot;PT1H0M0S&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>event_type</em> field determines the type of event that is triggered and when determining the last time an event was
+triggered for the rule. The <em>schedule</em> field determines how often the event should be triggered. The schedule value uses
+the ISO-8601 period format and is interpreted as absolute time within each day. Therefore, in the example above we are
+specifying the trigger should happen every hour on the hour. If an event is triggered a few minutes after the hour, the
+next event will still attempt to fire at the top of the next hour, rather than exactly one hour after the previous event
+in relative time. This makes the system more predictable and avoids events slowly drifting over time.</p>
+<p>Also note that the <em>name</em> field of the trigger rule model must match a corresponding clock event processor registration
+in the clock module. The processor registration determines what function the Scale clock will execute when the rule is
+due to trigger a new event.</p>
+</div>
+<div class="section" id="clock-trigger-configuration-specification-version-1-0">
+<span id="architecture-triggers-clock-spec"></span><h2>Clock Trigger Configuration Specification Version 1.0<a class="headerlink" href="#clock-trigger-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid clock trigger rule configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;event_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;schedule&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
+be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
+version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
+version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+future changes to the specification will still accept your parse trigger rule configuration.</div></blockquote>
+<p><strong>event_type</strong>: JSON string</p>
+<blockquote>
+<div>The <em>event_type</em> field is a required string that determines the trigger event associated with the rule. When the
+clock process checks to see if a rule needs to be triggered it will query for associated events using this type. If
+the clock determines that the rule does in fact need to trigger, then this type is used to create the new event that
+is passed to the clock processor function to do the actual work.</div></blockquote>
+<p><strong>schedule</strong>: JSON string</p>
+<blockquote>
+<div>The <em>schedule</em> field is a required string that specifies how often the rule should be triggered. The value must
+follow the ISO-8601 period format, which takes the form of hours, minutes, and seconds to trigger an event. Note
+that the current Scale clock implementation does not support the optional days portion of the standard and the
+smallest time slice that it can execute is once every minute. It is also important to note the scheduler interprets
+the period relative to the start of each day, rather than relative to its last triggered event. That way if a
+schedule is defined for every hour and one of the executions falls behind by a few minutes, the next event will
+still attempt to trigger as close to the hour as possible. For example, if we request execution every hour using
+<em>PT1H0M0S</em> and the last event actually runs at 11:07AM, then the next execution will be attempted at 12:00PM even
+though that is not a full hour later.</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Triggers</a><ul>
+<li><a class="reference internal" href="#ingest-triggers">Ingest Triggers</a></li>
+<li><a class="reference internal" href="#ingest-trigger-configuration-specification-version-1-0">Ingest Trigger Configuration Specification Version 1.0</a></li>
+<li><a class="reference internal" href="#parse-triggers">Parse Triggers</a></li>
+<li><a class="reference internal" href="#parse-trigger-configuration-specification-version-1-0">Parse Trigger Configuration Specification Version 1.0</a></li>
+<li><a class="reference internal" href="#clock-triggers">Clock Triggers</a></li>
+<li><a class="reference internal" href="#clock-trigger-configuration-specification-version-1-0">Clock Trigger Configuration Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="strike.html"
+                        title="previous chapter">Strike</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="workspaces.html"
+                        title="next chapter">Workspaces</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/architecture/triggers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="workspaces.html" title="Workspaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="strike.html" title="Strike"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Architecture</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

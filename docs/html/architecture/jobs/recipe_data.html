@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Recipe Data &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Jobs and Recipes" href="index.html" />
+    <link rel="next" title="Import/Export" href="../port.html" />
+    <link rel="prev" title="Recipe Definition" href="recipe_definition.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../port.html" title="Import/Export"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="recipe_definition.html" title="Recipe Definition"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="recipe-data">
+<span id="architecture-jobs-recipe-data"></span><h1>Recipe Data<a class="headerlink" href="#recipe-data" title="Permalink to this headline">¶</a></h1>
+<p>The recipe data is a JSON document that defines the actual data and configuration on which a recipe will run. It will
+describe all of the data being passed to the recipe&#8217;s inputs, as well as the workspace for storing the output for all of
+the recipe&#8217;s jobs. The recipe data is required when creating and queuing a recipe.</p>
+<p>Consider our previous example recipe definition from <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition"><em>Recipe Definition</em></a>. The recipe data for
+creating a recipe with that example definition could be defined as follows:</p>
+<p><strong>Example recipe data:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;georeference_data&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">1235</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">12</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>input_data</em> value is a list detailing the data to pass to each input in the recipe. In this case the input called
+<em>image</em> that takes a PNG image file is being passed a file from the Scale system that has the unique ID 1234, and the
+input called <em>georeference_data</em> which takes a CSV file is being passed a Scale file with the ID 1235. The
+<em>workspace_id</em> value indicates that any files produced by the jobs in the recipe should be stored in the workspace with
+the unique ID 12. To see all of the options for defining recipe data, please refer to the Recipe Data Specification
+below.</p>
+<div class="section" id="recipe-data-specification-version-1-0">
+<span id="architecture-jobs-recipe-data-spec"></span><h2>Recipe Data Specification Version 1.0<a class="headerlink" href="#recipe-data-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid recipe data is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;file_ids&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">INTEGER</span><span class="p">,</span>
+            <span class="nx">INTEGER</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the data specification used. This allows
+updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
+older version and convert it to the current version. The default value for <em>version</em> if it is not included is the
+latest version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so
+that future changes to the specification will still accept your recipe data.</div></blockquote>
+<p><strong>input_data</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>input_data</em> is a list of JSON objects that define the actual data the recipe receives for its inputs. If not
+provided, <em>input_data</em> defaults to an empty list (no input data). For the recipe data to be valid, every required
+input in the matching recipe definition must have a corresponding entry in this <em>input_data</em> field. The JSON object
+that represents each input data has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that gives the name of the input that the data is being provided for. It should
+match the name of an input in the recipe&#8217;s definition. The name of every input in the recipe data must be
+unique.</div></blockquote>
+<p>The other fields that describe the data being passed to the input are based upon the <em>type</em> of the input as it is
+defined in the recipe definition, see <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition-spec"><em>Recipe Definition Specification Version 1.0</em></a>. The valid types from the
+recipe definition specification are:</p>
+<p><strong>property</strong></p>
+<blockquote>
+<div><p>A &#8220;property&#8221; input has the following additional field:</p>
+<p><strong>value</strong>: JSON string</p>
+<blockquote>
+<div>The <em>value</em> field contains the string value that will be passed to the &#8220;property&#8221; input.</div></blockquote>
+</div></blockquote>
+<p><strong>file</strong></p>
+<blockquote>
+<div><p>A &#8220;file&#8221; input has the following additional field:</p>
+<p><strong>file_id</strong>: JSON number</p>
+<blockquote>
+<div>The required <em>file_id</em> field contains the unique ID of a file in the Scale system that will be passed to the
+input. The file must meet all of the criteria defined in the recipe definition for the input.</div></blockquote>
+</div></blockquote>
+<p><strong>files</strong></p>
+<blockquote>
+<div><p>A &#8220;files&#8221; input has the following additional field:</p>
+<p><strong>file_ids</strong>: JSON array</p>
+<blockquote>
+<div>The required <em>file_ids</em> field is a list of unique IDs of the files in the Scale system that will be passed
+to the input. Each file must meet all of the criteria defined in the recipe definition for the input. A
+&#8220;files&#8221; input will accept a <em>file_id</em> field instead of a <em>file_ids</em> field (the input will be passed a list
+containing the single file).</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p><strong>workspace_id</strong>: JSON number</p>
+<blockquote>
+<div>The <em>workspace_id</em> is required if any of the jobs in the recipe produce any output files. The <em>workspace_id</em> value
+is an integer providing the unique ID of the workspace to use for storing any files produced by the recipe&#8217;s jobs.</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Recipe Data</a><ul>
+<li><a class="reference internal" href="#recipe-data-specification-version-1-0">Recipe Data Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="recipe_definition.html"
+                        title="previous chapter">Recipe Definition</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../port.html"
+                        title="next chapter">Import/Export</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/architecture/jobs/recipe_data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../port.html" title="Import/Export"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="recipe_definition.html" title="Recipe Definition"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" >Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+ingest Package
+==============
+
+:mod:`ingest` Package
+---------------------
+
+.. automodule:: ingest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: ingest.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`cleanup` Module
+---------------------
+
+.. automodule:: ingest.cleanup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`file_system` Module
+-------------------------
+
+.. automodule:: ingest.file_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`ingest_job` Module
+------------------------
+
+.. automodule:: ingest.ingest_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: ingest.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: ingest.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: ingest.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: ingest.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.fixtures
+    ingest.management
+    ingest.migrations
+    ingest.strike
+    ingest.test
+    ingest.triggers
+

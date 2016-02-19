@@ -1,0 +1,912 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>scheduler Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="fixtures Package" href="scheduler.fixtures.html" />
+    <link rel="prev" title="scale Package" href="scale.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scheduler.fixtures.html" title="fixtures Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="scale.html" title="scale Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="scheduler-package">
+<h1>scheduler Package<a class="headerlink" href="#scheduler-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-scheduler" title="scheduler"><tt class="xref py py-mod docutils literal"><span class="pre">scheduler</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-scheduler"></span></div>
+<div class="section" id="module-scheduler.admin">
+<span id="admin-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">admin</span></tt> Module<a class="headerlink" href="#module-scheduler.admin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.admin.SchedulerAdmin">
+<em class="property">class </em><tt class="descclassname">scheduler.admin.</tt><tt class="descname">SchedulerAdmin</tt><big>(</big><em>model</em>, <em>admin_site</em><big>)</big><a class="headerlink" href="#scheduler.admin.SchedulerAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.contrib.admin.options.ModelAdmin</span></tt></p>
+<dl class="attribute">
+<dt id="scheduler.admin.SchedulerAdmin.list_display">
+<tt class="descname">list_display</tt><em class="property"> = (u'is_paused', u'id')</em><a class="headerlink" href="#scheduler.admin.SchedulerAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.admin.SchedulerAdmin.media">
+<tt class="descname">media</tt><a class="headerlink" href="#scheduler.admin.SchedulerAdmin.media" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-scheduler.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.apps.SchedulerConfig">
+<em class="property">class </em><tt class="descclassname">scheduler.apps.</tt><tt class="descname">SchedulerConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#scheduler.apps.SchedulerConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the scheduler app</p>
+<dl class="attribute">
+<dt id="scheduler.apps.SchedulerConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'scheduler'</em><a class="headerlink" href="#scheduler.apps.SchedulerConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.apps.SchedulerConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'scheduler'</em><a class="headerlink" href="#scheduler.apps.SchedulerConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.apps.SchedulerConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Scheduler'</em><a class="headerlink" href="#scheduler.apps.SchedulerConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.cluster_utils">
+<span id="cluster-utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cluster_utils</span></tt> Module<a class="headerlink" href="#module-scheduler.cluster_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="scheduler.cluster_utils.wait_for_leader">
+<tt class="descclassname">scheduler.cluster_utils.</tt><tt class="descname">wait_for_leader</tt><big>(</big><em>zk_url</em>, <em>my_id</em>, <em>func</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#scheduler.cluster_utils.wait_for_leader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.initialize">
+<span id="initialize-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">initialize</span></tt> Module<a class="headerlink" href="#module-scheduler.initialize" title="Permalink to this headline">¶</a></h2>
+<p>Provides initialization functionality for the Scale system</p>
+<dl class="function">
+<dt id="scheduler.initialize.initialize_system">
+<tt class="descclassname">scheduler.initialize.</tt><tt class="descname">initialize_system</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.initialize.initialize_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any necessary functions needed for initializing Scale</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.models">
+<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-scheduler.models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.models.Scheduler">
+<em class="property">class </em><tt class="descclassname">scheduler.models.</tt><tt class="descname">Scheduler</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.models.Scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents a scheduler instance.
+There should only be a single instance of this and it&#8217;s used for
+storing cluster-wide state related to scheduling in mesos.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>is_paused</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></tt>) &#8211; True if the entire cluster is currently paused and should not accept new jobs</li>
+<li><strong>node_error_period</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number of minutes sampled when deciding if a node should be paused due to excessive errors.</li>
+<li><strong>max_node_errors</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The maximum number of system errors which can occur in node_error_period before a node is paused</li>
+<li><strong>master_hostname</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The full domain-qualified hostname of the mesos master</li>
+<li><strong>port</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The port being used by the mesos master REST API</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="scheduler.models.Scheduler.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#scheduler.models.Scheduler.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="scheduler.models.Scheduler.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Scheduler.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#scheduler.models.Scheduler.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.objects">
+<tt class="descclassname">Scheduler.</tt><tt class="descname">objects</tt><em class="property"> = &lt;scheduler.models.SchedulerManager object at 0x304a5d0&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.models.SchedulerManager">
+<em class="property">class </em><tt class="descclassname">scheduler.models.</tt><tt class="descname">SchedulerManager</tt><a class="headerlink" href="#scheduler.models.SchedulerManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling scheduler db entry</p>
+<dl class="method">
+<dt id="scheduler.models.SchedulerManager.get_master">
+<tt class="descname">get_master</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.models.SchedulerManager.get_master" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current master scheduler instance for the cluster.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The master scheduler.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#scheduler.models.Scheduler" title="scheduler.models.Scheduler"><tt class="xref py py-class docutils literal"><span class="pre">scheduler.models.Scheduler</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.SchedulerManager.get_status">
+<tt class="descname">get_status</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.models.SchedulerManager.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch summary hardware resource usage for the scheduler framework.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Node resource usage information.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.SchedulerManager.is_master_active">
+<tt class="descname">is_master_active</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.models.SchedulerManager.is_master_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the current master scheduler is ready to schedule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the master scheduler is not registered or not paused.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.SchedulerManager.update_master">
+<tt class="descname">update_master</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.models.SchedulerManager.update_master" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update mesos master information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hostname</strong> (<em>str</em>) &#8211; Hostname for the master</li>
+<li><strong>port</strong> (<em>int</em>) &#8211; Port for the mesos master RESTful API</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.SchedulerManager.update_scheduler">
+<tt class="descname">update_scheduler</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.models.SchedulerManager.update_scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the data for the scheduler.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_data</strong> (<em>dict</em>) &#8211; Updated data for the node</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.scale_job_exe">
+<span id="scale-job-exe-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scale_job_exe</span></tt> Module<a class="headerlink" href="#module-scheduler.scale_job_exe" title="Permalink to this headline">¶</a></h2>
+<p>Scale Job Execution handles running Scale jobs within Mesos</p>
+<dl class="class">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution">
+<em class="property">class </em><tt class="descclassname">scheduler.scale_job_exe.</tt><tt class="descname">ScaleJobExecution</tt><big>(</big><em>job_exe</em>, <em>cpus</em>, <em>mem</em>, <em>disk_in</em>, <em>disk_out</em>, <em>disk_total</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class encapsulates the information about a Scale job execution that the scheduler needs to perform Mesos
+task scheduling.</p>
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.current_task">
+<tt class="descname">current_task</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.current_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of the current task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.get_current_task_resources">
+<tt class="descname">get_current_task_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.get_current_task_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources scheduled for the current task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the CPU, memory, and disk resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(float, float, float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.get_job_exe_id">
+<em class="property">static </em><tt class="descname">get_job_exe_id</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.get_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job execution ID for the given task ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.is_finished">
+<tt class="descname">is_finished</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.is_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether this job execution is finished with all Mesos tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if all tasks are finished, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.is_next_task_ready">
+<tt class="descname">is_next_task_ready</tt><big>(</big><em>cpus</em>, <em>mem</em>, <em>disk</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.is_next_task_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the next Mesos task for this job execution is ready and able to run with the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cpus</strong> (<em>float</em>) &#8211; The number of CPUs available</li>
+<li><strong>mem</strong> (<em>float</em>) &#8211; The amount of memory in MiB available</li>
+<li><strong>disk</strong> (<em>float</em>) &#8211; The amount of disk space in MiB available</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the next task is ready, False otherwise</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.start_next_task">
+<tt class="descname">start_next_task</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.start_next_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next Mesos task to be scheduled</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next Mesos task to schedule</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskInfo</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_completed">
+<tt class="descname">task_completed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a Mesos task for this job execution has completed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that was completed</li>
+<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_failed">
+<tt class="descname">task_failed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a Mesos task for this job execution has failed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that failed</li>
+<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_running">
+<tt class="descname">task_running</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a Mesos task for this job execution has started running</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that has started running</li>
+<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.scale_scheduler">
+<span id="scale-scheduler-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scale_scheduler</span></tt> Module<a class="headerlink" href="#module-scheduler.scale_scheduler" title="Permalink to this headline">¶</a></h2>
+<p>The Scale Mesos scheduler</p>
+<dl class="class">
+<dt id="scheduler.scale_scheduler.ScaleScheduler">
+<em class="property">class </em><tt class="descclassname">scheduler.scale_scheduler.</tt><tt class="descname">ScaleScheduler</tt><big>(</big><em>executor</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">mesos.interface.Scheduler</span></tt></p>
+<p>Mesos scheduler for the Scale framework</p>
+<dl class="attribute">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.DATABASE_WARN_THRESHOLD">
+<tt class="descname">DATABASE_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 200000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.DATABASE_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD">
+<tt class="descname">NORMAL_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 10000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.disconnected">
+<tt class="descname">disconnected</tt><big>(</big><em>driver</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.disconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the scheduler becomes disconnected from the master, e.g.
+the master fails and another is taking over.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.error">
+<tt class="descname">error</tt><big>(</big><em>driver</em>, <em>message</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when there is an unrecoverable error in the scheduler or
+scheduler driver.  The driver will be aborted BEFORE invoking this
+callback.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.executorLost">
+<tt class="descname">executorLost</tt><big>(</big><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.executorLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when an executor has exited/terminated. Note that any tasks
+running will have TASK_LOST status updates automatically generated.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.frameworkMessage">
+<tt class="descname">frameworkMessage</tt><big>(</big><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>message</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.frameworkMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when an executor sends a message. These messages are best
+effort; do not expect a framework message to be retransmitted in any
+reliable fashion.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.offerRescinded">
+<tt class="descname">offerRescinded</tt><big>(</big><em>driver</em>, <em>offerId</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.offerRescinded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when an offer is no longer valid (e.g., the slave was lost or
+another framework used resources in the offer.) If for whatever reason
+an offer is never rescinded (e.g., dropped message, failing over
+framework, etc.), a framwork that attempts to launch tasks using an
+invalid offer will receive TASK_LOST status updats for those tasks.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.registered">
+<tt class="descname">registered</tt><big>(</big><em>driver</em>, <em>frameworkId</em>, <em>masterInfo</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.registered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the scheduler successfully registers with a Mesos master.
+It is called with the frameworkId, a unique ID generated by the
+master, and the masterInfo which is information about the master
+itself.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.reregistered">
+<tt class="descname">reregistered</tt><big>(</big><em>driver</em>, <em>masterInfo</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.reregistered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the scheduler re-registers with a newly elected Mesos
+master.  This is only called when the scheduler has previously been
+registered.  masterInfo contains information about the newly elected
+master.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.resourceOffers">
+<tt class="descname">resourceOffers</tt><big>(</big><em>driver</em>, <em>offers</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.resourceOffers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when resources have been offered to this framework. A single
+offer will only contain resources from a single slave.  Resources
+associated with an offer will not be re-offered to _this_ framework
+until either (a) this framework has rejected those resources (see
+SchedulerDriver.launchTasks) or (b) those resources have been
+rescinded (see Scheduler.offerRescinded).  Note that resources may be
+concurrently offered to more than one framework at a time (depending
+on the allocator being used).  In that case, the first framework to
+launch tasks using those resources will be able to use them while the
+other frameworks will have those resources rescinded (or if a
+framework has already launched tasks with those resources then those
+tasks will fail with a TASK_LOST status and a message saying as much).</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.shutdown">
+<tt class="descname">shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs any clean up required by this scheduler implementation.</p>
+<p>Currently this method just notifies any background threads to break out of their work loops.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.slaveLost">
+<tt class="descname">slaveLost</tt><big>(</big><em>driver</em>, <em>slaveId</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.slaveLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when a slave has been determined unreachable (e.g., machine
+failure, network partition.) Most frameworks will need to reschedule
+any tasks launched on this slave on a new slave.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.statusUpdate">
+<tt class="descname">statusUpdate</tt><big>(</big><em>driver</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.statusUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoked when the status of a task has changed (e.g., a slave is lost
+and so the task is lost, a task finishes and an executor sends a
+status update saying so, etc.) Note that returning from this callback
+acknowledges receipt of this status update.  If for whatever reason
+the scheduler aborts during this callback (or the process exits)
+another status update will be delivered.  Note, however, that this is
+currently not true if the slave sending the status update is lost or
+fails during that time.</p>
+<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.scheduler_errors">
+<span id="scheduler-errors-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scheduler_errors</span></tt> Module<a class="headerlink" href="#module-scheduler.scheduler_errors" title="Permalink to this headline">¶</a></h2>
+<p>Defines errors relevant to the scheduler</p>
+<dl class="function">
+<dt id="scheduler.scheduler_errors.get_mesos_error">
+<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_mesos_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_mesos_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for Mesos losing the job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Mesos error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="scheduler.scheduler_errors.get_node_lost_error">
+<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_node_lost_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_node_lost_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for a lost node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node lost error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="scheduler.scheduler_errors.get_scheduler_error">
+<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_scheduler_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_scheduler_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for the scheduler losing the job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduler error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="scheduler.scheduler_errors.get_timeout_error">
+<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_timeout_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_timeout_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for a job timeout</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The timeout error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.serializers">
+<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-scheduler.serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for schedulers</p>
+<dl class="class">
+<dt id="scheduler.serializers.SchedulerSerializer">
+<em class="property">class </em><tt class="descclassname">scheduler.serializers.</tt><tt class="descname">SchedulerSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
+<p>Serializer for the scheduler</p>
+<dl class="class">
+<dt id="scheduler.serializers.SchedulerSerializer.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Meta class used to define what is serialized and how</p>
+<dl class="attribute">
+<dt id="scheduler.serializers.SchedulerSerializer.Meta.fields">
+<tt class="descname">fields</tt><em class="property"> = (u'is_paused',)</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.serializers.SchedulerSerializer.Meta.model">
+<tt class="descname">model</tt><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">Scheduler</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.serializers.SchedulerSerializer.base_fields">
+<tt class="descclassname">SchedulerSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {}</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.urls">
+<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-scheduler.urls" title="Permalink to this headline">¶</a></h2>
+<p>Defines the URLs for the RESTful node services</p>
+</div>
+<div class="section" id="module-scheduler.views">
+<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-scheduler.views" title="Permalink to this headline">¶</a></h2>
+<p>Scheduler Views</p>
+<dl class="class">
+<dt id="scheduler.views.SchedulerView">
+<em class="property">class </em><tt class="descclassname">scheduler.views.</tt><tt class="descname">SchedulerView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.views.SchedulerView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for viewing and modifying the scheduler</p>
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#scheduler.views.SchedulerView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets scheduler info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.patch">
+<tt class="descname">patch</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#scheduler.views.SchedulerView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify scheduler info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.views.SchedulerView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#scheduler.views.SchedulerView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.views.SchedulerView.update_fields">
+<tt class="descname">update_fields</tt><em class="property"> = (u'is_paused',)</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.views.StatusView">
+<em class="property">class </em><tt class="descclassname">scheduler.views.</tt><tt class="descname">StatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.views.StatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for viewing overall system information</p>
+<dl class="method">
+<dt id="scheduler.views.StatusView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#scheduler.views.StatusView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets high level status information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.views.StatusView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#scheduler.views.StatusView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.fixtures.html">fixtures Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.management.html">management Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.management.commands.html">commands Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.load_all_data"><tt class="docutils literal"><span class="pre">load_all_data</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler"><tt class="docutils literal"><span class="pre">scale_scheduler</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.migrations.html">migrations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0002_auto_20151007_1352"><tt class="docutils literal"><span class="pre">0002_auto_20151007_1352</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846"><tt class="docutils literal"><span class="pre">0003_auto_20160201_0846</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.offer.html">offer Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.node"><tt class="docutils literal"><span class="pre">node</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.offer"><tt class="docutils literal"><span class="pre">offer</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.sync.html">sync Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.job_type_manager"><tt class="docutils literal"><span class="pre">job_type_manager</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.node_manager"><tt class="docutils literal"><span class="pre">node_manager</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.scheduler_manager"><tt class="docutils literal"><span class="pre">scheduler_manager</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_initialize"><tt class="docutils literal"><span class="pre">test_initialize</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_scheduler"><tt class="docutils literal"><span class="pre">test_scheduler</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.offer.html">offer Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_manager"><tt class="docutils literal"><span class="pre">test_manager</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_node"><tt class="docutils literal"><span class="pre">test_node</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.sync.html">sync Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_job_type_manager"><tt class="docutils literal"><span class="pre">test_job_type_manager</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_node_manager"><tt class="docutils literal"><span class="pre">test_node_manager</span></tt> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_scheduler_manager"><tt class="docutils literal"><span class="pre">test_scheduler_manager</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.threads.html">threads Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.threads.html#module-scheduler.test.threads.test_schedule"><tt class="docutils literal"><span class="pre">test_schedule</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.threads.html">threads Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.db_sync"><tt class="docutils literal"><span class="pre">db_sync</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.recon"><tt class="docutils literal"><span class="pre">recon</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.schedule"><tt class="docutils literal"><span class="pre">schedule</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scheduler Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">scheduler</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-scheduler.admin"><tt class="docutils literal"><span class="pre">admin</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.cluster_utils"><tt class="docutils literal"><span class="pre">cluster_utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.initialize"><tt class="docutils literal"><span class="pre">initialize</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.scale_job_exe"><tt class="docutils literal"><span class="pre">scale_job_exe</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.scale_scheduler"><tt class="docutils literal"><span class="pre">scale_scheduler</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.scheduler_errors"><tt class="docutils literal"><span class="pre">scheduler_errors</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-scheduler.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scale.html"
+                        title="previous chapter">scale Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="scheduler.fixtures.html"
+                        title="next chapter">fixtures Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/scheduler.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="scheduler.fixtures.html" title="fixtures Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="scale.html" title="scale Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

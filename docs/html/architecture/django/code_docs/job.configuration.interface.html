@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>interface Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="configuration Package" href="job.configuration.html" />
+    <link rel="next" title="results Package" href="job.configuration.results.html" />
+    <link rel="prev" title="environment Package" href="job.configuration.environment.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.html" title="results Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.environment.html" title="environment Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" accesskey="U">configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interface-package">
+<h1>interface Package<a class="headerlink" href="#interface-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.configuration.interface.error_interface">
+<span id="error-interface-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">error_interface</span></tt> Module<a class="headerlink" href="#module-job.configuration.interface.error_interface" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for translating a job&#8217;s exit codes to error types</p>
+<dl class="class">
+<dt id="job.configuration.interface.error_interface.ErrorInterface">
+<em class="property">class </em><tt class="descclassname">job.configuration.interface.error_interface.</tt><tt class="descname">ErrorInterface</tt><big>(</big><em>definition</em><big>)</big><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the interface for translating a job&#8217;s exit code to an error type</p>
+<dl class="method">
+<dt id="job.configuration.interface.error_interface.ErrorInterface.get_dict">
+<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this error mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.error_interface.ErrorInterface.get_error">
+<tt class="descname">get_error</tt><big>(</big><em>exit_code=None</em><big>)</big><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method retrieves an error given an exit_code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exit_code</strong> (<em>int</em>) &#8211; The exit code from a previously ran job.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error model mapped to the given exit code.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.error_interface.ErrorInterface.get_error_names">
+<tt class="descname">get_error_names</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of all error names for this interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of error names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.error_interface.ErrorInterface.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the error mappings to ensure that all referenced errors actually exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.interface.exceptions.InvalidInterfaceDefinition" title="job.configuration.interface.exceptions.InvalidInterfaceDefinition"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.exceptions.InvalidInterfaceDefinition</span></tt></a>: If there is a missing error.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-job.configuration.interface.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with a job interface</p>
+<dl class="exception">
+<dt id="job.configuration.interface.exceptions.InvalidEnvironment">
+<em class="property">exception </em><tt class="descclassname">job.configuration.interface.exceptions.</tt><tt class="descname">InvalidEnvironment</tt><a class="headerlink" href="#job.configuration.interface.exceptions.InvalidEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided definition of a job interface was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.configuration.interface.exceptions.InvalidInterfaceDefinition">
+<em class="property">exception </em><tt class="descclassname">job.configuration.interface.exceptions.</tt><tt class="descname">InvalidInterfaceDefinition</tt><a class="headerlink" href="#job.configuration.interface.exceptions.InvalidInterfaceDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided definition of a job interface was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.job_interface">
+<span id="job-interface-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_interface</span></tt> Module<a class="headerlink" href="#module-job.configuration.interface.job_interface" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for executing a job</p>
+<dl class="class">
+<dt id="job.configuration.interface.job_interface.JobInterface">
+<em class="property">class </em><tt class="descclassname">job.configuration.interface.job_interface.</tt><tt class="descname">JobInterface</tt><big>(</big><em>definition</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the interface for executing a job</p>
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.add_output_to_connection">
+<tt class="descname">add_output_to_connection</tt><big>(</big><em>output_name</em>, <em>job_conn</em>, <em>input_name</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.add_output_to_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output from the interface as a new input to the given job connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>str</em>) &#8211; The name of the output to add to the connection</li>
+<li><strong>job_conn</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_connection.JobConnection" title="job.configuration.data.job_connection.JobConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_connection.JobConnection</span></tt></a>) &#8211; The job connection</li>
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The name of the connection input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.add_workspace_to_data">
+<tt class="descname">add_workspace_to_data</tt><big>(</big><em>job_data</em>, <em>workspace_id</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.add_workspace_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given workspace ID to the given job data for every output in this job interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>workspace_id</strong> (<em>int</em>) &#8211; The workspace ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.fully_populate_command_argument">
+<tt class="descname">fully_populate_command_argument</tt><big>(</big><em>job_data</em>, <em>job_environment</em>, <em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.fully_populate_command_argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a fully populated command arguments string. If pre-steps are necessary
+(see are_pre_steps_needed), they should be run before this.  populated with information
+from the job_data, job_environment, job_input_dir, and job_output_dir.This gets the properties and
+input_files from the job_data, the shared_resources from the job_environment, and ${input}
+${output_dir} from the work_dir.
+Throws a <a class="reference internal" href="#job.configuration.interface.exceptions.InvalidEnvironment" title="job.configuration.interface.exceptions.InvalidEnvironment"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.exceptions.InvalidEnvironment</span></tt></a> if the necessary
+pre-steps have not been performed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>job_environment</strong> (<a class="reference internal" href="job.configuration.environment.html#job.configuration.environment.job_environment.JobEnvironment" title="job.configuration.environment.job_environment.JobEnvironment"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.job_environment.JobEnvironment</span></tt></a>) &#8211; The job environment</li>
+<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_command">
+<tt class="descname">get_command</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the command
+:return: the command
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_dict">
+<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_file_output_names">
+<tt class="descname">get_file_output_names</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_file_output_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output parameter names for all file outputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file output parameter names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.perform_post_steps">
+<tt class="descname">perform_post_steps</tt><big>(</big><em>job_exe</em>, <em>job_data</em>, <em>stdoutAndStderr</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_post_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the files and deletes any working directories</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution model with related job and job_type fields</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>stdoutAndStderr</strong> (<em>str</em>) &#8211; the standard out from the job execution</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A tuple of the job results and the results manifest generated by the job execution</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="job.configuration.results.html#job.configuration.results.job_results.JobResults" title="job.configuration.results.job_results.JobResults"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.results.job_results.JobResults</span></tt></a>,
+<a class="reference internal" href="job.configuration.results.results_manifest.html#job.configuration.results.results_manifest.results_manifest.ResultsManifest" title="job.configuration.results.results_manifest.results_manifest.ResultsManifest"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.results.results_manifest.results_manifest.ResultsManifest</span></tt></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.perform_pre_steps">
+<tt class="descname">perform_pre_steps</tt><big>(</big><em>job_data</em>, <em>job_environment</em>, <em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
+This returns the command that should be executed for these parameters.
+:param job_data: The job data
+:type job_data: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>
+:param job_environment: The job environment
+:type job_environment: <a class="reference internal" href="job.configuration.environment.html#job.configuration.environment.job_environment.JobEnvironment" title="job.configuration.environment.job_environment.JobEnvironment"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.job_environment.JobEnvironment</span></tt></a>
+:param job_exe_id: The job execution ID
+:type job_exe_id: int</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.populate_command_argument_properties">
+<tt class="descname">populate_command_argument_properties</tt><big>(</big><em>job_data</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_command_argument_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the command arguments string,
+populated with the properties from the job_data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">command arguments for the given properties</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.validate_connection">
+<tt class="descname">validate_connection</tt><big>(</big><em>job_conn</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given job connection to ensure that the connection will provide sufficient data to run a job
+with this interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_conn</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_connection.JobConnection" title="job.configuration.data.job_connection.JobConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_connection.JobConnection</span></tt></a>) &#8211; The job data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.validate_data">
+<tt class="descname">validate_data</tt><big>(</big><em>job_data</em><big>)</big><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.validate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that the job_data matches the job_interface description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_data</strong> &#8211; The job data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.scale_file">
+<span id="scale-file-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scale_file</span></tt> Module<a class="headerlink" href="#module-job.configuration.interface.scale_file" title="Permalink to this headline">¶</a></h2>
+<p>Defines a class for representing the meta-data description of a file or group of files in a job interface</p>
+<dl class="class">
+<dt id="job.configuration.interface.scale_file.ScaleFileDescription">
+<em class="property">class </em><tt class="descclassname">job.configuration.interface.scale_file.</tt><tt class="descname">ScaleFileDescription</tt><a class="headerlink" href="#job.configuration.interface.scale_file.ScaleFileDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the meta-data description of a file or group of files in a job interface</p>
+<dl class="method">
+<dt id="job.configuration.interface.scale_file.ScaleFileDescription.add_allowed_media_type">
+<tt class="descname">add_allowed_media_type</tt><big>(</big><em>media_type</em><big>)</big><a class="headerlink" href="#job.configuration.interface.scale_file.ScaleFileDescription.add_allowed_media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an allowed media type to the file description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>media_type</strong> (<em>str</em>) &#8211; The allowed media type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.scale_file.ScaleFileDescription.is_media_type_allowed">
+<tt class="descname">is_media_type_allowed</tt><big>(</big><em>media_type</em><big>)</big><a class="headerlink" href="#job.configuration.interface.scale_file.ScaleFileDescription.is_media_type_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the given media type is allowed by this file description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>media_type</strong> (<em>str</em>) &#8211; The media type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the media type is allowed, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">interface Package</a><ul>
+<li><a class="reference internal" href="#module-job.configuration.interface.error_interface"><tt class="docutils literal"><span class="pre">error_interface</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.interface.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.interface.job_interface"><tt class="docutils literal"><span class="pre">job_interface</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.interface.scale_file"><tt class="docutils literal"><span class="pre">scale_file</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.configuration.environment.html"
+                        title="previous chapter">environment Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.configuration.results.html"
+                        title="next chapter">results Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.configuration.interface.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.html" title="results Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.environment.html" title="environment Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" >configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

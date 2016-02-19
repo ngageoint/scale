@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="queue Package" href="queue.html" />
+    <link rel="next" title="recipe Package" href="recipe.html" />
+    <link rel="prev" title="migrations Package" href="queue.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipe.html" title="recipe Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="queue.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="queue.html" accesskey="U">queue Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-queue.test"></span></div>
+<div class="section" id="module-queue.test.test_job_load">
+<span id="test-job-load-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_job_load</span></tt> Module<a class="headerlink" href="#module-queue.test.test_job_load" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.test.test_job_load.TestJobLoadProcessor">
+<em class="property">class </em><tt class="descclassname">queue.test.test_job_load.</tt><tt class="descname">TestJobLoadProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_job_load.TestJobLoadProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_job_load.TestJobLoadProcessor.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_job_load.TestJobLoadProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_job_load.TestJobLoadProcessor.test_process_event">
+<tt class="descname">test_process_event</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_job_load.TestJobLoadProcessor.test_process_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tests the Job Load Processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-queue.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.test.test_models.TestJobLoadManager">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestJobLoadManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestJobLoadManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestJobLoadManager.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestJobLoadManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestJobLoadManager.test_calculate_empty">
+<tt class="descname">test_calculate_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestJobLoadManager.test_calculate_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating job load when there are no jobs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestJobLoadManager.test_calculate_job_type">
+<tt class="descname">test_calculate_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestJobLoadManager.test_calculate_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating job load grouping by job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestJobLoadManager.test_calculate_status">
+<tt class="descname">test_calculate_status</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestJobLoadManager.test_calculate_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating job load filtering by status.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueDepthByJobTypeManagerSaveDepths</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.test_successful_with_empty_queue">
+<tt class="descname">test_successful_with_empty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.test_successful_with_empty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueDepthByJobTypeManager.save_depths() successfully with an empty queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.test_successful_with_nonempty_queue">
+<tt class="descname">test_successful_with_nonempty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByJobTypeManagerSaveDepths.test_successful_with_nonempty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueDepthByJobTypeManager.save_depths() successfully with a non-empty queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueDepthByPriorityManagerSaveDepths</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.test_successful_with_empty_queue">
+<tt class="descname">test_successful_with_empty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.test_successful_with_empty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueDepthByPriorityManager.save_depths() successfully with an empty queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.test_successful_with_nonempty_queue">
+<tt class="descname">test_successful_with_nonempty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueDepthByPriorityManagerSaveDepths.test_successful_with_nonempty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueDepthByPriorityManager.save_depths() successfully with a non-empty queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerGetCurrentQueueDepth">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerGetCurrentQueueDepth</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetCurrentQueueDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.test_successful_with_empty_queue">
+<tt class="descname">test_successful_with_empty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.test_successful_with_empty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests QueueManager.get_current_queue_depth() successfully with an empty queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.test_successful_with_nonempty_queue">
+<tt class="descname">test_successful_with_nonempty_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetCurrentQueueDepth.test_successful_with_nonempty_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests QueueManager.get_current_queue_depth() successfully with a non-empty queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerGetHistoricalQueueDepth</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_empty_range">
+<tt class="descname">test_successful_with_empty_range</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_empty_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests QueueManager.get_historical_queue_depth() successfully with an empty time range (no time points).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_nonempty_range">
+<tt class="descname">test_successful_with_nonempty_range</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_nonempty_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests QueueManager.get_historical_queue_depth() successfully with a non-empty time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_zero_point">
+<tt class="descname">test_successful_with_zero_point</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerGetHistoricalQueueDepth.test_successful_with_zero_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests QueueManager.get_historical_queue_depth() successfully with a single time point with zero depth</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerHandleJobCancellation</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job">
+<tt class="descname">test_exception_with_canceled_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() with a canceled job that results in an exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job">
+<tt class="descname">test_exception_with_completed_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() with a completed job that results in an exception.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job">
+<tt class="descname">test_successful_with_blocked_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job">
+<tt class="descname">test_successful_with_failed_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a failed job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_pending_job">
+<tt class="descname">test_successful_with_pending_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_pending_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a pending job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_queued_job">
+<tt class="descname">test_successful_with_queued_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_queued_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a queued job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_running_job">
+<tt class="descname">test_successful_with_running_job</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_running_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() successfully with a running job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCompletion">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerHandleJobCompletion</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCompletion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCompletion.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCompletion.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCompletion.test_successful_with_full_recipe">
+<tt class="descname">test_successful_with_full_recipe</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCompletion.test_successful_with_full_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_completion() successfully with all jobs in a recipe.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerHandleJobCompletion.test_successful_with_partial_recipe">
+<tt class="descname">test_successful_with_partial_recipe</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCompletion.test_successful_with_partial_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerQueueNewRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.queue_new_recipe() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob">
+<em class="property">class </em><tt class="descclassname">queue.test.test_models.</tt><tt class="descname">TestQueueManagerRequeueExistingJob</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.test_invalid_status">
+<tt class="descname">test_invalid_status</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.test_invalid_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests rejecting requeue of existing job with an incorrect status.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.requeue_existing_job() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.test.test_queue_depth_processor">
+<span id="test-queue-depth-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_queue_depth_processor</span></tt> Module<a class="headerlink" href="#module-queue.test.test_queue_depth_processor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.test.test_queue_depth_processor.TestQueueDepthProcessor">
+<em class="property">class </em><tt class="descclassname">queue.test.test_queue_depth_processor.</tt><tt class="descname">TestQueueDepthProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_queue_depth_processor.TestQueueDepthProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_queue_depth_processor.TestQueueDepthProcessor.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_queue_depth_processor.TestQueueDepthProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_queue_depth_processor.TestQueueDepthProcessor.test_queue_depth_processor">
+<tt class="descname">test_queue_depth_processor</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_queue_depth_processor.TestQueueDepthProcessor.test_queue_depth_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tests the Queue Depth Processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-queue.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.test.test_views.TestJobLoadView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestJobLoadView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_job_type_category">
+<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job load view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_job_type_id">
+<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job laod view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_job_type_name">
+<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job load view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_job_type_priority">
+<tt class="descname">test_job_type_priority</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_job_type_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job load view filtered by job type priority.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_max_duration">
+<tt class="descname">test_max_duration</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_max_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the job load view with time values that define a range greater than 31 days</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestJobLoadView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job load view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_views.TestQueueDepthView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestQueueDepthView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_missing_both_params">
+<tt class="descname">test_missing_both_params</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_missing_both_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with no parameter values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_missing_ended">
+<tt class="descname">test_missing_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_missing_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with no ended value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_missing_started">
+<tt class="descname">test_missing_started</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_missing_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with no started value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_missing_timezone">
+<tt class="descname">test_missing_timezone</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_missing_timezone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with time values that lack a timezone</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_negative_time_range">
+<tt class="descname">test_negative_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with time values that define a negative time range</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_over_31_days">
+<tt class="descname">test_over_31_days</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_over_31_days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view with time values that define a range greater than 31 days</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueDepthView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueDepthView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue depth view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_views.TestQueueNewJobView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestQueueNewJobView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_job_type_id">
+<tt class="descname">test_bad_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view with an invalid job type ID.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_type_args">
+<tt class="descname">test_bad_type_args</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_type_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view with a string job_data value (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_bad_type_job_type_id">
+<tt class="descname">test_bad_type_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_bad_type_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view with a string job type ID (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_invalid_args">
+<tt class="descname">test_invalid_args</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_invalid_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view with invalid job_data for the job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_missing_job_type_id">
+<tt class="descname">test_missing_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_missing_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view without the required job type ID.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewJobView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue status view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_views.TestQueueNewRecipeView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestQueueNewRecipeView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewRecipeView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id">
+<tt class="descname">test_bad_recipe_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue recipe view with an invalid recipe ID.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewRecipeView.test_bad_type_recipe_id">
+<tt class="descname">test_bad_type_recipe_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_bad_type_recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue recipe view with a string recipe ID (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id">
+<tt class="descname">test_missing_recipe_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue recipe view without the required job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueNewRecipeView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueNewRecipeView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the queue recipe view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_views.TestQueueStatusView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestQueueStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueStatusView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestQueueStatusView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the queue status view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.test.test_views.TestRequeueExistingJobView">
+<em class="property">class </em><tt class="descclassname">queue.test.test_views.</tt><tt class="descname">TestRequeueExistingJobView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueExistingJobView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueExistingJobView.test_bad_job_id">
+<tt class="descname">test_bad_job_id</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_bad_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view with an invalid job type ID.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueExistingJobView.test_requeue_canceled">
+<tt class="descname">test_requeue_canceled</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_requeue_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view successfully for a job that was never queued.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueExistingJobView.test_requeue_failed">
+<tt class="descname">test_requeue_failed</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_requeue_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view successfully for a job that was previously queued.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueExistingJobView.test_wrong_status">
+<tt class="descname">test_wrong_status</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_wrong_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view when the job hasn&#8217;t failed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-queue.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing queues</p>
+<dl class="function">
+<dt id="queue.test.utils.create_job_load">
+<tt class="descclassname">queue.test.utils.</tt><tt class="descname">create_job_load</tt><big>(</big><em>job_type=None</em>, <em>measured=None</em>, <em>pending_count=0</em>, <em>queued_count=0</em>, <em>running_count=0</em><big>)</big><a class="headerlink" href="#queue.test.utils.create_job_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a job load model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job load model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="queue.html#queue.models.JobLoad" title="queue.models.JobLoad"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoad</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="queue.test.utils.create_queue">
+<tt class="descclassname">queue.test.utils.</tt><tt class="descname">create_queue</tt><big>(</big><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em><big>)</big><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a queue model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>) &#8211; The job type</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; The priority</li>
+<li><strong>cpus_required</strong> (<em>float</em>) &#8211; The CPUs required in MiB</li>
+<li><strong>mem_required</strong> (<em>float</em>) &#8211; The memory required in MiB</li>
+<li><strong>disk_in_required</strong> (<em>float</em>) &#8211; The input disk space required in MiB</li>
+<li><strong>disk_out_required</strong> (<em>float</em>) &#8211; The output disk space required in MiB</li>
+<li><strong>disk_total_required</strong> (<em>float</em>) &#8211; The total disk space required in MiB</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-queue.test.test_job_load"><tt class="docutils literal"><span class="pre">test_job_load</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-queue.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-queue.test.test_queue_depth_processor"><tt class="docutils literal"><span class="pre">test_queue_depth_processor</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-queue.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-queue.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="queue.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="recipe.html"
+                        title="next chapter">recipe Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/queue.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipe.html" title="recipe Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="queue.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="queue.html" >queue Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

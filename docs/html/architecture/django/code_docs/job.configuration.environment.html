@@ -1,0 +1,163 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>environment Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="configuration Package" href="job.configuration.html" />
+    <link rel="next" title="interface Package" href="job.configuration.interface.html" />
+    <link rel="prev" title="data Package" href="job.configuration.data.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.interface.html" title="interface Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.data.html" title="data Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" accesskey="U">configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="environment-package">
+<h1>environment Package<a class="headerlink" href="#environment-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.configuration.environment.job_environment">
+<span id="job-environment-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_environment</span></tt> Module<a class="headerlink" href="#module-job.configuration.environment.job_environment" title="Permalink to this headline">¶</a></h2>
+<p>Defines the shared resources for a given job execution</p>
+<dl class="class">
+<dt id="job.configuration.environment.job_environment.JobEnvironment">
+<em class="property">class </em><tt class="descclassname">job.configuration.environment.job_environment.</tt><tt class="descname">JobEnvironment</tt><big>(</big><em>json_env</em><big>)</big><a class="headerlink" href="#job.configuration.environment.job_environment.JobEnvironment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the shared resources available for a given job execution.  If the environment is invalid, a
+<tt class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.exceptions.InvalidJobEnvirnoment</span></tt> exception will be thrown.</p>
+<dl class="method">
+<dt id="job.configuration.environment.job_environment.JobEnvironment.get_dict">
+<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.environment.job_environment.JobEnvironment.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dictionary representing the environment</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">environment Package</a><ul>
+<li><a class="reference internal" href="#module-job.configuration.environment.job_environment"><tt class="docutils literal"><span class="pre">job_environment</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.configuration.data.html"
+                        title="previous chapter">data Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.configuration.interface.html"
+                        title="next chapter">interface Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.configuration.environment.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.interface.html" title="interface Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.data.html" title="data Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" >configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

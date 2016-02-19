@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+:mod:`test_ingest_trigger_rule` Module
+--------------------------------------
+
+.. automodule:: ingest.test.triggers.configuration.test_ingest_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

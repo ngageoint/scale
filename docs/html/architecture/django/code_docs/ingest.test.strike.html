@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>strike Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="test Package" href="ingest.test.html" />
+    <link rel="next" title="configuration Package" href="ingest.test.strike.configuration.html" />
+    <link rel="prev" title="test Package" href="ingest.test.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.strike.configuration.html" title="configuration Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.html" title="test Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" >ingest Package</a> &raquo;</li>
+          <li><a href="ingest.test.html" accesskey="U">test Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="strike-package">
+<h1>strike Package<a class="headerlink" href="#strike-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ingest.test.strike.test_strike_processor">
+<span id="test-strike-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_strike_processor</span></tt> Module<a class="headerlink" href="#module-ingest.test.strike.test_strike_processor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile">
+<em class="property">class </em><tt class="descclassname">ingest.test.strike.test_strike_processor.</tt><tt class="descname">TestStrikeDeferFile</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_duplicate">
+<tt class="descname">test_complete_transfer_duplicate</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests failing to complete an ingest in the wrong state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_successful">
+<tt class="descname">test_complete_transfer_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully completing an ingest transfer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_config_bad_filename_regex">
+<tt class="descname">test_config_bad_filename_regex</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_config_bad_filename_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests failing validation for invalid filename regex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_defer_file_successful">
+<tt class="descname">test_defer_file_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_defer_file_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully deferring a file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.strike.configuration.html">configuration Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration"><tt class="docutils literal"><span class="pre">test_strike_configuration</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">strike Package</a><ul>
+<li><a class="reference internal" href="#module-ingest.test.strike.test_strike_processor"><tt class="docutils literal"><span class="pre">test_strike_processor</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ingest.test.html"
+                        title="previous chapter">test Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ingest.test.strike.configuration.html"
+                        title="next chapter">configuration Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/ingest.test.strike.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.strike.configuration.html" title="configuration Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.html" title="test Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" >ingest Package</a> &raquo;</li>
+          <li><a href="ingest.test.html" >test Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

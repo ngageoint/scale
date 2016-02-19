@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>execution Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="job Package" href="job.html" />
+    <link rel="next" title="running Package" href="job.execution.running.html" />
+    <link rel="prev" title="results_manifest Package" href="job.configuration.results.results_manifest.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.execution.running.html" title="running Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.results_manifest.html" title="results_manifest Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" accesskey="U">job Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="execution-package">
+<h1>execution Package<a class="headerlink" href="#execution-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.execution.cleanup">
+<span id="cleanup-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cleanup</span></tt> Module<a class="headerlink" href="#module-job.execution.cleanup" title="Permalink to this headline">¶</a></h2>
+<p>Defines methods for cleaning up job executions</p>
+<dl class="function">
+<dt id="job.execution.cleanup.cleanup_job_exe">
+<tt class="descclassname">job.execution.cleanup.</tt><tt class="descname">cleanup_job_exe</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.cleanup.cleanup_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans up a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.file_system">
+<span id="file-system-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">file_system</span></tt> Module<a class="headerlink" href="#module-job.execution.file_system" title="Permalink to this headline">¶</a></h2>
+<p>Defines methods for necessary file system interactions to perform job executions</p>
+<dl class="function">
+<dt id="job.execution.file_system.create_job_exe_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">create_job_exe_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.create_job_exe_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the top level directory for a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.create_normal_job_exe_dir_tree">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">create_normal_job_exe_dir_tree</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.create_normal_job_exe_dir_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the directory tree structure for a non-system job execution (job with pre and post tasks). This method
+expects the top level job execution directory to have already been created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.delete_job_exe_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">delete_job_exe_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.delete_job_exe_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the top level directory for a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.delete_normal_job_exe_dir_tree">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">delete_normal_job_exe_dir_tree</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.delete_normal_job_exe_dir_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the directory tree structure for a non-system job execution (job with pre and post tasks)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the work directory for a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the work directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_input_data_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_input_data_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_data_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directory for a job execution where input data should be written</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input data directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_input_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_input_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input directory for a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_input_work_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_input_work_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_work_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directory for a job execution that the input workspaces can use as a work directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input work directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_output_data_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_output_data_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_data_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directory for a job execution where output data should be written</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output data directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_output_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_output_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output directory for a job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.execution.file_system.get_job_exe_output_work_dir">
+<tt class="descclassname">job.execution.file_system.</tt><tt class="descname">get_job_exe_output_work_dir</tt><big>(</big><em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_work_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directory for a job execution that the output workspace can use as a work directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output work directory</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.job_exe_cleaner">
+<span id="job-exe-cleaner-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_exe_cleaner</span></tt> Module<a class="headerlink" href="#module-job.execution.job_exe_cleaner" title="Permalink to this headline">¶</a></h2>
+<p>Defines the abstract base class used for cleaning up job executions</p>
+<dl class="class">
+<dt id="job.execution.job_exe_cleaner.JobExecutionCleaner">
+<em class="property">class </em><tt class="descclassname">job.execution.job_exe_cleaner.</tt><tt class="descname">JobExecutionCleaner</tt><a class="headerlink" href="#job.execution.job_exe_cleaner.JobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract class for a cleaner that cleans up after a job execution</p>
+<dl class="method">
+<dt id="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution">
+<tt class="descname">cleanup_job_execution</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleans up the given job execution on the node on which it previously ran. The job_exe model will have its
+related job and job_type fields populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution model with related job and job_type fields</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.job_exe_cleaner.NormalJobExecutionCleaner">
+<em class="property">class </em><tt class="descclassname">job.execution.job_exe_cleaner.</tt><tt class="descname">NormalJobExecutionCleaner</tt><a class="headerlink" href="#job.execution.job_exe_cleaner.NormalJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.execution.job_exe_cleaner.JobExecutionCleaner" title="job.execution.job_exe_cleaner.JobExecutionCleaner"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner</span></tt></a></p>
+<p>Cleaner for the execution of normal jobs (non-system jobs with pre and post tasks)</p>
+<dl class="method">
+<dt id="job.execution.job_exe_cleaner.NormalJobExecutionCleaner.cleanup_job_execution">
+<tt class="descname">cleanup_job_execution</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.job_exe_cleaner.NormalJobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution"><tt class="xref py py-meth docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution()</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.metrics">
+<span id="metrics-module"></span><h2><a class="reference internal" href="metrics.html#module-metrics" title="metrics"><tt class="xref py py-mod docutils literal"><span class="pre">metrics</span></tt></a> Module<a class="headerlink" href="#module-job.execution.metrics" title="Permalink to this headline">¶</a></h2>
+<p>Defines the functions for handling job execution metrics</p>
+<dl class="function">
+<dt id="job.execution.metrics.save_job_exe_metrics">
+<tt class="descclassname">job.execution.metrics.</tt><tt class="descname">save_job_exe_metrics</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.metrics.save_job_exe_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects and saves the metrics for the given job execution. All database changes occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.task_manager">
+<span id="task-manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">task_manager</span></tt> Module<a class="headerlink" href="#module-job.execution.task_manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the manager for handling the tasks within a job execution</p>
+<dl class="class">
+<dt id="job.execution.task_manager.JobExeTaskManager">
+<em class="property">class </em><tt class="descclassname">job.execution.task_manager.</tt><tt class="descname">JobExeTaskManager</tt><big>(</big><em>job_exe</em>, <em>task_factory</em><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class manages the tasks that make up a running job execution. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.task_manager.JobExeTaskManager.get_current_task">
+<tt class="descname">get_current_task</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager.get_current_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current task for this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The current task, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.Task</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.execution.task_manager.JobExeTaskManager.get_job_exe_id">
+<em class="property">static </em><tt class="descname">get_job_exe_id</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager.get_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job execution ID for the given task ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.task_manager.JobExeTaskManager.is_finished">
+<tt class="descname">is_finished</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager.is_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job execution is finished with all tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if all tasks are finished, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.task_manager.JobExeTaskManager.is_next_task_ready">
+<tt class="descname">is_next_task_ready</tt><big>(</big><em>resources</em><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager.is_next_task_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the next task for this job execution is ready and able to run with the given node resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></tt></a>) &#8211; The available node resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the next task is ready, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.task_manager.JobExeTaskManager.start_next_task">
+<tt class="descname">start_next_task</tt><big>(</big><em>resources</em><big>)</big><a class="headerlink" href="#job.execution.task_manager.JobExeTaskManager.start_next_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the next task for this job execution and returns it. Returns None if the next task could not be
+started.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></tt></a>) &#8211; The available node resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The next task that was just started</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.Task</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.execution.running.html">running Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running.job_exe"><tt class="docutils literal"><span class="pre">job_exe</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running.tasks"><tt class="docutils literal"><span class="pre">tasks</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">execution Package</a><ul>
+<li><a class="reference internal" href="#module-job.execution.cleanup"><tt class="docutils literal"><span class="pre">cleanup</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.execution.file_system"><tt class="docutils literal"><span class="pre">file_system</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.execution.job_exe_cleaner"><tt class="docutils literal"><span class="pre">job_exe_cleaner</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.execution.metrics"><tt class="docutils literal"><span class="pre">metrics</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.execution.task_manager"><tt class="docutils literal"><span class="pre">task_manager</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.configuration.results.results_manifest.html"
+                        title="previous chapter">results_manifest Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.execution.running.html"
+                        title="next chapter">running Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.execution.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.execution.running.html" title="running Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.results.results_manifest.html" title="results_manifest Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: util.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_parse` Module
+------------------------
+
+.. automodule:: util.test.test_parse
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_rest` Module
+-----------------------
+
+.. automodule:: util.test.test_rest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_retry` Module
+------------------------
+
+.. automodule:: util.test.test_retry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

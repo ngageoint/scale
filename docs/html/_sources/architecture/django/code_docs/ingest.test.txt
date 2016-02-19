@@ -1,0 +1,51 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: ingest.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_ingest_job` Module
+-----------------------------
+
+.. automodule:: ingest.test.test_ingest_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_models` Module
+-------------------------
+
+.. automodule:: ingest.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: ingest.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: ingest.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.test.strike
+    ingest.test.triggers
+

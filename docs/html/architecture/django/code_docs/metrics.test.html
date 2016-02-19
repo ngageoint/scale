@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="metrics Package" href="metrics.html" />
+    <link rel="next" title="node Package" href="node.html" />
+    <link rel="prev" title="migrations Package" href="metrics.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="node.html" title="node Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="metrics.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="metrics.html" accesskey="U">metrics Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-metrics.test.test_daily_metrics">
+<span id="test-daily-metrics-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_daily_metrics</span></tt> Module<a class="headerlink" href="#module-metrics.test.test_daily_metrics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_daily_metrics.</tt><tt class="descname">TestDailyMetricsProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests the DailyMetricsProcessor clock event class.</p>
+<dl class="method">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_duplicate">
+<tt class="descname">test_process_event_duplicate</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests processing an event that was previously handled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_first">
+<tt class="descname">test_process_event_first</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests processing an event that was never triggered before.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_last">
+<tt class="descname">test_process_event_last</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests processing an event that was triggered before.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_range">
+<tt class="descname">test_process_event_range</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor.test_process_event_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests processing an event that requires catching up for a range of previous days.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-metrics.test.test_metrics_processor">
+<span id="test-metrics-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_metrics_processor</span></tt> Module<a class="headerlink" href="#module-metrics.test.test_metrics_processor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="metrics.test.test_metrics_processor.TestMetricsProcessor">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_metrics_processor.</tt><tt class="descname">TestMetricsProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_metrics_processor.TestMetricsProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="metrics.test.test_metrics_processor.TestMetricsProcessor.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_metrics_processor.TestMetricsProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup test harness</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_metrics_processor.TestMetricsProcessor.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_metrics_processor.TestMetricsProcessor.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tear down the test harness</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_metrics_processor.TestMetricsProcessor.test_metrics_processor">
+<tt class="descname">test_metrics_processor</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#metrics.test.test_metrics_processor.TestMetricsProcessor.test_metrics_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method tests the Metrics Processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-metrics.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-metrics.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="metrics.test.test_models.TestMetricsIngest">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_models.</tt><tt class="descname">TestMetricsIngest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests the MetricsIngest model logic.</p>
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_calculate_filtered">
+<tt class="descname">test_calculate_filtered</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_calculate_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests generating metrics with only certain ingests.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_calculate_none">
+<tt class="descname">test_calculate_none</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_calculate_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests generating metrics when there are no matching executions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_calculate_repeated">
+<tt class="descname">test_calculate_repeated</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_calculate_repeated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests regenerating metrics for a date that already has metrics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_calculate_stats">
+<tt class="descname">test_calculate_stats</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_calculate_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating individual statistics for a metrics entry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_calculate_stats_partial">
+<tt class="descname">test_calculate_stats_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_calculate_stats_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests individual statistics are null when information is unavailable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_get_metrics_type">
+<tt class="descname">test_get_metrics_type</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_get_metrics_type_choices">
+<tt class="descname">test_get_metrics_type_choices</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type_choices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics type with choices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_get_plot_data">
+<tt class="descname">test_get_plot_data</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_get_plot_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics plot data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsIngest.test_get_plot_data_filtered">
+<tt class="descname">test_get_plot_data_filtered</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsIngest.test_get_plot_data_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics plot data with filters.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="metrics.test.test_models.TestMetricsJobType">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_models.</tt><tt class="descname">TestMetricsJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests the MetricsJobType model logic.</p>
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_filtered">
+<tt class="descname">test_calculate_filtered</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests generating metrics with only certain job executions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_negative_times">
+<tt class="descname">test_calculate_negative_times</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_negative_times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating times when machine clocks are out of sync.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_none">
+<tt class="descname">test_calculate_none</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests generating metrics when there are no matching executions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_repeated">
+<tt class="descname">test_calculate_repeated</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_repeated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests regenerating metrics for a date that already has metrics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_stats">
+<tt class="descname">test_calculate_stats</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calculating individual statistics for a metrics entry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_calculate_stats_partial">
+<tt class="descname">test_calculate_stats_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_calculate_stats_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests individual statistics are null when information is unavailable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_get_metrics_type">
+<tt class="descname">test_get_metrics_type</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_get_metrics_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_get_metrics_type_choices">
+<tt class="descname">test_get_metrics_type_choices</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_get_metrics_type_choices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics type with choices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_get_plot_data">
+<tt class="descname">test_get_plot_data</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_get_plot_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics plot data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_models.TestMetricsJobType.test_get_plot_data_filtered">
+<tt class="descname">test_get_plot_data_filtered</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_models.TestMetricsJobType.test_get_plot_data_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting the metrics plot data with filters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-metrics.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-metrics.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="metrics.test.test_views.TestMetricDetailsView">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_views.</tt><tt class="descname">TestMetricDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricDetailsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricDetailsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metric details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="metrics.test.test_views.TestMetricPlotView">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_views.</tt><tt class="descname">TestMetricPlotView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricPlotView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricPlotView.test_choices">
+<tt class="descname">test_choices</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.test_choices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metric plot view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricPlotView.test_columns">
+<tt class="descname">test_columns</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.test_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metric plot view with column filters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricPlotView.test_groups">
+<tt class="descname">test_groups</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.test_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metric plot view with column filters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricPlotView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metric plot view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="metrics.test.test_views.TestMetricsView">
+<em class="property">class </em><tt class="descclassname">metrics.test.test_views.</tt><tt class="descname">TestMetricsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metrics.test.test_views.TestMetricsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#metrics.test.test_views.TestMetricsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the metrics view.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-metrics.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-metrics.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing metrics</p>
+<dl class="function">
+<dt id="metrics.test.utils.create_ingest">
+<tt class="descclassname">metrics.test.utils.</tt><tt class="descname">create_ingest</tt><big>(</big><em>strike=None</em>, <em>occurred=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#metrics.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a metrics ingest model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The metrics ingest model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="metrics.html#metrics.models.MetricsIngest" title="metrics.models.MetricsIngest"><tt class="xref py py-class docutils literal"><span class="pre">metrics.models.MetricsIngest</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="metrics.test.utils.create_job_type">
+<tt class="descclassname">metrics.test.utils.</tt><tt class="descname">create_job_type</tt><big>(</big><em>job_type=None</em>, <em>occurred=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#metrics.test.utils.create_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a metrics job type model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The metrics job type model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="metrics.html#metrics.models.MetricsJobType" title="metrics.models.MetricsJobType"><tt class="xref py py-class docutils literal"><span class="pre">metrics.models.MetricsJobType</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#module-metrics.test.test_daily_metrics"><tt class="docutils literal"><span class="pre">test_daily_metrics</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-metrics.test.test_metrics_processor"><tt class="docutils literal"><span class="pre">test_metrics_processor</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-metrics.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-metrics.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-metrics.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="metrics.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="node.html"
+                        title="next chapter">node Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/metrics.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="node.html" title="node Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="metrics.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="metrics.html" >metrics Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: source.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_models` Module
+-------------------------
+
+.. automodule:: source.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: source.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: source.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    source.test.configuration
+    source.test.triggers
+

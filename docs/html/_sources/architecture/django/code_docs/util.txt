@@ -1,0 +1,74 @@
+util Package
+============
+
+:mod:`util` Package
+-------------------
+
+.. automodule:: util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: util.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`command` Module
+---------------------
+
+.. automodule:: util.command
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`exceptions` Module
+------------------------
+
+.. automodule:: util.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`middleware` Module
+------------------------
+
+.. automodule:: util.middleware
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`parse` Module
+-------------------
+
+.. automodule:: util.parse
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`rest` Module
+------------------
+
+.. automodule:: util.rest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`retry` Module
+-------------------
+
+.. automodule:: util.retry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    util.test
+

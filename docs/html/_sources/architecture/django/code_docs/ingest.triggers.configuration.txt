@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+:mod:`ingest_trigger_rule` Module
+---------------------------------
+
+.. automodule:: ingest.triggers.configuration.ingest_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

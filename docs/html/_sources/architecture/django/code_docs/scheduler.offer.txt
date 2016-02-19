@@ -1,0 +1,27 @@
+offer Package
+=============
+
+:mod:`manager` Module
+---------------------
+
+.. automodule:: scheduler.offer.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`node` Module
+------------------
+
+.. automodule:: scheduler.offer.node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`offer` Module
+-------------------
+
+.. automodule:: scheduler.offer.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

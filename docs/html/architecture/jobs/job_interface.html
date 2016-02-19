@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Job Interface &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Jobs and Recipes" href="index.html" />
+    <link rel="next" title="Job Data" href="job_data.html" />
+    <link rel="prev" title="Job Environment" href="job_environment.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job_data.html" title="Job Data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job_environment.html" title="Job Environment"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="job-interface">
+<span id="architecture-jobs-interface"></span><h1>Job Interface<a class="headerlink" href="#job-interface" title="Permalink to this headline">¶</a></h1>
+<p>The job interface is a JSON document that defines the interface for executing
+the job&#8217;s algorithm. It will describe the algorithm&#8217;s inputs and outputs, as
+well as the command line details for how to invoke the algorithm.</p>
+<p>Consider the following example algorithm, called make_geotiff.py.
+make_geotiff.py is a Python script that takes a PNG image file and a CSV
+containing georeference information for the PNG. It combines the information
+from the two files to create a GeoTIFF file, which is an image format that
+contains georeference information. The job interface for the algorithm could be
+defined as follows:</p>
+<p><strong>Example job interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;python make_geotiff.py&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${image} ${georeference_data} ${job_output_dir}&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="s2">&quot;image/png&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;georeference_data&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="s2">&quot;text/csv&quot;</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;geo_image&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/tiff&quot;</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>command</em> value specifies that the algorithm is executed by invoking Python with the make_geotiff.py script. The
+<em>command_arguments</em> value describes the command line arguments to pass to the make_geotiff.py script. The <em>image</em> file
+input is first (this will be the absolute file system path of the file), the <em>georeference_data</em> file input will be
+next, and finally an output directory is provided for the script to write any output files. The <em>input_data</em> value is a
+list detailing the inputs to the algorithm; in this case an input called <em>image</em> that is a file with media type
+<em>image/png</em> and an input called <em>georeference_data</em> which is a CSV file. Finally the <em>output_data</em> value is a list of
+the algorithm outputs, which is a GeoTIFF file in this instance. To see all of the options for defining a job interface,
+please refer to the Job Interface Specification below.</p>
+<div class="section" id="job-interface-specification-version-1-0">
+<span id="architecture-jobs-interface-spec"></span><h2>Job Interface Specification Version 1.0<a class="headerlink" href="#job-interface-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid job interface is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;property&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;files&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;files&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>version</em> is an optional string value that defines the version of the definition specification used. This allows
+updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
+older version and convert it to the current version. The default value for <em>version</em> if it is not included is the
+latest version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so
+that future changes to the specification will still accept the recipe definition.</p>
+<p>Scale must recognize the version number as valid for the recipe to work. Currently, &#8220;1.0&#8221; is the only valid version.</p>
+</div></blockquote>
+<p><strong>command</strong>: JSON string</p>
+<blockquote>
+<div>The <em>command</em> is a required string value that defines the main command to execute on the command line without any of
+the command line arguments. Unlike <em>command_arguments</em>, no string substitution will be performed.</div></blockquote>
+<p><strong>command_arguments</strong>: JSON string</p>
+<blockquote>
+<div>The <em>command_arguments</em> is a required string value that defines the command line arguments to be passed to the
+<em>command</em> when it is executed. Although required, <em>command_arguments</em> may be an empty string (i.e. &#8220;&#8221;). Scale will
+perform string substitution on special values denoted by the pattern <em>${...}</em>. You can indicate that an input should
+be passed on the command line by using <em>${INPUT NAME}</em>. The value that is substituted depends on the type of the
+input. If you need the command line argument to be passed with a flag, you can use the following pattern:
+<em>${FLAG:INPUT NAME}</em>. There is also a special substitution value
+<em>${job_output_dir}</em>, which will be replaced with the absolute file system path of the output directory where the
+algorithm may write its output files. The algorithm should produce a results manifest named &#8220;results_manifest.json&#8221;.
+The format for the results manifest can be found here: <a class="reference internal" href="../../algorithms/results_manifest.html#algorithms-results-manifest"><em>Results Manifest</em></a>. Any output files must be
+registered in the results manifest.</div></blockquote>
+<p><strong>input_data</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>input_data</em> is an optional list of JSON objects that define the inputs the algorithm receives to perform its
+function. If not provided, <em>input_data</em> defaults to an empty list (no inputs). The JSON object that represents each
+input has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that defines the name of the input. The name of every input and output in the
+interface must be unique. This name must only be composed of less than 256 of the following characters:
+alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
+<p><strong>required</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>required</em> field is optional and indicates if the input is required for the algorithm to run successfully.
+If not provided, the <em>required</em> field defaults to <em>true</em>.</div></blockquote>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>type</em> is a required string from a defined set that defines the type of the input. The <em>input_data</em> JSON
+object may have additional fields depending on its <em>type</em>. The valid types are:</p>
+<p><strong>property</strong></p>
+<blockquote>
+<div>A &#8220;property&#8221; input is a string that is passed to the algorithm on the command line. When the algorithm is
+executed, the value of each &#8220;property&#8221; input will be substituted where its input name is located within
+the <em>command_arguments</em> string. A &#8220;property&#8221; input has no additional fields.</div></blockquote>
+<p><strong>file</strong></p>
+<blockquote>
+<div><p>A &#8220;file&#8221; input is a single file that is provided to the algorithm. When the algorithm is executed, the
+absolute file system path of each input file will be substituted where its input name is located within the
+<em>command_arguments</em> string. A &#8220;file&#8221; input has the following additional fields:</p>
+<p><strong>media_types</strong>: JSON array</p>
+<blockquote>
+<div>A <em>media_types</em> field on a &#8220;file&#8221; input is an optional list of strings that designate the required media
+types for any file being passed in the input. Any file that does not match one of the listed media types
+will be prevented from being passed to the algorithm. If not provided, the <em>media_types</em> field defaults
+to an empty list and all media types are accepted for the input.</div></blockquote>
+</div></blockquote>
+<p><strong>files</strong></p>
+<blockquote>
+<div><p>A &#8220;files&#8221; input is a list of one or more files that is provided to the algorithm. When the algorithm is
+executed, the absolute file system path of a directory containing the list of files will be substituted
+where its input name is located within the <em>command_arguments</em> string. A &#8220;files&#8221; input has the following
+additional fields:</p>
+<p><strong>media_types</strong>: JSON array</p>
+<blockquote>
+<div>A <em>media_types</em> field on a &#8220;files&#8221; input is an optional list of strings that designate the required
+media types for any files being passed in the input. Any file that does not match one of the listed
+media types will be prevented from being passed to the algorithm. If not provided, the <em>media_types</em>
+field defaults to an empty list and all media types are accepted for the input.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p><strong>output_data</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>output_data</em> is an optional list of JSON objects that define the outputs the algorithm will produce as a result
+of its successful execution. If not provided, <em>output_data</em> defaults to an empty list (no outputs). The JSON object
+that represents each output has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that defines the name of the output. The name of every input and output in the
+interface must be unique. This name must only be composed of less than 256 of the following characters:
+alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
+<p><strong>required</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>required</em> field is optional and indicates if the output is guaranteed to be produced by the algorithm on a
+<strong>successful</strong> run. If the algorithm may or may not product an output under normal conditions, the <em>required</em>
+field should be set to <em>false</em>. If not provided, the <em>required</em> field defaults to <em>true</em>.</div></blockquote>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>type</em> is a required string from a defined set that defines the type of the output. The <em>output_data</em> JSON
+object may have additional fields depending on its <em>type</em>. The valid types are:</p>
+<p><strong>file</strong></p>
+<blockquote>
+<div><p>A &#8220;file&#8221; output is a single file that is produced by the algorithm. A &#8220;file&#8221; output has the following
+additional fields:</p>
+<p><strong>media_type</strong>: JSON string</p>
+<blockquote>
+<div>A <em>media_type</em> field on a &#8220;file&#8221; output is an optional string defining the media type of the file
+produced. If not provided, the media type of the file will be determined by Scale using the file
+extension as guidance.</div></blockquote>
+</div></blockquote>
+<p><strong>files</strong></p>
+<blockquote>
+<div><p>A &#8220;files&#8221; output is a list of one or more files that are produced by the algorithm. A &#8220;files&#8221; output has the
+following additional fields:</p>
+<p><strong>media_type</strong>: JSON string</p>
+<blockquote>
+<div>A <em>media_type</em> field on a &#8220;files&#8221; output is an optional string defining the media type of each file
+produced. If not provided, the media type of each file will be determined by Scale using the file
+extension as guidance.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Job Interface</a><ul>
+<li><a class="reference internal" href="#job-interface-specification-version-1-0">Job Interface Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job_environment.html"
+                        title="previous chapter">Job Environment</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job_data.html"
+                        title="next chapter">Job Data</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/architecture/jobs/job_interface.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job_data.html" title="Job Data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job_environment.html" title="Job Environment"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="index.html" >Jobs and Recipes</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Results Manifest &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Algorithms" href="index.html" />
+    <link rel="next" title="Architecture" href="../architecture/index.html" />
+    <link rel="prev" title="Algorithms" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../architecture/index.html" title="Architecture"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Algorithms"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Algorithms</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="results-manifest">
+<span id="algorithms-results-manifest"></span><h1>Results Manifest<a class="headerlink" href="#results-manifest" title="Permalink to this headline">¶</a></h1>
+<p>The results manifest is a JSON document that defines the output of an algorithm&#8217;s run. Using the results manifest, you
+can specify your outputs, parse information, run_information and errors. In addition, you can register artifacts by
+printing a line to stdout with the following format &#8220;ARTIFACT:&lt;output_name&gt;:&lt;path_to_file&gt;&#8221;. The artifact string must be
+on a separate line, and if there are any conflicts with the manifest file, the manifest file takes precedence.</p>
+<p>The following are some example output manifest files:</p>
+<p><strong>Results manifest with one output</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;file&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span> <span class="o">:</span> <span class="s2">&quot;/tmp/job_exe_231/outputs/output.csv&quot;</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The above manifest simply says that the output with the name &#8220;output_file&#8221; can be found on the local computer at the
+location &#8220;/tmp/job_exe_231/outputs/output.csv&#8221;.</p>
+<p><strong>Results manifest with a parsed input</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;parse_results&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;filename&quot;</span> <span class="o">:</span> <span class="s2">&quot;myfile.h5&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;data_types&quot;</span> <span class="o">:</span> <span class="p">[</span>
+            <span class="s2">&quot;H5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;VEG&quot;</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;geo_metadata&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;data_started&quot;</span> <span class="o">:</span> <span class="s2">&quot;2015-05-15T10:34:12Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span> <span class="o">:</span> <span class="s2">&quot;2015-05-15T10:36:12Z&quot;</span><span class="p">,</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This example is the result of one of the inputs (myfile.h5) being parsed.</p>
+<div class="section" id="results-manifest-specification-version-1-1">
+<h2>Results Manifest Specification Version 1.1<a class="headerlink" href="#results-manifest-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
+<p>A valid results manifest is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><pre>{
+   "version": STRING,
+   "output_data": [
+      {
+         "name": STRING,
+         "file": {
+            "path": STRING,
+            "geo_metadata": {
+               "data_started": STRING(ISO-8601),
+               "data_ended": STRING(ISO-8601),
+               "geo_json": JSON
+            }
+         },
+         "files": [
+            {
+               "path": STRING,
+               "geo_metadata": {
+                  "data_started": STRING(ISO-8601),
+                  "data_ended": STRING(ISO-8601),
+                  "geo_json": JSON
+               }
+            }
+         ]
+      }
+   ],
+   "parse_results": [
+      {
+         "filename": STRING,
+         "new_workspace_path": STRING,
+         "data_types": [
+            STRING,
+            STRING
+         ],
+         "geo_metadata": {
+            "data_started": STRING(ISO-8601),
+            "data_ended": STRING(ISO-8601),
+            "geo_json": JSON
+         }
+      }
+   ],
+   "info": {},  # TODO: document when completed
+   "errors": {}  # TODO: document when completed
+}</pre>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the results manifest specification used.
+This allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale
+to recognize an older version and convert it to the current version. The default value for <em>version</em> if it is
+not included is the latest version, which is currently 1.1. It is recommended, though not required, that you
+include the <em>version</em> so that future changes to the specification will still accept your results manifest</div></blockquote>
+<p><strong>output_data</strong> JSON array</p>
+<blockquote>
+<div><p>The <em>output_data</em> is an optional array of output files that your algorithm produced. If not provided, it
+defaults to an empty list.  The JSON object that represents each <em>output_data</em> entry has the following
+fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that indicates which field in the job_interface this output corresponds to.</div></blockquote>
+<p><strong>file</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>file</em> is an optional sting field, however either <em>file</em> or <em>files</em> must be present.
+The <em>file</em> field should be used if the &#8220;file&#8221; output_type was used in the job interface.
+The <em>file</em> object has the following fields:</p>
+<p><strong>path</strong>: JSON string</p>
+<p>The <em>path</em> is the location of the file on the machine that ran the algorithm.</p>
+<p><strong>geo_metadata</strong>: JSON object</p>
+<p>The <em>geo_metadata</em> contains additional geospatial information associated with the output file.  It contains
+the following fields:</p>
+<blockquote>
+<div><p><strong>data_started</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_started</em> is an optional JSON string that is formatted to the ISO-8601 standard.
+This field represents when the data from this file started.</div></blockquote>
+<p><strong>data_ended</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_ended</em> is an optional JSON string that is formatted to the ISO-8601 standard.
+This field represents when the data from this file ended.</div></blockquote>
+<p><strong>geo_json</strong>: JSON object</p>
+<blockquote>
+<div>The <em>geo_json</em> is an optional JSON string containing the geospatial extents of the data.
+It is currently required that this contain a 3D geometry.
+In addition to storing the extents of the data, a center point is auto calculated.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p><strong>files</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>files</em> is an optional array of JSON objects, however either <em>file</em> or <em>files</em> must be present.
+The <em>files</em> field should be used if the &#8220;files&#8221; output_type was used in the job interface.
+Each <em>files</em> object has the following fields:</p>
+<p><strong>path</strong>: JSON string</p>
+<p>The <em>path</em> is the location of the file on the machine that ran the algorithm.</p>
+<p><strong>geo_metadata</strong>: JSON object</p>
+<p>The <em>geo_metadata</em> contains additional geospatial information associated with the output file.  It contains
+the following fields:</p>
+<blockquote>
+<div><p><strong>data_started</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_started</em> is an optional JSON string that is formatted to the ISO-8601 standard.
+This field represents when the data from this file started.</div></blockquote>
+<p><strong>data_ended</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_ended</em> is an optional JSON string that is formatted to the ISO-8601 standard.
+This field represents when the data from this file ended.</div></blockquote>
+<p><strong>geo_json</strong>: JSON object</p>
+<blockquote>
+<div>The <em>geo_json</em> is an optional JSON string containing the geospatial extents of the data.
+It is currently required that this contain a 3D geometry.
+In addition to storing the extents of the data, a center point is auto calculated.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p><strong>parse_results</strong>: JSON array</p>
+<blockquote>
+<div><p>The parse_results is an array of JSON objects that contain information from parsing inputs to your algorithm.
+These results should be used to associate meta-data with input files to the algorithm.  Each of the parse results
+corresponds to a input from the job interface of the type &#8220;file&#8221;.  Additionally, the file must be a &#8220;source&#8221; file.
+A &#8220;source&#8221; file is something that was not produced by an algorithm. Files produced by algorithms are known as
+&#8220;product&#8221; files. As an algorithm developer, this is not important, but when you are tying an algorithm to the
+scale data, this distinction is important.  Each parse_results object has the following fields:</p>
+<p><strong>filename</strong>: JSON string</p>
+<blockquote>
+<div>The <em>filename</em> is a required JSON string that is the name of the file that you have performed the parsing on.</div></blockquote>
+<p><strong>new_workspace_path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>new_workspace_path</em> is an optional JSON string that is a new location where the file should be stored.</div></blockquote>
+<p><strong>data_started</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_started</em> is an optional JSON string that is formatted to the ISO-8601 standard. This field represents
+when the data from this file started.</div></blockquote>
+<p><strong>data_ended</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_ended</em> is an optional JSON string that is formatted to the ISO-8601 standard. This field represents
+when the data from this file ended.</div></blockquote>
+<p><strong>data_types</strong>: JSON array</p>
+<blockquote>
+<div>The <em>data_types</em> is an optional array of JSON strings. Each of the strings is a file data type that this input
+file can be associated with.</div></blockquote>
+<p><strong>gis_data_path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>gis_data_path</em> is an optional path to a GeoJSON file. The contents of the this file will be set in the
+meta_data for the given input file. The geometry will also be set for the file. In addition to storing the
+extents of the data, a center point is auto calculated.</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="results-manifest-specification-version-1-0">
+<h2>Results Manifest Specification Version 1.0<a class="headerlink" href="#results-manifest-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid version 1.0 results manifest is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><pre>{
+   "version": STRING,
+   "files": [
+      {
+         "name": STRING,
+         "path": STRING
+      },
+      {
+         "name": STRING,
+         "paths": [
+            STRING,
+            STRING
+         ]
+      }
+   ],
+   "parse_results": [
+      {
+         "filename": STRING,
+         "data_started": STRING(ISO-8601),
+         "data_ended": STRING(ISO-8601),
+         "data_types": [
+            STRING,
+            STRING
+         ],
+         "gis_data_path": STRING
+      }
+   ],
+   "info": {},  # TODO: document when completed
+   "errors": {}  # TODO: document when completed
+}</pre>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the results manifest specification used.
+This allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale
+to recognize an older version and convert it to the current version. The default value for <em>version</em> if it is
+not included is the latest version, which is currently 1.0. It is recommended, though not required, that you
+include the <em>version</em> so that future changes to the specification will still accept your results manifest</div></blockquote>
+<p><strong>files</strong> JSON array</p>
+<blockquote>
+<div><p>The <em>files</em> is an optional array of output files that your algorithm produced. If not provided, files
+defaults to an empty list.  The JSON object that represents each <em>files</em> entry has the following
+fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that indicates which field in the job_interface this output corresponds to.</div></blockquote>
+<p><strong>path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>path</em> is an optional sting field, however either <em>path</em> or <em>paths</em> must be present.
+The <em>path</em> is the location of the file on the machine that ran the algorithm. The <em>path</em> field should be used
+if the &#8220;file&#8221; output_type was used in the job interface.</div></blockquote>
+<p><strong>paths</strong>: JSON array</p>
+<blockquote>
+<div>The <em>paths</em> is an optional array of JSON strings, however either <em>path</em> or <em>paths</em> must be present.
+Each string in the array is a path to a file that corresponds to a job_output. The <em>paths</em> field should be used
+if the &#8220;files&#8221; output_type was used in the job interface.</div></blockquote>
+</div></blockquote>
+<p><strong>parse_results</strong>: JSON array</p>
+<blockquote>
+<div><p>The parse_results is an array of JSON objects that contain information from parsing inputs to your algorithm.
+These results should be used to associate meta-data with input files to the algorithm.  Each of the parse results
+corresponds to a input from the job interface of the type &#8220;file&#8221;.  Additionally, the file must be a &#8220;source&#8221; file.
+A &#8220;source&#8221; file is something that was not produced by an algorithm. Files produced by algorithms are known as
+&#8220;product&#8221; files. As an algorithm developer, this is not important, but when you are tying an algorithm to the
+scale data, this distinction is important.  Each parse_results object has the following fields:</p>
+<p><strong>filename</strong>: JSON string</p>
+<blockquote>
+<div>The <em>filename</em> is a required JSON string that is the name of the file that you have performed the parsing on.</div></blockquote>
+<p><strong>data_started</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_started</em> is an optional JSON string that is formatted to the ISO-8601 standard. This field represents
+when the data from this file started.</div></blockquote>
+<p><strong>data_ended</strong>: JSON string (ISO-8601)</p>
+<blockquote>
+<div>The <em>data_ended</em> is an optional JSON string that is formatted to the ISO-8601 standard. This field represents
+when the data from this file ended.</div></blockquote>
+<p><strong>data_types</strong>: JSON array</p>
+<blockquote>
+<div>The <em>data_types</em> is an optional array of JSON strings. Each of the strings is a file data type that this input
+file can be associated with.</div></blockquote>
+<p><strong>gis_data_path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>gis_data_path</em> is an optional path to a GeoJSON file. The contents of the this file will be set in the
+meta_data for the given input file. The geometry will also be set for the file. In addition to storing the
+extents of the data, a center point is auto calculated.</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Results Manifest</a><ul>
+<li><a class="reference internal" href="#results-manifest-specification-version-1-1">Results Manifest Specification Version 1.1</a></li>
+<li><a class="reference internal" href="#results-manifest-specification-version-1-0">Results Manifest Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Algorithms</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../architecture/index.html"
+                        title="next chapter">Architecture</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/algorithms/results_manifest.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../architecture/index.html" title="Architecture"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Algorithms"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Algorithms</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

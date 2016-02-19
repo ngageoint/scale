@@ -1,0 +1,26 @@
+results Package
+===============
+
+:mod:`exceptions` Module
+------------------------
+
+.. automodule:: job.configuration.results.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`job_results` Module
+-------------------------
+
+.. automodule:: job.configuration.results.job_results
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.configuration.results.results_manifest
+

@@ -1,0 +1,27 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: node.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: node.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: node.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

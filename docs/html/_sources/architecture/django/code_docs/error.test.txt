@@ -1,0 +1,35 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: error.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_models` Module
+-------------------------
+
+.. automodule:: error.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: error.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: error.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

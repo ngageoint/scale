@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>configuration Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="strike Package" href="ingest.strike.html" />
+    <link rel="next" title="test Package" href="ingest.test.html" />
+    <link rel="prev" title="strike Package" href="ingest.strike.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.html" title="test Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ingest.strike.html" title="strike Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" >ingest Package</a> &raquo;</li>
+          <li><a href="ingest.strike.html" accesskey="U">strike Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuration-package">
+<h1>configuration Package<a class="headerlink" href="#configuration-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ingest.strike.configuration.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-ingest.strike.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with Strike configuration</p>
+<dl class="exception">
+<dt id="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration">
+<em class="property">exception </em><tt class="descclassname">ingest.strike.configuration.exceptions.</tt><tt class="descname">InvalidStrikeConfiguration</tt><a class="headerlink" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided Strike configuration was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.strike.configuration.strike_configuration">
+<span id="strike-configuration-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">strike_configuration</span></tt> Module<a class="headerlink" href="#module-ingest.strike.configuration.strike_configuration" title="Permalink to this headline">¶</a></h2>
+<p>Defines the configuration for running an instance of Strike</p>
+<dl class="class">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration">
+<em class="property">class </em><tt class="descclassname">ingest.strike.configuration.strike_configuration.</tt><tt class="descname">StrikeConfiguration</tt><big>(</big><em>configuration</em><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the configuration for a running Strike instance. The configuration includes details about mounting the
+transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
+identify files to ingest and how to store them.</p>
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount">
+<tt class="descname">get_mount</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the &#8220;mount&#8221; value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The mount value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix">
+<tt class="descname">get_transfer_suffix</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the &#8220;transfer_suffix&#8221; value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The transfer_suffix value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name">
+<tt class="descname">match_file_name</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to match the given file name against this configuration and if a match is made, returns the details
+about how to ingest the file. If no match is found, None is returned</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> (<em>str</em>) &#8211; The name of the file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the list of data types to add to the file, the remote path for storing the file within the
+workspace, and the workspace, or None if no file name match is found</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple(list of str, str, <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">configuration Package</a><ul>
+<li><a class="reference internal" href="#module-ingest.strike.configuration.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.strike.configuration.strike_configuration"><tt class="docutils literal"><span class="pre">strike_configuration</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ingest.strike.html"
+                        title="previous chapter">strike Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ingest.test.html"
+                        title="next chapter">test Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/ingest.strike.configuration.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.html" title="test Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ingest.strike.html" title="strike Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" >ingest Package</a> &raquo;</li>
+          <li><a href="ingest.strike.html" >strike Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

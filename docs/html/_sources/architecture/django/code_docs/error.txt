@@ -1,0 +1,68 @@
+error Package
+=============
+
+:mod:`error` Package
+--------------------
+
+.. automodule:: error
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: error.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`handlers` Module
+----------------------
+
+.. automodule:: error.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: error.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: error.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: error.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: error.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    error.fixtures
+    error.migrations
+    error.test
+

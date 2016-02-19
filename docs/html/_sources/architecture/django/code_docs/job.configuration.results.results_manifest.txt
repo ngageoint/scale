@@ -1,0 +1,19 @@
+results_manifest Package
+========================
+
+:mod:`results_manifest` Module
+------------------------------
+
+.. automodule:: job.configuration.results.results_manifest.results_manifest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`results_manifest_1_0` Module
+----------------------------------
+
+.. automodule:: job.configuration.results.results_manifest.results_manifest_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

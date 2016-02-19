@@ -1,0 +1,34 @@
+triggers Package
+================
+
+:mod:`triggers` Package
+-----------------------
+
+.. automodule:: ingest.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`ingest_trigger_condition` Module
+--------------------------------------
+
+.. automodule:: ingest.triggers.ingest_trigger_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`ingest_trigger_handler` Module
+------------------------------------
+
+.. automodule:: ingest.triggers.ingest_trigger_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.triggers.configuration
+

@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>util Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="test Package" href="util.test.html" />
+    <link rel="prev" title="test Package" href="trigger.test.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.test.html" title="test Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trigger.test.html" title="test Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="util-package">
+<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-util" title="util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-util"></span></div>
+<div class="section" id="module-util.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-util.apps" title="Permalink to this headline">¶</a></h2>
+<p>Defines the application configuration for the util application</p>
+<dl class="class">
+<dt id="util.apps.UtilConfig">
+<em class="property">class </em><tt class="descclassname">util.apps.</tt><tt class="descname">UtilConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#util.apps.UtilConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the util app</p>
+<dl class="attribute">
+<dt id="util.apps.UtilConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'util'</em><a class="headerlink" href="#util.apps.UtilConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.apps.UtilConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'util'</em><a class="headerlink" href="#util.apps.UtilConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.apps.UtilConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Util'</em><a class="headerlink" href="#util.apps.UtilConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.command">
+<span id="command-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">command</span></tt> Module<a class="headerlink" href="#module-util.command" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility functions for executing commands on the command line.</p>
+<dl class="exception">
+<dt id="util.command.CommandError">
+<em class="property">exception </em><tt class="descclassname">util.command.</tt><tt class="descname">CommandError</tt><big>(</big><em>msg</em>, <em>returncode=None</em><big>)</big><a class="headerlink" href="#util.command.CommandError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.command.execute_command_line">
+<tt class="descclassname">util.command.</tt><tt class="descname">execute_command_line</tt><big>(</big><em>cmd_list</em><big>)</big><a class="headerlink" href="#util.command.execute_command_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the given command list on the command line</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cmd_list</strong> (<em>list</em>) &#8211; The list of commands</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-util.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility exceptions</p>
+<dl class="exception">
+<dt id="util.exceptions.RollbackTransaction">
+<em class="property">exception </em><tt class="descclassname">util.exceptions.</tt><tt class="descname">RollbackTransaction</tt><a class="headerlink" href="#util.exceptions.RollbackTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception that can be thrown and swallowed to explicitly rollback a transaction</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.middleware">
+<span id="middleware-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">middleware</span></tt> Module<a class="headerlink" href="#module-util.middleware" title="Permalink to this headline">¶</a></h2>
+<p>Common middleware classes used in the web server configuration.</p>
+<dl class="class">
+<dt id="util.middleware.MultipleProxyMiddleware">
+<em class="property">class </em><tt class="descclassname">util.middleware.</tt><tt class="descname">MultipleProxyMiddleware</tt><a class="headerlink" href="#util.middleware.MultipleProxyMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Rewrites the proxy headers so that only the first the proxy forwarded host is used.</p>
+<p>By default Django, does not support forwarding the server host name when sitting behind multiple proxy servers.
+Without this middleware the host name returned to the client will contain both proxy names delimited by a comma,
+which will not redirect properly. The original example code this class was based on used the host header value from
+the most recent proxy server. Since the first proxy server in our infrastructure is the host name used by external
+users however, we want to always take that name instead.</p>
+<p>Code derived from the Django documentation for &#8220;Request and response objects&#8221;, HttpRequest.get_host() method.</p>
+<dl class="attribute">
+<dt id="util.middleware.MultipleProxyMiddleware.FORWARDED_FOR_FIELDS">
+<tt class="descname">FORWARDED_FOR_FIELDS</tt><em class="property"> = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED_HOST', 'HTTP_X_FORWARDED_SERVER']</em><a class="headerlink" href="#util.middleware.MultipleProxyMiddleware.FORWARDED_FOR_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.middleware.MultipleProxyMiddleware.process_request">
+<tt class="descname">process_request</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#util.middleware.MultipleProxyMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rewrite forwarded host headers to support multiple proxy servers.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.parse">
+<span id="parse-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">parse</span></tt> Module<a class="headerlink" href="#module-util.parse" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility functions for parsing data.</p>
+<dl class="exception">
+<dt id="util.parse.ParseError">
+<em class="property">exception </em><tt class="descclassname">util.parse.</tt><tt class="descname">ParseError</tt><a class="headerlink" href="#util.parse.ParseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating a value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.parse.parse_datetime">
+<tt class="descclassname">util.parse.</tt><tt class="descname">parse_datetime</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#util.parse.parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="util.parse.parse_duration">
+<tt class="descclassname">util.parse.</tt><tt class="descname">parse_duration</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#util.parse.parse_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a duration string and returns a datetime.timedelta.
+Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.parse.parse_timestamp">
+<tt class="descclassname">util.parse.</tt><tt class="descname">parse_timestamp</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#util.parse.parse_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses any valid ISO date/time, duration, or timestamp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; The raw string value to parse.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The result of parsing the given string value.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">datetime.datetime</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.rest">
+<span id="rest-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rest</span></tt> Module<a class="headerlink" href="#module-util.rest" title="Permalink to this headline">¶</a></h2>
+<p>Defines utilities for building RESTful APIs.</p>
+<dl class="exception">
+<dt id="util.rest.BadParameter">
+<em class="property">exception </em><tt class="descclassname">util.rest.</tt><tt class="descname">BadParameter</tt><big>(</big><em>detail=None</em><big>)</big><a class="headerlink" href="#util.rest.BadParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.exceptions.APIException</span></tt></p>
+<p>Exception indicating a REST API call contains an invalid value or a missing required parameter.</p>
+<dl class="attribute">
+<dt id="util.rest.BadParameter.status_code">
+<tt class="descname">status_code</tt><em class="property"> = 400</em><a class="headerlink" href="#util.rest.BadParameter.status_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.rest.JSONField">
+<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">JSONField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.rest.JSONField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
+<p>Represents JSON content for use in REST serializers.</p>
+<dl class="attribute">
+<dt id="util.rest.JSONField.default_error_messages">
+<tt class="descname">default_error_messages</tt><em class="property"> = {u'invalid': u'&quot;%s&quot; value must be JSON.'}</em><a class="headerlink" href="#util.rest.JSONField.default_error_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.JSONField.empty">
+<tt class="descname">empty</tt><em class="property"> = {}</em><a class="headerlink" href="#util.rest.JSONField.empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.rest.JSONField.from_native">
+<tt class="descname">from_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#util.rest.JSONField.from_native" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the given raw value to a Python object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.JSONField.type_label">
+<tt class="descname">type_label</tt><em class="property"> = u'json'</em><a class="headerlink" href="#util.rest.JSONField.type_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.JSONField.type_name">
+<tt class="descname">type_name</tt><em class="property"> = u'JSONField'</em><a class="headerlink" href="#util.rest.JSONField.type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.rest.ModelIdSerializer">
+<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">ModelIdSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.rest.ModelIdSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<p>Converts a model to a lightweight place holder object with only an identifier to REST output</p>
+<dl class="attribute">
+<dt id="util.rest.ModelIdSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;}</em><a class="headerlink" href="#util.rest.ModelIdSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="util.rest.ReadOnly">
+<em class="property">exception </em><tt class="descclassname">util.rest.</tt><tt class="descname">ReadOnly</tt><big>(</big><em>detail=None</em><big>)</big><a class="headerlink" href="#util.rest.ReadOnly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.exceptions.APIException</span></tt></p>
+<p>Exception indicating a REST API call is attempting to update a field that does not support it.</p>
+<dl class="attribute">
+<dt id="util.rest.ReadOnly.status_code">
+<tt class="descname">status_code</tt><em class="property"> = 400</em><a class="headerlink" href="#util.rest.ReadOnly.status_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.check_time_range">
+<tt class="descclassname">util.rest.</tt><tt class="descname">check_time_range</tt><big>(</big><em>started</em>, <em>ended</em>, <em>max_duration=None</em><big>)</big><a class="headerlink" href="#util.rest.check_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the given time range is valid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<em>datetime.datetime</em>) &#8211; The start of a time range.</li>
+<li><strong>ended</strong> (<em>datetime.datetime</em>) &#8211; The end of a time range.</li>
+<li><strong>max_duration</strong> (<em>datetime.timedelta</em>) &#8211; The maximum amount of time between the started and ended range.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True when the time range is valid.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If there is a problem with the time range.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.check_together">
+<tt class="descclassname">util.rest.</tt><tt class="descname">check_together</tt><big>(</big><em>names</em>, <em>values</em><big>)</big><a class="headerlink" href="#util.rest.check_together" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a list of fields as a group. Either all or none of the fields should be provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>names</strong> (<em>list[str]</em>) &#8211; The list of field names to check.</li>
+<li><strong>values</strong> (<em>list[object]</em>) &#8211; The list of field values to check.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True when all parameters are provided and false if none of the parameters are provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the list of fields is mismatched.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.check_update">
+<tt class="descclassname">util.rest.</tt><tt class="descname">check_update</tt><big>(</big><em>request</em>, <em>fields</em><big>)</big><a class="headerlink" href="#util.rest.check_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the given request includes fields that are not allowed to be updated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>fields</strong> (<em>list[str]</em>) &#8211; A list of field names that are permitted.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True when the request does not include extra fields.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.ReadOnly" title="util.rest.ReadOnly"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ReadOnly</span></tt></a>: If the request includes unsupported fields to update.
+:raises <tt class="xref py py-class docutils literal"><span class="pre">exceptions.AssertionError</span></tt>: If fields in not a list or None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.get_relative_days">
+<tt class="descclassname">util.rest.</tt><tt class="descname">get_relative_days</tt><big>(</big><em>days</em><big>)</big><a class="headerlink" href="#util.rest.get_relative_days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a relative date/time in the past without any time offsets.</p>
+<p>This is useful when a service wants to have a default value of, for example 7 days back. If an ISO duration format
+is used, such as P7D then the current time will be factored in which results in the earliest day being incomplete
+when computing an absolute time stamp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>days</strong> (<em>int</em>) &#8211; The number of days back to calculate from now.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An absolute time stamp that is the complete range of relative days back.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">datetime.datetime</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.has_params">
+<tt class="descclassname">util.rest.</tt><tt class="descname">has_params</tt><big>(</big><em>request</em>, <em>*names</em><big>)</big><a class="headerlink" href="#util.rest.has_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether one or more parameters are included in the request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>names</strong> (<em>str</em>) &#8211; One or more parameter names to check.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True when all the parameters are provided or false if at least one is not provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_bool">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_bool</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em><big>)</big><a class="headerlink" href="#util.rest.parse_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a bool parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>bool</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_datetime">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_datetime</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em><big>)</big><a class="headerlink" href="#util.rest.parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a datetime parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.datetime</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">datetime.datetime</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_dict">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_dict</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em><big>)</big><a class="headerlink" href="#util.rest.parse_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a dictionary parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>dict</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_duration">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_duration</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em><big>)</big><a class="headerlink" href="#util.rest.parse_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a time duration parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.timedelta</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">datetime.timedelta</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_float">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_float</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em>, <em>accepted_values=None</em><big>)</big><a class="headerlink" href="#util.rest.parse_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a floating point parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>float</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+<li><strong>accepted_values</strong> (<em>list[float]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_int">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_int</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em>, <em>accepted_values=None</em><big>)</big><a class="headerlink" href="#util.rest.parse_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an integer parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>int</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+<li><strong>accepted_values</strong> (<em>list[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_int_list">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_int_list</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em>, <em>accepted_values=None</em><big>)</big><a class="headerlink" href="#util.rest.parse_int_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a list of int parameters from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>list[int]</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+<li><strong>accepted_values</strong> (<em>list[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed or does not match the validation list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_string">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_string</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em>, <em>accepted_values=None</em><big>)</big><a class="headerlink" href="#util.rest.parse_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a string parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+<li><strong>accepted_values</strong> (<em>list[str]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_string_list">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_string_list</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em>, <em>accepted_values=None</em><big>)</big><a class="headerlink" href="#util.rest.parse_string_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a list of string parameters from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>list[str]</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+<li><strong>accepted_values</strong> (<em>list[str]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed or does not match the validation list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.parse_timestamp">
+<tt class="descclassname">util.rest.</tt><tt class="descname">parse_timestamp</tt><big>(</big><em>request</em>, <em>name</em>, <em>default_value=None</em>, <em>required=True</em><big>)</big><a class="headerlink" href="#util.rest.parse_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses any valid ISO datetime, duration, or timestamp parameter from the given request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.timedelta</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
+does not exist, there is no default value, and required is True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">datetime.datetime</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.perform_paging">
+<tt class="descclassname">util.rest.</tt><tt class="descname">perform_paging</tt><big>(</big><em>request</em>, <em>objects</em><big>)</big><a class="headerlink" href="#util.rest.perform_paging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs paging on the given objects using the given request parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
+<li><strong>objects</strong> (<em>list</em>) &#8211; List of objects, typically a queryset</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the created page</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">django.core.paginator.Page</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.retry">
+<span id="retry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">retry</span></tt> Module<a class="headerlink" href="#module-util.retry" title="Permalink to this headline">¶</a></h2>
+<p>Defines decorators for performing function retries with exponential backoff</p>
+<dl class="function">
+<dt id="util.retry.retry">
+<tt class="descclassname">util.retry.</tt><tt class="descname">retry</tt><big>(</big><em>no_arg_func=None</em>, <em>ex_class=&lt;type 'exceptions.Exception'&gt;</em>, <em>max_tries=3</em>, <em>base_ms_delay=1000</em>, <em>max_ms_delay=30000</em><big>)</big><a class="headerlink" href="#util.retry.retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps the decorated function so that it is retried with exponential backoff. On the first retry, the delay is a
+random number of milliseconds between 0 and base_ms_delay. The upper bound is then doubled for each successive
+retry. A retry delay will not exceed max_ms_delay milliseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>no_arg_func</strong> (<em>function</em>) &#8211; The function to retry (only populated if decorator used without args)</li>
+<li><strong>ex_class</strong> (<em>class or tuple of classes</em>) &#8211; The exception(s) that should cause the function to retry</li>
+<li><strong>max_tries</strong> (<em>int</em>) &#8211; The maximum number of times to call the function</li>
+<li><strong>base_ms_delay</strong> (<em>int</em>) &#8211; The base time to delay in milliseconds before retrying the function</li>
+<li><strong>max_ms_delay</strong> (<em>int</em>) &#8211; The maximum time to delay in milliseconds</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.retry.retry_database_query">
+<tt class="descclassname">util.retry.</tt><tt class="descname">retry_database_query</tt><big>(</big><em>no_arg_func=None</em>, <em>max_tries=5</em>, <em>base_ms_delay=1000</em>, <em>max_ms_delay=30000</em><big>)</big><a class="headerlink" href="#util.retry.retry_database_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps the decorated function so that it is retried with exponential backoff if any operational database errors
+(disconnect, too many connections, etc) occurs. On the first retry, the delay is a random number of milliseconds
+between 0 and base_ms_delay. The upper bound is then doubled for each successive retry. A retry delay will not
+exceed max_ms_delay milliseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>no_arg_func</strong> (<em>function</em>) &#8211; The function to retry (only populated if decorator used without args)</li>
+<li><strong>max_tries</strong> (<em>int</em>) &#8211; The maximum number of times to call the function</li>
+<li><strong>base_ms_delay</strong> (<em>int</em>) &#8211; The base time to delay in milliseconds before retrying the function</li>
+<li><strong>max_ms_delay</strong> (<em>int</em>) &#8211; The maximum time to delay in milliseconds</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="util.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse"><tt class="docutils literal"><span class="pre">test_parse</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest"><tt class="docutils literal"><span class="pre">test_rest</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry"><tt class="docutils literal"><span class="pre">test_retry</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">util Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-util.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.command"><tt class="docutils literal"><span class="pre">command</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.middleware"><tt class="docutils literal"><span class="pre">middleware</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.parse"><tt class="docutils literal"><span class="pre">parse</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.rest"><tt class="docutils literal"><span class="pre">rest</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-util.retry"><tt class="docutils literal"><span class="pre">retry</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trigger.test.html"
+                        title="previous chapter">test Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="util.test.html"
+                        title="next chapter">test Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.test.html" title="test Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trigger.test.html" title="test Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

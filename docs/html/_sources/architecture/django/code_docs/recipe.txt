@@ -1,0 +1,61 @@
+recipe Package
+==============
+
+:mod:`recipe` Package
+---------------------
+
+.. automodule:: recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: recipe.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: recipe.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: recipe.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: recipe.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: recipe.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.configuration
+    recipe.migrations
+    recipe.test
+    recipe.triggers
+

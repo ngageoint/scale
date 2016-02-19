@@ -1,0 +1,27 @@
+commands Package
+================
+
+:mod:`commands` Package
+-----------------------
+
+.. automodule:: ingest.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`scale_ingest` Module
+--------------------------
+
+.. automodule:: ingest.management.commands.scale_ingest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`scale_strike` Module
+--------------------------
+
+.. automodule:: ingest.management.commands.scale_strike
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

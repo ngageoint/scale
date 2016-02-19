@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="error Package" href="error.html" />
+    <link rel="next" title="ingest Package" href="ingest.html" />
+    <link rel="prev" title="migrations Package" href="error.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.html" title="ingest Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="error.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="error.html" accesskey="U">error Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-error.test"></span></div>
+<div class="section" id="module-error.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-error.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="error.test.test_models.TestGetDatabaseModel">
+<em class="property">class </em><tt class="descclassname">error.test.test_models.</tt><tt class="descname">TestGetDatabaseModel</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="error.test.test_models.TestGetDatabaseModel.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_models.TestGetDatabaseModel.test_get_model">
+<tt class="descname">test_get_model</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.test_get_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-error.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="error.test.test_views.TestErrorDetailsView">
+<em class="property">class </em><tt class="descclassname">error.test.test_views.</tt><tt class="descname">TestErrorDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_bad_catgory">
+<tt class="descname">test_edit_error_bad_catgory</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_bad_catgory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the edit Error method with a bad category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_change_system">
+<tt class="descname">test_edit_error_change_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_change_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that an existing error cannot be changed to a system level error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_not_found">
+<tt class="descname">test_edit_error_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the edit Error method with a bad error id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_success">
+<tt class="descname">test_edit_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the edit Error method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_system">
+<tt class="descname">test_edit_error_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that an existing system error cannot be edited.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_get_error_not_found">
+<tt class="descname">test_get_error_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Get Error method with a bad error id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsView.test_get_error_success">
+<tt class="descname">test_get_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Get Error method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.test.test_views.TestErrorsView">
+<em class="property">class </em><tt class="descclassname">error.test.test_views.</tt><tt class="descname">TestErrorsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.test_create_error_bad_category">
+<tt class="descname">test_create_error_bad_category</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_bad_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the create Error method with a bad category value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.test_create_error_missing">
+<tt class="descname">test_create_error_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the create Error method with missing data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.test_create_error_success">
+<tt class="descname">test_create_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the create Error method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.test_create_error_system">
+<tt class="descname">test_create_error_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that system errors cannot be created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsView.test_list_errors">
+<tt class="descname">test_list_errors</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_list_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Errors method.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-error.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing errors</p>
+<dl class="function">
+<dt id="error.test.utils.create_error">
+<tt class="descclassname">error.test.utils.</tt><tt class="descname">create_error</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>description=u'Test error description'</em>, <em>category=u'SYSTEM'</em><big>)</big><a class="headerlink" href="#error.test.utils.create_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a error model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-error.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="error.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ingest.html"
+                        title="next chapter">ingest Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/error.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.html" title="ingest Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="error.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="error.html" >error Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

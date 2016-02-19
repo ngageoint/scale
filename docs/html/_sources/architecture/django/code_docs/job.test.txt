@@ -1,0 +1,52 @@
+test Package
+============
+
+:mod:`test` Package
+-------------------
+
+.. automodule:: job.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_clock` Module
+------------------------
+
+.. automodule:: job.test.test_clock
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_models` Module
+-------------------------
+
+.. automodule:: job.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`test_views` Module
+------------------------
+
+.. automodule:: job.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: job.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.test.configuration
+    job.test.execution
+    job.test.management
+

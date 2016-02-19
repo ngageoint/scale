@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.test.configuration.data
+    recipe.test.configuration.definition
+

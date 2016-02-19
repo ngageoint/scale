@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>shared_resource Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="migrations Package" href="shared_resource.migrations.html" />
+    <link rel="prev" title="threads Package" href="scheduler.threads.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shared_resource.migrations.html" title="migrations Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="scheduler.threads.html" title="threads Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shared-resource-package">
+<h1>shared_resource Package<a class="headerlink" href="#shared-resource-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-shared_resource" title="shared_resource"><tt class="xref py py-mod docutils literal"><span class="pre">shared_resource</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-shared_resource"></span></div>
+<div class="section" id="module-shared_resource.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-shared_resource.apps" title="Permalink to this headline">¶</a></h2>
+<p>Configuration for Shared Resource App</p>
+<dl class="class">
+<dt id="shared_resource.apps.SharedResourceConfig">
+<em class="property">class </em><tt class="descclassname">shared_resource.apps.</tt><tt class="descname">SharedResourceConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#shared_resource.apps.SharedResourceConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the shared resource app</p>
+<dl class="attribute">
+<dt id="shared_resource.apps.SharedResourceConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'shared_resource'</em><a class="headerlink" href="#shared_resource.apps.SharedResourceConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.apps.SharedResourceConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'shared_resource'</em><a class="headerlink" href="#shared_resource.apps.SharedResourceConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.apps.SharedResourceConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Shared Resource'</em><a class="headerlink" href="#shared_resource.apps.SharedResourceConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-shared_resource.models">
+<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-shared_resource.models" title="Permalink to this headline">¶</a></h2>
+<p>Provides models and managers for for shared resources</p>
+<dl class="class">
+<dt id="shared_resource.models.SharedResource">
+<em class="property">class </em><tt class="descclassname">shared_resource.models.</tt><tt class="descname">SharedResource</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#shared_resource.models.SharedResource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents a resource available to the system that multiple nodes may share
+if limit is populated it is the upper limit of available resources of this type
+examples may be: network usage, database access, and licenses
+keyword name: The unique name of the global resource
+keyword description: A description of the global resource</p>
+<dl class="exception">
+<dt id="shared_resource.models.SharedResource.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#shared_resource.models.SharedResource.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="shared_resource.models.SharedResource.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">SharedResource.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#shared_resource.models.SharedResource.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.json_config">
+<tt class="descclassname">SharedResource.</tt><tt class="descname">json_config</tt><a class="headerlink" href="#shared_resource.models.SharedResource.json_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.nodes">
+<tt class="descclassname">SharedResource.</tt><tt class="descname">nodes</tt><a class="headerlink" href="#shared_resource.models.SharedResource.nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.objects">
+<tt class="descclassname">SharedResource.</tt><tt class="descname">objects</tt><em class="property"> = &lt;shared_resource.models.SharedResourceManager object at 0x2f38650&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResource.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.sharedresourcerequirement_set">
+<tt class="descclassname">SharedResource.</tt><tt class="descname">sharedresourcerequirement_set</tt><a class="headerlink" href="#shared_resource.models.SharedResource.sharedresourcerequirement_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="shared_resource.models.SharedResourceManager">
+<em class="property">class </em><tt class="descclassname">shared_resource.models.</tt><tt class="descname">SharedResourceManager</tt><a class="headerlink" href="#shared_resource.models.SharedResourceManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for managing shared resources</p>
+<dl class="method">
+<dt id="shared_resource.models.SharedResourceManager.get_resource_remaining">
+<tt class="descname">get_resource_remaining</tt><big>(</big><em>resource</em><big>)</big><a class="headerlink" href="#shared_resource.models.SharedResourceManager.get_resource_remaining" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the remaining amount of a resource by looking at running jobs
+:param resource: The resource that we are looking at to determine usage
+:type resource: <tt class="xref py py-class docutils literal"><span class="pre">resource.model.SharedResource</span></tt>
+:returns: the amount of resources remaining
+:rtype: float</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.models.SharedResourceManager.runnable_job_types">
+<tt class="descname">runnable_job_types</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#shared_resource.models.SharedResourceManager.runnable_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the job types that are runnable on a node based on shared resources
+:param node: The node that is using the resources
+:type node: <a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a>
+:returns: A new queryset containing <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a> objects filtered by available resources
+:rtype: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.query.QuerySet</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="shared_resource.models.SharedResourceRequirement">
+<em class="property">class </em><tt class="descclassname">shared_resource.models.</tt><tt class="descname">SharedResourceRequirement</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>A requirement for a shared resource.  A job is an example of something that can have a global resource
+requirement.  The requirement may include a usage amount.  As an example you could require 1.3 Gbps from
+a shared network pipe.</p>
+<dl class="exception">
+<dt id="shared_resource.models.SharedResourceRequirement.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="shared_resource.models.SharedResourceRequirement.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">SharedResourceRequirement.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.job_type">
+<tt class="descclassname">SharedResourceRequirement.</tt><tt class="descname">job_type</tt><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.job_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.objects">
+<tt class="descclassname">SharedResourceRequirement.</tt><tt class="descname">objects</tt><em class="property"> = &lt;django.db.models.manager.Manager object at 0x2f3c750&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.shared_resource">
+<tt class="descclassname">SharedResourceRequirement.</tt><tt class="descname">shared_resource</tt><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.shared_resource" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="shared_resource.migrations.html">migrations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shared_resource.migrations.html#module-shared_resource.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shared_resource.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shared_resource.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shared_resource.test.html#module-shared_resource.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shared_resource.test.html#module-shared_resource.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">shared_resource Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">shared_resource</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-shared_resource.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-shared_resource.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scheduler.threads.html"
+                        title="previous chapter">threads Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="shared_resource.migrations.html"
+                        title="next chapter">migrations Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/shared_resource.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="shared_resource.migrations.html" title="migrations Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="scheduler.threads.html" title="threads Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

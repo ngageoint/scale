@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+:mod:`test_strike_configuration` Module
+---------------------------------------
+
+.. automodule:: ingest.test.strike.configuration.test_strike_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

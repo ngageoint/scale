@@ -1,0 +1,26 @@
+triggers Package
+================
+
+:mod:`parse_trigger_condition` Module
+-------------------------------------
+
+.. automodule:: source.triggers.parse_trigger_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`parse_trigger_handler` Module
+-----------------------------------
+
+.. automodule:: source.triggers.parse_trigger_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    source.triggers.configuration
+

@@ -1,0 +1,508 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="product Package" href="product.html" />
+    <link rel="next" title="configuration Package" href="product.test.configuration.html" />
+    <link rel="prev" title="migrations Package" href="product.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.test.configuration.html" title="configuration Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="product.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="product.html" accesskey="U">product Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-product.test"></span></div>
+<div class="section" id="module-product.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-product.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks">
+<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestFileAncestryLinkManagerCreateFileAncestryLinks</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs">
+<tt class="descname">test_inputs</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating links for only input files before any products are generated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs_and_products">
+<tt class="descname">test_inputs_and_products</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs_and_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating links for inputs and then later replacing with generated products.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products">
+<tt class="descname">test_products</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating links for inputs with generated products at the same time.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors">
+<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestFileAncestryLinkManagerGetSourceAncestors</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling FileAncestryLinkManager.get_source_ancestors() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery">
+<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerGetProductUpdatesQuery</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests on the ProductFileManager.get_product_updates_query() method</p>
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_job_types">
+<tt class="descname">test_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.get_updates() with a &#8220;job_type_ids&#8221; argument value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types">
+<tt class="descname">test_no_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.get_updates() without a &#8220;job_type_ids&#8221; argument value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors">
+<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerPopulateSourceAncestors</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests on the ProductFileManager.populate_source_ancestors() method</p>
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.populate_source_ancestors() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles">
+<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerUploadFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_geo_metadata">
+<tt class="descname">test_geo_metadata</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_geo_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.upload_files() successfully with extra geometry meta data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product">
+<tt class="descname">test_non_operational_product</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.upload_files() with a non-operational input file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_success">
+<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.upload_files() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid">
+<tt class="descname">test_uuid</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests setting UUIDs on products from a single job execution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_input_files">
+<tt class="descname">test_uuid_use_input_files</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests setting UUIDs on products with different source input files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_exe">
+<tt class="descname">test_uuid_use_job_exe</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests setting UUIDs on products from multiple job executions of the same type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_type">
+<tt class="descname">test_uuid_use_job_type</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests setting UUIDs on products with different job types.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-product.test.test_queue_processor">
+<span id="test-queue-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_queue_processor</span></tt> Module<a class="headerlink" href="#module-product.test.test_queue_processor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.test.test_queue_processor.TestProductProcessor">
+<em class="property">class </em><tt class="descclassname">product.test.test_queue_processor.</tt><tt class="descname">TestProductProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<p>Tests handling queue events when job executions change state.</p>
+<dl class="method">
+<dt id="product.test.test_queue_processor.TestProductProcessor.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_queue_processor.TestProductProcessor.test_completed">
+<tt class="descname">test_completed</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests products are published when a job is completed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_initial">
+<tt class="descname">test_queued_initial</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_initial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests file ancestry links are created for input files when a job is first queued.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_repeat">
+<tt class="descname">test_queued_repeat</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_repeat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests nothing is done when a job is queued more than once.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-product.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-product.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.test.test_views.TestProductsUpdatesView">
+<em class="property">class </em><tt class="descclassname">product.test.test_views.</tt><tt class="descname">TestProductsUpdatesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_file_name">
+<tt class="descname">test_file_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view filtered by file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_invalid_ended">
+<tt class="descname">test_invalid_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product file updates view when the ended parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_invalid_started">
+<tt class="descname">test_invalid_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product file updates view when the started parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_is_operational">
+<tt class="descname">test_is_operational</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view filtered by is_operational flag.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_category">
+<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_id">
+<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_name">
+<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended">
+<tt class="descname">test_missing_tz_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product file updates view when the ended parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_missing_tz_started">
+<tt class="descname">test_missing_tz_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product file updates view when the started parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_negative_time_range">
+<tt class="descname">test_negative_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product file updates view with a negative time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsUpdatesView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product file updates view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.test.test_views.TestProductsView">
+<em class="property">class </em><tt class="descclassname">product.test.test_views.</tt><tt class="descname">TestProductsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_file_name">
+<tt class="descname">test_file_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_invalid_ended">
+<tt class="descname">test_invalid_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product files view when the ended parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_invalid_started">
+<tt class="descname">test_invalid_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product files view when the started parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_is_operational">
+<tt class="descname">test_is_operational</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by is_operational flag.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_job_type_category">
+<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_job_type_id">
+<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_job_type_name">
+<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_missing_tz_ended">
+<tt class="descname">test_missing_tz_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product files view when the ended parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_missing_tz_started">
+<tt class="descname">test_missing_tz_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product files view when the started parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_negative_time_range">
+<tt class="descname">test_negative_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the product files view with a negative time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-product.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-product.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing products</p>
+<dl class="function">
+<dt id="product.test.utils.create_product">
+<tt class="descclassname">product.test.utils.</tt><tt class="descname">create_product</tt><big>(</big><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em><big>)</big><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a product file model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The product model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="product.html#product.models.ProductFile" title="product.models.ProductFile"><tt class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="product.test.configuration.html">configuration Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="product.test.configuration.html#module-product.test.configuration.test_product_data_file"><tt class="docutils literal"><span class="pre">test_product_data_file</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-product.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-product.test.test_queue_processor"><tt class="docutils literal"><span class="pre">test_queue_processor</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-product.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-product.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="product.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="product.test.configuration.html"
+                        title="next chapter">configuration Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/product.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="product.test.configuration.html" title="configuration Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="product.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="product.html" >product Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

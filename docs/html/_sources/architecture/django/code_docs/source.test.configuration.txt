@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+:mod:`test_source_data_file` Module
+-----------------------------------
+
+.. automodule:: source.test.configuration.test_source_data_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

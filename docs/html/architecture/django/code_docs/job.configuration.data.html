@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>data Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="configuration Package" href="job.configuration.html" />
+    <link rel="next" title="environment Package" href="job.configuration.environment.html" />
+    <link rel="prev" title="configuration Package" href="job.configuration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.environment.html" title="environment Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.html" title="configuration Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" accesskey="U">configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-package">
+<h1>data Package<a class="headerlink" href="#data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.configuration.data.data_file">
+<span id="data-file-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">data_file</span></tt> Module<a class="headerlink" href="#module-job.configuration.data.data_file" title="Permalink to this headline">¶</a></h2>
+<p>Defines the data file inputs and data file outputs that are contained within job data</p>
+<dl class="class">
+<dt id="job.configuration.data.data_file.AbstractDataFileParseSaver">
+<em class="property">class </em><tt class="descclassname">job.configuration.data.data_file.</tt><tt class="descname">AbstractDataFileParseSaver</tt><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileParseSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract base class for a data file parse saver. A data file parse saver provides a way to save parse results for
+input data files.</p>
+<dl class="method">
+<dt id="job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results">
+<tt class="descname">save_parse_results</tt><big>(</big><em>parse_results</em>, <em>input_file_ids</em><big>)</big><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the given parse results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parse_results</strong> (dict of str -&gt; tuple(str, <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>, list,
+str, str)) &#8211; Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
+(optionally None), the start time of the data contained in the file (optionally None), the end time of the
+data contained in the file (optionally None), the list of data types, the new workspace path (optionally
+None), and the work directory (optionally None)</li>
+<li><strong>input_file_ids</strong> (<em>list of long</em>) &#8211; List of IDs for all input files</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.data.data_file.AbstractDataFileStore">
+<em class="property">class </em><tt class="descclassname">job.configuration.data.data_file.</tt><tt class="descname">AbstractDataFileStore</tt><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract base class for a data file store. A data file store provides a way to validate data file output
+configuration and store output data files.</p>
+<dl class="method">
+<dt id="job.configuration.data.data_file.AbstractDataFileStore.get_workspaces">
+<tt class="descname">get_workspaces</tt><big>(</big><em>workspace_ids</em><big>)</big><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the workspaces with the given IDs. If no workspace has a given ID, it will not be retrieved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>workspace_ids</strong> (<em>set of int</em>) &#8211; The set of workspace IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each workspace ID mapping to a bool indicating if it is active (True)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.data_file.AbstractDataFileStore.store_files">
+<tt class="descname">store_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>data_files</em>, <em>input_file_ids</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the given data files and writes them to the given workspaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading</li>
+<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple(str, str)</em>) &#8211; Dict with workspace ID mapping to a list of tuples with file paths relative to the upload
+directory and media type (media type is optionally None)</li>
+<li><strong>input_file_ids</strong> (<em>set of long</em>) &#8211; Set of input file IDs</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict with each local file path mapping to its new file ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of str -&gt; long</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.data.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-job.configuration.data.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with job data</p>
+<dl class="exception">
+<dt id="job.configuration.data.exceptions.InvalidConnection">
+<em class="property">exception </em><tt class="descclassname">job.configuration.data.exceptions.</tt><tt class="descname">InvalidConnection</tt><a class="headerlink" href="#job.configuration.data.exceptions.InvalidConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided job connection was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.configuration.data.exceptions.InvalidData">
+<em class="property">exception </em><tt class="descclassname">job.configuration.data.exceptions.</tt><tt class="descname">InvalidData</tt><a class="headerlink" href="#job.configuration.data.exceptions.InvalidData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that the provided job data was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.configuration.data.exceptions.StatusError">
+<em class="property">exception </em><tt class="descclassname">job.configuration.data.exceptions.</tt><tt class="descname">StatusError</tt><a class="headerlink" href="#job.configuration.data.exceptions.StatusError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception indicating that an operation cannot be completed due to the current job status.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.data.job_connection">
+<span id="job-connection-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_connection</span></tt> Module<a class="headerlink" href="#module-job.configuration.data.job_connection" title="Permalink to this headline">¶</a></h2>
+<p>Defines connections that will provide data to execute jobs</p>
+<dl class="class">
+<dt id="job.configuration.data.job_connection.JobConnection">
+<em class="property">class </em><tt class="descclassname">job.configuration.data.job_connection.</tt><tt class="descname">JobConnection</tt><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents a connection that will provide data to execute jobs. This class contains the necessary description
+needed to ensure the data provided by the connection will be sufficient to execute the given job.</p>
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.add_input_file">
+<tt class="descname">add_input_file</tt><big>(</big><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<em>str</em>) &#8211; The file parameter name</li>
+<li><strong>multiple</strong> (<em>bool</em>) &#8211; Whether the file parameter provides multiple files (True)</li>
+<li><strong>media_types</strong> (<em>list of str</em>) &#8211; The possible media types of the file parameter (unknown if None or [])</li>
+<li><strong>optional</strong> (<em>bool</em>) &#8211; Whether the file parameter is optional and may not be provided (True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.add_property">
+<tt class="descname">add_property</tt><big>(</big><em>property_name</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new property parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_name</strong> (<em>str</em>) &#8211; The property parameter name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.add_workspace">
+<tt class="descname">add_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that this connection provides a workspace for storing output files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.has_workspace">
+<tt class="descname">has_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this connection provides a workspace for storing output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this connection provides a workspace, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.validate_input_files">
+<tt class="descname">validate_input_files</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></tt></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+(True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_connection.JobConnection.validate_properties">
+<tt class="descname">validate_properties</tt><big>(</big><em>property_names</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.data.job_data">
+<span id="job-data-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_data</span></tt> Module<a class="headerlink" href="#module-job.configuration.data.job_data" title="Permalink to this headline">¶</a></h2>
+<p>Defines the data needed for executing a job</p>
+<dl class="class">
+<dt id="job.configuration.data.job_data.JobData">
+<em class="property">class </em><tt class="descclassname">job.configuration.data.job_data.</tt><tt class="descname">JobData</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Represents the data needed for executing a job. Data includes details about the data inputs, links needed to
+connect shared resources to resource instances in Scale, and details needed to store all resulting output.</p>
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.add_file_input">
+<tt class="descname">add_file_input</tt><big>(</big><em>input_name</em>, <em>file_id</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_file_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this job data. This method does not perform validation on the job data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The file parameter name</li>
+<li><strong>file_id</strong> (<em>long</em>) &#8211; The ID of the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.add_file_list_input">
+<tt class="descname">add_file_list_input</tt><big>(</big><em>input_name</em>, <em>file_ids</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_file_list_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new files parameter to this job data. This method does not perform validation on the job data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The files parameter name</li>
+<li><strong>file_ids</strong> (<em>list of long</em>) &#8211; The ID of the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.add_output">
+<tt class="descname">add_output</tt><big>(</big><em>output_name</em>, <em>workspace_id</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new output parameter to this job data with a workspace ID. This method does not perform validation on
+the job data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>str</em>) &#8211; The output parameter name</li>
+<li><strong>workspace_id</strong> (<em>int</em>) &#8211; The ID of the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.add_property_input">
+<tt class="descname">add_property_input</tt><big>(</big><em>input_name</em>, <em>value</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_property_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new property parameter to this job data. This method does not perform validation on the job data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The property parameter name</li>
+<li><strong>value</strong> (<em>str</em>) &#8211; The value of the property</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_dict">
+<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_input_file_ids">
+<tt class="descname">get_input_file_ids</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of scale file identifiers for each file in the job input data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of scale file identifiers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_output_workspace_ids">
+<tt class="descname">get_output_workspace_ids</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_output_workspace_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the IDs for every workspace used to store the output files for this data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of workspace IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_property_values">
+<tt class="descname">get_property_values</tt><big>(</big><em>property_names</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_property_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the values contained in this job data for the given property names. If no value is available for a
+property name, it will not be included in the returned dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>list of str</em>) &#8211; List of property names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each property name mapping to its value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.retrieve_input_data_files">
+<tt class="descname">retrieve_input_data_files</tt><big>(</big><em>download_dir</em>, <em>work_dir</em>, <em>data_files</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.retrieve_input_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the given data input files and writes them to the given local directories. Any given file
+parameters that do not appear in the data will not be returned in the results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
+<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in downloading</li>
+<li><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+multiple files (True) and a directory path relative to the download directory</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict with each file parameter name mapping to a list of absolute file paths of the written files</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of str -&gt; list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.save_parse_results">
+<tt class="descname">save_parse_results</tt><big>(</big><em>parse_results</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the given parse results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parse_results</strong> (dict of str -&gt; tuple(str, <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>, list,
+str, str)) &#8211; Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
+(optionally None), the start time of the data contained in the file (optionally None), the end time of the
+data contained in the file (optionally None), the list of data types, the new workspace path (optionally
+None), and the work directory (optionally None)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.setup_job_dir">
+<tt class="descname">setup_job_dir</tt><big>(</big><em>data_files</em>, <em>job_exe_id</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.setup_job_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the directory structure for a job execution and downloads the given files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+multiple files (True) and a relative directory path</li>
+<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict with each file parameter name mapping to a list of absolute file paths of the written files</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of str -&gt; list of str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.store_output_data_files">
+<tt class="descname">store_output_data_files</tt><big>(</big><em>data_files</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.store_output_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the given data output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_files</strong> (<em>dict of str -&gt; tuple(str, str) or list of tuple(str, str)</em>) &#8211; Dict with each file parameter name mapping to a tuple of absolute local file path and media
+type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
+parameter</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the output data
+files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The job results</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.results.html#job.configuration.results.job_results.JobResults" title="job.configuration.results.job_results.JobResults"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.results.job_results.JobResults</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.validate_input_files">
+<tt class="descname">validate_input_files</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></tt></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+(True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.validate_output_files">
+<tt class="descname">validate_output_files</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.validate_output_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em>list of str</em>) &#8211; List of file parameter names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.validate_properties">
+<tt class="descname">validate_properties</tt><big>(</big><em>property_names</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.JobData.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to ensure they are all populated correctly and exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.data.job_data.ValidationWarning">
+<em class="property">class </em><tt class="descclassname">job.configuration.data.job_data.</tt><tt class="descname">ValidationWarning</tt><big>(</big><em>key</em>, <em>details</em><big>)</big><a class="headerlink" href="#job.configuration.data.job_data.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Tracks job data configuration warnings during validation that may not prevent the job from working.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">data Package</a><ul>
+<li><a class="reference internal" href="#module-job.configuration.data.data_file"><tt class="docutils literal"><span class="pre">data_file</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.data.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.data.job_connection"><tt class="docutils literal"><span class="pre">job_connection</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.configuration.data.job_data"><tt class="docutils literal"><span class="pre">job_data</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.configuration.html"
+                        title="previous chapter">configuration Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.configuration.environment.html"
+                        title="next chapter">environment Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.configuration.data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.environment.html" title="environment Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.configuration.html" title="configuration Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.configuration.html" >configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

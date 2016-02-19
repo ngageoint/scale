@@ -1,0 +1,11 @@
+configuration Package
+=====================
+
+:mod:`test_parse_trigger_rule` Module
+-------------------------------------
+
+.. automodule:: source.test.triggers.configuration.test_parse_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

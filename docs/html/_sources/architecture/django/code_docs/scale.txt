@@ -1,0 +1,51 @@
+scale Package
+=============
+
+:mod:`local_settings` Module
+----------------------------
+
+.. automodule:: scale.local_settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`local_settings_SAMPLE_DEV` Module
+---------------------------------------
+
+.. automodule:: scale.local_settings_SAMPLE_DEV
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`local_settings_SAMPLE_PROD` Module
+----------------------------------------
+
+.. automodule:: scale.local_settings_SAMPLE_PROD
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`settings` Module
+----------------------
+
+.. automodule:: scale.settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: scale.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`wsgi` Module
+------------------
+
+.. automodule:: scale.wsgi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

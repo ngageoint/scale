@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Workspaces &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Architecture" href="index.html" />
+    <link rel="next" title="Django/Code Base" href="django/index.html" />
+    <link rel="prev" title="Triggers" href="triggers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="django/index.html" title="Django/Code Base"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="triggers.html" title="Triggers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Architecture</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="workspaces">
+<span id="architecture-workspaces"></span><h1>Workspaces<a class="headerlink" href="#workspaces" title="Permalink to this headline">¶</a></h1>
+<p>A workspace in the Scale system is a location where files are stored (source files, product files, etc). A workspace
+contains configuration specifying how files are stored into and retrieved from the workspace. Workspaces are configured
+to use various <em>brokers</em>, which know how to store/retrieve files in different storage systems (e.g. NFS, FTP).</p>
+<p><strong>Example workspace configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>broker</em> value is a JSON object providing the configuration for this workspace&#8217;s broker. The <em>type</em> value indicates
+that the NFS (Network File System) broker should be used for this workspace. The <em>mount</em> field specifies the NFS host
+and path that should be mounted in order to access the files. To see all of the options for a workspace&#8217;s configuration,
+please refer to the Workspace Configuration Specification below.</p>
+<div class="section" id="workspace-configuration-specification-version-1-0">
+<span id="architecture-workspaces-spec"></span><h2>Workspace Configuration Specification Version 1.0<a class="headerlink" href="#workspace-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid workspace configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
+be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
+version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
+version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+future changes to the specification will still accept your workspace configuration.</div></blockquote>
+<p><strong>broker</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>broker</em> is a JSON object that defines the broker that the workspace should use for retrieving and storing
+files. The <em>broker</em> JSON object has the following fields:</p>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>type</em> is a required string that specifies the type of the broker to use. The other fields that configure
+the broker are based upon the type of the broker in the <em>type</em> field. The valid broker types are:</p>
+<p><strong>nfs</strong></p>
+<blockquote>
+<div><p>An &#8220;nfs&#8221; broker utilizes an NFS (Network File System) for file storage. An NFS broker has the following
+additional field:</p>
+<p><strong>mount</strong>: JSON string</p>
+<blockquote>
+<div>The <em>mount</em> is a required string that specifies the NFS host and path that should be mounted in order to
+access the files (format is <em>host:/file/path</em>).</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Workspaces</a><ul>
+<li><a class="reference internal" href="#workspace-configuration-specification-version-1-0">Workspace Configuration Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="triggers.html"
+                        title="previous chapter">Triggers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="django/index.html"
+                        title="next chapter">Django/Code Base</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/architecture/workspaces.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="django/index.html" title="Django/Code Base"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="triggers.html" title="Triggers"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Architecture</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

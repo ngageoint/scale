@@ -1,0 +1,112 @@
+scheduler Package
+=================
+
+:mod:`scheduler` Package
+------------------------
+
+.. automodule:: scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`admin` Module
+-------------------
+
+.. automodule:: scheduler.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: scheduler.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`cluster_utils` Module
+---------------------------
+
+.. automodule:: scheduler.cluster_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`initialize` Module
+------------------------
+
+.. automodule:: scheduler.initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: scheduler.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`scale_job_exe` Module
+---------------------------
+
+.. automodule:: scheduler.scale_job_exe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`scale_scheduler` Module
+-----------------------------
+
+.. automodule:: scheduler.scale_scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`scheduler_errors` Module
+------------------------------
+
+.. automodule:: scheduler.scheduler_errors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: scheduler.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: scheduler.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: scheduler.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    scheduler.fixtures
+    scheduler.management
+    scheduler.migrations
+    scheduler.offer
+    scheduler.sync
+    scheduler.test
+    scheduler.threads
+

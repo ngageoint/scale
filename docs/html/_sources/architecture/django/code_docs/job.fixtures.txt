@@ -1,0 +1,11 @@
+fixtures Package
+================
+
+:mod:`fixtures` Package
+-----------------------
+
+.. automodule:: job.fixtures
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -1,0 +1,27 @@
+running Package
+===============
+
+:mod:`job_exe` Module
+---------------------
+
+.. automodule:: job.execution.running.job_exe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`manager` Module
+---------------------
+
+.. automodule:: job.execution.running.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`tasks` Module
+-------------------
+
+.. automodule:: job.execution.running.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

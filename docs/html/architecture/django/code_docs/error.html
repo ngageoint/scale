@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>error Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Django/Code Base" href="../index.html" />
+    <link rel="next" title="fixtures Package" href="error.fixtures.html" />
+    <link rel="prev" title="Django/Code Base" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="error.fixtures.html" title="fixtures Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Django/Code Base"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="error-package">
+<h1>error Package<a class="headerlink" href="#error-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-error" title="error"><tt class="xref py py-mod docutils literal"><span class="pre">error</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-error"></span><p>The standard interface for errors in scale</p>
+</div>
+<div class="section" id="module-error.apps">
+<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-error.apps" title="Permalink to this headline">¶</a></h2>
+<p>The scale error application</p>
+<dl class="class">
+<dt id="error.apps.ErrorConfig">
+<em class="property">class </em><tt class="descclassname">error.apps.</tt><tt class="descname">ErrorConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#error.apps.ErrorConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<p>Configuration for the error app</p>
+<dl class="attribute">
+<dt id="error.apps.ErrorConfig.label">
+<tt class="descname">label</tt><em class="property"> = u'error'</em><a class="headerlink" href="#error.apps.ErrorConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.apps.ErrorConfig.name">
+<tt class="descname">name</tt><em class="property"> = u'error'</em><a class="headerlink" href="#error.apps.ErrorConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.apps.ErrorConfig.verbose_name">
+<tt class="descname">verbose_name</tt><em class="property"> = u'Error'</em><a class="headerlink" href="#error.apps.ErrorConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.handlers">
+<span id="handlers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">handlers</span></tt> Module<a class="headerlink" href="#module-error.handlers" title="Permalink to this headline">¶</a></h2>
+<p>Error handlers for scale</p>
+<dl class="class">
+<dt id="error.handlers.DatabaseLogHandler">
+<em class="property">class </em><tt class="descclassname">error.handlers.</tt><tt class="descname">DatabaseLogHandler</tt><big>(</big><em>model=''</em><big>)</big><a class="headerlink" href="#error.handlers.DatabaseLogHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">logging.Handler</span></tt></p>
+<p>This class inherits from the logging.Handler class to provide
+support for logging messages to a database table.</p>
+<dl class="method">
+<dt id="error.handlers.DatabaseLogHandler.emit">
+<tt class="descname">emit</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#error.handlers.DatabaseLogHandler.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the record object to a database using the Django model class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>record</strong> (<em>LogRecord</em>) &#8211; Record object to save to the database</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.handlers.DatabaseLogHandler.get_model">
+<tt class="descname">get_model</tt><big>(</big><em>model_name</em><big>)</big><a class="headerlink" href="#error.handlers.DatabaseLogHandler.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the given Django model given the name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>model_name</strong> (<em>str</em>) &#8211; The name of the model to retrieve</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.handlers.DatabaseLogHandler.handleError">
+<tt class="descname">handleError</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#error.handlers.DatabaseLogHandler.handleError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles an exception that happened within the emit method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>record</strong> (<em>LogRecord</em>) &#8211; Record object to save to the database</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="error.handlers.DatabaseLogHandler.model">
+<tt class="descname">model</tt><em class="property"> = None</em><a class="headerlink" href="#error.handlers.DatabaseLogHandler.model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.models">
+<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-error.models" title="Permalink to this headline">¶</a></h2>
+<p>error models</p>
+<dl class="class">
+<dt id="error.models.Error">
+<em class="property">class </em><tt class="descclassname">error.models.</tt><tt class="descname">Error</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.models.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents an error that occurred during processing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The stable name of the error used by clients for queries</li>
+<li><strong>title</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The human-readable name of the error</li>
+<li><strong>description</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; A longer description of the error</li>
+<li><strong>category</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The category of the error</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the error model was created</li>
+<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the error model was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="error.models.Error.CATEGORIES">
+<tt class="descname">CATEGORIES</tt><em class="property"> = ((u'SYSTEM', u'SYSTEM'), (u'ALGORITHM', u'ALGORITHM'), (u'DATA', u'DATA'))</em><a class="headerlink" href="#error.models.Error.CATEGORIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="error.models.Error.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#error.models.Error.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="error.models.Error.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">Error.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#error.models.Error.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.get_category_display">
+<tt class="descclassname">Error.</tt><tt class="descname">get_category_display</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.Error.get_category_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.get_next_by_created">
+<tt class="descclassname">Error.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.Error.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.get_next_by_last_modified">
+<tt class="descclassname">Error.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.Error.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.get_previous_by_created">
+<tt class="descclassname">Error.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.Error.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.get_previous_by_last_modified">
+<tt class="descclassname">Error.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.Error.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.models.Error.job_set">
+<tt class="descclassname">Error.</tt><tt class="descname">job_set</tt><a class="headerlink" href="#error.models.Error.job_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.models.Error.jobexecution_set">
+<tt class="descclassname">Error.</tt><tt class="descname">jobexecution_set</tt><a class="headerlink" href="#error.models.Error.jobexecution_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.Error.natural_key">
+<tt class="descclassname">Error.</tt><tt class="descname">natural_key</tt><big>(</big><big>)</big><a class="headerlink" href="#error.models.Error.natural_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Django method to define the natural key for an error as the error
+name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple representing the natural key</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(str,)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="error.models.Error.objects">
+<tt class="descclassname">Error.</tt><tt class="descname">objects</tt><em class="property"> = &lt;error.models.ErrorManager object at 0x2a55c10&gt;</em><a class="headerlink" href="#error.models.Error.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.models.ErrorManager">
+<em class="property">class </em><tt class="descclassname">error.models.</tt><tt class="descname">ErrorManager</tt><a class="headerlink" href="#error.models.ErrorManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<p>Provides additional methods for handling errors</p>
+<dl class="method">
+<dt id="error.models.ErrorManager.create_error">
+<tt class="descname">create_error</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.models.ErrorManager.create_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new error in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The name of the error</li>
+<li><strong>title</strong> (<em>str</em>) &#8211; The title of the error</li>
+<li><strong>description</strong> (<em>str</em>) &#8211; A longer description of the error</li>
+<li><strong>category</strong> &#8211; The category of the error</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type :</th><td class="field-body"><p class="first last">str in Error.CATEGORIES</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_by_natural_key">
+<tt class="descname">get_by_natural_key</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Django method to retrieve an error for the given natural key</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error defined by the natural key</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_database_error">
+<tt class="descname">get_database_error</tt><big>(</big><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_database_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for a database problem</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The database error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_errors">
+<tt class="descname">get_errors</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of errors within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query errors updated after this amount of time.</li>
+<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query errors updated before this amount of time.</li>
+<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of errors that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_filesystem_error">
+<tt class="descname">get_filesystem_error</tt><big>(</big><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_filesystem_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for a filesystem problem</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The filesystem error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_nfs_error">
+<tt class="descname">get_nfs_error</tt><big>(</big><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_nfs_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for an NFS problem</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The NFS error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_unknown_error">
+<tt class="descname">get_unknown_error</tt><big>(</big><big>)</big><a class="headerlink" href="#error.models.ErrorManager.get_unknown_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for an unknown cause</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The unknown error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.models.LogEntry">
+<em class="property">class </em><tt class="descclassname">error.models.</tt><tt class="descname">LogEntry</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.models.LogEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<p>Represents a log entry that occurred during processing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>host</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The name of the cluster node that generated the LogRecord</li>
+<li><strong>level</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The severity/importance of the log entry</li>
+<li><strong>message</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></tt>) &#8211; The message generated from the cluster node</li>
+<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the log entry was created</li>
+<li><strong>stacktrace</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></tt>) &#8211; A stack trace of the LogRecord if one is available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="error.models.LogEntry.DoesNotExist">
+<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#error.models.LogEntry.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="error.models.LogEntry.MultipleObjectsReturned">
+<em class="property">exception </em><tt class="descclassname">LogEntry.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#error.models.LogEntry.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.LogEntry.get_next_by_created">
+<tt class="descclassname">LogEntry.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.LogEntry.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.models.LogEntry.get_previous_by_created">
+<tt class="descclassname">LogEntry.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#error.models.LogEntry.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="error.models.LogEntry.objects">
+<tt class="descclassname">LogEntry.</tt><tt class="descname">objects</tt><em class="property"> = &lt;django.db.models.manager.Manager object at 0x2a5e590&gt;</em><a class="headerlink" href="#error.models.LogEntry.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.serializers">
+<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-error.serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for errors</p>
+<dl class="class">
+<dt id="error.serializers.ErrorBaseSerializer">
+<em class="property">class </em><tt class="descclassname">error.serializers.</tt><tt class="descname">ErrorBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.serializers.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<p>Converts error model fields to REST output</p>
+<dl class="attribute">
+<dt id="error.serializers.ErrorBaseSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x35119d0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3511b10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3511b90&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x3511c10&gt;}</em><a class="headerlink" href="#error.serializers.ErrorBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorDetailsSerializer">
+<em class="property">class </em><tt class="descclassname">error.serializers.</tt><tt class="descname">ErrorDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.serializers.ErrorDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializer" title="error.serializers.ErrorSerializer"><tt class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializer</span></tt></a></p>
+<p>Converts error model fields to REST output</p>
+<dl class="attribute">
+<dt id="error.serializers.ErrorDetailsSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x35119d0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3511b10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3511b90&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x3511c10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3511c90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3511d50&gt;}</em><a class="headerlink" href="#error.serializers.ErrorDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorListSerializer">
+<em class="property">class </em><tt class="descclassname">error.serializers.</tt><tt class="descname">ErrorListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.serializers.ErrorListSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
+<p>Converts a list of job type models to paginated REST output.</p>
+<dl class="class">
+<dt id="error.serializers.ErrorListSerializer.Meta">
+<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#error.serializers.ErrorListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="error.serializers.ErrorListSerializer.Meta.object_serializer_class">
+<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#error.serializers.ErrorListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#error.serializers.ErrorSerializer" title="error.serializers.ErrorSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ErrorSerializer</span></tt></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="error.serializers.ErrorListSerializer.base_fields">
+<tt class="descclassname">ErrorListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#error.serializers.ErrorListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorSerializer">
+<em class="property">class </em><tt class="descclassname">error.serializers.</tt><tt class="descname">ErrorSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#error.serializers.ErrorSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorBaseSerializer" title="error.serializers.ErrorBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializer</span></tt></a></p>
+<p>Converts error model fields to REST output</p>
+<dl class="attribute">
+<dt id="error.serializers.ErrorSerializer.base_fields">
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x35119d0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3511b10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3511b90&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x3511c10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3511c90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3511d50&gt;}</em><a class="headerlink" href="#error.serializers.ErrorSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.urls">
+<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-error.urls" title="Permalink to this headline">¶</a></h2>
+<p>Defines the URLs for the RESTful recipe services</p>
+</div>
+<div class="section" id="module-error.views">
+<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-error.views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="error.views.ErrorDetailsView">
+<em class="property">class </em><tt class="descclassname">error.views.</tt><tt class="descname">ErrorDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#error.views.ErrorDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving details of an error.</p>
+<dl class="method">
+<dt id="error.views.ErrorDetailsView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em>, <em>error_id</em><big>)</big><a class="headerlink" href="#error.views.ErrorDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for an error and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>error_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the error</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.views.ErrorDetailsView.patch">
+<tt class="descname">patch</tt><big>(</big><em>request</em>, <em>error_id</em><big>)</big><a class="headerlink" href="#error.views.ErrorDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits an existing error and returns the updated model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP PATCH request</li>
+<li><strong>error_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the error</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="error.views.ErrorDetailsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#error.views.ErrorDetailsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.views.ErrorsView">
+<em class="property">class </em><tt class="descclassname">error.views.</tt><tt class="descname">ErrorsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#error.views.ErrorsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for retrieving the list of all errors and creating a new error.</p>
+<dl class="method">
+<dt id="error.views.ErrorsView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#error.views.ErrorsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of all errors and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.views.ErrorsView.post">
+<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#error.views.ErrorsView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new error and returns a link to the info URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="error.views.ErrorsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#error.views.ErrorsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="error.fixtures.html">fixtures Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="error.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error.migrations.html">migrations Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0002_auto_20151217_1319"><tt class="docutils literal"><span class="pre">0002_auto_20151217_1319</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="error.test.html">test Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="error.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.test.html#module-error.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.test.html#module-error.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.test.html#module-error.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">error Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">error</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-error.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.handlers"><tt class="docutils literal"><span class="pre">handlers</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-error.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Django/Code Base</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="error.fixtures.html"
+                        title="next chapter">fixtures Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/error.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="error.fixtures.html" title="fixtures Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Django/Code Base"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

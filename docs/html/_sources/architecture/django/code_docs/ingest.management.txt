@@ -1,0 +1,18 @@
+management Package
+==================
+
+:mod:`management` Package
+-------------------------
+
+.. automodule:: ingest.management
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.management.commands
+

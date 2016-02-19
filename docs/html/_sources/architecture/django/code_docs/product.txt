@@ -1,0 +1,68 @@
+product Package
+===============
+
+:mod:`product` Package
+----------------------
+
+.. automodule:: product
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`apps` Module
+------------------
+
+.. automodule:: product.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`models` Module
+--------------------
+
+.. automodule:: product.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`queue_processor` Module
+-----------------------------
+
+.. automodule:: product.queue_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`serializers` Module
+-------------------------
+
+.. automodule:: product.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: product.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: product.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    product.configuration
+    product.migrations
+    product.test
+

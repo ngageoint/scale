@@ -1,0 +1,11 @@
+definition Package
+==================
+
+:mod:`test_recipe_definition` Module
+------------------------------------
+
+.. automodule:: recipe.test.configuration.definition.test_recipe_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

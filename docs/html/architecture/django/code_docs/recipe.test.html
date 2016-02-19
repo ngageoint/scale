@@ -1,0 +1,676 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="recipe Package" href="recipe.html" />
+    <link rel="next" title="configuration Package" href="recipe.test.configuration.html" />
+    <link rel="prev" title="migrations Package" href="recipe.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipe.test.configuration.html" title="configuration Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="recipe.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="recipe.html" accesskey="U">recipe Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-recipe.test"></span></div>
+<div class="section" id="module-recipe.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-recipe.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestJobTypeManagerEditJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface">
+<tt class="descname">test_invalid_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and an invalid interface
+change is made</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface">
+<tt class="descname">test_valid_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and a valid interface change
+is made</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestJobTypeManagerValidateJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface">
+<tt class="descname">test_invalid_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
+change is made</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface">
+<tt class="descname">test_valid_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
+change is made</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestRecipeManagerCreateRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeManager.create_recipe() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipePopulateJobs">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestRecipePopulateJobs</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipePopulateJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipePopulateJobs.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipePopulateJobs.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipePopulateJobs.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipePopulateJobs.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.populate_source_ancestors() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestRecipeTypeManagerCreateRecipeType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.create_recipe_type() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_models.</tt><tt class="descname">TestRecipeTypeManagerEditRecipeType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_simple_no_trigger">
+<tt class="descname">test_change_simple_no_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_simple_no_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and no previous trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_simple_with_trigger">
+<tt class="descname">test_change_simple_with_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_simple_with_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and a previous trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_both">
+<tt class="descname">test_change_to_both</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_both" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and the trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_definition">
+<tt class="descname">test_change_to_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_trigger_rule">
+<tt class="descname">test_change_to_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to the trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_invalid_trigger_rule">
+<tt class="descname">test_invalid_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a new invalid trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_remove_trigger_rule">
+<tt class="descname">test_remove_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-recipe.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_views.</tt><tt class="descname">TestRecipeTypeDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<p>Tests related to the recipe-types details endpoint</p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_definition">
+<tt class="descname">test_edit_bad_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a recipe type using an invalid recipe definition</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_trigger">
+<tt class="descname">test_edit_bad_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a recipe type using an invalid trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition">
+<tt class="descname">test_edit_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the definition of a recipe type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition_and_trigger_rule">
+<tt class="descname">test_edit_definition_and_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition_and_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the recipe type definition and trigger rule together</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_simple">
+<tt class="descname">test_edit_simple</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing only the basic attributes of a recipe type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule">
+<tt class="descname">test_edit_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the trigger rule of a recipe type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_pause">
+<tt class="descname">test_edit_trigger_rule_pause</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests pausing the trigger rule of a recipe type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_remove">
+<tt class="descname">test_edit_trigger_rule_remove</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests removing the trigger rule from a recipe type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_not_found">
+<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the recipe type details view with an id that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypeDetailsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe type details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_views.</tt><tt class="descname">TestRecipeTypesValidationView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<p>Tests related to the recipe-types validation endpoint</p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_bad_job">
+<tt class="descname">test_bad_job</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with an invalid job relationship.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_bad_param">
+<tt class="descname">test_bad_param</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_config">
+<tt class="descname">test_bad_trigger_config</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type with an invalid trigger rule configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_type">
+<tt class="descname">test_bad_trigger_type</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type with an invalid trigger type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_successful_trigger">
+<tt class="descname">test_successful_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new recipe type with a trigger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesValidationView.test_warnings">
+<tt class="descname">test_warnings</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with mismatched media type warnings.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeTypesView">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_views.</tt><tt class="descname">TestRecipeTypesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<p>Tests related to the recipe-types base endpoint</p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create">
+<tt class="descname">test_create</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create_bad_job">
+<tt class="descname">test_create_bad_job</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create_bad_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with an invalid job relationship.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create_bad_param">
+<tt class="descname">test_create_bad_param</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_config">
+<tt class="descname">test_create_bad_trigger_config</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with an invalid trigger rule configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_type">
+<tt class="descname">test_create_bad_trigger_type</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with an invalid trigger type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_create_trigger">
+<tt class="descname">test_create_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_create_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new recipe type with a trigger rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeTypesView.test_list_all">
+<tt class="descname">test_list_all</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypesView.test_list_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting a list of recipe types.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipesView">
+<em class="property">class </em><tt class="descclassname">recipe.test.test_views.</tt><tt class="descname">TestRecipesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_successful_all">
+<tt class="descname">test_successful_all</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_successful_details">
+<tt class="descname">test_successful_details</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipe details</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_successful_type_id">
+<tt class="descname">test_successful_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipes by type id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_successful_type_name">
+<tt class="descname">test_successful_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipes by type name</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-recipe.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing jobs and job types</p>
+<dl class="class">
+<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration">
+<em class="property">class </em><tt class="descclassname">recipe.test.utils.</tt><tt class="descname">MockErrorTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>configuration</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></tt></a></p>
+<p>Mock error trigger rule configuration for testing</p>
+<dl class="method">
+<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job">
+<tt class="descname">validate_trigger_for_job</tt><big>(</big><em>job_interface</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_recipe">
+<tt class="descname">validate_trigger_for_recipe</tt><big>(</big><em>recipe_definition</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.utils.MockErrorTriggerRuleHandler">
+<em class="property">class </em><tt class="descclassname">recipe.test.utils.</tt><tt class="descname">MockErrorTriggerRuleHandler</tt><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a></p>
+<p>Mock error trigger rule handler for testing</p>
+<dl class="method">
+<dt id="recipe.test.utils.MockErrorTriggerRuleHandler.create_configuration">
+<tt class="descname">create_configuration</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockErrorTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.utils.MockTriggerRuleConfiguration">
+<em class="property">class </em><tt class="descclassname">recipe.test.utils.</tt><tt class="descname">MockTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>configuration</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></tt></a></p>
+<p>Mock trigger rule configuration for testing</p>
+<dl class="method">
+<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job">
+<tt class="descname">validate_trigger_for_job</tt><big>(</big><em>job_interface</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_recipe">
+<tt class="descname">validate_trigger_for_recipe</tt><big>(</big><em>recipe_definition</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.utils.MockTriggerRuleHandler">
+<em class="property">class </em><tt class="descclassname">recipe.test.utils.</tt><tt class="descname">MockTriggerRuleHandler</tt><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a></p>
+<p>Mock trigger rule handler for testing</p>
+<dl class="method">
+<dt id="recipe.test.utils.MockTriggerRuleHandler.create_configuration">
+<tt class="descname">create_configuration</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_recipe">
+<tt class="descclassname">recipe.test.utils.</tt><tt class="descname">create_recipe</tt><big>(</big><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em><big>)</big><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a job type model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type</strong> (<em>:class:&#8217;recipe.models.RecipeType&#8217;</em>) &#8211; The associated recipe type</li>
+<li><strong>data</strong> (<em>dict</em>) &#8211; The associated data for the recipe</li>
+<li><strong>event</strong> (<em>:class:&#8217;trigger.models.TriggerEvent&#8217;</em>) &#8211; The associated event</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_recipe_job">
+<tt class="descclassname">recipe.test.utils.</tt><tt class="descname">create_recipe_job</tt><big>(</big><em>recipe=None</em>, <em>job_name=None</em>, <em>job=None</em><big>)</big><a class="headerlink" href="#recipe.test.utils.create_recipe_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a job type model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe</strong> (<em>:class:&#8217;recipe.models.Recipe&#8217;</em>) &#8211; The associated recipe</li>
+<li><strong>job_name</strong> &#8211; The associated name for the recipe job</li>
+<li><strong>job</strong> (<em>:class:&#8217;job.models.Job&#8217;</em>) &#8211; The associated job</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe job model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_recipe_type">
+<tt class="descclassname">recipe.test.utils.</tt><tt class="descname">create_recipe_type</tt><big>(</big><em>name=None</em>, <em>version=None</em>, <em>title=None</em>, <em>description=None</em>, <em>definition=None</em>, <em>trigger_rule=None</em><big>)</big><a class="headerlink" href="#recipe.test.utils.create_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a recipe type for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The RecipeType model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipe.test.configuration.html">configuration Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.test.configuration.data.html">data Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data.test_recipe_data"><tt class="docutils literal"><span class="pre">test_recipe_data</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.test.configuration.definition.html">definition Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition"><tt class="docutils literal"><span class="pre">test_recipe_definition</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-recipe.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-recipe.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-recipe.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="recipe.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="recipe.test.configuration.html"
+                        title="next chapter">configuration Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/recipe.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="recipe.test.configuration.html" title="configuration Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="recipe.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="recipe.html" >recipe Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

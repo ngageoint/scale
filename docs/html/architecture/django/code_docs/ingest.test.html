@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="ingest Package" href="ingest.html" />
+    <link rel="next" title="strike Package" href="ingest.test.strike.html" />
+    <link rel="prev" title="configuration Package" href="ingest.strike.configuration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.strike.html" title="strike Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ingest.strike.configuration.html" title="configuration Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" accesskey="U">ingest Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ingest.test"></span></div>
+<div class="section" id="module-ingest.test.test_ingest_job">
+<span id="test-ingest-job-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_ingest_job</span></tt> Module<a class="headerlink" href="#module-ingest.test.test_ingest_job" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.test.test_ingest_job.TestPerformIngest">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_ingest_job.</tt><tt class="descname">TestPerformIngest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_ingest_job.TestPerformIngest.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = ['ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_ingest_job.TestPerformIngest.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_ingest_job.TestPerformIngest.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests processing a new ingest successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-ingest.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.test.test_models.TestIngestAddDataTypeTag">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestIngestAddDataTypeTag</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestAddDataTypeTag.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid">
+<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling add_data_type_tag() with invalid tags</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_valid">
+<tt class="descname">test_valid</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling add_data_type_tag() with valid tags</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_models.TestIngestGetDataTypeTags">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestIngestGetDataTypeTags</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestGetDataTypeTags.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags">
+<tt class="descname">test_no_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling get_data_type_tags() with no tags</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestIngestGetDataTypeTags.test_tags">
+<tt class="descname">test_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling get_data_type_tags() with tags</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestStrikeManagerCreateStrikeProcess</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeManager.create_strike_process() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.test.test_views">
+<span id="test-views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_views</span></tt> Module<a class="headerlink" href="#module-ingest.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.test.test_views.TestCreateStrikeView">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestCreateStrikeView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestCreateStrikeView.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestCreateStrikeView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type">
+<tt class="descname">test_configuration_bad_type</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with configuration that is not a dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration">
+<tt class="descname">test_invalid_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with invalid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestCreateStrikeView.test_missing_configuration">
+<tt class="descname">test_missing_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with missing configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestCreateStrikeView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestIngestDetailsView">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestIngestDetailsView.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestDetailsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestDetailsView.test_not_found">
+<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the ingest details view with an id that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestDetailsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestIngestStatusView">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestIngestStatusView.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots">
+<tt class="descname">test_fill_empty_slots</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest status view with place holder zero values when no data exists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.test_multiple_strikes">
+<tt class="descname">test_multiple_strikes</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_multiple_strikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest status view with multiple strike process groupings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest status view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.test_time_range">
+<tt class="descname">test_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest status view with a time range filter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestStatusView.test_use_ingest_time">
+<tt class="descname">test_use_ingest_time</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_use_ingest_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingest status view grouped by ingest time instead of data time.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestIngestsView">
+<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestIngestsView.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestsView.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestsView.test_status">
+<tt class="descname">test_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingests view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestsView.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingests view.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-ingest.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing ingests</p>
+<dl class="function">
+<dt id="ingest.test.utils.create_ingest">
+<tt class="descclassname">ingest.test.utils.</tt><tt class="descname">create_ingest</tt><big>(</big><em>file_name='test.txt'</em>, <em>status='TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>strike=None</em>, <em>source_file=None</em><big>)</big><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ingest.test.utils.create_strike">
+<tt class="descclassname">ingest.test.utils.</tt><tt class="descname">create_strike</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em><big>)</big><a class="headerlink" href="#ingest.test.utils.create_strike" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.strike.html">strike Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.html#module-ingest.test.strike.test_strike_processor"><tt class="docutils literal"><span class="pre">test_strike_processor</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.configuration.html">configuration Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration"><tt class="docutils literal"><span class="pre">test_strike_configuration</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.triggers.html">triggers Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition"><tt class="docutils literal"><span class="pre">test_ingest_trigger_condition</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler"><tt class="docutils literal"><span class="pre">test_ingest_trigger_handler</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.triggers.configuration.html">configuration Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule"><tt class="docutils literal"><span class="pre">test_ingest_trigger_rule</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-ingest.test.test_ingest_job"><tt class="docutils literal"><span class="pre">test_ingest_job</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-ingest.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ingest.strike.configuration.html"
+                        title="previous chapter">configuration Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ingest.test.strike.html"
+                        title="next chapter">strike Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/ingest.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ingest.test.strike.html" title="strike Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ingest.strike.configuration.html" title="configuration Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="ingest.html" >ingest Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

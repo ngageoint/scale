@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>data Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="configuration Package" href="job.test.configuration.html" />
+    <link rel="next" title="interface Package" href="job.test.configuration.interface.html" />
+    <link rel="prev" title="configuration Package" href="job.test.configuration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.test.configuration.interface.html" title="interface Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="job.test.configuration.html" title="configuration Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.test.html" >test Package</a> &raquo;</li>
+          <li><a href="job.test.configuration.html" accesskey="U">configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-package">
+<h1>data Package<a class="headerlink" href="#data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-job.test.configuration.data.test_job_connection">
+<span id="test-job-connection-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_job_connection</span></tt> Module<a class="headerlink" href="#module-job.test.configuration.data.test_job_connection" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_connection.</tt><tt class="descname">TestJobConnectionValidateInputFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_bad_media_type">
+<tt class="descname">test_bad_media_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_bad_media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_input_files() with a bad media type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_jamming_multiple_into_single">
+<tt class="descname">test_jamming_multiple_into_single</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_jamming_multiple_into_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_input_files() when passing multiple files into a single file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_optional_and_required">
+<tt class="descname">test_optional_and_required</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_optional_and_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_input_files() when the connection has optional data for required input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_required_missing">
+<tt class="descname">test_required_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_required_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_input_files() when a required file parameter is missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_input_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_connection.</tt><tt class="descname">TestJobConnectionValidateProperties</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.test_required_missing">
+<tt class="descname">test_required_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.test_required_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_properties() when a required property is missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_connection.TestJobConnectionValidateProperties.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobConnection.validate_properties() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.configuration.data.test_job_data">
+<span id="test-job-data-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_job_data</span></tt> Module<a class="headerlink" href="#module-job.test.configuration.data.test_job_data" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.DummyDataFileStore">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">DummyDataFileStore</tt><a class="headerlink" href="#job.test.configuration.data.test_job_data.DummyDataFileStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></tt></a></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.DummyDataFileStore.get_workspaces">
+<tt class="descname">get_workspaces</tt><big>(</big><em>workspace_ids</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.DummyDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.DummyDataFileStore.store_files">
+<tt class="descname">store_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>files</em>, <em>input_file_ids</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.DummyDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileInput">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataAddFileInput</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileInput.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileInput.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileInput.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileInput.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.add_file_input() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileListInput">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataAddFileListInput</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileListInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileListInput.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileListInput.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddFileListInput.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddFileListInput.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.add_file_list_input() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddOutput">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataAddOutput</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddOutput.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddOutput.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddOutput.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddOutput.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.add_output() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataAddPropertyInput</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataAddPropertyInput.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.add_property_input() successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataGetInputFileIds</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetInputFileIds.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.get_input_file_ids() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataGetPropertyValues</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataGetPropertyValues.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.get_property_values() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataInit</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_bad_version">
+<tt class="descname">test_init_bad_version</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_bad_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with bad version number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_blank">
+<tt class="descname">test_init_blank</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_blank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with blank JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_input_name">
+<tt class="descname">test_init_duplicate_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_input_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with duplicate data input name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_input_output_name">
+<tt class="descname">test_init_duplicate_input_output_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_input_output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with duplicate data input and output name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_output_name">
+<tt class="descname">test_init_duplicate_output_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with duplicate data output name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_no_input_name">
+<tt class="descname">test_init_no_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_no_input_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with missing data input name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_no_output_name">
+<tt class="descname">test_init_no_output_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_no_output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor with missing data output name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataInit.test_init_successful_one_property">
+<tt class="descname">test_init_successful_one_property</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_successful_one_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData constructor successfully with a single property input.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataRetrieveFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData._retrieve_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataRetrieveInputDataFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.test_bad_file_id">
+<tt class="descname">test_bad_file_id</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.test_bad_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.retrieve_input_data_files() with an invalid file ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataRetrieveInputDataFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.retrieve_input_data_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataStoreOutputDataFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataStoreOutputDataFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.store_output_data_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataValidateInputFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_file_id">
+<tt class="descname">test_bad_file_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a file that has an invalid ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_media_type">
+<tt class="descname">test_bad_media_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a file that has an invalid media type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_missing_required">
+<tt class="descname">test_missing_required</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_missing_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() when a file is required, but missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_given_single">
+<tt class="descname">test_multiple_given_single</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_given_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a multiple file param given with a single file ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_missing_file_ids">
+<tt class="descname">test_multiple_missing_file_ids</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_missing_file_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a multiple file param missing the file_ids field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_non_integrals">
+<tt class="descname">test_multiple_non_integrals</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_non_integrals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a multiple file param and non-integral file_ids field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_non_list">
+<tt class="descname">test_multiple_non_list</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_multiple_non_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a multiple file param with a non-list for file_ids field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_not_required">
+<tt class="descname">test_not_required</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_not_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() when a file is missing, but required</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_single_missing_file_id">
+<tt class="descname">test_single_missing_file_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_single_missing_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a single file param missing the file_id field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_single_non_integral">
+<tt class="descname">test_single_non_integral</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_single_non_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a single file param and non-integral file_id field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_input_files() with a valid set of job data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataValidateOutputFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_output">
+<tt class="descname">test_missing_output</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() when an output is missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_workspace_id">
+<tt class="descname">test_missing_workspace_id</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() when an output is missing the workspace_id field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_multiple_outputs">
+<tt class="descname">test_multiple_outputs</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_multiple_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() when there are multiple outputs with the same workspace id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_successful">
+<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() with successful data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_id_not_integer">
+<tt class="descname">test_workspace_id_not_integer</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_id_not_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() when an output has a non-integral value for workspace_id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_not_active">
+<tt class="descname">test_workspace_not_active</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_not_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() with a workspace that is not active</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_not_exist">
+<tt class="descname">test_workspace_not_exist</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_workspace_not_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_output_files() with a workspace that does not exist</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties">
+<em class="property">class </em><tt class="descclassname">job.test.configuration.data.test_job_data.</tt><tt class="descname">TestJobDataValidateProperties</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_missing_required">
+<tt class="descname">test_missing_required</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_missing_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_properties() when a property is required, but missing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_missing_value">
+<tt class="descname">test_missing_value</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_missing_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_properties() when a property is missing a value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_not_required">
+<tt class="descname">test_not_required</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_not_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_properties() when a property is missing, but is not required</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_required_successful">
+<tt class="descname">test_required_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_required_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_properties() successfully with a required property</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_value_not_string">
+<tt class="descname">test_value_not_string</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_value_not_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobData.validate_properties() when a property has a non-string value</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">data Package</a><ul>
+<li><a class="reference internal" href="#module-job.test.configuration.data.test_job_connection"><tt class="docutils literal"><span class="pre">test_job_connection</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-job.test.configuration.data.test_job_data"><tt class="docutils literal"><span class="pre">test_job_data</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="job.test.configuration.html"
+                        title="previous chapter">configuration Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="job.test.configuration.interface.html"
+                        title="next chapter">interface Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/job.test.configuration.data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="job.test.configuration.interface.html" title="interface Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="job.test.configuration.html" title="configuration Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="job.html" >job Package</a> &raquo;</li>
+          <li><a href="job.test.html" >test Package</a> &raquo;</li>
+          <li><a href="job.test.configuration.html" >configuration Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

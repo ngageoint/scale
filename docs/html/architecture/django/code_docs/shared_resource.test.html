@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>test Package &mdash; Scale 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
+    <link rel="up" title="shared_resource Package" href="shared_resource.html" />
+    <link rel="next" title="source Package" href="source.html" />
+    <link rel="prev" title="migrations Package" href="shared_resource.migrations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="source.html" title="source Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shared_resource.migrations.html" title="migrations Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="shared_resource.html" accesskey="U">shared_resource Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="test-package">
+<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-shared_resource.test"></span></div>
+<div class="section" id="module-shared_resource.test.test_models">
+<span id="test-models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_models</span></tt> Module<a class="headerlink" href="#module-shared_resource.test.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest">
+<em class="property">class </em><tt class="descclassname">shared_resource.test.test_models.</tt><tt class="descname">SharedResourceManagerTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForAcessWithJustEnoughUsage">
+<tt class="descname">testJobTypesForAcessWithJustEnoughUsage</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForAcessWithJustEnoughUsage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForGlobalOnlyNode">
+<tt class="descname">testJobTypesForGlobalOnlyNode</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForGlobalOnlyNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode">
+<tt class="descname">testJobTypesForSpecialAccessNode</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingNone">
+<tt class="descname">testResourceRemainingNone</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingNone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingReduceByJob">
+<tt class="descname">testResourceRemainingReduceByJob</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingReduceByJob" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingUnrelatedJob">
+<tt class="descname">testResourceRemainingUnrelatedJob</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingUnrelatedJob" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourcesRemainingNoJobs">
+<tt class="descname">testResourcesRemainingNoJobs</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourcesRemainingNoJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A resource with no jobs using it should have the limit remaining</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-shared_resource.test.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-shared_resource.test.utils" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility methods for testing nodes</p>
+<dl class="function">
+<dt id="shared_resource.test.utils.create_requirement">
+<tt class="descclassname">shared_resource.test.utils.</tt><tt class="descname">create_requirement</tt><big>(</big><em>job_type=None</em>, <em>shared_resource=None</em>, <em>usage=None</em><big>)</big><a class="headerlink" href="#shared_resource.test.utils.create_requirement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a shared resource requirement model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The shared resource requirement model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResourceRequirement" title="shared_resource.models.SharedResourceRequirement"><tt class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResourceRequirement</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="shared_resource.test.utils.create_resource">
+<tt class="descclassname">shared_resource.test.utils.</tt><tt class="descname">create_resource</tt><big>(</big><em>name=None</em>, <em>limit=None</em>, <em>is_global=True</em><big>)</big><a class="headerlink" href="#shared_resource.test.utils.create_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a shared resource model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The shared resource model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResource" title="shared_resource.models.SharedResource"><tt class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResource</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-shared_resource.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-shared_resource.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shared_resource.migrations.html"
+                        title="previous chapter">migrations Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="source.html"
+                        title="next chapter">source Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/architecture/django/code_docs/shared_resource.test.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="source.html" title="source Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shared_resource.migrations.html" title="migrations Package"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
+          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
+          <li><a href="shared_resource.html" >shared_resource Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, NGA.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
