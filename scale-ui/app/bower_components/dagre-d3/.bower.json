@@ -1,6 +1,6 @@
 {
   "name": "dagre-d3",
-  "version": "0.4.11",
+  "version": "0.4.17",
   "main": [
     "dist/dagre-d3.core.js"
   ],
@@ -29,11 +29,11 @@
     "lodash": "^3.10.0"
   },
   "homepage": "https://github.com/cpettitt/dagre-d3",
-  "_release": "0.4.11",
+  "_release": "0.4.17",
   "_resolution": {
     "type": "version",
-    "tag": "v0.4.11",
-    "commit": "8f4675a5be003b9bd81b3abd03beeab94c5d334e"
+    "tag": "v0.4.17",
+    "commit": "88bea485d5556382c1c50f7012d9ebd2ec5c270f"
   },
   "_source": "git://github.com/cpettitt/dagre-d3.git",
   "_target": "~0.4.8",
