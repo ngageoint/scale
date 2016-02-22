@@ -474,6 +474,7 @@ class TestNfsBrokerUploadFiles(TestCase):
         mock_umount.assert_called_once_with(work_dir)  # Make sure umount was successfully called for cleanup
 
 @skipIf(sys.platform.startswith("win"), u'umount is not available on windows.')
+@skipIf("TRAVIS" in os.environ, u'sudo is not available in travis-ci.')
 class TestNfsUmount(TestCase):
     def setUp(self):
         django.setup()
