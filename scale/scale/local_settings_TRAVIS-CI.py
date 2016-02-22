@@ -29,7 +29,7 @@ SECRET_KEY = "0fnk28edjh"
 # The template database to use when creating your new database.
 # By using your own template that already includes the postgis extension,
 # you can avoid needing to run the unit tests as a PostgreSQL superuser.
-POSTGIS_TEMPLATE = 'scale'
+#POSTGIS_TEMPLATE = 'scale'
 
 DATABASES = {
    'default': {
@@ -38,7 +38,6 @@ DATABASES = {
       'USER': 'postgres',
       'PASSWORD': '',
       'HOST': 'localhost',
-      'PORT': '',
    },
 }
 
