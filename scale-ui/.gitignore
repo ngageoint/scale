@@ -1,0 +1,12 @@
+app/styles/**/*.css
+node_modules
+build
+dist/
+reports
+.idea
+.idea/workspace.xml
+.tmp
+.sass-cache
+.DS_Store
+npm-debug.log
+deploy

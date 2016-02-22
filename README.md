@@ -1,3 +1,7 @@
+Master [![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=master)](https://travis-ci.org/ngageoint/scale)
+
+Develop [![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=develop)](https://travis-ci.org/ngageoint/scale)
+
 Scale
 =====
 Scale is a system that provides management of automated processing on a cluster of machines. It allows
@@ -41,9 +45,26 @@ Quick Start
 We've provided a vagrant and ansible setup to get you going quickly. Make sure vagrant, virtualbox, and ansible are installed then.
 ```
 cd vagrant
+vagrant plugin install vagrant-hostmanager
 vagrant up
 ```
-This will download a centos7 base image and start 2 virtual machines, a master and a slave. You can add additional slaves by editing `Vagrantfile` and adding them to the `HOSTS` and `mesos-slaves` sections before doing the `vagrant up`. Ansible will be used to push the configuration out and can take a while to run. You make need to modify `ansible/group_vars/all` or `ansible/vagrant.yml` if you need to specify a local docker index, etc.
+This will download a centos7 base image and start 3 virtual machines, a master and two slaves. You can add additional slaves by editing `Vagrantfile` and adding them to the `HOSTS` and `mesos-slaves` sections before doing the `vagrant up`. Ansible will be used to push the configuration out and can take a while to run. You make need to modify `ansible/group_vars/vagrant` or `ansible/vagrant.yml` if you need to specify a local docker index, etc.
+
+Once the cluster has started (it takes a while), you can visit http://master for the main scale interface or http://master:5050 for the mesos master interface.
+If you want to attempt a strike ingest, download some sample landsat data (multiple TIF files, one per band, in a .tar.gz with no subdirectories). Suitable data can be found in the scale "SAMPLE_DATA" release on github.
+Visit (http://master:8081) and upload the tar.gz file. You should see the data ingest in a short amount of time.
+
+Go to the Jobs tab and find the completed `landsat-tiles` job and look at the Products tab. You'll find an overview html file. Select that for an OpenLayers view of the processed data.
+
+Alternately, you can ingest directly from the filesystem.
+Save the tar.gz in the `vagrant` directory, run `vagrant ssh master`. Ingest the file as follows:
+```
+cp /vagrant/LC80170302015307LGN00.tar.gz /exports/ingest/LC80170302015307LGN00.tar.gz_tmp
+ln /exports/ingest/LC80170302015307LGN00.tar.gz_tmp /export/ingest/LC80170302015307LGN00.tar.gz
+rm /export/ingest/LC80170302015307LGN00.tar.gz_tmp
+```
+
+NOTE: Country borders shapefile courtesy of [Bjorn Sandvik](http://thematicmapping.org/downloads/world_borders.php)
 
 Setting up a development environment
 ====================================

@@ -1,0 +1,5 @@
+*.py[cod]
+docs/_build/
+static/
+ui/
+logs/*
