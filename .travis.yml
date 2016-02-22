@@ -1,0 +1,19 @@
+language: python
+
+python:
+  - "2.7"
+
+services:
+  - postgresql
+
+before script:
+  - psql -c 'create database scale;' -U postgres
+  - psql -d scale -U postgres -c "create extension postgis;"
+  - psql -d scale -U postgres -c "create extension postgis_topology;"
+  - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
+
+install:
+  - pip install -q --use-mirrors -r scale/pip/build_linux.txt
+
+script:
+  - python scale/manage.py test
