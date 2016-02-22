@@ -160,8 +160,8 @@
             activityIconCode: 'f110',
 
             urls: {
-                prefixDev: 'http://127.0.0.1:9000/', // dev
-                prefixProd: 'http://127.0.0.1:9000/',
+                //prefixDev: 'http://127.0.0.1:9000/', // dev
+                prefixProd: '/api//api/',
                 documentation: '/docs',
 
                 getQueueStatus: function () {
