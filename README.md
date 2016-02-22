@@ -1,3 +1,6 @@
+[![master Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=master)](https://travis-ci.org/ngageoint/scale)
+[![develop Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=develop)](https://travis-ci.org/ngageoint/scale)
+
 Scale
 =====
 Scale is a system that provides management of automated processing on a cluster of machines. It allows
