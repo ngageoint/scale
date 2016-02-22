@@ -6,7 +6,7 @@ python:
 services:
   - postgresql
 
-before script:
+before_script:
   - psql -c 'create database scale;' -U postgres
   - psql -d scale -U postgres -c "create extension postgis;"
   - psql -d scale -U postgres -c "create extension postgis_topology;"
