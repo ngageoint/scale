@@ -20,7 +20,7 @@ class PreTask(Task):
         super(PreTask, self).__init__('%i_pre' % job_exe.id, job_exe)
 
     def get_resources(self):
-        """See :meth:`job.execution.tasks.Task.get_resources`
+        """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
         """
 
         return NodeResources(cpus=self._cpus, mem=self._mem, disk=self._disk_total)

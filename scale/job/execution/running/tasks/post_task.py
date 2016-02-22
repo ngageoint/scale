@@ -20,7 +20,7 @@ class PostTask(Task):
         super(PostTask, self).__init__('%i_post' % job_exe.id, job_exe)
 
     def get_resources(self):
-        """See :meth:`job.execution.tasks.Task.get_resources`
+        """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
         """
 
         # Post task does not require any local disk space
