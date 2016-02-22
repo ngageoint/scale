@@ -16,4 +16,4 @@ install:
   - pip install -q --use-mirrors -r scale/pip/build_linux.txt
 
 script:
-  - python scale/manage.py test
+  - python scale/manage.py test --noinput
