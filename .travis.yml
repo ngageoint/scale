@@ -23,3 +23,5 @@ install:
 script:
   - cd scale
   - python manage.py test --noinput
+  - cd docs
+  - make code_docs html
