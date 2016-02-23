@@ -1,9 +1,18 @@
 """Defines the class that represents running job executions"""
 from __future__ import unicode_literals
 
+import logging
 import threading
+from datetime import datetime, timedelta
 
+from django.db import transaction
+
+from error.models import Error
 from job.execution.running.tasks.factory import TaskFactory
+from job.models import JobExecution
+
+
+logger = logging.getLogger(__name__)
 
 
 class RunningJobExecution(object):
@@ -185,38 +194,87 @@ class RunningJobExecution(object):
             self._current_task = self._remaining_tasks.pop(0)
             return self._current_task
 
-    def task_completed(self, task_id, status):
-        """Completes a Mesos task for this job execution
+    def task_complete(self, task_results):
+        """Completes a task for this job execution
 
-        :param task_id: The ID of the task that was completed
-        :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
+        :param task_results: The task results
+        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
         """
 
         with self._lock:
-            self.scale_job_exe.task_completed(task_id, status)
+            if not self._current_task or self._current_task.id != task_results.task_id:
+                return
 
-    def task_failed(self, task_id, status):
-        """Fails a Mesos task for this job execution
+            with transaction.atomic():
+                self._current_task.complete(task_results)
+                if not self._remaining_tasks:
+                    from queue.models import Queue
+                    Queue.objects.handle_job_completion(self._id, task_results.when)
 
-        :param task_id: The ID of the task that failed
-        :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
+            self._current_task = None
+
+    def task_fail(self, task_results, error=None):
+        """Fails a task for this job execution
+
+        :param task_results: The task results
+        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :param error: The error that caused this task to fail, possibly None
+        :type error: :class:`error.models.Error`
         """
 
         with self._lock:
-            self.scale_job_exe.task_failed(task_id, status)
+            if not self._current_task or self._current_task.id != task_results.task_id:
+                return
 
-    def task_running(self, task_id, status):
+            with transaction.atomic():
+                error = self._current_task.fail(task_results, error)
+                if not error:
+                    # TODO: clean this up
+                    error = Error.objects.get_unknown_error()
+                from queue.models import Queue
+                Queue.objects.handle_job_failure(self._id, task_results.when, error)
+
+                # TODO: move this somewhere else and refactor it
+                from scheduler.models import Scheduler
+                job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._id)
+                node = job_exe.node
+                # Check for a high number of system errors and decide if we should pause the node
+                if error.category == 'SYSTEM' and job_exe.job.num_exes >= job_exe.job.max_tries and node is not None and not node.is_paused:
+                    # search Job.objects. for the number of system failures in the past (configurable) 1 minute
+                    # if (configurable) 5 or more have occurred, pause the node
+                    node_error_period = Scheduler.objects.first().node_error_period
+                    if node_error_period > 0:
+                        check_time = datetime.utcnow() - timedelta(minutes=node_error_period)
+                        # find out how many jobs have recently failed on this node with a system error
+                        num_node_errors = JobExecution.objects.select_related('error', 'node').filter(
+                            status='FAILED', error__category='SYSTEM', ended__gte=check_time, node=node).distinct('job').count()
+                        max_node_errors = Scheduler.objects.first().max_node_errors
+                        if num_node_errors >= max_node_errors:
+                            logger.warning('%s failed %d jobs in %d minutes, pausing the host' % (node.hostname, num_node_errors, node_error_period))
+                            with transaction.atomic():
+                                node.is_paused = True
+                                node.is_paused_errors = True
+                                node.pause_reason = "System Failure Rate Too High"
+                                node.save()
+
+            self._current_task = None
+            self._remaining_tasks = []
+
+    def task_running(self, task_id, when, stdout_url, stderr_url):
         """Tells this job execution that one of its tasks has started running
 
-        :param task_id: The ID of the task that has started running
+        :param task_id: The ID of the task
         :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
+        :param when: The time that the task started running
+        :type when: :class:`datetime.datetime`
+        :param stdout_url: The URL for the task's stdout logs
+        :type stdout_url: str
+        :param stderr_url: The URL for the task's stderr logs
+        :type stderr_url: str
         """
 
         with self._lock:
-            self.scale_job_exe.task_running(task_id, status)
+            if not self._current_task or self._current_task.id != task_id:
+                return
+
+            self._current_task.running(when, stdout_url, stderr_url)
