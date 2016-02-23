@@ -135,8 +135,6 @@ class DatabaseSyncThread(object):
                     task_to_kill = running_job_exe.execution_timed_out(right_now)
                 except DatabaseError:
                     logger.exception('Error failing timed out job execution %i', running_job_exe.id)
-            elif job_exe_model.status != 'RUNNING':
-                logger.error('Job execution has unexpected status: %s', job_exe_model.status)
 
             if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()
