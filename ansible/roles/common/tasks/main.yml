@@ -1,9 +1,9 @@
 ---
 # roles/common/tasks/main.yml
-- name: Disable firewall
-  tags: common
-  service: name=firewalld state=stopped enabled=false
-  become: true
+#- name: Disable firewall
+#  tags: common
+#  service: name=firewalld state=stopped enabled=false
+#  become: true
 
 - name: Install python-pip
   tags: common

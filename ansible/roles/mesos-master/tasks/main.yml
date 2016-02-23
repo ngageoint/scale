@@ -6,10 +6,9 @@
     name: mesos-master
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ external_docker_registry }}mesoscloud/mesos-master:0.24.1'
-    state: reloaded
+    state: restarted
     restart_policy: always
     net: host
-    hostname: '{{ inventory_hostname }}'
     env:
       MESOS_QUORUM: '{{ mesos_quorum }}'
       MESOS_ZK: '{{ mesos_zk }}'
