@@ -6,7 +6,7 @@
     name: zookeeper
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ external_docker_registry }}mesoscloud/zookeeper:3.4.6-centos-7'
-    state: reloaded
+    state: restarted
     restart_policy: always
     net: host
     env:
