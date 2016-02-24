@@ -25,3 +25,9 @@ script:
   - python manage.py test --noinput
   - cd docs
   - make code_docs html
+
+# branch whitelist
+branches:
+  only:
+    - master
+    - develop
