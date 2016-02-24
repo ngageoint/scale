@@ -8,6 +8,7 @@ import threading
 from django.db import DatabaseError
 from django.utils.timezone import now
 
+from Error.models import Error
 from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.manager import RunningJobExecutionManager
 from job.execution.running.tasks.results import TaskResults
@@ -20,7 +21,6 @@ from scheduler.initialize import initialize_system
 from scheduler.models import Scheduler
 from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
-from scheduler.scheduler_errors import get_mesos_error, get_scheduler_error
 from scheduler.sync.job_type_manager import JobTypeManager
 from scheduler.sync.node_manager import NodeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
@@ -279,7 +279,7 @@ class ScaleScheduler(MesosScheduler):
                 elif status.state == mesos_pb2.TASK_FINISHED:
                     running_job_exe.task_complete(results)
                 elif status.state == mesos_pb2.TASK_LOST:
-                    running_job_exe.task_fail(results, get_mesos_error())
+                    running_job_exe.task_fail(results, Error.objects.get_builtin_error('mesos-lost'))
                 elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
                     running_job_exe.task_fail(results)
 
@@ -288,7 +288,7 @@ class ScaleScheduler(MesosScheduler):
                     self._job_exe_manager.remove_job_exe(job_exe_id)
             else:
                 # Scheduler doesn't have any knowledge of this job execution
-                Queue.objects.handle_job_failure(job_exe_id, now(), get_scheduler_error())
+                Queue.objects.handle_job_failure(job_exe_id, now(), Error.objects.get_builtin_error('scheduler-lost'))
         except Exception:
             logger.exception('Error handling status update for job execution: %s', job_exe_id)
             # Error handling status update, add task so it can be reconciled
@@ -435,8 +435,7 @@ class ScaleScheduler(MesosScheduler):
                     task_ids.append(task.id)
             else:
                 # Fail any executions that the scheduler has lost
-                error = get_scheduler_error()
-                Queue.objects.handle_job_failure(job_exe.id, now(), error)
+                Queue.objects.handle_job_failure(job_exe.id, now(), Error.objects.get_builtin_error('scheduler-lost'))
 
         # Send task IDs to reconciliation thread
         self._recon_thread.add_task_ids(task_ids)

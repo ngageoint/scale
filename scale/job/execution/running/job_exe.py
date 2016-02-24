@@ -124,9 +124,7 @@ class RunningJobExecution(object):
         :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
-        # TODO: move error into job app
-        from scheduler.scheduler_errors import get_node_lost_error
-        error = get_node_lost_error()
+        error = Error.objects.get_builtin_error('node-lost')
         from queue.models import Queue
         Queue.objects.handle_job_failure(self._id, when, error)
 
@@ -145,9 +143,7 @@ class RunningJobExecution(object):
         :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
-        # TODO: move error into job app
-        from scheduler.scheduler_errors import get_timeout_error
-        error = get_timeout_error()
+        error = Error.objects.get_builtin_error('timeout')
         from queue.models import Queue
         Queue.objects.handle_job_failure(self._id, when, error)
 
@@ -247,7 +243,6 @@ class RunningJobExecution(object):
         with transaction.atomic():
             error = current_task.fail(task_results, error)
             if not error:
-                # TODO: clean this up
                 error = Error.objects.get_unknown_error()
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, task_results.when, error)

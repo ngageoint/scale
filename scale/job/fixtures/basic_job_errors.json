@@ -1,0 +1,26 @@
+[
+	{
+		"model": "error.Error",
+		"pk": null,
+		"fields": {
+			"name": "node-lost",
+			"title": "Node Lost",
+			"description": "A node failed and was lost, causing all jobs running on it to fail.",
+			"category": "SYSTEM",
+			"created": "2015-03-11T00:00:00.0Z",
+			"last_modified": "2015-03-11T00:00:00.0Z"
+		}
+	},
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "timeout",
+            "title": "Timeout",
+            "description": "The job exceeded its timeout threshold.",
+            "category": "SYSTEM",
+            "created": "2015-03-11T00:00:00.0Z",
+            "last_modified": "2015-03-11T00:00:00.0Z"
+        }
+    }
+]
