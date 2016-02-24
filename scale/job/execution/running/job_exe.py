@@ -18,6 +18,18 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
+    @staticmethod
+    def get_job_exe_id(task_id):
+        """Returns the job execution ID for the given task ID
+
+        :param task_id: The task ID
+        :type task_id: str
+        :returns: The job execution ID
+        :rtype: int
+        """
+
+        return int(task_id.split('_')[0])
+
     def __init__(self, job_exe, task_factory=None):
         """Constructor
 
@@ -31,6 +43,8 @@ class RunningJobExecution(object):
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
         self._node_id = job_exe.node.id
+        self._node_hostname = job_exe.node.hostname
+        self._node_port = job_exe.node.port
 
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
         self._current_task = None
