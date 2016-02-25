@@ -12,6 +12,7 @@ from job.execution.running.tasks.job_task import JobTask
 from job.execution.running.tasks.post_task import PostTask
 from job.execution.running.tasks.pre_task import PreTask
 from job.models import JobExecution
+from util.retry import retry_database_query
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,7 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
             return task
 
+    @retry_database_query
     def execution_lost(self, when):
         """Fails this job execution for its node becoming lost and returns the current task
 
@@ -129,6 +131,7 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
             return task
 
+    @retry_database_query
     def execution_timed_out(self, when):
         """Fails this job execution for timing out and returns the current task
 
@@ -198,6 +201,7 @@ class RunningJobExecution(object):
             self._current_task = self._remaining_tasks.pop(0)
             return self._current_task
 
+    @retry_database_query
     def task_complete(self, task_results):
         """Completes a task for this job execution
 
@@ -222,6 +226,7 @@ class RunningJobExecution(object):
             if self._current_task and self._current_task.id == task_results.task_id:
                 self._current_task = None
 
+    @retry_database_query
     def task_fail(self, task_results, error=None):
         """Fails a task for this job execution
 
@@ -269,6 +274,7 @@ class RunningJobExecution(object):
             self._current_task = None
             self._remaining_tasks = []
 
+    @retry_database_query
     def task_running(self, task_id, when, stdout_url, stderr_url):
         """Tells this job execution that one of its tasks has started running
 

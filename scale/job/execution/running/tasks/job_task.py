@@ -37,9 +37,8 @@ class JobTask(Task):
         if self._task_id != task_results.task_id:
             return
 
-        JobExecution.objects.job_completed(self._job_exe_id, task_results.when, task_results.exit_code,
-                                           task_results.stdout, task_results.stderr, None)
-        JobExecution.objects.set_log_urls(self._job_exe_id, None, None)
+        JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
+                                        task_results.stdout, task_results.stderr)
 
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
@@ -59,9 +58,8 @@ class JobTask(Task):
             # Use job's error mapping here to determine error
             error = self._error_mapping.get_error(task_results.exit_code)
 
-        JobExecution.objects.job_failed(self._job_exe_id, task_results.when, task_results.exit_code,
+        JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
-        JobExecution.objects.set_log_urls(self._job_exe_id, None, None)
 
         return error
 
@@ -69,5 +67,4 @@ class JobTask(Task):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
-        JobExecution.objects.job_started(self._job_exe_id, when)
-        JobExecution.objects.set_log_urls(self._job_exe_id, stdout_url, stderr_url)
+        JobExecution.objects.task_started(self._job_exe_id, 'job', when, stdout_url, stderr_url)

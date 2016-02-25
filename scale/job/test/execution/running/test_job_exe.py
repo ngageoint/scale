@@ -17,7 +17,7 @@ from job.models import JobExecution
 class TestRunningJobExecution(TestCase):
     """Tests the RunningJobExecution class"""
 
-    fixtures = ['basic_job_errors.json']
+    fixtures = ['basic_job_errors.json', 'scheduler.json']
 
     def setUp(self):
         django.setup()
