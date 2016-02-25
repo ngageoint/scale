@@ -8,7 +8,7 @@ import threading
 from django.db import DatabaseError
 from django.utils.timezone import now
 
-from Error.models import Error
+from error.models import Error
 from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.manager import RunningJobExecutionManager
 from job.execution.running.tasks.results import TaskResults
