@@ -21,6 +21,7 @@ class Task(object):
         """
 
         self._task_id = task_id
+        self._task_name = 'Job Execution %i (%s)' % (job_exe.id, job_exe.get_job_type_name())
 
         # Keep job execution values that should not change
         self._job_exe_id = job_exe.id
@@ -31,6 +32,56 @@ class Task(object):
         self._disk_total = job_exe.disk_total_scheduled
         self._error_mapping = job_exe.get_error_interface()  # This can change, but not worth re-queuing
 
+        # Keep node values that should not change
+        self._agent_id = job_exe.node.slave_id
+
+        # These values will vary by different task subclasses
+        self._uses_docker = True
+        self._docker_image = None
+        self._is_docker_privileged = False
+        self._command = None
+        self._command_arguments = None
+
+    @property
+    def agent_id(self):
+        """Returns the ID of the agent that the task is running on
+
+        :returns: The agent ID
+        :rtype: str
+        """
+
+        return self._agent_id
+
+    @property
+    def command(self):
+        """Returns the command to execute for the task
+
+        :returns: The command to execute
+        :rtype: str
+        """
+
+        return self._command
+
+    @property
+    def command_arguments(self):
+        """Returns the command to execute for the task
+
+        :returns: The command to execute
+        :rtype: str
+        """
+
+        return self._command_arguments
+
+    @property
+    def docker_image(self):
+        """Returns the name of the Docker image to run for this task, possibly None
+
+        :returns: The Docker image name
+        :rtype: str
+        """
+
+        return self._docker_image
+
     @property
     def id(self):
         """Returns the unique ID of the task
@@ -40,6 +91,46 @@ class Task(object):
         """
 
         return self._task_id
+
+    @property
+    def is_docker_privileged(self):
+        """Indicates whether this task's Docker container should be run in privileged mode
+
+        :returns: True if the container should be run in privileged mode, False otherwise
+        :rtype: bool
+        """
+
+        return self._is_docker_privileged
+
+    @property
+    def job_exe_id(self):
+        """Returns the job execution ID of the task
+
+        :returns: The job execution ID
+        :rtype: int
+        """
+
+        return self._job_exe_id
+
+    @property
+    def name(self):
+        """Returns the name of the task
+
+        :returns: The task name
+        :rtype: str
+        """
+
+        return self._task_name
+
+    @property
+    def uses_docker(self):
+        """Indicates whether this task uses Docker or not
+
+        :returns: True if this task uses Docker, False otherwise
+        :rtype: bool
+        """
+
+        return self._uses_docker
 
     @abstractmethod
     def complete(self, task_results):
@@ -75,6 +166,7 @@ class Task(object):
 
         raise NotImplementedError()
 
+    @abstractmethod
     def running(self, when, stdout_url, stderr_url):
         """Marks this task as having started running
 

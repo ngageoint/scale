@@ -1,6 +1,7 @@
 """Defines the class for a job execution pre-task"""
 from __future__ import unicode_literals
 
+from job import settings
 from job.execution.running.tasks.base_task import Task
 from job.management.commands.scale_pre_steps import EXIT_CODE_DICT as PRE_EXIT_CODE_DICT
 from job.models import JobExecution
@@ -20,6 +21,12 @@ class PreTask(Task):
         """
 
         super(PreTask, self).__init__('%i_pre' % job_exe.id, job_exe)
+
+        self._uses_docker = False
+        self._docker_image = None
+        self._is_docker_privileged = False
+        self._command = '%s %s scale_pre_steps' % (settings.settings.PYTHON_EXECUTABLE, settings.settings.MANAGE_FILE)
+        self._command_arguments = '-i %i' % job_exe.id
 
     def complete(self, task_results):
         """See :meth:`job.execution.running.tasks.base_task.Task.complete`

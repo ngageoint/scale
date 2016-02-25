@@ -8,6 +8,7 @@ import time
 from django.db import OperationalError
 from django.utils.timezone import now
 
+from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.offer.manager import OfferManager
@@ -198,8 +199,7 @@ class SchedulingThread(object):
             for running_job_exe in node_offers.get_accepted_running_job_exes():
                 task = running_job_exe.start_next_task()
                 if task:
-                    # TODO: update this to create Mesos task from Scale task
-                    mesos_tasks.append(task)
+                    mesos_tasks.append(create_mesos_task(task))
             # Gather up queued job executions that were accepted
             for queued_job_exe in node_offers.get_accepted_new_job_exes():
                 queued_job_exes_to_schedule.append(queued_job_exe)
@@ -211,8 +211,7 @@ class SchedulingThread(object):
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
                 if task:
-                    # TODO: update this to create Mesos task from Scale task
-                    tasks_to_launch[scheduled_job_exe.node_id].append(task)
+                    tasks_to_launch[scheduled_job_exe.node_id].append(create_mesos_task(task))
         except OperationalError:
             logger.exception('Failed to schedule queued job executions')
 

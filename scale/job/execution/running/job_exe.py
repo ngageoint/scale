@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 from django.db import transaction
 
 from error.models import Error
-from job.execution.running.tasks.factory import TaskFactory
+from job.execution.running.tasks.job_task import JobTask
+from job.execution.running.tasks.post_task import PostTask
+from job.execution.running.tasks.pre_task import PreTask
 from job.models import JobExecution
 
 
@@ -30,14 +32,12 @@ class RunningJobExecution(object):
 
         return int(task_id.split('_')[0])
 
-    def __init__(self, job_exe, task_factory=None):
+    def __init__(self, job_exe):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type and
             job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
-        :param task_factory: The factory to use for creating the job execution tasks
-        :type task_factory: :class:`job.execution.running.tasks.factory.TaskFactory`
         """
 
         self._id = job_exe.id
@@ -51,16 +51,11 @@ class RunningJobExecution(object):
         self._remaining_tasks = []
 
         # Create tasks
-        if not task_factory:
-            task_factory = TaskFactory()
         if not job_exe.is_system:
-            pre_task = task_factory.create_pre_task(job_exe)
-            self._remaining_tasks.append(pre_task.get_id())
-        job_task = task_factory.create_job_task(job_exe)
-        self._remaining_tasks.append(job_task.get_id())
+            self._remaining_tasks.append(PreTask(job_exe))
+        self._remaining_tasks.append(JobTask(job_exe))
         if not job_exe.is_system:
-            post_task = task_factory.create_post_task(job_exe)
-            self._remaining_tasks.append(post_task.get_id())
+            self._remaining_tasks.append(PostTask(job_exe))
 
     @property
     def current_task(self):
