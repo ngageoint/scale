@@ -787,6 +787,7 @@ class JobExecutionManager(models.Manager):
 
         # Acquire model lock
         job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
+        job_exe.post_completed = when
         job_exe.post_exit_code = exit_code
         job_exe.append_stdout(stdout)
         job_exe.append_stderr(stderr)
@@ -1021,7 +1022,9 @@ class JobExecutionManager(models.Manager):
         job_exe.current_stderr_url = stderr
         job_exe.save()
 
-    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed.
+    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed. Do so the next
+    # time we make other job_exe model changes. At the same time, also rename pre_completed, job_completed, etc to
+    # pre_ended, job_ended, etc
     @transaction.atomic
     def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
         """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
