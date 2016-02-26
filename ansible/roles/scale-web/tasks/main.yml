@@ -7,6 +7,7 @@
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}scale-web:{{ scale_docker_version }}'
     state: restarted
+    pull: always
     restart_policy: always
     volumes:
       - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
@@ -19,7 +20,8 @@
     name: scale-web-static
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}scale-web-static:{{ scale_docker_version }}'
-    state: reloaded
+    state: restarted
+    pull: always
     restart_policy: always
     volumes_from: scale-web
     links:
