@@ -47,6 +47,10 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
+        # Pre-task sets updated command arguments
+        updated_commands_args = '-arg updated'
+        JobExecution.objects.filter(id=self._job_exe_id).update(command_arguments=updated_commands_args)
+
         # Complete pre-task
         pre_task_completed = pre_task_started + timedelta(seconds=1)
         pre_task_results = TaskResults(pre_task_id)
@@ -59,6 +63,7 @@ class TestRunningJobExecution(TestCase):
         # Start job-task
         task = running_job_exe.start_next_task()
         job_task_id = task.id
+        self.assertEqual(task._command_arguments, updated_commands_args)  # Make sure job task has updated command args
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 

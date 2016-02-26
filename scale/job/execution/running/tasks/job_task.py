@@ -40,6 +40,8 @@ class JobTask(Task):
         JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
 
+        return False
+
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
         """
@@ -62,6 +64,15 @@ class JobTask(Task):
                                         task_results.stdout, task_results.stderr)
 
         return error
+
+    def refresh_cached_values(self, job_exe):
+        """Refreshes the task's cached job execution values with the given model
+
+        :param job_exe: The job execution model
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        self._command_arguments = job_exe.command_arguments
 
     def running(self, when, stdout_url, stderr_url):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
