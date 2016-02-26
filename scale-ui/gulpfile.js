@@ -17,7 +17,7 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
@@ -144,6 +144,12 @@ var appJs = function () {
 gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
+var appConfig = function () {
+    return gulp.src('./app/modules/scaleConfig.local.js')
+        .pipe(gulp.dest('./build/scripts'));
+};
+gulp.task('app-config', ['clean'],appConfig);
+
 var appHtml = function () {
     return gulp.src(paths.html)
         .pipe(connect.reload())
@@ -182,7 +188,7 @@ var appTestData = function () {
 };
 gulp.task('app-test-data', ['clean'], appTestData);
 
-gulp.task('app-build', ['app-js', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
+gulp.task('app-build', ['app-js', 'app-config', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
 
 // code linting
 gulp.task('lint', function () {

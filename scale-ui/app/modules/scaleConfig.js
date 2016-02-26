@@ -171,7 +171,7 @@
                     return this.prefixProd + 'queue/depth/?started=' + started + '&ended=' + ended;
                 },
                 requeueJob: function () {
-                    return this.prefixProd + 'queue/requeue-job/'
+                    return this.prefixProd + 'queue/requeue-job/';
                 },
                 getRecipeTypes: function () {
                     return this.prefixProd + 'recipe-types/';
