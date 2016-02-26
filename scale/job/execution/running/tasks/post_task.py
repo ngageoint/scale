@@ -38,6 +38,8 @@ class PostTask(Task):
         JobExecution.objects.task_ended(self._job_exe_id, 'post', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
 
+        return False
+
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
         """
