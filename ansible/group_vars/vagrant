@@ -47,3 +47,10 @@ allowed_hosts: '"*"'
 # If true, docker with btrfs storage will be installed and configured. This is likely only useful for
 # the vagrant images and should be set to false for other configurations.
 btrfs: true
+
+# Location of the scale build on the build machine's filesystem. If not present, defaults to /scale
+scale_build_root: "/scale"
+
+# These are for the example database
+nfs_server: "{{ mesos_master_ip }}""
+example_image_tag: "dev"
