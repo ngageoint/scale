@@ -126,22 +126,20 @@ class DatabaseSyncThread(object):
 
         for job_exe_model in JobExecution.objects.filter(id__in=running_job_exes.keys()).iterator():
             running_job_exe = running_job_exes[job_exe_model.id]
-            task_id_to_kill = None
+            task_to_kill = None
 
             if job_exe_model.status == 'CANCELED':
-                task_id_to_kill = running_job_exe.execution_canceled()
+                task_to_kill = running_job_exe.execution_canceled()
             elif job_exe_model.is_timed_out(right_now):
                 try:
-                    task_id_to_kill = running_job_exe.execution_timed_out(right_now)
+                    task_to_kill = running_job_exe.execution_timed_out(right_now)
                 except DatabaseError:
                     logger.exception('Error failing timed out job execution %i', running_job_exe.id)
-            elif job_exe_model.status != 'RUNNING':
-                logger.error('Job execution has unexpected status: %s', job_exe_model.status)
 
-            if task_id_to_kill:
+            if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()
-                pb_task_to_kill.value = task_id_to_kill
-                logger.info('Killing task %s', task_id_to_kill)
+                pb_task_to_kill.value = task_to_kill.id
+                logger.info('Killing task %s', task_to_kill.id)
                 self._driver.killTask(pb_task_to_kill)
 
             if running_job_exe.is_finished():

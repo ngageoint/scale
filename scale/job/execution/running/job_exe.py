@@ -1,13 +1,37 @@
 """Defines the class that represents running job executions"""
 from __future__ import unicode_literals
 
+import logging
 import threading
+from datetime import datetime, timedelta
 
-from job.resources import NodeResources
+from django.db import transaction
+
+from error.models import Error
+from job.execution.running.tasks.job_task import JobTask
+from job.execution.running.tasks.post_task import PostTask
+from job.execution.running.tasks.pre_task import PreTask
+from job.models import JobExecution
+from util.retry import retry_database_query
+
+
+logger = logging.getLogger(__name__)
 
 
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
+
+    @staticmethod
+    def get_job_exe_id(task_id):
+        """Returns the job execution ID for the given task ID
+
+        :param task_id: The task ID
+        :type task_id: str
+        :returns: The job execution ID
+        :rtype: int
+        """
+
+        return int(task_id.split('_')[0])
 
     def __init__(self, job_exe):
         """Constructor
@@ -19,14 +43,30 @@ class RunningJobExecution(object):
 
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
-        self._lock = threading.Lock()
         self._node_id = job_exe.node.id
+        self._node_hostname = job_exe.node.hostname
+        self._node_port = job_exe.node.port
 
-        # TODO: Future refactor: replace ScaleJobExecution with the new task system, add unit tests
-        from scheduler.scale_job_exe import ScaleJobExecution
-        self.scale_job_exe = ScaleJobExecution(job_exe, job_exe.cpus_scheduled, job_exe.mem_scheduled,
-                                               job_exe.disk_in_scheduled, job_exe.disk_out_scheduled,
-                                               job_exe.disk_total_scheduled)
+        self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
+        self._current_task = None
+        self._remaining_tasks = []
+
+        # Create tasks
+        if not job_exe.is_system:
+            self._remaining_tasks.append(PreTask(job_exe))
+        self._remaining_tasks.append(JobTask(job_exe))
+        if not job_exe.is_system:
+            self._remaining_tasks.append(PostTask(job_exe))
+
+    @property
+    def current_task(self):
+        """Returns the currently running task of the job execution, or None if no task is currently running
+
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        """
+
+        return self._current_task
 
     @property
     def id(self):
@@ -58,67 +98,58 @@ class RunningJobExecution(object):
 
         return self._node_id
 
-    # TODO: Future refactor: have current_task() method
-    def current_task_id(self):
-        """Returns the ID of the current task
-
-        :returns: The ID of the current task, possibly None
-        :rtype: str
-        """
-
-        with self._lock:
-            return self.scale_job_exe.current_task()
-
     def execution_canceled(self):
-        """Cancels this job execution and returns the ID of the current task
+        """Cancels this job execution and returns the current task
 
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
 
+    @retry_database_query
     def execution_lost(self, when):
-        """Fails this job execution for its node becoming lost and returns the ID of the current task
+        """Fails this job execution for its node becoming lost and returns the current task
 
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
-        with self._lock:
-            from scheduler.scheduler_errors import get_node_lost_error
-            error = get_node_lost_error()
-            from queue.models import Queue
-            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+        error = Error.objects.get_builtin_error('node-lost')
+        from queue.models import Queue
+        Queue.objects.handle_job_failure(self._id, when, error)
 
+        with self._lock:
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
+
+    @retry_database_query
     def execution_timed_out(self, when):
-        """Fails this job execution for timing out and returns the ID of the current task
+        """Fails this job execution for timing out and returns the current task
 
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
-        :returns: The ID of the current task, possibly None
-        :rtype: str
+        :returns: The current task, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
+        error = Error.objects.get_builtin_error('timeout')
+        from queue.models import Queue
+        Queue.objects.handle_job_failure(self._id, when, error)
+
         with self._lock:
-            from scheduler.scheduler_errors import get_timeout_error
-            error = get_timeout_error()
-            from queue.models import Queue
-            Queue.objects.handle_job_failure(self.scale_job_exe.job_exe_id, when, error)
-            task_id = self.scale_job_exe.current_task_id
-            self.scale_job_exe.current_task_id = None
-            self.scale_job_exe.remaining_task_ids = []
-            return task_id
+            task = self._current_task
+            self._current_task = None
+            self._remaining_tasks = []
+            return task
 
     def is_finished(self):
         """Indicates whether this job execution is finished with all tasks
@@ -128,7 +159,7 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            return self.scale_job_exe.is_finished()
+            return not self._current_task and not self._remaining_tasks
 
     def is_next_task_ready(self):
         """Indicates whether the next task in this job execution is ready
@@ -138,7 +169,7 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            return self.scale_job_exe.current_task_id is None and len(self.scale_job_exe.remaining_task_ids) > 0
+            return not self._current_task and self._remaining_tasks
 
     def next_task_resources(self):
         """Returns the resources that are required by the next task in this job execution. Returns None if there are no
@@ -149,64 +180,116 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            if len(self.scale_job_exe.remaining_task_ids) == 0:
+            if not self._remaining_tasks:
                 return None
 
-            cpus = self.scale_job_exe.cpus
-            mem = self.scale_job_exe.mem
-            if not self.scale_job_exe.remaining_task_ids:
-                disk = 0.0
-            else:
-                disk = self.scale_job_exe._get_task_disk_required(self.scale_job_exe.remaining_task_ids[0])
-
-            return NodeResources(cpus=cpus, mem=mem, disk=disk)
+            next_task = self._remaining_tasks[0]
+            return next_task.get_resources()
 
     def start_next_task(self):
         """Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
         tasks remain.
 
-        :returns: The next Mesos task to schedule
-        :rtype: :class:`mesos_pb2.TaskInfo`
+        :returns: The new task that was started, possibly None
+        :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
 
         with self._lock:
-            if self.scale_job_exe.current_task_id is not None or len(self.scale_job_exe.remaining_task_ids) < 1:
+            if self._current_task or not self._remaining_tasks:
                 return None
 
-            return self.scale_job_exe.start_next_task()
+            self._current_task = self._remaining_tasks.pop(0)
+            return self._current_task
 
-    def task_completed(self, task_id, status):
-        """Completes a Mesos task for this job execution
+    @retry_database_query
+    def task_complete(self, task_results):
+        """Completes a task for this job execution
 
-        :param task_id: The ID of the task that was completed
-        :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
+        :param task_results: The task results
+        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
         """
 
         with self._lock:
-            self.scale_job_exe.task_completed(task_id, status)
+            current_task = self._current_task
+            remaining_tasks = self._remaining_tasks
 
-    def task_failed(self, task_id, status):
-        """Fails a Mesos task for this job execution
+        if not current_task or current_task.id != task_results.task_id:
+            return
 
-        :param task_id: The ID of the task that failed
-        :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
-        """
+        with transaction.atomic():
+            current_task.complete(task_results)
+            if not remaining_tasks:
+                from queue.models import Queue
+                Queue.objects.handle_job_completion(self._id, task_results.when)
 
         with self._lock:
-            self.scale_job_exe.task_failed(task_id, status)
+            if self._current_task and self._current_task.id == task_results.task_id:
+                self._current_task = None
 
-    def task_running(self, task_id, status):
+    @retry_database_query
+    def task_fail(self, task_results, error=None):
+        """Fails a task for this job execution
+
+        :param task_results: The task results
+        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :param error: The error that caused this task to fail, possibly None
+        :type error: :class:`error.models.Error`
+        """
+
+        current_task = self._current_task
+        if not current_task or current_task.id != task_results.task_id:
+            return
+
+        with transaction.atomic():
+            error = current_task.fail(task_results, error)
+            if not error:
+                error = Error.objects.get_unknown_error()
+            from queue.models import Queue
+            Queue.objects.handle_job_failure(self._id, task_results.when, error)
+
+            # TODO: move this somewhere else and refactor it
+            from scheduler.models import Scheduler
+            job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._id)
+            node = job_exe.node
+            # Check for a high number of system errors and decide if we should pause the node
+            if error.category == 'SYSTEM' and job_exe.job.num_exes >= job_exe.job.max_tries and node is not None and not node.is_paused:
+                # search Job.objects. for the number of system failures in the past (configurable) 1 minute
+                # if (configurable) 5 or more have occurred, pause the node
+                node_error_period = Scheduler.objects.first().node_error_period
+                if node_error_period > 0:
+                    check_time = datetime.utcnow() - timedelta(minutes=node_error_period)
+                    # find out how many jobs have recently failed on this node with a system error
+                    num_node_errors = JobExecution.objects.select_related('error', 'node').filter(
+                        status='FAILED', error__category='SYSTEM', ended__gte=check_time, node=node).distinct('job').count()
+                    max_node_errors = Scheduler.objects.first().max_node_errors
+                    if num_node_errors >= max_node_errors:
+                        logger.warning('%s failed %d jobs in %d minutes, pausing the host' % (node.hostname, num_node_errors, node_error_period))
+                        with transaction.atomic():
+                            node.is_paused = True
+                            node.is_paused_errors = True
+                            node.pause_reason = "System Failure Rate Too High"
+                            node.save()
+
+        with self._lock:
+            self._current_task = None
+            self._remaining_tasks = []
+
+    @retry_database_query
+    def task_running(self, task_id, when, stdout_url, stderr_url):
         """Tells this job execution that one of its tasks has started running
 
-        :param task_id: The ID of the task that has started running
+        :param task_id: The ID of the task
         :type task_id: str
-        :param status: The task status
-        :type status: :class:`mesos_pb2.TaskStatus`
+        :param when: The time that the task started running
+        :type when: :class:`datetime.datetime`
+        :param stdout_url: The URL for the task's stdout logs
+        :type stdout_url: str
+        :param stderr_url: The URL for the task's stderr logs
+        :type stderr_url: str
         """
 
-        with self._lock:
-            self.scale_job_exe.task_running(task_id, status)
+        current_task = self._current_task
+        if not current_task or current_task.id != task_id:
+            return
+
+        current_task.running(when, stdout_url, stderr_url)

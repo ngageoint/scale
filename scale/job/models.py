@@ -674,125 +674,6 @@ class JobExecutionManager(models.Manager):
         return job_exe_qry.filter(status='RUNNING')
 
     @transaction.atomic
-    def job_completed(self, job_exe_id, when, exit_code, stdout, stderr, mesos_run_id):
-        """Updates the given job execution to reflect that the job process has completed successfully.
-
-        All changes occur in an atomic database transaction.
-
-        :param job_exe_id: The job execution whose job process has completed
-        :type job_exe_id: int
-        :param exit_code: The exit code of the job process, possibly None
-        :type exit_code: int
-        :param stdout: The stdout contents of the job process, possibly None
-        :type stdout: str
-        :param stderr: The stderr contents of the job process, possibly None
-        :type stderr: str
-        :param mesos_run_id: The ID for the mesos run (sort of like a job execution).
-        :type mesos_run_id: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.job_completed = when
-        job_exe.job_exit_code = exit_code
-        job_exe.job_task_id = mesos_run_id
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
-    def job_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        """Updates the given job execution to reflect that the job process has failed.
-
-        All changes occur in an atomic database transaction.
-
-        :param job_exe_id: The job execution whose job process has failed
-        :type job_exe_id: int
-        :param when: The time that the job failed
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The exit code of the job process, possibly None
-        :type exit_code: int
-        :param stdout: The stdout contents of the job process, possibly None
-        :type stdout: str
-        :param stderr: The stderr contents of the job process, possibly None
-        :type stderr: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.job_exit_code = exit_code
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
-    def job_started(self, job_exe_id, when):
-        """Updates the given job execution to reflect that the job process has started.
-
-        All changes occur in an atomic database transaction.
-
-        :param job_exe_id: The job execution whose job process has started
-        :type job_exe_id: int
-        :param when: The time that the job was started
-        :type when: :class:`datetime.datetime`
-        """
-
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.job_started = when
-        job_exe.save()
-
-    @transaction.atomic
-    def post_steps_completed(self, job_exe_id, when, exit_code, stdout, stderr):
-        """Updates the given job execution to reflect that the post-job steps have completed successfully.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose post-job steps have completed
-        :type job_exe_id: int
-        :param when: The time that the post-steps were completed
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The post-job exit code, possibly None
-        :type exit_code: int
-        :param stdout: The post-job stdout contents, possibly None
-        :type stdout: str
-        :param stderr: The post-job stderr contents, possibly None
-        :type stderr: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.post_completed = when
-        job_exe.post_exit_code = exit_code
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
-    def post_steps_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        """Updates the given job execution to reflect that the post-job steps have failed.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose post-job steps have failed
-        :type job_exe_id: int
-        :param when: The time that the post-steps failed
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The post-job exit code, possibly None
-        :type exit_code: int
-        :param stdout: The post-job stdout contents, possibly None
-        :type stdout: str
-        :param stderr: The post-job stderr contents, possibly None
-        :type stderr: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.post_exit_code = exit_code
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
     def post_steps_results(self, job_exe_id, results, results_manifest):
         """Updates the given job execution to reflect that the post-job steps have finished calculating the results.
 
@@ -816,23 +697,6 @@ class JobExecutionManager(models.Manager):
         job_exe.save()
 
     @transaction.atomic
-    def post_steps_started(self, job_exe_id, when):
-        """Updates the given job execution to reflect that the post-job steps have started.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose post-job steps have started
-        :type job_exe_id: int
-        :param when: The time that the post-steps were started
-        :type when: :class:`datetime.datetime`
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.post_started = when
-        job_exe.save()
-
-    @transaction.atomic
     def pre_steps_command_arguments(self, job_exe_id, command_arguments):
         """Updates the given job execution after the job command argument string has been filled out.
 
@@ -848,75 +712,6 @@ class JobExecutionManager(models.Manager):
         # Acquire model lock
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
         job_exe.command_arguments = command_arguments
-        job_exe.save()
-
-    @transaction.atomic
-    def pre_steps_completed(self, job_exe_id, when, exit_code, stdout, stderr):
-        """Updates the given job execution to reflect that the pre-job steps have completed successfully.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose pre-job steps have completed
-        :type job_exe_id: int
-        :param when: The time that the pre-steps were completed
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The pre-job exit code, possibly None
-        :type exit_code: int
-        :param stdout: The pre-job stdout contents, possibly None
-        :type stdout: str
-        :param stderr: The pre-job stderr contents, possibly None
-        :type stderr: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.pre_completed = when
-        job_exe.pre_exit_code = exit_code
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
-    def pre_steps_failed(self, job_exe_id, when, exit_code, stdout, stderr):
-        """Updates the given job execution to reflect that the pre-job steps have failed.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose pre-job steps have failed
-        :type job_exe_id: int
-        :param when: The time that the pre-steps failed
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The pre-job exit code, possibly None
-        :type exit_code: int
-        :param stdout: The pre-job stdout contents, possibly None
-        :type stdout: str
-        :param stderr: The pre-job stderr contents, possibly None
-        :type stderr: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.pre_completed = when
-        job_exe.pre_exit_code = exit_code
-        job_exe.append_stdout(stdout)
-        job_exe.append_stderr(stderr)
-        job_exe.save()
-
-    @transaction.atomic
-    def pre_steps_started(self, job_exe_id, when):
-        """Updates the given job execution to reflect that the pre-job steps have started.
-
-        All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution whose pre-job steps have started
-        :type job_exe_id: int
-        :param when: The time that the pre-steps were started
-        :type when: :class:`datetime.datetime`
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.pre_started = when
         job_exe.save()
 
     def queue_job_exe(self, job, when):
@@ -1002,25 +797,9 @@ class JobExecutionManager(models.Manager):
 
         return job_exes
 
-    @transaction.atomic
-    def set_log_urls(self, job_exe_id, stdout, stderr):
-        """Set the URLs to the job execution's stdout/stderr, possibly None. All database changes occur in an atomic
-        transaction.
-
-        :param job_exe_id: The job execution whose URLs to update
-        :type job_exe_id: int
-        :param stdout: URL for the stdout log file
-        :type stdout: str or None
-        :param stderr: URL for the stderr log file
-        :type stderr: str or None
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.current_stdout_url = stdout
-        job_exe.current_stderr_url = stderr
-        job_exe.save()
-
+    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed. Do so the next
+    # time we make other job_exe model changes. At the same time, also rename pre_completed, job_completed, etc to
+    # pre_ended, job_ended, etc. This will force changes through the REST API though, so coordinate with UI
     @transaction.atomic
     def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
         """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
@@ -1041,6 +820,69 @@ class JobExecutionManager(models.Manager):
         job_exe.job_task_id = job_task_id
         job_exe.post_task_id = post_task_id
         job_exe.save()
+
+    def task_ended(self, job_exe_id, task, when, exit_code, stdout, stderr):
+        """Updates the given job execution to reflect that the given task has ended
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :param task: Indicates which task, either 'pre', 'job', or 'post'
+        :type task: str
+        :param when: The time that the task ended
+        :type when: :class:`datetime.datetime`
+        :param exit_code: The task exit code, possibly None
+        :type exit_code: int
+        :param stdout: The task stdout contents, possibly None
+        :type stdout: str
+        :param stderr: The task stderr contents, possibly None
+        :type stderr: str
+        """
+
+        # TODO: once we no longer have stdout and stderr in job execution model, transition this from selecting with
+        # lock to using a single update query as in task_started()
+        with transaction.atomic():
+            # Acquire model lock
+            job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
+
+            if task == 'pre':
+                job_exe.pre_completed = when
+                job_exe.pre_exit_code = exit_code
+            elif task == 'job':
+                job_exe.job_completed = when
+                job_exe.job_exit_code = exit_code
+            elif task == 'post':
+                job_exe.post_completed = when
+                job_exe.post_exit_code = exit_code
+
+            job_exe.append_stdout(stdout)
+            job_exe.append_stderr(stderr)
+            job_exe.current_stdout_url = None
+            job_exe.current_stderr_url = None
+            job_exe.save()
+
+    def task_started(self, job_exe_id, task, when, stdout_url, stderr_url):
+        """Updates the given job execution to reflect that the given task has started
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :param task: Indicates which task, either 'pre', 'job', or 'post'
+        :type task: str
+        :param when: The time that the task started
+        :type when: :class:`datetime.datetime`
+        :param stdout_url: The URL for the task's stdout logs
+        :type stdout_url: str
+        :param stderr_url: The URL for the task's stderr logs
+        :type stderr_url: str
+        """
+
+        job_exe_qry = self.filter(id=job_exe_id)
+
+        if task == 'pre':
+            job_exe_qry.update(pre_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
+        elif task == 'job':
+            job_exe_qry.update(job_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
+        elif task == 'post':
+            job_exe_qry.update(post_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
 
     @transaction.atomic
     def update_status(self, job_exe, status, when, error=None):
@@ -1309,6 +1151,7 @@ class JobExecution(models.Model):
         """
         return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
 
+    @property
     def is_system(self):
         """Indicates whether this job execution is for a system job
 

@@ -271,9 +271,10 @@ class RecipeJobManager(models.Manager):
             if jobs_lock and jobs_related:
                 # Grab locks here and do select_related in separate query
                 Job.objects.select_for_update().filter(id__in=job_ids).order_by('id')
-            if jobs_related:
                 job_qry = job_qry.select_related('job_type', 'job_type_rev')
-            if jobs_lock:
+            elif jobs_related:
+                job_qry = job_qry.select_related('job_type', 'job_type_rev')
+            elif jobs_lock:
                 job_qry = job_qry.select_for_update().order_by('id')
             for job in job_qry.filter(id__in=job_ids):
                 jobs[job.id] = job

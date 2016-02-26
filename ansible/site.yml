@@ -1,4 +1,17 @@
 ---
-# site.yml
+# site file for clusters
+# common requirements
+- hosts: mesos-masters, mesos-slaves
+  roles:
+    - common
+
+# start an nfs server
+- hosts: nfs
+  roles:
+    - nfs-server
+
+# start mesos master and slaves
 - include: mesos.yml
+
+# start scale components
 - include: scale.yml

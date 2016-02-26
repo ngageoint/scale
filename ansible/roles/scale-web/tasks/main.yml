@@ -10,7 +10,7 @@
     restart_policy: always
     volumes:
       - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
-      - '/etc/scale/scaleConfig.local.js:/opt/scale/ui/scale-ui/modules/scaleConfig.local.js'
+      - '/etc/scale/scaleConfig.local.js:/opt/scale/ui/modules/scaleConfig.local.js'
   become: true
 
 - name: static scale web server

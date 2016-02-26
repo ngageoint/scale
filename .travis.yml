@@ -18,8 +18,16 @@ before_script:
   - python scale/manage.py migrate --noinput
 
 install:
-  - pip install -q --use-mirrors -r scale/pip/build_linux.txt
+  - pip install -q -r scale/pip/build_linux.txt
 
 script:
   - cd scale
   - python manage.py test --noinput
+  - cd docs
+  - make code_docs html
+
+# branch whitelist
+branches:
+  only:
+    - master
+    - develop

@@ -57,7 +57,7 @@ class TestSchedulingThread(TransactionTestCase):
         self._scheduling_thread = SchedulingThread(self._driver, self._job_exe_manager, self._job_type_manager,
                                                    self._node_manager, self._offer_manager, self._scheduler_manager)
 
-    @patch('scheduler.scale_job_exe.mesos_pb2.TaskInfo')
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_successful_schedule(self, mock_taskinfo):
         """Tests successfully scheduling tasks"""
         mock_taskinfo.return_value = MagicMock()
@@ -69,7 +69,7 @@ class TestSchedulingThread(TransactionTestCase):
         num_tasks = self._scheduling_thread._perform_scheduling()
         self.assertEqual(num_tasks, 2)
 
-    @patch('scheduler.scale_job_exe.mesos_pb2.TaskInfo')
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_scheduler(self, mock_taskinfo):
         """Tests running the scheduling thread with a paused scheduler"""
         mock_taskinfo.return_value = MagicMock()
@@ -83,7 +83,7 @@ class TestSchedulingThread(TransactionTestCase):
         num_tasks = self._scheduling_thread._perform_scheduling()
         self.assertEqual(num_tasks, 0)
 
-    @patch('scheduler.scale_job_exe.mesos_pb2.TaskInfo')
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_job_type_limit(self, mock_taskinfo):
         """Tests running the scheduling thread with a job type limit"""
         mock_taskinfo.return_value = MagicMock()
