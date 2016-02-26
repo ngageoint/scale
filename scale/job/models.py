@@ -294,6 +294,7 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
+    # TODO: look at refactoring this back into update_status()
     @transaction.atomic
     def update_jobs_to_running(self, job_ids, when):
         """Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
@@ -317,14 +318,12 @@ class JobManager(models.Manager):
 
         return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
-    @transaction.atomic
-    def update_status(self, job, status, when, error=None):
-        """Updates the given job with the new status. The given job model must have already been saved in the database
-        (it must have an ID) and the caller must have obtained a lock on the job model using select_for_update(). All of
-        the job model changes will be saved in the database in an atomic transaction.
+    def update_status(self, jobs, status, when, error=None):
+        """Updates the given jobs with the new status. The caller must have obtained a lock using select_for_update() on
+        all of the given job models.
 
-        :param job: The job to update
-        :type job: :class:`job.models.Job`
+        :param jobs: The jobs to update
+        :type jobs: [:class:`job.models.Job`]
         :param status: The new status
         :type status: str
         :param when: The time that the status change occurred
@@ -334,19 +333,27 @@ class JobManager(models.Manager):
         """
 
         if status == 'QUEUED':
-            raise Exception('Changing status to queued must use the queue_job() method.')
+            raise Exception('Changing status to QUEUED must use the queue_job() method')
         if status == 'RUNNING':
-            raise Exception('Changing status to running must use the update_jobs_to_running() method.')
+            raise Exception('Changing status to RUNNING must use the update_jobs_to_running() method')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
             raise Exception('Status %s is invalid with an error' % status)
 
-        job.status = status
-        job.error = error
-        job.last_status_change = when
-        job.ended = when
-        job.save()
+        ended = when if status in Job.FINAL_STATUSES else None
+
+        # Update job models in memory and collect job IDs
+        job_ids = []
+        for job in jobs:
+            job_ids.append(job.id)
+            job.status = status
+            job.last_status_change = when
+            job.ended = ended
+            job.error = error
+
+        # Update job models in database with single query
+        self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error)
 
 
 class Job(models.Model):
@@ -411,6 +418,7 @@ class Job(models.Model):
         ('COMPLETED', 'COMPLETED'),
         ('CANCELED', 'CANCELED'),
     )
+    FINAL_STATUSES = ['FAILED', 'COMPLETED', 'CANCELED']
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
@@ -921,7 +929,7 @@ class JobExecutionManager(models.Manager):
         # Acquire model lock first, then query for related
         Job.objects.select_for_update().get(pk=job_exe.job_id)
         job = Job.objects.select_related('job_type', 'job_type_rev').get(pk=job_exe.job_id)
-        Job.objects.update_status(job, status, when, error)
+        Job.objects.update_status([job], status, when, error)
         return job
 
 

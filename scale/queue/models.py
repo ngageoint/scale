@@ -361,7 +361,7 @@ class QueueManager(models.Manager):
             self._handle_job_finished(job_exe)
         else:
             # Latest job execution was finished, so just mark the job as CANCELED
-            Job.objects.update_status(job, 'CANCELED', when)
+            Job.objects.update_status([job], 'CANCELED', when)
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
         if recipe:
@@ -633,7 +633,7 @@ class QueueManager(models.Manager):
         job_exe_id = None
         if job.num_exes == 0:
             # Job has never been queued before, so send it back to PENDING
-            Job.objects.update_status(job, 'PENDING', when)
+            Job.objects.update_status([job], 'PENDING', when)
         else:
             # Job has been queued before, so queue it again
             job_exe_id = self.queue_existing_job(job, None)
@@ -907,7 +907,7 @@ class QueueManager(models.Manager):
             new_status = new_job_statuses[job_id]
             job = jobs_by_id[job_id]
             if job.status != new_status:
-                Job.objects.update_status(job, new_status, when)
+                Job.objects.update_status([job], new_status, when)
 
 
 class Queue(models.Model):

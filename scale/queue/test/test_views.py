@@ -372,7 +372,7 @@ class TestRequeueExistingJobView(TestCase):
         '''Tests calling the requeue view successfully for a job that was never queued.'''
 
         # make sure the job is in the right state despite not actually having been run
-        Job.objects.update_status(self.job, 'CANCELED', timezone.now())
+        Job.objects.update_status([self.job], 'CANCELED', timezone.now())
         base_count = Queue.objects.count()
         json_data = {
             'job_id': self.job.id,
@@ -398,7 +398,7 @@ class TestRequeueExistingJobView(TestCase):
         job_test_utils.create_job_exe(job=self.job, status='FAILED')
 
         # make sure the job is in the right state despite not actually having been run
-        Job.objects.update_status(self.job, 'FAILED', timezone.now(), error_test_utils.create_error())
+        Job.objects.update_status([self.job], 'FAILED', timezone.now(), error_test_utils.create_error())
         self.job.num_exes = 2
         self.job.save()
 
@@ -424,7 +424,7 @@ class TestRequeueExistingJobView(TestCase):
         '''Tests calling the requeue view when the job hasn't failed.'''
 
         job_test_utils.create_job_exe(job=self.job, status='COMPLETED')
-        Job.objects.update_status(self.job, 'COMPLETED', timezone.now())
+        Job.objects.update_status([self.job], 'COMPLETED', timezone.now())
 
         json_data = {
             'job_id': self.job.id,
