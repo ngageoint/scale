@@ -622,7 +622,7 @@ class QueueManager(models.Manager):
         recipe = Recipe.objects.get_locked_recipe_for_job(job_id)
 
         # Make sure the job is ready to be re-queued
-        job = Job.objects.get_job(job_id, related=True, lock=True)
+        job = Job.objects.get_locked_jobs_for_update([job_id])[0]
         if not job.is_ready_to_requeue:
             raise StatusError
 

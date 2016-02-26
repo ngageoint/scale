@@ -73,31 +73,6 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_job(self, job_id, related=False, lock=False):
-        """Gets the job model with the given ID, optionally with related fields and/or with a model lock obtained
-
-        :param job_id: The ID of the job
-        :type job_id: int
-        :param related: Whether to include the related models for the job (job_type, job_type_rev)
-        :type related: bool
-        :param lock: Whether to obtain a select_for_update() lock on the job model
-        :type lock: bool
-        :returns: The job model
-        :rtype: :class:`job.models.Job`
-        """
-
-        job_qry = Job.objects.all()
-
-        if lock and related:
-            # Don't mix select_for_update() and select_related(), grab lock and then requery for related
-            Job.objects.select_for_update().get(id=job_id)
-        if related:
-            job_qry = job_qry.select_related('job_type', 'job_type_rev')
-        if lock:
-            job_qry = job_qry.select_for_update()
-
-        return job_qry.get(id=job_id)
-
     def get_jobs(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, order=None):
         """Returns a list of jobs within the given time range.
@@ -211,6 +186,20 @@ class JobManager(models.Manager):
         if not order:
             order = ['last_status_change']
         return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
+
+    def get_locked_jobs_for_update(self, job_ids):
+        """Gets the job models with the given IDs with model locks obtained and related job_type and job_type_rev models
+
+        :param job_ids: The job IDs
+        :type job_ids: [int]
+        :returns: The job models
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        # Lock job models
+        list(Job.objects.select_for_update().filter(id__in=job_ids).order('id').iterator())
+
+        return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
     @transaction.atomic
     def queue_job(self, job, data, when):
