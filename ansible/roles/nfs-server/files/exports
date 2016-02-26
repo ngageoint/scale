@@ -1,4 +1,0 @@
-/exports                10.4.4.0/24(fsid=0,sync,rw)
-/exports/ingest         10.4.4.0/24(sync,rw)
-/exports/raw            10.4.4.0/24(sync,rw)
-/exports/products       10.4.4.0/24(sync,rw)
