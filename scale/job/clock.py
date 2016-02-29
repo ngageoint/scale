@@ -1,4 +1,5 @@
 '''Contains the functionality of the Scale clock process'''
+from __future__ import unicode_literals
 import abc
 import datetime
 import logging
@@ -48,14 +49,14 @@ def perform_tick():
     '''
 
     # Check all the clock trigger rules
-    rules = TriggerRule.objects.filter(type=u'CLOCK', is_active=True)
+    rules = TriggerRule.objects.filter(type='CLOCK', is_active=True)
     for rule in rules:
         try:
             _check_rule(rule)
         except ClockEventError:
-            logger.exception(u'Clock scheduler caught known rule error: %s', rule.id)
+            logger.exception('Clock scheduler caught known rule error: %s', rule.id)
         except:
-            logger.exception(u'Clock scheduler encountered unexpected rule error: %s', rule.id)
+            logger.exception('Clock scheduler encountered unexpected rule error: %s', rule.id)
 
 
 def register_processor(name, processor_class):
@@ -68,10 +69,10 @@ def register_processor(name, processor_class):
     :param processor_class: The processor class to invoke when the associated event is triggered.
     :type processor_class: :class:`job.clock.ClockProcessor`
     '''
-    if name in _PROCESSORS:
-        logger.warn(u'Duplicate clock processor registered for name: %s', name)
-    logger.debug(u'Registering clock processor: %s -> %s', name, processor_class)
-    _PROCESSORS[name] = processor_class
+    if name not in _PROCESSORS:
+        _PROCESSORS[name] = []
+    logger.debug('Registering clock processor: %s -> %s', name, processor_class)
+    _PROCESSORS[name].append(processor_class)
 
 
 def _check_rule(rule):
@@ -85,22 +86,22 @@ def _check_rule(rule):
 
     # Validate the processor name attribute
     if rule.name not in _PROCESSORS:
-        raise ClockEventError(u'Clock trigger rule references unknown processor name: %s -> %s' % (rule.id, rule.name))
+        raise ClockEventError('Clock trigger rule references unknown processor name: %s -> %s' % (rule.id, rule.name))
 
     # Validate the event type attribute
-    if u'event_type' not in rule.configuration or not rule.configuration[u'event_type']:
-        raise ClockEventError(u'Clock trigger rule missing "event_type" attribute: ' % rule.id)
+    if 'event_type' not in rule.configuration or not rule.configuration['event_type']:
+        raise ClockEventError('Clock trigger rule missing "event_type" attribute: ' % rule.id)
 
     # Validate the clock schedule
-    if u'schedule' not in rule.configuration or not rule.configuration[u'schedule']:
-        raise ClockEventError(u'Clock trigger rule missing "schedule" attribute: ' % rule.id)
-    schedule = rule.configuration[u'schedule']
+    if 'schedule' not in rule.configuration or not rule.configuration['schedule']:
+        raise ClockEventError('Clock trigger rule missing "schedule" attribute: ' % rule.id)
+    schedule = rule.configuration['schedule']
     duration = parse.parse_duration(schedule)
     if not duration:
-        raise ClockEventError(u'Invalid format for clock trigger "schedule" attribute: %s -> %s' % (rule.id, schedule))
+        raise ClockEventError('Invalid format for clock trigger "schedule" attribute: %s -> %s' % (rule.id, schedule))
 
     # Trigger a new event when the schedule is surpassed
-    last_event = TriggerEvent.objects.filter(rule=rule).order_by(u'-occurred').first()
+    last_event = TriggerEvent.objects.filter(rule=rule).order_by('-occurred').first()
     logger.debug('Checking rule schedule: %s -> %s since %s', rule.type, duration, last_event)
     if _check_schedule(duration, last_event):
         _trigger_event(rule, last_event)
@@ -157,10 +158,15 @@ def _trigger_event(rule, last_event=None):
     '''
 
     # Create a new trigger event for the rule
-    event_type = rule.configuration[u'event_type']
+    event_type = rule.configuration['event_type']
     event = TriggerEvent.objects.create_trigger_event(event_type, rule, {}, timezone.now())
 
-    # Attempt to process the event
-    processor_class = _PROCESSORS[rule.name]
-    processor = processor_class()
-    processor.process_event(event, last_event)
+    # Allow each registered processor to handle the event
+    for processor_class in _PROCESSORS[rule.name]:
+        try:
+            processor = processor_class()
+            processor.process_event(event, last_event)
+        except ClockEventError:
+            logger.exception('Clock processor raised known rule error: %s', rule.id)
+        except:
+            logger.exception('Clock processor encountered unexpected rule error: %s', rule.id)

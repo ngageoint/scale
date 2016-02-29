@@ -14,7 +14,10 @@ to use various *brokers*, which know how to store/retrieve files in different st
 
    {
       "version": "1.0",
-      "broker": { "type": "nfs", "mount": "host:/my/path" }
+      "broker": {
+         "type": "nfs",
+         "mount": "host:/my/path"
+      }
    }
 
 The *broker* value is a JSON object providing the configuration for this workspace's broker. The *type* value indicates
@@ -33,7 +36,10 @@ A valid workspace configuration is a JSON document with the following structure:
 
    {
       "version": STRING,
-      "broker": { "type": "nfs", "mount": STRING }
+      "broker": {
+         "type": "nfs",
+         "mount": STRING
+      }
    }
 
 **version**: JSON string

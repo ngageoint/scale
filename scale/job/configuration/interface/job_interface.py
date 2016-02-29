@@ -1,4 +1,6 @@
 '''Defines the interface for executing a job'''
+from __future__ import unicode_literals
+
 import json
 import logging
 import os
@@ -19,102 +21,107 @@ logger = logging.getLogger(__name__)
 
 
 JOB_INTERFACE_SCHEMA = {
-    "type": "object",
-    "required": ["command", "command_arguments"],
-    "additionalProperties": False,
-    "properties": {
-        "version": {
-            "description": "version of the job_interface schema",
-            "type": "string",
-            "pattern": "^.{0,50}$"
+    'type': 'object',
+    'required': ['command', 'command_arguments'],
+    'additionalProperties': False,
+    'properties': {
+        'version': {
+            'description': 'version of the job_interface schema',
+            'type': 'string',
+            'pattern': '^.{0,50}$',
         },
-        "command": {
-            "description": "The command that will be called.  Uses variable replacement",
-            "type": "string"
+        'command': {
+            'description': 'The command that will be called.  Uses variable replacement',
+            'type': 'string',
         },
-        "command_arguments": {
-            "description": "The arguments that are passed to the command",
-            "type": "string"
+        'command_arguments': {
+            'description': 'The arguments that are passed to the command',
+            'type': 'string',
         },
-        "input_data": {
-            "type": "array",
-            "items": {"$ref": "#/definitions/input_data_item"}
+        'input_data': {
+            'type': 'array',
+            'items': {
+                '$ref': '#/definitions/input_data_item',
+            },
         },
-        "output_data": {
-            "type": "array",
-            "items": {"$ref": "#/definitions/output_data_item"}
+        'output_data': {
+            'type': 'array',
+            'items': {
+                '$ref': '#/definitions/output_data_item',
+            },
         },
-        "shared_resources": {
-            "type": "array",
-            "items": {"$ref": "#/definitions/shared_resource"}
+        'shared_resources': {
+            'type': 'array',
+            'items': {
+                '$ref': '#/definitions/shared_resource',
+            },
         },
     },
-    "definitions": {
-        "input_data_item": {
-            "type": "object",
-            "required": ["name", "type"],
-            "additionalProperties": False,
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\\-_ ]{1,255}$"
+    'definitions': {
+        'input_data_item': {
+            'type': 'object',
+            'required': ['name', 'type'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'pattern': '^[a-zA-Z0-9\\-_ ]{1,255}$',
                 },
-                "type": {
-                    "type": "string",
-                    "enum": ["file", "files", "property"]
+                'type': {
+                    'type': 'string',
+                    'enum': ['file', 'files', 'property'],
                 },
-                "required": {
-                    "type": "boolean"
+                'required': {
+                    'type': 'boolean',
                 },
-                "media_types": {
-                    "type": "array"
-                }
-            }
+                'media_types': {
+                    'type': 'array',
+                },
+            },
         },
-        "output_data_item": {
-            "type": "object",
-            "required": ["name", "type"],
-            "additionalProperties": False,
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "pattern": "^[a-zA-Z0-9\\-_ ]{1,255}$"
+        'output_data_item': {
+            'type': 'object',
+            'required': ['name', 'type'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'pattern': '^[a-zA-Z0-9\\-_ ]{1,255}$',
                 },
-                "type": {
-                    "type": "string",
-                    "enum": ["file", "files"]
+                'type': {
+                    'type': 'string',
+                    'enum': ['file', 'files'],
                 },
-                "required": {
-                    "type": "boolean"
+                'required': {
+                    'type': 'boolean',
                 },
-                "media_type": {
-                    "type": "string"
+                'media_type': {
+                    'type': 'string',
                 },
-            }
+            },
         },
-        "shared_resource": {
-            "type": "object",
-            "required": ["name", "type"],
-            "additionalProperties": False,
-            "properties": {
-                "name": {
-                    "type": "string"
+        'shared_resource': {
+            'type': 'object',
+            'required': ['name', 'type'],
+            'additionalProperties': False,
+            'properties': {
+                'name': {
+                    'type': 'string',
                 },
-                "type": {
-                    "type": "string"
+                'type': {
+                    'type': 'string',
                 },
-                "required": {
-                    "type": "boolean"
-                }
-            }
-        }
-    }
+                'required': {
+                    'type': 'boolean',
+                },
+            },
+        },
+    },
 }
 
 
 class JobInterface(object):
-    '''Represents the interface for executing a job
-    '''
+    '''Represents the interface for executing a job'''
 
     def __init__(self, definition):
         '''Creates a job interface from the given definition. If the definition is invalid, a
@@ -140,8 +147,8 @@ class JobInterface(object):
 
         self._populate_default_values()
 
-        if self.definition[u'version'] != u'1.0':
-            raise InvalidInterfaceDefinition(u'%s is an unsupported version number' % self.definition[u'version'])
+        if self.definition['version'] != '1.0':
+            raise InvalidInterfaceDefinition('%s is an unsupported version number' % self.definition['version'])
 
         self._check_param_name_uniqueness()
         self._validate_command_arguments()
@@ -160,13 +167,13 @@ class JobInterface(object):
 
         output_data = self._get_output_data_item_by_name(output_name)
         if output_data:
-            output_type = output_data[u'type']
-            if output_type in [u'file', u'files']:
-                multiple = (output_type == u'files')
-                optional = not output_data[u'required']
+            output_type = output_data['type']
+            if output_type in ['file', 'files']:
+                multiple = (output_type == 'files')
+                optional = not output_data['required']
                 media_types = []
-                if u'media_type' in output_data and output_data[u'media_type']:
-                    media_types.append(output_data[u'media_type'])
+                if 'media_type' in output_data and output_data['media_type']:
+                    media_types.append(output_data['media_type'])
                 job_conn.add_input_file(input_name, multiple, media_types, optional)
 
     def add_workspace_to_data(self, job_data, workspace_id):
@@ -203,19 +210,19 @@ class JobInterface(object):
         job_input_dir = get_job_exe_input_data_dir(job_exe_id)
         job_output_dir = get_job_exe_output_data_dir(job_exe_id)
 
-        for input_data in self.definition[u'input_data']:
-            input_name = input_data[u'name']
-            input_type = input_data[u'type']
-            if input_type == u'file':
+        for input_data in self.definition['input_data']:
+            input_name = input_data['name']
+            input_type = input_data['type']
+            if input_type == 'file':
                 param_dir = os.path.join(job_input_dir, input_name)
                 file_path = self._get_one_file_from_directory(param_dir)
                 command_arguments = self._replace_command_parameter(command_arguments, input_name, file_path)
-            elif input_type == u'files':
+            elif input_type == 'files':
                 #TODO: verify folder exists
                 param_dir = os.path.join(job_input_dir, input_name)
                 command_arguments = self._replace_command_parameter(command_arguments, input_name, param_dir)
 
-        command_arguments = self._replace_command_parameter(command_arguments, u'job_output_dir', job_output_dir)
+        command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir', job_output_dir)
         return command_arguments
 
     def get_command(self):
@@ -224,7 +231,16 @@ class JobInterface(object):
         :rtype: str
         '''
 
-        return self.definition[u'command']
+        return self.definition['command']
+
+    def get_dict(self):
+        '''Returns the internal dictionary that represents this job interface
+
+        :returns: The internal dictionary
+        :rtype: dict
+        '''
+
+        return self.definition
 
     def get_file_output_names(self):
         '''Returns the output parameter names for all file outputs
@@ -234,9 +250,9 @@ class JobInterface(object):
         '''
 
         names = []
-        for output_data in self.definition[u'output_data']:
-            if output_data[u'type'] in [u'file', u'files']:
-                names.append(output_data[u'name'])
+        for output_data in self.definition['output_data']:
+            if output_data['type'] in ['file', 'files']:
+                names.append(output_data['name'])
         return names
 
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
@@ -255,15 +271,15 @@ class JobInterface(object):
 
         manifest_data = {}
         job_output_dir = get_job_exe_output_data_dir(job_exe.id)
-        path_to_manifest_file = os.path.join(job_output_dir, u'results_manifest.json')
+        path_to_manifest_file = os.path.join(job_output_dir, 'results_manifest.json')
         if os.path.exists(path_to_manifest_file):
-            logger.info(u'Opening results manifest...')
-            with open(path_to_manifest_file, u'r') as manifest_file:
+            logger.info('Opening results manifest...')
+            with open(path_to_manifest_file, 'r') as manifest_file:
                 manifest_data = json.loads(manifest_file.read())
-                logger.info(u'Results manifest:')
+                logger.info('Results manifest:')
                 logger.info(manifest_data)
         else:
-            logger.info(u'No results manifest found')
+            logger.info('No results manifest found')
 
         results_manifest = ResultsManifest(manifest_data)
         stdout_files = self._get_artifacts_from_stdout(stdoutAndStderr)
@@ -273,42 +289,42 @@ class JobInterface(object):
 
         files_to_store = {}
         for manifest_file_entry in results_manifest.get_files():
-            param_name = manifest_file_entry[u'name']
+            param_name = manifest_file_entry['name']
 
             media_type = None
             output_data_item = self._get_output_data_item_by_name(param_name)
             if output_data_item:
                 media_type = output_data_item.get('media_type')
 
-            if u'file' in manifest_file_entry:
-                file_entry = manifest_file_entry[u'file']
-                if u'geo_metadata' in file_entry:
-                    files_to_store[param_name] = (file_entry[u'path'], media_type, file_entry[u'geo_metadata'])
+            if 'file' in manifest_file_entry:
+                file_entry = manifest_file_entry['file']
+                if 'geo_metadata' in file_entry:
+                    files_to_store[param_name] = (file_entry['path'], media_type, file_entry['geo_metadata'])
                 else:
-                    files_to_store[param_name] = (file_entry[u'path'], media_type)
-            elif u'files' in manifest_file_entry:
+                    files_to_store[param_name] = (file_entry['path'], media_type)
+            elif 'files' in manifest_file_entry:
                 file_tuples = []
-                for file_entry in manifest_file_entry[u'files']:
-                    if u'geo_metadata' in file_entry:
-                        file_tuples.append((file_entry[u'path'], media_type, file_entry[u'geo_metadata']))
+                for file_entry in manifest_file_entry['files']:
+                    if 'geo_metadata' in file_entry:
+                        file_tuples.append((file_entry['path'], media_type, file_entry['geo_metadata']))
                     else:
-                        file_tuples.append((file_entry[u'path'], media_type))
+                        file_tuples.append((file_entry['path'], media_type))
                 files_to_store[param_name] = file_tuples
 
         job_data_parse_results = {}  # parse results formatted for job_data
         for parse_result in results_manifest.get_parse_results():
-            filename = parse_result[u'filename']
+            filename = parse_result['filename']
             assert filename not in job_data_parse_results
-            geo_metadata = parse_result.get(u'geo_metadata', {})
-            geo_json = geo_metadata.get(u'geo_json', None)
-            data_started = geo_metadata.get(u'data_started', None)
-            data_ended = geo_metadata.get(u'data_ended', None)
-            data_types = parse_result.get(u'data_types', [])
-            new_workspace_path = parse_result.get(u'new_workspace_path', None)
+            geo_metadata = parse_result.get('geo_metadata', {})
+            geo_json = geo_metadata.get('geo_json', None)
+            data_started = geo_metadata.get('data_started', None)
+            data_ended = geo_metadata.get('data_ended', None)
+            data_types = parse_result.get('data_types', [])
+            new_workspace_path = parse_result.get('new_workspace_path', None)
             work_dir = None
             if new_workspace_path:
                 new_workspace_path = os.path.join(new_workspace_path, filename)
-                work_dir = os.path.join(get_job_exe_output_work_dir(job_exe.id), u'move_source_file_in_workspace')
+                work_dir = os.path.join(get_job_exe_output_work_dir(job_exe.id), 'move_source_file_in_workspace')
             job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path,
                                                 work_dir)
 
@@ -337,12 +353,12 @@ class JobInterface(object):
         :return: command arguments for the given properties
         :rtype: str
         '''
-        command_arguments = self.definition[u'command_arguments']
-        for input_data in self.definition[u'input_data']:
-            input_name = input_data[u'name']
-            input_type = input_data[u'type']
-            if input_type == u'property':
-                property_val = job_data.data_inputs_by_name[input_name][u'value']
+        command_arguments = self.definition['command_arguments']
+        for input_data in self.definition['input_data']:
+            input_name = input_data['name']
+            input_type = input_data['type']
+            if input_type == 'property':
+                property_val = job_data.data_inputs_by_name[input_name]['value']
                 command_arguments = self._replace_command_parameter(command_arguments, input_name, property_val)
 
         return command_arguments
@@ -364,7 +380,7 @@ class JobInterface(object):
         warnings.extend(job_conn.validate_properties(self._property_validation_dict))
         # Make sure connection has a workspace if the interface has any output files
         if self._output_file_validation_list and not job_conn.has_workspace():
-            raise InvalidConnection(u'No workspace provided for output files')
+            raise InvalidConnection('No workspace provided for output files')
         return warnings
 
     def validate_data(self, job_data):
@@ -392,15 +408,15 @@ class JobInterface(object):
         :rtype: str
         '''
 
-        for input_data in self.definition[u'input_data']:
-            if input_data[u'name'] in self._param_names:
-                raise InvalidInterfaceDefinition(u'shared resource & input_data names must be unique')
-            self._param_names.add(input_data[u'name'])
+        for input_data in self.definition['input_data']:
+            if input_data['name'] in self._param_names:
+                raise InvalidInterfaceDefinition('shared resource & input_data names must be unique')
+            self._param_names.add(input_data['name'])
 
-        for shared_resource in self.definition[u'shared_resources']:
-            if shared_resource[u'name'] in self._param_names:
-                raise InvalidInterfaceDefinition(u'shared resource & input_data names must be unique')
-            self._param_names.add(shared_resource[u'name'])
+        for shared_resource in self.definition['shared_resources']:
+            if shared_resource['name'] in self._param_names:
+                raise InvalidInterfaceDefinition('shared resource & input_data names must be unique')
+            self._param_names.add(shared_resource['name'])
 
     def _create_retrieve_files_dict(self):
         '''creates parameter folders and returns the dict needed to call
@@ -411,40 +427,40 @@ class JobInterface(object):
         '''
 
         retrieve_files_dict = {}
-        for input_data in self.definition[u'input_data']:
-            input_name = input_data[u'name']
-            input_type = input_data[u'type']
-            if input_type in [u'file', u'files']:
-                is_multiple = input_type == u'files'
+        for input_data in self.definition['input_data']:
+            input_name = input_data['name']
+            input_type = input_data['type']
+            if input_type in ['file', 'files']:
+                is_multiple = input_type == 'files'
                 input_path = input_name
                 retrieve_files_dict[input_name] = (is_multiple, input_path)
         return retrieve_files_dict
 
     def _create_validation_dicts(self):
         '''Creates the validation dicts required by job_data to perform its validation'''
-        for input_data in self.definition[u'input_data']:
-            name = input_data[u'name']
-            required = input_data[u'required']
-            if input_data[u'type'] == u'property':
+        for input_data in self.definition['input_data']:
+            name = input_data['name']
+            required = input_data['required']
+            if input_data['type'] == 'property':
                 self._property_validation_dict[name] = required
-            elif input_data[u'type'] == u'file':
+            elif input_data['type'] == 'file':
                 file_desc = ScaleFileDescription()
-                for media_type in input_data[u'media_types']:
+                for media_type in input_data['media_types']:
                     file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, False, file_desc)
-            elif input_data[u'type'] == u'files':
+            elif input_data['type'] == 'files':
                 file_desc = ScaleFileDescription()
-                for media_type in input_data[u'media_types']:
+                for media_type in input_data['media_types']:
                     file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, True, file_desc)
 
-        for ouput_data in self.definition[u'output_data']:
-            output_type = ouput_data[u'type']
-            if output_type in [u'file', u'files']:
-                name = ouput_data[u'name']
-                required = ouput_data[u'required']
+        for ouput_data in self.definition['output_data']:
+            output_type = ouput_data['type']
+            if output_type in ['file', 'files']:
+                name = ouput_data['name']
+                required = ouput_data['required']
                 self._output_file_validation_list.append(name)
-                self._output_file_manifest_dict[name] = (output_type == u'files', required)
+                self._output_file_manifest_dict[name] = (output_type == 'files', required)
 
     def _get_artifacts_from_stdout(self, stdout):
         '''Parses stdout looking for artifacts of the form ARTIFACT:<ouput_name>:<output_path>
@@ -456,21 +472,21 @@ class JobInterface(object):
         see job.configuration.results.manifest.RESULTS_MANIFEST_SCHEMA
         '''
         artifacts_found = {}
-        artifacts_pattern = u'^ARTIFACT:([^:]*):(.*)'
+        artifacts_pattern = '^ARTIFACT:([^:]*):(.*)'
         for artifact_match in re.findall(artifacts_pattern, stdout, re.MULTILINE):
             artifact_name = artifact_match[0]
             artifact_path = artifact_match[1]
             if artifact_name in artifacts_found:
                 paths = []
-                if u'paths' in artifacts_found[artifact_name]:
-                    paths = artifacts_found[artifact_name][u'paths']
+                if 'paths' in artifacts_found[artifact_name]:
+                    paths = artifacts_found[artifact_name]['paths']
                 else:
-                    paths = [artifacts_found[artifact_name][u'path']]
-                    artifacts_found[artifact_name].pop(u'path')
+                    paths = [artifacts_found[artifact_name]['path']]
+                    artifacts_found[artifact_name].pop('path')
                 paths.append(artifact_path)
-                artifacts_found[artifact_name][u'paths'] = paths
+                artifacts_found[artifact_name]['paths'] = paths
             else:
-                artifacts_found[artifact_name] = {u'name': artifact_name, u'path': artifact_path}
+                artifacts_found[artifact_name] = {'name': artifact_name, 'path': artifact_path}
         return artifacts_found.values()
 
     def _get_one_file_from_directory(self, dir_path):
@@ -494,20 +510,20 @@ class JobInterface(object):
         :type data_item_name: str
         '''
 
-        for output_data in self.definition[u'output_data']:
-            if data_item_name == output_data[u'name']:
+        for output_data in self.definition['output_data']:
+            if data_item_name == output_data['name']:
                 return output_data
 
     def _populate_default_values(self):
         '''Goes through the definition and fills in any missing default values'''
-        if u'version' not in self.definition:
-            self.definition[u'version'] = u'1.0'
-        if u'input_data' not in self.definition:
-            self.definition[u'input_data'] = []
-        if u'shared_resources' not in self.definition:
-            self.definition[u'shared_resources'] = []
-        if u'output_data' not in self.definition:
-            self.definition[u'output_data'] = []
+        if 'version' not in self.definition:
+            self.definition['version'] = '1.0'
+        if 'input_data' not in self.definition:
+            self.definition['input_data'] = []
+        if 'shared_resources' not in self.definition:
+            self.definition['shared_resources'] = []
+        if 'output_data' not in self.definition:
+            self.definition['output_data'] = []
 
         self._populate_input_data_defaults()
         self._populate_resource_defaults()
@@ -515,23 +531,23 @@ class JobInterface(object):
 
     def _populate_input_data_defaults(self):
         '''populates the default values for any missing input_data values'''
-        for input_data in self.definition[u'input_data']:
-            if u'required' not in input_data:
-                input_data[u'required'] = True
-            if input_data[u'type'] in [u'file', u'files'] and u'media_types' not in input_data:
-                input_data[u'media_types'] = []
+        for input_data in self.definition['input_data']:
+            if 'required' not in input_data:
+                input_data['required'] = True
+            if input_data['type'] in ['file', 'files'] and 'media_types' not in input_data:
+                input_data['media_types'] = []
 
     def _populate_output_data_defaults(self):
         '''populates the default values for any missing output_data values'''
-        for output_data in self.definition[u'output_data']:
-            if u'required' not in output_data:
-                output_data[u'required'] = True
+        for output_data in self.definition['output_data']:
+            if 'required' not in output_data:
+                output_data['required'] = True
 
     def _populate_resource_defaults(self):
         '''populates the default values for any missing shared_resource values'''
-        for shared_resource in self.definition[u'shared_resources']:
-            if u'required' not in shared_resource:
-                shared_resource[u'required'] = True
+        for shared_resource in self.definition['shared_resources']:
+            if 'required' not in shared_resource:
+                shared_resource['required'] = True
 
     def _replace_command_parameter(self, command_arguments, param_name, param_value):
         '''find all occurances of a parameter with a given name in the command_arguments string and
@@ -550,7 +566,7 @@ class JobInterface(object):
         :rtype: str
         '''
         ret_str = command_arguments
-        param_pattern = u'\$\{([^\}]*\:)?' + re.escape(param_name) + u'\}'
+        param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
         pattern_prog = re.compile(param_pattern)
 
         keep_replacing = True
@@ -572,24 +588,24 @@ class JobInterface(object):
         Will raise a :exception:`job.configuration.data.exceptions.InvalidInterfaceDefinition`
         if the arguments are not valid
         '''
-        command_arguments = self.definition[u'command_arguments']
+        command_arguments = self.definition['command_arguments']
 
-        param_pattern = u'\$\{(?:[^\}]*:)?([^\}]*)\}'
+        param_pattern = '\$\{(?:[^\}]*:)?([^\}]*)\}'
 
         for param in re.findall(param_pattern, command_arguments):
             found_match = False
-            for input_data in self.definition[u'input_data']:
-                if input_data[u'name'] == param:
+            for input_data in self.definition['input_data']:
+                if input_data['name'] == param:
                     found_match = True
                     break
             if not found_match:
-                for shared_resource in self.definition[u'shared_resources']:
-                    if shared_resource[u'name'] == param:
+                for shared_resource in self.definition['shared_resources']:
+                    if shared_resource['name'] == param:
                         found_match = True
                         break
 
             #Look for system properties
-            if param == u'job_output_dir':
+            if param == 'job_output_dir':
                 found_match = True
 
             if not found_match:

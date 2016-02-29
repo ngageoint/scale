@@ -1,0 +1,27 @@
+@import 'colors';
+
+.grid-container {
+    background: #fff;
+
+    .scale-grid {
+        width: auto;
+
+        .ui-grid-header {
+            width: 100%;
+        }
+
+        .ui-grid-row {
+            &:hover {
+                .ui-grid-cell-contents {
+                    cursor: pointer;
+                    background: @accent_blue;
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+.ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
+    background-color: inherit;
+}

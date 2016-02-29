@@ -225,6 +225,8 @@ class NodeManager(models.Manager):
             results.append(node_status)
         return results
 
+    # TODO: This is deprecated and currently unused. Remove this and last_offer field when next changes are made to Node
+    # model
     @transaction.atomic
     def update_last_offer(self, slave_id):
         '''Update the last offer for a node with the given slave id.

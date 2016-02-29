@@ -96,7 +96,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .post_exit_code    | Integer           | The exit code of the post-steps job process for this job execution.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .queued            | ISO-8601 Datetime | When the job was added to the queue for this run and went to QUEUED status.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -231,7 +231,7 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | post_exit_code       | Integer           | The exit code of the post-steps job process for this job execution.            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| created              | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created              | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | queued               | ISO-8601 Datetime | When the job was added to the queue for this run and went to QUEUED status.    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -412,7 +412,7 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | post_exit_code       | Integer           | The exit code of the post-steps job process for this job execution.            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| created              | ISO-8601 Datetime | When the associated database model model was initially created.                |
+| created              | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | queued               | ISO-8601 Datetime | When the job was added to the queue for this run and went to QUEUED status.    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+

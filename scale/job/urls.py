@@ -9,7 +9,7 @@ urlpatterns = patterns(
     # Job type views
     url(r'^job-types/$', views.JobTypesView.as_view(), name='job_types_view'),
     url(r'^job-types/(\d+)/$', views.JobTypeDetailsView.as_view(), name='job_type_details_view'),
-    url(r'^job-types/create/$', views.JobTypeDetailsCreateView.as_view(), name='job_type_details_create_view'),
+    url(r'^job-types/validation/$', views.JobTypesValidationView.as_view(), name='job_types_validation_view'),
     url(r'^job-types/status/$', views.JobTypesStatusView.as_view(), name='job_types_status_view'),
     url(r'^job-types/running/$', views.JobTypesRunningView.as_view(), name='job_types_running_view'),
     url(r'^job-types/system-failures/$', views.JobTypesSystemFailuresView.as_view(),

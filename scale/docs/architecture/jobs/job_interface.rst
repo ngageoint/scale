@@ -23,9 +23,29 @@ defined as follows:
       "version": "1.0",
       "command": "python make_geotiff.py",
       "command_arguments": "${image} ${georeference_data} ${job_output_dir}",
-      "input_data": [ {"name": "image", "type": "file", "media_types": ["image/png"]},
-                      {"name": "georeference_data", "type": "file", "media_types": ["text/csv"]} ],
-      "output_data": [ {"name": "geo_image", "type": "file", "media_type": "image/tiff"} ]
+      "input_data": [
+         {
+            "name": "image",
+            "type": "file",
+            "media_types": [
+               "image/png"
+            ]
+         },
+         {
+            "name": "georeference_data",
+            "type": "file",
+            "media_types": [
+               "text/csv"
+            ]
+         }
+      ],
+      "output_data": [
+         {
+            "name": "geo_image",
+            "type": "file",
+            "media_type": "image/tiff"
+         }
+      ]
    }
 
 The *command* value specifies that the algorithm is executed by invoking Python with the make_geotiff.py script. The
@@ -50,11 +70,45 @@ A valid job interface is a JSON document with the following structure:
       "version": STRING,
       "command": STRING,
       "command_arguments": STRING,
-      "input_data": [ {"name": STRING, "type": "property", "required": true|false},
-                      {"name": STRING, "type": "file", "required": true|false, "media_types": [STRING, STRING]},
-                      {"name": STRING, "type": "files", "required": true|false, "media_types": [STRING, STRING]} ],
-      "output_data": [ {"name": STRING, "type": "file", "required": true|false, "media_type": STRING},
-                       {"name": STRING, "type": "files", "required": true|false, "media_type": STRING} ]
+      "input_data": [
+         {
+            "name": STRING,
+            "type": "property",
+            "required": true|false
+         },
+         {
+            "name": STRING,
+            "type": "file",
+            "required": true|false,
+            "media_types": [
+               STRING,
+               STRING
+            ]
+         },
+         {
+            "name": STRING,
+            "type": "files",
+            "required": true|false,
+            "media_types": [
+               STRING,
+               STRING
+            ]
+         }
+      ],
+      "output_data": [
+         {
+            "name": STRING,
+            "type": "file",
+            "required": true|false,
+            "media_type": STRING
+         },
+         {
+            "name": STRING,
+            "type": "files",
+            "required": true|false,
+            "media_type": STRING
+         }
+      ]
    }
 
 **version**: JSON string
@@ -65,7 +119,7 @@ A valid job interface is a JSON document with the following structure:
     latest version, which is currently 1.0. It is recommended, though not required, that you include the *version* so
     that future changes to the specification will still accept the recipe definition.
 
-    If scale does not recognize the version number as valid, the recipe cannot be used.  Currently, the only valid version is "1.0".
+    Scale must recognize the version number as valid for the recipe to work. Currently, "1.0" is the only valid version.
 
 **command**: JSON string
 
@@ -82,8 +136,8 @@ A valid job interface is a JSON document with the following structure:
     *${FLAG:INPUT NAME}*. There is also a special substitution value
     *${job_output_dir}*, which will be replaced with the absolute file system path of the output directory where the
     algorithm may write its output files. The algorithm should produce a results manifest named "results_manifest.json".
-    The format for the results manifest can be found here: :ref:`algorithms_results_manifest`.  Any output files must be registered
-    in the results manifest.
+    The format for the results manifest can be found here: :ref:`algorithms_results_manifest`. Any output files must be
+    registered in the results manifest.
 
 **input_data**: JSON array
 

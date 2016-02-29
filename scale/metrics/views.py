@@ -1,9 +1,10 @@
-'''Defines the views for the RESTful product services'''
+'''Defines the views for the RESTful metrics services'''
 from __future__ import unicode_literals
 
 import logging
 
 import rest_framework.status as status
+from django.http.response import Http404
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,7 +14,6 @@ import util.rest as rest_util
 from metrics.registry import MetricsTypeError
 from metrics.serializers import (MetricsPlotListSerializer, MetricsPlotMultiListSerializer,
                                  MetricsTypeDetailsSerializer, MetricsTypeListSerializer)
-from django.http.response import Http404
 
 logger = logging.getLogger(__name__)
 
@@ -70,11 +70,11 @@ class MetricPlotView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         '''
-        started = rest_util.parse_timestamp(request, u'started', required=False)
-        ended = rest_util.parse_timestamp(request, u'ended', required=False)
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        choice_ids = rest_util.parse_string_list(request, 'choice-id', required=False)
+        choice_ids = rest_util.parse_string_list(request, 'choice_id', required=False)
         column_names = rest_util.parse_string_list(request, 'column', required=False)
         group_names = rest_util.parse_string_list(request, 'group', required=False)
 

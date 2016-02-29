@@ -71,6 +71,66 @@ class TestRest(TestCase):
         self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 1),
                           datetime.datetime(2015, 3, 1), datetime.timedelta(days=31))
 
+    def test_check_together_empty(self):
+        '''Tests checking multiple parameters together when none are given.'''
+        self.assertFalse(rest_util.check_together([], []))
+
+    def test_check_together_none(self):
+        '''Tests checking multiple parameters together when none are given.'''
+        self.assertFalse(rest_util.check_together(['test1', 'test2'], [None, None]))
+
+    def test_check_together_single(self):
+        '''Tests checking multiple parameters together when one is given.'''
+        self.assertFalse(rest_util.check_together(['test1'], [None]))
+
+    def test_check_together_partial(self):
+        '''Tests checking multiple parameters together when some are given.'''
+        self.assertRaises(BadParameter, rest_util.check_together, ['test1', 'test2'], ['value1', None])
+
+    def test_check_together_all(self):
+        '''Tests checking multiple parameters together.'''
+        self.assertTrue(rest_util.check_together(['test1', 'test2'], ['value1', 'value2']))
+
+    def test_has_params_empty(self):
+        '''Tests checking parameter presence when none are given.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        self.assertFalse(rest_util.has_params(request))
+
+    def test_has_params_none(self):
+        '''Tests checking parameter presence when none are given.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        self.assertFalse(rest_util.has_params(request, None, None))
+
+    def test_has_params_single(self):
+        '''Tests checking parameter presence when one is given.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test1': 'value1',
+        })
+        self.assertTrue(rest_util.has_params(request, 'test1'))
+
+    def test_has_params_partial(self):
+        '''Tests checking parameter presence when some are given.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test1': 'value1',
+        })
+        self.assertFalse(rest_util.has_params(request, 'test1', 'test2'))
+
+    def test_has_params_all(self):
+        '''Tests checking parameter presence when all are given.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test1': 'value1',
+            'test2': None,
+        })
+        self.assertTrue(rest_util.has_params(request, 'test1', 'test2'))
+
     def test_parse_string(self):
         '''Tests parsing a required string parameter that is provided via GET.'''
         request = MagicMock(Request)
@@ -107,6 +167,26 @@ class TestRest(TestCase):
         })
         self.assertIsNone(rest_util.parse_string(request, 'test2', required=False))
 
+    def test_parse_string_accepted_none(self):
+        '''Tests parsing a string parameter where the value is not acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': 'value1',
+        })
+
+        self.assertRaises(BadParameter, rest_util.parse_string, request, 'test', accepted_values=['value'])
+
+    def test_parse_string_accepted_all(self):
+        '''Tests parsing a string parameter where the value is acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': 'value1',
+        })
+
+        self.assertEqual(rest_util.parse_string(request, 'test', accepted_values=['value1']), 'value1')
+
     def test_parse_string_post(self):
         '''Tests parsing a required string parameter that is provided via POST.'''
         request = MagicMock(Request)
@@ -128,29 +208,50 @@ class TestRest(TestCase):
         '''Tests parsing a required list of string parameters that are missing.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': 'value1',
-            'test': 'value2',
-        })
+        request.QUERY_PARAMS.setlist('test', ['value1', 'value2'])
+
         self.assertRaises(BadParameter, rest_util.parse_string_list, request, 'test2')
 
     def test_parse_string_list_default(self):
         '''Tests parsing a required list of string parameters that are provided via default value.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': 'value1',
-        })
+        request.QUERY_PARAMS.setlist('test', ['value1'])
+
         self.assertEqual(rest_util.parse_string_list(request, 'test2', ['value2', 'value3']), ['value2', 'value3'])
 
     def test_parse_string_list_optional(self):
         '''Tests parsing an optional list of string parameters that are missing.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': 'value1',
-        })
+        request.QUERY_PARAMS.setlist('test', ['value1'])
+
         self.assertListEqual(rest_util.parse_string_list(request, 'test2', required=False), [])
+
+    def test_parse_string_list_accepted_none(self):
+        '''Tests parsing a list of string parameters where none of the values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['value1', 'value2'])
+
+        self.assertRaises(BadParameter, rest_util.parse_string_list, request, 'test', accepted_values=['value'])
+
+    def test_parse_string_list_accepted_partial(self):
+        '''Tests parsing a list of string parameters where only some values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['value1', 'value2'])
+
+        self.assertRaises(BadParameter, rest_util.parse_string_list, request, 'test', accepted_values=['value1'])
+
+    def test_parse_string_list_accepted_all(self):
+        '''Tests parsing a list of string parameters where all values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['value1', 'value2'])
+
+        self.assertListEqual(rest_util.parse_string_list(request, 'test', accepted_values=['value1', 'value2']),
+                             ['value1', 'value2'])
 
     def test_parse_string_list_post(self):
         '''Tests parsing a required list of string parameters that are provided via POST.'''
@@ -268,6 +369,26 @@ class TestRest(TestCase):
         })
         self.assertIsNone(rest_util.parse_int(request, 'test2', required=False))
 
+    def test_parse_int_accepted_none(self):
+        '''Tests parsing an int parameter where the value is not acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': '1',
+        })
+
+        self.assertRaises(BadParameter, rest_util.parse_int, request, 'test', accepted_values=[5, 10])
+
+    def test_parse_int_accepted_all(self):
+        '''Tests parsing an int parameter where the value is acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': '1',
+        })
+
+        self.assertEqual(rest_util.parse_int(request, 'test', accepted_values=[1, 2, 3]), 1)
+
     def test_parse_int_zero(self):
         '''Tests parsing an optional int parameter zero instead of using the default value.'''
         request = MagicMock(Request)
@@ -307,29 +428,46 @@ class TestRest(TestCase):
         '''Tests parsing a required list of int parameters that are missing.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': '1',
-            'test': '2',
-        })
+        request.QUERY_PARAMS.setlist('test', ['1', '2'])
         self.assertRaises(BadParameter, rest_util.parse_int_list, request, 'test2')
 
     def test_parse_int_list_default(self):
         '''Tests parsing a required list of int parameters that are provided via default value.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': '1',
-        })
+        request.QUERY_PARAMS.setlist('test', ['1'])
         self.assertEqual(rest_util.parse_int_list(request, 'test2', ['2', '3']), [2, 3])
 
     def test_parse_int_list_optional(self):
         '''Tests parsing an optional list of int parameters that are missing.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        request.QUERY_PARAMS.update({
-            'test': '1',
-        })
+        request.QUERY_PARAMS.setlist('test', ['1'])
         self.assertListEqual(rest_util.parse_int_list(request, 'test2', required=False), [])
+
+    def test_parse_int_list_accepted_none(self):
+        '''Tests parsing a list of int parameters where none of the values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['1', '2'])
+
+        self.assertRaises(BadParameter, rest_util.parse_int_list, request, 'test', accepted_values=[3])
+
+    def test_parse_int_list_accepted_partial(self):
+        '''Tests parsing a list of int parameters where only some values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['1', '2'])
+
+        self.assertRaises(BadParameter, rest_util.parse_int_list, request, 'test', accepted_values=[1])
+
+    def test_parse_int_list_accepted_all(self):
+        '''Tests parsing a list of int parameters where all values are acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.setlist('test', ['1', '2'])
+
+        self.assertListEqual(rest_util.parse_int_list(request, 'test', accepted_values=[1, 2]), [1, 2])
 
     def test_parse_int_list_post(self):
         '''Tests parsing a required list of int parameters that are provided via POST.'''
@@ -374,6 +512,26 @@ class TestRest(TestCase):
             'test': 'value1',
         })
         self.assertIsNone(rest_util.parse_float(request, 'test2', required=False))
+
+    def test_parse_float_accepted_none(self):
+        '''Tests parsing a float parameter where the value is not acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': '1.0',
+        })
+
+        self.assertRaises(BadParameter, rest_util.parse_float, request, 'test', accepted_values=[5.0, 10.0])
+
+    def test_parse_float_valid(self):
+        '''Tests parsing a float parameter where the value is acceptable.'''
+        request = MagicMock(Request)
+        request.QUERY_PARAMS = QueryDict('', mutable=True)
+        request.QUERY_PARAMS.update({
+            'test': '1.1',
+        })
+
+        self.assertEqual(rest_util.parse_float(request, 'test', accepted_values=[1.1, 2.2, 3.3]), 1.1)
 
     def test_parse_float_zero(self):
         '''Tests parsing an optional float parameter zero instead of using the default value.'''
@@ -540,4 +698,4 @@ class TestRest(TestCase):
         '''Tests parsing an optional dict with no default value.'''
         request = MagicMock(Request)
         request.QUERY_PARAMS = QueryDict('', mutable=True)
-        self.assertIsNone(rest_util.parse_dict(request, 'test', required=False))
+        self.assertDictEqual(rest_util.parse_dict(request, 'test', required=False), {})

@@ -21,7 +21,6 @@ from job.configuration.results.results_manifest.results_manifest import ResultsM
 JOB_RESULTS = JobResults()
 RESULTS_MANIFEST = ResultsManifest()
 RESULTS = (JOB_RESULTS, RESULTS_MANIFEST)
-NODE_WORK_DIR = os.path.join('test', 'dir', 'node')
 
 
 class TestPostJobSteps(TestCase):
@@ -41,12 +40,12 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.Command._cleanup')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('job.management.commands.scale_post_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_post_steps_successful(self, mock_node_dir, mock_job_exe_manager, mock_cleanup, mock_call):
+    def test_scale_post_steps_successful(self, mock_job_exe_manager, mock_cleanup, mock_call):
         '''Tests successfully executing scale_post_steps.'''
 
         # Set up mocks
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
         cmd = PostCommand()
@@ -58,8 +57,7 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
-    @patch('job.management.commands.scale_post_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_post_steps_database_error(self, mock_node_dir, mock_db, mock_sys_exit, mock_call):
+    def test_scale_post_steps_database_error(self, mock_db, mock_sys_exit, mock_call):
         '''Tests executing scale_post_steps when a database error occurs.'''
 
         # Set up mocks
@@ -75,8 +73,7 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('job.management.commands.scale_post_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_post_steps_nfs_error(self, mock_node_dir, mock_job_exe_manager, mock_sys_exit, mock_call):
+    def test_scale_post_steps_nfs_error(self, mock_job_exe_manager, mock_sys_exit, mock_call):
         '''Tests executing scale_post_steps when an NFS error occurs.'''
 
         # Set up mocks
@@ -92,8 +89,7 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('job.management.commands.scale_post_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_post_steps_io_error(self, mock_node_dir, mock_job_exe_manager, mock_sys_exit, mock_call):
+    def test_scale_post_steps_io_error(self, mock_job_exe_manager, mock_sys_exit, mock_call):
         '''Tests executing scale_post_steps when an IO error occurs.'''
 
         # Set up mocks
@@ -109,14 +105,14 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.Command._cleanup')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('job.management.commands.scale_post_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_post_steps_no_stderr(self, mock_node_dir, mock_job_exe_manager, mock_cleanup, mock_call):
+    def test_scale_post_steps_no_stderr(self, mock_job_exe_manager, mock_cleanup, mock_call):
         '''Tests successfully executing scale_post_steps.'''
 
         # Set up mocks
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stdout = 'something'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stderr = None
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
         cmd = PostCommand()

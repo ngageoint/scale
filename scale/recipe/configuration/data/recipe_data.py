@@ -1,12 +1,14 @@
 '''Defines the data needed for executing a recipe'''
+from __future__ import unicode_literals
+
 from numbers import Integral
 
 from job.configuration.data.data_file import DATA_FILE_STORE
-from recipe.configuration.data.exceptions import InvalidData
+from recipe.configuration.data.exceptions import InvalidRecipeData
 from storage.models import ScaleFile
 
 
-DEFAULT_VERSION = u'1.0'
+DEFAULT_VERSION = '1.0'
 
 
 class ValidationWarning(object):
@@ -36,34 +38,34 @@ class RecipeData(object):
         :param data: The recipe data
         :type data: dict
 
-        :raises InvalidData: If the recipe data is invalid
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         '''
 
         self.data_dict = data
         self.param_names = set()
         self.data_inputs_by_name = {}  # str -> dict
 
-        if not u'version' in self.data_dict:
-            self.data_dict[u'version'] = DEFAULT_VERSION
-        if not self.data_dict[u'version'] == u'1.0':
-            raise InvalidData(u'Invalid recipe data: %s is an unsupported version number' % self.data_dict[u'version'])
+        if not 'version' in self.data_dict:
+            self.data_dict['version'] = DEFAULT_VERSION
+        if not self.data_dict['version'] == '1.0':
+            raise InvalidRecipeData('Invalid recipe data: %s is an unsupported version number' % self.data_dict['version'])
 
-        if not u'input_data' in self.data_dict:
-            self.data_dict[u'input_data'] = []
-        for data_input in self.data_dict[u'input_data']:
-            if not u'name' in data_input:
-                raise InvalidData(u'Invalid recipe data: Every data input must have a "name" field')
-            name = data_input[u'name']
+        if not 'input_data' in self.data_dict:
+            self.data_dict['input_data'] = []
+        for data_input in self.data_dict['input_data']:
+            if not 'name' in data_input:
+                raise InvalidRecipeData('Invalid recipe data: Every data input must have a "name" field')
+            name = data_input['name']
             if name in self.param_names:
-                raise InvalidData(u'Invalid recipe data: %s cannot be defined more than once' % name)
+                raise InvalidRecipeData('Invalid recipe data: %s cannot be defined more than once' % name)
             else:
                 self.param_names.add(name)
             self.data_inputs_by_name[name] = data_input
 
-        if u'workspace_id' in self.data_dict:
-            workspace_id = self.data_dict[u'workspace_id']
+        if 'workspace_id' in self.data_dict:
+            workspace_id = self.data_dict['workspace_id']
             if not isinstance(workspace_id, Integral):
-                raise InvalidData(u'Invalid recipe data: Workspace ID must be an integer')
+                raise InvalidRecipeData('Invalid recipe data: Workspace ID must be an integer')
 
     def add_file_input(self, input_name, file_id):
         '''Adds a new file parameter to this recipe data.
@@ -76,11 +78,11 @@ class RecipeData(object):
         '''
 
         if input_name in self.param_names:
-            raise Exception(u'Data already has a parameter named %s' % input_name)
+            raise Exception('Data already has a parameter named %s' % input_name)
 
         self.param_names.add(input_name)
-        file_input = {u'name': input_name, u'file_id': file_id}
-        self.data_dict[u'input_data'].append(file_input)
+        file_input = {'name': input_name, 'file_id': file_id}
+        self.data_dict['input_data'].append(file_input)
         self.data_inputs_by_name[input_name] = file_input
 
     def add_input_to_data(self, recipe_input_name, job_data, job_input_name):
@@ -96,14 +98,14 @@ class RecipeData(object):
 
         if recipe_input_name in self.data_inputs_by_name:
             recipe_input = self.data_inputs_by_name[recipe_input_name]
-            if u'value' in recipe_input:
-                value = recipe_input[u'value']
+            if 'value' in recipe_input:
+                value = recipe_input['value']
                 job_data.add_property_input(job_input_name, value)
-            elif u'file_id' in recipe_input:
-                file_id = recipe_input[u'file_id']
+            elif 'file_id' in recipe_input:
+                file_id = recipe_input['file_id']
                 job_data.add_file_input(job_input_name, file_id)
-            elif u'file_ids' in recipe_input:
-                file_ids = recipe_input[u'file_ids']
+            elif 'file_ids' in recipe_input:
+                file_ids = recipe_input['file_ids']
                 job_data.add_file_list_input(job_input_name, file_ids)
 
     def get_input_file_ids(self):
@@ -114,11 +116,11 @@ class RecipeData(object):
         '''
 
         file_ids = set()
-        for data_input in self.data_dict[u'input_data']:
-            if u'file_id' in data_input:
-                file_ids.add(data_input[u'file_id'])
-            elif u'file_ids' in data_input:
-                file_ids.update(data_input[u'file_ids'])
+        for data_input in self.data_dict['input_data']:
+            if 'file_id' in data_input:
+                file_ids.add(data_input['file_id'])
+            elif 'file_ids' in data_input:
+                file_ids.update(data_input['file_ids'])
         return file_ids
 
     def get_workspace_id(self):
@@ -128,7 +130,7 @@ class RecipeData(object):
         :rtype: int
         '''
 
-        return self.data_dict[u'workspace_id']
+        return self.data_dict['workspace_id']
 
     def set_workspace_id(self, workspace_id):
         '''Set the workspace ID in the recipe data.
@@ -136,11 +138,11 @@ class RecipeData(object):
         :param workspace_id: The new workspace ID
         :type workspace_id: int
 
-        :raises InvalidData: If the workspace id is an invalid type
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the workspace ID is an invalid type
         '''
         if not isinstance(workspace_id, Integral):
-            raise InvalidData(u'Workspace ID must be an integer')
-        self.data_dict[u'workspace_id'] = workspace_id
+            raise InvalidRecipeData('Workspace ID must be an integer')
+        self.data_dict['workspace_id'] = workspace_id
 
     def get_dict(self):
         '''Returns the internal dictionary that represents this recipe data
@@ -161,7 +163,7 @@ class RecipeData(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
-        :raises :class:`recipe.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
         '''
 
         warnings = []
@@ -174,41 +176,41 @@ class RecipeData(object):
                 file_input = self.data_inputs_by_name[name]
                 file_ids = []
                 if multiple:
-                    if not u'file_ids' in file_input:
-                        if u'file_id' in file_input:
-                            file_input[u'file_ids'] = [file_input[u'file_id']]
+                    if not 'file_ids' in file_input:
+                        if 'file_id' in file_input:
+                            file_input['file_ids'] = [file_input['file_id']]
                         else:
-                            msg = u'Invalid recipe data: Data input %s is a list of files and must have a "file_ids" ' \
+                            msg = 'Invalid recipe data: Data input %s is a list of files and must have a "file_ids" ' \
                             'or "file_id" field'
-                            raise InvalidData(msg % name)
-                    if u'file_id' in file_input:
-                        del file_input[u'file_id']
-                    value = file_input[u'file_ids']
+                            raise InvalidRecipeData(msg % name)
+                    if 'file_id' in file_input:
+                        del file_input['file_id']
+                    value = file_input['file_ids']
                     if not isinstance(value, list):
-                        msg = u'Invalid recipe data: Data input %s must have a list of integers in its "file_ids" field'
-                        raise InvalidData(msg % name)
+                        msg = 'Invalid recipe data: Data input %s must have a list of integers in its "file_ids" field'
+                        raise InvalidRecipeData(msg % name)
                     for file_id in value:
                         if not isinstance(file_id, Integral):
-                            msg = u'Invalid recipe data: Data input %s must have a list of integers in its "file_ids"' \
+                            msg = 'Invalid recipe data: Data input %s must have a list of integers in its "file_ids"' \
                             'field'
-                            raise InvalidData(msg % name)
+                            raise InvalidRecipeData(msg % name)
                         file_ids.append(long(file_id))
                 else:
-                    if not u'file_id' in file_input:
-                        msg = u'Invalid recipe data: Data input %s is a file and must have a "file_id" field' % name
-                        raise InvalidData(msg)
-                    if u'file_ids' in file_input:
-                        del file_input[u'file_ids']
-                    file_id = file_input[u'file_id']
+                    if not 'file_id' in file_input:
+                        msg = 'Invalid recipe data: Data input %s is a file and must have a "file_id" field' % name
+                        raise InvalidRecipeData(msg)
+                    if 'file_ids' in file_input:
+                        del file_input['file_ids']
+                    file_id = file_input['file_id']
                     if not isinstance(file_id, Integral):
-                        msg = u'Invalid recipe data: Data input %s must have an integer in its "file_id" field' % name
-                        raise InvalidData(msg)
+                        msg = 'Invalid recipe data: Data input %s must have an integer in its "file_id" field' % name
+                        raise InvalidRecipeData(msg)
                     file_ids.append(long(file_id))
                 warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
                 # Don't have this input, check if it is required
                 if required:
-                    raise InvalidData(u'Invalid recipe data: Data input %s is required and was not provided' % name)
+                    raise InvalidRecipeData('Invalid recipe data: Data input %s is required and was not provided' % name)
         return warnings
 
     def validate_properties(self, property_names):
@@ -220,7 +222,7 @@ class RecipeData(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
-        :raises :class:`recipe.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
         '''
 
         warnings = []
@@ -228,17 +230,17 @@ class RecipeData(object):
             if name in self.data_inputs_by_name:
                 # Have this input, make sure it is a valid property
                 property_input = self.data_inputs_by_name[name]
-                if not u'value' in property_input:
-                    msg = u'Invalid recipe data: Data input %s is a property and must have a "value" field' % name
-                    raise InvalidData(msg)
-                value = property_input[u'value']
+                if not 'value' in property_input:
+                    msg = 'Invalid recipe data: Data input %s is a property and must have a "value" field' % name
+                    raise InvalidRecipeData(msg)
+                value = property_input['value']
                 if not isinstance(value, basestring):
-                    msg = u'Invalid recipe data: Data input %s must have a string in its "value" field' % name
-                    raise InvalidData(msg)
+                    msg = 'Invalid recipe data: Data input %s must have a string in its "value" field' % name
+                    raise InvalidRecipeData(msg)
             else:
                 # Don't have this input, check if it is required
                 if property_names[name]:
-                    raise InvalidData(u'Invalid recipe data: Data input %s is required and was not provided' % name)
+                    raise InvalidRecipeData('Invalid recipe data: Data input %s is required and was not provided' % name)
         return warnings
 
     def validate_workspace(self):
@@ -247,24 +249,24 @@ class RecipeData(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
-        :raises :class:`recipe.configuration.data.exceptions.InvalidData`: If the workspace is missing or invalid.
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the workspace is missing or invalid
         '''
 
         warnings = []
-        if not u'workspace_id' in self.data_dict:
-            raise InvalidData(u'Invalid recipe data: Workspace ID is needed and was not provided')
-        workspace_id = self.data_dict[u'workspace_id']
+        if not 'workspace_id' in self.data_dict:
+            raise InvalidRecipeData('Invalid recipe data: Workspace ID is needed and was not provided')
+        workspace_id = self.data_dict['workspace_id']
 
-        data_file_store = DATA_FILE_STORE[u'DATA_FILE_STORE']
+        data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
         if not data_file_store:
-            raise Exception(u'No data file store found')
+            raise Exception('No data file store found')
         workspaces = data_file_store.get_workspaces([workspace_id])
 
         if not workspaces:
-            raise InvalidData(u'Invalid recipe data: Workspace for ID %i does not exist' % workspace_id)
+            raise InvalidRecipeData('Invalid recipe data: Workspace for ID %i does not exist' % workspace_id)
         active = workspaces[workspace_id]
         if not active:
-            raise InvalidData(u'Invalid recipe data: Workspace for ID %i is not active' % workspace_id)
+            raise InvalidRecipeData('Invalid recipe data: Workspace for ID %i is not active' % workspace_id)
         return warnings
 
     def _validate_file_ids(self, file_ids, file_desc):
@@ -277,7 +279,7 @@ class RecipeData(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
-        :raises :class:`recipe.configuration.data.exceptions.InvalidData`: If any of the files are missing.
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If any of the files are missing
         '''
 
         warnings = []
@@ -286,12 +288,12 @@ class RecipeData(object):
             found_ids.add(scale_file.id)
             media_type = scale_file.media_type
             if not file_desc.is_media_type_allowed(media_type):
-                warn = ValidationWarning(u'media_type',
-                                         u'Invalid media type for file: %i -> %s' % (scale_file.id, media_type))
+                warn = ValidationWarning('media_type',
+                                         'Invalid media type for file: %i -> %s' % (scale_file.id, media_type))
                 warnings.append(warn)
 
         # Check if there were any file IDs that weren't found in the query
         for file_id in file_ids:
             if file_id not in found_ids:
-                raise InvalidData(u'Invalid recipe data: Data file for ID %i does not exist' % file_ids[0])
+                raise InvalidRecipeData('Invalid recipe data: Data file for ID %i does not exist' % file_ids[0])
         return warnings

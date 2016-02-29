@@ -1,4 +1,5 @@
 '''Defines the serializers for Scale files and workspaces'''
+import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
@@ -83,9 +84,15 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
     last_modified = serializers.DateTimeField()
 
 
-class WorkspaceDetailsSerializer(WorkspaceBaseSerializer):
+class WorkspaceDetailsSerializer(WorkspaceSerializer):
     '''Converts workspace model fields to REST output'''
     json_config = serializers.CharField()
+
+
+class WorkspaceListSerializer(pagination.PaginationSerializer):
+    '''Converts a list of workspace models to paginated REST output.'''
+    class Meta:
+        object_serializer_class = WorkspaceSerializer
 
 
 class ScaleFileBaseSerializer(ModelIdSerializer):

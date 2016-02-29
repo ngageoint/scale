@@ -1,0 +1,137 @@
+---
+# build-scale/tasks/main.yml
+- name: Install unzip
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=unzip
+  become: true
+
+- name: Install postgresql client and libs
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=postgresql
+  become: true
+
+- name: Install gdal python
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=gdal-python
+  become: true
+
+- name: Install psycopg2
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=python-psycopg2
+  become: true
+
+- name: Install geos
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=geos
+  become: true
+
+- name: Install subversion libs
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=subversion-libs
+  become: true
+
+- name: Install protobuf
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=protobuf
+  become: true
+
+- name: Install npm
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=npm
+  become: true
+
+- name: Install node-gyp
+  tags: [ build-scale, build-scale-minimal ]
+  yum: name=node-gyp
+  become: true
+
+- name: Install gulp
+  tags: [ build-scale, build-scale-minimal ]
+  npm: name=gulp global=true
+  become: true
+
+- name: Create scale folder
+  tags: [ build-scale, build-scale-sync ]
+  file: path='{{ scale_build_root }}' state=directory mode=755
+  become: true
+
+- name: Install scale
+  tags: [ build-scale, build-scale-sync ]
+  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
+  become: true
+
+- name: Install python build libraries
+  tags: [ build-scale, build-scale-minimal ]
+  pip: requirements='{{ scale_build_root }}/scale/pip/build_linux.txt'
+  become: true
+
+- name: Install npm ui dependencies
+  tags: [ build-scale, build-scale-minimal ]
+  npm: path='{{ scale_build_root }}/scale-ui'
+
+- name: Build ui with gulp
+  tags: [ build-scale, build-scale-minimal ]
+  command: gulp deploy chdir='{{ scale_build_root }}/scale-ui' creates='{{ scale_build_root }}/scale-ui/deploy/'
+
+- name: Create ui target
+  tags: [ build-scale, build-scale-minimal ]
+  file: path='{{ scale_build_root }}/scale/ui' state=directory
+
+- name: Install ui files
+  tags: [ build-scale, build-scale-minimal ]
+  unarchive: copy=no src='{{ item }}' dest='{{ scale_build_root }}/scale/ui'
+  with_fileglob: "{{ scale_build_root }}/scale-ui/deploy/scale*.tar.gz"
+
+- name: Install local_settings.py
+  tags: [ build-scale, build-scale-minimal ]
+  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
+
+- name: Create database migrations.
+  tags: [ build-scale, build-scale-minimal ]
+  django_manage: command=makemigrations app_path='{{ django_build_dir }}'
+
+- name: Create docs
+  tags: [ build-scale, build-scale-minimal ]
+  command: make code_docs html chdir='{{ scale_build_root }}/scale/docs'
+
+- name: Collect static files.
+  tags: [ build-scale, build-scale-minimal ]
+  django_manage: command=collectstatic app_path='{{ django_build_dir }}'
+
+- name: Copy built files to the docker directory
+  tags: [ build-scale, build-scale-docker, build-scale-minimal ]
+  synchronize: src='{{ scale_build_root }}/scale' dest='{{ scale_build_root }}/dockerfiles/framework/scale'
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Build scale docker image
+  tags: [ build-scale, build-scale-docker ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/framework/scale"
+    name: "scale"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+  notify:
+    - push scale
+
+- name: Build scale-web docker image
+  tags: [ build-scale, build-scale-docker ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web"
+    name: "scale-web"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+  notify:
+    - push scale-web
+
+- name: Build scale-web-static docker image
+  tags: [ build-scale, build-scale-docker ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web-static"
+    name: "scale-web-static"
+    tag: "{{ scale_docker_version }}"
+    state: build
+  become: true
+  notify:
+    - push scale-web-static

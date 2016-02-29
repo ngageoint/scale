@@ -1,0 +1,9 @@
+---
+# scale.yml
+- hosts: scale-scheduler
+  roles:
+    - scale-scheduler
+
+- hosts: scale-web
+  roles:
+    - scale-web

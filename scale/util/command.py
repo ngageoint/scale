@@ -11,6 +11,7 @@ class CommandError(Exception):
         super(CommandError, self).__init__(msg)
         self.returncode = returncode
 
+
 def execute_command_line(cmd_list):
     '''Executes the given command list on the command line
 

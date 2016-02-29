@@ -18,7 +18,7 @@ from trigger.models import TriggerEvent
 
 FILLED_IN_CMD = 'run test filled in'
 
-def new_fill_in_command_dirs(job_exe, node_work_dir):
+def new_fill_in_command_dirs(job_exe):
     return FILLED_IN_CMD
 
 def new_populate_output_args(config, args):
@@ -28,8 +28,6 @@ def new_populate_output_args(config, args):
             if output['name'] == arg_name:
                 output['value'] = arg_value
     return config
-
-NODE_WORK_DIR = os.path.join('test', 'dir', 'node')
 
 
 class TestPreJobSteps(TestCase):
@@ -46,7 +44,7 @@ class TestPreJobSteps(TestCase):
         mem = 1.0
         disk = 1.0
         interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args}
-        
+
         self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
@@ -56,9 +54,8 @@ class TestPreJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.Command._chmod_job_dir')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
-    @patch('job.management.commands.scale_pre_steps.os.makedirs')
-    @patch('job.management.commands.scale_pre_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_pre_steps_successful(self, mock_node_dir, mock_makedirs, mock_job_exe, mock_chmod, mock_sysexit, mock_subprocess):
+    @patch('job.management.commands.scale_pre_steps.file_system')
+    def test_scale_pre_steps_successful(self, mock_file_system, mock_job_exe, mock_chmod, mock_sysexit, mock_subprocess):
         '''Tests successfully executing scale_pre_steps.'''
 
         # Set up mocks
@@ -75,8 +72,7 @@ class TestPreJobSteps(TestCase):
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution.objects.select_related')
     @patch('job.management.commands.scale_pre_steps.os.makedirs')
-    @patch('job.management.commands.scale_pre_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_pre_steps_database_error(self, mock_node_dir, mock_makedirs, mock_db, mock_sys_exit):
+    def test_scale_pre_steps_database_error(self, mock_makedirs, mock_db, mock_sys_exit):
         '''Tests executing scale_pre_steps when a database error occurs.'''
 
         # Set up mocks
@@ -91,9 +87,8 @@ class TestPreJobSteps(TestCase):
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
-    @patch('job.management.commands.scale_pre_steps.os.makedirs')
-    @patch('job.management.commands.scale_pre_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_pre_steps_nfs_error(self, mock_node_dir, mock_makedirs, mock_job_exe, mock_sys_exit):
+    @patch('job.management.commands.scale_pre_steps.file_system')
+    def test_scale_pre_steps_nfs_error(self, mock_file_system, mock_job_exe, mock_sys_exit):
         '''Tests executing scale_pre_steps when an NFS error occurs.'''
 
         # Set up mocks
@@ -108,9 +103,8 @@ class TestPreJobSteps(TestCase):
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
-    @patch('job.management.commands.scale_pre_steps.os.makedirs')
-    @patch('job.management.commands.scale_pre_steps.settings.NODE_WORK_DIR', new_callable=lambda: NODE_WORK_DIR)
-    def test_scale_pre_steps_io_error(self, mock_node_dir, mock_makedirs, mock_job_exe, mock_sys_exit):
+    @patch('job.management.commands.scale_pre_steps.file_system')
+    def test_scale_pre_steps_io_error(self, mock_file_system, mock_job_exe, mock_sys_exit):
         '''Tests executing scale_pre_steps when an IO error occurs.'''
 
         # Set up mocks

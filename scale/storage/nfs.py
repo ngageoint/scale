@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import os
-import subprocess
 
 from storage.exceptions import NfsError
 from util.command import execute_command_line, CommandError
@@ -46,9 +44,10 @@ def nfs_umount(mounted_on):
     try:
         execute_command_line(cmd_list)
     except CommandError as ex:
-        if ex.returncode != 32:  # ignore location not mounted error
-            if ex.returncode == 1 and "not mounted" in str(ex):
-                return  # sometimes we're getting a return code of 1 instead of 32 when running the CI build
-            raise NfsError(ex)
+        # Ignore location not mounted error
+        if ex.returncode == 32 or (ex.returncode == 1 and "not mounted" in str(ex)):
+            logger.info('%s was not mounted', mounted_on)
+            return
+        raise NfsError(ex)
     except Exception as ex:
         raise NfsError(ex)

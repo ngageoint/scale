@@ -2,15 +2,13 @@
 from __future__ import unicode_literals
 
 import logging
-import os
-import shutil
 
 from django.utils.timezone import now
 
-import job.settings as settings
-from job.execution.file_system import get_job_exe_dir
+from job.execution.file_system import delete_job_exe_dir
 from job.execution.job_exe_cleaner import NormalJobExecutionCleaner
 from job.models import JobExecution
+from util.retry import retry_database_query
 
 
 logger = logging.getLogger(__name__)
@@ -33,9 +31,7 @@ def cleanup_job_exe(job_exe_id):
 
     logger.info('Cleaning up job execution %s', str(job_exe_id))
 
-    node_work_dir = settings.NODE_WORK_DIR
-    job_exe_dir = get_job_exe_dir(job_exe_id, node_work_dir)
-    job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
+    job_exe = _get_job_exe(job_exe_id)
     job_type_name = job_exe.job.job_type.name
 
     # Run appropriate cleaner for job type
@@ -46,9 +42,31 @@ def cleanup_job_exe(job_exe_id):
     cleaner.cleanup_job_execution(job_exe)
 
     # Delete job execution directory
-    if os.path.exists(job_exe_dir):
-        logger.info('Deleting %s', job_exe_dir)
-        shutil.rmtree(job_exe_dir)
+    delete_job_exe_dir(job_exe_id)
+
+    _complete_cleanup(job_exe_id)
+    logger.info('Successfully cleaned up job execution %s', str(job_exe_id))
+
+
+@retry_database_query
+def _complete_cleanup(job_exe_id):
+    '''Mark the cleanup as completed
+
+    :param job_exe_id: The job execution ID
+    :type job_exe_id: int
+    '''
 
     JobExecution.objects.cleanup_completed(job_exe_id, now())
-    logger.info('Successfully cleaned up job execution %s', str(job_exe_id))
+
+
+@retry_database_query
+def _get_job_exe(job_exe_id):
+    '''Returns the job execution to be cleaned with its related job and job type models
+
+    :param job_exe_id: The job execution ID
+    :type job_exe_id: int
+    :returns: The job execution model
+    :rtype: :class:`job.models.JobExecution`
+    '''
+
+    return JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)

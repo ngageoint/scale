@@ -1,0 +1,87 @@
+---
+# init-examples/tasks/main.yml
+- name: Install initialization script
+  tags: init-examples
+  template: src=example_data.py.j2 dest='/tmp/example_data.py'
+
+- name: Install the countries shapefile
+  tags: init-examples
+  unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
+
+- name: Initialize example database
+  tags: init-examples
+  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | /scale/scale/manage.py shell"
+
+- name: Build landsat-base docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-base"
+    name: "landsat-base"
+    state: build
+  become: true
+
+- name: Build landsat-parse docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-parse"
+    name: "landsat-parse_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push landsat-parse
+
+- name: Build landsat-ndwi docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-ndwi"
+    name: "landsat-ndwi_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push landsat-ndwi
+
+- name: Build landsat-tiles docker image
+  tags: init-examples
+  docker_image:
+    path: "/scale/dockerfiles/examples/landsat-tiles"
+    name: "landsat-tiles_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push landsat-tiles
+
+- name: Static example product web server
+  tags: init-examples
+  docker:
+    name: example-web
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ external_docker_registry }}httpd'
+    state: reloaded
+    restart_policy: always
+    volumes:
+      - '/exports:/usr/local/apache2/htdocs'
+    ports:
+      - '8080:80'
+  become: true
+
+- name: Example file uploader
+  tags:
+    - init-examples
+    - file-upload
+  docker:
+    name: file-uploader
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ external_docker_registry }}bigdatauniversity/file-upload'
+    state: reloaded
+    restart_policy: always
+    env:
+      SITE_NAME: 'Scale Sample Site'
+      SITE_PASSWORD: 'admin'
+    volumes:
+      - '/exports/ingest:/var/www/upload/server/php/files'
+    ports:
+      - '8081:80'
+  become: true

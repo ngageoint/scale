@@ -26,3 +26,5 @@ class StrikeJobExecutionCleaner(JobExecutionCleaner):
 
         if os.path.exists(ingest_work_dir):
             nfs_umount(ingest_work_dir)
+            logger.info('Deleting %s', ingest_work_dir)
+            os.rmdir(ingest_work_dir)

@@ -261,7 +261,7 @@ class ProductFileManager(models.GeoManager):
         '''
 
         # Acquire model lock
-        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe_id)
+        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe_id).order_by('id')
         for product in product_qry:
             product.has_been_published = True
             product.is_published = True

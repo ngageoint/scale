@@ -1,9 +1,10 @@
 '''Defines the database models for file information and workspaces'''
+from __future__ import unicode_literals
+
 import hashlib
 import logging
 import os
 import re
-import shutil
 
 import djorm_pgjson.fields
 from django.db import transaction
@@ -16,13 +17,14 @@ import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
 from storage.media_type import get_media_type
+from storage.nfs import nfs_umount
 
 
 logger = logging.getLogger(__name__)
 
 
 # Allow alphanumerics, dashes, underscores, and spaces
-VALID_TAG_PATTERN = re.compile(u'^[a-zA-Z0-9\\-_ ]+$')
+VALID_TAG_PATTERN = re.compile('^[a-zA-Z0-9\\-_ ]+$')
 
 
 class CountryDataManager(models.Manager):
@@ -145,7 +147,7 @@ class CountryData(models.Model):
 
     class Meta(object):
         '''meta information for the db'''
-        db_table = u'country_data'
+        db_table = 'country_data'
         unique_together = ("name", "effective")
         index_together = ["name", "effective"]
 
@@ -164,11 +166,41 @@ class ScaleFileManager(models.Manager):
         '''
 
         download_dir = os.path.normpath(download_dir)
+        work_dir = os.path.normpath(work_dir)
+        workspace_root_dir = self._get_workspace_root_dir(work_dir)
 
         for workspace in Workspace.objects.all():
             workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
             if os.path.exists(workspace_work_dir):
                 workspace.cleanup_download_dir(download_dir, workspace_work_dir)
+                logger.info('Deleting %s', workspace_work_dir)
+                os.rmdir(workspace_work_dir)
+
+        if os.path.exists(workspace_root_dir):
+            logger.info('Deleting %s', workspace_root_dir)
+            os.rmdir(workspace_root_dir)
+
+    def cleanup_move_dir(self, work_dir):
+        '''Performs any cleanup necessary for a previous move_files() call
+
+        :param work_dir: Absolute path to a local work directory available to assist in moving
+        :type work_dir: str
+        :param workspace: The workspace to upload files into
+        :type workspace: :class:`storage.models.Workspace`
+        '''
+
+        work_dir = os.path.normpath(work_dir)
+
+        workspace_root_dir = self._get_workspace_root_dir(work_dir)
+
+        if os.path.exists(workspace_root_dir):
+            for name in os.listdir(workspace_root_dir):
+                sub_dir = os.path.join(workspace_root_dir, name)
+                nfs_umount(sub_dir)
+                logger.info('Deleting %s', sub_dir)
+                os.rmdir(sub_dir)
+            logger.info('Deleting %s', workspace_root_dir)
+            os.rmdir(workspace_root_dir)
 
     def cleanup_upload_dir(self, upload_dir, work_dir, workspace):
         '''Performs any cleanup necessary for a previous setup_upload_dir() call
@@ -182,9 +214,28 @@ class ScaleFileManager(models.Manager):
         '''
 
         upload_dir = os.path.normpath(upload_dir)
+        work_dir = os.path.normpath(work_dir)
+
+        delete_root_dir = self._get_delete_root_dir(work_dir)
+        delete_work_dir = self._get_delete_work_dir(work_dir, workspace)
+        workspace_root_dir = self._get_workspace_root_dir(work_dir)
         workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
 
-        workspace.cleanup_upload_dir(upload_dir, workspace_work_dir)
+        if os.path.exists(workspace_work_dir):
+            workspace.cleanup_upload_dir(upload_dir, workspace_work_dir)
+            logger.info('Deleting %s', workspace_work_dir)
+            os.rmdir(workspace_work_dir)
+            if not os.listdir(workspace_root_dir):
+                logger.info('Deleting %s', workspace_root_dir)
+                os.rmdir(workspace_root_dir)
+
+        if os.path.exists(delete_work_dir):
+            nfs_umount(delete_work_dir)
+            logger.info('Deleting %s', delete_work_dir)
+            os.rmdir(delete_work_dir)
+            if not os.listdir(delete_root_dir):
+                logger.info('Deleting %s', delete_root_dir)
+                os.rmdir(delete_root_dir)
 
     def download_files(self, download_dir, work_dir, files_to_download):
         '''Downloads the given Scale files into the given download directory. After all use of the downloaded files is
@@ -201,6 +252,7 @@ class ScaleFileManager(models.Manager):
         '''
 
         download_dir = os.path.normpath(download_dir)
+        work_dir = os.path.normpath(work_dir)
 
         # {Workspace ID: (workspace, list of (file_path, local_path))}
         wp_dict = {}
@@ -211,9 +263,9 @@ class ScaleFileManager(models.Manager):
             workspace_path = scale_file.file_path
             workspace = scale_file.workspace
             if not workspace.is_active:
-                raise ArchivedWorkspace(u'%s is no longer active' % workspace.name)
+                raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if scale_file.is_deleted:
-                raise DeletedFile(u'%s has been deleted' % scale_file.file_name)
+                raise DeletedFile('%s has been deleted' % scale_file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
@@ -226,6 +278,8 @@ class ScaleFileManager(models.Manager):
             workspace = wp_dict[wp_id][0]
             download_file_list = wp_dict[wp_id][1]
             workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
+            logger.info('Creating %s', workspace_work_dir)
+            os.makedirs(workspace_work_dir, mode=0755)
             workspace.setup_download_dir(download_dir, workspace_work_dir)
             workspace.download_files(download_dir, workspace_work_dir, download_file_list)
 
@@ -238,11 +292,11 @@ class ScaleFileManager(models.Manager):
         :rtype: long
         '''
 
-        results = ScaleFile.objects.filter(id__in=file_ids).aggregate(Sum(u'file_size'))
+        results = ScaleFile.objects.filter(id__in=file_ids).aggregate(Sum('file_size'))
 
         file_size = 0
-        if u'file_size__sum' in results:
-            file_size_sum = results[u'file_size__sum']
+        if 'file_size__sum' in results:
+            file_size_sum = results['file_size__sum']
             if file_size_sum is not None:
                 file_size = long(file_size_sum)
         return file_size
@@ -267,9 +321,9 @@ class ScaleFileManager(models.Manager):
             workspace_path = scale_file.file_path
             workspace = scale_file.workspace
             if not workspace.is_active:
-                raise ArchivedWorkspace(u'%s is no longer active' % workspace.name)
+                raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if scale_file.is_deleted:
-                raise DeletedFile(u'%s has been deleted' % scale_file.file_name)
+                raise DeletedFile('%s has been deleted' % scale_file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
@@ -285,6 +339,8 @@ class ScaleFileManager(models.Manager):
             workspace = wp_dict[wp_id][0]
             move_file_list = wp_dict[wp_id][1]
             workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
+            logger.info('Creating %s', workspace_work_dir)
+            os.makedirs(workspace_work_dir, mode=0755)
             workspace.move_files(workspace_work_dir, move_file_list)
 
     def setup_upload_dir(self, upload_dir, work_dir, workspace):
@@ -302,7 +358,12 @@ class ScaleFileManager(models.Manager):
         '''
 
         upload_dir = os.path.normpath(upload_dir)
+        work_dir = os.path.normpath(work_dir)
         workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
+
+        if not os.path.exists(workspace_work_dir):
+            logger.info('Creating %s', workspace_work_dir)
+            os.makedirs(workspace_work_dir, mode=0755)
 
         workspace.setup_upload_dir(upload_dir, workspace_work_dir)
 
@@ -325,6 +386,7 @@ class ScaleFileManager(models.Manager):
         '''
 
         upload_dir = os.path.normpath(upload_dir)
+        work_dir = os.path.normpath(work_dir)
         workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
 
         file_list = []
@@ -370,11 +432,13 @@ class ScaleFileManager(models.Manager):
         except Exception as ex:
             # Attempt to clean up failed files before propagating exception
             try:
-                delete_work_dir = os.path.join(os.path.normpath(work_dir), 'delete', get_valid_filename(workspace.name))
+                delete_work_dir = self._get_delete_work_dir(work_dir, workspace)
+                logger.info('Creating %s', delete_work_dir)
+                os.makedirs(delete_work_dir, mode=0755)
                 workspace.delete_files(delete_work_dir, wksp_delete_list)
             except Exception:
                 # Failure to delete should not override ex
-                logger.exception(u'Error cleaning up files that failed to upload')
+                logger.exception('Error cleaning up files that failed to upload')
             raise ex
 
     def _correct_workspace_path(self, workspace_path):
@@ -393,6 +457,35 @@ class ScaleFileManager(models.Manager):
 
         return os.path.normpath(workspace_path)
 
+    def _get_delete_root_dir(self, work_dir):
+        '''Returns the root directory for workspace sub-directories used for deleting files
+
+        :param work_dir: Absolute path to a local work directory available to Scale
+        :type work_dir: str
+        '''
+
+        return os.path.join(work_dir, 'delete')
+
+    def _get_delete_work_dir(self, work_dir, workspace):
+        '''Returns a work sub-directory used to delete files from the given workspace
+
+        :param work_dir: Absolute path to a local work directory available to Scale
+        :type work_dir: str
+        :param workspace: The workspace
+        :type workspace: :class:`storage.models.Workspace`
+        '''
+
+        return os.path.join(self._get_delete_root_dir(work_dir), get_valid_filename(workspace.name))
+
+    def _get_workspace_root_dir(self, work_dir):
+        '''Returns the root directory for workspace work sub-directories
+
+        :param work_dir: Absolute path to a local work directory available to Scale
+        :type work_dir: str
+        '''
+
+        return os.path.join(work_dir, 'workspaces')
+
     def _get_workspace_work_dir(self, work_dir, workspace):
         '''Returns a work sub-directory for the given workspace
 
@@ -402,7 +495,7 @@ class ScaleFileManager(models.Manager):
         :type workspace: :class:`storage.models.Workspace`
         '''
 
-        return os.path.join(os.path.normpath(work_dir), 'workspaces', get_valid_filename(workspace.name))
+        return os.path.join(self._get_workspace_root_dir(work_dir), get_valid_filename(workspace.name))
 
 
 class ScaleFile(models.Model):
@@ -465,7 +558,7 @@ class ScaleFile(models.Model):
     # Optional geospatial fields
     data_started = models.DateTimeField(blank=True, null=True, db_index=True)
     data_ended = models.DateTimeField(blank=True, null=True)
-    geometry = models.GeometryField(u'Geometry', blank=True, null=True, srid=4326)
+    geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
     meta_data = djorm_pgjson.fields.JSONField()
     countries = models.ManyToManyField(CountryData)
@@ -505,7 +598,7 @@ class ScaleFile(models.Model):
         '''
 
         if not VALID_TAG_PATTERN.match(tag):
-            raise InvalidDataTypeTag(u'%s is an invalid data type tag' % tag)
+            raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
 
         tags = self.get_data_type_tags()
         tags.add(tag)
@@ -520,7 +613,7 @@ class ScaleFile(models.Model):
 
         tags = set()
         if self.data_type:
-            for tag in self.data_type.split(u','):
+            for tag in self.data_type.split(','):
                 tags.add(tag)
         return tags
 
@@ -546,7 +639,7 @@ class ScaleFile(models.Model):
         :type tags: set of str
         '''
 
-        self.data_type = u','.join(tags)
+        self.data_type = ','.join(tags)
 
     def _get_url(self):
         '''Gets the absolute URL used to download this file.
@@ -574,7 +667,62 @@ class ScaleFile(models.Model):
 
     class Meta(object):
         '''meta information for the db'''
-        db_table = u'scale_file'
+        db_table = 'scale_file'
+
+
+class WorkspaceManager(models.Manager):
+    '''Provides additional methods for handling workspaces.'''
+
+    def get_details(self, workspace_id):
+        '''Returns the workspace for the given ID with all detail fields included.
+
+        There are currently no additional fields included.
+
+        :param workspace_id: The unique identifier of the workspace.
+        :type workspace_id: int
+        :returns: The workspace with all detail fields included.
+        :rtype: :class:`storage.models.Workspace`
+        '''
+
+        # Attempt to get the workspace
+        workspace = Workspace.objects.get(pk=workspace_id)
+
+        return workspace
+
+    def get_workspaces(self, started=None, ended=None, names=None, order=None):
+        '''Returns a list of workspaces within the given time range.
+
+        :param started: Query workspaces updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query workspaces updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param names: Query workspaces with the given name.
+        :type names: list[str]
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The list of workspaces that match the time range.
+        :rtype: list[:class:`storage.models.Workspace`]
+        '''
+
+        # Fetch a list of workspaces
+        workspaces = Workspace.objects.all()
+
+        # Apply time range filtering
+        if started:
+            workspaces = workspaces.filter(last_modified__gte=started)
+        if ended:
+            workspaces = workspaces.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if names:
+            workspaces = workspaces.filter(name__in=names)
+
+        # Apply sorting
+        if order:
+            workspaces = workspaces.order_by(*order)
+        else:
+            workspaces = workspaces.order_by('last_modified')
+        return workspaces
 
 
 class Workspace(models.Model):
@@ -623,6 +771,8 @@ class Workspace(models.Model):
     archived = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
+    objects = WorkspaceManager()
+
     def cleanup_download_dir(self, download_dir, work_dir):
         '''Performs any cleanup necessary for a previous setup_download_dir() call
 
@@ -631,9 +781,6 @@ class Workspace(models.Model):
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
         '''
-
-        download_dir = os.path.normpath(download_dir)
-        work_dir = os.path.normpath(work_dir)
 
         broker = self._get_broker()
         broker.cleanup_download_dir(download_dir, work_dir)
@@ -647,9 +794,6 @@ class Workspace(models.Model):
         :type work_dir: str
         '''
 
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
-
         broker = self._get_broker()
         broker.cleanup_upload_dir(upload_dir, work_dir)
 
@@ -661,11 +805,6 @@ class Workspace(models.Model):
         :param workspace_paths: The relative workspace paths of the files to delete
         :type workspace_paths: list of str
         '''
-
-        work_dir = os.path.normpath(work_dir)
-        if not os.path.exists(work_dir):
-            logger.info('Creating %s', work_dir)
-            os.makedirs(work_dir, mode=0755)
 
         broker = self._get_broker()
         broker.delete_files(work_dir, workspace_paths)
@@ -683,9 +822,6 @@ class Workspace(models.Model):
         :type files_to_download: list of (str, str)
         '''
 
-        download_dir = os.path.normpath(download_dir)
-        work_dir = os.path.normpath(work_dir)
-
         broker = self._get_broker()
         broker.download_files(download_dir, work_dir, files_to_download)
 
@@ -697,11 +833,6 @@ class Workspace(models.Model):
         :param files_to_move: List of tuples (current workspace path of a file to move, new workspace path for the file)
         :type files_to_move: list of (str, str)
         '''
-
-        work_dir = os.path.normpath(work_dir)
-        if not os.path.exists(work_dir):
-            logger.info('Creating %s', work_dir)
-            os.makedirs(work_dir, mode=0755)
 
         broker = self._get_broker()
         broker.move_files(work_dir, files_to_move)
@@ -715,16 +846,6 @@ class Workspace(models.Model):
         :type work_dir: str
         '''
 
-        download_dir = os.path.normpath(download_dir)
-        work_dir = os.path.normpath(work_dir)
-
-        if not os.path.exists(download_dir):
-            logger.info('Creating %s', download_dir)
-            os.makedirs(download_dir, mode=0755)
-        if not os.path.exists(work_dir):
-            logger.info('Creating %s', work_dir)
-            os.makedirs(work_dir, mode=0755)
-
         broker = self._get_broker()
         broker.setup_download_dir(download_dir, work_dir)
 
@@ -736,20 +857,6 @@ class Workspace(models.Model):
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
         '''
-
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
-
-        base_upload_dir = os.path.dirname(upload_dir)
-        if not os.path.exists(base_upload_dir):
-            logger.info('Creating %s', base_upload_dir)
-            os.makedirs(base_upload_dir, mode=0755)
-        if os.path.exists(upload_dir):
-            logger.info('Deleting %s', upload_dir)
-            shutil.rmtree(upload_dir)
-        if not os.path.exists(work_dir):
-            logger.info('Creating %s', work_dir)
-            os.makedirs(work_dir, mode=0755)
 
         broker = self._get_broker()
         broker.setup_upload_dir(upload_dir, work_dir)
@@ -766,9 +873,6 @@ class Workspace(models.Model):
             file)
         :type files_to_upload: list of (str, str)
         '''
-
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
 
         broker = self._get_broker()
         broker.upload_files(upload_dir, work_dir, files_to_upload)
@@ -788,4 +892,4 @@ class Workspace(models.Model):
 
     class Meta(object):
         '''meta information for the db'''
-        db_table = u'workspace'
+        db_table = 'workspace'

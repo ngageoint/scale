@@ -1,0 +1,34 @@
+<ais-header name="'Node Details'" show-subnav="false"></ais-header>
+<h3>{{ node.hostname }}</h3>
+<div class="row">
+    <div class="col-xs-4">
+        <h3>Overview</h3>
+        <table class="table table-hover table-condensed table-striped">
+            <tbody>
+                <tr><td>Port:</td><td>{{ node.port }}</td></tr>
+                <tr><td>Slave ID:</td><td>{{ node.slave_id }}</div></td></tr>
+                <tr><td>Paused:</td><td>{{ node.is_paused }}</td></tr>
+                <tr><td>Paused Due To Errors:</td><td>{{ node.is_paused_errors }}</td></tr>
+                <tr><td>Paused Reason:</td><td>{{ node.pause_reason }}</td></tr>
+                <tr><td>Active:</td><td>{{ node.is_active }}</td></tr>
+                <tr><td>Archived:</td><td>{{ node.archived }}</td></tr>
+                <tr><td>Created:</td><td>{{ node.created }}</td></tr>
+                <tr><td>Last Offer:</td><td>{{ node.last_offer }}</td></tr>
+                <tr><td>Last Modified:</td><td>{{ node.last_modified }}</td></tr>
+                <tr><td>Disconnected:</td><td>{{ node.disconnected }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-4">
+        <h3>Resources</h3>
+        <table class="table table-hover table-condensed table-striped">
+            <tbody>
+                <tr><td>CPU:</td><td>{{ node.resources.cpu }}</td></tr>
+                <tr><td>Memory:</td><td>{{ node.resources.mem }}</div></td></tr>
+                <tr><td>Disk:</td><td>{{ node.resources.disk }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-4">
+    </div>
+</div>

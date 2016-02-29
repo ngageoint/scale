@@ -1,20 +1,61 @@
 ---
 # vagrant.yml
-# site file for vagrant cluster..configures vars differently and sets up the database
-- include: mesos.yml
-  vars:
-    mesos_zk: 'zk://10.4.4.10:2181/mesos'
-    scale_docker_version: '3-dev'
-    mesos_master_ip: '{{ ansible_all_ipv4_addresses[-1] }}'
-    mesos_slave_ip: '{{ ansible_all_ipv4_addresses[-1] }}'
-    zookeeper_servers: '{{ mesos_master_ip }}'
-    mesos_slave_resources: 'cpus:1;mem:1024'
+# site file for vagrant cluster
+# common requirements
+- hosts: all
+  roles:
+    - common
 
+# start a DNS server
+- hosts: dns
+  roles:
+    - dns-server
+
+# start and initialize the postgis server
 - hosts: db
   roles:
     - postgis
     - db-init
-  vars:
-    db_username: 'postgres'
-    db_password: 'vagrant_postgis'
-    db_host: '10.4.4.10'
+
+# start an nfs server
+- hosts: nfs
+  roles:
+    - nfs-server
+
+# setup resolv.conf to point to the new DNS server
+- hosts: all
+  tasks:
+    - name: Setup resolv.conf
+      lineinfile: dest=/etc/resolv.conf line="nameserver 10.4.4.10"
+      become: true
+
+# setup a docker registry
+- hosts: registry
+  roles:
+    - docker-registry
+
+# start mesos master and slaves
+- include: mesos.yml
+
+# build scale
+- hosts: build
+  roles:
+    - build-scale
+
+# migrate database changes
+- hosts: build
+  roles:
+    - migrate
+
+# load initial database data
+- hosts: build
+  roles:
+    - load-initial-data
+
+# initialize example data
+- hosts: build
+  roles:
+    - init-examples
+
+# start scale components
+- include: scale.yml

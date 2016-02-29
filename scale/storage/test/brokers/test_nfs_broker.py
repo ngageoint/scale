@@ -21,8 +21,7 @@ class TestNfsBrokerCleanupDownloadDir(TestCase):
 
     @patch('storage.brokers.nfs_broker.os.path.exists')
     @patch('storage.brokers.nfs_broker.nfs_umount')
-    @patch('storage.brokers.nfs_broker.shutil.rmtree')
-    def test_successfully(self, mock_remove, mock_umount, mock_exists):
+    def test_successfully(self, mock_umount, mock_exists):
         '''Tests calling NfsBroker.cleanup_download_dir() successfully'''
 
         def new_exists(path):
@@ -37,7 +36,6 @@ class TestNfsBrokerCleanupDownloadDir(TestCase):
         broker.cleanup_download_dir(download_dir, work_dir)
 
         # Check results
-        mock_remove.assert_called_once_with(download_dir)
         mock_umount.assert_called_once_with(work_dir)
 
 
@@ -47,8 +45,8 @@ class TestNfsBrokerCleanupUploadDir(TestCase):
         django.setup()
 
     @patch('storage.brokers.nfs_broker.os.path.exists')
-    @patch('storage.brokers.nfs_broker.shutil.rmtree')
-    def test_successfully(self, mock_remove, mock_exists):
+    @patch('storage.brokers.nfs_broker.nfs_umount')
+    def test_successfully(self, mock_umount, mock_exists):
         '''Tests calling NfsBroker.cleanup_upload_dir() successfully'''
 
         def new_exists(path):
@@ -63,7 +61,7 @@ class TestNfsBrokerCleanupUploadDir(TestCase):
         broker.cleanup_upload_dir(upload_dir, work_dir)
 
         # Check results
-        mock_remove.assert_called_once_with(upload_dir)
+        mock_umount.assert_called_once_with(work_dir)
 
 
 class TestNfsBrokerDeleteFiles(TestCase):
@@ -236,10 +234,11 @@ class TestNfsBrokerMoveFiles(TestCase):
 
     @patch('storage.brokers.nfs_broker.os.makedirs')
     @patch('storage.brokers.nfs_broker.os.path.exists')
+    @patch('storage.brokers.nfs_broker.os.chmod')
     @patch('storage.brokers.nfs_broker.nfs_mount')
     @patch('storage.brokers.nfs_broker.nfs_umount')
     @patch('storage.brokers.nfs_broker.shutil.move')
-    def test_successfully(self, mock_move, mock_umount, mock_mount, mock_exists, mock_makedirs):
+    def test_successfully(self, mock_move, mock_umount, mock_mount, mock_chmod, mock_exists, mock_makedirs):
         '''Tests calling NfsBroker.move_files() successfully'''
 
         def new_exists(path):
@@ -272,6 +271,7 @@ class TestNfsBrokerMoveFiles(TestCase):
         two_calls = [call(full_old_workspace_path_1, full_new_workspace_path_1), call(full_old_workspace_path_2, full_new_workspace_path_2)]
         mock_move.assert_has_calls(two_calls)
         mock_umount.assert_called_once_with(work_dir)
+
 
     @patch('storage.brokers.nfs_broker.os.path.exists')
     @patch('storage.brokers.nfs_broker.nfs_mount')
@@ -336,8 +336,7 @@ class TestNfsBrokerSetupUploadDir(TestCase):
     def setUp(self):
         django.setup()
 
-    @patch('storage.brokers.nfs_broker.os.mkdir')
-    def test_successfully(self, mock_mkdir):
+    def test_successfully(self):
         '''Tests calling NfsBroker.setup_upload_dir() successfully'''
 
         mount = 'host:/dir'
@@ -349,9 +348,6 @@ class TestNfsBrokerSetupUploadDir(TestCase):
         broker.load_config({'type': NfsBroker.broker_type, 'mount': mount})
         broker.setup_upload_dir(upload_dir, work_dir)
 
-        # Check results
-        mock_mkdir.assert_called_once_with(upload_dir, 0755)
-
 
 class TestNfsBrokerUploadFiles(TestCase):
 
@@ -360,10 +356,11 @@ class TestNfsBrokerUploadFiles(TestCase):
 
     @patch('storage.brokers.nfs_broker.os.makedirs')
     @patch('storage.brokers.nfs_broker.os.path.exists')
+    @patch('storage.brokers.nfs_broker.os.chmod')
     @patch('storage.brokers.nfs_broker.nfs_mount')
     @patch('storage.brokers.nfs_broker.nfs_umount')
     @patch('storage.brokers.nfs_broker.shutil.copy')
-    def test_successfully(self, mock_copy, mock_umount, mock_mount, mock_exists, mock_makedirs):
+    def test_successfully(self, mock_copy, mock_umount, mock_mount, mock_chmod, mock_exists, mock_makedirs):
         '''Tests calling NfsBroker.upload_files() successfully'''
 
         def new_exists(path):
@@ -476,7 +473,8 @@ class TestNfsBrokerUploadFiles(TestCase):
         mock_mount.assert_called_once_with(mount, work_dir, False)
         mock_umount.assert_called_once_with(work_dir)  # Make sure umount was successfully called for cleanup
 
-@skipIf(sys.platform.startswith("win"), u'umount is not available on windows.')
+@skipIf(not sys.platform.startswith("linux"), u'umount test is only available on linux.')
+@skipIf("TRAVIS" in os.environ, u'sudo is not available in travis-ci.')
 class TestNfsUmount(TestCase):
     def setUp(self):
         django.setup()

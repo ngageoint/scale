@@ -11,12 +11,14 @@ from django.db.utils import DatabaseError
 from optparse import make_option
 
 import job.execution.file_system as file_system
-import job.settings as settings
 from error.models import Error
 from job.models import JobExecution
 from storage.exceptions import NfsError
+from util.retry import retry_database_query
+
 
 logger = logging.getLogger(__name__)
+
 
 # Exit codes that map to specific job errors
 DB_EXIT_CODE = 1001
@@ -43,29 +45,23 @@ class Command(BaseCommand):
 
         This method starts the command.
         '''
-        exe_id = options.get('job_exe_id')
+        job_exe_id = options.get('job_exe_id')
 
-        logger.info('Command starting: scale_pre_steps - Job Execution ID: %i', exe_id)
+        logger.info('Command starting: scale_pre_steps - Job Execution ID: %i', job_exe_id)
         try:
-            node_work_dir = settings.NODE_WORK_DIR
+            job_exe = self._get_job_exe(job_exe_id)
 
-            job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(exe_id)
-
-            job_dir = file_system.get_job_exe_dir(exe_id, node_work_dir)
-            input_dir = file_system.get_job_exe_input_dir(exe_id, node_work_dir)
-            output_dir = file_system.get_job_exe_output_dir(exe_id, node_work_dir)
-            job_dirs = [job_dir, input_dir, output_dir]
-            for target_dir in job_dirs:
-                self._create_job_dir(exe_id, target_dir)
+            file_system.create_job_exe_dir(job_exe_id)
+            file_system.create_normal_job_exe_dir_tree(job_exe_id)
 
             job_interface = job_exe.get_job_interface()
             job_data = job_exe.job.get_job_data()
             job_environment = job_exe.get_job_environment()
-            job_interface.perform_pre_steps(job_data, job_environment, exe_id)
-            command_args = job_interface.fully_populate_command_argument(job_data, job_environment, exe_id)
+            job_interface.perform_pre_steps(job_data, job_environment, job_exe_id)
+            command_args = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
 
             # This shouldn't be necessary once we have user namespaces in docker
-            self._chmod_job_dir(file_system.get_job_exe_output_data_dir(exe_id))
+            self._chmod_job_dir(file_system.get_job_exe_output_data_dir(job_exe_id))
 
             # Perform a force pull for docker jobs to get the latest version of the image before running
             # TODO: Remove this hack in favor of the feature in Mesos 0.22.x, see MESOS-1886 for details
@@ -79,32 +75,20 @@ class Command(BaseCommand):
                 except OSError:
                     logger.exception('OS unable to run docker pull command.')
 
-            logger.info('Executing job: %i -> %s', exe_id, ' '.join(command_args))
-            JobExecution.objects.pre_steps_command_arguments(exe_id, command_args)
-        except Exception as e:
-            logger.exception('Job Execution %i: Error performing pre-job steps', exe_id)
+            logger.info('Executing job: %i -> %s', job_exe_id, ' '.join(command_args))
+            self._populate_command_arguments(job_exe_id, command_args)
+        except Exception as ex:
+            logger.exception('Job Execution %i: Error performing pre-job steps', job_exe_id)
 
             exit_code = -1
-            if isinstance(e, DatabaseError):
+            if isinstance(ex, DatabaseError):
                 exit_code = DB_EXIT_CODE
-            elif isinstance(e, NfsError):
+            elif isinstance(ex, NfsError):
                 exit_code = NFS_EXIT_CODE
-            elif isinstance(e, IOError):
+            elif isinstance(ex, IOError):
                 exit_code = IO_EXIT_CODE
             sys.exit(exit_code)
         logger.info('Command completed: scale_pre_steps')
-
-    def _create_job_dir(self, exe_id, target_dir):
-        '''Creates the given work directory for an execution.
-
-        :param exe_id: The unique identifier of the job execution.
-        :type exe_id: int
-        :param target_dir: The path of the directory to create.
-        :type target_dir: str
-        '''
-        if not os.path.exists(target_dir):
-            logger.info('Job Execution %i: Creating %s', exe_id, target_dir)
-            os.makedirs(target_dir, mode=0777)
 
     def _chmod_job_dir(self, target_dir):
         '''Changes permissions of the given directory to be wide open.
@@ -117,3 +101,27 @@ class Command(BaseCommand):
                 os.chmod(os.path.join(root, _dir), 0777)
             for _dir in files:
                 os.chmod(os.path.join(root, _dir), 0777)
+
+    @retry_database_query
+    def _get_job_exe(self, job_exe_id):
+        '''Returns the job execution for the ID with its related job and job type models
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :returns: The job execution model
+        :rtype: :class:`job.models.JobExecution`
+        '''
+
+        return JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
+
+    @retry_database_query
+    def _populate_command_arguments(self, job_exe_id, command_args):
+        '''Populates the full set of command arguments for the job execution
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :param command_args: The new job execution command argument string with pre-job step information filled in
+        :type command_args: str
+        '''
+
+        JobExecution.objects.pre_steps_command_arguments(job_exe_id, command_args)

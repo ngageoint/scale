@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import os
 
-import job.settings as settings
 from job.execution.file_system import get_job_exe_dir
 
 
@@ -16,5 +15,5 @@ def get_ingest_work_dir(job_exe_id):
     :rtype: str
     '''
 
-    job_exe_dir = get_job_exe_dir(job_exe_id, settings.NODE_WORK_DIR)
+    job_exe_dir = get_job_exe_dir(job_exe_id)
     return os.path.join(job_exe_dir, 'ingest_work')

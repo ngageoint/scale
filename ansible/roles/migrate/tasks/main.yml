@@ -1,0 +1,4 @@
+---
+# migrate/tasks/main.yml
+- name: migrate db changes
+  django_manage: command=migrate app_path='{{ django_build_dir }}'

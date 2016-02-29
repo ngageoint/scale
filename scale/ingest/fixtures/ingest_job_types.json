@@ -23,6 +23,7 @@
 			     "input_data": [ { "name": "Ingest ID", "type": "property" },
 			                     { "name": "Mount", "type": "property" } ]
 			},
+			"revision_num": 1,
             "error_mapping": null,
 			"priority": 10,
 			"timeout": 3600,
@@ -75,6 +76,7 @@
                  "command_arguments": "${-i :Strike ID}",
                  "input_data": [ { "name": "Strike ID", "type": "property" } ]
             },
+            "revision_num": 1,
             "error_mapping": null,
             "priority": 5,
             "timeout": 0,

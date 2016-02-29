@@ -1,0 +1,64 @@
+@import '../components/colors';
+
+h2 {
+    margin: 2px 0;
+}
+
+.ov-chart {
+    height: 150px;
+}
+
+.ov-overview-chart {
+    //border: 1px solid #f00;
+    margin: 2.0em 0;
+    width: 100%;
+    height: 350px;
+    text-align: center;
+}
+
+.overview-alert {
+    .alert {
+        h4 {
+            margin: 3px 0;
+        }
+    }
+    .alert-success {
+        background-image: none;
+        background: @chart_green;
+        color: #fff;
+        border-color: darken(@chart_green, 10%);
+    }
+    .alert-danger {
+        background-image: none;
+        background: @chart_red;
+        color: #fff;
+        border-color: darken(@chart_red, 10%);
+    }
+    .alert-warning {
+        background-image: none;
+        background: @chart_yellow;
+        color: #fff;
+        border-color: darken(@chart_yellow, 10%);
+    }
+}
+
+.ov-margin-fix {
+    margin-bottom: 110px; /* this is necessary because of the health directives used inside this div */
+}
+
+@media screen and (max-width:992px) {
+  .ov-margin-fix {
+    margin-bottom: 200px;
+  }
+  .grid-chart {
+    svg {
+      width:100%;
+    }
+  }
+}
+
+@media screen and (max-width:768px) {
+  .ov-margin-fix {
+    margin-bottom: 250px;
+  }
+}

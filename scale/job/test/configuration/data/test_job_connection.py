@@ -64,14 +64,14 @@ class TestJobConnectionValidateInputFiles(TestCase):
         file_desc.add_allowed_media_type(u'application/json')
         file_desc_2 = ScaleFileDescription()
         file_desc_2.add_allowed_media_type(u'application/json')
-        file_desc_2.add_allowed_media_type(u'plain/text')
+        file_desc_2.add_allowed_media_type(u'text/plain')
         files = {u'Param1': (True, True, file_desc), u'Param2': (True, False, ScaleFileDescription()),
                  u'Param3': (False, True, file_desc_2), u'Param4': (False, True, file_desc_2)}
 
         conn = JobConnection()
         conn.add_input_file(u'Param1', True, [u'application/json'], False)
-        conn.add_input_file(u'Param2', False, [u'plain/text'], False)
-        conn.add_input_file(u'Param3', False, [u'plain/text'], False)
+        conn.add_input_file(u'Param2', False, [u'text/plain'], False)
+        conn.add_input_file(u'Param3', False, [u'text/plain'], False)
 
         # No exception is success
         warnings = conn.validate_input_files(files)

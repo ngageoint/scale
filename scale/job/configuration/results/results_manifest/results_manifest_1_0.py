@@ -79,7 +79,7 @@ RESULTS_MANIFEST_SCHEMA = {
                 "data_ended": {
                     "type": "string"
                 },
-                "file-types": {
+                "data_types": {
                     "type": "array",
                     "items": {
                         "type": "string"

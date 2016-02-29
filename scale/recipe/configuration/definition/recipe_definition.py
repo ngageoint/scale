@@ -10,6 +10,7 @@ from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.models import JobType
+from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 
 
@@ -206,6 +207,7 @@ class RecipeDefinition(object):
                 raise InvalidDefinition('Invalid recipe definition: %s is a duplicate job name' % name)
             self._jobs_by_name[name] = job_dict
 
+        self._create_validation_dicts()
         self._validate_job_dependencies()
         self._validate_no_dup_job_inputs()
         self._validate_recipe_inputs()
@@ -219,26 +221,39 @@ class RecipeDefinition(object):
 
         return self._definition
 
-    def get_job_types(self):
+    def get_job_types(self, lock=False):
         '''Returns a set of job types for each job in the recipe
 
+        :param lock: Whether to obtain select_for_update() locks on the job type models
+        :type lock: bool
         :returns: Set of referenced job types
         :rtype: set[:class:`job.models.JobType`]
         '''
 
-        queries = []
+        filters = []
+        for job_type_key in self.get_job_type_keys():
+            job_type_filter = Q(name=job_type_key[0], version=job_type_key[1])
+            filters = filters | job_type_filter if filters else job_type_filter
+        if filters:
+            job_type_query = JobType.objects.all()
+            if lock:
+                job_type_query = job_type_query.select_for_update().order_by('id')
+            return {job_type for job_type in job_type_query.filter(filters)}
+        return set()
+
+    def get_job_type_keys(self):
+        '''Returns a set of tuples that represent keys for each job in the recipe
+
+        :returns: Set of referenced job types as a tuple of (name, version)
+        :rtype: set[(str, str)]
+        '''
+        job_type_keys = set()
         for job_dict in self._jobs_by_name.itervalues():
             if 'job_type' in job_dict:
                 job_type = job_dict['job_type']
                 if 'name' in job_type and 'version' in job_type:
-                    queries.append(Q(name=job_type['name'], version=job_type['version']))
-
-        if queries:
-            filters = queries.pop()
-            for query in queries:
-                filters = filters | query
-            return {job_type for job_type in JobType.objects.filter(filters)}
-        return set()
+                    job_type_keys.add((job_type['name'], job_type['version']))
+        return job_type_keys
 
     def get_job_type_map(self):
         '''Returns a mapping of job name to job type for each job in the recipe
@@ -350,6 +365,35 @@ class RecipeDefinition(object):
                 del job_statuses[job_id]
         return job_statuses
 
+    def validate_connection(self, recipe_conn):
+        '''Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
+        recipe with this definition
+
+        :param recipe_conn: The recipe definition
+        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.RecipeConnection`
+        :returns: A list of warnings discovered during validation
+        :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If there is a configuration
+            problem
+        '''
+
+        warnings = []
+        warnings.extend(recipe_conn.validate_input_files(self._input_file_validation_dict))
+        warnings.extend(recipe_conn.validate_properties(self._property_validation_dict))
+
+        # Check all recipe jobs for any file outputs
+        file_outputs = False
+        for job_type in self.get_job_types():
+            if job_type.get_job_interface().get_file_output_names():
+                file_outputs = True
+                break
+
+        # Make sure connection has a workspace if the recipe has any output files
+        if file_outputs and not recipe_conn.has_workspace():
+            raise InvalidRecipeConnection('No workspace provided for output files')
+        return warnings
+
     def validate_data(self, recipe_data):
         '''Validates the given data against the recipe definition
 
@@ -358,7 +402,7 @@ class RecipeDefinition(object):
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
-        :raises :class:`recipe.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
         '''
 
         warnings = []
@@ -478,13 +522,15 @@ class RecipeDefinition(object):
                 self._property_validation_dict[name] = required
             elif input_data['type'] == 'file':
                 file_desc = ScaleFileDescription()
-                for media_type in input_data['media_types']:
-                    file_desc.add_allowed_media_type(media_type)
+                if 'media_types' in input_data:
+                    for media_type in input_data['media_types']:
+                        file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, False, file_desc)
             elif input_data['type'] == 'files':
                 file_desc = ScaleFileDescription()
-                for media_type in input_data['media_types']:
-                    file_desc.add_allowed_media_type(media_type)
+                if 'media_types' in input_data:
+                    for media_type in input_data['media_types']:
+                        file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, True, file_desc)
 
     def _populate_default_values(self):

@@ -6,7 +6,7 @@ from mock import MagicMock, patch
 
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.interface.scale_file import ScaleFileDescription
-from recipe.configuration.data.exceptions import InvalidData
+from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import RecipeData
 from storage.test import utils as storage_utils
 
@@ -85,26 +85,26 @@ class TestRecipeDataInit(TestCase):
         '''Tests calling RecipeData constructor with bad version number.'''
 
         data = {u'version': u'BAD VERSION'}
-        self.assertRaises(InvalidData, RecipeData, data)
+        self.assertRaises(InvalidRecipeData, RecipeData, data)
 
     def test_init_no_input_name(self):
         '''Tests calling RecipeData constructor with missing data input name.'''
 
         data = {u'input_data': [{u'value': u'1'}]}
-        self.assertRaises(InvalidData, RecipeData, data)
+        self.assertRaises(InvalidRecipeData, RecipeData, data)
 
     def test_init_duplicate_input_name(self):
         '''Tests calling RecipeData constructor with duplicate data input name.'''
 
         data = {u'input_data': [{u'name': u'My Name', u'value': u'1'},
                                 {u'name': u'My Name', u'value': u'1'}]}
-        self.assertRaises(InvalidData, RecipeData, data)
+        self.assertRaises(InvalidRecipeData, RecipeData, data)
 
     def test_init_workspace_id_not_integer(self):
         '''Tests calling RecipeData constructor with a non-integral value for workspace_id'''
 
         data = {u'workspace_id': u'foo'}
-        self.assertRaises(InvalidData, RecipeData, data)
+        self.assertRaises(InvalidRecipeData, RecipeData, data)
 
     def test_init_successful_one_property(self):
         '''Tests calling RecipeData constructor successfully with a single property input.'''
@@ -129,7 +129,7 @@ class TestRecipeDataValidateInputFiles(TestCase):
 
         data = {u'input_data': []}
         files = {u'File1': (True, True, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
     
     def test_not_required(self):
         '''Tests calling RecipeData.validate_input_files() when a file is missing, but required'''
@@ -145,21 +145,21 @@ class TestRecipeDataValidateInputFiles(TestCase):
 
         data = {u'input_data': [{u'name': u'File1'}]}
         files = {u'File1': (True, True, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
 
     def test_multiple_non_list(self):
         '''Tests calling RecipeData.validate_input_files() with a multiple file param with a non-list for file_ids field'''
 
         data = {u'input_data': [{u'name': u'File1', u'file_ids': u'STRING'}]}
         files = {u'File1': (True, True, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
 
     def test_multiple_non_integrals(self):
         '''Tests calling RecipeData.validate_input_files() with a multiple file param with a list of non-integrals for file_ids field'''
 
         data = {u'input_data': [{u'name': u'File1', u'file_ids': [123, u'STRING']}]}
         files = {u'File1': (True, True, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
 
     def test_multiple_given_single(self):
         '''Tests calling RecipeData.validate_input_files() with a multiple file param that is provided with a single file ID'''
@@ -175,14 +175,14 @@ class TestRecipeDataValidateInputFiles(TestCase):
 
         data = {u'input_data': [{u'name': u'File1'}]}
         files = {u'File1': (True, False, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
 
     def test_single_non_integral(self):
         '''Tests calling RecipeData.validate_input_files() with a single file param with a non-integral for file_id field'''
 
         data = {u'input_data': [{u'name': u'File1', u'file_id': 'STRING'}]}
         files = {u'File1': (True, False, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
     
     def test_bad_media_type(self):
         '''Tests calling RecipeData.validate_input_files() with a file that has an invalid media type'''
@@ -199,7 +199,7 @@ class TestRecipeDataValidateInputFiles(TestCase):
 
         data = {u'input_data': [{u'name': u'File1', u'file_id': 999999}]}
         files = {u'File1': (True, False, ScaleFileDescription())}
-        self.assertRaises(InvalidData, RecipeData(data).validate_input_files, files)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_input_files, files)
 
     def test_successful(self):
         '''Tests calling RecipeData.validate_input_files() with a valid set of job data'''
@@ -227,21 +227,21 @@ class TestRecipeDataValidateProperties(TestCase):
 
         data = {u'input_data': [{u'name': u'Param1'}]}
         properties = {u'Param1': False}
-        self.assertRaises(InvalidData, RecipeData(data).validate_properties, properties)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_properties, properties)
 
     def test_value_not_string(self):
         '''Tests calling RecipeData.validate_properties() when a property has a non-string value'''
 
         data = {u'input_data': [{u'name': u'Param1', u'value': 123}]}
         properties = {u'Param1': False}
-        self.assertRaises(InvalidData, RecipeData(data).validate_properties, properties)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_properties, properties)
 
     def test_missing_required(self):
         '''Tests calling RecipeData.validate_properties() when a property is required, but missing'''
 
         data = {u'input_data': []}
         properties = {u'Param1': True}
-        self.assertRaises(InvalidData, RecipeData(data).validate_properties, properties)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_properties, properties)
 
     def test_not_required(self):
         '''Tests calling RecipeData.validate_properties() when a property is missing, but is not required'''
@@ -272,21 +272,21 @@ class TestRecipeDataValidateWorkspace(TestCase):
         '''Tests calling RecipeData.validate_workspace() when missing the workspace_id field'''
 
         data = {}
-        self.assertRaises(InvalidData, RecipeData(data).validate_workspace)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_workspace)
 
     @patch('recipe.configuration.data.recipe_data.DATA_FILE_STORE', new_callable=lambda: {u'DATA_FILE_STORE': DummyDataFileStore()})
     def test_workspace_not_exist(self, mock_store):
         '''Tests calling RecipeData.validate_workspace() with a workspace that does not exist'''
 
         data = {u'workspace_id': 2}
-        self.assertRaises(InvalidData, RecipeData(data).validate_workspace)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_workspace)
 
     @patch('recipe.configuration.data.recipe_data.DATA_FILE_STORE', new_callable=lambda: {u'DATA_FILE_STORE': DummyDataFileStore()})
     def test_workspace_not_active(self, mock_store):
         '''Tests calling RecipeData.validate_workspace() with a workspace that is not active'''
 
         data = {u'workspace_id': 3}
-        self.assertRaises(InvalidData, RecipeData(data).validate_workspace)
+        self.assertRaises(InvalidRecipeData, RecipeData(data).validate_workspace)
 
     @patch('recipe.configuration.data.recipe_data.DATA_FILE_STORE', new_callable=lambda: {u'DATA_FILE_STORE': DummyDataFileStore()})
     def test_successful(self, mock_store):

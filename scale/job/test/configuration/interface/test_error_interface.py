@@ -1,4 +1,5 @@
 #@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
@@ -6,6 +7,7 @@ from django.test import TestCase
 import error.test.utils as error_test_utils
 from error.models import Error
 from job.configuration.interface.error_interface import ErrorInterface
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 
 
 class TestErrorInterfaceValidate(TestCase):
@@ -13,19 +15,19 @@ class TestErrorInterfaceValidate(TestCase):
     def setUp(self):
         django.setup()
 
-        self.error_1 = error_test_utils.create_error(name=u'unknown', category=u'SYSTEM')
-        self.error_2 = error_test_utils.create_error(name=u'database', category=u'SYSTEM')
-        self.error_3 = error_test_utils.create_error(name=u'timeout', category=u'ALGORITHM')
+        self.error_1 = error_test_utils.create_error(name='unknown', category='SYSTEM')
+        self.error_2 = error_test_utils.create_error(name='database', category='SYSTEM')
+        self.error_3 = error_test_utils.create_error(name='timeout', category='ALGORITHM')
 
     def test_get_error_zero(self):
         ''' Tests that no error is returned when the exit_code is 0'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {
-                u'1': self.error_1.name,
-                u'2': self.error_2.name,
-                u'3': self.error_3.name,
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
+                '3': self.error_3.name,
             },
         }
 
@@ -38,11 +40,11 @@ class TestErrorInterfaceValidate(TestCase):
         ''' Tests that an error model is returned given an exit_code other than 0'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {
-                u'1': self.error_1.name,
-                u'2': self.error_2.name,
-                u'3': self.error_3.name,
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
+                '3': self.error_3.name,
             },
         }
 
@@ -56,11 +58,11 @@ class TestErrorInterfaceValidate(TestCase):
         ''' Tests that an unknown error is returned when a non-registered name is found in the mapping'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {
-                u'1': self.error_1.name,
-                u'2': self.error_2.name,
-                u'3': self.error_3.name,
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
+                '3': self.error_3.name,
             },
         }
 
@@ -74,10 +76,10 @@ class TestErrorInterfaceValidate(TestCase):
         '''Tests getting error names from the mapping.'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {
-                u'1': self.error_1.name,
-                u'2': self.error_2.name,
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
             },
         }
 
@@ -100,8 +102,8 @@ class TestErrorInterfaceValidate(TestCase):
         '''Tests getting error names when there are no exit codes defined.'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {},
+            'version': '1.0',
+            'exit_codes': {},
         }
 
         error_interface = ErrorInterface(error_interface_dict)
@@ -113,11 +115,11 @@ class TestErrorInterfaceValidate(TestCase):
         '''Tests getting error names without duplicates.'''
 
         error_interface_dict = {
-            u'version': u'1.0',
-            u'exit_codes': {
-                u'0': self.error_1.name,
-                u'2': self.error_2.name,
-                u'5': self.error_1.name,
+            'version': '1.0',
+            'exit_codes': {
+                '0': self.error_1.name,
+                '2': self.error_2.name,
+                '5': self.error_1.name,
             },
         }
 
@@ -125,3 +127,49 @@ class TestErrorInterfaceValidate(TestCase):
 
         error_names = error_interface.get_error_names()
         self.assertSetEqual(error_names, {self.error_1.name, self.error_2.name})
+
+    def test_validate_empty(self):
+        '''Tests validating no error names.'''
+
+        error_interface_dict = {
+            'version': '1.0',
+            'exit_codes': {
+            },
+        }
+
+        error_interface = ErrorInterface(error_interface_dict)
+
+        # No exception is passing
+        error_interface.validate()
+
+    def test_validate_success(self):
+        '''Tests validating all error names.'''
+
+        error_interface_dict = {
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
+                '3': self.error_3.name,
+            },
+        }
+
+        error_interface = ErrorInterface(error_interface_dict)
+
+        # No exception is passing
+        error_interface.validate()
+
+    def test_validate_missing(self):
+        '''Tests validating when some error names are missing.'''
+
+        error_interface_dict = {
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '4': 'test-missing-name',
+            },
+        }
+
+        error_interface = ErrorInterface(error_interface_dict)
+
+        self.assertRaises(InvalidInterfaceDefinition, error_interface.validate)

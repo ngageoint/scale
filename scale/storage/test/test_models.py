@@ -127,7 +127,8 @@ class TestScaleFileManagerCleanupDownloadDir(TestCase):
 
     @patch('storage.models.Workspace.objects.all')
     @patch('storage.models.os.path.exists')
-    def test_success(self, mock_exists, mock_workspaces):
+    @patch('storage.models.os.rmdir')
+    def test_success(self, mock_rmdir, mock_exists, mock_workspaces):
         '''Tests calling ScaleFileManager.cleanup_download_dir() successfully'''
 
         download_dir = os.path.join('download', 'dir')
@@ -152,6 +153,7 @@ class TestScaleFileManagerCleanupDownloadDir(TestCase):
         ScaleFile.objects.cleanup_download_dir(download_dir, work_dir)
 
         workspace_1.cleanup_download_dir.assert_called_once_with(download_dir, workspace_1_work_dir)
+        mock_rmdir.assert_called_once_with(workspace_1_work_dir)
         # Workspace 2 should not be cleaned up because os.path.exists() returns false
         self.assertFalse(workspace_2.cleanup_download_dir.called)
 
@@ -161,7 +163,10 @@ class TestScaleFileManagerCleanupUploadDir(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_success(self):
+    @patch('storage.models.os.listdir')
+    @patch('storage.models.os.path.exists')
+    @patch('storage.models.os.rmdir')
+    def test_success(self, mock_rmdir, mock_exists, mock_listdir):
         '''Tests calling ScaleFileManager.cleanup_upload_dir() successfully'''
 
         upload_dir = os.path.join('upload', 'dir')
@@ -170,6 +175,14 @@ class TestScaleFileManagerCleanupUploadDir(TestCase):
         workspace_1 = storage_test_utils.create_workspace()
         workspace_1.cleanup_upload_dir = MagicMock()
         workspace_1_work_dir = ScaleFile.objects._get_workspace_work_dir(work_dir, workspace_1)
+
+        def new_exists(path):
+            return path == workspace_1_work_dir
+        mock_exists.side_effect = new_exists
+
+        def new_listdir(path):
+            return []
+        mock_listdir.side_effect = new_listdir
 
         ScaleFile.objects.cleanup_upload_dir(upload_dir, work_dir, workspace_1)
 
@@ -181,7 +194,8 @@ class TestScaleFileManagerDownloadFiles(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_success(self):
+    @patch('storage.models.os.makedirs')
+    def test_success(self, mock_makedirs):
         '''Tests calling ScaleFileManager.download_files() successfully'''
 
         download_dir = os.path.join('download', 'dir')
@@ -310,7 +324,8 @@ class TestScaleFileManagerMoveFiles(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_success(self):
+    @patch('storage.models.os.makedirs')
+    def test_success(self, mock_makedirs):
         '''Tests calling ScaleFileManager.move_files() successfully'''
 
         work_dir = os.path.join('work', 'dir')
@@ -417,7 +432,8 @@ class TestScaleFileManagerSetupUploadDir(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_success(self):
+    @patch('storage.models.os.makedirs')
+    def test_success(self, mock_makedirs):
         '''Tests calling ScaleFileManager.setup_upload_dir() successfully'''
 
         upload_dir = os.path.join('upload', 'dir')
@@ -477,7 +493,8 @@ class TestScaleFileManagerUploadFiles(TestCase):
         self.assertEqual(workspace.id, models[1].workspace_id)
 
     @patch('storage.models.os.path.getsize')
-    def test_fails(self, mock_getsize):
+    @patch('storage.models.os.makedirs')
+    def test_fails(self, mock_makedirs, mock_getsize):
         '''Tests calling ScaleFileManager.upload_files() when Workspace.upload_files() fails'''
         def new_getsize(path):
             return 100

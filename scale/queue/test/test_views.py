@@ -423,7 +423,7 @@ class TestRequeueExistingJobView(TestCase):
     def test_wrong_status(self,):
         '''Tests calling the requeue view when the job hasn't failed.'''
 
-        job_test_utils.create_job_exe(self.job, status='COMPLETED')
+        job_test_utils.create_job_exe(job=self.job, status='COMPLETED')
         Job.objects.update_status(self.job, 'COMPLETED', timezone.now())
 
         json_data = {

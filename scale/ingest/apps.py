@@ -18,8 +18,13 @@ class IngestConfig(AppConfig):
 
         from ingest.cleanup import IngestJobExecutionCleaner
         from ingest.strike.cleanup import StrikeJobExecutionCleaner
+        from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
         from job.execution.cleanup import REGISTERED_CLEANERS
+        from trigger.handler import register_trigger_rule_handler
 
         # Register job execution cleaners for ingest and Strike jobs
         REGISTERED_CLEANERS['scale-ingest'] = IngestJobExecutionCleaner()
         REGISTERED_CLEANERS['scale-strike'] = StrikeJobExecutionCleaner()
+
+        # Register ingest trigger rule handler
+        register_trigger_rule_handler(IngestTriggerHandler())

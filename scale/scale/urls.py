@@ -17,9 +17,11 @@ urlpatterns = patterns(
     url(r'', include('job.urls')),
     url(r'', include('metrics.urls')),
     url(r'', include('node.urls')),
+    url(r'', include('port.urls')),
     url(r'', include('product.urls')),
     url(r'', include('queue.urls')),
     url(r'', include('recipe.urls')),
     url(r'', include('scheduler.urls')),
     url(r'', include('source.urls')),
+    url(r'', include('storage.urls')),
 )

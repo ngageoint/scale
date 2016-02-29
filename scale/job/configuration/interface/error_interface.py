@@ -1,5 +1,5 @@
-'''Defines the interface for translating a job's exit codes
-to error types'''
+'''Defines the interface for translating a job's exit codes to error types'''
+from __future__ import unicode_literals
 
 import logging
 
@@ -13,19 +13,19 @@ from error.models import Error
 logger = logging.getLogger(__name__)
 
 ERROR_INTERFACE_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "version": {
-            "description": "version of the error_interface schema",
-            "type": "string",
-            "pattern": "^.{0,50}$"
+    'type': 'object',
+    'additionalProperties': False,
+    'properties': {
+        'version': {
+            'description': 'version of the error_interface schema',
+            'type': 'string',
+            'pattern': '^.{0,50}$',
         },
-        "exit_codes": {
-            "type": "object",
-            "item": {
-                "type": "string",
-            }
+        'exit_codes': {
+            'type': 'object',
+            'item': {
+                'type': 'string',
+            },
         },
     },
 }
@@ -53,6 +53,20 @@ class ErrorInterface(object):
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
 
+        self._populate_default_values()
+
+        if self.definition['version'] != '1.0':
+            raise InvalidInterfaceDefinition('%s is an unsupported version number' % self.definition['version'])
+
+    def get_dict(self):
+        '''Returns the internal dictionary that represents this error mapping
+
+        :returns: The internal dictionary
+        :rtype: dict
+        '''
+
+        return self.definition
+
     def get_error(self, exit_code=None):
         ''' This method retrieves an error given an exit_code.
 
@@ -69,7 +83,7 @@ class ErrorInterface(object):
                 return None
 
             # get the exit codes
-            exit_codes = self.definition.get(u'exit_codes')
+            exit_codes = self.definition.get('exit_codes')
             if exit_codes:
                 # Retrieve the error item using the exit code from the dict
                 # exit code should never be None, but it may not be in 'exit_codes'
@@ -90,11 +104,27 @@ class ErrorInterface(object):
         :returns: Set of error names
         :rtype: set[string]
         '''
-        if u'exit_codes' not in self.definition:
+        if 'exit_codes' not in self.definition:
             return set()
 
-        codes = self.definition.get(u'exit_codes')
+        codes = self.definition.get('exit_codes')
         return {error_name for error_name in codes.itervalues()}
+
+    def validate(self):
+        '''Validates the error mappings to ensure that all referenced errors actually exist.
+
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+
+        :raises :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`: If there is a missing error.
+        '''
+        error_names = self.get_error_names()
+        error_map = {error.name: error for error in Error.objects.filter(name__in=error_names)}
+
+        for error_name in error_names:
+            if error_name not in error_map:
+                raise InvalidInterfaceDefinition('Missing error model reference: %s' % error_name)
+        return []
 
     def _lookup_error(self, name):
         '''This method looks up error by name
@@ -109,3 +139,10 @@ class ErrorInterface(object):
         except Error.DoesNotExist:
             logger.exception('Unable to find error mapping: %s', name)
             pass
+
+    def _populate_default_values(self):
+        '''Goes through the definition and fills in any missing default values'''
+        if 'version' not in self.definition:
+            self.definition['version'] = '1.0'
+        if 'exit_codes' not in self.definition:
+            self.definition['exit_codes'] = {}

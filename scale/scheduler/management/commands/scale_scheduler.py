@@ -13,12 +13,17 @@ logger = logging.getLogger(__name__)
 # Try to import production Mesos bindings, fall back to stubs
 try:
     from mesos.interface import mesos_pb2
-    from mesos.native import MesosSchedulerDriver
-    logger.info(u'Successfully imported native Mesos bindings')
+    from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
+    logger.info(u'Successfully imported pesos bindings')
 except ImportError:
-    logger.info(u'No native Mesos bindings, falling back to stubs')
-    import mesos_api.mesos_pb2 as mesos_pb2
-    from mesos_api.mesos import MesosSchedulerDriver
+    try:
+       from mesos.interface import mesos_pb2
+       from mesos.native import MesosSchedulerDriver
+       logger.info(u'Successfully imported native Mesos bindings')
+    except ImportError:
+       logger.info(u'No native Mesos bindings, falling back to stubs')
+       import mesos_api.mesos_pb2 as mesos_pb2
+       from mesos_api.mesos import MesosSchedulerDriver
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False
@@ -57,6 +62,22 @@ class Command(BaseCommand):
         executor.command.value = '%s %s scale_executor' % (settings.PYTHON_EXECUTABLE, settings.MANAGE_FILE)
         executor.name = 'Scale Executor (Python)'
 
+        try:
+            scheduler_zk = settings.SCHEDULER_ZK
+        except:
+            scheduler_zk = None
+
+        if scheduler_zk is not None:
+            import socket
+            from scheduler import cluster_utils
+            my_id = socket.gethostname()
+            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master, executor)
+        else:
+            # leader election is disabled
+            self.run_scheduler(mesos_master, executor)
+
+    def run_scheduler(self, mesos_master, executor):
+        logger.info("I am the leader")
         self.scheduler = ScaleScheduler(executor)
 
         framework = mesos_pb2.FrameworkInfo()

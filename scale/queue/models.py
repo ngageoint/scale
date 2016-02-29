@@ -8,6 +8,7 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 
 from job.configuration.data.exceptions import InvalidData, StatusError
+from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.resources import JobResources
 from job.models import JobExecution
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 # Important note: when acquiring select_for_update() locks on related models, be sure to acquire them in the following
-# order: JobExecution, Queue, Recipe, Job, JobType
+# order: JobExecution, Queue, Recipe, Job, RecipeType, JobType, TriggerRule
 
 
 class JobLoadGroup(object):
@@ -283,6 +284,15 @@ class QueueManager(models.Manager):
 
         return {'job_types': job_types, 'priorities': priorities, 'queue_depths': queue_depths}
 
+    def get_queue(self):
+        '''Returns the list of queue models sorted according to their scheduling priority
+
+        :returns: The list of queue models
+        :rtype: list[:class:`queue.models.Queue`]
+        '''
+
+        return Queue.objects.order_by('priority', 'queued').iterator()
+
     def get_queue_status(self):
         '''Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
         version with overall stats for that type
@@ -291,19 +301,22 @@ class QueueManager(models.Manager):
         :rtype: list of dict
         '''
 
-        status_qry = Queue.objects.values('job_type__name', 'job_type__version', 'is_job_type_paused')
+        status_qry = Queue.objects.values('job_type__name', 'job_type__version', 'job_type__is_paused')
         status_qry = status_qry.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
                                          highest_priority=models.Min('priority'))
-        status_qry = status_qry.order_by('is_job_type_paused', 'highest_priority', 'longest_queued')
+        status_qry = status_qry.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
 
         # Remove double underscores
         for entry in status_qry:
             name = entry['job_type__name']
             version = entry['job_type__version']
+            is_paused = entry['job_type__is_paused']
             del entry['job_type__name']
             del entry['job_type__version']
+            del entry['job_type__is_paused']
             entry['job_type_name'] = name
             entry['job_type_version'] = version
+            entry['is_job_type_paused'] = is_paused
 
         return status_qry
 
@@ -365,8 +378,7 @@ class QueueManager(models.Manager):
         '''
 
         # Acquire model lock
-        job_exe_qry = JobExecution.objects.select_for_update().select_related('job')
-        job_exe = job_exe_qry.defer('stdout', 'stderr').get(pk=job_exe_id)
+        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
 
         if job_exe.status != 'RUNNING':
             raise Exception('Cannot complete a job execution in status %s' % job_exe.status)
@@ -411,8 +423,7 @@ class QueueManager(models.Manager):
             raise Exception('Error that caused the failure is required')
 
         # Acquire model lock
-        job_exe_qry = JobExecution.objects.select_for_update().select_related('job').defer('stdout', 'stderr')
-        job_exe = job_exe_qry.get(pk=job_exe_id)
+        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
         if not job_exe.status == 'RUNNING':
             # If job is no longer running, ignore failure
             return
@@ -479,8 +490,9 @@ class QueueManager(models.Manager):
         queue = Queue()
         queue.job_exe = job_exe
         queue.job_type = job.job_type
-        queue.is_job_type_paused = job.job_type.is_paused
         queue.priority = job.priority
+        if job.job_type.name == 'scale-cleanup':
+            queue.node_required_id = job.event.description['node_id']
         queue.cpus_required = job.cpus_required
         queue.mem_required = job.mem_required
         queue.disk_in_required = job.disk_in_required if job.disk_in_required else 0
@@ -510,9 +522,6 @@ class QueueManager(models.Manager):
 
         job = Job.objects.create_job(job_type, event)
         job.save()
-
-        # Acquire lock on new job
-        job = Job.objects.select_for_update().select_related('job_type').get(pk=job.id)
 
         job_exe_id = self.queue_existing_job(job, data)
         return job.id, job_exe_id
@@ -636,84 +645,70 @@ class QueueManager(models.Manager):
         return job_exe_id
 
     @transaction.atomic
-    def schedule_jobs_on_node(self, cpus, mem, disk, node):
-        '''Schedules and returns a list of the highest priority job executions that can be executed with the given
-        resources on the given node. Each returned job execution model will have a lock from select_for_update() and its
-        related job, job_type, job_type_rev, and node models populated. All database changes occur in an atomic
-        transaction.
+    def schedule_job_executions(self, job_executions):
+        """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
+        be deleted from the database. All database changes occur in an atomic transaction.
 
-        :param cpus: The number of CPUs available on the node
-        :type cpus: float
-        :param mem: The amount of RAM in MiB available on the node
-        :type mem: float
-        :param disk: The amount of disk space in MiB available on the node
-        :type disk: float
-        :param node: The node to schedule the job executions on
-        :type node: :class:`node.models.Node`
-        :returns: The list of job executions scheduled on the node
-        :rtype: list[:class:`job.models.JobExecution`]
-        '''
+        :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
+            run
+        :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
+        :returns: The scheduled job executions
+        :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
+        """
 
+        if not job_executions:
+            return []
+
+        job_exe_ids = []
+        for job_execution in job_executions:
+            job_exe_ids.append(job_execution.id)
+
+        # Lock corresponding job executions
+        job_exes = {}
+        for job_exe in JobExecution.objects.select_for_update().filter(id__in=job_exe_ids).order_by('id'):
+            job_exes[job_exe.id] = job_exe
+
+        # Set up job executions to schedule
+        executions_to_schedule = []
+        for job_execution in job_executions:
+            queue = job_execution.queue
+            node = job_execution.provided_node
+            resources = job_execution.provided_resources
+            job_exe = job_exes[job_execution.id]
+
+            # Ignore executions that are no longer queued (executions may have been changed since queue model was last
+            # queried)
+            if job_exe.status != 'QUEUED':
+                continue
+
+            # Check that resources are sufficient
+            if resources.cpus < queue.cpus_required:
+                msg = 'Job execution requires %s CPUs and only %s were provided'
+                raise Exception(msg % (str(resources.cpus), str(queue.cpus_required)))
+            if resources.mem < queue.mem_required:
+                msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
+                raise Exception(msg % (str(resources.mem), str(queue.mem_required)))
+            if resources.disk_in < queue.disk_in_required:
+                msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_in), str(queue.disk_in_required)))
+            if resources.disk_out < queue.disk_out_required:
+                msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_out), str(queue.disk_out_required)))
+            if resources.disk_total < queue.disk_total_required:
+                msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
+                raise Exception(msg % (str(resources.disk_total), str(queue.disk_total_required)))
+
+            executions_to_schedule.append((job_exe, node, resources))
+
+        # Schedule job executions
         scheduled_job_exes = []
+        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule):
+            scheduled_job_exes.append(RunningJobExecution(job_exe))
 
-        # TODO: this most certainly needs to be refactored. Sigh. But when is there time?
-
-        # Schedule cleanup jobs first. This is special because the normal way does not currently restrict which node(s)
-        # a particular job can be scheduled on
-        cleanup_type = JobType.objects.get_cleanup_job_type()
-        for cleanup_queue in Queue.objects.filter(job_type_id=cleanup_type.id):
-            cleanup_job_exe = JobExecution.objects.defer('stdout', 'stderr').get(id=cleanup_queue.job_exe_id)
-            if JobExecution.objects.defer('stdout', 'stderr').get(cleanup_job_id=cleanup_job_exe.job_id).node_id == node.id:
-                if cpus >= cleanup_queue.cpus_required and mem >= cleanup_queue.mem_required:
-                    resources = JobResources(cpus=cleanup_queue.cpus_required, mem=cleanup_queue.mem_required)
-                    cleanup_job_exe = self._schedule_job_execution(cleanup_queue, node, resources)
-                    scheduled_job_exes.append(cleanup_job_exe)
-                    cpus -= cleanup_job_exe.cpus_scheduled
-                    mem -= cleanup_job_exe.mem_scheduled
-
-        while True:
-            # Acquire model lock to get next execution off of the queue to schedule
-            queue_qry = Queue.objects.filter(is_job_type_paused=False, cpus_required__lte=cpus, mem_required__lte=mem,
-                                             disk_total_required__lte=disk).exclude(job_type_id=cleanup_type.id)
-            job_types_with_enough_resources = SharedResource.objects.runnable_job_types(node)
-            queue_qry = queue_qry.filter(job_type__in=job_types_with_enough_resources)
-            queue = queue_qry.order_by('priority', 'queued').first()
-            if queue is None:
-                break
-
-            # Schedule the job execution
-            resources = JobResources(cpus=queue.cpus_required, mem=queue.mem_required, disk_in=queue.disk_in_required,
-                                     disk_out=queue.disk_out_required, disk_total=queue.disk_total_required)
-            scheduled_job_exe = self._schedule_job_execution(queue, node, resources)
-            scheduled_job_exes.append(scheduled_job_exe)
-            cpus -= scheduled_job_exe.cpus_scheduled
-            mem -= scheduled_job_exe.mem_scheduled
-            disk -= scheduled_job_exe.disk_total_scheduled
+        # Clear the job executions from the queue
+        Queue.objects.filter(job_exe_id__in=job_exe_ids).delete()
 
         return scheduled_job_exes
-
-    @transaction.atomic
-    def update_job_type_pause(self, job_type_id, is_paused):
-        '''Updates whether the given job type is paused. All database changes occur in an atomic transaction.
-
-        :param job_type_id: The ID of the job type to update
-        :type job_type_id: int
-        :param is_paused: Whether the job type should be paused
-        :type is_paused: bool
-        '''
-
-        # Lock the queue models with the given job type so they can be updated
-        Queue.objects.select_for_update().filter(job_type_id=job_type_id).iterator()
-        Queue.objects.filter(job_type_id=job_type_id).update(is_job_type_paused=is_paused)
-
-        # Acquire model lock
-        job_type = JobType.objects.select_for_update().get(pk=job_type_id)
-        job_type.is_paused = is_paused
-        if is_paused:
-            job_type.paused = timezone.now()
-        else:
-            job_type.paused = None
-        job_type.save()
 
     @transaction.atomic
     def _handle_job_finished(self, job_exe):
@@ -739,7 +734,7 @@ class QueueManager(models.Manager):
                 'version': '1.0',
                 'input_data': [{'name': 'Job Exe ID', 'value': str(job_exe.id)}]
             }
-            desc = {'job_exe_id': job_exe.id}
+            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node.id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
             cleanup_job_id, _cleanup_job_exe_id = Queue.objects.queue_new_job(cleanup_type, data, event)
             job_exe.cleanup_job_id = cleanup_job_id
@@ -881,48 +876,6 @@ class QueueManager(models.Manager):
             recipe.save()
 
     @transaction.atomic
-    def _schedule_job_execution(self, queue, node, resources):
-        '''Schedules the given job execution (tied to the queue model) on the given node with the given resources and
-        returns the scheduled job execution model with a lock from select_for_update() and its related job, job_type,
-        job_type_rev and node models populated. If this method succeeds, the given queue model will have been deleted
-        from the database. All database changes occur in an atomic transaction.
-
-        :param queue: The queue model representing the queued job execution
-        :type queue: :class:`queue.models.Queue`
-        :param node: The node on which to schedule the job execution
-        :type node: :class:`node.models.Node`
-        :param resources: The resources that are being scheduled on the node for this job execution
-        :type resources: :class:`job.resources.JobResources`
-        :returns: The scheduled job execution model
-        :rtype: :class:`job.models.JobExecution`
-        '''
-
-        # Check that resources are sufficient
-        if resources.cpus < queue.cpus_required:
-            msg = 'Job execution requires %s CPUs and only %s were provided'
-            raise Exception(msg % (str(resources.cpus), str(queue.cpus_required)))
-        if resources.mem < queue.mem_required:
-            msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
-            raise Exception(msg % (str(resources.mem), str(queue.mem_required)))
-        if resources.disk_in < queue.disk_in_required:
-            msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
-            raise Exception(msg % (str(resources.disk_in), str(queue.disk_in_required)))
-        if resources.disk_out < queue.disk_out_required:
-            msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
-            raise Exception(msg % (str(resources.disk_out), str(queue.disk_out_required)))
-        if resources.disk_total < queue.disk_total_required:
-            msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
-            raise Exception(msg % (str(resources.disk_total), str(queue.disk_total_required)))
-
-        # Schedule job execution
-        job_exe = JobExecution.objects.schedule_job_exe(queue.job_exe_id, node, resources)
-
-        # Clear the job execution from the queue
-        queue.delete()
-
-        return job_exe
-
-    @transaction.atomic
     def _update_dependent_recipe_jobs(self, recipe, when):
         '''Updates all unqueued dependent jobs in the given recipe so that they have the correct PENDING or BLOCKED
         status based on whether their dependencies cannot complete (FAILED or CANCELED). The given recipe model must
@@ -964,12 +917,11 @@ class Queue(models.Model):
     :type job_exe: :class:`django.db.models.ForeignKey`
     :keyword job_type: The type of this job execution
     :type job_type: :class:`django.db.models.ForeignKey`
-    :keyword is_job_type_paused: Whether this job type has been paused. When True, this job execution will not be taken
-        off of the queue. Any update to this field requires obtaining a lock on the model using select_for_update().
-    :type is_job_type_paused: :class:`django.db.models.BooleanField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
+    :keyword node_required: The specific node on which this job is required to run
+    :type node_required: :class:`django.db.models.ForeignKey`
     :keyword cpus_required: The number of CPUs required for this job
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_required: The amount of RAM in MiB required for this job
@@ -992,9 +944,9 @@ class Queue(models.Model):
 
     job_exe = models.ForeignKey('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
-    is_job_type_paused = models.BooleanField(default=False)
 
     priority = models.IntegerField(db_index=True)
+    node_required = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     cpus_required = models.FloatField()
     mem_required = models.FloatField()
     disk_in_required = models.FloatField()

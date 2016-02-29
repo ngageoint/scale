@@ -1,0 +1,21 @@
+---
+# setup.yml
+# start and initialize the postgis server
+- hosts: db
+  roles:
+    - db-init
+
+# migrate database changes
+- hosts: build
+  roles:
+    - migrate
+
+# load initial database data
+- hosts: build
+  roles:
+    - load-initial-data
+
+# initialize example data
+- hosts: build
+  roles:
+    - init-examples

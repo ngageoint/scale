@@ -1,13 +1,16 @@
 '''Defines the database models for recipes and recipe types'''
 from __future__ import unicode_literals
 
-import djorm_pgjson.fields
 from django.db import models, transaction
+import djorm_pgjson.fields
 
-from job.models import Job
+from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
+from trigger.configuration.exceptions import InvalidTriggerType
+from trigger.models import TriggerRule
 
 
 # Important note: when acquiring select_for_update() locks on related models, be sure to acquire them in the following
@@ -33,7 +36,8 @@ class RecipeManager(models.Manager):
         :type data: dict
         :returns: The new recipe
         :rtype: :class:`recipe.models.Recipe`
-        :raises InvalidData: If the recipe data is invalid
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         '''
 
         if not recipe_type.is_active:
@@ -43,7 +47,7 @@ class RecipeManager(models.Manager):
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type
-        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_latest_revision(recipe_type.id)
+        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
         recipe_definition = recipe.get_recipe_definition()
 
@@ -101,8 +105,9 @@ class RecipeManager(models.Manager):
 
         try:
             recipe_job = RecipeJob.objects.get(job_id=job_id)
-            recipe_qry = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').select_for_update()
-            recipe = recipe_qry.get(pk=recipe_job.recipe_id)
+            # Acquire model lock first, then requery for related fields
+            Recipe.objects.select_for_update().get(pk=recipe_job.recipe_id)
+            recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(pk=recipe_job.recipe_id)
         except RecipeJob.DoesNotExist:
             # Not in a recipe
             recipe = None
@@ -263,10 +268,14 @@ class RecipeJobManager(models.Manager):
                 job_ids.append(recipe_job.job_id)
             # Query job models
             job_qry = Job.objects.all()
-            if jobs_related:
+            if jobs_lock and jobs_related:
+                # Grab locks here and do select_related in separate query
+                Job.objects.select_for_update().filter(id__in=job_ids).order_by('id')
                 job_qry = job_qry.select_related('job_type', 'job_type_rev')
-            if jobs_lock:
-                job_qry = job_qry.select_for_update()
+            elif jobs_related:
+                job_qry = job_qry.select_related('job_type', 'job_type_rev')
+            elif jobs_lock:
+                job_qry = job_qry.select_for_update().order_by('id')
             for job in job_qry.filter(id__in=job_ids):
                 jobs[job.id] = job
             # Re-populate the job fields with the updated job models
@@ -321,14 +330,26 @@ class RecipeTypeManager(models.Manager):
         :returns: The new recipe type
         :rtype: :class:`recipe.models.RecipeType`
 
-        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
-            If any part of the recipe definition violates the specification
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If any part of the recipe
+            definition violates the specification
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+            type for creating recipes
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+            invalid
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If the trigger rule connection to
+            the recipe type definition is invalid
         '''
 
-        # TODO: need to figure out how trigger rule validation works with this
-
-        # Validate the recipe definition
+        # Must lock job type interfaces so the new recipe type definition can be validated
+        _ = definition.get_job_types(lock=True)
         definition.validate_job_interfaces()
+
+        # Validate the trigger rule
+        if trigger_rule:
+            trigger_config = trigger_rule.get_configuration()
+            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
+                raise InvalidTriggerType('%s is an invalid trigger rule type for creating recipes' % trigger_rule.type)
+            trigger_config.validate_trigger_for_recipe(definition)
 
         # Create the new recipe type
         recipe_type = RecipeType()
@@ -345,26 +366,115 @@ class RecipeTypeManager(models.Manager):
 
         return recipe_type
 
-    def validate_recipe_type(self, name, version, description, definition):
-        '''Validates a new recipe type prior to attempting a save
+    @transaction.atomic
+    def edit_recipe_type(self, recipe_type_id, title, description, definition, trigger_rule, remove_trigger_rule):
+        '''Edits the given recipe type and saves the changes in the database. The caller must provide the related
+        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
+        indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
+        no change to the trigger rule (False) and removing the trigger rule (True) when trigger_rule is None.
 
-        :param name: The human-readable name of the recipe type
-        :type name: str
-        :param version: The version of the recipe type
-        :type version: str
-        :param description: An optional description of the recipe type
+        :param recipe_type_id: The unique identifier of the recipe type to edit
+        :type recipe_type_id: int
+        :param title: The human-readable name of the recipe type, possibly None
+        :type title: str
+        :param description: A description of the recipe type, possibly None
         :type description: str
-        :param definition: The definition for running a recipe of this type
+        :param definition: The definition for running a recipe of this type, possibly None
         :type definition: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :param trigger_rule: The trigger rule that creates recipes of this type, possibly None
+        :type trigger_rule: :class:`trigger.models.TriggerRule`
+        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
+            when trigger_rule is None
+        :type remove_trigger_rule: bool
 
-        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
-            If any part of the recipe definition violates the specification
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If any part of the recipe
+            definition violates the specification
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+            type for creating recipes
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+            invalid
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If the trigger rule connection to
+            the recipe type definition is invalid
         '''
 
-        # TODO: need to figure out how trigger rule validation works with this
-        return definition.validate_job_interfaces()
+        # Acquire model lock
+        recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
+
+        if title is not None:
+            recipe_type.title = title
+
+        if description is not None:
+            recipe_type.description = description
+
+        if definition:
+            # Must lock job type interfaces so the new recipe type definition can be validated
+            _ = definition.get_job_types(lock=True)
+            definition.validate_job_interfaces()
+            recipe_type.definition = definition.get_dict()
+            recipe_type.revision_num = recipe_type.revision_num + 1
+
+        if trigger_rule or remove_trigger_rule:
+            if recipe_type.trigger_rule:
+                # Archive old trigger rule since we are changing to a new one
+                TriggerRule.objects.archive_trigger_rule(recipe_type.trigger_rule_id)
+            recipe_type.trigger_rule = trigger_rule
+
+        # Validate updated trigger rule against updated definition
+        if recipe_type.trigger_rule:
+            trigger_config = recipe_type.trigger_rule.get_configuration()
+            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
+                msg = '%s is an invalid trigger rule type for creating recipes'
+                raise InvalidTriggerType(msg % recipe_type.trigger_rule.type)
+            trigger_config.validate_trigger_for_recipe(recipe_type.get_recipe_definition())
+
+        recipe_type.save()
+
+        if definition:
+            # Create new revision of the recipe type for new definition
+            RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+
+    def get_active_trigger_rules(self, trigger_type):
+        '''Returns the active trigger rules with the given trigger type that create jobs and recipes
+
+        :param trigger_type: The trigger rule type
+        :type trigger_type: str
+        :returns: The active trigger rules for the given type and their associated job/recipe types
+        :rtype: list[(:class:`trigger.models.TriggerRule`, :class:`job.models.JobType`
+            or :class:`recipe.models.RecipeType`)]
+        '''
+
+        trigger_rules = []
+
+        # Get trigger rules that create jobs
+        job_type_qry = JobType.objects.select_related('trigger_rule')
+        for job_type in job_type_qry.filter(trigger_rule__is_active=True, trigger_rule__type=trigger_type):
+            trigger_rules.append((job_type.trigger_rule, job_type))
+
+        # Get trigger rules that create recipes
+        recipe_type_qry = RecipeType.objects.select_related('trigger_rule')
+        for recipe_type in recipe_type_qry.filter(trigger_rule__is_active=True, trigger_rule__type=trigger_type):
+            trigger_rules.append((recipe_type.trigger_rule, recipe_type))
+
+        return trigger_rules
+
+    def get_details(self, recipe_type_id):
+        '''Gets additional details for the given recipe type model based on related model attributes.
+
+        The additional fields include: job_types.
+
+        :param recipe_type_id: The unique identifier of the recipe type.
+        :type recipe_type_id: int
+        :returns: The recipe type with extra related attributes.
+        :rtype: :class:`recipe.models.RecipeType`
+        '''
+
+        # Attempt to fetch the requested recipe type
+        recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type_id)
+
+        # Add associated job type information
+        recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+
+        return recipe_type
 
     def get_recipe_types(self, started=None, ended=None, order=None):
         '''Returns a list of recipe types within the given time range.
@@ -395,24 +505,44 @@ class RecipeTypeManager(models.Manager):
             recipe_types = recipe_types.order_by('last_modified')
         return recipe_types
 
-    def get_details(self, recipe_type_id):
-        '''Gets additional details for the given recipe type model based on related model attributes.
+    def validate_recipe_type(self, name, title, version, description, definition, trigger_config):
+        '''Validates a new recipe type prior to attempting a save
 
-        The additional fields include: job_types.
+        :param name: The system name of the recipe type
+        :type name: str
+        :param title: The human-readable name of the recipe type
+        :type title: str
+        :param version: The version of the recipe type
+        :type version: str
+        :param description: An optional description of the recipe type
+        :type description: str
+        :param definition: The definition for running a recipe of this type
+        :type definition: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
+        :param trigger_config: The trigger rule configuration
+        :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
-        :param recipe_type_id: The unique identifier of the recipe type.
-        :type recipe_type_id: int
-        :returns: The recipe type with extra related attributes.
-        :rtype: :class:`recipe.models.RecipeType`
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If any part of the recipe
+            definition violates the specification
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+            type for creating recipes
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+            invalid
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If the trigger rule connection to
+            the recipe type definition is invalid
         '''
 
-        # Attempt to fetch the requested recipe type
-        recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        warnings = definition.validate_job_interfaces()
 
-        # Add associated job type information
-        recipe_type.job_types = recipe_type.get_recipe_definition().get_job_types()
+        if trigger_config:
+            trigger_config.validate()
+            if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
+                msg = '%s is an invalid trigger rule type for creating recipes'
+                raise InvalidTriggerType(msg % trigger_config.trigger_rule_type)
+            warnings.extend(trigger_config.validate_trigger_for_recipe(definition))
 
-        return recipe_type
+        return warnings
 
 
 class RecipeType(models.Model):
@@ -432,6 +562,8 @@ class RecipeType(models.Model):
     :type is_active: :class:`django.db.models.BooleanField`
     :keyword definition: JSON definition for running a recipe of this type
     :type definition: :class:`djorm_pgjson.fields.JSONField`
+    :keyword revision_num: The current revision number of the definition, starts at one
+    :type revision_num: :class:`django.db.models.IntegerField`
     :keyword trigger_rule: The rule to trigger new recipes of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
 
@@ -445,11 +577,12 @@ class RecipeType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    title = models.CharField(blank=True, max_length=50, null=True)
+    title = models.CharField(blank=True, max_length=50)
     description = models.CharField(blank=True, max_length=500)
 
     is_active = models.BooleanField(default=True)
     definition = djorm_pgjson.fields.JSONField()
+    revision_num = models.IntegerField(default=1)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -478,34 +611,32 @@ class RecipeTypeRevisionManager(models.Manager):
     '''
 
     def create_recipe_type_revision(self, recipe_type):
-        '''Creates a new revision for the given recipe type. The caller must have obtained a lock using
-        select_for_update() on the given recipe type model.
+        '''Creates a new revision for the given recipe type. The recipe type's definition and revision number must
+        already be updated. The caller must have obtained a lock using select_for_update() on the given recipe type
+        model.
 
         :param recipe_type: The recipe type
         :type recipe_type: :class:`recipe.models.RecipeType`
         '''
 
-        last_rev = self.get_latest_revision(recipe_type.id)
-        new_rev_num = 1
-        if last_rev:
-            new_rev_num = last_rev.revision_num + 1
-
         new_rev = RecipeTypeRevision()
         new_rev.recipe_type = recipe_type
-        new_rev.revision_num = new_rev_num
+        new_rev.revision_num = recipe_type.revision_num
         new_rev.definition = recipe_type.definition
         new_rev.save()
 
-    def get_latest_revision(self, recipe_type_id):
-        '''Returns the latest revision for the given recipe type
+    def get_revision(self, recipe_type_id, revision_num):
+        '''Returns the revision for the given recipe type and revision number
 
         :param recipe_type_id: The ID of the recipe type
         :type recipe_type_id: int
-        :returns: The latest revision for the recipe type
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The revision
         :rtype: :class:`recipe.models.RecipeTypeRevision`
         '''
 
-        return RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type_id).order_by('-revision_num').first()
+        return RecipeTypeRevision.objects.get(recipe_type_id=recipe_type_id, revision_num=revision_num)
 
 
 class RecipeTypeRevision(models.Model):

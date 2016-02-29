@@ -118,7 +118,7 @@ RESULTS_MANIFEST_SCHEMA = {
                 "new_workspace_path": {
                     "type": "string"
                 },
-                "file-types": {
+                "data_types": {
                     "type": "array",
                     "items": {
                         "type": "string"

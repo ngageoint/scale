@@ -19,6 +19,7 @@ describe the services available for each component of Scale.
    job_type
    metrics
    node
+   port
    product
    queue
    recipe

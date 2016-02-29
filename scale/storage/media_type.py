@@ -1,13 +1,15 @@
 '''Defines functions for determining the media type of a file'''
+from __future__ import unicode_literals
+
 import mimetypes
 
 
-UNKNOWN_MEDIA_TYPE = u'application/octet-stream'
-mimetypes.add_type(u'application/json', u'.json')
-mimetypes.add_type(u'application/vnd.geo+json', u'.geojson')
-mimetypes.add_type(u'image/x-hdf5-image', u'.h5')
-mimetypes.add_type(u'image/x-nitf-image', u'.ntf')
-mimetypes.add_type(u'application/xml', u'.xml')
+UNKNOWN_MEDIA_TYPE = 'application/octet-stream'
+mimetypes.add_type('application/json', '.json')
+mimetypes.add_type('application/vnd.geo+json', '.geojson')
+mimetypes.add_type('image/x-hdf5-image', '.h5')
+mimetypes.add_type('image/x-nitf-image', '.ntf')
+mimetypes.add_type('application/xml', '.xml')
 
 
 def get_media_type(file_name):

@@ -1,0 +1,265 @@
+@import 'components/colors';
+
+.widget-label-left {
+    margin: 10px 0;
+    text-align: left;
+}
+.widget-label-center {
+    width: 65%;
+    margin: 10px auto;
+}
+
+@font-face {
+    font-family: 'raleway';
+    src: url("../fonts/raleway-light-webfont.ttf") format(truetype);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'raleway';
+    src: url("../fonts/raleway-bold-webfont.ttf") format(truetype);
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Light-webfont.ttf") format(truetype);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Bold-webfont.ttf") format(truetype);
+    font-weight: bold;
+    font-style: normal;
+}
+
+body, html {
+    background: @nav_bg;
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+}
+
+a {
+    cursor: pointer;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid lighten(@view_txt, 100%);
+    height: 1px;
+    background: lighten(@view_txt, 55%);
+    //background: darken(@view_bg, 10%);
+    //background: @accent_blue;
+    margin: 1.0em auto;
+    width: 100%;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.container-fluid {
+    height: 100%;
+}
+.row {
+    height: 100%;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+.tall {
+    min-height: 100% !important;
+}
+
+.view {
+    background: @view_bg;
+}
+
+// STATUS STYLES
+.completed {
+    background-color: @chart_green;
+}
+
+.blocked {
+    background-color: @chart_gray;
+}
+
+.queued {
+    background-color: @chart_purple;
+}
+
+.running {
+    background-color: @chart_blue;
+}
+
+.failed {
+    background-color: @chart_red;
+}
+
+.canceled {
+    background-color: @chart_gray;
+}
+
+.paused {
+    background-color: @chart_yellow;
+}
+// END STATUS STYLES
+
+.loading-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-top: 215px;
+    z-index: 1010;
+    background: rgba(242, 249, 255, 0.75);
+    text-align: center;
+
+    i {
+        margin-bottom: 10px;
+    }
+}
+
+.loading-component {
+    margin-top: 25px;
+    width: 100%;
+    text-align: center;
+}
+
+.header {
+    .nav {
+        margin: 20px 0;
+    }
+}
+
+.margin-top-sm {
+    margin-top: 5px;
+}
+
+.margin-top-md {
+    margin-top: 10px;
+}
+
+.margin-top-lg {
+    margin-top: 20px;
+}
+
+.margin-right-sm {
+    margin-right: 5px;
+}
+
+.margin-right-md {
+    margin-right: 10px;
+}
+
+.margin-right-lg {
+    margin-right: 20px;
+}
+
+.margin-bottom-sm {
+    margin-bottom: 5px;
+}
+
+.margin-bottom-md {
+    margin-bottom: 10px;
+}
+
+.margin-bottom-lg {
+    margin-bottom: 20px;
+}
+
+.margin-left-sm {
+    margin-left: 5px;
+}
+
+.margin-left-md {
+    margin-left: 10px;
+}
+
+.margin-left-lg {
+    margin-left: 20px;
+}
+
+.mediaType {
+    font-size: 1.5em;
+}
+
+/************ Bootstrap Overrides ************/
+
+ol.breadcrumb {
+    background: none;
+
+    li {
+        background: #fff;
+        padding: 8px;
+
+        &:nth-last-child(2) {
+            padding-right: 0;
+        }
+    }
+}
+
+.input-sm {
+    height: 22px;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.tab-content {
+    background: #fff;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+
+    h3 {
+        margin: 0;
+        padding: 0 10px 10px 0;
+    }
+}
+
+.table-hover {
+    tr.link {
+        &:hover {
+            cursor: pointer;
+            background: #337ab7;
+            color: white;
+        }
+    }
+}
+
+.panel-default > a {
+    &:hover {
+        background-color: #337ab7;
+        color: white;
+        text-decoration: none;
+    }
+    > .panel-heading {
+        background-image: none;
+        background-color: #f7f7f7;
+        &:hover {
+            background-color: #337ab7;
+        }
+    }
+}
+
+#scheduler .btn {
+  position: relative;
+  left: -20px;
+}
+
+@media screen and (max-width:992px) {
+  .tall {
+      min-height: auto !important;
+  }
+}

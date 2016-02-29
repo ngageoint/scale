@@ -61,7 +61,7 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .category          | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model model was initially created.                     |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                                  |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -105,7 +105,7 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | description        | String            | A longer description of the error.                                                  |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
+| category           | String            | The category of the error. Choices: [ALGORITHM, DATA].                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                   |
 |                                                                                                                              |
@@ -126,12 +126,19 @@ These services provide access to information about registered errors and error m
 +--------------------+---------------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| error_id           | Integer           | Unique id for this error. Passed to the detail API call.                            |
+|                    | JSON Object       | All fields are the same as the error details model.                                 |
+|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                     |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                   |
 |                                                                                                                              |
 |    {                                                                                                                         |
-|        "error_id": 8                                                                                                         |
+|        "id": 100,                                                                                                            |
+|        "name": "error1",                                                                                                     |
+|        "title": "Error 1",                                                                                                   |
+|        "description": "This is an algorithm error",                                                                          |
+|        "category": "ALGORITHM",                                                                                              |
+|        "created": "2015-03-11T00:00:00Z",                                                                                    |
+|        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
 |    }                                                                                                                         |
 +------------------------------------------------------------------------------------------------------------------------------+
 
@@ -163,7 +170,7 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model model was initially created.                     |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                                  |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -175,6 +182,58 @@ These services provide access to information about registered errors and error m
 |        "title": "Unknown",                                                                                                   |
 |        "description": "The error that caused the failure is unknown.",                                                       |
 |        "category": "SYSTEM",                                                                                                 |
+|        "created": "2015-03-11T00:00:00Z",                                                                                    |
+|        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
+|    }                                                                                                                         |
++------------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_error_edit:
+
++------------------------------------------------------------------------------------------------------------------------------+
+| **Edit Error**                                                                                                               |
++==============================================================================================================================+
+| Edits an existing error                                                                                                      |
++------------------------------------------------------------------------------------------------------------------------------+
+| **PATCH** /errors/{id}/                                                                                                      |
+|           Where {id} is the unique identifier of an existing model.                                                          |
++--------------------+---------------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                      |
++--------------------+---------------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                              |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| title              | String            | Optional | The human readable display name of the error.                            |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| description        | String            | Optional | A longer description of the error.                                       |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| category           | String            | Optional | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].           |
++--------------------+-------------------+----------+--------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                                   |
+|                                                                                                                              |
+|    {                                                                                                                         |
+|        "title": "My Error",                                                                                                  |
+|        "description": "An edited error description.",                                                                        |
+|        "category": "ALGORITHM"                                                                                               |
+|    }                                                                                                                         |
++------------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                      |
++--------------------+---------------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                                  |
++--------------------+---------------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                      |
++--------------------+---------------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                              |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
+|                    | JSON Object       | All fields are the same as the error details model.                                 |
+|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                     |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                                   |
+|                                                                                                                              |
+|    {                                                                                                                         |
+|        "id": 100,                                                                                                            |
+|        "name": "my-error",                                                                                                   |
+|        "title": "My Error",                                                                                                  |
+|        "description": "An edited error description.",                                                                        |
+|        "category": "ALGORITHM",                                                                                              |
 |        "created": "2015-03-11T00:00:00Z",                                                                                    |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
 |    }                                                                                                                         |

@@ -85,7 +85,7 @@ class TestMetricPlotView(TestCase):
     def test_choices(self):
         '''Tests successfully calling the metric plot view.'''
 
-        url = '/metrics/job-types/plot-data/?choice-id=%s&choice-id=%s' % (self.job_type1.id, self.job_type2.id)
+        url = '/metrics/job-types/plot-data/?choice_id=%s&choice_id=%s' % (self.job_type1.id, self.job_type2.id)
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
 

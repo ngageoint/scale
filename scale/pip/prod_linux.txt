@@ -8,6 +8,7 @@ djangorestframework>=2.3.0,<2.4.0
 djorm-ext-pgjson>=0.2,<0.3
 gunicorn>=18.0.0,<19.0.0
 jsonschema>=2.3,<2.4
-mesos.interface>=0.21.1,<0.22
+mesos>=0.21.1,<0.25
 psycopg2>=2.5.0,<2.6.0
+kazoo>=2.2.1
 pytz

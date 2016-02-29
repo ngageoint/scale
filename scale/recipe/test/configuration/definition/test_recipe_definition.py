@@ -10,7 +10,7 @@ import storage.test.utils as storage_test_utils
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.results.job_results import JobResults
 from job.models import Job
-from recipe.configuration.data.exceptions import InvalidData
+from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
@@ -36,7 +36,26 @@ class TestRecipeDefinitionGetJobTypes(TestCase):
         self.job_type1 = job_test_utils.create_job_type()
         self.job_type2 = job_test_utils.create_job_type()
 
-    def test_get_job_types(self):
+    def test_get_job_types_one(self):
+        '''Tests getting a job type from the definition.'''
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+            }],
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+
+        results = recipe_definition.get_job_types()
+        self.assertSetEqual(results, {self.job_type1})
+
+    def test_get_job_types_multi(self):
         '''Tests getting job types from the definition.'''
         definition = {
             'version': '1.0',
@@ -104,6 +123,105 @@ class TestRecipeDefinitionGetJobTypes(TestCase):
 
         results = recipe_definition.get_job_types()
         self.assertSetEqual(results, {self.job_type1, self.job_type2})
+
+
+class TestRecipeDefinitionGetJobTypeKeys(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type()
+        self.job_type2 = job_test_utils.create_job_type()
+
+    def test_get_job_type_keys_one(self):
+        '''Tests getting a job type key from the definition.'''
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+            }],
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+
+        results = recipe_definition.get_job_type_keys()
+        self.assertSetEqual(results, {(self.job_type1.name, self.job_type1.version)})
+
+    def test_get_job_type_keys_multi(self):
+        '''Tests getting job type keys from the definition.'''
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_type2.name,
+                    'version': self.job_type2.version,
+                },
+            }],
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+
+        results = recipe_definition.get_job_type_keys()
+        self.assertSetEqual(results, {(self.job_type1.name, self.job_type1.version),
+                                      (self.job_type2.name, self.job_type2.version)})
+
+    def test_get_job_type_keys_empty(self):
+        '''Tests getting job type keys when there are no jobs defined.'''
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [],
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+
+        results = recipe_definition.get_job_type_keys()
+        self.assertSetEqual(results, set())
+
+    def test_get_job_type_keys_unique(self):
+        '''Tests getting job type keys without duplicates.'''
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1a',
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_type2.name,
+                    'version': self.job_type2.version,
+                },
+            }, {
+                'name': 'Job 1b',
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+            }],
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+
+        results = recipe_definition.get_job_type_keys()
+        self.assertSetEqual(results, {(self.job_type1.name, self.job_type1.version),
+                                      (self.job_type2.name, self.job_type2.version)})
 
 
 class TestRecipeDefinitionGetJobTypeMap(TestCase):
@@ -929,7 +1047,7 @@ class TestRecipeDefinitionValidateData(TestCase):
         }
         recipe_data = RecipeData(data)
 
-        self.assertRaises(InvalidData, recipe.validate_data, recipe_data)
+        self.assertRaises(InvalidRecipeData, recipe.validate_data, recipe_data)
 
     @patch('recipe.configuration.data.recipe_data.DATA_FILE_STORE',
            new_callable=lambda: {'DATA_FILE_STORE': DummyDataFileStore()})

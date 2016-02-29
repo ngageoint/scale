@@ -1,0 +1,13 @@
+---
+# init-examples/handlers/main.yml
+- name: push landsat-parse
+  command: sh -c 'docker tag -f landsat-parse_1.0:dev {{ docker_registry }}landsat-parse_1.0:dev; docker push {{ docker_registry }}landsat-parse_1.0:dev'
+  become: true
+
+- name: push landsat-ndwi
+  command: sh -c 'docker tag -f landsat-ndwi_1.0:dev {{ docker_registry }}landsat-ndwi_1.0:dev; docker push {{ docker_registry }}landsat-ndwi_1.0:dev'
+  become: true
+
+- name: push landsat-tiles
+  command: sh -c 'docker tag -f landsat-tiles_1.0:dev {{ docker_registry }}landsat-tiles_1.0:dev; docker push {{ docker_registry }}landsat-tiles_1.0:dev'
+  become: true

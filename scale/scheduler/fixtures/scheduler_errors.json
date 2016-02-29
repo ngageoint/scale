@@ -1,23 +1,11 @@
 [
 	{
-		"model": "error.Error",
-		"pk": null,
-		"fields": {
-			"name": "node-lost",
-			"title": "Node Lost",
-			"description": "A node failed and was lost, causing all jobs currently running on it to fail.",
-			"category": "SYSTEM",
-			"created": "2015-03-11T00:00:00.0Z",
-			"last_modified": "2015-03-11T00:00:00.0Z"
-		}
-	},
-	{
         "model": "error.Error",
         "pk": null,
         "fields": {
             "name": "scheduler-lost",
             "title": "Lost By Scheduler",
-            "description": "The Scale scheduler lost track of this job and could not find it.",
+            "description": "The Scale scheduler lost track of this job. This usually occurs when the scheduler fails or restarts.",
             "category": "SYSTEM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
@@ -30,18 +18,6 @@
             "name": "mesos-lost",
             "title": "Lost By Mesos",
             "description": "Apache Mesos lost track of this job and could not find it.",
-            "category": "SYSTEM",
-            "created": "2015-03-11T00:00:00.0Z",
-            "last_modified": "2015-03-11T00:00:00.0Z"
-        }
-    },
-    {
-        "model": "error.Error",
-        "pk": null,
-        "fields": {
-            "name": "timeout",
-            "title": "Timeout",
-            "description": "The job exceeded its timeout threshold.",
             "category": "SYSTEM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"

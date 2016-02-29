@@ -8,15 +8,16 @@ from django.utils.text import get_valid_filename
 from django.utils.timezone import now, utc
 from mock import mock_open, patch, MagicMock, Mock
 
+from job.test import utils as job_utils
 from source.models import SourceFile
-from source.triggers.parse_rule import ParseTriggerRule
 from storage.models import Workspace
 from storage.test import utils as storage_utils
 from trigger.models import TriggerEvent
+from trigger.test import utils as trigger_utils
 
-FEATURE_COLLECTION_GEOJSON = u'{"type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }]}'
-FEATURE_GEOJSON = u'{"type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }'
-POLYGON_GEOJSON = u'{"type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }'
+FEATURE_COLLECTION_GEOJSON = {"type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }]}
+FEATURE_GEOJSON = {"type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }
+POLYGON_GEOJSON = {"type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] }
 
 
 class TestSourceFileManagerSaveParseResults(TestCase):
@@ -82,11 +83,15 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         '''Tests calling save_parse_results with valid arguments and parse rules in place'''
 
         # Setup parse rule
+        workspace = storage_utils.create_workspace()
         configuration = {u'version': u'1.0',
-                         u'trigger': {u'media_type': u'text/plain', u'data_types': [u'type']},
-                         u'create': {u'jobs': []}}
-        rule = ParseTriggerRule(configuration)
-        rule.save_to_db()
+                         u'condition': {u'media_type': u'text/plain', u'data_types': [u'type']},
+                         u'data': {u'input_data_name': u'my_input', u'workspace_name': workspace.name}}
+        rule_model = trigger_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
+        interface = {'version': '1.0', 'command': '', 'command_arguments': '', 'input_data': [{'name': 'my_input', 'type': 'file'}]}
+        job_type = job_utils.create_job_type(interface=interface)
+        job_type.trigger_rule = rule_model
+        job_type.save()
 
         # Call method to test
         SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, None)
@@ -120,7 +125,8 @@ class TestSourceFileManagerStoreFile(TestCase):
 
     @patch('source.models.execute_command_line')
     @patch('storage.models.os.path.getsize')
-    def test_success_new(self, mock_getsize, mock_execute):
+    @patch('storage.models.os.mkdir')
+    def test_success_new(self, mock_mkdir, mock_getsize, mock_execute):
         '''Tests calling SourceFileManager.store_file() successfully with a new source file'''
         def new_getsize(path):
             return 100

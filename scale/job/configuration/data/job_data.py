@@ -316,11 +316,6 @@ class JobData(object):
         for workspace in Workspace.objects.filter(id__in=workspace_ids):
             ScaleFile.objects.setup_upload_dir(upload_dir, upload_work_dir, workspace)
 
-        # If the upload dir did not get created (e.g. no output files), make sure it gets created for results manifests
-        if not os.path.exists(upload_dir):
-            logger.info('Creating %s', upload_dir)
-            os.makedirs(upload_dir, mode=0755)
-
     def store_output_data_files(self, data_files, job_exe):
         '''Stores the given data output files
 

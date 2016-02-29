@@ -1,0 +1,497 @@
+{
+    "count": 10,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 3,
+            "status": "COMPLETED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T18:12:25.072Z",
+            "queued": "2015-06-15T18:12:25.051Z",
+            "scheduled": "2015-06-15T18:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T18:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T19:14:22.604Z",
+            "last_modified": "2015-06-15T19:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 1,
+                    "name": "alfa",
+                    "version": "1.0",
+                    "title": "Alfa",
+                    "description": "alfa v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f13d"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "QUEUED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T17:12:25.072Z",
+            "queued": "2015-06-15T17:12:25.051Z",
+            "scheduled": "2015-06-15T17:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T17:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T18:14:22.604Z",
+            "last_modified": "2015-06-15T18:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 2,
+                    "name": "bravo",
+                    "version": "1.0",
+                    "title": "Bravo",
+                    "description": "bravo v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f0e7"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "RUNNING",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T16:12:25.072Z",
+            "queued": "2015-06-15T16:12:25.051Z",
+            "scheduled": "2015-06-15T16:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T16:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T17:14:22.604Z",
+            "last_modified": "2015-06-15T17:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 3,
+                    "name": "charlie",
+                    "version": "1.0",
+                    "title": "Charlie",
+                    "description": "charlie v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f140"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "FAILED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T15:12:25.072Z",
+            "queued": "2015-06-15T15:12:25.051Z",
+            "scheduled": "2015-06-15T15:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T15:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T16:14:22.604Z",
+            "last_modified": "2015-06-15T16:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 4,
+                    "name": "delta",
+                    "version": "1.0",
+                    "title": "Delta",
+                    "description": "delta v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f017"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "RUNNING",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T14:12:25.072Z",
+            "queued": "2015-06-15T14:12:25.051Z",
+            "scheduled": "2015-06-15T14:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T14:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T15:14:22.604Z",
+            "last_modified": "2015-06-15T15:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 5,
+                    "name": "echo",
+                    "version": "1.0",
+                    "title": "Echo",
+                    "description": "echo v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f0c2"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "COMPLETED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T13:12:25.072Z",
+            "queued": "2015-06-15T13:12:25.051Z",
+            "scheduled": "2015-06-15T13:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T13:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T14:14:22.604Z",
+            "last_modified": "2015-06-15T14:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 6,
+                    "name": "foxtrot",
+                    "version": "1.0",
+                    "title": "Foxtrot",
+                    "description": "foxtrot v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f14e"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "FAILED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T12:12:25.072Z",
+            "queued": "2015-06-15T12:12:25.051Z",
+            "scheduled": "2015-06-15T12:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T12:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T13:14:22.604Z",
+            "last_modified": "2015-06-15T13:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 7,
+                    "name": "golf",
+                    "version": "1.0",
+                    "title": "Golf",
+                    "description": "golf v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f05b"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "QUEUED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T11:12:25.072Z",
+            "queued": "2015-06-15T11:12:25.051Z",
+            "scheduled": "2015-06-15T11:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T11:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T12:14:22.604Z",
+            "last_modified": "2015-06-15T12:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 8,
+                    "name": "hotel",
+                    "version": "1.0",
+                    "title": "Hotel",
+                    "description": "hotel v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f1c0"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "COMPLETED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T10:12:25.072Z",
+            "queued": "2015-06-15T10:12:25.051Z",
+            "scheduled": "2015-06-15T10:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T10:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T11:14:22.604Z",
+            "last_modified": "2015-06-15T11:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 9,
+                    "name": "india",
+                    "version": "1.0",
+                    "title": "India",
+                    "description": "india v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f219"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        },
+        {
+            "id": 3,
+            "status": "COMPLETED",
+            "command_arguments": "-i 1",
+            "timeout": 0,
+            "exit_code": null,
+            "created": "2015-06-15T09:12:25.072Z",
+            "queued": "2015-06-15T09:12:25.051Z",
+            "scheduled": "2015-06-15T09:18:52.449Z",
+            "pre_started": null,
+            "pre_completed": null,
+            "job_started": "2015-06-15T09:12:52.618Z",
+            "job_completed": null,
+            "post_started": null,
+            "post_completed": null,
+            "ended": "2015-06-15T10:14:22.604Z",
+            "last_modified": "2015-06-15T10:14:23.142Z",
+            "job": {
+                "id": 3,
+                "job_type": {
+                    "id": 10,
+                    "name": "juliet",
+                    "version": "1.0",
+                    "title": "Juliet",
+                    "description": "juliet v1.0",
+                    "category": "system",
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f06e"
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1
+            },
+            "node": {
+                "id": 1,
+                "hostname": "machine.com",
+                "port": 5051,
+                "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+            },
+            "error": null
+        }
+    ]
+}

@@ -114,9 +114,8 @@ class Broker(object):
 
     @abstractmethod
     def setup_upload_dir(self, upload_dir, work_dir):
-        '''Sets up the given upload directory to upload or delete files in the workspace. The parent directory of the
-        upload directory already exists, but the broker is responsible for creating the upload directory itself. The
-        work directory already exists.
+        '''Sets up the given upload directory to upload or delete files in the workspace. The upload directory and the
+        work directory already exist.
 
         :param upload_dir: Absolute path to the local directory of the files to upload
         :type upload_dir: str
