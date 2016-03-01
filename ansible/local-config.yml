@@ -4,6 +4,6 @@
 # make sure you set scale_config_path
 - hosts: all
   roles:
-    - scale-config
+    - scale-configs
   vars:
     - scale_config_path: '{{ playbook_dir }}/../scale/scale'
