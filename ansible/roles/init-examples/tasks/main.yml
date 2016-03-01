@@ -2,7 +2,7 @@
 # init-examples/tasks/main.yml
 - name: Install initialization script
   tags: init-examples
-  copy: src=example_data.py dest=/tmp/example_data.py
+  template: src=example_data.py.j2 dest='/tmp/example_data.py'
 
 - name: Install the countries shapefile
   tags: init-examples
@@ -25,7 +25,7 @@
   docker_image:
     path: "/scale/dockerfiles/examples/landsat-parse"
     name: "landsat-parse_1.0"
-    tag: "dev"
+    tag: "{{ example_image_tag }}"
     state: build
   become: true
   notify:
@@ -36,7 +36,7 @@
   docker_image:
     path: "/scale/dockerfiles/examples/landsat-ndwi"
     name: "landsat-ndwi_1.0"
-    tag: "dev"
+    tag: "{{ example_image_tag }}"
     state: build
   become: true
   notify:
@@ -47,7 +47,7 @@
   docker_image:
     path: "/scale/dockerfiles/examples/landsat-tiles"
     name: "landsat-tiles_1.0"
-    tag: "dev"
+    tag: "{{ example_image_tag }}"
     state: build
   become: true
   notify:

@@ -1,7 +1,7 @@
 ---
 # site file for clusters
 # common requirements
-- hosts: mesos-masters, mesos-slaves
+- hosts: mesos
   roles:
     - common
 

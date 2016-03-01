@@ -22,7 +22,7 @@
 
 - name: Configure nfs exports
   tags: nfs-server
-  copy: src=exports dest='/etc/exports'
+  template: src=exports.j2 dest='/etc/exports'
   become: true
 
 - name: Start rpc

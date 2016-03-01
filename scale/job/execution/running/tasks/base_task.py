@@ -134,10 +134,12 @@ class Task(object):
 
     @abstractmethod
     def complete(self, task_results):
-        """Completes this task
+        """Completes this task and indicates whether following tasks should update their cached job execution values
 
         :param task_results: The task results
         :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :returns: True if following tasks should update their cached job execution values, False otherwise
+        :rtype: bool
         """
 
         raise NotImplementedError()
@@ -165,6 +167,15 @@ class Task(object):
         """
 
         raise NotImplementedError()
+
+    def refresh_cached_values(self, job_exe):
+        """Refreshes the task's cached job execution values with the given model
+
+        :param job_exe: The job execution model
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        pass
 
     @abstractmethod
     def running(self, when, stdout_url, stderr_url):

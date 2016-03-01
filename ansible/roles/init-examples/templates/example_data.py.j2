@@ -8,18 +8,22 @@ import storage.models
 import trigger.models
 import trigger.handler as trigger_handler
 
+nfs_server="{{ nfs_server }}"
+registry="{{ docker_registry }}"
+docker_tag="{{ example_image_tag }}"
+
 # Workspaces
 if not storage.models.Workspace.objects.filter(name="raw").exists():
     storage.models.Workspace.objects.create(name="raw", title="raw", description="Raw ingested data",
-        base_url="http://master:8080/raw",
+        base_url="http://{{ inventory_hostname }}:8080/raw",
         json_config={
-        "version": "1.0", "broker": {"mount": "10.4.4.10:/raw", "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"mount": "%s:/raw" % nfs_server, "type": "nfs"}}).save()
 
 if not storage.models.Workspace.objects.filter(name="products").exists():
     storage.models.Workspace.objects.create(name="products", title="products", description="Product storage",
-        base_url="http://master:8080/products",
+        base_url="http://{{ inventory_hostname }}:8080/products",
         json_config={
-        "version": "1.0", "broker": {"mount": "10.4.4.10:/products", "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"mount": "%s:/products" % nfs_server, "type": "nfs"}}).save()
 
 # Triggers
 if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
@@ -50,7 +54,7 @@ if not job.models.JobType.objects.filter(name="landsat-parse").exists():
                 {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
             "version": "1.0", "command": "./parse_landsat.sh"}),
         description="Parse landsat multi-tif files in tar.gz archives",
-        docker_image="10.4.4.10:5000/landsat-parse_1.0:dev",
+        docker_image="%slandsat-parse_1.0:%s" % (registry, docker_tag),
         priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
     jt.title = "Landsat Parse"
     jt.save()
@@ -64,7 +68,7 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
                 {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "msi"}],
             "version": "1.0", "command": "python landsat_ndwi.py"}),
         description="Perform NDWI on landsat 8 data.",
-        docker_image="10.4.4.10:5000/landsat-ndwi_1.0:dev",
+        docker_image="%slandsat-ndwi_1.0:%s" % (registry, docker_tag),
         priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat NDWI"
     jt.save()
@@ -78,7 +82,7 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
                 {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
             "version": "1.0", "command": "./landsat_tiles.sh"}),
         description="Generate map tiles for a landsat 8 product.",
-        docker_image="10.4.4.10:5000/landsat-tiles_1.0:dev",
+        docker_image="%slandsat-tiles_1.0:%s" % (registry, docker_tag),
         priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat Tiles"
     jt.save()
@@ -168,7 +172,7 @@ if not ingest.models.Strike.objects.filter(name="landsat").exists():
 		    "workspace_path": "landsat"
 		}
 	    ],
-	    "mount": "10.4.4.10:/ingest",
+	    "mount": "%s:/ingest" % nfs_server,
 	    "transfer_suffix": "_tmp",
 	    "version": "1.0"
 	}).save()

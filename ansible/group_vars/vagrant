@@ -1,16 +1,56 @@
 # group_vars/vagrant
+
+# The zookeeper url used for mesos master reconcilliation
 mesos_zk: 'zk://10.4.4.10:2181/mesos'
+
+# The zookeeper url used for scale scheduler reconcilliation
 scheduler_zk: 'zk://10.4.4.10:2181/scale'
+
+# The internal docker registry where framework images are stored. Note the trailing /
 docker_registry: '10.4.4.10:5000/'
+
+# The tag associated with the framework images. Leave this blank to use 'latest'
 scale_docker_version: '3'
+
+# The IP address of the mesos master. This must be an IP address.
 mesos_master_ip: '10.4.4.10' #'{{ ansible_all_ipv4_addresses[-1] }}'
+
+# The IP address of the current slave. You may need to adjust the index
+# depending on your slave's network configuration.
 mesos_slave_ip: '{{ ansible_all_ipv4_addresses[-1] }}'
+
+# A comma separated list of zookeeper server IP addresses. Leave as is to
+# run a single server (no redundancy) on the master node.
 zookeeper_servers: '{{ mesos_master_ip }}'
+
+# Resources for the slaves. If you have heterogenous slaves, use a separate config file for
+# common groups of slaves and add them to the groups in the inventory file.
 mesos_slave_resources: 'cpus:4;mem:2048'
+
+# Database connection information
 db_username: 'postgres'
 db_password: 'vagrant_postgis'
 db_host: '10.4.4.10'
+
+# The location on the build machine where the scale django source is located.
 django_build_dir: "/scale/scale"
+
+# If you intend scale to live in the URL root then leave this blank, otherwise include the
+# prefix for all scale URLs (RESTful API, static files, etc.). For example:
+# http://myhost/scale/ would requite this set to "/scale"
 scale_url_prefix: ""
+
+# Django allowed_hosts. We're isolating with docker in the default configuration so * should
+# be ok. If you will be exposing the API externally or want extra security, set this appropriately.
 allowed_hosts: '"*"'
+
+# If true, docker with btrfs storage will be installed and configured. This is likely only useful for
+# the vagrant images and should be set to false for other configurations.
 btrfs: true
+
+# Location of the scale build on the build machine's filesystem. If not present, defaults to /scale
+scale_build_root: "/scale"
+
+# These are for the example database
+nfs_server: "{{ mesos_master_ip }}""
+example_image_tag: "dev"

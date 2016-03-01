@@ -217,7 +217,11 @@ class RunningJobExecution(object):
             return
 
         with transaction.atomic():
-            current_task.complete(task_results)
+            need_refresh = current_task.complete(task_results)
+            if need_refresh and remaining_tasks:
+                job_exe = JobExecution.objects.get(id=self._id)
+                for task in remaining_tasks:
+                    task.refresh_cached_values(job_exe)
             if not remaining_tasks:
                 from queue.models import Queue
                 Queue.objects.handle_job_completion(self._id, task_results.when)
