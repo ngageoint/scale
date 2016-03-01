@@ -253,8 +253,8 @@
             });
 
             modalInstance.result.then(function () {
-                if($scope.selectedItem){
-                    jobTypeService.getJobTypeDetails($scope.selectedItem.id).then(function(data){
+                if($scope.selectedJobType){
+                    jobTypeService.getJobTypeDetails($scope.selectedJobType.id).then(function(data){
                         $scope.addJobType(data);
                         enableSaveRecipe();
                     });
@@ -386,7 +386,7 @@
                     });
                 }
             }).catch(function(error){
-                if(error.detail){
+                if(error && error.detail){
                     toastr['error'](error.detail);
                 } else {
                     toastr['error'](error);
@@ -398,6 +398,7 @@
         };
 
         $scope.addJobType = function (selectedJobType) {
+            console.log(selectedJobType.name);
             $scope.recipeType.definition.addJob(selectedJobType);
             $scope.$broadcast('redrawRecipes');
         };
@@ -568,8 +569,8 @@
             }
         };
 
-        $scope.selectItem = function(item){
-            $scope.selectedItem = item;
+        $scope.selectJobTypeToAdd = function(item){
+            $scope.selectedJobType = item;
         };
 
         $scope.$on('redrawRecipes', function () {
