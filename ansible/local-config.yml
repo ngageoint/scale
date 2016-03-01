@@ -1,0 +1,9 @@
+---
+# local-config.yml
+# Sets up config files in a local install so manage.py can be run
+# make sure you set scale_config_path
+- hosts: all
+  roles:
+    - scale-configs
+  vars:
+    - scale_config_path: '{{ playbook_dir }}/../scale/scale'
