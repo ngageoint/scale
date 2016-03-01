@@ -10,3 +10,4 @@ db_password: scale
 db_host: localhost
 django_debug: 'False'
 scale_build_root: '/scale'
+django_build_dir: '{{ scale_build_root }}/scale'
