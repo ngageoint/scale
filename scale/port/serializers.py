@@ -53,6 +53,7 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
 
     priority = serializers.IntegerField(required=False)
     timeout = serializers.IntegerField(required=False)
+    max_scheduled = serializers.IntegerField(required=False)
     max_tries = serializers.IntegerField(required=False)
     cpus_required = serializers.FloatField(required=False)
     mem_required = serializers.FloatField(required=False)
@@ -66,9 +67,9 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobType
         fields = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational',
-                  'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_tries', 'cpus_required',
-                  'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface', 'error_mapping',
-                  'trigger_rule')
+                  'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_scheduled', 'max_tries',
+                  'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface',
+                  'error_mapping', 'trigger_rule')
 
 
 class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):

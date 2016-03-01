@@ -444,6 +444,7 @@ class TestConfigurationViewImport(TestCase):
                     'docker_image': 'test-docker-image',
                     'priority': 1,
                     'timeout': 100,
+                    'max_scheduled': 1,
                     'max_tries': 1,
                     'cpus_required': 2.0,
                     'mem_required': 1024.0,
@@ -482,6 +483,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.docker_image, 'test-docker-image')
         self.assertEqual(result.priority, 1)
         self.assertEqual(result.timeout, 100)
+        self.assertEqual(result.max_scheduled, 1)
         self.assertEqual(result.max_tries, 1)
         self.assertEqual(result.cpus_required, 2.0)
         self.assertEqual(result.mem_required, 1024.0)
@@ -1363,6 +1365,7 @@ class TestConfigurationViewImport(TestCase):
 
         self.assertEqual(job_types[0].title, 'test-job-title')
         self.assertDictEqual(job_types[0].interface, interface)
+        self.assertIsNone(job_types[0].max_scheduled)
         self.assertDictEqual(job_types[0].error_mapping, error_mapping)
         self.assertIsNotNone(job_types[0].trigger_rule)
 

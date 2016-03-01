@@ -143,7 +143,7 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', error=None, comman
 
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
-                    cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_operational=True, trigger_rule=None):
+                    max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_operational=True, trigger_rule=None):
     '''Creates a job type model for unit testing
 
     :returns: The job type model
@@ -183,9 +183,9 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
         trigger_rule = trigger_test_utils.create_trigger_rule()
 
     job_type = JobType.objects.create(name=name, version=version, category=category, interface=interface,
-                                      priority=priority, timeout=timeout, max_tries=max_tries, cpus_required=cpus,
-                                      mem_required=mem, disk_out_const_required=disk, error_mapping=error_mapping,
-                                      is_operational=is_operational, trigger_rule=trigger_rule)
+                                      priority=priority, timeout=timeout, max_tries=max_tries, max_scheduled=max_scheduled,
+                                      cpus_required=cpus, mem_required=mem, disk_out_const_required=disk,
+                                      error_mapping=error_mapping, is_operational=is_operational, trigger_rule=trigger_rule)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 

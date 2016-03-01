@@ -2,7 +2,7 @@
 .. _rest_job_type:
 
 Job Type Services
-===============================================================================
+=================
 
 These services provide access to information about job types.
 
@@ -97,6 +97,9 @@ These services provide access to information about job types.
 | .timeout                 | Integer           | The maximum amount of time to allow a job of this type to run            |
 |                          |                   | before being killed (in seconds).                                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .max_scheduled           | Integer           | An optional number indicating the maximum number of jobs of this type    |
+|                          |                   | that may be scheduled to run at the same time. May be 'null'.            |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .max_tries               | Integer           | The maximum number of times to try executing a job in case of errors.    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .cpus_required           | Decimal           | The number of CPUs needed for a job of this type.                        |
@@ -144,6 +147,7 @@ These services provide access to information about job types.
 |                "revision_num": 1,                                                                                       |
 |                "priority": 1,                                                                                           |
 |                "timeout": 0,                                                                                            |
+|                "max_scheduled": 1,                                                                                      |
 |                "max_tries": 0,                                                                                          |
 |                "cpus_required": 0.5,                                                                                    |
 |                "mem_required": 64.0,                                                                                    |
@@ -203,6 +207,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
++-------------------------+-------------------+---------------------------------------------------------------------------+
+| max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
+|                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_tries               | Integer           | Optional | The maximum number of times to try executing a job when failed.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -320,6 +327,7 @@ These services provide access to information about job types.
 |        "revision_num": 1,                                                                                               |
 |        "priority": 1,                                                                                                   |
 |        "timeout": 0,                                                                                                    |
+|        "max_scheduled": null,                                                                                           |
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
@@ -382,6 +390,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
++-------------------------+-------------------+---------------------------------------------------------------------------+
+| max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
+|                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_tries               | Integer           | Optional | The maximum number of times to try executing a job when failed.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -550,6 +561,9 @@ These services provide access to information about job types.
 | timeout                  | Integer           | The maximum amount of time to allow a job of this type to run            |
 |                          |                   | before being killed (in seconds).                                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| max_scheduled            | Integer           | An optional number indicating the maximum number of jobs of this type    |
+|                          |                   | that may be scheduled to run at the same time. May be 'null'.            |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | max_tries                | Integer           | The maximum number of times to try executing a job in case of errors.    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | cpus_required            | Decimal           | The number of CPUs needed for a job of this type.                        |
@@ -636,6 +650,7 @@ These services provide access to information about job types.
 |        "revision_num": 1,                                                                                               |
 |        "priority": 1,                                                                                                   |
 |        "timeout": 0,                                                                                                    |
+|        "max_scheduled": null,                                                                                           |
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
@@ -735,6 +750,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
++-------------------------+-------------------+---------------------------------------------------------------------------+
+| max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
+|                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_tries               | Integer           | Optional | The maximum number of times to try executing a job when failed.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -774,6 +792,7 @@ These services provide access to information about job types.
 |        "docker_image": null,                                                                                            |
 |        "priority": 1,                                                                                                   |
 |        "timeout": 0,                                                                                                    |
+|        "max_scheduled": 2,                                                                                              |
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
@@ -850,6 +869,7 @@ These services provide access to information about job types.
 |        "revision_num": 1,                                                                                               |
 |        "priority": 1,                                                                                                   |
 |        "timeout": 0,                                                                                                    |
+|        "max_scheduled": 1,                                                                                              |
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
