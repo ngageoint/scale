@@ -78,7 +78,7 @@
                 page_size: null,
                 started: obj.started,
                 ended: obj.ended,
-                'choice-id': obj.choice_id,
+                choice_id: obj.choice_id,
                 column: obj.column,
                 group: obj.group,
                 dataType: obj.dataType.name
