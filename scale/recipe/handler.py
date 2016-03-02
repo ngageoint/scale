@@ -49,6 +49,31 @@ class RecipeHandler(object):
 
         return blocked_jobs
 
+    def get_existing_jobs_to_queue(self):
+        """Returns all of the existing recipe jobs that are ready to be queued
+
+        :returns: The list of existing jobs that are ready to be queued along with their data
+        :rtype: [(:class:`job.models.Job`, :class:`job.configuration.data.job_data.JobData`)]
+        """
+
+        unqueued_jobs = {}  # {Job name: Job}
+        completed_jobs = {}  # {Job name: Job}
+
+        for job_name in self._jobs_by_name:
+            job = self._jobs_by_name[job_name].job
+            if job.status == 'PENDING':
+                unqueued_jobs[job_name] = job
+            elif job.status == 'COMPLETED':
+                completed_jobs[job_name] = job
+
+        results = []
+        jobs_to_queue = self._definition.get_next_jobs_to_queue(self._data, unqueued_jobs, completed_jobs)
+        for job_id in jobs_to_queue:
+            job_data = jobs_to_queue[job_id]
+            job = self._jobs_by_id[job_id].job
+            results.append((job, job_data))
+        return results
+
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status
 

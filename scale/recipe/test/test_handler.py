@@ -5,6 +5,7 @@ from django.test import TestCase
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
+import storage.test.utils as storage_test_utils
 from recipe.models import Recipe
 
 
@@ -149,6 +150,112 @@ class TestRecipeHandler(TestCase):
             blocked_job_ids.add(blocked_job.id)
 
         self.assertSetEqual(blocked_job_ids, {self.job_fa_co_b.id, self.job_qu_ca_a.id, self.job_qu_ca_b.id})
+
+    def test_get_existing_jobs_to_queue(self):
+        """Tests calling RecipeHandler.get_existing_jobs_to_queue()"""
+
+        input_name_1 = 'Test Input 1'
+        output_name_1 = 'Test Output 1'
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_cmd',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': input_name_1,
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': output_name_1,
+                'type': 'files',
+                'media_type': 'image/png',
+            }],
+        }
+        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+        job_1 = job_test_utils.create_job(job_type=job_type_1)
+
+        input_name_2 = 'Test Input 2'
+        output_name_2 = 'Test Output 2'
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_cmd',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': input_name_2,
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': output_name_2,
+                'type': 'file',
+            }],
+        }
+        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+        job_2 = job_test_utils.create_job(job_type=job_type_2)
+        file_1 = storage_test_utils.create_file(media_type='text/plain')
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': input_name_1,
+                }]
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': output_name_1,
+                        'input': input_name_2,
+                    }],
+                }],
+            }],
+        }
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file_1.id,
+            }],
+            'workspace_id': 1,
+        }
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
+        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
+
+        handler = Recipe.objects.get_recipe_handlers([recipe.id])[0]
+        jobs_to_queue = handler.get_existing_jobs_to_queue()
+
+        # Make sure only Job 1 is returned and that its job data is correct
+        self.assertEqual(len(jobs_to_queue), 1)
+        self.assertEqual(jobs_to_queue[0][0].id, job_1.id)
+        self.assertDictEqual(jobs_to_queue[0][1].get_dict(), {
+            'version': '1.0',
+            'input_data': [{
+                'name': input_name_1,
+                'file_id': file_1.id,
+            }],
+            'output_data': [{
+                'name': output_name_1,
+                'workspace_id': 1,
+            }],
+        })
 
     def test_get_pending_jobs(self):
         """Tests calling RecipeHandler.get_pending_jobs()"""
