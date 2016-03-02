@@ -143,7 +143,7 @@ class RecipeManager(models.Manager):
         recipes = {}  # {Recipe ID: Recipe}
         recipe_jobs = {}  # {Recipe ID: [Recipe jobs]}
 
-        recipe_qry = self.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
+        recipe_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         recipe_qry = recipe_qry.select_related('job__job_type', 'job__job_type_rev').filter(recipe_id__in=recipe_ids)
         recipe_qry = recipe_qry.order_by('recipe_id')
 

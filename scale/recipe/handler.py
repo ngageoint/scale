@@ -17,9 +17,57 @@ class RecipeHandler(object):
         self._recipe = recipe
         self._data = recipe.get_recipe_data()
         self._definition = recipe.get_recipe_definition()
-        self._jobs = {}  # {Job name: Job}
+        self._jobs_by_id = {}  # {Job ID: Recipe Job}
+        self._jobs_by_name = {}  # {Job name: Recipe Job}
 
         for recipe_job in recipe_jobs:
-            self._jobs[recipe_job.job_name] = recipe_job
+            self._jobs_by_id[recipe_job.job.id] = recipe_job
+            self._jobs_by_name[recipe_job.job_name] = recipe_job
 
-    # TODO: add methods for getting jobs to set to PENDING/BLOCKED, and getting jobs to queue
+    # TODO: add methods for getting jobs to queue
+
+    def get_blocked_jobs(self):
+        """Returns the jobs within this recipe that should be updated to BLOCKED status
+
+        :returns: The list of jobs that should be updated to BLOCKED
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        blocked_jobs = []
+        jobs_by_name = {}
+
+        for job_name in self._jobs_by_name:
+            jobs_by_name[job_name] = self._jobs_by_name[job_name].job
+
+        new_job_statuses = self._definition.get_unqueued_job_statuses(jobs_by_name)
+
+        for job_id in new_job_statuses:
+            new_status = new_job_statuses[job_id]
+            job = self._jobs_by_id[job_id].job
+            if new_status == 'BLOCKED' and job.status != new_status:
+                blocked_jobs.append(job)
+
+        return blocked_jobs
+
+    def get_pending_jobs(self):
+        """Returns the jobs within this recipe that should be updated to PENDING status
+
+        :returns: The list of jobs that should be updated to PENDING
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        pending_jobs = []
+        jobs_by_name = {}
+
+        for job_name in self._jobs_by_name:
+            jobs_by_name[job_name] = self._jobs_by_name[job_name].job
+
+        new_job_statuses = self._definition.get_unqueued_job_statuses(jobs_by_name)
+
+        for job_id in new_job_statuses:
+            new_status = new_job_statuses[job_id]
+            job = self._jobs_by_id[job_id].job
+            if new_status == 'PENDING' and job.status != new_status:
+                pending_jobs.append(job)
+
+        return pending_jobs
