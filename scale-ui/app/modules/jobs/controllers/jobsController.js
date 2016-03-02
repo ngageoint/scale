@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $modal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService) {
+    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $uibModal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService, moment) {
         var self = this;
 
         self.jobsParams = {
@@ -32,6 +32,25 @@
         $scope.actionClicked = false;
         $scope.gridStyle = '';
         $scope.readonly = true;
+        $scope.lastModifiedStart = moment.utc().subtract(1, 'months').startOf('d').toDate();
+        $scope.lastModifiedStartPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStartPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStartPopup.opened = true;
+        };
+        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStopPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStopPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStopPopup.opened = true;
+        };
+        $scope.dateModelOptions = {
+            timezone: '+000'
+        };
 
         subnavService.setCurrentPath('jobs');
 
@@ -40,7 +59,7 @@
                 field: 'job_type',
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobType"><option ng-if="grid.appScope.jobTypeValues[$index]" ng-selected="{{ grid.appScope.jobTypeValues[$index].id == grid.appScope.selectedJobType }}" value="{{ grid.appScope.jobTypeValues[$index].id }}" ng-repeat="jobType in grid.appScope.jobTypeValues track by $index">{{ grid.appScope.jobTypeValues[$index].title }} {{ grid.appScope.jobTypeValues[$index].version }}</option></select>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobType"><option ng-if="grid.appScope.jobTypeValues[$index]" ng-selected="{{ grid.appScope.jobTypeValues[$index].id == grid.appScope.selectedJobType }}" value="{{ grid.appScope.jobTypeValues[$index].id }}" ng-repeat="jobType in grid.appScope.jobTypeValues track by $index">{{ grid.appScope.jobTypeValues[$index].title }} {{ grid.appScope.jobTypeValues[$index].version }}</option></select></div>'
             },
             {
                 field: 'created',
@@ -51,9 +70,10 @@
             {
                 field: 'last_modified',
                 displayName: 'Last Modified',
-                enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>',
                 //cellFilter: 'date:\'' + scaleConfig.dateFormats.day_minute_utc + '\'',
+                //filterHeaderTemplate: '<div class="ui-grid-filter-container"><div class="row"><div class="col-xs-6"><input type="text" class="form-control ui-grid-filter-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="grid.appScope.lastModifiedStart" is-open="grid.appScope.lastModifiedStartPopup.opened" close-text="Close" datepicker-options="grid.appScope.dateOptions" ng-click="grid.appScope.openLastModifiedStartPopup($event)"></div><div class="col-xs-6"><input type="text" class="form-control ui-grid-filter-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="grid.appScope.lastModifiedStop" is-open="grid.appScope.lastModifiedStopPopup.opened" close-text="Close" datepicker-options="grid.appScope.dateOptions" ng-click="grid.appScope.openLastModifiedStopPopup($event)"></div></div></div>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><div class="row"><div class="col-xs-6"><div class="form-group"><label for="lastModifiedStart">From:</label><input id="lastModifiedStart" type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="grid.appScope.lastModifiedStart" ng-model-options="grid.appScope.dateModelOptions" is-open="grid.appScope.lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="grid.appScope.openLastModifiedStartPopup($event)" /></div></div><div class="col-xs-6"><div class="form-group"><label for="lastModifiedStop">To:</label><input id="lastModifiedStop" type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="grid.appScope.lastModifiedStop" ng-model-options="grid.appScope.dateModelOptions" is-open="grid.appScope.lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="grid.appScope.openLastModifiedStopPopup($event)" /></div></div></div></div>'
             },
             { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
             {
@@ -167,6 +187,20 @@
             $scope.filterResults();
         };
 
+        $scope.$watch('lastModifiedStart', function (value) {
+            if (!$scope.loading) {
+                self.jobsParams.started = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
+        $scope.$watch('lastModifiedStop', function (value) {
+            if (!$scope.loading) {
+                self.jobsParams.ended = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
         /*$scope.$watch('gridApi', function (gridApi) {
             if (filteredByOrder) {
                 gridApi.core.raise.sortChanged();
@@ -180,7 +214,7 @@
             jobService.getJobDetail(jobId).then(function (data) {
                 $scope.selectedJob = data.job_type.title + ' ' + data.job_type.version;
                 $scope.jobExecution = data.getLatestExecution();
-                var modalInstance = $modal.open({
+                var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'showLog.html',
                     scope: $scope,
@@ -270,6 +304,14 @@
                 if (!self.jobsParams.page_size) {
                     self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
                     $location.search('page_size', self.jobsParams.page_size).replace();
+                }
+                if (!self.jobsParams.started) {
+                    self.jobsParams.started = moment.utc($scope.lastModifiedStart).toISOString();
+                    $location.search('started', self.jobsParams.started).replace();
+                }
+                if (!self.jobsParams.ended) {
+                    self.jobsParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
+                    $location.search('ended', self.jobsParams.ended).replace();
                 }
             }
             self.getJobTypes();
