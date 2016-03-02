@@ -187,8 +187,9 @@ class JobManager(models.Manager):
             order = ['last_status_change']
         return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
 
-    def get_locked_jobs_for_update(self, job_ids):
-        """Gets the job models with the given IDs with model locks obtained and related job_type and job_type_rev models
+    def get_locked_jobs(self, job_ids):
+        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models.
+        This should only be used on job models that are not in any recipes.
 
         :param job_ids: The job IDs
         :type job_ids: [int]
@@ -308,8 +309,9 @@ class JobManager(models.Manager):
         return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
     def update_status(self, jobs, status, when, error=None):
-        """Updates the given jobs with the new status. The caller must have obtained a lock using select_for_update() on
-        all of the given job models.
+        """Updates the given jobs with the new status. For jobs that are in recipes, the caller must have obtained model
+        locks on all of the corresponding recipe models. For job not in recipes, the caller must have obtained model
+        locks on the job models.
 
         :param jobs: The jobs to update
         :type jobs: [:class:`job.models.Job`]
@@ -331,6 +333,7 @@ class JobManager(models.Manager):
             raise Exception('Status %s is invalid with an error' % status)
 
         ended = when if status in Job.FINAL_STATUSES else None
+        modified = timezone.now()
 
         # Update job models in memory and collect job IDs
         job_ids = []
@@ -340,9 +343,11 @@ class JobManager(models.Manager):
             job.last_status_change = when
             job.ended = ended
             job.error = error
+            job.last_modified = modified
 
         # Update job models in database with single query
-        self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error)
+        self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
+                                           last_modified=modified)
 
 
 class Job(models.Model):
