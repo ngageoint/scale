@@ -202,6 +202,27 @@ class JobManager(models.Manager):
 
         return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
+    def increment_max_tries(self, jobs):
+        """Increments the max_tries of the given jobs to be one greater than their current number of executions. For
+        jobs that are in recipes, the caller must have obtained model locks on all of the corresponding recipe models.
+        For jobs not in recipes, the caller must have obtained model locks on the job models.
+
+        :param jobs: The jobs to update
+        :type jobs: [:class:`job.models.Job`]
+        """
+
+        modified = timezone.now()
+
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        for job in jobs:
+            job_ids.add(job.id)
+            job.max_tries = job.num_exes + 1
+            job.last_modified = modified
+
+        # Update job models in database with single query
+        self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
+
     # TODO: deprecated, use queue_jobs() and populate_job_data() instead
     @transaction.atomic
     def queue_job(self, job, data, when):

@@ -562,6 +562,7 @@ class QueueManager(models.Manager):
         logger.debug('Registering queue processor: %s', processor_class)
         self._processors.append(processor_class)
 
+    # TODO: deprecated, use requeue_jobs() instead
     @transaction.atomic
     def requeue_existing_job(self, job_id):
         """Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
@@ -607,6 +608,61 @@ class QueueManager(models.Manager):
             self._queue_next_recipe_jobs(recipe)
             self._update_dependent_recipe_jobs(recipe, when)
         return job_exe_id
+
+    @transaction.atomic
+    def requeue_jobs(self, job_ids):
+        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
+        ignored. All database changes will occur within an atomic transaction.
+
+        :param job_ids: The IDs of the jobs to re-queue
+        :type job_ids: [int]
+        """
+
+        jobs_to_requeue = []
+        job_ids_to_lock = set(job_ids)
+
+        # Lock recipes and get recipe handlers for jobs within a recipe
+        recipe_ids = []
+        handlers = []
+        for recipe_job in Recipe.objects.get_locked_recipes(job_ids):
+            recipe_ids.append(recipe_job.recipe_id)
+            job_ids_to_lock.discard(recipe_job.job_id)
+        if recipe_ids:
+            handlers = Recipe.objects.get_recipe_handlers(recipe_ids)
+        for handler in handlers:
+            jobs_to_requeue.extend(handler.get_jobs(job_ids))
+
+        # Lock jobs not within a recipe
+        if job_ids_to_lock:
+            jobs_to_requeue.extend(Job.objects.get_locked_jobs(job_ids_to_lock))
+
+        jobs_to_queue = []
+        jobs_to_blocked = []
+        jobs_to_pending = []
+        for job in jobs_to_requeue:
+            if not job.is_ready_to_requeue:
+                continue
+            if job.num_exes == 0:
+                # Never been queued before, job should either be PENDING or BLOCKED depending on parent jobs
+                # Assume BLOCKED and it will get switched to PENDING later if needed
+                jobs_to_blocked.append(job)
+            else:
+                # Queued before, go back on queue
+                jobs_to_queue.append(job)
+
+        # Update jobs that are being re-queued
+        if jobs_to_queue:
+            Job.objects.increment_max_tries(jobs_to_queue)
+            self._queue_jobs(jobs_to_queue)
+        when = timezone.now()
+        if jobs_to_blocked:
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+
+        # Update dependent recipe jobs that should now go back to PENDING
+        for handler in handlers:
+            jobs_to_pending.extend(handler.get_pending_jobs())
+        if jobs_to_pending:
+            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
     def schedule_job_executions(self, job_executions):

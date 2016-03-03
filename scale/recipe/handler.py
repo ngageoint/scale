@@ -72,6 +72,21 @@ class RecipeHandler(object):
             results.append((job, job_data))
         return results
 
+    def get_jobs(self, job_ids):
+        """Returns the jobs within this recipe that have the given IDs
+
+        :param job_ids: The job IDs
+        :type job_ids: [int]
+        :returns: The list of jobs that have the given IDs
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        jobs = []
+        for job_id in job_ids:
+            if job_id in self._jobs_by_id:
+                jobs.append(self._jobs_by_id[job_id].job)
+        return jobs
+
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status
 

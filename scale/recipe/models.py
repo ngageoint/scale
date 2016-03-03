@@ -125,8 +125,8 @@ class RecipeManager(models.Manager):
         :rtype: [:class:`recipe.models.RecipeJob`]
         """
 
-        recipe_qry = self.select_for_update().select_related('recipe').filter(job_id__in=job_ids)
-        recipe_qry = recipe_qry.order_by('recipe_id', 'id')
+        recipe_qry = RecipeJob.objects.select_for_update().select_related('recipe').filter(job_id__in=job_ids)
+        recipe_qry = recipe_qry.order_by('recipe_id', 'job_id')
         return list(recipe_qry.iterator())
 
     def get_recipe_handlers(self, recipe_ids):
