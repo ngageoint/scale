@@ -296,7 +296,8 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Queue the job
         job = job_test_utils.create_job()
-        job_exe_id = Queue.objects.queue_existing_job(job, {})
+        job_exe = Queue.objects._queue_jobs([job])[0]
+        job_exe_id = job_exe.id
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())

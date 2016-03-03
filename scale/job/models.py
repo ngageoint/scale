@@ -331,8 +331,8 @@ class JobManager(models.Manager):
         job.last_modified = modified
 
         # Update job model in database with single query
-        self.filter(id__in=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
-                                          disk_out_required=disk_out_required, last_modified=modified)
+        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
+                                      disk_out_required=disk_out_required, last_modified=modified)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".

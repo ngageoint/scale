@@ -8,12 +8,11 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 
 from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
-from job.resources import JobResources
 from job.models import JobExecution
 from recipe.models import Recipe, RecipeJob
-from shared_resource.models import SharedResource
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
@@ -449,58 +448,11 @@ class QueueManager(models.Manager):
         # Also re-queue long running jobs
         requeue = requeue or job.job_type.is_long_running
         if requeue:
-            self.queue_existing_job(job, None)
+            self._queue_jobs([job])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
         if recipe:
             self._update_dependent_recipe_jobs(recipe, when)
-
-    @transaction.atomic
-    def queue_existing_job(self, job, data):
-        """Puts an existing task on the queue to run with the given arguments. The data should be set to None if this is
-        not the first time the job has been queued. The given job model must have already been saved in the database (it
-        must have an ID), it must have its related job_type and job_type_rev models, and the caller must have obtained a
-        lock on the job model using select_for_update(). The new job_exe and queue models are saved in the database in
-        an atomic transaction.
-
-        :param job: The job to put on the queue
-        :type job: :class:`job.models.Job`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
-        :returns: The new job execution id
-        :rtype: int
-        :raises InvalidData: If the job data is invalid
-        """
-
-        when_queued = timezone.now()
-        Job.objects.queue_job(job, data, when_queued)
-
-        job_exe = JobExecution.objects.queue_job_exe(job, when_queued)
-        job_exe.save()
-
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_queued(job_exe, data != None)
-            except:
-                logger.exception('Unable to call queue processor for queued job execution: %s -> %s', processor_class,
-                                 job_exe.id)
-
-        queue = Queue()
-        queue.job_exe = job_exe
-        queue.job_type = job.job_type
-        queue.priority = job.priority
-        if job.job_type.name == 'scale-cleanup':
-            queue.node_required_id = job.event.description['node_id']
-        queue.cpus_required = job.cpus_required
-        queue.mem_required = job.mem_required
-        queue.disk_in_required = job.disk_in_required if job.disk_in_required else 0
-        queue.disk_out_required = job.disk_out_required if job.disk_out_required else 0
-        queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
-        queue.queued = when_queued
-        queue.save()
-        return queue.job_exe.id
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
@@ -517,14 +469,18 @@ class QueueManager(models.Manager):
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
         :returns: The ID of the new job and the ID of the job execution
-        :rtype: tuple of (int, int)
+        :rtype: int
+        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
         job = Job.objects.create_job(job_type, event)
         job.save()
 
-        job_exe_id = self.queue_existing_job(job, data)
-        return job.id, job_exe_id
+        # No lock needed for this job since it doesn't exist outside this transaction yet
+        Job.objects.populate_job_data(job, JobData(data))
+        self._queue_jobs([job])
+
+        return job.id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -545,7 +501,9 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        return self.queue_new_job(job_type, data, event)
+        job_id = self.queue_new_job(job_type, data, event)
+        job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
+        return job_id, job_exe.id
 
     @transaction.atomic
     def queue_new_recipe(self, recipe_type, data, event):
@@ -631,6 +589,7 @@ class QueueManager(models.Manager):
 
         # Increase the max tries to ensure it can be scheduled
         job.increase_max_tries()
+        Job.objects.filter(id=job.id).update(max_tries=job.max_tries)
 
         when = timezone.now()
         job_exe_id = None
@@ -639,7 +598,9 @@ class QueueManager(models.Manager):
             Job.objects.update_status([job], 'PENDING', when)
         else:
             # Job has been queued before, so queue it again
-            job_exe_id = self.queue_existing_job(job, None)
+            self._queue_jobs([job])
+            job_exe = JobExecution.objects.get(job_id=job.id, status='QUEUED')
+            job_exe_id = job_exe.id
 
         if recipe:
             # Update fellow recipe jobs now that this job is no longer FAILED or CANCELED
@@ -739,7 +700,7 @@ class QueueManager(models.Manager):
             }
             desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node.id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
-            cleanup_job_id, _cleanup_job_exe_id = Queue.objects.queue_new_job(cleanup_type, data, event)
+            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event)
             job_exe.cleanup_job_id = cleanup_job_id
             job_exe.save()
 
@@ -832,6 +793,47 @@ class QueueManager(models.Manager):
 
         return queue_depths
 
+    def _queue_jobs(self, jobs):
+        """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
+        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
+        must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
+        data will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+
+        :param jobs: The jobs to put on the queue
+        :type jobs: [:class:`job.models.Job`]
+        :returns: The new queued job execution models
+        :rtype: [:class:`job.models.JobExecution`]
+        """
+
+        when_queued = timezone.now()
+
+        job_exes = Job.objects.queue_jobs(jobs, when_queued)
+
+        # Execute any registered processors from other applications
+        for processor_class in self._processors:
+            processor = processor_class()
+            for job_exe in job_exes:
+                processor.process_queued(job_exe, job_exe.job.num_exes == 1)
+
+        queues = []
+        for job_exe in job_exes:
+            queue = Queue()
+            queue.job_exe = job_exe
+            queue.job_type = job_exe.job.job_type
+            queue.priority = job_exe.job.priority
+            if job_exe.job.job_type.name == 'scale-cleanup':
+                queue.node_required_id = job_exe.job.event.description['node_id']
+            queue.cpus_required = job_exe.job.cpus_required
+            queue.mem_required = job_exe.job.mem_required
+            queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
+            queue.disk_out_required = job_exe.job.disk_out_required if job_exe.job.disk_out_required else 0
+            queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
+            queue.queued = when_queued
+            queues.append(queue)
+
+        self.bulk_create(queues)
+        return job_exes
+
     @transaction.atomic
     def _queue_next_recipe_jobs(self, recipe):
         """Queues all of the jobs in the recipe that have all of their job dependencies completed and are ready to be
@@ -869,7 +871,8 @@ class QueueManager(models.Manager):
             job_data = jobs_to_queue[job_id]
             job = jobs_by_id[job_id]
             try:
-                self.queue_existing_job(job, job_data.get_dict())
+                Job.objects.populate_job_data(job, job_data)
+                self._queue_jobs([job])
             except InvalidData as ex:
                 raise Exception('Scale created invalid job data: %s' % str(ex))
 
