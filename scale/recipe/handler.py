@@ -24,8 +24,6 @@ class RecipeHandler(object):
             self._jobs_by_id[recipe_job.job.id] = recipe_job
             self._jobs_by_name[recipe_job.job_name] = recipe_job
 
-    # TODO: add methods for getting jobs to queue
-
     def get_blocked_jobs(self):
         """Returns the jobs within this recipe that should be updated to BLOCKED status
 
