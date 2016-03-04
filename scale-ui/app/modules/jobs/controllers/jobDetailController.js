@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $modal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService) {
+    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService) {
         $scope.job = {};
         $scope.jobId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -20,7 +20,7 @@
 
         $scope.showLog = function (execution) {
             $scope.selectedExecutionLog = execution;
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'showLog.html',
                 scope: $scope,
@@ -33,7 +33,7 @@
             jobExecutionService.getJobExecutionDetails(executionId).then(function (data) {
                 $scope.selectedExecutionDetails = data;
                 $scope.selectedExecutionDetailValues = _.pairs(data);
-                var modalInstance = $modal.open({
+                var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'showExecutionDetails.html',
                     scope: $scope,

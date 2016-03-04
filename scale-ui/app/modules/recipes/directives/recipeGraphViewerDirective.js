@@ -2,7 +2,7 @@
  * <ais-scale-recipe-viewer />
  */
 (function () {
-    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $modal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService) {
+    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService) {
         $scope.vertices = [];
         $scope.edges = [];
         $scope.isUpdate = false;
@@ -115,7 +115,7 @@
         };
 
         var confirmChangeRecipe = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'confirmDialog.html',
                 scope: $scope,
@@ -245,7 +245,7 @@
         };
 
         $scope.openAddJob = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'addJobContent.html',
                 scope: $scope,
@@ -265,7 +265,7 @@
         };
 
         $scope.openEditTrigger = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'editTrigger.html',
                 scope: $scope,
@@ -295,7 +295,7 @@
         };
 
         $scope.openAddInput = function(){
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'addInput.html',
                 scope: $scope

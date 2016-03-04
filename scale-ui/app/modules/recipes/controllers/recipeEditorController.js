@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('scaleApp').controller('recipeEditorController', function($scope, $log, $location, $routeParams, $modal, navService, recipeService, RecipeType, subnavService, jobTypeService, scaleConfig) {
+    angular.module('scaleApp').controller('recipeEditorController', function($scope, $log, $location, $routeParams, $uibModal, navService, recipeService, RecipeType, subnavService, jobTypeService, scaleConfig) {
 
         $scope.date = new Date();
         $scope.recipes = null;
@@ -27,7 +27,7 @@
         };
 
         $scope.openAddJob = function (size) {
-           var modalInstance = $modal.open({
+           var modalInstance = $uibModal.open({
              animation: $scope.animationsEnabled,
              templateUrl: 'addJobContent.html',
              scope: $scope,

@@ -4,7 +4,7 @@ describe('jobsController', function () {
     var jobsController;
     var $scope;
     var $controller;
-    var $modal;
+    var $uibModal;
     var $location;
 
     beforeEach(inject(function ($injector, $q, Job, JobDetails) {
@@ -15,7 +15,7 @@ describe('jobsController', function () {
         $scope = $injector.get('$rootScope').$new();
         $controller = $injector.get('$controller');
         $location = $injector.get('$location');
-        $modal = jasmine.createSpyObj('modal', ['open']);
+        $uibModal = jasmine.createSpyObj('modal', ['open']);
 
         var _jobService_  = {
             getJobsOnce: function () {
@@ -32,7 +32,7 @@ describe('jobsController', function () {
             }
         };
 
-        jobsController = $controller('jobsController', { $scope: $scope, jobService: _jobService_, jobTypeService: _jobTypeService_, $modal: $modal, $location: $location });
+        jobsController = $controller('jobsController', { $scope: $scope, jobService: _jobService_, jobTypeService: _jobTypeService_, $uibModal: $uibModal, $location: $location });
     }));
 
     it ('should be defined.', function () {
@@ -44,7 +44,7 @@ describe('jobsController', function () {
     });
 
     it ('should be able to launch a modal window', function() {
-        expect($modal).toBeDefined();
+        expect($uibModal).toBeDefined();
     });
 
     describe('afterActivation', function () {
@@ -101,7 +101,7 @@ describe('jobsController', function () {
 
             expect($scope.selectedJob).toBeDefined();
             expect($scope.jobExecution).not.toBeNull();
-            expect($modal.open).toHaveBeenCalled();
+            expect($uibModal.open).toHaveBeenCalled();
         });
     });
 });
