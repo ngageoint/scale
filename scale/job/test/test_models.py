@@ -27,9 +27,9 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, started=timezone.now(), ended=timezone.now())
+        job = job_test_utils.create_job(num_exes=1, data={}, started=timezone.now(), ended=timezone.now())
 
-        Job.objects.queue_job(job, None, timezone.now())
+        Job.objects.queue_jobs([job], timezone.now())
 
         self.assertEqual(job.status, 'QUEUED')
         self.assertIsNotNone(job.queued)

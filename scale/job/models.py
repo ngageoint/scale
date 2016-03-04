@@ -223,57 +223,6 @@ class JobManager(models.Manager):
         # Update job models in database with single query
         self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
 
-    # TODO: deprecated, use queue_jobs() and populate_job_data() instead
-    @transaction.atomic
-    def queue_job(self, job, data, when):
-        """Puts the given job into the QUEUED state with the given arguments. The data should be set to None if this is
-        not the first time the job has been queued. The given job model must have already been saved in the database (it
-        must have an ID), it must have its related job type and job type revision fields, and the caller must have
-        obtained a lock on the job model using select_for_update(). The changes to the job will be saved in the database
-        in an atomic transaction.
-
-        :param job: The job to put on the queue
-        :type job: :class:`job.models.Job`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
-        :param when: The time that the job was queued
-        :type when: :class:`datetime.datetime`
-        :raises InvalidData: If the job data is invalid
-        """
-
-        if not job.is_ready_to_queue:
-            raise Exception('Job cannot be queued with current status %s' % job.status)
-        job.status = 'QUEUED'
-        job.error = None
-        job.queued = when
-        job.started = None
-        job.ended = None
-        job.last_status_change = when
-
-        if job.num_exes == 0:
-            if data is None:
-                raise Exception('Job data must be provided when a job is first queued')
-
-            # Validate job data
-            job_data = JobData(data)
-            interface = job.get_job_interface()
-            interface.validate_data(job_data)
-            job.data = data
-
-            # Calculate disk space required for the job
-            input_file_ids = job_data.get_input_file_ids()
-            # Get total input file size in MiB rounded up to the nearest whole MiB
-            input_size_mb = long(math.ceil((ScaleFile.objects.get_total_file_size(input_file_ids) / (1024.0 * 1024.0))))
-            # Calculate output space required in MiB rounded up to the nearest whole MiB
-            multiplier = job.job_type.disk_out_mult_required
-            const = job.job_type.disk_out_const_required
-            output_size_mb = long(math.ceil(multiplier * input_size_mb + const))
-            job.disk_in_required = max(input_size_mb, MIN_DISK)
-            job.disk_out_required = max(output_size_mb, MIN_DISK)
-
-        job.num_exes = job.num_exes + 1
-        job.save()
-
     def queue_jobs(self, jobs, when):
         """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
         must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
@@ -818,34 +767,6 @@ class JobExecutionManager(models.Manager):
         job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
         job_exe.command_arguments = command_arguments
         job_exe.save()
-
-    # TODO: deprecated, use queue_job_exes() instead
-    def queue_job_exe(self, job, when):
-        """Creates a new job execution for a queued job and returns the job_exe model. The given job model must have
-        already been saved in the database (it must have an ID), it must have its related job_type and job_type_rev
-        models, and the caller must have obtained a lock on the job model using select_for_update(). The returned
-        job_exe model will have not yet been saved in the database.
-
-        :param job: The job that is being queued
-        :type job: :class:`job.models.Job`
-        :param when: The time that the job was queued
-        :type when: :class:`datetime.datetime`
-        :returns: The new job execution
-        :rtype: :class:`job.models.JobExecution`
-        """
-
-        job_exe = JobExecution()
-        job_exe.job = job
-        job_exe.timeout = job.timeout
-        job_exe.queued = when
-        job_exe.created = when
-
-        # Fill in job execution command argument string with data that doesn't require pre-job steps
-        interface = job.get_job_interface()
-        data = job.get_job_data()
-        job_exe.command_arguments = interface.populate_command_argument_properties(data)
-
-        return job_exe
 
     def queue_job_exes(self, jobs, when):
         """Creates, saves, and returns new job executions for the given queued jobs. For jobs that are in recipes, the
