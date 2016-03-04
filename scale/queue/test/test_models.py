@@ -706,8 +706,91 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
 
+        # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
+        job_type_a_1 = job_test_utils.create_job_type()
+        job_type_a_2 = job_test_utils.create_job_type()
+        definition_a = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_a_1.name,
+                    'version': job_type_a_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_a_2.name,
+                    'version': job_type_a_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', num_exes=1)
+        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED')
+        data_a = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, data=data_a)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
+
+        # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
+        job_type_b_1 = job_test_utils.create_job_type()
+        job_type_b_2 = job_test_utils.create_job_type()
+        job_type_b_3 = job_test_utils.create_job_type()
+        definition_b = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_b_1.name,
+                    'version': job_type_b_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_b_2.name,
+                    'version': job_type_b_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_b_3.name,
+                    'version': job_type_b_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 2'
+                }],
+            }],
+        }
+        recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED')
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED')
+        data_b = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, data=data_b)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 1', job=self.job_b_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 2', job=self.job_b_2)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 3', job=self.job_b_3)
+
+        # Job IDs to re-queue
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
-                        self.standalone_completed_job.id]
+                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
 
         # Register a fake processor
         self.mock_processor = MagicMock(QueueEventProcessor)
@@ -729,6 +812,18 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         # Completed job should not be re-queued
         standalone_completed_job = Job.objects.get(id=self.standalone_completed_job.id)
         self.assertEqual(standalone_completed_job.status, 'COMPLETED')
+
+        job_a_1 = Job.objects.get(id=self.job_a_1.id)
+        self.assertEqual(job_a_1.status, 'QUEUED')
+        job_a_2 = Job.objects.get(id=self.job_a_2.id)
+        self.assertEqual(job_a_2.status, 'PENDING')
+
+        job_b_1 = Job.objects.get(id=self.job_b_1.id)
+        self.assertEqual(job_b_1.status, 'FAILED')
+        job_b_2 = Job.objects.get(id=self.job_b_2.id)
+        self.assertEqual(job_b_2.status, 'BLOCKED')
+        job_b_3 = Job.objects.get(id=self.job_b_3.id)
+        self.assertEqual(job_b_3.status, 'BLOCKED')
 
 
 # TODO: Remove this once the UI migrates to /load
