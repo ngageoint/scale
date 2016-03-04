@@ -100,8 +100,7 @@
 
 - name: Copy built files to the docker directory
   tags: [ build-scale, build-scale-docker, build-scale-minimal ]
-  synchronize: src='{{ scale_build_root }}/scale' dest='{{ scale_build_root }}/dockerfiles/framework/scale'
-  delegate_to: "{{ inventory_hostname }}"
+  command: "rsync -a {{ scale_build_root }}/scale {{ scale_build_root }}/dockerfiles/framework/scale"
 
 - name: Build scale docker image
   tags: [ build-scale, build-scale-docker ]
