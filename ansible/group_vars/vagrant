@@ -52,5 +52,5 @@ btrfs: true
 scale_build_root: "/scale"
 
 # These are for the example database
-nfs_server: "{{ mesos_master_ip }}""
+nfs_server: "{{ mesos_master_ip }}"
 example_image_tag: "dev"
