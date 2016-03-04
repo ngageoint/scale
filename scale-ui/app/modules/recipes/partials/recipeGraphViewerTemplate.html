@@ -248,10 +248,10 @@
             <div class="master-container">
                 <div class="add-job-list">
                     <ul class="list-unstyled">
-                        <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedItem.name === jobType.name }" ng-click="selectItem(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
+                        <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedJobType.name === jobType.name }" ng-click="selectJobTypeToAdd(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
                     </ul>
                 </div>
-                Selected: <b>{{ selectedItem.name }}</b>
+                Selected: <b>{{ selectedJobType.name }}</b>
             </div>
         </div>
         <div class="modal-footer">

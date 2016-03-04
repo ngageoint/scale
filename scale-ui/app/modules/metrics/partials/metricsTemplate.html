@@ -5,15 +5,15 @@
         <div class="form-group">
             <label for="startDate">Start Date</label>
             <div class="input-group">
-                <input id="startDate" type="text" class="form-control" ng-click="openInputStart($event)" datepicker-popup="yyyy-MM-dd" ng-model="inputStartDate" is-open="inputStartOpened" close-text="Close" />
-                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input id="startDate" type="text" class="form-control" ng-click="openInputStart($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputStartDate" ng-model-options="dateModelOptions" is-open="inputStartOpened" close-text="Close" />
+                <span class="input-group-addon" ng-click="openInputStart($event)"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
         </div>
         <div class="form-group">
             <label for="endDate">End Date</label>
             <div class="input-group">
-                <input id="endDate" type="text" class="form-control" ng-click="openInputEnd($event)" datepicker-popup="yyyy-MM-dd" ng-model="inputEndDate" is-open="inputEndOpened" close-text="Close" />
-                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input id="endDate" type="text" class="form-control" ng-click="openInputEnd($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputEndDate" ng-model-options="dateModelOptions" is-open="inputEndOpened" close-text="Close" />
+                <span class="input-group-addon" ng-click="openInputEnd($event)"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
         </div>
         <div class="form-group">

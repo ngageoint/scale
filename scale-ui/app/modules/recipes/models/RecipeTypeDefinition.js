@@ -11,13 +11,27 @@
             this.jobs = jobs ? RecipeTypeDefinitionJob.transformer(jobs) : [];
         };
 
+        var getJobName = function(jobs, jobName){
+            var theName = jobName;
+            var existing = _.find(jobs, { 'name': jobName });
+            var idx = 2;
+            while(existing){
+                theName = jobName + '-' + idx;
+                existing = _.find(jobs, { 'name': theName });
+                idx++;
+            }
+            return theName;
+        };
+
         // public methods
         RecipeTypeDefinition.prototype = {
             addJob: function (jobType) {
+                var jname = getJobName(this.jobs, jobType.name);
+                console.log(jname);
                 var job = {
                     dependencies: [],
                     recipe_inputs: [],
-                    name: jobType.name,
+                    name: jname,
                     job_type_id: jobType.id,
                     job_type: jobType
                 };
