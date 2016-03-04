@@ -3,12 +3,13 @@
 
     angular.module('scaleApp').service('metricsService', function ($http, $q, $resource, scaleConfig) {
         var getPlotDataParams = function (page, page_size, started, ended, choice_id, column, group, dataType) {
+            console.log(choice_id);
             return {
                 page: page,
                 page_size: page_size,
                 started: started,
                 ended: ended,
-                'choice-id': choice_id,
+                choice_id: choice_id,
                 column: column,
                 group: group,
                 dataType: dataType

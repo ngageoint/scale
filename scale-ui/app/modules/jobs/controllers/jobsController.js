@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $modal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService) {
+    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $uibModal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService, moment) {
         var self = this;
 
         self.jobsParams = {
@@ -40,7 +40,7 @@
                 field: 'job_type',
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobType"><option ng-if="grid.appScope.jobTypeValues[$index]" ng-selected="{{ grid.appScope.jobTypeValues[$index].id == grid.appScope.selectedJobType }}" value="{{ grid.appScope.jobTypeValues[$index].id }}" ng-repeat="jobType in grid.appScope.jobTypeValues track by $index">{{ grid.appScope.jobTypeValues[$index].title }} {{ grid.appScope.jobTypeValues[$index].version }}</option></select>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobType"><option ng-if="grid.appScope.jobTypeValues[$index]" ng-selected="{{ grid.appScope.jobTypeValues[$index].id == grid.appScope.selectedJobType }}" value="{{ grid.appScope.jobTypeValues[$index].id }}" ng-repeat="jobType in grid.appScope.jobTypeValues track by $index">{{ grid.appScope.jobTypeValues[$index].title }} {{ grid.appScope.jobTypeValues[$index].version }}</option></select></div>'
             },
             {
                 field: 'created',
@@ -53,7 +53,6 @@
                 displayName: 'Last Modified',
                 enableFiltering: false,
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
-                //cellFilter: 'date:\'' + scaleConfig.dateFormats.day_minute_utc + '\'',
             },
             { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
             {
@@ -180,7 +179,7 @@
             jobService.getJobDetail(jobId).then(function (data) {
                 $scope.selectedJob = data.job_type.title + ' ' + data.job_type.version;
                 $scope.jobExecution = data.getLatestExecution();
-                var modalInstance = $modal.open({
+                var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'showLog.html',
                     scope: $scope,
@@ -194,6 +193,7 @@
             _.forEach(_.pairs(self.jobsParams), function (param) {
                 $location.search(param[0], param[1]);
             });
+            $scope.loading = true;
             self.getJobs();
         };
 

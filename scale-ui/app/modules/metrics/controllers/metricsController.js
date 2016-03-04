@@ -20,8 +20,8 @@
         $scope.chartData = [];
         $scope.chartStyle = '';
         $scope.selectedDataType = {};
-        $scope.inputStartDate = moment.utc().subtract(1, 'M').toISOString();
-        $scope.inputEndDate = moment.utc().toISOString();
+        $scope.inputStartDate = moment.utc().subtract(1, 'M').toDate();
+        $scope.inputEndDate = moment.utc().toDate();
         $scope.openInputStart = function ($event) {
             $event.stopPropagation();
             $scope.inputStartOpened = true;
@@ -32,6 +32,9 @@
             $scope.inputEndOpened = true;
         };
         $scope.inputEndOpened = false;
+        $scope.dateModelOptions = {
+            timezone: '+000'
+        };
         $scope.dataTypeFilterText = '';
         $scope.filtersApplied = [];
         $scope.filteredChoices = [];
@@ -78,7 +81,7 @@
                 page_size: null,
                 started: obj.started,
                 ended: obj.ended,
-                'choice-id': obj.choice_id,
+                choice_id: obj.choice_id,
                 column: obj.column,
                 group: obj.group,
                 dataType: obj.dataType.name
@@ -86,8 +89,8 @@
         };
 
         self.resetSelections = function () {
-            $scope.inputStartDate = moment.utc().subtract(1, 'M').toISOString();
-            $scope.inputEndDate = moment.utc().toISOString();
+            $scope.inputStartDate = moment.utc().subtract(1, 'M').toDate();
+            $scope.inputEndDate = moment.utc().toDate();
             $scope.selectedDataType = {};
             $scope.changeDataTypeSelection();
         };
@@ -144,8 +147,8 @@
                 selectedColumns.push(_.find($scope.columns, { name: $scope.selectedMetrics }));
             }
             $scope.chartArr.push({
-                started: $scope.inputStartDate,
-                ended: $scope.inputEndDate,
+                started: $scope.inputStartDate.toISOString(),
+                ended: $scope.inputEndDate.toISOString(),
                 choice_id: $scope.filtersApplied,
                 column: _.pluck(selectedColumns, 'name'),
                 group: null,
@@ -355,9 +358,9 @@
             colNames = {};
 
             // create xArr
-            var numDays = moment.utc($scope.inputEndDate).endOf('d').diff(moment.utc($scope.inputStartDate).startOf('d'), 'd') + 1; // add 1 to include starting day in count
+            var numDays = moment.utc($scope.inputEndDate).endOf('d').diff(moment.utc($scope.inputStartDate.toISOString()).startOf('d'), 'd') + 1; // add 1 to include starting day in count
             for (var i = 0; i < numDays; i++) {
-                xArr.push(moment.utc($scope.inputStartDate).startOf('d').add(i, 'd').toDate());
+                xArr.push(moment.utc($scope.inputStartDate.toISOString()).startOf('d').add(i, 'd').toDate());
             }
 
             // iterate over datatypes and add values to colArr

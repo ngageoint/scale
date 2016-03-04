@@ -10,12 +10,12 @@
 
 - name: Initialize example database
   tags: init-examples
-  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | /scale/scale/manage.py shell"
+  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | {{ django_build_dir }}/manage.py shell"
 
 - name: Build landsat-base docker image
   tags: init-examples
   docker_image:
-    path: "/scale/dockerfiles/examples/landsat-base"
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-base"
     name: "landsat-base"
     state: build
   become: true
@@ -23,7 +23,7 @@
 - name: Build landsat-parse docker image
   tags: init-examples
   docker_image:
-    path: "/scale/dockerfiles/examples/landsat-parse"
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-parse"
     name: "landsat-parse_1.0"
     tag: "{{ example_image_tag }}"
     state: build
@@ -34,7 +34,7 @@
 - name: Build landsat-ndwi docker image
   tags: init-examples
   docker_image:
-    path: "/scale/dockerfiles/examples/landsat-ndwi"
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-ndwi"
     name: "landsat-ndwi_1.0"
     tag: "{{ example_image_tag }}"
     state: build
@@ -45,7 +45,7 @@
 - name: Build landsat-tiles docker image
   tags: init-examples
   docker_image:
-    path: "/scale/dockerfiles/examples/landsat-tiles"
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-tiles"
     name: "landsat-tiles_1.0"
     tag: "{{ example_image_tag }}"
     state: build

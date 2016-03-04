@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $modal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService) {
+    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService) {
         $scope.loading = true;
         $scope.masterContainerStyle = '';
         $scope.detailContainerStyle = '';
@@ -109,7 +109,7 @@
         };
 
         var confirmChangeRecipe = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'confirmDialog.html',
                 scope: $scope,

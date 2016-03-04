@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $modal, userService, scaleConfig) {
+    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $uibModal, userService, scaleConfig) {
         var svg = null,
             rect = null,
             scale = parseFloat($scope.scale),
@@ -535,7 +535,7 @@
 
                         // only prompt for reason when pausing (not resuming)
                         if (!target.is_paused) {
-                            var modalInstance = $modal.open({
+                            var modalInstance = $uibModal.open({
                                 animation: true,
                                 templateUrl: 'pauseDialog.html',
                                 scope: $scope

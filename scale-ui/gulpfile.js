@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    bump = require('gulp-bump'),
     concat = require('gulp-concat'),
     connect = require('gulp-connect'),
     mainBowerFiles = require('main-bower-files'),
@@ -13,16 +14,21 @@ var gulp = require('gulp'),
     ngAnnotate = require('gulp-ng-annotate'),
     tar = require('gulp-tar'),
     gzip = require('gulp-gzip'),
+    fs = require('fs'),
     p = require('./package.json');
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js'],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js',],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
     testData: ['./app/test/data/**/*'],
     tests: ['./tests/*.js']
+};
+
+var getVersionJson = function() {
+    return JSON.parse(fs.readFileSync('./app/version.json','utf8'));
 };
 
 // clean
@@ -244,8 +250,32 @@ gulp.task('watch', ['connect'], function () {
 
 // build
 gulp.task('build', ['vendor-build', 'clean-tmp', 'app-build'], function () {
-    return gulp.src('app/index.html')
+    return gulp.src(['app/index.html','app/version.json'],{base: 'app/'})
         .pipe(gulp.dest('build'));
+});
+
+// bump version
+gulp.task('bump', function() {
+    var pkg = getVersionJson();
+
+    var versions = pkg.version.split('.');
+    var major = versions[0];
+    var minor = versions[1];
+    var build = (Number(versions[2])+1).toString();
+
+    var newVer = major + '.' + minor + '.' + build;
+
+    gulp.src('./package.json')
+        .pipe(bump({version: newVer}))
+        .pipe(gulp.dest('./'));
+
+    gulp.src('./bower.json')
+        .pipe(bump({version: newVer}))
+        .pipe(gulp.dest('./'));
+
+    gulp.src('./app/version.json')
+        .pipe(bump({version: newVer}))
+        .pipe(gulp.dest('./app/modules'));
 });
 
 // dist
@@ -255,7 +285,7 @@ gulp.task('dist', ['build', 'uglify', 'clean-dist'], function () {
 });
 
 // deploy
-gulp.task('deploy-scale', ['dist'], function () {
+gulp.task('deploy-scale', ['bump','dist'], function () {
     return gulp.src('./dist/**/*')
         .pipe(gulp.dest('./scale')) // this will be the name of the directory inside the archive
         .pipe(tar('scale' + p.version + '.tar'))
