@@ -36,14 +36,15 @@ class TestJobManager(TransactionTestCase):
         self.assertIsNone(job.started)
         self.assertIsNone(job.ended)
 
-    def test_update_jobs_to_running(self):
+    def test_update_status_running(self):
         """Tests that job attributes are updated when a job is running."""
-        job_1 = job_test_utils.create_job(num_exes=1, started=timezone.now(), ended=timezone.now())
-        job_2 = job_test_utils.create_job(num_exes=1, started=timezone.now(), ended=timezone.now())
+        job_1 = job_test_utils.create_job(num_exes=1, started=None, ended=timezone.now())
+        job_2 = job_test_utils.create_job(num_exes=1, started=None, ended=timezone.now())
 
         when = timezone.now()
-        jobs = Job.objects.update_jobs_to_running([job_1.id, job_2.id], when)
+        Job.objects.update_status([job_1, job_2], 'RUNNING', when)
 
+        jobs = Job.objects.filter(id__in=[job_1.id, job_2.id])
         for job in jobs:
             self.assertEqual(job.status, 'RUNNING')
             self.assertEqual(job.started, when)

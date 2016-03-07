@@ -339,30 +339,6 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    # TODO: look at refactoring this back into update_status()
-    @transaction.atomic
-    def update_jobs_to_running(self, job_ids, when):
-        """Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
-        select_for_update() and their related job_type and job_type_rev models populated.
-
-        :param job_ids: The list of job IDs to update
-        :type job_ids: list[int]
-        :param when: The time that the jobs began running
-        :type when: :class:`datetime.datetime`
-        :returns: The updated job models with a lock and related job_type and job_type_rev models populated
-        :rtype: list[:class:`job.models.Job`]
-        """
-
-        # Acquire model lock for jobs
-        list(Job.objects.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
-
-        # Update jobs
-        modified = timezone.now()
-        Job.objects.filter(id__in=job_ids).update(status='RUNNING', started=when, ended=None, last_status_change=when,
-                                                  last_modified=modified)
-
-        return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
-
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
 
@@ -378,13 +354,12 @@ class JobManager(models.Manager):
 
         if status == 'QUEUED':
             raise Exception('Changing status to QUEUED must use the queue_jobs() method')
-        if status == 'RUNNING':
-            raise Exception('Changing status to RUNNING must use the update_jobs_to_running() method')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
             raise Exception('Status %s is invalid with an error' % status)
 
+        change_started = (status == 'RUNNING')
         ended = when if status in Job.FINAL_STATUSES else None
         modified = timezone.now()
 
@@ -394,13 +369,19 @@ class JobManager(models.Manager):
             job_ids.add(job.id)
             job.status = status
             job.last_status_change = when
+            if change_started:
+                job.started = when
             job.ended = ended
             job.error = error
             job.last_modified = modified
 
         # Update job models in database with single query
-        self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
-                                           last_modified=modified)
+        if change_started:
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended,
+                                               error=error, last_modified=modified)
+        else:
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
+                                               last_modified=modified)
 
 
 class Job(models.Model):
@@ -806,9 +787,10 @@ class JobExecutionManager(models.Manager):
 
     @transaction.atomic
     def schedule_job_executions(self, job_executions):
-        """Schedules the given job executions. The given job_exe models must have a lock from select_for_update(). All
-        of the job_exe and job model changes will be saved in the database in an atomic transaction. The updated job_exe
-        models are returned with their related job, job_type, job_type_rev and node models populated.
+        """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
+        Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
+        will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
+        related job, job_type, job_type_rev and node models populated.
 
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
             schedule it on, and the resources it will be given
@@ -822,11 +804,14 @@ class JobExecutionManager(models.Manager):
         job_ids = []
         for job_execution in job_executions:
             job_exe = job_execution[0]
-            job_ids.append(job_exe.job_id)
+            if job_exe.status == 'QUEUED':
+                job_ids.append(job_exe.job_id)
 
-        # Lock corresponding jobs, update them to RUNNING, and query for related job_type and job_type_rev models
+        # Lock corresponding jobs and update them to RUNNING
         jobs = {}
-        for job in Job.objects.update_jobs_to_running(job_ids, started):
+        locked_jobs = Job.objects.get_locked_jobs(job_ids)
+        Job.objects.update_status(locked_jobs, 'RUNNING', started)
+        for job in locked_jobs:
             jobs[job.id] = job
 
         # Update each job execution
@@ -836,6 +821,8 @@ class JobExecutionManager(models.Manager):
             node = job_execution[1]
             resources = job_execution[2]
 
+            if job_exe.status != 'QUEUED':
+                continue
             if node is None:
                 raise Exception('Cannot schedule job execution %i without node' % job_exe.id)
             if resources is None:
