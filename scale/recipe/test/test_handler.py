@@ -143,7 +143,7 @@ class TestRecipeHandler(TestCase):
     def test_get_blocked_jobs(self):
         """Tests calling RecipeHandler.get_blocked_jobs()"""
 
-        handler = Recipe.objects.get_recipe_handlers([self.recipe.id])[0]
+        handler = Recipe.objects.get_recipe_handlers_for_jobs([self.job_failed.id])[self.job_failed.id]
         blocked_jobs = handler.get_blocked_jobs()
         blocked_job_ids = set()
         for blocked_job in blocked_jobs:
@@ -239,7 +239,7 @@ class TestRecipeHandler(TestCase):
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
 
-        handler = Recipe.objects.get_recipe_handlers([recipe.id])[0]
+        handler = Recipe.objects.get_recipe_handlers_for_jobs([job_1.id])[job_1.id]
         jobs_to_queue = handler.get_existing_jobs_to_queue()
 
         # Make sure only Job 1 is returned and that its job data is correct
@@ -260,7 +260,7 @@ class TestRecipeHandler(TestCase):
     def test_get_pending_jobs(self):
         """Tests calling RecipeHandler.get_pending_jobs()"""
 
-        handler = Recipe.objects.get_recipe_handlers([self.recipe.id])[0]
+        handler = Recipe.objects.get_recipe_handlers_for_jobs([self.job_failed.id])[self.job_failed.id]
         pending_jobs = handler.get_pending_jobs()
         pending_job_ids = set()
         for pending_job in pending_jobs:

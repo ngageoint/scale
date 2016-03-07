@@ -94,7 +94,7 @@ class RecipeManager(models.Manager):
 
         return results
 
-    # TODO: this is deprecated; use get_locked_recipes() instead
+    # TODO: this might be deprecated, might still be used to lock recipe for completing it
     def get_locked_recipe_for_job(self, job_id):
         """Returns the recipe model for the given job. The returned recipe model (None if job does not have a recipe)
         will have its related recipe_type field populated and have a lock obtained by select_for_update().
@@ -116,47 +116,38 @@ class RecipeManager(models.Manager):
 
         return recipe
 
-    def get_locked_recipes(self, job_ids):
-        """Gets the recipe_job and recipe models for the given job IDs with model locks obtained
+    def get_recipe_handlers_for_jobs(self, job_ids):
+        """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
+        have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
+        all recipe jobs that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
+        that a given job ID will not appear in the results if it does not exist within a recipe.
 
         :param job_ids: The job IDs
         :type job_ids: [int]
-        :returns: The recipe_job models
-        :rtype: [:class:`recipe.models.RecipeJob`]
+        :returns: The recipe handlers by job ID
+        :rtype: {int: :class:`recipe.handler.RecipeHandler`}
         """
 
-        recipe_qry = RecipeJob.objects.select_for_update().select_related('recipe').filter(job_id__in=job_ids)
-        recipe_qry = recipe_qry.order_by('recipe_id', 'job_id')
-        return list(recipe_qry.iterator())
+        # Figure out all recipe IDs for the given job IDs
+        recipe_ids_per_job_id = {}  # {Job ID: [Recipe ID]}
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids).iterator():
+            if recipe_job.job_id not in recipe_ids_per_job_id:
+                recipe_ids_per_job_id[recipe_job.job_id] = []
+            recipe_ids_per_job_id[recipe_job.job_id].append(recipe_job.recipe_id)
 
-    def get_recipe_handlers(self, recipe_ids):
-        """Returns handlers for all of the recipes with the given IDs. The caller must first have obtained model locks
-        on all of the corresponding recipe models.
+        # Get handlers for all recipes and figure out dependent jobs to lock
+        handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
+        job_ids_to_lock = set()
+        for job_id in job_ids:
+            if job_id in handlers:
+                handler = handlers[job_id]
+                job_ids_to_lock.union(handler.get_dependent_job_ids(job_id))
 
-        :param recipe_ids: The recipe IDs
-        :type recipe_ids: [int]
-        :returns: The handlers for the given recipes
-        :rtype: :class:`recipe.handler.RecipeHandler`
-        """
+        # Lock dependent recipe jobs
+        Job.objects.lock_jobs(job_ids_to_lock)
 
-        handlers = []
-        recipes = {}  # {Recipe ID: Recipe}
-        recipe_jobs = {}  # {Recipe ID: [Recipe jobs]}
-
-        recipe_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
-        recipe_qry = recipe_qry.select_related('job__job_type', 'job__job_type_rev').filter(recipe_id__in=recipe_ids)
-        recipe_qry = recipe_qry.order_by('recipe_id')
-
-        for recipe_job in recipe_qry.iterator():
-            if recipe_job.recipe_id not in recipes:
-                recipes[recipe_job.recipe_id] = recipe_job.recipe
-                recipe_jobs[recipe_job.recipe_id] = []
-            recipe_jobs[recipe_job.recipe_id].append(recipe_job)
-        for recipe_id in recipes:
-            handler = RecipeHandler(recipes[recipe_id], recipe_jobs[recipe_id])
-            handlers.append(handler)
-
-        return handlers
+        # Return handlers with updated data after all dependent jobs have been locked
+        return self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
 
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, order=None):
         """Returns a list of recipes within the given time range.
@@ -225,6 +216,30 @@ class RecipeManager(models.Manager):
         recipe.jobs = jobs
         return recipe
 
+    def _get_recipe_handlers_for_jobs(self, recipe_ids_per_job_id):
+        """Returns handlers for the recipes tied to each job ID
+
+        :param recipe_ids_per_job_id: Each job ID mapping to its corresponding recipe IDs
+        :type recipe_ids_per_job_id: {int: [int]}
+        :returns: The recipe handlers by job ID
+        :rtype: {int: :class:`recipe.handler.RecipeHandler`}
+        """
+
+        all_recipe_ids = set()
+        for job_id in recipe_ids_per_job_id:
+            for recipe_id in recipe_ids_per_job_id[job_id]:
+                all_recipe_ids.add(recipe_id)
+
+        handlers = {}  # {Job ID: Recipe handler}
+        recipes = RecipeJob.objects.get_recipe_data(all_recipe_ids)
+        for job_id in recipe_ids_per_job_id:
+            recipe_id = recipe_ids_per_job_id[job_id][0]
+            recipe = recipes[recipe_id][0]
+            recipe_jobs = recipes[recipe_id][1]
+            handler = RecipeHandler(recipe, recipe_jobs)
+            handlers[job_id] = handler
+        return handlers
+
 
 class Recipe(models.Model):
     """Represents a recipe to be run on the cluster. Any updates to a recipe model requires obtaining a lock on the
@@ -287,7 +302,31 @@ class RecipeJobManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
-    # TODO: this is deprecated; use get_locked_recipes() and get_recipe_handlers() instead
+    def get_recipe_data(self, recipe_ids):
+        """Returns the recipe, recipe_job, and job models for the given recipe IDs with the recipe/job type and revision
+        models included
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: [int]
+        :returns: Dict where each recipe ID maps to a tuple of its recipe model and a list of its recipe_job models
+        :rtype: {int: (:class:`recipe.models.Recipe`, [:class:`recipe.models.RecipeJob`])}
+        """
+
+        # Call get_my_handlers() and organize them, lock dependent jobs, and call get_my_handlers() and organize them
+        recipes = {}  # {Recipe ID: (Recipe, [Recipe job])}
+
+        recipe_qry = self.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
+        recipe_qry = recipe_qry.select_related('job__job_type', 'job__job_type_rev')
+        recipe_qry = recipe_qry.filter(recipe_id__in=recipe_ids)
+
+        for recipe_job in recipe_qry.iterator():
+            if recipe_job.recipe_id not in recipes:
+                recipes[recipe_job.recipe_id] = (recipe_job.recipe, [])
+            recipes[recipe_job.recipe_id][1].append(recipe_job)
+
+        return recipes
+
+    # TODO: this is deprecated; use get_recipe_handlers() instead
     @transaction.atomic
     def get_recipe_jobs(self, recipe_id, jobs_related=False, jobs_lock=False):
         """Returns the recipe_job models for the given recipe ID. Each recipe_job model with have its related job model

@@ -189,7 +189,6 @@ class JobManager(models.Manager):
 
     def get_locked_jobs(self, job_ids):
         """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models.
-        This should only be used on job models that are not in any recipes.
 
         :param job_ids: The job IDs
         :type job_ids: [int]
@@ -197,15 +196,13 @@ class JobManager(models.Manager):
         :rtype: [:class:`job.models.Job`]
         """
 
-        # Lock job models
-        list(Job.objects.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
+        self.lock_jobs(job_ids)
 
-        return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
+        return list(self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
     def increment_max_tries(self, jobs):
-        """Increments the max_tries of the given jobs to be one greater than their current number of executions. For
-        jobs that are in recipes, the caller must have obtained model locks on all of the corresponding recipe models.
-        For jobs not in recipes, the caller must have obtained model locks on the job models.
+        """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
+        caller must have obtained model locks on the job models.
 
         :param jobs: The jobs to update
         :type jobs: [:class:`job.models.Job`]
@@ -223,11 +220,19 @@ class JobManager(models.Manager):
         # Update job models in database with single query
         self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
 
+    def lock_jobs(self, job_ids):
+        """Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)
+
+        :param job_ids: The IDs of the jobs to lock
+        :type job_ids: [int]
+        """
+
+        list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
+
     def queue_jobs(self, jobs, when):
-        """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
-        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
-        must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
-        data will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
+        the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
+        should have their related job_type and job_type_rev models populated.
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
@@ -265,10 +270,8 @@ class JobManager(models.Manager):
         return JobExecution.objects.queue_job_exes(jobs_to_queue, when)
 
     def populate_job_data(self, job, data):
-        """Populates the job data and all derived fields for the given job. For jobs that are in recipes, the caller
-        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
-        must have obtained model locks on the job models. The job should have its related job_type and job_type_rev
-        models populated.
+        """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
+        on the job model. The job should have its related job_type and job_type_rev models populated.
 
         :param job: The job
         :type job: :class:`job.models.Job`
@@ -361,9 +364,7 @@ class JobManager(models.Manager):
         return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
     def update_status(self, jobs, status, when, error=None):
-        """Updates the given jobs with the new status. For jobs that are in recipes, the caller must have obtained model
-        locks on all of the corresponding recipe models. For jobs not in recipes, the caller must have obtained model
-        locks on the job models.
+        """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
 
         :param jobs: The jobs to update
         :type jobs: [:class:`job.models.Job`]
@@ -769,10 +770,9 @@ class JobExecutionManager(models.Manager):
         job_exe.save()
 
     def queue_job_exes(self, jobs, when):
-        """Creates, saves, and returns new job executions for the given queued jobs. For jobs that are in recipes, the
-        caller must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the
-        caller must have obtained model locks on the job models. Any jobs that are not queued will be ignored. All jobs
-        should have their related job_type and job_type_rev models populated.
+        """Creates, saves, and returns new job executions for the given queued jobs. The caller must have obtained model
+        locks on the job models. Any jobs that are not queued will be ignored. All jobs should have their related
+        job_type and job_type_rev models populated.
 
         :param jobs: The queued jobs
         :type jobs: [:class:`job.models.Job`]

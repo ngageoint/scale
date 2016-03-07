@@ -618,30 +618,15 @@ class QueueManager(models.Manager):
         :type job_ids: [int]
         """
 
-        jobs_to_requeue = []
-        job_ids_to_lock = set(job_ids)
-
-        # Lock recipes and get recipe handlers for jobs within a recipe
-        recipe_ids = []
-        handlers = []
-        for recipe_job in Recipe.objects.get_locked_recipes(job_ids):
-            recipe_ids.append(recipe_job.recipe_id)
-            job_ids_to_lock.discard(recipe_job.job_id)
-        if recipe_ids:
-            handlers = Recipe.objects.get_recipe_handlers(recipe_ids)
-        for handler in handlers:
-            jobs_to_requeue.extend(handler.get_jobs(job_ids))
-
-        # Lock jobs not within a recipe
-        if job_ids_to_lock:
-            jobs_to_requeue.extend(Job.objects.get_locked_jobs(job_ids_to_lock))
-
+        jobs_to_requeue = Job.objects.get_locked_jobs(job_ids)
+        all_valid_job_ids = []
         jobs_to_queue = []
         jobs_to_blocked = []
         jobs_to_pending = []
         for job in jobs_to_requeue:
             if not job.is_ready_to_requeue:
                 continue
+            all_valid_job_ids.append(job.id)
             if job.num_exes == 0:
                 # Never been queued before, job should either be PENDING or BLOCKED depending on parent jobs
                 # Assume BLOCKED and it will get switched to PENDING later if needed
@@ -658,9 +643,12 @@ class QueueManager(models.Manager):
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
-        # Update dependent recipe jobs that should now go back to PENDING
-        for handler in handlers:
-            jobs_to_pending.extend(handler.get_pending_jobs())
+        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
+        handlers = Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids)
+        for job_id in all_valid_job_ids:
+            if job_id in handlers:
+                handler = handlers[job_id]
+                jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 

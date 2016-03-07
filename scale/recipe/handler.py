@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 class RecipeHandler(object):
     """This class handles the logic for a recipe"""
 
+    BLOCKING_STATUSES = ['BLOCKED', 'FAILED', 'CANCELED']
+
     def __init__(self, recipe, recipe_jobs):
         """Constructor
 
@@ -17,12 +19,28 @@ class RecipeHandler(object):
         self._recipe = recipe
         self._data = recipe.get_recipe_data()
         self._definition = recipe.get_recipe_definition()
-        self._jobs_by_id = {}  # {Job ID: Recipe Job}
-        self._jobs_by_name = {}  # {Job name: Recipe Job}
+        self._nodes_by_id = {}  # {Job ID: Recipe Node}
+        self._nodes_by_name = {}  # {Job name: Recipe Node}
+        self._root_nodes = []  # Recipe nodes that have jobs with no dependencies
 
         for recipe_job in recipe_jobs:
-            self._jobs_by_id[recipe_job.job.id] = recipe_job
-            self._jobs_by_name[recipe_job.job_name] = recipe_job
+            node = RecipeNode()
+            node.recipe_job = recipe_job
+            self._nodes_by_id[recipe_job.job.id] = node
+            self._nodes_by_name[recipe_job.job_name] = node
+
+        # TODO: refactor the recipe definition class so we don't have to grab its internals
+        for job_name in self._definition._jobs_by_name:
+            job_dict = self._definition._jobs_by_name[job_name]
+            dependent_node = self._nodes_by_name[job_name]
+            dependencies = job_dict['dependencies']
+            if dependencies:
+                for dependency_dict in job_dict['dependencies']:
+                    parent_node = self._nodes_by_name[dependency_dict['name']]
+                    parent_node.dependent_nodes.append(dependent_node)
+                    dependent_node.parent_nodes.append(parent_node)
+            else:
+                self._root_nodes.append(dependent_node)
 
     def get_blocked_jobs(self):
         """Returns the jobs within this recipe that should be updated to BLOCKED status
@@ -34,18 +52,35 @@ class RecipeHandler(object):
         blocked_jobs = []
         jobs_by_name = {}
 
-        for job_name in self._jobs_by_name:
-            jobs_by_name[job_name] = self._jobs_by_name[job_name].job
+        for job_name in self._nodes_by_name:
+            jobs_by_name[job_name] = self._nodes_by_name[job_name].recipe_job.job
 
         new_job_statuses = self._definition.get_unqueued_job_statuses(jobs_by_name)
 
         for job_id in new_job_statuses:
             new_status = new_job_statuses[job_id]
-            job = self._jobs_by_id[job_id].job
+            job = self._nodes_by_id[job_id].recipe_job.job
             if new_status == 'BLOCKED' and job.status != new_status:
                 blocked_jobs.append(job)
 
         return blocked_jobs
+
+    def get_dependent_job_ids(self, job_id):
+        """Returns the IDs of the jobs that depend upon the job with the given ID
+
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The set of job IDs that depend on the given job
+        :rtype: {int}
+        """
+
+        node = self._nodes_by_id[job_id]
+        job_ids = set()
+        for dependent_node in node.dependent_nodes:
+            dependent_id = dependent_node.recipe_job.job.id
+            job_ids.add(dependent_id)
+            job_ids.union(self.get_dependent_job_ids(dependent_id))
+        return job_ids
 
     def get_existing_jobs_to_queue(self):
         """Returns all of the existing recipe jobs that are ready to be queued
@@ -57,8 +92,8 @@ class RecipeHandler(object):
         unqueued_jobs = {}  # {Job name: Job}
         completed_jobs = {}  # {Job name: Job}
 
-        for job_name in self._jobs_by_name:
-            job = self._jobs_by_name[job_name].job
+        for job_name in self._nodes_by_name:
+            job = self._nodes_by_name[job_name].recipe_job.job
             if job.status == 'PENDING':
                 unqueued_jobs[job_name] = job
             elif job.status == 'COMPLETED':
@@ -68,24 +103,9 @@ class RecipeHandler(object):
         jobs_to_queue = self._definition.get_next_jobs_to_queue(self._data, unqueued_jobs, completed_jobs)
         for job_id in jobs_to_queue:
             job_data = jobs_to_queue[job_id]
-            job = self._jobs_by_id[job_id].job
+            job = self._nodes_by_id[job_id].recipe_job.job
             results.append((job, job_data))
         return results
-
-    def get_jobs(self, job_ids):
-        """Returns the jobs within this recipe that have the given IDs
-
-        :param job_ids: The job IDs
-        :type job_ids: [int]
-        :returns: The list of jobs that have the given IDs
-        :rtype: [:class:`job.models.Job`]
-        """
-
-        jobs = []
-        for job_id in job_ids:
-            if job_id in self._jobs_by_id:
-                jobs.append(self._jobs_by_id[job_id].job)
-        return jobs
 
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status
@@ -97,15 +117,28 @@ class RecipeHandler(object):
         pending_jobs = []
         jobs_by_name = {}
 
-        for job_name in self._jobs_by_name:
-            jobs_by_name[job_name] = self._jobs_by_name[job_name].job
+        for job_name in self._nodes_by_name:
+            jobs_by_name[job_name] = self._nodes_by_name[job_name].recipe_job.job
 
         new_job_statuses = self._definition.get_unqueued_job_statuses(jobs_by_name)
 
         for job_id in new_job_statuses:
             new_status = new_job_statuses[job_id]
-            job = self._jobs_by_id[job_id].job
+            job = self._nodes_by_id[job_id].recipe_job.job
             if new_status == 'PENDING' and job.status != new_status:
                 pending_jobs.append(job)
 
         return pending_jobs
+
+
+class RecipeNode(object):
+    """This class represents a node within a recipe. A node contains a job along with links to its parent jobs and
+    dependent jobs."""
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self.dependent_nodes = []
+        self.parent_nodes = []
+        self.recipe_job = None
