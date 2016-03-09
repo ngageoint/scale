@@ -702,8 +702,9 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', num_exes=3)
-        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1)
+        self.new_priority = 200
+        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', num_exes=3, priority=100)
+        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1, priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
@@ -799,15 +800,17 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
     def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
-        Queue.objects.requeue_jobs(self.job_ids)
+        Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
         self.assertEqual(standalone_failed_job.max_tries, 4)
+        self.assertEqual(standalone_failed_job.priority, self.new_priority)
 
         standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
         self.assertEqual(standalone_canceled_job.status, 'QUEUED')
         self.assertEqual(standalone_canceled_job.max_tries, 2)
+        self.assertEqual(standalone_canceled_job.priority, self.new_priority)
 
         # Completed job should not be re-queued
         standalone_completed_job = Job.objects.get(id=self.standalone_completed_job.id)

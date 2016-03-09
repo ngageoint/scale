@@ -259,7 +259,7 @@ class JobManager(models.Manager):
 
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
-    def queue_jobs(self, jobs, when):
+    def queue_jobs(self, jobs, when, priority=None):
         """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
         the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
         should have their related job_type and job_type_rev models populated.
@@ -268,6 +268,8 @@ class JobManager(models.Manager):
         :type jobs: [:class:`job.models.Job`]
         :param when: The time that the jobs are queued
         :type when: :class:`datetime.datetime`
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
         :returns: The new queued job execution models
         :rtype: [:class:`job.models.JobExecution`]
         """
@@ -290,12 +292,19 @@ class JobManager(models.Manager):
             job.ended = None
             job.last_status_change = when
             job.num_exes += 1
+            if priority:
+                job.priority = priority
             job.last_modified = modified
 
         # Update job models in database with single query
-        self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
-                                           last_status_change=when, num_exes=models.F('num_exes') + 1,
-                                           last_modified=modified)
+        if priority:
+            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
+                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
+                                               priority=priority, last_modified=modified)
+        else:
+            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
+                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
+                                               last_modified=modified)
 
         return JobExecution.objects.queue_job_exes(jobs_to_queue, when)
 

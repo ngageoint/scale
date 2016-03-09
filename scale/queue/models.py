@@ -625,12 +625,14 @@ class QueueManager(models.Manager):
         return job_exe_id
 
     @transaction.atomic
-    def requeue_jobs(self, job_ids):
+    def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
         ignored. All database changes will occur within an atomic transaction.
 
         :param job_ids: The IDs of the jobs to re-queue
         :type job_ids: [int]
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
         """
 
         jobs_to_requeue = Job.objects.get_locked_jobs(job_ids)
@@ -653,7 +655,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries(jobs_to_queue)
-            self._queue_jobs(jobs_to_queue)
+            self._queue_jobs(jobs_to_queue, priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -851,7 +853,7 @@ class QueueManager(models.Manager):
 
         return queue_depths
 
-    def _queue_jobs(self, jobs):
+    def _queue_jobs(self, jobs, priority=None):
         """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
         must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
         must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
@@ -859,13 +861,15 @@ class QueueManager(models.Manager):
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
         :returns: The new queued job execution models
         :rtype: [:class:`job.models.JobExecution`]
         """
 
         when_queued = timezone.now()
 
-        job_exes = Job.objects.queue_jobs(jobs, when_queued)
+        job_exes = Job.objects.queue_jobs(jobs, when_queued, priority)
 
         # Execute any registered processors from other applications
         for processor_class in self._processors:
