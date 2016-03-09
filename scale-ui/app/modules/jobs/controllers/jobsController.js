@@ -32,6 +32,25 @@
         $scope.actionClicked = false;
         $scope.gridStyle = '';
         $scope.readonly = true;
+        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStartPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStartPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStartPopup.opened = true;
+        };
+        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStopPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStopPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStopPopup.opened = true;
+        };
+        $scope.dateModelOptions = {
+            timezone: '+000'
+        };
 
         subnavService.setCurrentPath('jobs');
 
@@ -166,6 +185,20 @@
             $scope.filterResults();
         };
 
+        $scope.$watch('lastModifiedStart', function (value) {
+            if (!$scope.loading) {
+                self.jobsParams.started = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
+        $scope.$watch('lastModifiedStop', function (value) {
+            if (!$scope.loading) {
+                self.jobsParams.ended = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
         /*$scope.$watch('gridApi', function (gridApi) {
             if (filteredByOrder) {
                 gridApi.core.raise.sortChanged();
@@ -270,6 +303,14 @@
                 if (!self.jobsParams.page_size) {
                     self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
                     $location.search('page_size', self.jobsParams.page_size).replace();
+                }
+                if (!self.jobsParams.started) {
+                    self.jobsParams.started = moment.utc($scope.lastModifiedStart).toISOString();
+                    $location.search('started', self.jobsParams.started).replace();
+                }
+                if (!self.jobsParams.ended) {
+                    self.jobsParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
+                    $location.search('ended', self.jobsParams.ended).replace();
                 }
             }
             self.getJobTypes();
