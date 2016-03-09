@@ -45,6 +45,23 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
+    def complete_job(self, job, when, results):
+        """Updates the given job to COMPLETED status. The caller must have obtained a model lock on the job model.
+
+        :param job: The job to update
+        :type job: :class:`job.models.Job`
+        :param when: The time that the job was completed
+        :type when: :class:`datetime.datetime`
+        :param results: The error that caused the failure (required if status is FAILED, should be None otherwise)
+        :type results: :class:`job.configuration.results.job_results.JobResults`
+        """
+
+        job.status = 'COMPLETED'
+        job.results = results.get_dict()
+        job.ended = when
+        job.last_status_change = when
+        job.save()
+
     def create_job(self, job_type, event):
         """Creates a new job for the given type and returns the job model. The given job_type model must have already
         been saved in the database (it must have an ID). The given event model must have already been saved in the
@@ -572,6 +589,23 @@ class JobExecutionManager(models.Manager):
 
         modified = timezone.now()
         self.filter(id=job_exe_id).update(requires_cleanup=False, cleaned_up=when, last_modified=modified)
+
+    def complete_job_exe(self, job_exe, when):
+        """Updates the given job execution and its job to COMPLETED. The caller must have obtained model locks on the
+        job execution and job models (in that order).
+
+        :param job_exe: The job execution (with related job model) to complete
+        :type job_exe: :class:`job.models.JobExecution`
+        :param when: The time that the job execution was completed
+        :type when: :class:`datetime.datetime`
+        """
+
+        job_exe.status = 'COMPLETED'
+        job_exe.ended = when
+        job_exe.save()
+
+        # Update job model
+        Job.objects.complete_job(job_exe.job, when, JobResults(job_exe.results))
 
     def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):

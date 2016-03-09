@@ -380,14 +380,11 @@ class QueueManager(models.Manager):
         """
 
         job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if not job_exe.status == 'RUNNING':
+        if job_exe.status != 'RUNNING':
             # If this job execution is no longer running, ignore completion
             return
         job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
-        JobExecution.objects.update_status([job_exe], 'COMPLETED', when)
-        # Grab results from the completed job execution
-        job_exe.job.results = job_exe.results
-        job_exe.job.save()
+        JobExecution.objects.complete_job_exe(job_exe, when)
 
         self._handle_job_finished(job_exe)
 
@@ -434,7 +431,7 @@ class QueueManager(models.Manager):
             error = Error.objects.get_unknown_error()
 
         job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if not job_exe.status == 'RUNNING':
+        if job_exe.status != 'RUNNING':
             # If this job execution is no longer running, ignore failure
             return
         job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
