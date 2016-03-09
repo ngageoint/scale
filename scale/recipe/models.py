@@ -15,8 +15,11 @@ from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 
 
-# Important note: when acquiring select_for_update() locks on related models, be sure to acquire them in the following
-# order: JobExecution, Recipe, Job, RecipeType, JobType, TriggerRule
+# IMPORTANT NOTE: Locking order
+# Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
+# deadlocks and ensure query efficiency
+# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
 class RecipeManager(models.Manager):
@@ -257,8 +260,7 @@ class RecipeManager(models.Manager):
 
 
 class Recipe(models.Model):
-    """Represents a recipe to be run on the cluster. Any updates to a recipe model requires obtaining a lock on the
-    model using select_for_update().
+    """Represents a recipe to be run on the cluster
 
     :keyword recipe_type: The type of this recipe
     :type recipe_type: :class:`django.db.models.ForeignKey`
@@ -340,48 +342,6 @@ class RecipeJobManager(models.Manager):
             recipes[recipe_job.recipe_id][1].append(recipe_job)
 
         return recipes
-
-    # TODO: this is deprecated; use get_recipe_handlers() instead
-    @transaction.atomic
-    def get_recipe_jobs(self, recipe_id, jobs_related=False, jobs_lock=False):
-        """Returns the recipe_job models for the given recipe ID. Each recipe_job model with have its related job model
-        populated.
-
-        :param recipe_id: The recipe ID
-        :type recipe_id: int
-        :param jobs_related: Whether to include the related models (job_type, job_type_rev) on each related job model
-        :type jobs_related: bool
-        :param jobs_lock: Whether to obtain a select_for_update() lock on each related job model
-        :type jobs_lock: bool
-        :returns: The list of recipe jobs
-        :rtype: list of :class:`recipe.models.RecipeJob`
-        """
-
-        recipe_job_query = RecipeJob.objects.select_related('job').filter(recipe_id=recipe_id)
-        recipe_jobs = list(recipe_job_query.iterator())
-
-        if jobs_related or jobs_lock:
-            job_ids = []
-            jobs = {}
-            for recipe_job in recipe_jobs:
-                job_ids.append(recipe_job.job_id)
-            # Query job models
-            job_qry = Job.objects.all()
-            if jobs_lock and jobs_related:
-                # Grab locks here and do select_related in separate query
-                Job.objects.select_for_update().filter(id__in=job_ids).order_by('id')
-                job_qry = job_qry.select_related('job_type', 'job_type_rev')
-            elif jobs_related:
-                job_qry = job_qry.select_related('job_type', 'job_type_rev')
-            elif jobs_lock:
-                job_qry = job_qry.select_for_update().order_by('id')
-            for job in job_qry.filter(id__in=job_ids):
-                jobs[job.id] = job
-            # Re-populate the job fields with the updated job models
-            for recipe_job in recipe_jobs:
-                recipe_job.job = jobs[recipe_job.job_id]
-
-        return recipe_jobs
 
 
 class RecipeJob(models.Model):

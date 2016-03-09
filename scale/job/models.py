@@ -34,9 +34,11 @@ MIN_MEM = 128.0
 MIN_DISK = 0.0
 
 
-# Important note: when acquiring select_for_update() locks on related models,
-# be sure to acquire them in the following
-# order: JobExecution, Job, JobType, TriggerRule
+# IMPORTANT NOTE: Locking order
+# Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
+# deadlocks and ensure query efficiency
+# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
 class JobManager(models.Manager):
@@ -396,8 +398,9 @@ class JobManager(models.Manager):
 
 
 class Job(models.Model):
-    """Represents a job to be run on the cluster. Any updates to a job model requires obtaining a lock on the model
-    using select_for_update().
+    """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
+    model using select_for_update(). If a related job execution model is changing status as well, its model lock must be
+    obtained BEFORE obtaining the lock for the job model.
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -558,11 +561,8 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
-    @transaction.atomic
     def cleanup_completed(self, job_exe_id, when):
-        """Updates the given job execution to reflect that its cleanup has completed successfully.
-
-        All database changes occur in an atomic transaction.
+        """Updates the given job execution to reflect that its cleanup has completed successfully
 
         :param job_exe_id: The job execution that was cleaned up
         :type job_exe_id: int
@@ -570,11 +570,8 @@ class JobExecutionManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.requires_cleanup = False
-        job_exe.cleaned_up = when
-        job_exe.save()
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(requires_cleanup=False, cleaned_up=when, last_modified=modified)
 
     def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
@@ -731,11 +728,8 @@ class JobExecutionManager(models.Manager):
         job_exe_qry = JobExecution.objects.defer('stdout', 'stderr')
         return job_exe_qry.filter(status='RUNNING')
 
-    @transaction.atomic
     def post_steps_results(self, job_exe_id, results, results_manifest):
-        """Updates the given job execution to reflect that the post-job steps have finished calculating the results.
-
-        All database changes occur in an atomic transaction.
+        """Updates the given job execution to reflect that the post-job steps have finished calculating the results
 
         :param job_exe_id: The job execution whose results have been processed
         :type job_exe_id: int
@@ -748,18 +742,14 @@ class JobExecutionManager(models.Manager):
         if not results or not results_manifest:
             raise Exception('Job execution results and results manifest are required')
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-        job_exe.results = results.get_dict()
-        job_exe.results_manifest = results_manifest.get_json_dict()
-        job_exe.save()
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(results=results.get_dict(), results_manifest=results_manifest.get_json_dict(),
+                                          last_modified=modified)
 
-    @transaction.atomic
     def pre_steps_command_arguments(self, job_exe_id, command_arguments):
         """Updates the given job execution after the job command argument string has been filled out.
 
-        This typically includes pre-job step information (e.g. location of file paths). All database changes occur in an
-        atomic transaction.
+        This typically includes pre-job step information (e.g. location of file paths).
 
         :param job_exe_id: The job execution whose pre-job steps have filled out the job command
         :type job_exe_id: int
@@ -767,10 +757,8 @@ class JobExecutionManager(models.Manager):
         :type command_arguments: str
         """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.command_arguments = command_arguments
-        job_exe.save()
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(command_arguments=command_arguments, last_modified=modified)
 
     def queue_job_exes(self, jobs, when):
         """Creates, saves, and returns new job executions for the given queued jobs. The caller must have obtained model
@@ -1000,8 +988,8 @@ class JobExecutionManager(models.Manager):
 
 
 class JobExecution(models.Model):
-    """Represents an instance of a job being queued and executed on a cluster node. Any updates to a job execution model
-    requires obtaining a lock on the model using select_for_update().
+    """Represents an instance of a job being queued and executed on a cluster node. Any status updates to a job
+    execution model requires obtaining a lock on the model using select_for_update().
 
     :keyword job: The job that is being executed
     :type job: :class:`django.db.models.ForeignKey`
@@ -1404,7 +1392,7 @@ class JobTypeManager(models.Manager):
                 raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
             trigger_config.validate_trigger_for_job(interface)
 
-        # Create the new recipe type
+        # Create the new job type
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
@@ -1813,9 +1801,8 @@ class JobTypeManager(models.Manager):
 
 
 class JobType(models.Model):
-    """Represents a type of job that can be run on the cluster. Any updates to
-    a job type model requires obtaining a lock on the model using
-    select_for_update().
+    """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
+    lock on the model using select_for_update().
 
     :keyword name: The stable name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`

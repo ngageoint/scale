@@ -19,8 +19,11 @@ from trigger.models import TriggerEvent
 logger = logging.getLogger(__name__)
 
 
-# Important note: when acquiring select_for_update() locks on related models, be sure to acquire them in the following
-# order: JobExecution, Queue, Recipe, Job, RecipeType, JobType, TriggerRule
+# IMPORTANT NOTE: Locking order
+# Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
+# deadlocks and ensure query efficiency
+# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
 class JobLoadGroup(object):
@@ -335,7 +338,7 @@ class QueueManager(models.Manager):
         job_exe = job_exe_qry.order_by('-created').first()
 
         # Acquire model lock on job
-        job = Job.objects.select_for_update().get(pk=job_id)
+        job = Job.objects.get_locked_job(job_id)
 
         # Get latest job execution again to ensure no new job execution was just created
         job_exe_2 = JobExecution.objects.defer('stdout', 'stderr').filter(job_id=job_id).order_by('-created').first()
@@ -736,8 +739,7 @@ class QueueManager(models.Manager):
     @transaction.atomic
     def _handle_job_finished(self, job_exe):
         """Handles a job execution finishing (reaching a final status of COMPLETED, FAILED, or CANCELED). The caller
-        must have obtained a lock on the given job_exe model using select_for_update(). All database changes occur in an
-        atomic transaction.
+        must have obtained a model lock on the given job_exe model. All database changes occur in an atomic transaction.
 
         :param job_exe: The job execution that finished
         :type job_exe: :class:`job.models.JobExecution`
