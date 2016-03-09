@@ -258,7 +258,8 @@ class ScaleScheduler(MesosScheduler):
                 results = TaskResults(task_id)
                 results.exit_code = utils.parse_exit_code(status)
                 results.when = utils.get_status_timestamp(status)
-                if status.state != mesos_pb2.TASK_LOST:
+                if status.state in [mesos_pb2.TASK_FINISHED, mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED,
+                                    mesos_pb2.TASK_KILLED]:
                     try:
                         log_start_time = now()
                         hostname = running_job_exe._node_hostname
