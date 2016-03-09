@@ -1,6 +1,6 @@
 {
   "name": "scale-ui",
-  "version": "2.5.0",
+  "version": "3.0.3",
   "dependencies": {},
   "devDependencies": {
     "del": "^2.2.0",
@@ -24,7 +24,8 @@
     "karma-jasmine": "^0.3.6",
     "karma-read-json": "^1.1.0",
     "karma-spec-reporter": "0.0.23",
-    "main-bower-files": "^2.11.1"
+    "main-bower-files": "^2.11.1",
+    "gulp-bump": "^1.0.0"
   },
   "engines": {
     "node": ">=0.10.0"

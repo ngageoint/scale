@@ -288,7 +288,7 @@ class TestJobTypesView(TestCase):
 
         self.workspace = storage_test_utils.create_workspace()
         self.error = error_test_utils.create_error()
-        self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0)
+        self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
         self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0)
 
     def test_successful(self):
@@ -310,6 +310,7 @@ class TestJobTypesView(TestCase):
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['version'], expected.version)
+            self.assertEqual(entry['max_scheduled'], expected.max_scheduled)
 
     def test_name(self):
         '''Tests successfully calling the jobs view filtered by job type name.'''
@@ -393,6 +394,42 @@ class TestJobTypesView(TestCase):
         self.assertIsNotNone(results['error_mapping'])
         self.assertEqual(results['error_mapping']['exit_codes']['1'], self.error.name)
         self.assertIsNone(results['trigger_rule'])
+        self.assertIsNone(results['max_scheduled'])
+
+    def test_create_max_scheduled(self):
+        '''Tests creating a new job type.'''
+        url = '/job-types/'
+        json_data = {
+            'name': 'job-type-max_scheduled-test',
+            'version': '1.0.0',
+            'title': 'Job Type max_scheduled Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'max_scheduled': '42',
+            'interface': {
+                'version': '1.0',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        job_type = JobType.objects.filter(name='job-type-max_scheduled-test').first()
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['max_scheduled'], 42)
 
     def test_create_trigger(self):
         '''Tests creating a new job type with a trigger rule.'''
@@ -589,7 +626,7 @@ class TestJobTypeDetailsView(TestCase):
                                                                    configuration=self.trigger_config)
 
         self.job_type = job_test_utils.create_job_type(interface=self.interface, error_mapping=self.error_mapping,
-                                                       trigger_rule=self.trigger_rule)
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2)
         self.error1 = error_test_utils.create_error()
         self.error2 = error_test_utils.create_error()
 
@@ -617,6 +654,7 @@ class TestJobTypeDetailsView(TestCase):
         self.assertIsNotNone(result['interface'])
         self.assertIsNotNone(result['error_mapping'])
         self.assertIsNotNone(result['trigger_rule'])
+        self.assertEqual(result['max_scheduled'], 2)
         self.assertEqual(len(result['errors']), 1)
 
         self.assertEqual(len(result['job_counts_6h']), 0)

@@ -94,6 +94,7 @@ These services allow administrators to export recipe, job, and error records and
 |                "docker_image": null,                                                                                    |
 |                "priority": 1,                                                                                           |
 |                "timeout": 0,                                                                                            |
+|                "max_scheduled": 1,                                                                                      |
 |                "max_tries": 0,                                                                                          |
 |                "cpus_required": 1.0,                                                                                    |
 |                "mem_required": 64.0,                                                                                    |

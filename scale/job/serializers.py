@@ -32,6 +32,7 @@ class JobTypeSerializer(JobTypeBaseSerializer):
     revision_num = serializers.IntegerField()
 
     priority = serializers.IntegerField()
+    max_scheduled = serializers.IntegerField()
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()
     cpus_required = serializers.FloatField()
