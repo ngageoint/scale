@@ -187,8 +187,19 @@ class JobManager(models.Manager):
             order = ['last_status_change']
         return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
 
+    def get_locked_job(self, job_id):
+        """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
+
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The job model
+        :rtype: :class:`job.models.Job`
+        """
+
+        return self.get_locked_jobs([job_id])[0]
+
     def get_locked_jobs(self, job_ids):
-        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models.
+        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
 
         :param job_ids: The job IDs
         :type job_ids: [int]
@@ -632,6 +643,17 @@ class JobExecutionManager(models.Manager):
         job_exe = job_exe.get(pk=job_exe_id)
         return job_exe
 
+    def get_locked_job_exe(self, job_exe_id):
+        """Returns the job execution with the given ID with a model lock obtained
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :returns: The job execution model with a model lock
+        :rtype: :class:`job.models.JobExecution`
+        """
+
+        return self.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
+
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 
@@ -934,45 +956,47 @@ class JobExecutionManager(models.Manager):
         elif task == 'post':
             job_exe_qry.update(post_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
 
-    @transaction.atomic
-    def update_status(self, job_exe, status, when, error=None):
-        """Updates the given job execution (and its job) with the new status. The given job_exe model must have already
-        been saved in the database (it must have an ID) and the caller must have obtained a lock on the job_exe model
-        using select_for_update(). All of the job_exe and job model changes will be saved in the database. The updated
-        job model is returned with a lock from select_for_update() and its related job_type and job_type_rev models. All
-        database changes occur in an atomic transaction.
+    def update_status(self, job_exes, status, when, error=None):
+        """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
+        the job execution and job models (in that order).
 
-        :param job_exe: The job execution to update
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job_exes: The job executions (with related job models) to update
+        :type job_exes: [:class:`job.models.JobExecution`]
         :param status: The new status
         :type status: str
         :param when: The time that the status change occurred
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
         :type error: :class:`error.models.Error`
-        :returns: The job model with lock and related job_type and job_type_rev models
-        :rtype: :class:`job.models.Job`
         """
 
-        if status in ['QUEUED', 'RUNNING']:
-            raise Exception('Invalid status transition for a job execution')
-        if when is None:
-            raise Exception('Cannot update status without when')
+        if status == 'QUEUED':
+            raise Exception('QUEUED is an invalid status transition for job executions, use queue_job_exes()')
+        if status == 'RUNNING':
+            raise Exception('update_status() cannot set a job execution to RUNNING, use schedule_job_executions()')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
             raise Exception('Status %s is invalid with an error' % status)
 
-        job_exe.status = status
-        job_exe.error = error
-        job_exe.ended = when
-        job_exe.save()
+        modified = timezone.now()
 
-        # Acquire model lock first, then query for related
-        Job.objects.select_for_update().get(pk=job_exe.job_id)
-        job = Job.objects.select_related('job_type', 'job_type_rev').get(pk=job_exe.job_id)
-        Job.objects.update_status([job], status, when, error)
-        return job
+        # Update job execution models in memory and collect job execution IDs
+        job_exe_ids = set()
+        jobs = []
+        for job_exe in job_exes:
+            job_exe_ids.add(job_exe.id)
+            jobs.append(job_exe.job)
+            job_exe.status = status
+            job_exe.ended = when
+            job_exe.error = error
+            job_exe.last_modified = modified
+
+        # Update job execution models in database with single query
+        self.filter(id__in=job_exe_ids).update(status=status, ended=when, error=error, last_modified=modified)
+
+        # Update job models
+        Job.objects.update_status(jobs, status, when, error)
 
 
 class JobExecution(models.Model):

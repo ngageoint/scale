@@ -42,6 +42,16 @@ class RecipeHandler(object):
             else:
                 self._root_nodes.append(dependent_node)
 
+    @property
+    def recipe_id(self):
+        """Returns the ID of the recipe for this handler
+
+        :returns: The recipe ID
+        :rtype: int
+        """
+
+        return self._recipe.id
+
     def get_blocked_jobs(self):
         """Returns the jobs within this recipe that should be updated to BLOCKED status
 
@@ -129,6 +139,18 @@ class RecipeHandler(object):
                 pending_jobs.append(job)
 
         return pending_jobs
+
+    def is_completed(self):
+        """Indicates whether this recipe has been completed
+
+        :returns: True if this recipe has been completed, False otherwise
+        :rtype: bool
+        """
+
+        for node in self._nodes_by_id.values():
+            if node.recipe_job.job.status != 'COMPLETED':
+                return False
+        return True
 
 
 class RecipeNode(object):

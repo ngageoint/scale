@@ -7,12 +7,13 @@ import logging
 import django.utils.timezone as timezone
 from django.db import models, transaction
 
+from error.models import Error
 from job.configuration.data.exceptions import InvalidData, StatusError
 from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
-from recipe.models import Recipe, RecipeJob
+from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
@@ -333,9 +334,6 @@ class QueueManager(models.Manager):
         job_exe_qry = JobExecution.objects.select_for_update().defer('stdout', 'stderr').filter(job_id=job_id)
         job_exe = job_exe_qry.order_by('-created').first()
 
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_id)
-
         # Acquire model lock on job
         job = Job.objects.select_for_update().get(pk=job_id)
 
@@ -356,15 +354,17 @@ class QueueManager(models.Manager):
             # Stop the current job execution, removing it from the queue if applicable
             if job_exe.status == 'QUEUED':
                 Queue.objects.filter(job_exe_id=job_exe.id).delete()
-            JobExecution.objects.update_status(job_exe, 'CANCELED', when)
+            JobExecution.objects.update_status([job_exe], 'CANCELED', when)
             self._handle_job_finished(job_exe)
         else:
             # Latest job execution was finished, so just mark the job as CANCELED
             Job.objects.update_status([job], 'CANCELED', when)
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        if recipe:
-            self._update_dependent_recipe_jobs(recipe, when)
+        handler = Recipe.objects.get_recipe_handler_for_job(job.id)
+        if handler:
+            jobs_to_blocked = handler.get_blocked_jobs()
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def handle_job_completion(self, job_exe_id, when):
@@ -376,19 +376,15 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-
-        if job_exe.status != 'RUNNING':
-            raise Exception('Cannot complete a job execution in status %s' % job_exe.status)
-
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_exe.job_id)
-
-        job = JobExecution.objects.update_status(job_exe, 'COMPLETED', when)
+        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
+        if not job_exe.status == 'RUNNING':
+            # If this job execution is no longer running, ignore completion
+            return
+        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        JobExecution.objects.update_status([job_exe], 'COMPLETED', when)
         # Grab results from the completed job execution
-        job.results = job_exe.results
-        job.save()
+        job_exe.job.results = job_exe.results
+        job_exe.job.save()
 
         self._handle_job_finished(job_exe)
 
@@ -402,11 +398,24 @@ class QueueManager(models.Manager):
                                  processor_class, job_exe_id)
 
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
-        if recipe:
-            self._queue_next_recipe_jobs(recipe)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        if handler:
+            jobs_to_queue = []
+            for job_tuple in handler.get_existing_jobs_to_queue():
+                job = job_tuple[0]
+                job_data = job_tuple[1]
+                try:
+                    Job.objects.populate_job_data(job, job_data)
+                except InvalidData as ex:
+                    raise Exception('Scale created invalid job data: %s' % str(ex))
+                jobs_to_queue.append(job)
+            if jobs_to_queue:
+                self._queue_jobs(jobs_to_queue)
+            if handler.is_completed():
+                Recipe.objects.complete(handler.recipe_id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_exe_id, when, error):
+    def handle_job_failure(self, job_exe_id, when, error=None):
         """Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
         Otherwise it is marked failed. All database changes occur in an atomic transaction.
 
@@ -419,18 +428,14 @@ class QueueManager(models.Manager):
         """
 
         if not error:
-            raise Exception('Error that caused the failure is required')
+            error = Error.objects.get_unknown_error()
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
+        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
         if not job_exe.status == 'RUNNING':
-            # If job is no longer running, ignore failure
+            # If this job execution is no longer running, ignore failure
             return
-
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_exe.job_id)
-
-        job = JobExecution.objects.update_status(job_exe, 'FAILED', when, error)
+        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
 
         self._handle_job_finished(job_exe)
 
@@ -444,15 +449,17 @@ class QueueManager(models.Manager):
                                  job_exe_id)
 
         # Re-queue job if a system error occurred and there are more tries left
-        requeue = error.category == 'SYSTEM' and job.num_exes < job.max_tries
+        requeue = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
         # Also re-queue long running jobs
-        requeue = requeue or job.job_type.is_long_running
+        requeue = requeue or job_exe.job.job_type.is_long_running
         if requeue:
-            self._queue_jobs([job])
+            self._queue_jobs([job_exe.job])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        if recipe:
-            self._update_dependent_recipe_jobs(recipe, when)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        if handler:
+            jobs_to_blocked = handler.get_blocked_jobs()
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
@@ -523,10 +530,20 @@ class QueueManager(models.Manager):
         :raises InvalidData: If the recipe data is invalid
         """
 
-        recipe = Recipe.objects.create_recipe(recipe_type, event, data)
-        self._queue_next_recipe_jobs(recipe)
+        handler = Recipe.objects.create_recipe(recipe_type, event, data)
+        jobs_to_queue = []
+        for job_tuple in handler.get_existing_jobs_to_queue():
+            job = job_tuple[0]
+            job_data = job_tuple[1]
+            try:
+                Job.objects.populate_job_data(job, job_data)
+            except InvalidData as ex:
+                raise Exception('Scale created invalid job data: %s' % str(ex))
+            jobs_to_queue.append(job)
+        if jobs_to_queue:
+            self._queue_jobs(jobs_to_queue)
 
-        return recipe.id
+        return handler.recipe_id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -742,7 +759,7 @@ class QueueManager(models.Manager):
                 'version': '1.0',
                 'input_data': [{'name': 'Job Exe ID', 'value': str(job_exe.id)}]
             }
-            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node.id}
+            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
             cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event)
             job_exe.cleanup_job_id = cleanup_job_id
@@ -877,87 +894,6 @@ class QueueManager(models.Manager):
 
         self.bulk_create(queues)
         return job_exes
-
-    @transaction.atomic
-    def _queue_next_recipe_jobs(self, recipe):
-        """Queues all of the jobs in the recipe that have all of their job dependencies completed and are ready to be
-        queued. The given recipe model must have already been saved in the database (it must have an ID), it must have
-        its related recipe_type and recipe_type_rev models populated, and the caller must have obtianed a lock on it
-        using select_for_update(). All database changes occur in an atomic transaction.
-
-        :param recipe: The recipe
-        :type recipe: :class:`recipe.models.Recipe`
-        """
-
-        definition = recipe.get_recipe_definition()
-
-        # Get and categorize jobs in the recipe
-        unqueued_jobs = {}
-        completed_jobs = {}
-        jobs_by_id = {}
-        last_completed = None
-
-        # Get all recipe jobs with job model locks
-        recipe_jobs = RecipeJob.objects.get_recipe_jobs(recipe.id, jobs_related=True, jobs_lock=True)
-        for recipe_job in recipe_jobs:
-            jobs_by_id[recipe_job.job_id] = recipe_job.job
-            if recipe_job.job.status == 'PENDING':
-                unqueued_jobs[recipe_job.job_name] = recipe_job.job
-            elif recipe_job.job.status == 'COMPLETED':
-                completed_jobs[recipe_job.job_name] = recipe_job.job
-
-                if not last_completed or recipe_job.job.last_status_change > last_completed:
-                    last_completed = recipe_job.job.last_status_change
-
-        # Determine jobs to queue and then queue them
-        jobs_to_queue = definition.get_next_jobs_to_queue(recipe.get_recipe_data(), unqueued_jobs, completed_jobs)
-        for job_id in jobs_to_queue:
-            job_data = jobs_to_queue[job_id]
-            job = jobs_by_id[job_id]
-            try:
-                Job.objects.populate_job_data(job, job_data)
-                self._queue_jobs([job])
-            except InvalidData as ex:
-                raise Exception('Scale created invalid job data: %s' % str(ex))
-
-        # Update the overall recipe completed time once all child recipe jobs are completed successfully
-        if len(completed_jobs) == len(recipe_jobs):
-            recipe.completed = last_completed
-            recipe.save()
-
-    @transaction.atomic
-    def _update_dependent_recipe_jobs(self, recipe, when):
-        """Updates all unqueued dependent jobs in the given recipe so that they have the correct PENDING or BLOCKED
-        status based on whether their dependencies cannot complete (FAILED or CANCELED). The given recipe model must
-        have already been saved in the database (it must have an ID), it must have its related recipe_type and
-        recipe_type_rev models populated, and the caller must have obtianed a lock on it using select_for_update(). All
-        database changes occur in an atomic transaction.
-
-        :param recipe: The recipe
-        :type recipe: :class:`recipe.models.Recipe`
-        :param when: The time when the statuses needed to be updated
-        :type when: :class:`datetime.datetime`
-        """
-
-        definition = recipe.get_recipe_definition()
-        jobs_by_id = {}
-        jobs_by_name = {}
-
-        # Get all recipe jobs with job model locks
-        recipe_jobs = RecipeJob.objects.get_recipe_jobs(recipe.id, jobs_related=False, jobs_lock=True)
-        for recipe_job in recipe_jobs:
-            jobs_by_id[recipe_job.job.id] = recipe_job.job
-            jobs_by_name[recipe_job.job_name] = recipe_job.job
-
-        # Determine PENDING/BLOCKED recipe jobs
-        new_job_statuses = definition.get_unqueued_job_statuses(jobs_by_name)
-
-        # Update job statuses as needed
-        for job_id in new_job_statuses:
-            new_status = new_job_statuses[job_id]
-            job = jobs_by_id[job_id]
-            if job.status != new_status:
-                Job.objects.update_status([job], new_status, when)
 
 
 class Queue(models.Model):

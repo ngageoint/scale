@@ -324,11 +324,11 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         '''Tests calling RecipeManager.create_recipe() successfully.'''
 
         event = trigger_test_utils.create_trigger_event()
-        recipe = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=self.data)
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=self.data)
 
         # Make sure the recipe jobs get created with the correct job types
-        recipe_job_1 = RecipeJob.objects.get(recipe_id=recipe.id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.get(recipe_id=recipe.id, job_name='Job 2')
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 2')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
 

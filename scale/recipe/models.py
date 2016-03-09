@@ -1,8 +1,9 @@
 """Defines the database models for recipes and recipe types"""
 from __future__ import unicode_literals
 
-from django.db import models, transaction
+import django.utils.timezone as timezone
 import djorm_pgjson.fields
+from django.db import models, transaction
 
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
@@ -22,12 +23,24 @@ class RecipeManager(models.Manager):
     """Provides additional methods for handling recipes
     """
 
+    def complete(self, recipe_id, when):
+        """Marks the recipe with the given ID as being completed
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: :int
+        :param when: The time that the recipe was completed
+        :type when: :class:`datetime.datetime`
+        """
+
+        modified = timezone.now()
+        self.filter(id=recipe_id).update(completed=when, last_modified=modified)
+
     @transaction.atomic
     def create_recipe(self, recipe_type, event, data):
-        """Creates a new recipe for the given type and returns the saved recipe model. All jobs for the recipe will also
-        be created. The given recipe type model must have already been saved in the database (it must have an ID). The
-        given event model must have already been saved in the database (it must have an ID). All database changes occur
-        in an atomic transaction.
+        """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
+        also be created. The given recipe type model must have already been saved in the database (it must have an ID).
+        The given event model must have already been saved in the database (it must have an ID). All database changes
+        occur in an atomic transaction.
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
@@ -35,8 +48,8 @@ class RecipeManager(models.Manager):
         :type event: :class:`trigger.models.TriggerEvent`
         :param data: JSON description defining the recipe data to run on
         :type data: dict
-        :returns: The new recipe
-        :rtype: :class:`recipe.models.Recipe`
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handler.RecipeHandler`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
@@ -59,6 +72,7 @@ class RecipeManager(models.Manager):
         recipe.save()
 
         # Create recipe jobs and link them to the recipe
+        recipe_jobs = []
         jobs_by_name = self._create_recipe_jobs(recipe_definition, event)
         for job_name in jobs_by_name:
             recipe_job = RecipeJob()
@@ -66,8 +80,9 @@ class RecipeManager(models.Manager):
             recipe_job.job_name = job_name
             recipe_job.recipe = recipe
             recipe_job.save()
+            recipe_jobs.append(recipe_job)
 
-        return recipe
+        return RecipeHandler(recipe, recipe_jobs)
 
     @transaction.atomic
     def _create_recipe_jobs(self, recipe_definition, event):
@@ -94,7 +109,7 @@ class RecipeManager(models.Manager):
 
         return results
 
-    # TODO: this might be deprecated, might still be used to lock recipe for completing it
+    # TODO: deprecated, remove when no longer in use
     def get_locked_recipe_for_job(self, job_id):
         """Returns the recipe model for the given job. The returned recipe model (None if job does not have a recipe)
         will have its related recipe_type field populated and have a lock obtained by select_for_update().
@@ -116,10 +131,26 @@ class RecipeManager(models.Manager):
 
         return recipe
 
+    def get_recipe_handler_for_job(self, job_id):
+        """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
+        must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
+        all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs.
+
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The recipe handler, possibly None
+        :rtype: :class:`recipe.handler.RecipeHandler`
+        """
+
+        handlers = self.get_recipe_handlers_for_jobs([job_id])
+        if job_id not in handlers:
+            return None
+        return handlers[job_id]
+
     def get_recipe_handlers_for_jobs(self, job_ids):
         """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
         have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
-        all recipe jobs that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
+        all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
         that a given job ID will not appear in the results if it does not exist within a recipe.
 
         :param job_ids: The job IDs
@@ -136,7 +167,9 @@ class RecipeManager(models.Manager):
             recipe_ids_per_job_id[recipe_job.job_id].append(recipe_job.recipe_id)
 
         # Get handlers for all recipes and figure out dependent jobs to lock
-        handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
+        handlers = {}
+        if recipe_ids_per_job_id:
+            handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
         job_ids_to_lock = set()
         for job_id in job_ids:
             if job_id in handlers:
@@ -144,9 +177,12 @@ class RecipeManager(models.Manager):
                 job_ids_to_lock.union(handler.get_dependent_job_ids(job_id))
 
         # Lock dependent recipe jobs
-        Job.objects.lock_jobs(job_ids_to_lock)
+        if job_ids_to_lock:
+            Job.objects.lock_jobs(job_ids_to_lock)
 
         # Return handlers with updated data after all dependent jobs have been locked
+        if not recipe_ids_per_job_id:
+            return {}
         return self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
 
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, order=None):
