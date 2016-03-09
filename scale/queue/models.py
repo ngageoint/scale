@@ -594,9 +594,6 @@ class QueueManager(models.Manager):
         :raises StatusError: If the job is not in a valid state to be queued.
         """
 
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_id)
-
         # Make sure the job is ready to be re-queued
         jobs = Job.objects.get_locked_jobs([job_id])
         if not jobs:
@@ -612,18 +609,19 @@ class QueueManager(models.Manager):
         when = timezone.now()
         job_exe_id = None
         if job.num_exes == 0:
-            # Job has never been queued before, so send it back to PENDING
-            Job.objects.update_status([job], 'PENDING', when)
+            # Job has never been queued before, set it to BLOCKED, might be changed to PENDING
+            Job.objects.update_status([job], 'BLOCKED', when)
         else:
             # Job has been queued before, so queue it again
             self._queue_jobs([job])
             job_exe = JobExecution.objects.get(job_id=job.id, status='QUEUED')
             job_exe_id = job_exe.id
 
-        if recipe:
-            # Update fellow recipe jobs now that this job is no longer FAILED or CANCELED
-            self._queue_next_recipe_jobs(recipe)
-            self._update_dependent_recipe_jobs(recipe, when)
+        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
+        if handler:
+            jobs_to_pending = handler.get_pending_jobs()
+            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
         return job_exe_id
 
     @transaction.atomic

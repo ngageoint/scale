@@ -1,4 +1,3 @@
-##PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import json
@@ -40,7 +39,7 @@ class TestJobLoadView(TestCase):
         queue_test_utils.create_job_load(job_type=self.job_type3, running_count=1)
 
     def test_successful(self):
-        '''Tests successfully calling the job load view.'''
+        """Tests successfully calling the job load view."""
 
         url = '/load/'
         response = self.client.generic('GET', url)
@@ -50,7 +49,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(len(result['results']), 3)
 
     def test_job_type_id(self):
-        '''Tests successfully calling the job laod view filtered by job type identifier.'''
+        """Tests successfully calling the job laod view filtered by job type identifier."""
 
         url = '/load/?job_type_id=%s' % self.job_type1.id
         response = self.client.generic('GET', url)
@@ -61,7 +60,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(result['results'][0]['pending_count'], 1)
 
     def test_job_type_name(self):
-        '''Tests successfully calling the job load view filtered by job type name.'''
+        """Tests successfully calling the job load view filtered by job type name."""
 
         url = '/load/?job_type_name=%s' % self.job_type2.name
         response = self.client.generic('GET', url)
@@ -72,7 +71,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(result['results'][0]['queued_count'], 1)
 
     def test_job_type_category(self):
-        '''Tests successfully calling the job load view filtered by job type category.'''
+        """Tests successfully calling the job load view filtered by job type category."""
 
         url = '/load/?job_type_category=%s' % self.job_type3.category
         response = self.client.generic('GET', url)
@@ -83,7 +82,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(result['results'][0]['running_count'], 1)
 
     def test_job_type_priority(self):
-        '''Tests successfully calling the job load view filtered by job type priority.'''
+        """Tests successfully calling the job load view filtered by job type priority."""
 
         url = '/load/?job_type_priority=%s' % self.job_type1.priority
         response = self.client.generic('GET', url)
@@ -94,7 +93,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(result['results'][0]['pending_count'], 1)
 
     def test_max_duration(self):
-        '''Tests calling the job load view with time values that define a range greater than 31 days'''
+        """Tests calling the job load view with time values that define a range greater than 31 days"""
 
         url = '/load/?started=2015-01-01T00:00:00Z&ended=2015-02-02T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -109,7 +108,7 @@ class TestQueueDepthView(TestCase):
         django.setup()
 
     def test_missing_both_params(self):
-        '''Tests calling the queue depth view with no parameter values.'''
+        """Tests calling the queue depth view with no parameter values."""
 
         url = '/queue/depth/'
         response = self.client.generic('GET', url)
@@ -117,7 +116,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_started(self):
-        '''Tests calling the queue depth view with no started value.'''
+        """Tests calling the queue depth view with no started value."""
 
         url = '/queue/depth/?ended=2015-01-01T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -125,7 +124,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_ended(self):
-        '''Tests calling the queue depth view with no ended value.'''
+        """Tests calling the queue depth view with no ended value."""
 
         url = '/queue/depth/?ended=2015-01-01T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -133,7 +132,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_timezone(self):
-        '''Tests calling the queue depth view with time values that lack a timezone'''
+        """Tests calling the queue depth view with time values that lack a timezone"""
 
         url = '/queue/depth/?started=2015-01-01T00:00:00&ended=2015-01-02T00:00:00'
         response = self.client.generic('GET', url)
@@ -141,7 +140,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_over_31_days(self):
-        '''Tests calling the queue depth view with time values that define a range greater than 31 days'''
+        """Tests calling the queue depth view with time values that define a range greater than 31 days"""
 
         url = '/queue/depth/?started=2015-01-01T00:00:00Z&ended=2015-02-02T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -149,7 +148,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_negative_time_range(self):
-        '''Tests calling the queue depth view with time values that define a negative time range'''
+        """Tests calling the queue depth view with time values that define a negative time range"""
 
         url = '/queue/depth/?ended=2015-01-01T00:00:00Z&started=2015-01-02T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -157,7 +156,7 @@ class TestQueueDepthView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_successful(self):
-        '''Tests calling the queue depth view successfully.'''
+        """Tests calling the queue depth view successfully."""
 
         url = '/queue/depth/?started=2015-01-01T00:00:00Z&ended=2015-01-02T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -173,7 +172,7 @@ class TestQueueNewJobView(TestCase):
         django.setup()
 
     def test_bad_job_type_id(self):
-        '''Tests calling the queue status view with an invalid job type ID.'''
+        """Tests calling the queue status view with an invalid job type ID."""
 
         json_data = {
             'job_type_id': -1234,
@@ -186,7 +185,7 @@ class TestQueueNewJobView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_bad_type_job_type_id(self):
-        '''Tests calling the queue status view with a string job type ID (which is invalid).'''
+        """Tests calling the queue status view with a string job type ID (which is invalid)."""
 
         json_data = {
             'job_type_id': 'BAD',
@@ -199,7 +198,7 @@ class TestQueueNewJobView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_job_type_id(self):
-        '''Tests calling the queue status view without the required job type ID.'''
+        """Tests calling the queue status view without the required job type ID."""
 
         json_data = {
             'job_data': {},
@@ -212,7 +211,7 @@ class TestQueueNewJobView(TestCase):
 
     @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
     def test_bad_type_args(self):
-        '''Tests calling the queue status view with a string job_data value (which is invalid).'''
+        """Tests calling the queue status view with a string job_data value (which is invalid)."""
 
         json_data = {
             'job_type_id': 123,
@@ -227,7 +226,7 @@ class TestQueueNewJobView(TestCase):
     @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
     @patch('queue.views.Queue.objects.queue_new_job_for_user')
     def test_invalid_args(self, mock_queue):
-        '''Tests calling the queue status view with invalid job_data for the job.'''
+        """Tests calling the queue status view with invalid job_data for the job."""
         mock_queue.side_effect = InvalidData('Invalid args')
 
         json_data = {
@@ -243,7 +242,7 @@ class TestQueueNewJobView(TestCase):
     @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
     @patch('queue.views.Queue.objects.queue_new_job_for_user')
     def test_successful(self, mock_queue):
-        '''Tests calling the queue status view successfully.'''
+        """Tests calling the queue status view successfully."""
         job1 = job_test_utils.create_job()
         job2 = job_test_utils.create_job()
 
@@ -272,7 +271,7 @@ class TestQueueNewRecipeView(TestCase):
         django.setup()
 
     def test_bad_recipe_id(self):
-        '''Tests calling the queue recipe view with an invalid recipe ID.'''
+        """Tests calling the queue recipe view with an invalid recipe ID."""
 
         json_data = {
             'recipe_type_id': -1234,
@@ -285,7 +284,7 @@ class TestQueueNewRecipeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_bad_type_recipe_id(self):
-        '''Tests calling the queue recipe view with a string recipe ID (which is invalid).'''
+        """Tests calling the queue recipe view with a string recipe ID (which is invalid)."""
 
         json_data = {
             'recipe_id': 'BAD',
@@ -298,7 +297,7 @@ class TestQueueNewRecipeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_recipe_id(self):
-        '''Tests calling the queue recipe view without the required job type.'''
+        """Tests calling the queue recipe view without the required job type."""
 
         json_data = {
             'recipe_data': {},
@@ -310,7 +309,7 @@ class TestQueueNewRecipeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_successful(self):
-        '''Tests calling the queue recipe view successfully.'''
+        """Tests calling the queue recipe view successfully."""
 
         recipe_type = recipe_test_utils.create_recipe_type()
         workspace = storage_test_utils.create_workspace()
@@ -338,7 +337,7 @@ class TestQueueStatusView(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests successfully calling the queue status view.'''
+        """Tests successfully calling the queue status view."""
 
         url = '/queue/status/'
         response = self.client.generic('GET', url)
@@ -354,11 +353,36 @@ class TestRequeueExistingJobView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type = job_test_utils.create_job_type(max_tries=2)
-        self.job = job_test_utils.create_job(job_type=self.job_type, data={})
+        self.job_1 = job_test_utils.create_job(status='RUNNING')
+        self.job_2 = job_test_utils.create_job(data={})
+
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_1.job_type.name,
+                    'version': self.job_1.job_type.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_2.job_type.name,
+                    'version': self.job_2.job_type.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+        self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 1', job=self.job_1)
+        self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 2', job=self.job_2)
 
     def test_bad_job_id(self):
-        '''Tests calling the requeue view with an invalid job type ID.'''
+        """Tests calling the requeue view with an invalid job type ID."""
         json_data = {
             'job_id': 1000,
         }
@@ -369,13 +393,13 @@ class TestRequeueExistingJobView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_requeue_canceled(self,):
-        '''Tests calling the requeue view successfully for a job that was never queued.'''
+        """Tests calling the requeue view successfully for a job that was never queued."""
 
         # make sure the job is in the right state despite not actually having been run
-        Job.objects.update_status([self.job], 'CANCELED', timezone.now())
+        Job.objects.update_status([self.job_2], 'CANCELED', timezone.now())
         base_count = Queue.objects.count()
         json_data = {
-            'job_id': self.job.id,
+            'job_id': self.job_2.id,
         }
 
         url = '/queue/requeue-job/'
@@ -383,28 +407,27 @@ class TestRequeueExistingJobView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(result['id'], self.job.id)
+        self.assertEqual(result['id'], self.job_2.id)
         self.assertEqual(result['status'], 'PENDING')
         self.assertEqual(len(result['job_exes']), 0)
 
-        job = Job.objects.get(id=self.job.id)
-        self.assertEqual(job.max_tries, 2)
+        job = Job.objects.get(id=self.job_2.id)
         self.assertEqual(Queue.objects.count() - base_count, 0)
 
     def test_requeue_failed(self,):
-        '''Tests calling the requeue view successfully for a job that was previously queued.'''
+        """Tests calling the requeue view successfully for a job that was previously queued."""
 
-        job_test_utils.create_job_exe(job=self.job, status='FAILED')
-        job_test_utils.create_job_exe(job=self.job, status='FAILED')
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
 
         # make sure the job is in the right state despite not actually having been run
-        Job.objects.update_status([self.job], 'FAILED', timezone.now(), error_test_utils.create_error())
-        self.job.num_exes = 2
-        self.job.save()
+        Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
+        self.job_2.num_exes = 2
+        self.job_2.save()
 
         base_count = Queue.objects.count()
         json_data = {
-            'job_id': self.job.id,
+            'job_id': self.job_2.id,
         }
 
         url = '/queue/requeue-job/'
@@ -412,27 +435,25 @@ class TestRequeueExistingJobView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(result['id'], self.job.id)
+        self.assertEqual(result['id'], self.job_2.id)
         self.assertEqual(result['status'], 'QUEUED')
         self.assertEqual(len(result['job_exes']), 3)
 
-        job = Job.objects.get(id=self.job.id)
-        self.assertEqual(job.max_tries, 4)
+        job = Job.objects.get(id=self.job_2.id)
         self.assertEqual(Queue.objects.count() - base_count, 1)
 
     def test_wrong_status(self,):
-        '''Tests calling the requeue view when the job hasn't failed.'''
+        """Tests calling the requeue view when the job hasn't failed."""
 
-        job_test_utils.create_job_exe(job=self.job, status='COMPLETED')
-        Job.objects.update_status([self.job], 'COMPLETED', timezone.now())
+        job_test_utils.create_job_exe(job=self.job_2, status='COMPLETED')
+        Job.objects.update_status([self.job_2], 'COMPLETED', timezone.now())
 
         json_data = {
-            'job_id': self.job.id,
+            'job_id': self.job_2.id,
         }
 
         url = '/queue/requeue-job/'
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        job = Job.objects.get(id=self.job.id)
+        job = Job.objects.get(id=self.job_2.id)
 
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
-        self.assertEqual(job.max_tries, 2)

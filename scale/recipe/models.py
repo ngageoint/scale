@@ -109,28 +109,6 @@ class RecipeManager(models.Manager):
 
         return results
 
-    # TODO: deprecated, remove when no longer in use
-    def get_locked_recipe_for_job(self, job_id):
-        """Returns the recipe model for the given job. The returned recipe model (None if job does not have a recipe)
-        will have its related recipe_type field populated and have a lock obtained by select_for_update().
-
-        :param job_id: The ID of the job
-        :type job_id: int
-        :returns: The job's recipe, possibly None, with populated recipe_type and model lock
-        :rtype: :class:`recipe.models.Recipe`
-        """
-
-        try:
-            recipe_job = RecipeJob.objects.get(job_id=job_id)
-            # Acquire model lock first, then requery for related fields
-            Recipe.objects.select_for_update().get(pk=recipe_job.recipe_id)
-            recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(pk=recipe_job.recipe_id)
-        except RecipeJob.DoesNotExist:
-            # Not in a recipe
-            recipe = None
-
-        return recipe
-
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
@@ -165,24 +143,25 @@ class RecipeManager(models.Manager):
             if recipe_job.job_id not in recipe_ids_per_job_id:
                 recipe_ids_per_job_id[recipe_job.job_id] = []
             recipe_ids_per_job_id[recipe_job.job_id].append(recipe_job.recipe_id)
+        if not recipe_ids_per_job_id:
+            return {}
 
         # Get handlers for all recipes and figure out dependent jobs to lock
-        handlers = {}
-        if recipe_ids_per_job_id:
-            handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
+        handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
         job_ids_to_lock = set()
         for job_id in job_ids:
             if job_id in handlers:
                 handler = handlers[job_id]
                 job_ids_to_lock.union(handler.get_dependent_job_ids(job_id))
 
+        if not job_ids_to_lock:
+            # Dependent jobs, just return handlers
+            return handlers
+
         # Lock dependent recipe jobs
-        if job_ids_to_lock:
-            Job.objects.lock_jobs(job_ids_to_lock)
+        Job.objects.lock_jobs(job_ids_to_lock)
 
         # Return handlers with updated data after all dependent jobs have been locked
-        if not recipe_ids_per_job_id:
-            return {}
         return self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
 
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, order=None):
