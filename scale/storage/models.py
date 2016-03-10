@@ -1,4 +1,4 @@
-'''Defines the database models for file information and workspaces'''
+"""Defines the database models for file information and workspaces"""
 from __future__ import unicode_literals
 
 import hashlib
@@ -28,12 +28,12 @@ VALID_TAG_PATTERN = re.compile('^[a-zA-Z0-9\\-_ ]+$')
 
 
 class CountryDataManager(models.Manager):
-    '''Provides additional methods for handling country data
-    '''
+    """Provides additional methods for handling country data
+    """
 
     @transaction.atomic
     def update_border(self, name, border, effective=None):
-        '''Updates the country border geometry for an existing country, adding a new entry for the new effective date.
+        """Updates the country border geometry for an existing country, adding a new entry for the new effective date.
 
         :param name: The name of an existing country
         :type name: str
@@ -41,7 +41,7 @@ class CountryDataManager(models.Manager):
         :type border: GEOSGeometry or str
         :param effective: The effective date for the new border. If None, now() will be used
         :type data_started: :class:`datetime.datetime`
-        '''
+        """
 
         if not isinstance(border, geos.geometry.GEOSGeometry):
             border, _ = geospatial_utils.parse_geo_json(border)
@@ -55,7 +55,7 @@ class CountryDataManager(models.Manager):
             new_item.save()
 
     def get_effective(self, target_date, name=None, iso2=None):
-        '''Get the country data entry for a name or iso2 abbreviation and target date such that this is the most
+        """Get the country data entry for a name or iso2 abbreviation and target date such that this is the most
         recent entry whose effective date is before the target.
 
         :param target_date: The target date
@@ -66,7 +66,7 @@ class CountryDataManager(models.Manager):
         :type name: str
         :rval: A query set
         :rtype: :class:`django.db.models.query.QuerySet`
-        '''
+        """
         assert((name is not None and iso2 is None) or (iso2 is not None and name is None))
         if name is not None:
             return self.filter(name=name, effective__lte=target_date).order_by('-effective').first()
@@ -74,7 +74,7 @@ class CountryDataManager(models.Manager):
             return self.filter(iso2=iso2, effective__lte=target_date).order_by('-effective').first()
 
     def get_intersects(self, geom, target_date):
-        '''Get the countries whose borders intersect the specified geometry and whose effective date
+        """Get the countries whose borders intersect the specified geometry and whose effective date
         is before the target.
 
         :param geom: The geometry (point, poly, etc.) to search.
@@ -83,7 +83,7 @@ class CountryDataManager(models.Manager):
         :type target_date: :class:`datetime.datetime`
         :rval: A dict of intersected countries mapped to enties
         :rtype: dict
-        '''
+        """
 
         tmp = self.filter(border__intersects=geom, effective__lte=target_date).order_by('-effective')
         rval = {}
@@ -97,7 +97,7 @@ class CountryDataManager(models.Manager):
 
 
 class CountryData(models.Model):
-    '''Represents country borders and official abbreviations
+    """Represents country borders and official abbreviations
 
     :keyword name: The full name of the country
     :type name: :class:`django.db.models.CharField`
@@ -123,7 +123,7 @@ class CountryData(models.Model):
     :type deleted: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the country model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     name = models.CharField(max_length=128)
     fips = models.CharField(max_length=2)
@@ -141,29 +141,29 @@ class CountryData(models.Model):
     objects = CountryDataManager()
 
     def __unicode__(self):
-        '''Unicode representation of a country which is the ISO3 code for this country.
-        '''
+        """Unicode representation of a country which is the ISO3 code for this country.
+        """
         return self.iso3
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'country_data'
         unique_together = ("name", "effective")
         index_together = ["name", "effective"]
 
 
 class ScaleFileManager(models.Manager):
-    '''Provides additional methods for handling Scale files
-    '''
+    """Provides additional methods for handling Scale files
+    """
 
     def cleanup_download_dir(self, download_dir, work_dir):
-        '''Performs any cleanup necessary for a previous download_files() call
+        """Performs any cleanup necessary for a previous download_files() call
 
         :param download_dir: Absolute path to the local directory for the files to download
         :type download_dir: str
         :param work_dir: Absolute path to a local work directory available to assist in downloading
         :type work_dir: str
-        '''
+        """
 
         download_dir = os.path.normpath(download_dir)
         work_dir = os.path.normpath(work_dir)
@@ -181,13 +181,13 @@ class ScaleFileManager(models.Manager):
             os.rmdir(workspace_root_dir)
 
     def cleanup_move_dir(self, work_dir):
-        '''Performs any cleanup necessary for a previous move_files() call
+        """Performs any cleanup necessary for a previous move_files() call
 
         :param work_dir: Absolute path to a local work directory available to assist in moving
         :type work_dir: str
         :param workspace: The workspace to upload files into
         :type workspace: :class:`storage.models.Workspace`
-        '''
+        """
 
         work_dir = os.path.normpath(work_dir)
 
@@ -203,7 +203,7 @@ class ScaleFileManager(models.Manager):
             os.rmdir(workspace_root_dir)
 
     def cleanup_upload_dir(self, upload_dir, work_dir, workspace):
-        '''Performs any cleanup necessary for a previous setup_upload_dir() call
+        """Performs any cleanup necessary for a previous setup_upload_dir() call
 
         :param upload_dir: Absolute path to the local directory of the files to upload
         :type upload_dir: str
@@ -211,7 +211,7 @@ class ScaleFileManager(models.Manager):
         :type work_dir: str
         :param workspace: The workspace to upload files into
         :type workspace: :class:`storage.models.Workspace`
-        '''
+        """
 
         upload_dir = os.path.normpath(upload_dir)
         work_dir = os.path.normpath(work_dir)
@@ -238,7 +238,7 @@ class ScaleFileManager(models.Manager):
                 os.rmdir(delete_root_dir)
 
     def download_files(self, download_dir, work_dir, files_to_download):
-        '''Downloads the given Scale files into the given download directory. After all use of the downloaded files is
+        """Downloads the given Scale files into the given download directory. After all use of the downloaded files is
         complete, the caller should call cleanup_download_dir(). Each ScaleFile model should have its related workspace
         field populated.
 
@@ -249,7 +249,7 @@ class ScaleFileManager(models.Manager):
         :type work_dir: str
         :param files_to_download: List of tuples (Scale file, destination path relative to download directory)
         :type files_to_download: list of (:class:`storage.models.ScaleFile`, str)
-        '''
+        """
 
         download_dir = os.path.normpath(download_dir)
         work_dir = os.path.normpath(work_dir)
@@ -284,13 +284,13 @@ class ScaleFileManager(models.Manager):
             workspace.download_files(download_dir, workspace_work_dir, download_file_list)
 
     def get_total_file_size(self, file_ids):
-        '''Returns the total file size of the given file IDs in bytes
+        """Returns the total file size of the given file IDs in bytes
 
         :param files: List of file IDs
         :type files: list[int]
         :returns: Total file size in bytes
         :rtype: long
-        '''
+        """
 
         results = ScaleFile.objects.filter(id__in=file_ids).aggregate(Sum('file_size'))
 
@@ -303,14 +303,14 @@ class ScaleFileManager(models.Manager):
 
     @transaction.atomic
     def move_files(self, work_dir, files_to_move):
-        '''Moves the given Scale files to the new workspace location. Each ScaleFile model should have its related
+        """Moves the given Scale files to the new workspace location. Each ScaleFile model should have its related
         workspace field populated and the caller must have obtained a model lock on each using select_for_update().
 
         :param work_dir: Absolute path to a local work directory available to assist in moving
         :type work_dir: str
         :param files_to_move: List of tuples (Scale file, destination workspace path)
         :type files_to_move: list of (:class:`storage.models.ScaleFile`, str)
-        '''
+        """
 
         # {Workspace ID: (workspace, list of (workspace_path, new_workspace_path))}
         wp_dict = {}
@@ -344,7 +344,7 @@ class ScaleFileManager(models.Manager):
             workspace.move_files(workspace_work_dir, move_file_list)
 
     def setup_upload_dir(self, upload_dir, work_dir, workspace):
-        '''Sets up the given upload directory to upload Scale files into the given workspace. Note that moving/copying
+        """Sets up the given upload directory to upload Scale files into the given workspace. Note that moving/copying
         files into an upload directory after this method has been called may be expensive as the setup upload directory
         may not be a local directory.
 
@@ -355,7 +355,7 @@ class ScaleFileManager(models.Manager):
         :type work_dir: str
         :param workspace: The workspace to upload files into
         :type workspace: :class:`storage.models.Workspace`
-        '''
+        """
 
         upload_dir = os.path.normpath(upload_dir)
         work_dir = os.path.normpath(work_dir)
@@ -368,7 +368,7 @@ class ScaleFileManager(models.Manager):
         workspace.setup_upload_dir(upload_dir, workspace_work_dir)
 
     def upload_files(self, upload_dir, work_dir, workspace, files_to_upload):
-        '''Uploads the given files in the given upload directory into the workspace. This method assumes that
+        """Uploads the given files in the given upload directory into the workspace. This method assumes that
         setup_upload_dir() has already been called with the same upload and work directories. The ScaleFile models will
         be saved in an atomic database transaction.
 
@@ -383,7 +383,7 @@ class ScaleFileManager(models.Manager):
         :type files_to_upload: list of (:class:`storage.models.ScaleFile`, str, str)
         :returns: The list of the saved file models
         :rtype: list of :class:`storage.models.ScaleFile`
-        '''
+        """
 
         upload_dir = os.path.normpath(upload_dir)
         work_dir = os.path.normpath(work_dir)
@@ -442,13 +442,13 @@ class ScaleFileManager(models.Manager):
             raise ex
 
     def _correct_workspace_path(self, workspace_path):
-        '''Applies any needed corrections to the given workspace path (path should be normalized and relative)
+        """Applies any needed corrections to the given workspace path (path should be normalized and relative)
 
         :param workspace_path: The workspace path to correct
         :type workspace_path: str
         :returns: The corrected workspace path
         :rtype: str
-        '''
+        """
 
         # Make sure path is relative
         if os.path.isabs(workspace_path):
@@ -458,48 +458,48 @@ class ScaleFileManager(models.Manager):
         return os.path.normpath(workspace_path)
 
     def _get_delete_root_dir(self, work_dir):
-        '''Returns the root directory for workspace sub-directories used for deleting files
+        """Returns the root directory for workspace sub-directories used for deleting files
 
         :param work_dir: Absolute path to a local work directory available to Scale
         :type work_dir: str
-        '''
+        """
 
         return os.path.join(work_dir, 'delete')
 
     def _get_delete_work_dir(self, work_dir, workspace):
-        '''Returns a work sub-directory used to delete files from the given workspace
+        """Returns a work sub-directory used to delete files from the given workspace
 
         :param work_dir: Absolute path to a local work directory available to Scale
         :type work_dir: str
         :param workspace: The workspace
         :type workspace: :class:`storage.models.Workspace`
-        '''
+        """
 
         return os.path.join(self._get_delete_root_dir(work_dir), get_valid_filename(workspace.name))
 
     def _get_workspace_root_dir(self, work_dir):
-        '''Returns the root directory for workspace work sub-directories
+        """Returns the root directory for workspace work sub-directories
 
         :param work_dir: Absolute path to a local work directory available to Scale
         :type work_dir: str
-        '''
+        """
 
         return os.path.join(work_dir, 'workspaces')
 
     def _get_workspace_work_dir(self, work_dir, workspace):
-        '''Returns a work sub-directory for the given workspace
+        """Returns a work sub-directory for the given workspace
 
         :param work_dir: Absolute path to a local work directory available to Scale
         :type work_dir: str
         :param workspace: The workspace
         :type workspace: :class:`storage.models.Workspace`
-        '''
+        """
 
         return os.path.join(self._get_workspace_root_dir(work_dir), get_valid_filename(workspace.name))
 
 
 class ScaleFile(models.Model):
-    '''Represents a file that is stored within a Scale workspace
+    """Represents a file that is stored within a Scale workspace
 
     :keyword id: The ID of the file
     :type id: :class:`storage.models.BigAutoField`
@@ -540,7 +540,7 @@ class ScaleFile(models.Model):
     :type meta_data: :class:`djorm_pgjson.fields.JSONField`
     :keyword countries: List of countries represented in this file as indicated by the file's geometry.
     :type countries: :class:`django.db.models.ManyToManyField` of :class:`storage.models.CountryData`
-    '''
+    """
 
     file_name = models.CharField(max_length=250, db_index=True)
     media_type = models.CharField(max_length=250)
@@ -566,13 +566,13 @@ class ScaleFile(models.Model):
     objects = ScaleFileManager()
 
     def update_uuid(self, *args):
-        '''Computes and sets a new UUID value for this file by hashing the given arguments.
+        """Computes and sets a new UUID value for this file by hashing the given arguments.
 
         :param args: One or more input objects to hash.
         :type args: list[str]
         :returns: The generated unique identifier.
         :rtype: str
-        '''
+        """
 
         # Make sure a value is passed to avoid silently creating useless identifiers
         if not args:
@@ -589,13 +589,13 @@ class ScaleFile(models.Model):
         return self.uuid
 
     def add_data_type_tag(self, tag):
-        '''Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
+        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
         spaces.
 
         :param tag: The data type tag to add
         :type tag: str
         :raises InvalidDataTypeTag: If the given tag is invalid
-        '''
+        """
 
         if not VALID_TAG_PATTERN.match(tag):
             raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
@@ -605,11 +605,11 @@ class ScaleFile(models.Model):
         self._set_data_type_tags(tags)
 
     def get_data_type_tags(self):
-        '''Returns the set of data type tags associated with this file
+        """Returns the set of data type tags associated with this file
 
         :returns: The set of data type tags
         :rtype: set of str
-        '''
+        """
 
         tags = set()
         if self.data_type:
@@ -618,10 +618,10 @@ class ScaleFile(models.Model):
         return tags
 
     def set_countries(self):
-        '''Clears the countries list then recreates it from the CountryData table.
+        """Clears the countries list then recreates it from the CountryData table.
         If no geometry is available, this will remain empty.
         The country border effective date will use (in order or preference) data_started, data_ended, or created.
-        '''
+        """
         self.countries.clear()
         if self.geometry is None:
             return
@@ -633,22 +633,22 @@ class ScaleFile(models.Model):
         apply(self.countries.add, CountryData.objects.get_intersects(self.geometry, target_date).values())
 
     def _set_data_type_tags(self, tags):
-        '''Sets the data type tags on the model
+        """Sets the data type tags on the model
 
         :param tags: The data type tags
         :type tags: set of str
-        '''
+        """
 
         self.data_type = ','.join(tags)
 
     def _get_url(self):
-        '''Gets the absolute URL used to download this file.
+        """Gets the absolute URL used to download this file.
 
         Note that this property is only supported if the associated workspace supports HTTP downloads.
 
         :returns: The file download URL.
         :rtype: str
-        '''
+        """
 
         # Make sure a valid path can be created
         if self.workspace.base_url and self.file_path:
@@ -666,15 +666,15 @@ class ScaleFile(models.Model):
     url = property(_get_url)
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'scale_file'
 
 
 class WorkspaceManager(models.Manager):
-    '''Provides additional methods for handling workspaces.'''
+    """Provides additional methods for handling workspaces."""
 
     def get_details(self, workspace_id):
-        '''Returns the workspace for the given ID with all detail fields included.
+        """Returns the workspace for the given ID with all detail fields included.
 
         There are currently no additional fields included.
 
@@ -682,7 +682,7 @@ class WorkspaceManager(models.Manager):
         :type workspace_id: int
         :returns: The workspace with all detail fields included.
         :rtype: :class:`storage.models.Workspace`
-        '''
+        """
 
         # Attempt to get the workspace
         workspace = Workspace.objects.get(pk=workspace_id)
@@ -690,7 +690,7 @@ class WorkspaceManager(models.Manager):
         return workspace
 
     def get_workspaces(self, started=None, ended=None, names=None, order=None):
-        '''Returns a list of workspaces within the given time range.
+        """Returns a list of workspaces within the given time range.
 
         :param started: Query workspaces updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -702,7 +702,7 @@ class WorkspaceManager(models.Manager):
         :type order: list[str]
         :returns: The list of workspaces that match the time range.
         :rtype: list[:class:`storage.models.Workspace`]
-        '''
+        """
 
         # Fetch a list of workspaces
         workspaces = Workspace.objects.all()
@@ -726,7 +726,7 @@ class WorkspaceManager(models.Manager):
 
 
 class Workspace(models.Model):
-    '''Represents a storage location where files can be stored and retrieved
+    """Represents a storage location where files can be stored and retrieved
     for processing
 
     :keyword name: The stable name of the workspace used by clients for queries
@@ -742,6 +742,8 @@ class Workspace(models.Model):
 
     :keyword json_config: JSON configuration describing how to store/retrieve files for this workspace
     :type json_config: :class:`djorm_pgjson.fields.JSONField`
+    :keyword is_move_enabled: Whether the workspace allows files to be moved within it
+    :type is_move_enabled: :class:`django.db.models.BooleanField`
 
     :keyword used_size: The number of used bytes, may be None (unknown)
     :type used_size: :class:`django.db.models.BigIntegerField`
@@ -754,7 +756,7 @@ class Workspace(models.Model):
     :type archived: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the workspace was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     name = models.CharField(db_index=True, max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
@@ -763,6 +765,7 @@ class Workspace(models.Model):
     is_active = models.BooleanField(default=True)
 
     json_config = djorm_pgjson.fields.JSONField()
+    is_move_enabled = models.BooleanField(default=True)
 
     used_size = models.BigIntegerField(blank=True, null=True)
     total_size = models.BigIntegerField(blank=True, null=True)
@@ -774,43 +777,43 @@ class Workspace(models.Model):
     objects = WorkspaceManager()
 
     def cleanup_download_dir(self, download_dir, work_dir):
-        '''Performs any cleanup necessary for a previous setup_download_dir() call
+        """Performs any cleanup necessary for a previous setup_download_dir() call
 
         :param download_dir: Absolute path to the local directory for the files to download
         :type download_dir: str
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
-        '''
+        """
 
         broker = self._get_broker()
         broker.cleanup_download_dir(download_dir, work_dir)
 
     def cleanup_upload_dir(self, upload_dir, work_dir):
-        '''Performs any cleanup necessary for a previous setup_upload_dir() call
+        """Performs any cleanup necessary for a previous setup_upload_dir() call
 
         :param upload_dir: Absolute path to the local directory of the files to upload
         :type upload_dir: str
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
-        '''
+        """
 
         broker = self._get_broker()
         broker.cleanup_upload_dir(upload_dir, work_dir)
 
     def delete_files(self, work_dir, workspace_paths):
-        '''Deletes the workspace files with the given workspace paths
+        """Deletes the workspace files with the given workspace paths
 
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
         :param workspace_paths: The relative workspace paths of the files to delete
         :type workspace_paths: list of str
-        '''
+        """
 
         broker = self._get_broker()
         broker.delete_files(work_dir, workspace_paths)
 
     def download_files(self, download_dir, work_dir, files_to_download):
-        '''Downloads the given workspace files into the given download directory. This method assumes that
+        """Downloads the given workspace files into the given download directory. This method assumes that
         setup_download_dir() has already been called with the same download and work directories.
 
         :param download_dir: Absolute path to the local directory for the files to download
@@ -820,49 +823,49 @@ class Workspace(models.Model):
         :param files_to_download: List of tuples (workspace path of a file to download, destination path relative to
             download directory)
         :type files_to_download: list of (str, str)
-        '''
+        """
 
         broker = self._get_broker()
         broker.download_files(download_dir, work_dir, files_to_download)
 
     def move_files(self, work_dir, files_to_move):
-        '''Moves the workspace files to the new workspace paths
+        """Moves the workspace files to the new workspace paths
 
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
         :param files_to_move: List of tuples (current workspace path of a file to move, new workspace path for the file)
         :type files_to_move: list of (str, str)
-        '''
+        """
 
         broker = self._get_broker()
         broker.move_files(work_dir, files_to_move)
 
     def setup_download_dir(self, download_dir, work_dir):
-        '''Sets up the given download directory to download files from the workspace
+        """Sets up the given download directory to download files from the workspace
 
         :param download_dir: Absolute path to the local directory for the files to download
         :type download_dir: str
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
-        '''
+        """
 
         broker = self._get_broker()
         broker.setup_download_dir(download_dir, work_dir)
 
     def setup_upload_dir(self, upload_dir, work_dir):
-        '''Sets up the given upload directory to upload files into the workspace
+        """Sets up the given upload directory to upload files into the workspace
 
         :param upload_dir: Absolute path to the local directory of the files to upload
         :type upload_dir: str
         :param work_dir: Absolute path to a local work directory available to the workspace
         :type work_dir: str
-        '''
+        """
 
         broker = self._get_broker()
         broker.setup_upload_dir(upload_dir, work_dir)
 
     def upload_files(self, upload_dir, work_dir, files_to_upload):
-        '''Uploads the given files in the given upload directory into the workspace. This method assumes that
+        """Uploads the given files in the given upload directory into the workspace. This method assumes that
         setup_upload_dir() has already been called with the same upload and work directories.
 
         :param upload_dir: Absolute path to the local directory of the files to upload
@@ -872,17 +875,17 @@ class Workspace(models.Model):
         :param files_to_upload: List of tuples (source path relative to upload directory, workspace path for storing the
             file)
         :type files_to_upload: list of (str, str)
-        '''
+        """
 
         broker = self._get_broker()
         broker.upload_files(upload_dir, work_dir, files_to_upload)
 
     def _get_broker(self):
-        '''Returns the configured broker for this workspace
+        """Returns the configured broker for this workspace
 
         :returns: The configured broker
         :rtype: :class:`storage.brokers.broker.Broker`
-        '''
+        """
 
         broker_config = self.json_config['broker']
         broker_type = broker_config['type']
@@ -891,5 +894,5 @@ class Workspace(models.Model):
         return broker
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'workspace'
