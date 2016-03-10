@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    '''Command that migrates existing data files into scale
-    '''
+    """Command that migrates existing data files into scale
+    """
 
     help = 'Migrate existing data into scale'
 
@@ -42,10 +42,10 @@ class Command(BaseCommand):
     # input dir, target workspace
 
     def handle(self, *args, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method migrates existing data files into scale.
-        '''
+        """
         logger.info(u'Command starting: migratedata')
 
         workspace, workspace_path, local_path, data_types = None, None, None, []
