@@ -100,12 +100,11 @@ class RecipeManager(models.Manager):
         :rtype: dict of str -> :class:`job.models.Job`
         """
 
-        # Get a mapping of all job names to job types for the recipe
-        job_types_by_name = recipe_definition.get_job_type_map()
-
         # Create an associated job for each recipe reference
         results = {}
-        for job_name, job_type in job_types_by_name.iteritems():
+        for job_tuple in recipe_definition.get_jobs_to_create():
+            job_name = job_tuple[0]
+            job_type = job_tuple[1]
             job = Job.objects.create_job(job_type, event)
             job.save()
             results[job_name] = job
