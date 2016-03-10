@@ -511,7 +511,7 @@ class Job(models.Model):
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
     last_status_change = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobManager()
 
@@ -1180,7 +1180,7 @@ class JobExecution(models.Model):
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
     cleaned_up = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()
 

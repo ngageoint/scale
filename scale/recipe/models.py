@@ -287,7 +287,7 @@ class Recipe(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = RecipeManager()
 
