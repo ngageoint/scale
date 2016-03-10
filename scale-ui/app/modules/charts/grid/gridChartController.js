@@ -259,7 +259,7 @@
                 // offsets are the same; no dragging occurred; process as click event
                 $scope.$apply(function () {
                     if (target.toString() === 'JobType') {
-                        $location.path('/jobs/types/' + target.id);
+                        $location.path('/jobs').search('job_type_id', target.id);
                     } else if (target.toString() === 'Node') {
                         $location.path('/nodes/' + target.id);
                     }
