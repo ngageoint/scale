@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'scheduler',
     'metrics',
     'port',
+    'cli',
 )
 
 MIDDLEWARE_CLASSES = (
