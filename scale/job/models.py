@@ -257,6 +257,10 @@ class JobManager(models.Manager):
         :type job_ids: [int]
         """
 
+        # Dummy list is used here to force query execution
+        # Unfortunately this query can't usually be combined with other queries since using select_related() with
+        # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
+        # two queries in get_locked_jobs().
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
     def queue_jobs(self, jobs, when, priority=None):
