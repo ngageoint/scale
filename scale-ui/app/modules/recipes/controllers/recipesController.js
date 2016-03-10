@@ -26,6 +26,25 @@
         $scope.selectedRecipeType = recipesParams.type_id || 0;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         $scope.gridStyle = '';
+        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStartPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStartPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStartPopup.opened = true;
+        };
+        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStopPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStopPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStopPopup.opened = true;
+        };
+        $scope.dateModelOptions = {
+            timezone: '+000'
+        };
 
         subnavService.setCurrentPath('recipes');
 
@@ -105,6 +124,7 @@
             _.forEach(_.pairs(recipesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
+            $scope.loading = true;
             getRecipes();
         };
 
@@ -149,6 +169,20 @@
             }
         };
 
+        $scope.$watch('lastModifiedStart', function (value) {
+            if (!$scope.loading) {
+                recipesParams.started = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
+        $scope.$watch('lastModifiedStop', function (value) {
+            if (!$scope.loading) {
+                recipesParams.ended = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
         $scope.$watch('selectedRecipeType', function (value) {
             if ($scope.loading) {
                 if (filteredByRecipeType) {
@@ -170,6 +204,14 @@
                 if (!recipesParams.page_size) {
                     recipesParams.page_size = $scope.gridOptions.paginationPageSize;
                     $location.search('page_size', recipesParams.page_size).replace();
+                }
+                if (!recipesParams.started) {
+                    recipesParams.started = moment.utc($scope.lastModifiedStart).toISOString();
+                    $location.search('started', recipesParams.started).replace();
+                }
+                if (!recipesParams.ended) {
+                    recipesParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
+                    $location.search('ended', recipesParams.ended).replace();
                 }
             }
             getRecipeTypes();
