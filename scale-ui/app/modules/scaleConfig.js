@@ -281,8 +281,8 @@
             },
             subnavLinks: {
                 jobs: [
-                    { path: 'jobs', label: 'Jobs' },
-                    { path: 'jobs/types', label: 'Job Types' }
+                    { path: 'jobs/types', label: 'Job Types' },
+                    { path: 'jobs', label: 'Jobs' }
                 ],
                 load: [
                     { path: 'load', label: 'Queued' },
@@ -290,8 +290,8 @@
                     { path: 'load/depth', label: 'Job Load' }
                 ],
                 recipes: [
-                    { path: 'recipes', label: 'Recipes' },
-                    { path: 'recipes/types', label: 'Recipe Types' }
+                    { path: 'recipes/types', label: 'Recipe Types' },
+                    { path: 'recipes', label: 'Recipes' }
                 ],
                 feed: [
                     { path: 'feed', label: 'Status' },
