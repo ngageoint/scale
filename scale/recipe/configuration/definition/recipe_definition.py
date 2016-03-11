@@ -1,4 +1,4 @@
-'''Defines the class for managing a recipe definition'''
+"""Defines the class for managing a recipe definition"""
 from __future__ import unicode_literals
 
 from django.db.models import Q
@@ -167,19 +167,19 @@ RECIPE_DEFINITION_SCHEMA = {
 
 
 class RecipeDefinition(object):
-    '''Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
+    """Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
     recipe, and how the inputs and outputs of those jobs are connected together.
-    '''
+    """
 
     def __init__(self, definition):
-        '''Creates a recipe definition object from the given dictionary. The general format is checked for correctness,
+        """Creates a recipe definition object from the given dictionary. The general format is checked for correctness,
         but the actual job details are not checked for correctness.
 
         :param definition: The recipe definition
         :type definition: dict
 
         :raises InvalidDefinition: If the given definition is invalid
-        '''
+        """
 
         self._definition = definition
         self._inputs_by_name = {}  # Name -> input data dict
@@ -213,22 +213,22 @@ class RecipeDefinition(object):
         self._validate_recipe_inputs()
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this recipe definition
+        """Returns the internal dictionary that represents this recipe definition
 
         :returns: The internal dictionary
         :rtype: dict
-        '''
+        """
 
         return self._definition
 
     def get_job_types(self, lock=False):
-        '''Returns a set of job types for each job in the recipe
+        """Returns a set of job types for each job in the recipe
 
         :param lock: Whether to obtain select_for_update() locks on the job type models
         :type lock: bool
         :returns: Set of referenced job types
         :rtype: set[:class:`job.models.JobType`]
-        '''
+        """
 
         filters = []
         for job_type_key in self.get_job_type_keys():
@@ -242,11 +242,11 @@ class RecipeDefinition(object):
         return set()
 
     def get_job_type_keys(self):
-        '''Returns a set of tuples that represent keys for each job in the recipe
+        """Returns a set of tuples that represent keys for each job in the recipe
 
         :returns: Set of referenced job types as a tuple of (name, version)
         :rtype: set[(str, str)]
-        '''
+        """
         job_type_keys = set()
         for job_dict in self._jobs_by_name.itervalues():
             if 'job_type' in job_dict:
@@ -256,11 +256,11 @@ class RecipeDefinition(object):
         return job_type_keys
 
     def get_job_type_map(self):
-        '''Returns a mapping of job name to job type for each job in the recipe
+        """Returns a mapping of job name to job type for each job in the recipe
 
         :returns: Dictionary with the recipe job name of each job mapping to its job type
         :rtype: dict of str -> :class:`job.models.JobType`
-        '''
+        """
         results = {}
         job_types = self.get_job_types()
         job_type_map = {(job_type.name, job_type.version): job_type for job_type in job_types}
@@ -274,8 +274,23 @@ class RecipeDefinition(object):
 
         return results
 
+    def get_jobs_to_create(self):
+        """Returns the list of job names and types to create for the recipe, in the order that they be created
+
+        :returns: List of tuples with each job's name and type
+        :rtype: [(str, :class:`job.models.JobType`)]
+        """
+
+        results = []
+        job_type_map = self.get_job_type_map()
+        ordering = self._get_topological_order()
+        for job_name in ordering:
+            job_tuple = (job_name, job_type_map[job_name])
+            results.append(job_tuple)
+        return results
+
     def get_next_jobs_to_queue(self, data, unqueued_jobs, completed_jobs):
-        '''Returns the IDs and data for the next recipe jobs that should be placed on the queue
+        """Returns the IDs and data for the next recipe jobs that should be placed on the queue
 
         :param data: The recipe data
         :type data: :class:`recipe.configuration.data.recipe_data.RecipeData`
@@ -287,7 +302,7 @@ class RecipeDefinition(object):
         :type completed_jobs: dict of str -> :class:`job.models.Job`
         :returns: Dictionary with the ID of each job to queue mapping to its job data
         :rtype: dict of int -> :class:`job.configuration.data.job_data.JobData`
-        '''
+        """
 
         jobs_to_queue = {}
 
@@ -311,14 +326,14 @@ class RecipeDefinition(object):
         return jobs_to_queue
 
     def get_unqueued_job_statuses(self, recipe_jobs):
-        '''Returns the status (PENDING or BLOCKED) that each recipe job that has never been queued should be set to
+        """Returns the status (PENDING or BLOCKED) that each recipe job that has never been queued should be set to
         based upon whether any of its dependencies are FAILED or CANCELED
 
         :param recipe_jobs: All of the recipe job models, mapped by recipe job name
         :type recipe_jobs: dict of str -> :class:`job.models.Job`
         :returns: Dictionary with the ID of each never-queued job mapping to its appropriate status (PENDING or BLOCKED)
         :rtype: dict of int -> :class:`job.configuration.data.job_data.JobData`
-        '''
+        """
 
         job_statuses = {}  # {Job ID: Status}
         processed_jobs = {}  # {Recipe Job Name: Job}
@@ -366,7 +381,7 @@ class RecipeDefinition(object):
         return job_statuses
 
     def validate_connection(self, recipe_conn):
-        '''Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
+        """Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
         recipe with this definition
 
         :param recipe_conn: The recipe definition
@@ -376,7 +391,7 @@ class RecipeDefinition(object):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If there is a configuration
             problem
-        '''
+        """
 
         warnings = []
         warnings.extend(recipe_conn.validate_input_files(self._input_file_validation_dict))
@@ -395,7 +410,7 @@ class RecipeDefinition(object):
         return warnings
 
     def validate_data(self, recipe_data):
-        '''Validates the given data against the recipe definition
+        """Validates the given data against the recipe definition
 
         :param recipe_data: The recipe data
         :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
@@ -403,7 +418,7 @@ class RecipeDefinition(object):
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
-        '''
+        """
 
         warnings = []
         warnings.extend(recipe_data.validate_input_files(self._input_file_validation_dict))
@@ -422,7 +437,7 @@ class RecipeDefinition(object):
         return warnings
 
     def validate_job_interfaces(self):
-        '''Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
+        """Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
         connections are valid
 
         :returns: A list of warnings discovered during validation.
@@ -430,7 +445,7 @@ class RecipeDefinition(object):
 
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
             If there are any invalid job connections in the definition
-        '''
+        """
 
         # Query for job types
         job_types_by_name = self.get_job_type_map()  # Job name in recipe -> job type model
@@ -452,13 +467,13 @@ class RecipeDefinition(object):
         return warnings
 
     def _add_recipe_inputs_to_conn(self, job_conn, recipe_inputs):
-        '''Populates the given connection for a job with its recipe inputs
+        """Populates the given connection for a job with its recipe inputs
 
         :param job_conn: The job's connection
         :type job_conn: :class:`job.configuration.data.job_connection.JobConnection`
         :param recipe_inputs: List of recipe inputs used for the job
         :type recipe_inputs: list of dict
-        '''
+        """
 
         for recipe_dict in recipe_inputs:
             recipe_input = recipe_dict['recipe_input']
@@ -474,7 +489,7 @@ class RecipeDefinition(object):
                 job_conn.add_input_file(job_input, multiple, media_types, optional)
 
     def _create_job_data(self, job_dict, job, recipe_data, completed_jobs):
-        '''Creates and returns the job data for the given recipe job
+        """Creates and returns the job data for the given recipe job
 
         :param job_dict: The recipe job dictionary
         :type job_dict: dict
@@ -487,7 +502,7 @@ class RecipeDefinition(object):
         :type completed_jobs: dict of str -> :class:`job.models.Job`
         :returns: The job data
         :rtype: :class:`job.configuration.data.job_data.JobData`
-        '''
+        """
 
         job_data = JobData({})
 
@@ -513,7 +528,7 @@ class RecipeDefinition(object):
         return job_data
 
     def _create_validation_dicts(self):
-        '''Creates the validation dicts required by recipe_data to perform its validation'''
+        """Creates the validation dicts required by recipe_data to perform its validation"""
 
         for input_data in self._definition['input_data']:
             name = input_data['name']
@@ -533,9 +548,70 @@ class RecipeDefinition(object):
                         file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, True, file_desc)
 
+    def _get_topological_order(self):
+        """Returns the recipe job names in a valid topological ordering
+
+        :returns: The list of job names in topological ordering
+        :rtype: [str]
+        """
+
+        nodes_by_name = {}  # {Job name: Recipe Node}
+        root_nodes = []  # Recipe nodes that have jobs with no dependencies
+
+        for job_name in self._jobs_by_name:
+            node = RecipeNode()
+            node.job_name = job_name
+            nodes_by_name[job_name] = node
+
+        for job_name in self._jobs_by_name:
+            job_dict = self._jobs_by_name[job_name]
+            dependent_node = nodes_by_name[job_name]
+            dependencies = job_dict['dependencies']
+            if dependencies:
+                for dependency_dict in job_dict['dependencies']:
+                    parent_node = nodes_by_name[dependency_dict['name']]
+                    parent_node.dependent_nodes.append(dependent_node)
+                    dependent_node.parent_nodes.append(parent_node)
+            else:
+                root_nodes.append(dependent_node)
+
+        results = []
+        perm_set = set()
+        temp_set = set()
+        unmarked_set = set(self._jobs_by_name.keys())
+        while unmarked_set:
+            job_name = unmarked_set.pop()
+            node = nodes_by_name[job_name]
+            self._get_topological_order_visit(node, results, perm_set, temp_set)
+            unmarked_set = set(self._jobs_by_name.keys()) - perm_set
+        return results
+
+    def _get_topological_order_visit(self, node, results, perm_set, temp_set):
+        """Recursive depth-first search algorithm for determining a topological ordering of the recipe jobs
+
+        :param node: The job dictionary
+        :type node: :class:`recipe.configuration.definition.recipe_definition.RecipeNode`
+        :param results: The list of job names in topological order
+        :type results: list
+        :param perm_set: A permanent set of visited nodes (job names)
+        :type perm_set: set
+        :param temp_set: A temporary set of visited nodes (job names)
+        :type temp_set: set
+        """
+
+        if node.job_name in temp_set:
+            raise Exception('Recipe has cyclic dependencies')
+        if node.job_name not in perm_set:
+            temp_set.add(node.job_name)
+            for dependent_node in node.dependent_nodes:
+                self._get_topological_order_visit(dependent_node, results, perm_set, temp_set)
+            perm_set.add(node.job_name)
+            temp_set.remove(node.job_name)
+            results.insert(0, node.job_name)
+
     def _populate_default_values(self):
-        '''Goes through the definition and populates any missing values with defaults
-        '''
+        """Goes through the definition and populates any missing values with defaults
+        """
 
         if not 'version' in self._definition:
             self._definition['version'] = DEFAULT_VERSION
@@ -556,7 +632,7 @@ class RecipeDefinition(object):
                     dependency_dict['connections'] = []
 
     def _validate_job_interface(self, job_dict, job_types_by_name):
-        '''Validates the input connections for the given job in the recipe definition
+        """Validates the input connections for the given job in the recipe definition
 
         :param job_dict: The job dictionary
         :type job_dict: dict
@@ -567,7 +643,7 @@ class RecipeDefinition(object):
 
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
             If there are any invalid job connections in the definition
-        '''
+        """
 
         # Job connection will represent data to be passed to the job to validate
         job_conn = JobConnection()
@@ -596,10 +672,10 @@ class RecipeDefinition(object):
         return warnings
 
     def _validate_job_dependencies(self):
-        '''Validates that every job dependency is listed in jobs and that there are no cyclic dependencies
+        """Validates that every job dependency is listed in jobs and that there are no cyclic dependencies
 
         :raises InvalidDefinition: If there is an undefined job or a cyclic dependency
-        '''
+        """
 
         # Make sure all dependencies are defined
         for job_dict in self._definition['jobs']:
@@ -629,10 +705,10 @@ class RecipeDefinition(object):
                 dependencies_to_check = next_layer
 
     def _validate_no_dup_job_inputs(self):
-        '''Validates that there are no duplicate inputs for any job
+        """Validates that there are no duplicate inputs for any job
 
         :raises InvalidDefinition: If there is a duplicate input
-        '''
+        """
 
         for job_dict in self._definition['jobs']:
             job_name = job_dict['name']
@@ -652,10 +728,10 @@ class RecipeDefinition(object):
                     input_names.add(name)
 
     def _validate_recipe_inputs(self):
-        '''Validates that the recipe inputs used when listing the jobs are defined in the input data section
+        """Validates that the recipe inputs used when listing the jobs are defined in the input data section
 
         :raises InvalidDefinition: If there is an undefined recipe input
-        '''
+        """
 
         for job_dict in self._definition['jobs']:
             job_name = job_dict['name']
@@ -664,3 +740,16 @@ class RecipeDefinition(object):
                 if recipe_input not in self._inputs_by_name:
                     msg = 'Invalid recipe definition: Job %s has undefined recipe input %s' % (job_name, recipe_input)
                     raise InvalidDefinition(msg)
+
+
+class RecipeNode(object):
+    """This class represents a node within a recipe. A node contains a job name along with links to its parent jobs and
+    dependent jobs."""
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self.dependent_nodes = []
+        self.parent_nodes = []
+        self.job_name = None

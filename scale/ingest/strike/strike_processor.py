@@ -374,7 +374,7 @@ class StrikeProcessor(object):
             }
             desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
             event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, ingest.transfer_ended)
-            job_id, _job_exe_id = Queue.objects.queue_new_job(ingest_job_type, data, event)
+            job_id = Queue.objects.queue_new_job(ingest_job_type, data, event)
 
             ingest.job_id = job_id
             ingest.status = 'QUEUED'

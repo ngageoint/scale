@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
@@ -97,8 +96,8 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        '''Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and a valid interface change
-        is made'''
+        """Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and a valid interface change
+        is made"""
 
         # Call test
         JobType.objects.edit_job_type(self.job_type.id, self.new_valid_job_interface)
@@ -112,8 +111,8 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_invalid_interface(self):
-        '''Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and an invalid interface
-        change is made'''
+        """Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and an invalid interface
+        change is made"""
 
         # Call test
         self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type, self.job_type.id, self.new_invalid_job_interface)
@@ -205,8 +204,8 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        '''Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
-        change is made'''
+        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
+        change is made"""
 
         # Call test
         warnings = JobType.objects.validate_job_type(self.job_type.name, self.job_type.version,
@@ -221,8 +220,8 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         self.assertEqual(len(warnings), 1)
 
     def test_invalid_interface(self):
-        '''Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
-        change is made'''
+        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
+        change is made"""
 
         # Call test
         self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type, self.job_type.name, self.job_type.version,
@@ -321,16 +320,18 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         }
 
     def test_successful(self):
-        '''Tests calling RecipeManager.create_recipe() successfully.'''
+        """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        recipe = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=self.data)
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=self.data)
 
         # Make sure the recipe jobs get created with the correct job types
-        recipe_job_1 = RecipeJob.objects.get(recipe_id=recipe.id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.get(recipe_id=recipe.id, job_name='Job 2')
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 2')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+        # Make sure the recipe jobs get created in the correct order
+        self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
 
 
 class TestRecipePopulateJobs(TransactionTestCase):
@@ -344,7 +345,7 @@ class TestRecipePopulateJobs(TransactionTestCase):
         self.recipe_job3 = recipe_test_utils.create_recipe_job(self.recipe, job_name='job 3')
 
     def test_successful(self):
-        '''Tests calling ProductFileManager.populate_source_ancestors() successfully'''
+        """Tests calling ProductFileManager.populate_source_ancestors() successfully"""
 
         recipe = Recipe.objects.get_details(self.recipe.id)
         jobs = list(recipe.jobs)
@@ -428,7 +429,7 @@ class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
         self.recipe_def.validate_job_interfaces()
 
     def test_successful(self):
-        '''Tests calling RecipeTypeManager.create_recipe_type() successfully.'''
+        """Tests calling RecipeTypeManager.create_recipe_type() successfully."""
 
         name = 'test-recipe'
         version = '1.0'
@@ -569,7 +570,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
                                                                                  self.new_configuration)
 
     def test_change_simple_no_trigger(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and no previous trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and no previous trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -595,7 +596,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_change_simple_with_trigger(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and a previous trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with only basic attributes and a previous trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -624,7 +625,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_change_to_definition(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the definition"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -654,7 +655,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_change_to_trigger_rule(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with a change to the trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to the trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -688,7 +689,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_remove_trigger_rule(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() that removes the trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -717,7 +718,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_change_to_both(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and the trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and the trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -752,7 +753,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_invalid_trigger_rule(self):
-        '''Tests calling RecipeTypeManager.edit_recipe_type() with a new invalid trigger rule'''
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a new invalid trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
