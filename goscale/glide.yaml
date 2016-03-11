@@ -1,0 +1,6 @@
+package: github.com/ngageoint/scale/goscale
+import:
+- package: github.com/codegangsta/cli
+- package: gopkg.in/resty.v0
+- package: github.com/op/go-logging
+- package: github.com/fatih/color
