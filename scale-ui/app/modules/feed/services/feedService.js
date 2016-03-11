@@ -7,7 +7,7 @@
             var p = {};
             p.page_size = 1000;
             p.started = params.started ? params.started : moment.utc().add(-7,'days').startOf('d').toDate();
-            p.ended = params.stopped ? params.stopped : moment.utc().toDate();
+            p.ended = params.ended ? params.ended : moment.utc().toDate();
             p.use_ingest_time = params.use_ingest_time ? params.use_ingest_time : null;
             return p;
         };
