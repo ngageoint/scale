@@ -111,8 +111,8 @@ class SourceFileManager(models.GeoManager):
         src_file.set_countries()
         src_file.save()
 
-        # Move the source file if a new workspace path is provided
-        if new_workspace_path:
+        # Move the source file if a new workspace path is provided and the workspace allows it
+        if new_workspace_path and src_file.workspace.is_move_enabled:
             old_workspace_path = src_file.file_path
             ScaleFile.objects.move_files(work_dir, [(src_file, new_workspace_path)])
 
@@ -121,7 +121,7 @@ class SourceFileManager(models.GeoManager):
             ParseTriggerHandler().process_parsed_source_file(src_file)
         except Exception:
             # Move file back if there was an error
-            if new_workspace_path:
+            if new_workspace_path and src_file.workspace.is_move_enabled:
                 ScaleFile.objects.move_files(work_dir, [(src_file, old_workspace_path)])
 
             raise

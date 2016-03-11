@@ -1,4 +1,4 @@
-'''Defines an NFS broker that utilizes a network file system as its backend storage'''
+"""Defines an NFS broker that utilizes a network file system as its backend storage"""
 from __future__ import unicode_literals
 
 import logging
@@ -14,32 +14,32 @@ logger = logging.getLogger(__name__)
 
 
 class NfsBroker(Broker):
-    '''Broker that utilizes the NFS (Network File System) protocol
-    '''
+    """Broker that utilizes the NFS (Network File System) protocol
+    """
 
     broker_type = 'nfs'
 
     def __init__(self):
-        '''Constructor
-        '''
+        """Constructor
+        """
 
         self.mount = None
 
     def cleanup_download_dir(self, download_dir, work_dir):
-        '''See :meth:`storage.brokers.broker.Broker.cleanup_download_dir`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.cleanup_download_dir`
+        """
 
         nfs_umount(work_dir)
 
     def cleanup_upload_dir(self, upload_dir, work_dir):
-        '''See :meth:`storage.brokers.broker.Broker.cleanup_upload_dir`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.cleanup_upload_dir`
+        """
 
         nfs_umount(work_dir)
 
     def delete_files(self, work_dir, workspace_paths):
-        '''See :meth:`storage.brokers.broker.Broker.delete_files`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.delete_files`
+        """
 
         nfs_mount(self.mount, work_dir, False)
         try:
@@ -52,8 +52,8 @@ class NfsBroker(Broker):
             nfs_umount(work_dir)
 
     def download_files(self, download_dir, work_dir, files_to_download):
-        '''See :meth:`storage.brokers.broker.Broker.download_files`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.download_files`
+        """
 
         for file_to_download in files_to_download:
             workspace_path = file_to_download[0]
@@ -69,12 +69,12 @@ class NfsBroker(Broker):
             execute_command_line(['ln', '-s', full_workspace_path, full_dest_path])
 
     def is_config_valid(self, config):
-        '''Validates the given configuration. There is no return value; an invalid configuration should just raise an
+        """Validates the given configuration. There is no return value; an invalid configuration should just raise an
         exception.
 
         :param config: The configuration as a dictionary
         :type config: dict
-        '''
+        """
 
         if not config['type'] == self.broker_type:
             raise Exception('Invalid broker type: %s' % config['type'])
@@ -82,17 +82,17 @@ class NfsBroker(Broker):
         self._validate_str_config_field('mount', config)
 
     def load_config(self, config):
-        '''Loads the given configuration
+        """Loads the given configuration
 
         :param config: The configuration as a dictionary
         :type config: dict
-        '''
+        """
 
         self.mount = config['mount']
 
     def move_files(self, work_dir, files_to_move):
-        '''See :meth:`storage.brokers.broker.Broker.move_files`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.move_files`
+        """
 
         nfs_mount(self.mount, work_dir, False)
         try:
@@ -115,20 +115,20 @@ class NfsBroker(Broker):
             nfs_umount(work_dir)
 
     def setup_download_dir(self, download_dir, work_dir):
-        '''See :meth:`storage.brokers.broker.Broker.setup_download_dir`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.setup_download_dir`
+        """
 
         nfs_mount(self.mount, work_dir, True)
 
     def setup_upload_dir(self, upload_dir, work_dir):
-        '''See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
+        """
 
         pass
 
     def upload_files(self, upload_dir, work_dir, files_to_upload):
-        '''See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
-        '''
+        """See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
+        """
 
         nfs_mount(self.mount, work_dir, False)
         try:
@@ -149,14 +149,18 @@ class NfsBroker(Broker):
             nfs_umount(work_dir)
 
     def _copy_file(self, src_path, dest_path):
-        '''Performs a copy from the src_path to the dest_path
+        """Performs a copy from the src_path to the dest_path
 
         :param src_path: The absolute path to the source file
         :type src_path: str
         :param dest_path: The absolute path to the destination
         :type dest_path: str
-        '''
+        """
 
+        if os.path.islink(src_path):
+            real_path = os.path.realpath(src_path)
+            logger.info('%s is a link to %s', src_path, real_path)
+            src_path = real_path
         logger.info('Copying %s to %s', src_path, dest_path)
         # attempt bbcp copy first. If it fails, we'll fallback to cp
         try:
@@ -178,14 +182,14 @@ class NfsBroker(Broker):
         shutil.copy(src_path, dest_path)
 
     def _get_mount_info(self, *args):
-        '''Determine what filesystem contains a path and if it's an nfs filesystem return the mount spec and server.
+        """Determine what filesystem contains a path and if it's an nfs filesystem return the mount spec and server.
 
         :param args: The path(s) to query.
         :type args: str
         :return: A tuple with ('server:/path/on/server', 'residual path') or (None, 'full path') per argument.
                  The resulting tuple can be passed to os.path.join (i.e. apply(os.path.join, rval))
         :rtype: list of tuple
-        '''
+        """
 
         # create a list of nfs mounts from proc/mountinfo
         mnt_table = []

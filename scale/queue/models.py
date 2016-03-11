@@ -1,4 +1,4 @@
-'''Defines the database model for a queue entry'''
+"""Defines the database model for a queue entry"""
 from __future__ import unicode_literals
 
 import abc
@@ -7,24 +7,27 @@ import logging
 import django.utils.timezone as timezone
 from django.db import models, transaction
 
+from error.models import Error
 from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
-from job.resources import JobResources
 from job.models import JobExecution
-from recipe.models import Recipe, RecipeJob
-from shared_resource.models import SharedResource
+from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
 
 
-# Important note: when acquiring select_for_update() locks on related models, be sure to acquire them in the following
-# order: JobExecution, Queue, Recipe, Job, RecipeType, JobType, TriggerRule
+# IMPORTANT NOTE: Locking order
+# Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
+# deadlocks and ensure query efficiency
+# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
 class JobLoadGroup(object):
-    '''Represents a group of job load models.
+    """Represents a group of job load models.
 
     :keyword time: When the counts were actually measured.
     :type time: datetime.datetime
@@ -34,7 +37,7 @@ class JobLoadGroup(object):
     :type queued_count: int
     :keyword running_count: The number of jobs in running status for the type.
     :type running_count: int
-    '''
+    """
     def __init__(self, time, pending_count=0, queued_count=0, running_count=0):
         self.time = time
         self.pending_count = pending_count
@@ -43,11 +46,11 @@ class JobLoadGroup(object):
 
 
 class JobLoadManager(models.Manager):
-    '''This class manages the JobLoad model.'''
+    """This class manages the JobLoad model."""
 
     @transaction.atomic
     def calculate(self):
-        '''Calculates and saves new job load models grouped by job type based on a current jobs snapshot.'''
+        """Calculates and saves new job load models grouped by job type based on a current jobs snapshot."""
 
         # Get a list of job counts grouped by type and status
         jobs = Job.objects.filter(status__in=['PENDING', 'QUEUED', 'RUNNING'])
@@ -89,7 +92,7 @@ class JobLoadManager(models.Manager):
 
     def get_job_loads(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
                       job_type_priorities=None, order=None):
-        '''Returns a list of job loads within the given time range.
+        """Returns a list of job loads within the given time range.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -107,7 +110,7 @@ class JobLoadManager(models.Manager):
         :type order: list[str]
         :returns: The list of job loads that match the time range.
         :rtype: list[:class:`queue.models.JobLoad`]
-        '''
+        """
 
         # Fetch a list of job loads
         job_loads = JobLoad.objects.all().select_related('job_type')
@@ -136,13 +139,13 @@ class JobLoadManager(models.Manager):
         return job_loads
 
     def group_by_time(self, job_loads):
-        '''Groups the given job loads by job type.
+        """Groups the given job loads by job type.
 
         :param job_loads: Query jobs updated after this amount of time.
         :type job_loads: list[:class:`queue.models.JobLoad`]
         :returns: A list of job loads grouped by job type.
         :rtype: list[:class:`queue.models.JobLoadGroup`]
-        '''
+        """
         results = []
         for job_load in job_loads:
             if not results or results[-1].time != job_load.measured:
@@ -154,7 +157,7 @@ class JobLoadManager(models.Manager):
 
 
 class JobLoad(models.Model):
-    '''Represents the load counts for each job type at various points in time.
+    """Represents the load counts for each job type at various points in time.
 
     :keyword job_type: The type of job being measured.
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -169,7 +172,7 @@ class JobLoad(models.Model):
     :type running_count: :class:`django.db.models.IntegerField`
     :keyword total_count: The number of jobs in pending, queued, or running status for the type.
     :type total_count: :class:`django.db.models.IntegerField`
-    '''
+    """
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT, blank=True, null=True)
     measured = models.DateTimeField(db_index=True)
@@ -182,56 +185,56 @@ class JobLoad(models.Model):
     objects = JobLoadManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'job_load'
 
 
 class QueueEventProcessor(object):
-    '''Base class used to process queue events.'''
+    """Base class used to process queue events."""
     __metaclass__ = abc.ABCMeta
 
     def process_queued(self, job_exe, is_initial):
-        '''Callback when a new job execution is queued that sub-classes have registered to process.
+        """Callback when a new job execution is queued that sub-classes have registered to process.
 
         :param job_exe: The new job execution that requires processing.
         :type job_exe: :class:`job.models.JobExecution`
         :param is_initial: Whether or not this is the first time the associated job has been queued.
         :type is_initial: bool
-        '''
+        """
         raise NotImplemented()
 
     def process_completed(self, job_exe):
-        '''Callback when an existing job execution completed successfully that sub-classes have registered to process.
+        """Callback when an existing job execution completed successfully that sub-classes have registered to process.
 
         :param job_exe: The new job execution that requires processing.
         :type job_exe: :class:`job.models.JobExecution`
-        '''
+        """
         raise NotImplemented()
 
     def process_failed(self, job_exe):
-        '''Callback when an existing job execution failed that sub-classes have registered to process.
+        """Callback when an existing job execution failed that sub-classes have registered to process.
 
         :param job_exe: The new job execution that requires processing.
         :type job_exe: :class:`job.models.JobExecution`
-        '''
+        """
         raise NotImplemented()
 
 
 class QueueManager(models.Manager):
-    '''Provides additional methods for managing the queue
-    '''
+    """Provides additional methods for managing the queue
+    """
 
     # List of queue event processor class definitions
     _processors = []
 
     # TODO: Remove this once the UI migrates to job load
     def get_current_queue_depth(self):
-        '''Returns the current queue depth, both for each job type and for each priority level
+        """Returns the current queue depth, both for each job type and for each priority level
 
         :returns: Tuple of two dicts where the first has each job type ID map to its depth count and the second has each
             priority level map to its depth count
         :rtype: tuple of ({int: int}, {int: int})
-        '''
+        """
 
         depth_by_job_type = {}
         depth_by_priority = {}
@@ -255,7 +258,7 @@ class QueueManager(models.Manager):
 
     # TODO: Remove this once the UI migrates to job load
     def get_historical_queue_depth(self, started, ended):
-        '''Returns the historical queue depth for the given range. The queue depth is returned as a dict with three
+        """Returns the historical queue depth for the given range. The queue depth is returned as a dict with three
         keys: a "job_types" array that lists the job types that had a depth during the time range, a "priorities" array
         that contains the priority levels that had a depth, and a "queue_depth" array with the total depth, depth by job
         type, and depth by priority for each time that the queue depth was measured.
@@ -266,7 +269,7 @@ class QueueManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :returns: dict with the queue depth measurements for the given time range
         :rtype: dict
-        '''
+        """
 
         job_type_qry = QueueDepthByJobType.objects.filter(depth_time__gte=started, depth_time__lte=ended)
         job_type_qry = job_type_qry.select_related('job_type').order_by('depth_time')
@@ -285,21 +288,21 @@ class QueueManager(models.Manager):
         return {'job_types': job_types, 'priorities': priorities, 'queue_depths': queue_depths}
 
     def get_queue(self):
-        '''Returns the list of queue models sorted according to their scheduling priority
+        """Returns the list of queue models sorted according to their scheduling priority
 
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
-        '''
+        """
 
         return Queue.objects.order_by('priority', 'queued').iterator()
 
     def get_queue_status(self):
-        '''Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
+        """Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
         version with overall stats for that type
 
         :returns: The list of each job type with stats
         :rtype: list of dict
-        '''
+        """
 
         status_qry = Queue.objects.values('job_type__name', 'job_type__version', 'job_type__is_paused')
         status_qry = status_qry.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
@@ -322,23 +325,20 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
-        '''Handles the cancellation of a job. All database changes occur in an atomic transaction.
+        """Handles the cancellation of a job. All database changes occur in an atomic transaction.
 
         :param job_id: The ID of the job to be canceled
         :type job_id: int
         :param when: When the job was canceled
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         # Acquire model lock on latest job execution
         job_exe_qry = JobExecution.objects.select_for_update().defer('stdout', 'stderr').filter(job_id=job_id)
         job_exe = job_exe_qry.order_by('-created').first()
 
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_id)
-
         # Acquire model lock on job
-        job = Job.objects.select_for_update().get(pk=job_id)
+        job = Job.objects.get_locked_job(job_id)
 
         # Get latest job execution again to ensure no new job execution was just created
         job_exe_2 = JobExecution.objects.defer('stdout', 'stderr').filter(job_id=job_id).order_by('-created').first()
@@ -357,39 +357,34 @@ class QueueManager(models.Manager):
             # Stop the current job execution, removing it from the queue if applicable
             if job_exe.status == 'QUEUED':
                 Queue.objects.filter(job_exe_id=job_exe.id).delete()
-            JobExecution.objects.update_status(job_exe, 'CANCELED', when)
+            JobExecution.objects.update_status([job_exe], 'CANCELED', when)
             self._handle_job_finished(job_exe)
         else:
             # Latest job execution was finished, so just mark the job as CANCELED
-            Job.objects.update_status(job, 'CANCELED', when)
+            Job.objects.update_status([job], 'CANCELED', when)
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        if recipe:
-            self._update_dependent_recipe_jobs(recipe, when)
+        handler = Recipe.objects.get_recipe_handler_for_job(job.id)
+        if handler:
+            jobs_to_blocked = handler.get_blocked_jobs()
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def handle_job_completion(self, job_exe_id, when):
-        '''Handles the successful completion of a job. All database changes occur in an atomic transaction.
+        """Handles the successful completion of a job. All database changes occur in an atomic transaction.
 
         :param job_exe_id: The ID of the job execution that successfully completed
         :type job_exe_id: int
         :param when: When the job execution was completed
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-
+        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
         if job_exe.status != 'RUNNING':
-            raise Exception('Cannot complete a job execution in status %s' % job_exe.status)
-
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_exe.job_id)
-
-        job = JobExecution.objects.update_status(job_exe, 'COMPLETED', when)
-        # Grab results from the completed job execution
-        job.results = job_exe.results
-        job.save()
+            # If this job execution is no longer running, ignore completion
+            return
+        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        JobExecution.objects.complete_job_exe(job_exe, when)
 
         self._handle_job_finished(job_exe)
 
@@ -403,12 +398,25 @@ class QueueManager(models.Manager):
                                  processor_class, job_exe_id)
 
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
-        if recipe:
-            self._queue_next_recipe_jobs(recipe)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        if handler:
+            jobs_to_queue = []
+            for job_tuple in handler.get_existing_jobs_to_queue():
+                job = job_tuple[0]
+                job_data = job_tuple[1]
+                try:
+                    Job.objects.populate_job_data(job, job_data)
+                except InvalidData as ex:
+                    raise Exception('Scale created invalid job data: %s' % str(ex))
+                jobs_to_queue.append(job)
+            if jobs_to_queue:
+                self._queue_jobs(jobs_to_queue)
+            if handler.is_completed():
+                Recipe.objects.complete(handler.recipe_id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_exe_id, when, error):
-        '''Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
+    def handle_job_failure(self, job_exe_id, when, error=None):
+        """Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
         Otherwise it is marked failed. All database changes occur in an atomic transaction.
 
         :param job_exe_id: The ID of the job execution that failed
@@ -417,21 +425,17 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
-        '''
+        """
 
         if not error:
-            raise Exception('Error that caused the failure is required')
+            error = Error.objects.get_unknown_error()
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-        if not job_exe.status == 'RUNNING':
-            # If job is no longer running, ignore failure
+        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
+        if job_exe.status != 'RUNNING':
+            # If this job execution is no longer running, ignore failure
             return
-
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_exe.job_id)
-
-        job = JobExecution.objects.update_status(job_exe, 'FAILED', when, error)
+        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
 
         self._handle_job_finished(job_exe)
 
@@ -445,66 +449,21 @@ class QueueManager(models.Manager):
                                  job_exe_id)
 
         # Re-queue job if a system error occurred and there are more tries left
-        requeue = error.category == 'SYSTEM' and job.num_exes < job.max_tries
+        requeue = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
         # Also re-queue long running jobs
-        requeue = requeue or job.job_type.is_long_running
+        requeue = requeue or job_exe.job.job_type.is_long_running
         if requeue:
-            self.queue_existing_job(job, None)
+            self._queue_jobs([job_exe.job])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        if recipe:
-            self._update_dependent_recipe_jobs(recipe, when)
-
-    @transaction.atomic
-    def queue_existing_job(self, job, data):
-        '''Puts an existing task on the queue to run with the given arguments. The data should be set to None if this is
-        not the first time the job has been queued. The given job model must have already been saved in the database (it
-        must have an ID), it must have its related job_type and job_type_rev models, and the caller must have obtained a
-        lock on the job model using select_for_update(). The new job_exe and queue models are saved in the database in
-        an atomic transaction.
-
-        :param job: The job to put on the queue
-        :type job: :class:`job.models.Job`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
-        :returns: The new job execution id
-        :rtype: int
-        :raises InvalidData: If the job data is invalid
-        '''
-
-        when_queued = timezone.now()
-        Job.objects.queue_job(job, data, when_queued)
-
-        job_exe = JobExecution.objects.queue_job_exe(job, when_queued)
-        job_exe.save()
-
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_queued(job_exe, data != None)
-            except:
-                logger.exception('Unable to call queue processor for queued job execution: %s -> %s', processor_class,
-                                 job_exe.id)
-
-        queue = Queue()
-        queue.job_exe = job_exe
-        queue.job_type = job.job_type
-        queue.priority = job.priority
-        if job.job_type.name == 'scale-cleanup':
-            queue.node_required_id = job.event.description['node_id']
-        queue.cpus_required = job.cpus_required
-        queue.mem_required = job.mem_required
-        queue.disk_in_required = job.disk_in_required if job.disk_in_required else 0
-        queue.disk_out_required = job.disk_out_required if job.disk_out_required else 0
-        queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
-        queue.queued = when_queued
-        queue.save()
-        return queue.job_exe.id
+        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        if handler:
+            jobs_to_blocked = handler.get_blocked_jobs()
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
-        '''Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
+        """Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
         job_type model must have already been saved in the database (it must have an ID). The given event model must
         have already been saved in the database (it must have an ID). The new job, job_exe, and queue models are saved
         in the database in an atomic transaction. If the data is invalid, a
@@ -517,19 +476,23 @@ class QueueManager(models.Manager):
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
         :returns: The ID of the new job and the ID of the job execution
-        :rtype: tuple of (int, int)
-        '''
+        :rtype: int
+        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
+        """
 
         job = Job.objects.create_job(job_type, event)
         job.save()
 
-        job_exe_id = self.queue_existing_job(job, data)
-        return job.id, job_exe_id
+        # No lock needed for this job since it doesn't exist outside this transaction yet
+        Job.objects.populate_job_data(job, JobData(data))
+        self._queue_jobs([job])
+
+        return job.id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
     def queue_new_job_for_user(self, job_type, data):
-        '''Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
+        """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
         the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
         job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
         invalid, a :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
@@ -540,16 +503,18 @@ class QueueManager(models.Manager):
         :type data: dict
         :returns: The ID of the new job and the ID of the job execution
         :rtype: tuple of (int, int)
-        '''
+        """
 
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        return self.queue_new_job(job_type, data, event)
+        job_id = self.queue_new_job(job_type, data, event)
+        job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
+        return job_id, job_exe.id
 
     @transaction.atomic
     def queue_new_recipe(self, recipe_type, data, event):
-        '''Creates a new recipe for the given type and data. The new jobs in the recipe with no dependencies on other
+        """Creates a new recipe for the given type and data. The new jobs in the recipe with no dependencies on other
         jobs are immediately placed on the queue. The given recipe_type model must have already been saved in the
         database (it must have an ID). The given event model must have already been saved in the database (it must have
         an ID). All database changes occur in an atomic transaction.
@@ -563,17 +528,27 @@ class QueueManager(models.Manager):
         :returns: The ID of the new recipe
         :rtype: int
         :raises InvalidData: If the recipe data is invalid
-        '''
+        """
 
-        recipe = Recipe.objects.create_recipe(recipe_type, event, data)
-        self._queue_next_recipe_jobs(recipe)
+        handler = Recipe.objects.create_recipe(recipe_type, event, data)
+        jobs_to_queue = []
+        for job_tuple in handler.get_existing_jobs_to_queue():
+            job = job_tuple[0]
+            job_data = job_tuple[1]
+            try:
+                Job.objects.populate_job_data(job, job_data)
+            except InvalidData as ex:
+                raise Exception('Scale created invalid job data: %s' % str(ex))
+            jobs_to_queue.append(job)
+        if jobs_to_queue:
+            self._queue_jobs(jobs_to_queue)
 
-        return recipe.id
+        return handler.recipe_id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
     def queue_new_recipe_for_user(self, recipe_type, data):
-        '''Creates a new recipe for the given type and data at the request of a user.
+        """Creates a new recipe for the given type and data at the request of a user.
 
         The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
         event model must have already been saved in the database (it must have an ID). All database changes occur in an
@@ -586,7 +561,7 @@ class QueueManager(models.Manager):
         :returns: The ID of the new recipe
         :rtype: int
         :raises InvalidData: If the recipe data is invalid
-        '''
+        """
 
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
@@ -594,19 +569,20 @@ class QueueManager(models.Manager):
         return self.queue_new_recipe(recipe_type, data, event)
 
     def register_processor(self, processor_class):
-        '''Registers the given processor class to be called when job executions change status.
+        """Registers the given processor class to be called when job executions change status.
 
         Processors from other applications can be registered during their ready() method.
 
         :param processor_class: The processor class to invoke when the associated status change occurs.
         :type processor_class: :class:`job.clock.ClockProcessor`
-        '''
+        """
         logger.debug('Registering queue processor: %s', processor_class)
         self._processors.append(processor_class)
 
+    # TODO: deprecated, use requeue_jobs() instead
     @transaction.atomic
     def requeue_existing_job(self, job_id):
-        '''Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
+        """Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
         correspond to an existing model previously saved in the database and the job must have its related job_type
         model. The new job_exe and queue models are saved in the database in an atomic transaction.
 
@@ -616,33 +592,82 @@ class QueueManager(models.Manager):
         :rtype: int
         :raises InvalidData: If the job data is invalid
         :raises StatusError: If the job is not in a valid state to be queued.
-        '''
-
-        # Acquire model lock on recipe to prevent race conditions with multiple jobs within the same recipe
-        recipe = Recipe.objects.get_locked_recipe_for_job(job_id)
+        """
 
         # Make sure the job is ready to be re-queued
-        job = Job.objects.get_job(job_id, related=True, lock=True)
+        jobs = Job.objects.get_locked_jobs([job_id])
+        if not jobs:
+            raise Job.DoesNotExist
+        job = jobs[0]
         if not job.is_ready_to_requeue:
             raise StatusError
 
         # Increase the max tries to ensure it can be scheduled
         job.increase_max_tries()
+        Job.objects.filter(id=job.id).update(max_tries=job.max_tries)
 
         when = timezone.now()
         job_exe_id = None
         if job.num_exes == 0:
-            # Job has never been queued before, so send it back to PENDING
-            Job.objects.update_status(job, 'PENDING', when)
+            # Job has never been queued before, set it to BLOCKED, might be changed to PENDING
+            Job.objects.update_status([job], 'BLOCKED', when)
         else:
             # Job has been queued before, so queue it again
-            job_exe_id = self.queue_existing_job(job, None)
+            self._queue_jobs([job])
+            job_exe = JobExecution.objects.get(job_id=job.id, status='QUEUED')
+            job_exe_id = job_exe.id
 
-        if recipe:
-            # Update fellow recipe jobs now that this job is no longer FAILED or CANCELED
-            self._queue_next_recipe_jobs(recipe)
-            self._update_dependent_recipe_jobs(recipe, when)
+        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
+        if handler:
+            jobs_to_pending = handler.get_pending_jobs()
+            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
         return job_exe_id
+
+    @transaction.atomic
+    def requeue_jobs(self, job_ids, priority=None):
+        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
+        ignored. All database changes will occur within an atomic transaction.
+
+        :param job_ids: The IDs of the jobs to re-queue
+        :type job_ids: [int]
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
+        """
+
+        jobs_to_requeue = Job.objects.get_locked_jobs(job_ids)
+        all_valid_job_ids = []
+        jobs_to_queue = []
+        jobs_to_blocked = []
+        jobs_to_pending = []
+        for job in jobs_to_requeue:
+            if not job.is_ready_to_requeue:
+                continue
+            all_valid_job_ids.append(job.id)
+            if job.num_exes == 0:
+                # Never been queued before, job should either be PENDING or BLOCKED depending on parent jobs
+                # Assume BLOCKED and it will get switched to PENDING later if needed
+                jobs_to_blocked.append(job)
+            else:
+                # Queued before, go back on queue
+                jobs_to_queue.append(job)
+
+        # Update jobs that are being re-queued
+        if jobs_to_queue:
+            Job.objects.increment_max_tries(jobs_to_queue)
+            self._queue_jobs(jobs_to_queue, priority)
+        when = timezone.now()
+        if jobs_to_blocked:
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+
+        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
+        handlers = Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids)
+        for job_id in all_valid_job_ids:
+            if job_id in handlers:
+                handler = handlers[job_id]
+                jobs_to_pending.extend(handler.get_pending_jobs())
+        if jobs_to_pending:
+            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
     def schedule_job_executions(self, job_executions):
@@ -712,13 +737,12 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def _handle_job_finished(self, job_exe):
-        '''Handles a job execution finishing (reaching a final status of COMPLETED, FAILED, or CANCELED). The caller
-        must have obtained a lock on the given job_exe model using select_for_update(). All database changes occur in an
-        atomic transaction.
+        """Handles a job execution finishing (reaching a final status of COMPLETED, FAILED, or CANCELED). The caller
+        must have obtained a model lock on the given job_exe model. All database changes occur in an atomic transaction.
 
         :param job_exe: The job execution that finished
         :type job_exe: :class:`job.models.JobExecution`
-        '''
+        """
 
         if not job_exe.is_finished:
             raise Exception('Job execution is not finished in status %s' % job_exe.status)
@@ -734,14 +758,14 @@ class QueueManager(models.Manager):
                 'version': '1.0',
                 'input_data': [{'name': 'Job Exe ID', 'value': str(job_exe.id)}]
             }
-            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node.id}
+            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
-            cleanup_job_id, _cleanup_job_exe_id = Queue.objects.queue_new_job(cleanup_type, data, event)
+            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event)
             job_exe.cleanup_job_id = cleanup_job_id
             job_exe.save()
 
     def _process_job_type_depths(self, job_type_qry, job_types, queue_depth_dict, depth_times):
-        '''Processes the queue depths that are split by job type
+        """Processes the queue depths that are split by job type
 
         :param job_type_qry: the query with the depth results
         :type job_type_qry: :class:`django.db.models.query.QuerySet`
@@ -751,7 +775,7 @@ class QueueManager(models.Manager):
         :type queue_depth_dict: dict
         :param depth_times: List to populate with ascending depth times
         :type depth_times: list
-        '''
+        """
 
         job_types_set = set()
         for job_type_depth in job_type_qry:
@@ -770,7 +794,7 @@ class QueueManager(models.Manager):
                 job_type_dict[job_type_depth.job_type_id] = job_type_depth.depth
 
     def _process_priority_depths(self, priority_qry, priorities, queue_depth_dict):
-        '''Processes the queue depths that are split by priority. The queue_depth_dict must have already been processed
+        """Processes the queue depths that are split by priority. The queue_depth_dict must have already been processed
         by _process_job_type_depths().
 
         :param priority_qry: the query with the depth results
@@ -779,7 +803,7 @@ class QueueManager(models.Manager):
         :type priorities: list
         :param queue_depth_dict: Dict of {time: ({job type ID: count}, {priority: count})}
         :type queue_depth_dict: dict
-        '''
+        """
 
         priorities_set = set()
         for priority_depth in priority_qry:
@@ -792,7 +816,7 @@ class QueueManager(models.Manager):
                 priority_dict[priority_depth.priority] = priority_depth.depth
 
     def _process_queue_depths(self, job_types, priorities, queue_depth_dict, depth_times):
-        '''Processes and creates the queue depth list
+        """Processes and creates the queue depth list
 
         :param job_types: the list of job types processed
         :type job_types: list
@@ -804,7 +828,7 @@ class QueueManager(models.Manager):
         :type depth_times: list
         :rtype: list
         :returns: list of queue depth data
-        '''
+        """
 
         queue_depths = []
         for depth_time in depth_times:
@@ -829,89 +853,52 @@ class QueueManager(models.Manager):
 
         return queue_depths
 
-    @transaction.atomic
-    def _queue_next_recipe_jobs(self, recipe):
-        '''Queues all of the jobs in the recipe that have all of their job dependencies completed and are ready to be
-        queued. The given recipe model must have already been saved in the database (it must have an ID), it must have
-        its related recipe_type and recipe_type_rev models populated, and the caller must have obtianed a lock on it
-        using select_for_update(). All database changes occur in an atomic transaction.
+    def _queue_jobs(self, jobs, priority=None):
+        """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
+        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
+        must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
+        data will be ignored. All jobs should have their related job_type and job_type_rev models populated.
 
-        :param recipe: The recipe
-        :type recipe: :class:`recipe.models.Recipe`
-        '''
+        :param jobs: The jobs to put on the queue
+        :type jobs: [:class:`job.models.Job`]
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
+        :returns: The new queued job execution models
+        :rtype: [:class:`job.models.JobExecution`]
+        """
 
-        definition = recipe.get_recipe_definition()
+        when_queued = timezone.now()
 
-        # Get and categorize jobs in the recipe
-        unqueued_jobs = {}
-        completed_jobs = {}
-        jobs_by_id = {}
-        last_completed = None
+        job_exes = Job.objects.queue_jobs(jobs, when_queued, priority)
 
-        # Get all recipe jobs with job model locks
-        recipe_jobs = RecipeJob.objects.get_recipe_jobs(recipe.id, jobs_related=True, jobs_lock=True)
-        for recipe_job in recipe_jobs:
-            jobs_by_id[recipe_job.job_id] = recipe_job.job
-            if recipe_job.job.status == 'PENDING':
-                unqueued_jobs[recipe_job.job_name] = recipe_job.job
-            elif recipe_job.job.status == 'COMPLETED':
-                completed_jobs[recipe_job.job_name] = recipe_job.job
+        # Execute any registered processors from other applications
+        for processor_class in self._processors:
+            processor = processor_class()
+            for job_exe in job_exes:
+                processor.process_queued(job_exe, job_exe.job.num_exes == 1)
 
-                if not last_completed or recipe_job.job.last_status_change > last_completed:
-                    last_completed = recipe_job.job.last_status_change
+        queues = []
+        for job_exe in job_exes:
+            queue = Queue()
+            queue.job_exe = job_exe
+            queue.job_type = job_exe.job.job_type
+            queue.priority = job_exe.job.priority
+            if job_exe.job.job_type.name == 'scale-cleanup':
+                queue.node_required_id = job_exe.job.event.description['node_id']
+            queue.cpus_required = job_exe.job.cpus_required
+            queue.mem_required = job_exe.job.mem_required
+            queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
+            queue.disk_out_required = job_exe.job.disk_out_required if job_exe.job.disk_out_required else 0
+            queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
+            queue.queued = when_queued
+            queues.append(queue)
 
-        # Determine jobs to queue and then queue them
-        jobs_to_queue = definition.get_next_jobs_to_queue(recipe.get_recipe_data(), unqueued_jobs, completed_jobs)
-        for job_id in jobs_to_queue:
-            job_data = jobs_to_queue[job_id]
-            job = jobs_by_id[job_id]
-            try:
-                self.queue_existing_job(job, job_data.get_dict())
-            except InvalidData as ex:
-                raise Exception('Scale created invalid job data: %s' % str(ex))
-
-        # Update the overall recipe completed time once all child recipe jobs are completed successfully
-        if len(completed_jobs) == len(recipe_jobs):
-            recipe.completed = last_completed
-            recipe.save()
-
-    @transaction.atomic
-    def _update_dependent_recipe_jobs(self, recipe, when):
-        '''Updates all unqueued dependent jobs in the given recipe so that they have the correct PENDING or BLOCKED
-        status based on whether their dependencies cannot complete (FAILED or CANCELED). The given recipe model must
-        have already been saved in the database (it must have an ID), it must have its related recipe_type and
-        recipe_type_rev models populated, and the caller must have obtianed a lock on it using select_for_update(). All
-        database changes occur in an atomic transaction.
-
-        :param recipe: The recipe
-        :type recipe: :class:`recipe.models.Recipe`
-        :param when: The time when the statuses needed to be updated
-        :type when: :class:`datetime.datetime`
-        '''
-
-        definition = recipe.get_recipe_definition()
-        jobs_by_id = {}
-        jobs_by_name = {}
-
-        # Get all recipe jobs with job model locks
-        recipe_jobs = RecipeJob.objects.get_recipe_jobs(recipe.id, jobs_related=False, jobs_lock=True)
-        for recipe_job in recipe_jobs:
-            jobs_by_id[recipe_job.job.id] = recipe_job.job
-            jobs_by_name[recipe_job.job_name] = recipe_job.job
-
-        # Determine PENDING/BLOCKED recipe jobs
-        new_job_statuses = definition.get_unqueued_job_statuses(jobs_by_name)
-
-        # Update job statuses as needed
-        for job_id in new_job_statuses:
-            new_status = new_job_statuses[job_id]
-            job = jobs_by_id[job_id]
-            if job.status != new_status:
-                Job.objects.update_status(job, new_status, when)
+        self.bulk_create(queues)
+        return job_exes
 
 
 class Queue(models.Model):
-    '''Represents a job that is queued to be run on a node
+    """Represents a job that is queued to be run on a node
 
     :keyword job_exe: The job execution that has been queued
     :type job_exe: :class:`django.db.models.ForeignKey`
@@ -940,7 +927,7 @@ class Queue(models.Model):
     :type queued: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the queue model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     job_exe = models.ForeignKey('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
@@ -960,24 +947,24 @@ class Queue(models.Model):
     objects = QueueManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'queue'
 
 
 # TODO: Remove this once the UI migrates to /load
 class QueueDepthByJobTypeManager(models.Manager):
-    '''This class manages the QueueDepthByJobType model
-    '''
+    """This class manages the QueueDepthByJobType model
+    """
 
     @transaction.atomic
     def save_depths(self, depth_time, depths):
-        '''Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.
+        """Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.
 
         :param depth_time: The time that the depth was measured
         :type depth_time: :class:`datetime.datetime`
         :param depths: Dict with job type IDs mapping to their corresponding depth counts
         :type depths: dict of {int: int}
-        '''
+        """
 
         if not depths:
             # Save at least one (dummy) model so that it is known that the queue depth was 0 at this time
@@ -993,7 +980,7 @@ class QueueDepthByJobTypeManager(models.Manager):
 
 # TODO: Remove this once the UI migrates to /load
 class QueueDepthByJobType(models.Model):
-    '''Represents the queue depth counts for each job type at various points in time
+    """Represents the queue depth counts for each job type at various points in time
 
     :keyword job_type: The job type
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -1001,7 +988,7 @@ class QueueDepthByJobType(models.Model):
     :type depth_time: :class:`django.db.models.DateTimeField`
     :keyword depth: The queue depth for this job type at this time
     :type depth: :class:`django.db.models.IntegerField`
-    '''
+    """
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     depth_time = models.DateTimeField(db_index=True)
@@ -1010,24 +997,24 @@ class QueueDepthByJobType(models.Model):
     objects = QueueDepthByJobTypeManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'queue_depth_job_type'
 
 
 # TODO: Remove this once the UI migrates to /load
 class QueueDepthByPriorityManager(models.Manager):
-    '''This class manages the QueueDepthByPriority model
-    '''
+    """This class manages the QueueDepthByPriority model
+    """
 
     @transaction.atomic
     def save_depths(self, depth_time, depths):
-        '''Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.
+        """Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.
 
         :param depth_time: The time that the depth was measured
         :type depth_time: :class:`datetime.datetime`
         :param depths: Dict with priorities mapping to their corresponding depth counts
         :type depths: dict of {int: int}
-        '''
+        """
 
         if not depths:
             # Save at least one (dummy) model so that it is known that the queue depth was 0 at this time
@@ -1043,7 +1030,7 @@ class QueueDepthByPriorityManager(models.Manager):
 
 # TODO: Remove this once the UI migrates to /load
 class QueueDepthByPriority(models.Model):
-    '''Represents the queue depth counts for each priority level at various points in time
+    """Represents the queue depth counts for each priority level at various points in time
 
     :keyword priority: The priority level
     :type priority: :class:`django.db.models.IntegerField`
@@ -1051,7 +1038,7 @@ class QueueDepthByPriority(models.Model):
     :type depth_time: :class:`django.db.models.DateTimeField`
     :keyword depth: The queue depth for this priority at this time
     :type depth: :class:`django.db.models.IntegerField`
-    '''
+    """
 
     priority = models.IntegerField()
     depth_time = models.DateTimeField(db_index=True)
@@ -1060,5 +1047,5 @@ class QueueDepthByPriority(models.Model):
     objects = QueueDepthByPriorityManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'queue_depth_priority'

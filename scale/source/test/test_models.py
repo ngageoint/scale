@@ -1,12 +1,11 @@
-#@PydevCodeAnalysisIgnore
 import datetime
 import os
 
 import django
 from django.test import TestCase
 from django.utils.text import get_valid_filename
-from django.utils.timezone import now, utc
-from mock import mock_open, patch, MagicMock, Mock
+from django.utils.timezone import now
+from mock import patch, MagicMock
 
 from job.test import utils as job_utils
 from source.models import SourceFile
@@ -33,10 +32,9 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
 
-
     @patch('source.models.ScaleFile.objects.move_files')
     def test_move_source_file(self, mock_move_files):
-        '''Tests calling save_parse_results so that the source file is moved to a different path in the workspace'''
+        """Tests calling save_parse_results so that the source file is moved to a different path in the workspace"""
 
         work_dir = os.path.join('the', 'work', 'dir')
         new_path = os.path.join('the', 'new', 'workspace', 'path', self.src_file.file_name)
@@ -47,8 +45,23 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         # Check results
         mock_move_files.assert_called_once_with(work_dir, [(self.src_file, new_path)])
 
+    @patch('source.models.ScaleFile.objects.move_files')
+    def test_move_source_file_denied(self, mock_move_files):
+        """Tests calling save_parse_results where the source file is not allowed to be moved within the workspace"""
+
+        self.src_file.workspace.is_move_enabled = False
+        self.src_file.workspace.save()
+        work_dir = os.path.join('the', 'work', 'dir')
+        new_path = os.path.join('the', 'new', 'workspace', 'path', self.src_file.file_name)
+
+        # Call method to test
+        SourceFile.objects.save_parse_results(self.src_file.id, None, None, None, [], new_path, work_dir)
+
+        # Check results
+        self.assertFalse(mock_move_files.called, 'ScaleFile.objects.move_files() should not be called')
+
     def test_valid_feature_collection(self):
-        '''Tests calling save_parse_results with valid arguments'''
+        """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
         SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_COLLECTION_GEOJSON, self.started, self.ended, [], None, None)
@@ -64,7 +77,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.center_point)
 
     def test_valid_feature(self):
-        '''Tests calling save_parse_results with valid arguments'''
+        """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
         SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, None)
@@ -80,7 +93,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.center_point)
 
     def test_valid_feature_with_parse_rule(self):
-        '''Tests calling save_parse_results with valid arguments and parse rules in place'''
+        """Tests calling save_parse_results with valid arguments and parse rules in place"""
 
         # Setup parse rule
         workspace = storage_utils.create_workspace()
@@ -102,7 +115,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertEqual(evt.description[u'file_name'], u'text.txt')
 
     def test_valid_polygon(self):
-        '''Tests calling save_parse_results with valid arguments'''
+        """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
         SourceFile.objects.save_parse_results(self.src_file.id, POLYGON_GEOJSON, None, None, [], None, None)
@@ -127,7 +140,7 @@ class TestSourceFileManagerStoreFile(TestCase):
     @patch('storage.models.os.path.getsize')
     @patch('storage.models.os.mkdir')
     def test_success_new(self, mock_mkdir, mock_getsize, mock_execute):
-        '''Tests calling SourceFileManager.store_file() successfully with a new source file'''
+        """Tests calling SourceFileManager.store_file() successfully with a new source file"""
         def new_getsize(path):
             return 100
         mock_getsize.side_effect = new_getsize

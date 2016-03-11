@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import time
@@ -11,10 +10,8 @@ from mock import MagicMock
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
-import node.test.utils as node_test_utils
 import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
-import shared_resource.test.utils as shared_resource_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
@@ -34,7 +31,7 @@ class TestJobLoadManager(TestCase):
         django.setup()
 
     def test_calculate_empty(self):
-        '''Tests calculating job load when there are no jobs.'''
+        """Tests calculating job load when there are no jobs."""
 
         JobLoad.objects.calculate()
         results = JobLoad.objects.all()
@@ -42,7 +39,7 @@ class TestJobLoadManager(TestCase):
         self.assertEqual(len(results), 1)
 
     def test_calculate_status(self):
-        '''Tests calculating job load filtering by status.'''
+        """Tests calculating job load filtering by status."""
 
         job_type = job_test_utils.create_job_type()
         job_test_utils.create_job(job_type=job_type, status='PENDING')
@@ -65,7 +62,7 @@ class TestJobLoadManager(TestCase):
         self.assertEqual(results[0].total_count, 3)
 
     def test_calculate_job_type(self):
-        '''Tests calculating job load grouping by job type.'''
+        """Tests calculating job load grouping by job type."""
 
         job_type1 = job_test_utils.create_job_type()
         job_test_utils.create_job(job_type=job_type1, status='PENDING')
@@ -118,7 +115,7 @@ class TestQueueManagerGetCurrentQueueDepth(TestCase):
         self.trigger_event_1 = trigger_test_utils.create_trigger_event()
 
     def test_successful_with_nonempty_queue(self):
-        '''Tests QueueManager.get_current_queue_depth() successfully with a non-empty queue.'''
+        """Tests QueueManager.get_current_queue_depth() successfully with a non-empty queue."""
 
         # Set up queue
         Queue.objects.queue_new_job(self.job_type_1, {}, self.trigger_event_1)
@@ -146,7 +143,7 @@ class TestQueueManagerGetCurrentQueueDepth(TestCase):
         self.assertDictEqual(dict_tuple[1], {1: 5, 3: 7, 4: 2})
 
     def test_successful_with_empty_queue(self):
-        '''Tests QueueManager.get_current_queue_depth() successfully with an empty queue.'''
+        """Tests QueueManager.get_current_queue_depth() successfully with an empty queue."""
 
         dict_tuple = Queue.objects.get_current_queue_depth()
 
@@ -191,7 +188,7 @@ class TestQueueManagerGetHistoricalQueueDepth(TestCase):
         QueueDepthByPriority.objects.create(priority=1, depth_time=self.time_3, depth=0)
 
     def test_successful_with_nonempty_range(self):
-        '''Tests QueueManager.get_historical_queue_depth() successfully with a non-empty time range.'''
+        """Tests QueueManager.get_historical_queue_depth() successfully with a non-empty time range."""
 
         results = Queue.objects.get_historical_queue_depth(self.time_1, self.time_3)
 
@@ -230,7 +227,7 @@ class TestQueueManagerGetHistoricalQueueDepth(TestCase):
         self.assertItemsEqual([0, 0, 0], time_3_dict['depth_per_priority'])
 
     def test_successful_with_empty_range(self):
-        '''Tests QueueManager.get_historical_queue_depth() successfully with an empty time range (no time points).'''
+        """Tests QueueManager.get_historical_queue_depth() successfully with an empty time range (no time points)."""
 
         results = Queue.objects.get_historical_queue_depth(self.time_1 - timedelta(hours=2),
                                                            self.time_1 - timedelta(hours=1))
@@ -239,7 +236,7 @@ class TestQueueManagerGetHistoricalQueueDepth(TestCase):
         self.assertDictEqual({'job_types': [], 'priorities': [], 'queue_depths': []}, results)
 
     def test_successful_with_zero_point(self):
-        '''Tests QueueManager.get_historical_queue_depth() successfully with a single time point with zero depth'''
+        """Tests QueueManager.get_historical_queue_depth() successfully with a single time point with zero depth"""
 
         results = Queue.objects.get_historical_queue_depth(self.time_3 - timedelta(minutes=5),
                                                            self.time_3 + timedelta(minutes=5))
@@ -264,7 +261,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         django.setup()
 
     def test_successful_with_pending_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() successfully with a pending job.'''
+        """Tests calling QueueManager.handle_job_cancellation() successfully with a pending job."""
 
         # Create the job
         job = job_test_utils.create_job(status='PENDING')
@@ -278,7 +275,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=job.id).count(), 0)
 
     def test_successful_with_blocked_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job.'''
+        """Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job."""
 
         # Create the job
         job = job_test_utils.create_job(status='BLOCKED')
@@ -292,11 +289,12 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=job.id).count(), 0)
 
     def test_successful_with_queued_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() successfully with a queued job.'''
+        """Tests calling QueueManager.handle_job_cancellation() successfully with a queued job."""
 
         # Queue the job
         job = job_test_utils.create_job()
-        job_exe_id = Queue.objects.queue_existing_job(job, {})
+        job_exe = Queue.objects._queue_jobs([job])[0]
+        job_exe_id = job_exe.id
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
@@ -309,7 +307,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(Queue.objects.filter(job_exe_id=job_exe_id).count(), 0)
 
     def test_successful_with_running_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() successfully with a running job.'''
+        """Tests calling QueueManager.handle_job_cancellation() successfully with a running job."""
 
         # Create the running job
         job_exe = job_test_utils.create_job_exe()
@@ -324,7 +322,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(final_job_exe.status, 'CANCELED')
 
     def test_successful_with_failed_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() successfully with a failed job.'''
+        """Tests calling QueueManager.handle_job_cancellation() successfully with a failed job."""
 
         # Create the failed job
         job = job_test_utils.create_job(status='FAILED')
@@ -344,7 +342,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(final_job_exe.status, 'FAILED')
 
     def test_exception_with_completed_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() with a completed job that results in an exception.'''
+        """Tests calling QueueManager.handle_job_cancellation() with a completed job that results in an exception."""
 
         # Create the completed job
         job = job_test_utils.create_job(status='COMPLETED')
@@ -356,7 +354,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertRaises(Exception, Queue.objects.handle_job_cancellation, job.id, now())
 
     def test_exception_with_canceled_job(self):
-        '''Tests calling QueueManager.handle_job_cancellation() with a canceled job that results in an exception.'''
+        """Tests calling QueueManager.handle_job_cancellation() with a canceled job that results in an exception."""
 
         # Create the canceled job
         job = job_test_utils.create_job(status='CANCELED')
@@ -461,7 +459,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         Queue.objects.register_processor(lambda: self.mock_processor)
 
     def test_successful_with_partial_recipe(self):
-        '''Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe.'''
+        """Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe."""
 
         # Queue the recipe
         recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
@@ -491,7 +489,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         self.assertIsNone(recipe_job_2.recipe.completed)
 
     def test_successful_with_full_recipe(self):
-        '''Tests calling QueueManager.handle_job_completion() successfully with all jobs in a recipe.'''
+        """Tests calling QueueManager.handle_job_completion() successfully with all jobs in a recipe."""
 
         # Queue the recipe
         recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
@@ -629,7 +627,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         Queue.objects.register_processor(lambda: self.mock_processor)
 
     def test_successful(self):
-        '''Tests calling QueueManager.queue_new_recipe() successfully.'''
+        """Tests calling QueueManager.queue_new_recipe() successfully."""
 
         recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
 
@@ -674,13 +672,13 @@ class TestQueueManagerRequeueExistingJob(TransactionTestCase):
         Queue.objects.register_processor(lambda: self.mock_processor)
 
     def test_invalid_status(self):
-        '''Tests rejecting requeue of existing job with an incorrect status.'''
+        """Tests rejecting requeue of existing job with an incorrect status."""
         job = job_test_utils.create_job(job_type=self.job_type, status='RUNNING')
 
         self.assertRaises(StatusError, Queue.objects.requeue_existing_job, job.id)
 
     def test_successful(self):
-        '''Tests calling QueueManager.requeue_existing_job() successfully.'''
+        """Tests calling QueueManager.requeue_existing_job() successfully."""
         job = job_test_utils.create_job(job_type=self.job_type, status='FAILED', error=error_test_utils.create_error(),
                                         data=self.data, num_exes=1)
 
@@ -699,6 +697,138 @@ class TestQueueManagerRequeueExistingJob(TransactionTestCase):
         self.assertTrue(Queue.objects.get(job_exe=job_exe))
 
 
+class TestQueueManagerRequeueJobs(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.new_priority = 200
+        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', num_exes=3, priority=100)
+        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1, priority=100)
+        self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
+
+        # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
+        job_type_a_1 = job_test_utils.create_job_type()
+        job_type_a_2 = job_test_utils.create_job_type()
+        definition_a = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_a_1.name,
+                    'version': job_type_a_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_a_2.name,
+                    'version': job_type_a_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', num_exes=1)
+        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED')
+        data_a = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, data=data_a)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
+
+        # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
+        job_type_b_1 = job_test_utils.create_job_type()
+        job_type_b_2 = job_test_utils.create_job_type()
+        job_type_b_3 = job_test_utils.create_job_type()
+        definition_b = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_b_1.name,
+                    'version': job_type_b_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_b_2.name,
+                    'version': job_type_b_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_b_3.name,
+                    'version': job_type_b_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 2'
+                }],
+            }],
+        }
+        recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED')
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED')
+        data_b = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, data=data_b)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 1', job=self.job_b_1)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 2', job=self.job_b_2)
+        recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 3', job=self.job_b_3)
+
+        # Job IDs to re-queue
+        self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
+                        self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
+
+        # Register a fake processor
+        self.mock_processor = MagicMock(QueueEventProcessor)
+        Queue.objects.register_processor(lambda: self.mock_processor)
+
+    def test_successful(self):
+        """Tests calling QueueManager.requeue_jobs() successfully"""
+
+        Queue.objects.requeue_jobs(self.job_ids, self.new_priority)
+
+        standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
+        self.assertEqual(standalone_failed_job.status, 'QUEUED')
+        self.assertEqual(standalone_failed_job.max_tries, 4)
+        self.assertEqual(standalone_failed_job.priority, self.new_priority)
+
+        standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
+        self.assertEqual(standalone_canceled_job.status, 'QUEUED')
+        self.assertEqual(standalone_canceled_job.max_tries, 2)
+        self.assertEqual(standalone_canceled_job.priority, self.new_priority)
+
+        # Completed job should not be re-queued
+        standalone_completed_job = Job.objects.get(id=self.standalone_completed_job.id)
+        self.assertEqual(standalone_completed_job.status, 'COMPLETED')
+
+        job_a_1 = Job.objects.get(id=self.job_a_1.id)
+        self.assertEqual(job_a_1.status, 'QUEUED')
+        job_a_2 = Job.objects.get(id=self.job_a_2.id)
+        self.assertEqual(job_a_2.status, 'PENDING')
+
+        job_b_1 = Job.objects.get(id=self.job_b_1.id)
+        self.assertEqual(job_b_1.status, 'FAILED')
+        job_b_2 = Job.objects.get(id=self.job_b_2.id)
+        self.assertEqual(job_b_2.status, 'BLOCKED')
+        job_b_3 = Job.objects.get(id=self.job_b_3.id)
+        self.assertEqual(job_b_3.status, 'BLOCKED')
+
+
 # TODO: Remove this once the UI migrates to /load
 class TestQueueDepthByJobTypeManagerSaveDepths(TestCase):
 
@@ -706,7 +836,7 @@ class TestQueueDepthByJobTypeManagerSaveDepths(TestCase):
         django.setup()
 
     def test_successful_with_nonempty_queue(self):
-        '''Tests calling QueueDepthByJobTypeManager.save_depths() successfully with a non-empty queue.'''
+        """Tests calling QueueDepthByJobTypeManager.save_depths() successfully with a non-empty queue."""
 
         when = now()
         QueueDepthByJobType.objects.save_depths(when, {1: 10, 2: 20})
@@ -720,7 +850,7 @@ class TestQueueDepthByJobTypeManagerSaveDepths(TestCase):
         self.assertEqual(depths[1].depth, 20)
 
     def test_successful_with_empty_queue(self):
-        '''Tests calling QueueDepthByJobTypeManager.save_depths() successfully with an empty queue.'''
+        """Tests calling QueueDepthByJobTypeManager.save_depths() successfully with an empty queue."""
 
         when = now()
         QueueDepthByJobType.objects.save_depths(when, {})
@@ -739,7 +869,7 @@ class TestQueueDepthByPriorityManagerSaveDepths(TestCase):
         django.setup()
 
     def test_successful_with_nonempty_queue(self):
-        '''Tests calling QueueDepthByPriorityManager.save_depths() successfully with a non-empty queue.'''
+        """Tests calling QueueDepthByPriorityManager.save_depths() successfully with a non-empty queue."""
 
         when = now()
         QueueDepthByPriority.objects.save_depths(when, {1: 10, 2: 20})
@@ -753,7 +883,7 @@ class TestQueueDepthByPriorityManagerSaveDepths(TestCase):
         self.assertEqual(depths[1].depth, 20)
 
     def test_successful_with_empty_queue(self):
-        '''Tests calling QueueDepthByPriorityManager.save_depths() successfully with an empty queue.'''
+        """Tests calling QueueDepthByPriorityManager.save_depths() successfully with an empty queue."""
 
         when = now()
         QueueDepthByPriority.objects.save_depths(when, {})
