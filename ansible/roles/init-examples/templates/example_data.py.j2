@@ -15,13 +15,13 @@ docker_tag="{{ example_image_tag }}"
 # Workspaces
 if not storage.models.Workspace.objects.filter(name="raw").exists():
     storage.models.Workspace.objects.create(name="raw", title="raw", description="Raw ingested data",
-        base_url="http://{{ inventory_hostname }}:8080/raw",
+        base_url="http://{{ example_server }}:8080/raw",
         json_config={
         "version": "1.0", "broker": {"mount": "%s:/raw" % nfs_server, "type": "nfs"}}).save()
 
 if not storage.models.Workspace.objects.filter(name="products").exists():
     storage.models.Workspace.objects.create(name="products", title="products", description="Product storage",
-        base_url="http://{{ inventory_hostname }}:8080/products",
+        base_url="http://{{ example_server }}:8080/products",
         json_config={
         "version": "1.0", "broker": {"mount": "%s:/products" % nfs_server, "type": "nfs"}}).save()
 
