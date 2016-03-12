@@ -257,7 +257,9 @@ class TestRest(TestCase):
         '''Tests parsing a required list of string parameters that are provided via POST.'''
         request = MagicMock(Request)
         request.DATA = QueryDict('', mutable=True)
-        request.DATA.setlist('test', ['value1', 'value2'])
+        request.DATA.update({
+            'test': ['value1', 'value2']
+        })
 
         self.assertEqual(rest_util.parse_string_list(request, 'test'), ['value1', 'value2'])
 
@@ -473,7 +475,9 @@ class TestRest(TestCase):
         '''Tests parsing a required list of int parameters that are provided via POST.'''
         request = MagicMock(Request)
         request.DATA = QueryDict('', mutable=True)
-        request.DATA.setlist('test', ['1', '2'])
+        request.DATA.update({
+            'test': ['1', '2']
+        })
 
         self.assertEqual(rest_util.parse_int_list(request, 'test'), [1, 2])
 

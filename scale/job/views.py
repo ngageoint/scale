@@ -32,17 +32,17 @@ logger = logging.getLogger(__name__)
 
 
 class JobTypesView(APIView):
-    '''This view is the endpoint for retrieving the list of all job types.'''
+    """This view is the endpoint for retrieving the list of all job types."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves the list of all job types and returns it in JSON form
+        """Retrieves the list of all job types and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -59,13 +59,13 @@ class JobTypesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        '''Creates a new job type and returns a link to the detail URL
+        """Creates a new job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
 
@@ -138,11 +138,11 @@ class JobTypesView(APIView):
 
 
 class JobTypeDetailsView(APIView):
-    '''This view is the endpoint for retrieving/updating details of a job type.'''
+    """This view is the endpoint for retrieving/updating details of a job type."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request, job_type_id):
-        '''Retrieves the details for a job type and return them in JSON form
+        """Retrieves the details for a job type and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -150,7 +150,7 @@ class JobTypeDetailsView(APIView):
         :type job_type_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             job_type = JobType.objects.get_details(job_type_id)
         except JobType.DoesNotExist:
@@ -160,7 +160,7 @@ class JobTypeDetailsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, job_type_id):
-        '''Edits an existing job type and returns the updated details
+        """Edits an existing job type and returns the updated details
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -168,7 +168,7 @@ class JobTypeDetailsView(APIView):
         :type job_type_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface', required=False)
@@ -258,18 +258,18 @@ class JobTypeDetailsView(APIView):
 
 
 class JobTypesValidationView(APIView):
-    '''This view is the endpoint for validating a new job type before attempting to actually create it
-    '''
+    """This view is the endpoint for validating a new job type before attempting to actually create it
+    """
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def post(self, request):
-        '''Validates a new job type and returns any warnings discovered
+        """Validates a new job type and returns any warnings discovered
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
 
@@ -333,17 +333,17 @@ class JobTypesValidationView(APIView):
 
 
 class JobTypesRunningView(APIView):
-    '''This view is the endpoint for retrieving the status of all currently running job types.'''
+    """This view is the endpoint for retrieving the status of all currently running job types."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves the current status of running job types and returns it in JSON form
+        """Retrieves the current status of running job types and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Get all the running job types with statistics
         running_status = JobType.objects.get_running_status()
@@ -355,17 +355,17 @@ class JobTypesRunningView(APIView):
 
 
 class JobTypesSystemFailuresView(APIView):
-    '''This view is the endpoint for viewing system errors organized by job type.'''
+    """This view is the endpoint for viewing system errors organized by job type."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves the job types that have failed with system errors and returns them in JSON form
+        """Retrieves the job types that have failed with system errors and returns them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Get all the failed job types with statistics
         failed_status = JobType.objects.get_failed_status()
@@ -377,18 +377,18 @@ class JobTypesSystemFailuresView(APIView):
 
 
 class JobTypesStatusView(APIView):
-    '''This view is the endpoint for retrieving overall job type status information.'''
+    """This view is the endpoint for retrieving overall job type status information."""
 
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves the list of all job types with status and returns it in JSON form
+        """Retrieves the list of all job types with status and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
@@ -401,31 +401,32 @@ class JobTypesStatusView(APIView):
 
 
 class JobsView(APIView):
-    '''This view is the endpoint for retrieving a list of all available jobs.'''
+    """This view is the endpoint for retrieving a list of all available jobs."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves jobs and returns it in JSON form
+        """Retrieves jobs and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
         job_status = rest_util.parse_string(request, 'status', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_type_ids, job_type_names, job_type_categories,
-                                    order)
+        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
+                                    job_type_categories, order)
 
         page = rest_util.perform_paging(request, jobs)
         serializer = JobListSerializer(page, context={'request': request})
@@ -433,11 +434,11 @@ class JobsView(APIView):
 
 
 class JobDetailsView(APIView):
-    '''This view is the endpoint for retrieving details about a single job.'''
+    """This view is the endpoint for retrieving details about a single job."""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request, job_id):
-        '''Retrieves jobs and returns it in JSON form
+        """Retrieves jobs and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -445,7 +446,7 @@ class JobDetailsView(APIView):
         :type job_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         try:
             job = Job.objects.get_details(job_id)
@@ -456,7 +457,7 @@ class JobDetailsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, job_id):
-        '''Modify job info with a subset of fields
+        """Modify job info with a subset of fields
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -464,7 +465,7 @@ class JobDetailsView(APIView):
         :type job_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Validate that no extra fields are included
         rest_util.check_update(request, ['status'])
@@ -485,18 +486,18 @@ class JobDetailsView(APIView):
 
 
 class JobUpdatesView(APIView):
-    '''This view is the endpoint for retrieving job updates over a given time range.'''
+    """This view is the endpoint for retrieving job updates over a given time range."""
 
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Retrieves the job updates for a given time range and returns it in JSON form
+        """Retrieves the job updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -518,30 +519,31 @@ class JobUpdatesView(APIView):
 
 
 class JobsWithExecutionView(APIView):
-    '''This view is the endpoint for viewing jobs and their associated latest execution'''
+    """This view is the endpoint for viewing jobs and their associated latest execution"""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Gets jobs and their associated latest execution
+        """Gets jobs and their associated latest execution
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
         job_status = rest_util.parse_string(request, 'status', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_type_ids, job_type_names, job_type_categories,
-                                    order)
+        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
+                                    job_type_categories, order)
         page = rest_util.perform_paging(request, jobs)
 
         # Add the latest execution for each matching job
@@ -556,17 +558,17 @@ class JobsWithExecutionView(APIView):
 
 
 class JobExecutionsView(APIView):
-    '''This view is the endpoint for viewing job executions and their associated job_type id, name, and version'''
+    """This view is the endpoint for viewing job executions and their associated job_type id, name, and version"""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
-        '''Gets job executions and their associated job_type id, name, and version
+        """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -589,11 +591,11 @@ class JobExecutionsView(APIView):
 
 
 class JobExecutionDetailsView(APIView):
-    '''This view is the endpoint for viewing job execution detail'''
+    """This view is the endpoint for viewing job execution detail"""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request, job_exe_id):
-        '''Gets job execution and associated job_type id, name, and version
+        """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -601,7 +603,7 @@ class JobExecutionDetailsView(APIView):
         :type job_exe_id: int
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             job_exe = JobExecution.objects.get_details(job_exe_id)
         except JobExecution.DoesNotExist:
@@ -612,11 +614,11 @@ class JobExecutionDetailsView(APIView):
 
 
 class JobExecutionLogView(APIView):
-    '''This view is the endpoint for viewing job execution logs'''
+    """This view is the endpoint for viewing job execution logs"""
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request, job_exe_id):
-        '''Gets job execution logs. This can be a slightly slow operation so it's a separate view from the details.
+        """Gets job execution logs. This can be a slightly slow operation so it's a separate view from the details.
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -624,7 +626,7 @@ class JobExecutionLogView(APIView):
         :type job_exe_id: int
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             job_exe = JobExecution.objects.get_logs(job_exe_id)
         except JobExecution.DoesNotExist:

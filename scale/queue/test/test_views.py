@@ -348,6 +348,197 @@ class TestQueueStatusView(TestCase):
         self.assertTrue(isinstance(result['queue_status'], list), 'queue_status must be a list')
 
 
+class TestRequeueJobsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_1 = job_test_utils.create_job(status='RUNNING')
+        self.job_2 = job_test_utils.create_job(data={})
+        self.job_3 = job_test_utils.create_job(status='FAILED')
+
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_1.job_type.name,
+                    'version': self.job_1.job_type.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_2.job_type.name,
+                    'version': self.job_2.job_type.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+        self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+        self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 1', job=self.job_1)
+        self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 2', job=self.job_2)
+
+    def test_bad_job_id(self):
+        """Tests calling the requeue view with an invalid job type ID."""
+        json_data = {
+            'job_ids': [1000],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_requeue_canceled(self,):
+        """Tests calling the requeue view successfully for a job that was never queued."""
+
+        # make sure the job is in the right state despite not actually having been run
+        Job.objects.update_status([self.job_2], 'CANCELED', timezone.now())
+        base_count = Queue.objects.count()
+        json_data = {
+            'job_ids': [self.job_2.id],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_2.id)
+        self.assertEqual(result['results'][0]['status'], 'PENDING')
+
+        self.assertEqual(Queue.objects.count() - base_count, 0)
+
+    def test_requeue_failed(self,):
+        """Tests calling the requeue view successfully for a job that was previously queued."""
+
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
+
+        # make sure the job is in the right state despite not actually having been run
+        Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
+        self.job_2.num_exes = 2
+        self.job_2.save()
+
+        base_count = Queue.objects.count()
+        json_data = {
+            'job_ids': [self.job_2.id],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_2.id)
+        self.assertEqual(result['results'][0]['status'], 'QUEUED')
+
+        self.assertEqual(Queue.objects.count() - base_count, 1)
+
+    def test_requeue_ignored(self,):
+        """Tests calling the requeue view when the job has already completed."""
+
+        job_test_utils.create_job_exe(job=self.job_2, status='COMPLETED')
+        Job.objects.update_status([self.job_2], 'COMPLETED', timezone.now())
+
+        json_data = {
+            'job_ids': [self.job_2.id],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_2.id)
+        self.assertEqual(result['results'][0]['status'], 'COMPLETED')
+
+    def test_status(self):
+        """Tests successfully calling the requeue view filtered by status."""
+
+        json_data = {
+            'status': self.job_3.status,
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_3.id)
+        self.assertEqual(result['results'][0]['status'], 'BLOCKED')
+
+    def test_job_ids(self):
+        """Tests successfully calling the requeue view filtered by job identifier."""
+
+        json_data = {
+            'job_ids': [self.job_3.id],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_3.id)
+
+    def test_job_type_ids(self):
+        """Tests successfully calling the requeue view filtered by job type identifier."""
+
+        json_data = {
+            'job_type_ids': [self.job_3.job_type.id],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job_3.job_type.id)
+
+    def test_job_type_names(self):
+        """Tests successfully calling the requeue view filtered by job type name."""
+
+        json_data = {
+            'job_type_names': [self.job_3.job_type.name],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job_3.job_type.name)
+
+    def test_job_type_categories(self):
+        """Tests successfully calling the requeue view filtered by job type category."""
+
+        json_data = {
+            'job_type_categories': [self.job_3.job_type.category],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['category'], self.job_3.job_type.category)
+
+
+# TODO: Remove this once the UI migrates to /queue/requeue-jobs/
 class TestRequeueExistingJobView(TestCase):
 
     def setUp(self):

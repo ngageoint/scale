@@ -37,6 +37,9 @@ These services provide access to information about "all", "currently running" an
 | status             | String            | Optional | Return only jobs with a status matching this string.                |
 |                    |                   |          | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].            |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_id             | Integer           | Optional | Return only jobs with a given identifier.                           |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_id        | Integer           | Optional | Return only jobs with a given job type identifier.                  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -581,6 +584,10 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The job type that is associated with the job.                                  |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type_rev      | JSON Object       | The job type revision that is associated with the job.                         |
+|                    |                   | This represents the definition at the time the job was scheduled.              |
+|                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .event             | JSON Object       | The trigger event that is associated with the job.                             |
 |                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |

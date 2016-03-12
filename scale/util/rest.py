@@ -1,4 +1,4 @@
-'''Defines utilities for building RESTful APIs.'''
+"""Defines utilities for building RESTful APIs."""
 from __future__ import unicode_literals
 
 import datetime
@@ -17,12 +17,12 @@ from util.parse import ParseError
 
 
 class ModelIdSerializer(serializers.Serializer):
-    '''Converts a model to a lightweight place holder object with only an identifier to REST output'''
+    """Converts a model to a lightweight place holder object with only an identifier to REST output"""
     id = serializers.IntegerField()
 
 
 class JSONField(serializers.CharField):
-    '''Represents JSON content for use in REST serializers.'''
+    """Represents JSON content for use in REST serializers."""
     type_name = 'JSONField'
     type_label = 'json'
     empty = {}
@@ -32,7 +32,7 @@ class JSONField(serializers.CharField):
     }
 
     def from_native(self, value):
-        '''Converts the given raw value to a Python object.'''
+        """Converts the given raw value to a Python object."""
         if value in validators.EMPTY_VALUES:
             return None
 
@@ -47,28 +47,28 @@ class JSONField(serializers.CharField):
 
 
 class BadParameter(APIException):
-    '''Exception indicating a REST API call contains an invalid value or a missing required parameter.'''
+    """Exception indicating a REST API call contains an invalid value or a missing required parameter."""
     status_code = status.HTTP_400_BAD_REQUEST
 
 
 class ReadOnly(APIException):
-    '''Exception indicating a REST API call is attempting to update a field that does not support it.'''
+    """Exception indicating a REST API call is attempting to update a field that does not support it."""
     status_code = status.HTTP_400_BAD_REQUEST
 
 
 def check_update(request, fields):
-    '''Checks whether the given request includes fields that are not allowed to be updated.
+    """Checks whether the given request includes fields that are not allowed to be updated.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param fields: A list of field names that are permitted.
-    :type fields: list[str]
+    :type fields: list[string]
     :returns: True when the request does not include extra fields.
     :rtype: bool
 
     :raises :class:`util.rest.ReadOnly`: If the request includes unsupported fields to update.
     :raises :class:`exceptions.AssertionError`: If fields in not a list or None.
-    '''
+    """
     fields = fields or []
     assert(type(fields) == type([]))
     extra = filter(lambda x, y=fields: x not in y, request.DATA.keys())
@@ -78,7 +78,7 @@ def check_update(request, fields):
 
 
 def check_time_range(started, ended, max_duration=None):
-    '''Checks whether the given time range is valid.
+    """Checks whether the given time range is valid.
 
     :param started: The start of a time range.
     :type started: datetime.datetime
@@ -90,7 +90,7 @@ def check_time_range(started, ended, max_duration=None):
     :rtype: bool
 
     :raises :class:`util.rest.BadParameter`: If there is a problem with the time range.
-    '''
+    """
     if not started or not ended:
         return True
     if started == ended:
@@ -106,17 +106,17 @@ def check_time_range(started, ended, max_duration=None):
 
 
 def check_together(names, values):
-    '''Checks whether a list of fields as a group. Either all or none of the fields should be provided.
+    """Checks whether a list of fields as a group. Either all or none of the fields should be provided.
 
     :param names: The list of field names to check.
-    :type names: list[str]
+    :type names: list[string]
     :param values: The list of field values to check.
     :type values: list[object]
     :returns: True when all parameters are provided and false if none of the parameters are provided.
     :rtype: bool
 
     :raises :class:`util.rest.BadParameter`: If the list of fields is mismatched.
-    '''
+    """
     if not names and not values:
         return False
     if len(names) != len(values):
@@ -132,15 +132,15 @@ def check_together(names, values):
 
 
 def has_params(request, *names):
-    '''Checks whether one or more parameters are included in the request.
+    """Checks whether one or more parameters are included in the request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param names: One or more parameter names to check.
-    :type names: str
+    :type names: string
     :returns: True when all the parameters are provided or false if at least one is not provided.
     :rtype: bool
-    '''
+    """
     if not names:
         return False
     for name in names:
@@ -150,7 +150,7 @@ def has_params(request, *names):
 
 
 def get_relative_days(days):
-    '''Calculates a relative date/time in the past without any time offsets.
+    """Calculates a relative date/time in the past without any time offsets.
 
     This is useful when a service wants to have a default value of, for example 7 days back. If an ISO duration format
     is used, such as P7D then the current time will be factored in which results in the earliest day being incomplete
@@ -160,66 +160,66 @@ def get_relative_days(days):
     :type days: int
     :returns: An absolute time stamp that is the complete range of relative days back.
     :rtype: datetime.datetime
-    '''
+    """
     base_date = (timezone.now() - datetime.timedelta(days=days)).date()
     return datetime.datetime.combine(base_date, datetime.time.min).replace(tzinfo=timezone.utc)
 
 
 def parse_string(request, name, default_value=None, required=True, accepted_values=None):
-    '''Parses a string parameter from the given request.
+    """Parses a string parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: str
+    :type default_value: string
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[str]
+    :type accepted_values: list[string]
     :returns: The value of the named parameter or the default value if provided.
-    :rtype: str
+    :rtype: string
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     _check_accepted_value(name, value, accepted_values)
     return value
 
 
 def parse_string_list(request, name, default_value=None, required=True, accepted_values=None):
-    '''Parses a list of string parameters from the given request.
+    """Parses a list of string parameters from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: list[str]
+    :type default_value: list[string]
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[str]
+    :type accepted_values: list[string]
     :returns: The value of the named parameter or the default value if provided.
-    :rtype: str
+    :rtype: string
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
-    '''
+    """
     values = _get_param_list(request, name, default_value, required)
     _check_accepted_values(name, values, accepted_values)
     return values
 
 
 def parse_bool(request, name, default_value=None, required=True):
-    '''Parses a bool parameter from the given request.
+    """Parses a bool parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: bool
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -229,7 +229,7 @@ def parse_bool(request, name, default_value=None, required=True):
     :rtype: bool
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -243,12 +243,12 @@ def parse_bool(request, name, default_value=None, required=True):
 
 
 def parse_int(request, name, default_value=None, required=True, accepted_values=None):
-    '''Parses an integer parameter from the given request.
+    """Parses an integer parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: int
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -260,7 +260,7 @@ def parse_int(request, name, default_value=None, required=True, accepted_values=
     :rtype: int
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -274,12 +274,12 @@ def parse_int(request, name, default_value=None, required=True, accepted_values=
 
 
 def parse_int_list(request, name, default_value=None, required=True, accepted_values=None):
-    '''Parses a list of int parameters from the given request.
+    """Parses a list of int parameters from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: list[int]
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -288,10 +288,10 @@ def parse_int_list(request, name, default_value=None, required=True, accepted_va
     :param accepted_values: A list of values that are acceptable for the parameter.
     :type accepted_values: list[int]
     :returns: The value of the named parameter or the default value if provided.
-    :rtype: str
+    :rtype: string
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
-    '''
+    """
     param_list = _get_param_list(request, name, default_value, required)
 
     if param_list and len(param_list):
@@ -307,12 +307,12 @@ def parse_int_list(request, name, default_value=None, required=True, accepted_va
 
 
 def parse_float(request, name, default_value=None, required=True, accepted_values=None):
-    '''Parses a floating point parameter from the given request.
+    """Parses a floating point parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: float
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -324,7 +324,7 @@ def parse_float(request, name, default_value=None, required=True, accepted_value
     :rtype: float
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -338,14 +338,14 @@ def parse_float(request, name, default_value=None, required=True, accepted_value
 
 
 def parse_timestamp(request, name, default_value=None, required=True):
-    '''Parses any valid ISO datetime, duration, or timestamp parameter from the given request.
+    """Parses any valid ISO datetime, duration, or timestamp parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: datetime.timedelta
+    :type default_value: datetime.timedelta or string
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
@@ -353,7 +353,7 @@ def parse_timestamp(request, name, default_value=None, required=True):
     :rtype: datetime.datetime
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -368,14 +368,14 @@ def parse_timestamp(request, name, default_value=None, required=True):
 
 
 def parse_duration(request, name, default_value=None, required=True):
-    '''Parses a time duration parameter from the given request.
+    """Parses a time duration parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: datetime.timedelta
+    :type default_value: datetime.timedelta or string
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
@@ -383,7 +383,7 @@ def parse_duration(request, name, default_value=None, required=True):
     :rtype: datetime.timedelta
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -398,12 +398,12 @@ def parse_duration(request, name, default_value=None, required=True):
 
 
 def parse_datetime(request, name, default_value=None, required=True):
-    '''Parses a datetime parameter from the given request.
+    """Parses a datetime parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: datetime.datetime
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -413,7 +413,7 @@ def parse_datetime(request, name, default_value=None, required=True):
     :rtype: datetime.datetime
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if not isinstance(value, basestring):
         return value
@@ -430,12 +430,12 @@ def parse_datetime(request, name, default_value=None, required=True):
 
 
 def parse_dict(request, name, default_value=None, required=True):
-    '''Parses a dictionary parameter from the given request.
+    """Parses a dictionary parameter from the given request.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: dict
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -445,7 +445,7 @@ def parse_dict(request, name, default_value=None, required=True):
     :rtype: dict
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
-    '''
+    """
     value = _get_param(request, name, default_value, required)
     if required and not isinstance(value, dict):
         raise BadParameter('Parameter must be a valid JSON object: "%s"' % name)
@@ -453,7 +453,7 @@ def parse_dict(request, name, default_value=None, required=True):
 
 
 def perform_paging(request, objects):
-    '''Performs paging on the given objects using the given request parameters
+    """Performs paging on the given objects using the given request parameters
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
@@ -461,7 +461,7 @@ def perform_paging(request, objects):
     :type objects: list
     :returns: the created page
     :rtype: :class:`django.core.paginator.Page`
-    '''
+    """
     # TODO: Replace this function with the paging features added to DRF 3.x
 
     try:
@@ -484,12 +484,12 @@ def perform_paging(request, objects):
 
 
 def _get_param(request, name, default_value=None, required=True):
-    '''Gets a parameter from the given request that works for either read or write operations.
+    """Gets a parameter from the given request that works for either read or write operations.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: object
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
@@ -497,7 +497,7 @@ def _get_param(request, name, default_value=None, required=True):
     :type required: bool
     :returns: The value of the named parameter or the default value if provided.
     :rtype: object
-    '''
+    """
     value = None
     if name in request.QUERY_PARAMS:
         value = request.QUERY_PARAMS.get(name)
@@ -513,22 +513,22 @@ def _get_param(request, name, default_value=None, required=True):
 
 
 def _get_param_list(request, name, default_value=None, required=True):
-    '''Gets a list of parameters from the given request that works for either read or write operations.
+    """Gets a list of parameters from the given request that works for either read or write operations.
 
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param name: The name of the parameter to parse.
-    :type name: str
+    :type name: string
     :param default_value: The name of the parameter to parse.
     :type default_value: object
     :returns: A list of the values of the named parameter or the default value if provided.
     :rtype: list[object]
-    '''
+    """
     value = None
     if name in request.QUERY_PARAMS:
         value = request.QUERY_PARAMS.getlist(name)
     if value is None and name in request.DATA:
-        value = request.DATA.getlist(name)
+        value = request.DATA.get(name)
 
     if value is None and default_value is not None:
         return default_value
@@ -539,30 +539,30 @@ def _get_param_list(request, name, default_value=None, required=True):
 
 
 def _check_accepted_value(name, value, accepted_values):
-    '''Checks that a parameter has a value that is acceptable.
+    """Checks that a parameter has a value that is acceptable.
 
     :param name: The name of the parameter.
-    :type name: str
+    :type name: string
     :param value: A value to validate.
     :type value: list[object]
     :param accepted_values: A list of values that are acceptable for the parameter.
     :type accepted_values: list[object]
-    '''
+    """
     if value and accepted_values:
         if value not in accepted_values:
             raise BadParameter('Parameter "%s" values must be one of: %s' % (name, accepted_values))
 
 
 def _check_accepted_values(name, values, accepted_values):
-    '''Checks that a list of parameters has values that are acceptable.
+    """Checks that a list of parameters has values that are acceptable.
 
     :param name: The name of the parameter.
-    :type name: str
+    :type name: string
     :param values: A list of values to validate.
     :type values: list[object]
     :param accepted_values: A list of values that are acceptable for the parameter.
     :type accepted_values: list[object]
-    '''
+    """
     if values and accepted_values:
         for value in values:
             _check_accepted_value(name, value, accepted_values)
