@@ -92,7 +92,7 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_jobs(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
+    def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -102,6 +102,8 @@ class JobManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param status: Query jobs with the a specific execution status.
         :type status: str
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: list[int]
         :param job_type_ids: Query jobs of the type associated with the identifier.
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
@@ -126,6 +128,8 @@ class JobManager(models.Manager):
 
         if status:
             jobs = jobs.filter(status=status)
+        if job_ids:
+            jobs = jobs.filter(id__in=job_ids)
         if job_type_ids:
             jobs = jobs.filter(job_type_id__in=job_type_ids)
         if job_type_names:
@@ -181,8 +185,8 @@ class JobManager(models.Manager):
         self.populate_input_files([job])
         return job
 
-    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
-                        job_type_categories=None, order=None):
+    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None,
+                        job_type_names=None, job_type_categories=None, order=None):
         """Returns a list of jobs that changed status within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -204,7 +208,8 @@ class JobManager(models.Manager):
         """
         if not order:
             order = ['last_status_change']
-        return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
+        return self.get_jobs(started=started, ended=ended, status=status, job_type_ids=job_type_ids,
+                             job_type_names=job_type_names, job_type_categories=job_type_categories, order=order)
 
     def get_locked_job(self, job_id):
         """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
