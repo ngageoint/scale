@@ -537,6 +537,32 @@ class TestRequeueJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job_3.job_type.category)
 
+    def test_priority(self):
+        """Tests successfully calling the requeue view changing the job priority."""
+
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
+        job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
+
+        # make sure the job is in the right state despite not actually having been run
+        Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
+        self.job_2.num_exes = 2
+        self.job_2.save()
+
+        json_data = {
+            'job_ids': [self.job_2.id],
+            'priority': 123,
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_2.id)
+        self.assertEqual(result['results'][0]['status'], 'QUEUED')
+        self.assertEqual(result['results'][0]['priority'], 123)
+
 
 # TODO: Remove this once the UI migrates to /queue/requeue-jobs/
 class TestRequeueExistingJobView(TestCase):
