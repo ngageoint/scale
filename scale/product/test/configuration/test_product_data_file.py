@@ -1,14 +1,13 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import os
 import django
 
-from django.utils.timezone import now
 from django.test import TestCase
+from django.utils.text import get_valid_filename
+from django.utils.timezone import now
 from mock import MagicMock, patch
 
-from job.models import Job, JobExecution, JobType
 from job.test import utils as job_utils
 from product.configuration.product_data_file import ProductDataFileStore
 from storage.models import Workspace
@@ -25,7 +24,7 @@ class TestProductDataFileStoreGetWorkspaces(TestCase):
         self.invalid_workspace_id = long(999)
 
     def test_successful(self):
-        '''Tests calling ProductDataFileStore.get_workspaces() successfully'''
+        """Tests calling ProductDataFileStore.get_workspaces() successfully"""
 
         workspaces_ids = [self.workspace_1.id, self.workspace_2.id, self.invalid_workspace_id]
 
@@ -49,11 +48,13 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=job_type, event=event, status='RUNNING', last_status_change=now())
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', timeout=1, queued=now())
+        self.remote_base_path = os.path.join(get_valid_filename(self.job.job_type.name),
+                                             get_valid_filename(self.job.job_type.version))
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
     @patch('product.models.ProductFile.objects.upload_files')
     def test_successful(self, mock_upload_files, mock_create_file_ancestry_links):
-        '''Tests calling ProductDataFileType.store_files() successfully'''
+        """Tests calling ProductDataFileType.store_files() successfully"""
 
         local_path_1 = os.path.join('my', 'path', 'one', 'my_test.txt')
         media_type_1 = 'text/plain'
@@ -68,6 +69,8 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         def new_upload_files(upload_dir, work_dir, file_entries, input_file_ids, job_exe, workspace):
             results = []
             for file_entry in file_entries:
+                # Check base remote path for job type name and version
+                self.assertTrue(file_entry[1].startswith(self.remote_base_path))
                 if file_entry[0] == local_path_1:
                     mock_1 = MagicMock()
                     mock_1.id = 1
@@ -90,19 +93,19 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         data_files = {self.workspace_1.id: [(local_path_1, media_type_1), (local_path_2, media_type_2)],
                       self.workspace_2.id: [(local_path_3, media_type_3), (local_path_4, media_type_4)]}
 
-        parent_ids = set([98, 99])
+        parent_ids = {98, 99}
 
         upload_dir = 'upload_dir'
         results = ProductDataFileStore().store_files(upload_dir, 'work_dir', data_files, parent_ids, self.job_exe)
 
         self.assertDictEqual(results, {os.path.join(upload_dir, local_path_1): long(1), os.path.join(upload_dir, local_path_2): long(2),
                                        os.path.join(upload_dir, local_path_3): long(3), os.path.join(upload_dir, local_path_4): long(4)})
-        mock_create_file_ancestry_links.assert_once_called_with(parent_ids, set([1, 2, 3, 4]))
+        mock_create_file_ancestry_links.assert_once_called_with(parent_ids, {1, 2, 3, 4}, self.job_exe)
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
     @patch('product.models.ProductFile.objects.upload_files')
     def test_geo_metadata(self, mock_upload_files, mock_create_file_ancestry_links):
-        '''Tests calling ProductDataFileType.store_files() successfully'''
+        """Tests calling ProductDataFileType.store_files() successfully"""
 
         geo_metadata = {
             "data_started": "2015-05-15T10:34:12Z",
