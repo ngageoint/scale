@@ -5,8 +5,6 @@ import queue.views
 
 urlpatterns = patterns(
     '',
-    # TODO: Remove this once the UI migrates to /load/
-    url(r'queue/depth/$', queue.views.QueueDepthView.as_view(), name='queue_depth_view'),
     # TODO: Remove this once the UI migrates to /queue/requeue-jobs/
     url(r'queue/requeue-job/$', queue.views.RequeueExistingJobView.as_view(), name='requeue_existing_job_view'),
 
