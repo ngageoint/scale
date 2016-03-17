@@ -62,15 +62,19 @@ class JobManager(models.Manager):
         job.last_status_change = when
         job.save()
 
-    def create_job(self, job_type, event):
-        """Creates a new job for the given type and returns the job model. The given job_type model must have already
-        been saved in the database (it must have an ID). The given event model must have already been saved in the
-        database (it must have an ID). The returned job model will have not yet been saved in the database.
+    def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
+        """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
+        job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
+        returned job model will have not yet been saved in the database.
 
         :param job_type: The type of the job to create
         :type job_type: :class:`job.models.JobType`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
+        :param superseded_job: The job that the created job is superseding, possibly None
+        :type superseded_job: :class:`job.models.Job`
+        :param delete_superseded: Whether the created job should delete products from the superseded job
+        :type delete_superseded: :class:`job.models.Job`
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
@@ -90,6 +94,14 @@ class JobManager(models.Manager):
         job.max_tries = job_type.max_tries
         job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
         job.mem_required = max(job_type.mem_required, MIN_MEM)
+
+        if superseded_job:
+            root_id = superseded_job.root_superseded_job_id
+            if not root_id:
+                root_id = superseded_job.id
+            job.root_superseded_job_id = root_id
+            job.superseded_job = superseded_job
+            job.delete_superseded = delete_superseded
 
         return job
 
