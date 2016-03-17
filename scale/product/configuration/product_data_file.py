@@ -1,4 +1,4 @@
-'''Defines the product data file input type contained within job data'''
+"""Defines the product data file input type contained within job data"""
 from __future__ import unicode_literals
 
 import os
@@ -9,16 +9,18 @@ from django.utils.timezone import now
 
 from job.configuration.data.data_file import AbstractDataFileStore
 from product.models import FileAncestryLink, ProductFile
+from recipe.models import Recipe
 from storage.models import Workspace
 
+
 class ProductDataFileStore(AbstractDataFileStore):
-    '''Implements the data file store class to provide a way to validate product file output configuration and store
+    """Implements the data file store class to provide a way to validate product file output configuration and store
     product data files.
-    '''
+    """
 
     def get_workspaces(self, workspace_ids):
-        '''See :meth:`job.configuration.data.data_file.AbstractDataFileStore.get_workspaces`
-        '''
+        """See :meth:`job.configuration.data.data_file.AbstractDataFileStore.get_workspaces`
+        """
 
         workspaces = Workspace.objects.filter(id__in=workspace_ids)
 
@@ -29,8 +31,8 @@ class ProductDataFileStore(AbstractDataFileStore):
         return results
 
     def store_files(self, upload_dir, work_dir, data_files, input_file_ids, job_exe):
-        '''See :meth:`job.configuration.data.data_file.AbstractDataFileStore.store_files`
-        '''
+        """See :meth:`job.configuration.data.data_file.AbstractDataFileStore.store_files`
+        """
 
         workspace_ids = data_files.keys()
         workspaces = Workspace.objects.filter(id__in=workspace_ids)
@@ -66,7 +68,7 @@ class ProductDataFileStore(AbstractDataFileStore):
         return results
 
     def _calculate_remote_path(self, job_exe, input_file_ids):
-        '''Returns the remote path for storing the products
+        """Returns the remote path for storing the products
 
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the files
         :type job_exe: :class:`job.models.JobExecution`
@@ -74,11 +76,17 @@ class ProductDataFileStore(AbstractDataFileStore):
         :type input_file_ids: set of int
         :returns: The remote path for storing the products
         :rtype: str
-        '''
+        """
 
+        remote_path = ''
+        recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        if recipe:
+            recipe_type_path = get_valid_filename(recipe.recipe_type.name)
+            recipe_version_path = get_valid_filename(recipe.recipe_type.version)
+            remote_path = os.path.join(remote_path, 'recipes', recipe_type_path, recipe_version_path)
         job_type_path = get_valid_filename(job_exe.job.job_type.name)
         job_version_path = get_valid_filename(job_exe.job.job_type.version)
-        remote_path = os.path.join(job_type_path, job_version_path)
+        remote_path = os.path.join(remote_path, 'jobs', job_type_path, job_version_path)
 
         # Try to use data start time from earliest ancestor source file
         the_date = None

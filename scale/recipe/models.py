@@ -111,6 +111,23 @@ class RecipeManager(models.Manager):
 
         return results
 
+    def get_recipe_for_job(self, job_id):
+        """Returns the recipe, possibly None, for the job with the given ID. The returned model will have its related
+        recipe_type and recipe_type_rev models populated.
+
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The recipe model with related recipe_type and recipe_type-rev, possibly None
+        :rtype: :class:`recipe.models.Recipe`
+        """
+
+        recipe_job_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
+        try:
+            recipe_job = recipe_job_qry.get(job_id=job_id)
+        except RecipeJob.DoesNotExist:
+            return None
+        return recipe_job.recipe
+
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
