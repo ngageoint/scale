@@ -400,6 +400,28 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
+    def supersede_jobs(self, jobs, when):
+        """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
+
+        :param jobs: The jobs to supersede
+        :type jobs: [:class:`job.models.Job`]
+        :param when: The time that the jobs were superseded
+        :type when: :class:`datetime.datetime`
+        """
+
+        modified = timezone.now()
+
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        for job in jobs:
+            job_ids.add(job.id)
+            job.is_superseded = True
+            job.superseded = when
+            job.last_modified = modified
+
+        # Update job models in database with single query
+        self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=modified)
+
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
 
@@ -489,9 +511,9 @@ class Job(models.Model):
         job
     :type disk_out_required: :class:`django.db.models.FloatField`
 
-    :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while superseded_by
-        is null, indicating that this job is obsolete (its recipe has been superseded), but there is no new job that has
-        directly taken its place.
+    :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
+        superseded_by_job (the reverse relationship of superded_job) is null, indicating that this job is obsolete (its
+        recipe has been superseded), but there is no new job that has directly taken its place.
     :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword root_superseded_job: The first job in the chain of superseded jobs. This field will be null for the first
         job in the chain (i.e. jobs that have a null superseded_job field).

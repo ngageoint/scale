@@ -44,6 +44,8 @@ class TestJobManager(TransactionTestCase):
         event = trigger_test_utils.create_trigger_event()
         new_job = Job.objects.create_job(old_job.job_type, event, old_job, False)
         new_job.save()
+        when = timezone.now()
+        Job.objects.supersede_jobs([old_job], when)
 
         new_job = Job.objects.get(pk=new_job.id)
         self.assertEqual(new_job.status, 'PENDING')
@@ -52,6 +54,9 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(new_job.superseded_job_id, old_job.id)
         self.assertFalse(new_job.delete_superseded)
         self.assertIsNone(new_job.superseded)
+        old_job = Job.objects.get(pk=old_job.id)
+        self.assertTrue(old_job.is_superseded)
+        self.assertEqual(old_job.superseded, when)
 
     def test_update_status_running(self):
         """Tests that job attributes are updated when a job is running."""
