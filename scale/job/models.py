@@ -1212,6 +1212,21 @@ class JobExecution(models.Model):
 
         return self.job.job_type.docker_image
 
+    def get_docker_params(self):
+        """Get the Docker params as a list of lists. Performs some basic validation.
+
+        :returns: The Docker params as a list of lists
+        :rtype: list
+        """
+
+        if self.docker_params is None or len(self.docker_params) == 0:
+            return []
+        if type(self.docker_params) is not type([]):
+            return []
+        if False in map(lambda x: type(x) is type([]) and len(x) == 2, self.docker_params):
+            return []
+        return self.docker_params
+
     def get_error_interface(self):
         """Returns the error interface for this job execution
 
