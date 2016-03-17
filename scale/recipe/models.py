@@ -287,7 +287,7 @@ class Recipe(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True, db_index=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeManager()
 
@@ -312,6 +312,7 @@ class Recipe(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe'
+        index_together = ['last_modified', 'recipe_type']
 
 
 class RecipeJobManager(models.Manager):

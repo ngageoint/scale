@@ -477,6 +477,19 @@ class Job(models.Model):
         job
     :type disk_out_required: :class:`django.db.models.FloatField`
 
+    :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while superseded_by
+        is null, indicating that this job is obsolete (its recipe has been superseded), but there is no new job that has
+        directly taken its place.
+    :type is_superseded: :class:`django.db.models.BooleanField`
+    :keyword root_superseded_job: The first job in the chain of superseded jobs. This field will be null for the first
+        job in the chain (i.e. jobs that have a null superseded_job field).
+    :type root_superseded_job: :class:`django.db.models.ForeignKey`
+    :keyword superseded_job: The job that was directly superseded by this job. The reverse relationship can be accessed
+        using 'superseded_by_job'.
+    :type superseded_job: :class:`django.db.models.ForeignKey`
+    :keyword delete_superseded: Whether this job should delete the products of the job that it has directly superseded
+    :type delete_superseded: :class:`django.db.models.BooleanField`
+
     :keyword created: When the job was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job was added to the queue to be run when resources are available
@@ -487,6 +500,8 @@ class Job(models.Model):
     :type ended: :class:`django.db.models.DateTimeField`
     :keyword last_status_change: When the job's last status change occurred
     :type last_status_change: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this job was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -520,12 +535,18 @@ class Job(models.Model):
     disk_in_required = models.FloatField(blank=True, null=True)
     disk_out_required = models.FloatField(blank=True, null=True)
 
+    is_superseded = models.BooleanField(default=False)
+    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True, on_delete=models.PROTECT)
+    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True, on_delete=models.PROTECT)
+    delete_superseded = models.BooleanField(default=True)
+
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
     last_status_change = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True, db_index=True)
+    superseded = models.DateTimeField(blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     objects = JobManager()
 
@@ -596,6 +617,7 @@ class Job(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'job'
+        index_together = ['last_modified', 'job_type', 'status']
 
 
 class JobExecutionManager(models.Manager):
