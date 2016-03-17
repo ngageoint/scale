@@ -49,7 +49,7 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=job_type, event=event, status='RUNNING', last_status_change=now())
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', timeout=1, queued=now())
-        self.remote_base_path = os.path.join(get_valid_filename(self.job.job_type.name),
+        self.remote_base_path = os.path.join('jobs', get_valid_filename(self.job.job_type.name),
                                              get_valid_filename(self.job.job_type.version))
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
@@ -111,8 +111,8 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         job_exe_in_recipe = job_utils.create_job_exe(status='RUNNING')
         recipe = recipe_utils.create_recipe()
         _recipe_job = recipe_utils.create_recipe_job(recipe=recipe, job_name='My Job', job=job_exe_in_recipe.job)
-        remote_base_path_with_recipe = os.path.join(get_valid_filename(recipe.recipe_type.name),
-                                                    get_valid_filename(recipe.recipe_type.version),
+        remote_base_path_with_recipe = os.path.join('recipes', get_valid_filename(recipe.recipe_type.name),
+                                                    get_valid_filename(recipe.recipe_type.version), 'jobs',
                                                     get_valid_filename(job_exe_in_recipe.job.job_type.name),
                                                     get_valid_filename(job_exe_in_recipe.job.job_type.version))
 
