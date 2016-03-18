@@ -130,7 +130,21 @@ class TestJobDetailsView(TestCase):
         django.setup()
 
         self.file = storage_test_utils.create_file()
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'file',
+                'name': 'input_file'
+            }],
+            'output_data': [],
+            'shared_resources': [],
+        }
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
         self.job = job_test_utils.create_job(
+            job_type=self.job_type,
             data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 

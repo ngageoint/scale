@@ -214,7 +214,6 @@ class JobDetailsSerializer(JobSerializer):
     data = serializers.CharField()
     results = serializers.CharField()
 
-    input_files = ScaleFileBaseSerializer()
     job_exes = JobExecutionBaseSerializer()
 
     # Attempt to serialize related model fields
@@ -225,6 +224,13 @@ class JobDetailsSerializer(JobSerializer):
     except:
         pass
 
+    inputs = serializers.CharField()
+    outputs = serializers.CharField()
+
+    # TODO Remove this attribute once the UI migrates to "inputs"
+    input_files = ScaleFileBaseSerializer()
+
+    # TODO Remove this attribute once the UI migrates to "outputs"
     try:
         from product.serializers import ProductFileBaseSerializer
         products = ProductFileBaseSerializer()

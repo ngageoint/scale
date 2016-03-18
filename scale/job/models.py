@@ -1,6 +1,7 @@
 """Defines the database models for jobs and job types"""
 from __future__ import unicode_literals
 
+import copy
 import datetime
 import logging
 import math
@@ -156,9 +157,7 @@ class JobManager(models.Manager):
         """
 
         # Attempt to fetch the requested job
-        job = Job.objects.all()
-        job = job.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error')
-        job = Job.objects.get(pk=job_id)
+        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error').get(pk=job_id)
 
         # Attempt to get related job executions
         job.job_exes = JobExecution.objects.filter(job=job).order_by('-created')
@@ -173,16 +172,32 @@ class JobManager(models.Manager):
         except:
             job.recipes = []
 
+        # Fetch all the associated input files
+        input_file_ids = job.get_job_data().get_input_file_ids()
+        input_files = ScaleFile.objects.filter(id__in=input_file_ids)
+        input_files = input_files.select_related('workspace').defer('workspace__json_config')
+        input_files = input_files.order_by('id').distinct('id')
+
         # Attempt to get related products
         # Use a localized import to make higher level application dependencies optional
         try:
             from product.models import ProductFile
-            job.products = ProductFile.objects.filter(job=job).order_by('last_modified').select_related('file')
+            output_files = ProductFile.objects.filter(job=job)
+            output_files = output_files.select_related('file', 'file__workspace').defer('file__workspace__json_config')
+            output_files = output_files.order_by('id').distinct('id')
         except:
-            job.products = []
+            output_files = []
 
-        # Add related input files
-        self.populate_input_files([job])
+        # Merge job interface definitions with mapped values
+        job_interface_dict = job.get_job_interface().get_dict()
+        job.inputs = self._merge_job_data(job_interface_dict['input_data'],
+                                          job.get_job_data().get_dict()['input_data'], input_files)
+        job.outputs = self._merge_job_data(job_interface_dict['output_data'],
+                                           job.get_job_results().get_dict()['output_data'], output_files)
+
+        # TODO Remove these attributes once the UI migrates to "inputs" and "outputs"
+        job.input_files = input_files
+        job.products = output_files
         return job
 
     def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None,
@@ -430,6 +445,27 @@ class JobManager(models.Manager):
         else:
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
                                                last_modified=modified)
+
+    def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
+
+        # Setup the basic structure for merged results
+        merged_dicts = copy.deepcopy(job_interface_dict)
+        name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
+        file_map = {job_file.id: job_file for job_file in job_files}
+
+        # Merge the job data with the result data
+        for data_dict in job_data_dict:
+            value = None
+            if 'value' in data_dict:
+                value = data_dict['value']
+            elif 'file_id' in data_dict:
+                value = file_map[data_dict['file_id']]
+            elif 'file_ids' in data_dict:
+                value = [file_map[file_id] for file_id in data_dict['file_ids']]
+
+            merged_dict = name_map[data_dict['name']]
+            merged_dict['value'] = value
+        return merged_dicts
 
 
 class Job(models.Model):
