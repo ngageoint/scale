@@ -38,7 +38,7 @@ class Task(object):
         # These values will vary by different task subclasses
         self._uses_docker = True
         self._docker_image = None
-        self._docker_params = job_exe.get_docker_params()
+        self._docker_params = []
         self._is_docker_privileged = False
         self._command = None
         self._command_arguments = None
@@ -88,10 +88,10 @@ class Task(object):
         """Returns the Docker parameters used to run this task.
 
         :returns: The Docker parameters
-        :rtype: List of 2-tuples
+        :rtype: [[str, str]]
         """
 
-        return self.docker_params
+        return self._docker_params
 
     @property
     def id(self):

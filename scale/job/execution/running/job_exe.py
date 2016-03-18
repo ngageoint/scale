@@ -42,7 +42,6 @@ class RunningJobExecution(object):
         """
 
         self._id = job_exe.id
-        self._docker_params = job_exe.docker_params
         self._job_type_id = job_exe.job.job_type_id
         self._node_id = job_exe.node.id
         self._node_hostname = job_exe.node.hostname
