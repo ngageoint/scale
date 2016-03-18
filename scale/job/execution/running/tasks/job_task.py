@@ -23,6 +23,8 @@ class JobTask(Task):
 
         self._uses_docker = job_exe.uses_docker()
         self._docker_image = job_exe.get_docker_image()
+        if self._uses_docker:
+            self._docker_params = job_exe.get_docker_params()
         self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
         if job_exe.is_system:
