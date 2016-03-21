@@ -298,7 +298,8 @@
                     { path: 'feed/ingests', label: 'Ingest Records' }
                 ]
             },
-            headerOffset: 160
+            headerOffset: 160,
+            dateFilterOffset: 65
         };
         _.merge(cfg, scaleConfigLocal);
         return cfg;
