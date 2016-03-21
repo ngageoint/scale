@@ -86,6 +86,7 @@ class JobManager(models.Manager):
         job.event = event
         job.priority = job_type.priority
         job.timeout = job_type.timeout
+        job.docker_params = job_type.docker_params
         job.max_tries = job_type.max_tries
         job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
         job.mem_required = max(job_type.mem_required, MIN_MEM)
@@ -454,6 +455,9 @@ class Job(models.Model):
     :keyword results: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type results: :class:`djorm_pgjson.fields.JSONField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+    See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -505,6 +509,7 @@ class Job(models.Model):
 
     data = djorm_pgjson.fields.JSONField()
     results = djorm_pgjson.fields.JSONField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
@@ -835,6 +840,7 @@ class JobExecutionManager(models.Manager):
             job_exe = JobExecution()
             job_exe.job = job
             job_exe.timeout = job.timeout
+            job_exe.docker_params = job.docker_params
             job_exe.queued = when
             job_exe.created = when
             # Fill in job execution command argument string with data that doesn't require pre-task
@@ -1056,6 +1062,9 @@ class JobExecution(models.Model):
     :type command_arguments: :class:`django.db.models.CharField`
     :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+    See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
@@ -1149,6 +1158,7 @@ class JobExecution(models.Model):
 
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     environment = djorm_pgjson.fields.JSONField()
@@ -1201,6 +1211,21 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.docker_image
+
+    def get_docker_params(self):
+        """Get the Docker params as a list of lists. Performs some basic validation.
+
+        :returns: The Docker params as a list of lists
+        :rtype: list
+        """
+
+        if self.docker_params is None or len(self.docker_params) == 0:
+            return []
+        if type(self.docker_params) is not type([]):
+            return []
+        if False in map(lambda x: type(x) is type([]) and len(x) == 2, self.docker_params):
+            return []
+        return self.docker_params
 
     def get_error_interface(self):
         """Returns the error interface for this job execution
@@ -1895,6 +1920,9 @@ class JobType(models.Model):
     :type docker_image: :class:`django.db.models.CharField`
     :keyword interface: JSON description defining the interface for running a job of this type
     :type interface: :class:`djorm_pgjson.fields.JSONField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+    See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
     :keyword revision_num: The current revision number of the interface, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
     :keyword error_mapping: Mapping for translating an exit code to an error type
@@ -1956,6 +1984,7 @@ class JobType(models.Model):
     docker_privileged = models.BooleanField(default=False)
     docker_image = models.CharField(blank=True, null=True, max_length=500)
     interface = djorm_pgjson.fields.JSONField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
     revision_num = models.IntegerField(default=1)
     error_mapping = djorm_pgjson.fields.JSONField()
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
