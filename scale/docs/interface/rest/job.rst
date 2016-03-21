@@ -238,16 +238,35 @@ These services provide access to information about "all", "currently running" an
 | results            | JSON Object       | An interface description for all the job results meta-data.                    |
 |                    |                   | (See :ref:`architecture_jobs_job_results_spec`)                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| input_files        | JSON Object       | A list of files that the job used as input.                                    |
-|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | recipes            | Array             | A list of all recipes associated with the job.                                 |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_exes           | Array             | A list of all job executions associated with the job.                          |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| products           | Array             | A list of all generated products associated with the job.                      |
+| inputs             | Array             | A list of job interface inputs merged with their respective job data values.   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .name              | String            | The name of the input as defined by the job type interface.                    |
+|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .type              | String            | The type of the input as defined by teh job type interface.                    |
+|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .value             | Various           | The actual value of the input, which can vary depending on the type. Simple    |
+|                    |                   | property inputs will include primitive values, whereas the file or files type  |
+|                    |                   | will include a full JSON representation of a Scale file object.                |
+|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| outputs            | Array             | A list of job interface outputs merged with their respective job result values.|
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .name              | String            | The name of the output as defined by the job type interface.                   |
+|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .type              | String            | The type of the output as defined by teh job type interface.                   |
+|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .value             | Various           | The actual value of the output, which can vary depending on the type. A file or|
+|                    |                   | files type will include a full JSON representation of a Product file object.   |
 |                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
@@ -360,30 +379,6 @@ These services provide access to information about "all", "currently running" an
 |            ],                                                                                                           |
 |            "version": "1.0"                                                                                             |
 |        },                                                                                                               |
-|        "input_files": [                                                                                                 |
-|            {                                                                                                            |
-|                "id": 2,                                                                                                 |
-|                "workspace": {                                                                                           |
-|                    "id": 1,                                                                                             |
-|                    "name": "Raw Source"                                                                                 |
-|                },                                                                                                       |
-|                "file_name": "input_file.txt",                                                                           | 
-|                "media_type": "text/plain",                                                                              |
-|                "file_size": 1234,                                                                                       |
-|                "data_type": [],                                                                                         | 
-|                "is_deleted": false,                                                                                     |
-|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
-|                "url": "http://host.com/input_file.txt",                                                                 |
-|                "created": "2015-09-10T15:24:53.962Z",                                                                   |
-|                "deleted": null,                                                                                         |
-|                "data_started": "2015-09-10T14:50:49Z",                                                                  |
-|                "data_ended": "2015-09-10T14:51:05Z",                                                                    |
-|                "geometry": null,                                                                                        |
-|                "center_point": null,                                                                                    |
-|                "meta_data": {...}                                                                                       |
-|                "last_modified": "2015-09-10T15:25:02.808Z"                                                              |
-|            }                                                                                                            |
-|        ],                                                                                                               |
 |        "recipes": [                                                                                                     |
 |            {                                                                                                            |
 |                "id": 4832,                                                                                              |
@@ -435,40 +430,72 @@ These services provide access to information about "all", "currently running" an
 |                "error": null                                                                                            |
 |            }                                                                                                            |
 |        ],                                                                                                               |
-|        "products": [                                                                                                    |
+|        "inputs": [                                                                                                      |
 |            {                                                                                                            |
-|                "id": 8484,                                                                                              |
-|                "workspace": {                                                                                           |
-|                    "id": 2,                                                                                             | 
-|                    "name": "Products"                                                                                   | 
-|                },                                                                                                       |
-|                "file_name": "file.kml",                                                                                 |
-|                "media_type": "application/vnd.google-earth.kml+xml",                                                    |
-|                "file_size": 1234,                                                                                       |
-|                "data_type": [],                                                                                         |
-|                "is_deleted": false,                                                                                     |
-|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
-|                "url": "http://host.com/file/path/my_file.kml",                                                          | 
-|                "created": "2015-09-01T17:27:48.477Z",                                                                   | 
-|                "deleted": null,                                                                                         |
-|                "data_started": null,                                                                                    |
-|                "data_ended": null,                                                                                      |
-|                "geometry": null,                                                                                        |
-|                "center_point": null,                                                                                    | 
-|                "meta_data": {},                                                                                         |
-|                "last_modified": "2015-09-01T17:27:49.639Z",                                                             |
-|                "is_operational": true,                                                                                  |
-|                "is_published": true,                                                                                    |
-|                "published": "2015-09-01T17:27:49.461Z",                                                                 |
-|                "unpublished": null,                                                                                     |
-|                "job_type": {                                                                                            |
-|                    "id": 8                                                                                              |
-|                },                                                                                                       |
-|                "job": {                                                                                                 |
-|                    "id": 35                                                                                             |
-|                },                                                                                                       |
-|                "job_exe": {                                                                                             |
-|                    "id": 19                                                                                             |
+|                "name": "input_file",                                                                                    |
+|                "type": "file",                                                                                          |
+|                "value": {                                                                                               |
+|                    "id": 2,                                                                                             |
+|                    "workspace": {                                                                                       |
+|                        "id": 1,                                                                                         |
+|                        "name": "Raw Source"                                                                             |
+|                    },                                                                                                   |
+|                    "file_name": "input_file.txt",                                                                       |
+|                    "media_type": "text/plain",                                                                          |
+|                    "file_size": 1234,                                                                                   |
+|                    "data_type": [],                                                                                     |
+|                    "is_deleted": false,                                                                                 |
+|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
+|                    "url": "http://host.com/input_file.txt",                                                             |
+|                    "created": "2015-09-10T15:24:53.962Z",                                                               |
+|                    "deleted": null,                                                                                     |
+|                    "data_started": "2015-09-10T14:50:49Z",                                                              |
+|                    "data_ended": "2015-09-10T14:51:05Z",                                                                |
+|                    "geometry": null,                                                                                    |
+|                    "center_point": null,                                                                                |
+|                    "meta_data": {...}                                                                                   |
+|                    "last_modified": "2015-09-10T15:25:02.808Z"                                                          |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        ],                                                                                                               |
+|        "outputs": [                                                                                                     |
+|            {                                                                                                            |
+|                "name": "output_file",                                                                                   |
+|                "type": "file",                                                                                          |
+|                "value": {                                                                                               |
+|                    "id": 8484,                                                                                          |
+|                    "workspace": {                                                                                       |
+|                        "id": 2,                                                                                         |
+|                        "name": "Products"                                                                               |
+|                    },                                                                                                   |
+|                    "file_name": "file.kml",                                                                             |
+|                    "media_type": "application/vnd.google-earth.kml+xml",                                                |
+|                    "file_size": 1234,                                                                                   |
+|                    "data_type": [],                                                                                     |
+|                    "is_deleted": false,                                                                                 |
+|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
+|                    "url": "http://host.com/file/path/my_file.kml",                                                      |
+|                    "created": "2015-09-01T17:27:48.477Z",                                                               |
+|                    "deleted": null,                                                                                     |
+|                    "data_started": null,                                                                                |
+|                    "data_ended": null,                                                                                  |
+|                    "geometry": null,                                                                                    |
+|                    "center_point": null,                                                                                |
+|                    "meta_data": {},                                                                                     |
+|                    "last_modified": "2015-09-01T17:27:49.639Z",                                                         |
+|                    "is_operational": true,                                                                              |
+|                    "is_published": true,                                                                                |
+|                    "published": "2015-09-01T17:27:49.461Z",                                                             |
+|                    "unpublished": null,                                                                                 |
+|                    "job_type": {                                                                                        |
+|                        "id": 8                                                                                          |
+|                    },                                                                                                   |
+|                    "job": {                                                                                             |
+|                        "id": 35                                                                                         |
+|                    },                                                                                                   |
+|                    "job_exe": {                                                                                         |
+|                        "id": 19                                                                                         |
+|                    }                                                                                                    |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        ]                                                                                                                |
