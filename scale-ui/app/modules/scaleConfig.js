@@ -277,7 +277,7 @@
                 queueStatus: 5 * (60 * 1000),
                 queueDepth: 5 * (60 * 1000),
                 status: 5 * (60 * 1000),
-                jobLoad: .05 * (60 * 1000)
+                jobLoad: 5 * (60 * 1000)
             },
             subnavLinks: {
                 jobs: [
