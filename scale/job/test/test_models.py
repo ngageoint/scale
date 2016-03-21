@@ -36,6 +36,28 @@ class TestJobManager(TransactionTestCase):
         self.assertIsNone(job.started)
         self.assertIsNone(job.ended)
 
+    def test_superseded_job(self):
+        """Tests creating a job that supersedes another job"""
+
+        old_job = job_test_utils.create_job()
+
+        event = trigger_test_utils.create_trigger_event()
+        new_job = Job.objects.create_job(old_job.job_type, event, old_job, False)
+        new_job.save()
+        when = timezone.now()
+        Job.objects.supersede_jobs([old_job], when)
+
+        new_job = Job.objects.get(pk=new_job.id)
+        self.assertEqual(new_job.status, 'PENDING')
+        self.assertFalse(new_job.is_superseded)
+        self.assertEqual(new_job.root_superseded_job_id, old_job.id)
+        self.assertEqual(new_job.superseded_job_id, old_job.id)
+        self.assertFalse(new_job.delete_superseded)
+        self.assertIsNone(new_job.superseded)
+        old_job = Job.objects.get(pk=old_job.id)
+        self.assertTrue(old_job.is_superseded)
+        self.assertEqual(old_job.superseded, when)
+
     def test_update_status_running(self):
         """Tests that job attributes are updated when a job is running."""
         job_1 = job_test_utils.create_job(num_exes=1, started=None, ended=timezone.now())
