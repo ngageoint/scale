@@ -26,7 +26,7 @@
         $scope.selectedRecipeType = recipesParams.type_id || 0;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         $scope.gridStyle = '';
-        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStart = recipesParams.started ? moment.utc(recipesParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -34,7 +34,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStop = recipesParams.ended ? moment.utc(recipesParams.ended).toDate() : moment.utc().endOf('d').toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
