@@ -2,19 +2,17 @@
 
 <div class="row">
     <div class="col-xs-2">
-        <div class="form-group">
-            <label for="startDate">Start Date</label>
-            <div class="input-group">
-                <input id="startDate" type="text" class="form-control" ng-click="openInputStart($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputStartDate" ng-model-options="dateModelOptions" is-open="inputStartOpened" close-text="Close" />
-                <span class="input-group-addon" ng-click="openInputStart($event)"><i class="glyphicon glyphicon-calendar"></i></span>
-            </div>
+        <div class="input-group margin-bottom-lg">
+            <span class="input-group-addon">
+                From:
+            </span>
+            <input id="startDate" type="text" class="form-control" ng-click="openInputStart($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputStartDate" ng-model-options="dateModelOptions" is-open="inputStartOpened" close-text="Close" />
         </div>
-        <div class="form-group">
-            <label for="endDate">End Date</label>
-            <div class="input-group">
-                <input id="endDate" type="text" class="form-control" ng-click="openInputEnd($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputEndDate" ng-model-options="dateModelOptions" is-open="inputEndOpened" close-text="Close" />
-                <span class="input-group-addon" ng-click="openInputEnd($event)"><i class="glyphicon glyphicon-calendar"></i></span>
-            </div>
+        <div class="input-group margin-bottom-lg">
+            <span class="input-group-addon" style="padding-right: 28px">
+                To:
+            </span>
+            <input id="endDate" type="text" class="form-control" ng-click="openInputEnd($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="inputEndDate" ng-model-options="dateModelOptions" is-open="inputEndOpened" close-text="Close" />
         </div>
         <div class="form-group">
             <label for="dataSource">Data Source</label>

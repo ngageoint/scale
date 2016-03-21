@@ -1,22 +1,4 @@
 [
-    {
-        "model": "trigger.TriggerRule",
-        "pk": null,
-        "fields": {
-            "type": "CLOCK",
-            "name": "scale-queue-depth",
-            "configuration": {
-                "version": "1.0",
-                "event_type": "QUEUE_DEPTH",
-                "schedule": "PT1H0M0S"
-            },
-            "is_active": true,
-            "created": "2015-09-22T00:00:00.0Z",
-            "archived": null,
-            "last_modified": "2015-09-22T00:00:00.0Z"
-        }
-    },
-
 	{
 		"model": "trigger.TriggerRule",
 		"pk": null,

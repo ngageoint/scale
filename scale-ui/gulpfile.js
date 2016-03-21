@@ -288,7 +288,7 @@ gulp.task('dist', ['build', 'uglify', 'clean-dist'], function () {
 gulp.task('deploy-scale', ['bump','dist'], function () {
     return gulp.src('./dist/**/*')
         .pipe(gulp.dest('./scale')) // this will be the name of the directory inside the archive
-        .pipe(tar('scale' + p.version + '.tar'))
+        .pipe(tar('scale-ui.tar'))
         .pipe(gzip())
         .pipe(gulp.dest('./deploy'));
 });
