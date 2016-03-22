@@ -130,9 +130,39 @@ class TestJobDetailsView(TestCase):
         django.setup()
 
         self.file = storage_test_utils.create_file()
-        self.job = job_test_utils.create_job(
-            data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
-        )
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'property',
+                'name': 'input_field',
+            }, {
+                'type': 'file',
+                'name': 'input_file',
+            }, {
+                'type': 'files',
+                'name': 'input_files',
+            }],
+            'output_data': [{
+                'type': 'file',
+                'name': 'output_file',
+            }, {
+                'type': 'files',
+                'name': 'output_files',
+            }],
+            'shared_resources': [],
+        }
+
+        job_data = {
+            'input_data': []
+        }
+        job_results = {
+            'output_data': []
+        }
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
+        self.job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
 
         # Attempt to stage related models
         self.job_exe = job_test_utils.create_job_exe(job=self.job)
@@ -143,7 +173,7 @@ class TestJobDetailsView(TestCase):
             self.recipe_job = recipe_test_utils.create_recipe_job(self.recipe, job=self.job)
         except:
             self.recipe = None
-            self.receip_job = None
+            self.recipe_job = None
 
         try:
             import product.test.utils as product_test_utils
@@ -151,8 +181,8 @@ class TestJobDetailsView(TestCase):
         except:
             self.product = None
 
-    def test_successful(self):
-        """Tests successfully calling the jobs view."""
+    def test_successful_empty(self):
+        """Tests successfully calling the job details view with no data or results."""
 
         url = '/jobs/%i/' % self.job.id
         response = self.client.generic('GET', url)
@@ -161,8 +191,14 @@ class TestJobDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(result['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
-        self.assertEqual(len(result['input_files']), 1)
-        self.assertEqual(result['input_files'][0]['id'], self.file.id)
+
+        self.assertEqual(len(result['inputs']), 3)
+        for data_input in result['inputs']:
+            self.assertIsNone(data_input['value'])
+
+        self.assertEqual(len(result['outputs']), 2)
+        for data_output in result['outputs']:
+            self.assertIsNone(data_output['value'])
 
         if self.job_exe:
             self.assertEqual(result['job_exes'][0]['command_arguments'], self.job_exe.command_arguments)
@@ -174,10 +210,97 @@ class TestJobDetailsView(TestCase):
         else:
             self.assertEqual(len(result['recipes']), 0)
 
+    def test_successful_property(self):
+        """Tests successfully calling the job details view for one input property."""
+        self.job.job_type_rev.interface['input_data'] = [{
+            'name': 'input_field',
+            'type': 'property',
+        }]
+        self.job.job_type_rev.save()
+        self.job.data['input_data'] = [{
+            'name': 'input_field',
+            'value': 10,
+        }]
+        self.job.save()
+
+        url = '/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(result['inputs']), 1)
+        self.assertEqual(result['inputs'][0]['value'], 10)
+
+    def test_successful_file(self):
+        """Tests successfully calling the job details view for one input/output file."""
+        self.job.job_type_rev.interface['input_data'] = [{
+            'name': 'input_file',
+            'type': 'file',
+        }]
+        self.job.job_type_rev.interface['output_data'] = [{
+            'name': 'output_file',
+            'type': 'file',
+        }]
+        self.job.job_type_rev.save()
+        self.job.data['input_data'] = [{
+            'name': 'input_file',
+            'file_id': self.file.id,
+        }]
         if self.product:
-            self.assertEqual(result['products'][0]['file_name'], self.product.file_name)
-        else:
-            self.assertEqual(len(result['products']), 0)
+            self.job.results['output_data'] = [{
+                'name': 'output_file',
+                'file_id': self.product.id,
+            }]
+        self.job.save()
+
+        url = '/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(result['inputs']), 1)
+        self.assertEqual(result['inputs'][0]['value']['id'], self.file.id)
+
+        if self.product:
+            self.assertEqual(len(result['outputs']), 1)
+            self.assertEqual(result['outputs'][0]['value']['id'], self.product.id)
+
+    def test_successful_files(self):
+        """Tests successfully calling the job details view for multiple input/output files."""
+        self.job.job_type_rev.interface['input_data'] = [{
+            'name': 'input_files',
+            'type': 'files',
+        }]
+        self.job.job_type_rev.interface['output_data'] = [{
+            'name': 'output_files',
+            'type': 'files',
+        }]
+        self.job.job_type_rev.save()
+        self.job.data['input_data'] = [{
+            'name': 'input_files',
+            'file_ids': [self.file.id],
+        }]
+        if self.product:
+            self.job.results['output_data'] = [{
+                'name': 'output_files',
+                'file_ids': [self.product.id],
+            }]
+        self.job.save()
+
+        url = '/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(result['inputs']), 1)
+        self.assertEqual(result['inputs'][0]['value'][0]['id'], self.file.id)
+
+        if self.product:
+            self.assertEqual(len(result['outputs']), 1)
+            self.assertEqual(result['outputs'][0]['value'][0]['id'], self.product.id)
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
@@ -190,7 +313,7 @@ class TestJobDetailsView(TestCase):
         self.assertEqual(result['status'], 'CANCELED')
 
     def test_cancel_bad_param(self):
-        """Tests successfully cancelling a job."""
+        """Tests cancelling a job with invalid arguments."""
 
         url = '/jobs/%i/' % self.job.id
         data = {'foo': 'bar'}
@@ -198,7 +321,7 @@ class TestJobDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_cancel_bad_value(self):
-        """Tests successfully cancelling a job."""
+        """Tests cancelling a job with an incorrect status."""
 
         url = '/jobs/%i/' % self.job.id
         data = {'status': 'COMPLETED'}
