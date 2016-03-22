@@ -11,16 +11,33 @@
         // check for gridParams in query string, and update as necessary
         _.forEach(_.pairs(gridParams), function (param) {
             var value = _.at($location.search(), param[0]);
-            if (value.length > 0 && value[0]) {
+            if (value.length > 0) {
                 gridParams[param[0]] = value.length > 1 ? value : value[0];
-            }
-            else {
-                $location.search()[param[0]] = param[1];
             }
         });
 
         var filteredByStatus = gridParams.status ? true : false;
         var filteredByOrder = gridParams.order ? true : false;
+        $scope.lastModifiedStart = gridParams.started ? moment.utc(gridParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+
+        $scope.lastModifiedStartPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStartPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStartPopup.opened = true;
+        };
+        $scope.lastModifiedStop = gridParams.ended ? moment.utc(gridParams.ended).toDate() : moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStopPopup = {
+            opened: false
+        };
+        $scope.openLastModifiedStopPopup = function ($event) {
+            $event.stopPropagation();
+            $scope.lastModifiedStopPopup.opened = true;
+        };
+        $scope.dateModelOptions = {
+            timezone: '+000'
+        };
 
         $scope.statusValues = scaleConfig.ingestStatus;
         $scope.selectedStatus = gridParams.status || $scope.statusValues[0];
@@ -34,6 +51,22 @@
                 updateStatus(value);
             }
         });
+
+        $scope.$watch('lastModifiedStart', function (value) {
+            if (!$scope.loading) {
+                gridParams.started = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
+        $scope.$watch('lastModifiedStop', function (value) {
+            if (!$scope.loading) {
+                console.log(value);
+                gridParams.ended = value.toISOString();
+                $scope.filterResults();
+            }
+        });
+
 
         var updateStatus = function (value) {
             if (value != gridParams.status) {
@@ -140,6 +173,15 @@
         var initialize = function () {
             navService.updateLocation('feed');
             subnavService.setCurrentPath('feed/ingests');
+            if (!gridParams.started) {
+                console.log('lastModifiedStart: ' + $scope.lastModifiedStart);
+                gridParams.started = moment.utc($scope.lastModifiedStart).toISOString();
+                $location.search('started', gridParams.started).replace();
+            }
+            if (!gridParams.ended) {
+                gridParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
+                $location.search('ended', gridParams.ended).replace();
+            }
             getIngests();
         };
 
@@ -148,7 +190,7 @@
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset,
+                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
                 gridMaxHeight = viewport.height - offset;
 
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';

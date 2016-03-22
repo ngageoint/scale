@@ -32,7 +32,7 @@
         $scope.actionClicked = false;
         $scope.gridStyle = '';
         $scope.readonly = true;
-        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStart = self.jobsParams.started ? moment.utc(self.jobsParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -40,7 +40,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStop = self.jobsParams.ended ? moment.utc(self.jobsParams.ended).toDate() : moment.utc().endOf('d').toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
@@ -327,7 +327,7 @@
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset,
+                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
                 gridMaxHeight = viewport.height - offset;
 
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';

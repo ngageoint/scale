@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='recipe',
             name='last_modified',
-            field=models.DateTimeField(auto_now=True, db_index=True),
+            field=models.DateTimeField(auto_now=True),  # Removed db_index to workaround a migration hashing bug
             preserve_default=True,
         ),
     ]
