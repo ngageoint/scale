@@ -275,7 +275,7 @@ class RecipeDefinition(object):
         return results
 
     def get_jobs_to_create(self):
-        """Returns the list of job names and types to create for the recipe, in the order that they be created
+        """Returns the list of job names and types to create for the recipe, in the order that they should be created
 
         :returns: List of tuples with each job's name and type
         :rtype: [(str, :class:`job.models.JobType`)]
