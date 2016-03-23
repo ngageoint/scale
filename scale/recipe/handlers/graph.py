@@ -1,0 +1,103 @@
+"""Defines the class for handling recipe graphs"""
+from __future__ import unicode_literals
+
+from recipe.handlers.connection import DependencyInputConnection, RecipeInputConnection
+from recipe.handlers.node import RecipeNode
+
+
+class RecipeGraph(object):
+    """Represents a graph of recipe nodes
+    """
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self._inputs = {}  # {Input name: Input}
+        self._nodes = {}  # {Job name: Node}
+        self._root_nodes = {}  # {Job name: Node}
+
+    def add_dependency(self, parent_job_name, child_job_name, connections):
+        """Adds a dependency that one job has upon another job
+
+        :param parent_job_name: The name of the parent job
+        :type parent_job_name: str
+        :param child_job_name: The name of the child job
+        :type child_job_name: str
+        :param connections: List of tuples where first item is parent output name and second item is child input name
+        :type connections: [(str, str)]
+        """
+
+        parent_node = self._get_node(parent_job_name)
+        child_node = self._get_node(child_job_name)
+        dependency_connections = []
+        for connection in connections:
+            input_name = connection[0]
+            output_name = connection[1]
+            dependency_connection = DependencyInputConnection(input_name, parent_node, output_name)
+            dependency_connections.append(dependency_connection)
+
+        child_node.add_dependency(parent_node, dependency_connections)
+        parent_node.add_child(child_node)
+        if child_job_name in self._root_nodes:
+            del self._root_nodes[child_job_name]
+
+    def add_input(self, recipe_input):
+        """Adds a recipe input to this graph
+
+        :param recipe_input: The recipe input
+        :type recipe_input: :class:`job.handlers.inputs.base_input.Input`
+        """
+
+        self._inputs[recipe_input.input_name] = recipe_input
+
+    def add_job(self, job_name, job_type_name, job_type_version):
+        """Adds a new job node to the graph
+
+        :param job_name: The unique name of the job
+        :type job_name: str
+        :param job_type_name: The name of the job's type
+        :type job_type_name: str
+        :param job_type_version: The version of the job's type
+        :type job_type_version: str
+        """
+
+        if job_name in self._nodes:
+            raise Exception('Recipe cannot have duplicate job names')
+
+        node = RecipeNode(job_name, job_type_name, job_type_version)
+        self._nodes[job_name] = node
+        self._root_nodes[job_name] = node
+
+    def add_recipe_input_connection(self, recipe_input, job_name, job_input):
+        """Adds a recipe input connection from the given recipe input to the given job input
+
+        :param recipe_input: The name of the recipe input
+        :type recipe_input: str
+        :param job_name: The name of the job
+        :type job_name: str
+        :param job_input: The name of the job input
+        :type job_input: str
+        """
+
+        if recipe_input not in self._inputs:
+            raise Exception('Recipe input %s is not defined' % recipe_input)
+
+        if job_name not in self._nodes:
+            raise Exception('Recipe job %s is not defined' % job_name)
+
+        input_conn = RecipeInputConnection(job_input, self._inputs[recipe_input])
+        self._get_node(job_name).add_recipe_input(input_conn)
+
+    def _get_node(self, job_name):
+        """Returns the node with the given job_name
+
+        :param job_name: The job name
+        :type job_name: str
+        :returns: The node
+        :rtype: :class:`recipe.handlers.node.RecipeNode`
+        """
+
+        if job_name not in self._nodes:
+            raise Exception('Recipe job %s is not defined' % job_name)
+        return self._nodes[job_name]

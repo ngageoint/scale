@@ -9,9 +9,13 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.handlers.inputs.file import FileInput
+from job.handlers.inputs.files import FilesInput
+from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.handlers.graph import RecipeGraph
 
 
 DEFAULT_VERSION = '1.0'
@@ -220,6 +224,50 @@ class RecipeDefinition(object):
         """
 
         return self._definition
+
+    def get_graph(self):
+        """Returns the recipe graph for this definition
+
+        :returns: The recipe graph
+        :rtype: :class:`recipe.handlers.graph.RecipeGraph`
+        """
+
+        graph = RecipeGraph()
+        for input_name in self._inputs_by_name:
+            input_dict = self._inputs_by_name[input_name]
+            input_type = input_dict['type']
+            recipe_input = None
+            if input_type == 'property':
+                recipe_input = PropertyInput(input_name)
+            elif input_type == 'file':
+                recipe_input = FileInput(input_name)
+            elif input_type == 'files':
+                recipe_input = FilesInput(input_name)
+            graph.add_input(recipe_input)
+
+        for job_name in self._jobs_by_name:
+            job_dict = self._jobs_by_name[job_name]
+            job_type = job_dict['job_type']
+            job_type_name = job_type['name']
+            job_type_version = job_type['version']
+            graph.add_job(job_name, job_type_name, job_type_version)
+            for recipe_input_dict in job_dict['recipe_inputs']:
+                recipe_input_name = recipe_input_dict['recipe_input']
+                job_input_name = recipe_input_dict['job_input']
+                graph.add_recipe_input_connection(recipe_input_name, job_name, job_input_name)
+
+        for job_name in self._jobs_by_name:
+            job_dict = self._jobs_by_name[job_name]
+            for dependency_dict in job_dict['dependencies']:
+                dependency_name = dependency_dict['name']
+                dependency_connections = []
+                for conn_dict in dependency_dict['connections']:
+                    conn_input = conn_dict['input']
+                    job_output = conn_dict['output']
+                    dependency_connections.append((job_output, conn_input))
+                graph.add_dependency(dependency_name, job_name, dependency_connections)
+
+        return graph
 
     def get_job_types(self, lock=False):
         """Returns a set of job types for each job in the recipe

@@ -8,7 +8,7 @@ class PropertyInput(Input):
     """Represents a property input
     """
 
-    def __init__(self, input_name, input_type):
+    def __init__(self, input_name):
         """Constructor
 
         :param input_name: The name of the input
