@@ -12,9 +12,9 @@ NETWORK = "10.4.4."
 NETMASK = "255.255.255.0"
 
 HOSTS = {
-   "master" => [NETWORK+"10", 1024, 3],
-   "slave1" => [NETWORK+"20", SLAVE_RAM, SLAVE_CPUS],
-   "slave2" => [NETWORK+"21", SLAVE_RAM, SLAVE_CPUS],
+   "scale-master" => [NETWORK+"10", 1024, 3],
+   "scale-slave1" => [NETWORK+"20", SLAVE_RAM, SLAVE_CPUS],
+   "scale-slave2" => [NETWORK+"21", SLAVE_RAM, SLAVE_CPUS],
 }
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
        machine.vm.hostname = name
        machine.vm.network 'private_network', ip: ipaddr, netmask: NETMASK, :adapter => 2
 
-       if name === "master"
+       if name === "scale-master"
           machine.vm.synced_folder "..", "/scale/"
        end
      end
@@ -89,19 +89,19 @@ Vagrant.configure(2) do |config|
      ansible.playbook = '../ansible/vagrant.yml'
      ansible.verbose = 'vv'
      ansible.groups = {
-        'zookeeper' => ["master"],
-        'mesos-masters' => ["master"],
-        'mesos-slaves' => ["slave1","slave2"],
-        'db' => ["master"],
-        'dns' => ["master"],
-        'nfs' => ["master"],
-        'registry' => ["master"],
-        'build' => ["master"],
-        'scale-scheduler' => ["master"],
-        'scale-web' => ["master"],
+        'zookeeper' => ["scale-master"],
+        'mesos-masters' => ["scale-master"],
+        'mesos-slaves' => ["scale-slave1","scale-slave2"],
+        'db' => ["scale-master"],
+        'dns' => ["scale-master"],
+        'nfs' => ["scale-master"],
+        'registry' => ["scale-master"],
+        'build' => ["scale-master"],
+        'scale-scheduler' => ["scale-master"],
+        'scale-web' => ["scale-master"],
         'mesos:children' => ["mesos-masters", "mesos-slaves"],
         'scale-framework:children' => ["scale-scheduler", "scale-web"],
-        'vagrant' => ["master", "slave1", "slave2"]
+        'vagrant' => ["scale-master", "scale-slave1", "scale-slave2"]
      }
    end
 end

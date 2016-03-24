@@ -12,4 +12,4 @@ USER root
 # Change the entrypoint to run gunicoem and export the port,
 # everything is already in the base image
 EXPOSE 8000
-ENTRYPOINT ["/usr/bin/gunicorn", "-b", "0.0.0.0:8000", "scale.wsgi:application"]
+ENTRYPOINT ["/usr/bin/gunicorn", "-b", "0.0.0.0:8000", "-w", "4", "scale.wsgi:application"]
