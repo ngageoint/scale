@@ -76,7 +76,7 @@ register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
-               started=None, ended=None, last_status_change=None, priority=100):
+               started=None, ended=None, last_status_change=None, priority=100, results=None):
     '''Creates a job model for unit testing
 
     :returns: The job model
@@ -106,6 +106,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.ended = ended
     job.last_status_change = last_status_change
     job.error = error
+    job.results = results
     job.save()
     return job
 

@@ -1,4 +1,11 @@
-<ais-header name="'Jobs (' + gridOptions.totalItems + ')'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<ais-header hide-title="true" name="'Jobs (' + gridOptions.totalItems + ')'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<div class="page-header">
+    <h1>
+        Jobs ({{ gridOptions.totalItems }})
+        <small ng-if="!readonly"><button class="btn btn-default" ng-click="requeueJobs()"><i class="fa fa-refresh"></i> Requeue All</button></small>
+    </h1>
+</div>
+<!--<h1>Jobs ({{ gridOptions.totalItems }})</h1>-->
 <div class="container-fluid">
     <div class="form-inline margin-bottom-md">
         <div class="input-group margin-right-md">
@@ -7,7 +14,7 @@
             </span>
             <input id="lastModifiedStart" type="text" class="form-control" aria-describedby="from-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="lastModifiedStart" ng-model-options="dateModelOptions" is-open="lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="openLastModifiedStartPopup($event)" />
         </div>
-        <div class="input-group">
+        <div class="input-group margin-right-md">
             <span class="input-group-addon" id="to-input">
                 To:
             </span>

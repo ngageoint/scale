@@ -24,9 +24,10 @@
 
 # setup resolv.conf to point to the new DNS server
 - hosts: all
+  tags: resolvconf
   tasks:
     - name: Setup resolv.conf
-      lineinfile: dest=/etc/resolv.conf line="nameserver 10.4.4.10"
+      command: echo "nameserver 10.4.4.10" > /etc/resolv.conf
       become: true
 
 # setup a docker registry
