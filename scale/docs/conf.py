@@ -20,7 +20,11 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Set up Django for autodoc generation
 import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scale.local_settings")
+settings_default="scale.local_settings" 
+# If we readthedocs is building, swap in local_settings_DOCS as default
+if os.environ.get('READTHEDOCS', None) == 'True':
+    settings_default="scale.local_settings_DOCS" 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_default)
 django.setup()
 
 # -- General configuration -----------------------------------------------------
