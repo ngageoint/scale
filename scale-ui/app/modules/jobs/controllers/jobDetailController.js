@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService) {
+    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, toastr) {
         $scope.job = {};
         $scope.jobId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -53,12 +53,12 @@
 
         $scope.requeueJob = function (jobId) {
             $scope.loading = true;
-            loadService.requeueJob(jobId).then(function (data) {
+            loadService.requeueJobs({ job_ids: [jobId] }).then(function (data) {
                 toastr['success']('Requeued Job');
-                $scope.job.status = data.status;
+                $scope.job.status = data.job_status;
                 getJobDetail(jobId);
             }).catch(function (error) {
-                toaster['error'](error);
+                toastr['error']('Requeue request failed');
                 console.log(error);
             }).finally(function () {
                 $scope.loading = false;
@@ -81,7 +81,7 @@
             }).finally(function () {
                 $scope.loading = false;
             });
-        }
+        };
 
         var getJobDetail = function (jobId) {
             $scope.loadingJobDetail = true;

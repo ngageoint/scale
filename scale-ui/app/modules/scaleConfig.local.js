@@ -4,7 +4,7 @@
     angular.module('scaleApp').constant('scaleConfigLocal', {
         urls: {
             //prefixProd: 'http://127.0.0.1:9000/',
-            prefixProd: 'http://52.91.113.165/api//api/'//,
+            prefixProd: 'http://52.91.113.165/api/'//,
             //
             //getQueueStatus: function () {
             //    return this.prefixDev + 'test/data/queueStatus.json';

@@ -122,5 +122,6 @@
             });
     })
     .value('moment', window.moment)
-    .value('localStorage', window.localStorage);
+    .value('localStorage', window.localStorage)
+    .value('toastr', window.toastr);
 })();
