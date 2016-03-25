@@ -28,9 +28,13 @@ if os.environ.get('READTHEDOCS', None) == 'True':
 
     # We also have to mock some of the python dependencies on C modules
     from mock import Mock as MagicMock
+    import django.contrib.gis.geos
+
     fake_module = MagicMock()
     sys.modules['django.contrib.gis.geos.GEOSException'] = fake_module
+    setattr(django.contrib.gis.geos, 'GEOSException', fake_module)
     sys.modules['django.contrib.gis.geos.GEOSGeometry'] = fake_module
+    setattr(django.contrib.gis.geos, 'GEOSGeometry', fake_module)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_default)
 django.setup()
