@@ -21,9 +21,21 @@ sys.path.insert(0, os.path.abspath('..'))
 # Set up Django for autodoc generation
 import django
 settings_default="scale.local_settings" 
+
 # If we readthedocs is building, swap in local_settings_DOCS as default
 if os.environ.get('READTHEDOCS', None) == 'True':
     settings_default="scale.local_settings_DOCS" 
+    # We also have to mock some of the python dependencies on C modules
+    from mock import Mock as MagicMock
+
+    class Mock(MagicMock):
+        @classmethod
+        def __getattr__(cls, name):
+            return Mock()
+
+    MOCK_MODULES = ['django.contrib.gis.geos']
+    sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_default)
 django.setup()
 
