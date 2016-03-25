@@ -33,7 +33,8 @@ if os.environ.get('READTHEDOCS', None) == 'True':
         def __getattr__(cls, name):
             return Mock()
 
-    MOCK_MODULES = ['django.contrib.gis.geos']
+    MOCK_MODULES = ['django.contrib.gis.geos.GEOSGeometry',
+                    'django.contrib.gis.geos.GEOSException']
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_default)
