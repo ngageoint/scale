@@ -7,7 +7,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from recipe.handlers.handler import RecipeHandler
-from recipe.models import Recipe, RecipeJob
+from recipe.models import RecipeJob
 
 
 class TestRecipeHandler(TestCase):

@@ -8,7 +8,7 @@ from django.db import models, transaction
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
-from recipe.handler import RecipeHandler
+from recipe.handlers.handler import RecipeHandler
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -171,7 +171,7 @@ class RecipeManager(models.Manager):
         for job_id in job_ids:
             if job_id in handlers:
                 handler = handlers[job_id]
-                job_ids_to_lock.union(handler.get_dependent_job_ids(job_id))
+                job_ids_to_lock |= handler.get_dependent_job_ids(job_id)  # Add dependent IDs by doing set union
 
         if not job_ids_to_lock:
             # Dependent jobs, just return handlers
@@ -265,13 +265,13 @@ class RecipeManager(models.Manager):
                 all_recipe_ids.add(recipe_id)
 
         handlers = {}  # {Job ID: Recipe handler}
-        recipes = RecipeJob.objects.get_recipe_data(all_recipe_ids)
+        recipe_data = RecipeJob.objects.get_recipe_data(all_recipe_ids)
         for job_id in recipe_ids_per_job_id:
             recipe_id = recipe_ids_per_job_id[job_id][0]
-            recipe = recipes[recipe_id][0]
-            recipe_jobs = recipes[recipe_id][1]
-            handler = RecipeHandler(recipe, recipe_jobs)
-            handlers[job_id] = handler
+            recipe_jobs = recipe_data[recipe_id]
+            if recipe_jobs:
+                handler = RecipeHandler(recipe_jobs[0].recipe, recipe_jobs)
+                handlers[job_id] = handler
         return handlers
 
 
@@ -337,17 +337,16 @@ class RecipeJobManager(models.Manager):
     """
 
     def get_recipe_data(self, recipe_ids):
-        """Returns the recipe, recipe_job, and job models for the given recipe IDs with the recipe/job type and revision
-        models included
+        """Returns the recipe_job models with related recipe, recipe_type, recipe_type_rev, job, job_type, and
+        job_type_rev models for the given recipe IDs
 
         :param recipe_ids: The recipe IDs
         :type recipe_ids: [int]
-        :returns: Dict where each recipe ID maps to a tuple of its recipe model and a list of its recipe_job models
-        :rtype: {int: (:class:`recipe.models.Recipe`, [:class:`recipe.models.RecipeJob`])}
+        :returns: Dict where each recipe ID maps to its corresponding recipe_job models
+        :rtype: {int: [:class:`recipe.models.RecipeJob`]}
         """
 
-        # Call get_my_handlers() and organize them, lock dependent jobs, and call get_my_handlers() and organize them
-        recipes = {}  # {Recipe ID: (Recipe, [Recipe job])}
+        recipes = {}  # {Recipe ID: [Recipe job]}
 
         recipe_qry = self.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         recipe_qry = recipe_qry.select_related('job__job_type', 'job__job_type_rev')
@@ -355,8 +354,8 @@ class RecipeJobManager(models.Manager):
 
         for recipe_job in recipe_qry.iterator():
             if recipe_job.recipe_id not in recipes:
-                recipes[recipe_job.recipe_id] = (recipe_job.recipe, [])
-            recipes[recipe_job.recipe_id][1].append(recipe_job)
+                recipes[recipe_job.recipe_id] = []
+            recipes[recipe_job.recipe_id].append(recipe_job)
 
         return recipes
 
