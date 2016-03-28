@@ -28,8 +28,8 @@ class RecipeGraph(object):
         :type connections: [(str, str)]
         """
 
-        parent_node = self._get_node(parent_job_name)
-        child_node = self._get_node(child_job_name)
+        parent_node = self.get_node(parent_job_name)
+        child_node = self.get_node(child_job_name)
         dependency_connections = []
         for connection in connections:
             input_name = connection[0]
@@ -87,9 +87,9 @@ class RecipeGraph(object):
             raise Exception('Recipe job %s is not defined' % job_name)
 
         input_conn = RecipeInputConnection(job_input, self._inputs[recipe_input])
-        self._get_node(job_name).add_recipe_input(input_conn)
+        self.get_node(job_name).add_recipe_input(input_conn)
 
-    def _get_node(self, job_name):
+    def get_node(self, job_name):
         """Returns the node with the given job_name
 
         :param job_name: The job name
@@ -101,3 +101,45 @@ class RecipeGraph(object):
         if job_name not in self._nodes:
             raise Exception('Recipe job %s is not defined' % job_name)
         return self._nodes[job_name]
+
+    def get_topological_order(self):
+        """Returns the recipe job names in a valid topological ordering (dependency order)
+
+        :returns: The list of job names in topological ordering
+        :rtype: [str]
+        """
+
+        results = []
+        perm_set = set()
+        temp_set = set()
+        unmarked_set = set(self._nodes.keys())
+        while unmarked_set:
+            job_name = unmarked_set.pop()
+            node = self._nodes[job_name]
+            self._get_topological_order_visit(node, results, perm_set, temp_set)
+            unmarked_set = set(self._nodes.keys()) - perm_set
+        return results
+
+    def _get_topological_order_visit(self, node, results, perm_set, temp_set):
+        """Recursive depth-first search algorithm for determining a topological ordering of the recipe jobs
+
+        :param node: The job dictionary
+        :type node: :class:`recipe.handlers.node.RecipeNode`
+        :param results: The list of job names in topological order
+        :type results: list
+        :param perm_set: A permanent set of visited nodes (job names)
+        :type perm_set: set
+        :param temp_set: A temporary set of visited nodes (job names)
+        :type temp_set: set
+        """
+
+        if node.job_name in temp_set:
+            raise Exception('Recipe has cyclic dependencies')
+
+        if node.job_name not in perm_set:
+            temp_set.add(node.job_name)
+            for child_node in node.children:
+                self._get_topological_order_visit(child_node, results, perm_set, temp_set)
+            perm_set.add(node.job_name)
+            temp_set.remove(node.job_name)
+            results.insert(0, node.job_name)

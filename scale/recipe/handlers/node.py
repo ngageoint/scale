@@ -1,6 +1,8 @@
 """Defines the class for handling recipe nodes"""
 from __future__ import unicode_literals
 
+from job.configuration.data.job_data import JobData
+
 
 class RecipeNode(object):
     """Represents a node in a recipe
@@ -20,8 +22,8 @@ class RecipeNode(object):
         self.job_name = job_name
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
-        self._parents = []
-        self._children = []
+        self.parents = []
+        self.children = []
         self._inputs = {}  # {Input name: NodeInputConnection}
 
     def add_child(self, child_node):
@@ -31,7 +33,7 @@ class RecipeNode(object):
         :type child_node: :class:`recipe.handlers.node.RecipeNode`
         """
 
-        self._children.append(child_node)
+        self.children.append(child_node)
 
     def add_dependency(self, parent_node, connections):
         """Adds a parent node upon which this node is dependent
@@ -42,7 +44,7 @@ class RecipeNode(object):
         :type connections: [:class:`recipe.handlers.connection.DependencyInputConnection`]
         """
 
-        self._parents.append(parent_node)
+        self.parents.append(parent_node)
         for connection in connections:
             self._inputs[connection.input_name] = connection
 
@@ -54,3 +56,28 @@ class RecipeNode(object):
         """
 
         self._inputs[recipe_input.input_name] = recipe_input
+
+    def create_job_data(self, job_interface, recipe_data, parent_results):
+        """Creates the data for the job within this node. The parent_results must contain completed results from every
+        parent node that this node depends upon.
+
+        :param job_interface: The job's interface
+        :type job_interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param recipe_data: The recipe data
+        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :param parent_results: The results of each parent job stored by job name
+        :type parent_results: {str: :class:`job.configuration.results.job_results.JobResults`}
+        :returns: The created job data
+        :rtype: :class:`job.configuration.data.job_data.JobData`
+        """
+
+        job_data = JobData({})
+
+        for input_connection in self._inputs.values():
+            input_connection.add_input_to_job_data(job_data, recipe_data, parent_results)
+
+        # Add workspace for file outputs if needed
+        if job_interface.get_file_output_names():
+            job_interface.add_workspace_to_data(job_data, recipe_data.get_workspace_id())
+
+        return job_data
