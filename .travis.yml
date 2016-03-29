@@ -25,6 +25,12 @@ script:
   - python manage.py test --noinput
   - cd docs
   - make code_docs html
+# Update gh-pages api docs
+  - git checkout gh-pages
+  - cp -R _build/html/ ../../docs
+  - git add ../../docs
+  - git commit -m "Build updated from Travis build #$TRAVIS_BUILD_NUMBER"
+  - git push
 
 # branch whitelist
 branches:
