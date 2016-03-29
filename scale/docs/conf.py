@@ -12,6 +12,7 @@
 # serve to show the default.
 
 import sys, os
+import sphinx_rtd_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -20,23 +21,6 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Set up Django for autodoc generation
 import django
-settings_default="scale.local_settings" 
-
-# If we readthedocs is building, swap in local_settings_DOCS as default
-if os.environ.get('READTHEDOCS', None) == 'True':
-    settings_default="scale.local_settings_DOCS"
-
-    # We also have to mock some of the python dependencies on C modules
-    from mock import Mock as MagicMock
-    import django.contrib.gis.geos
-
-    fake_module = MagicMock()
-    sys.modules['django.contrib.gis.geos.GEOSException'] = fake_module
-    setattr(django.contrib.gis.geos, 'GEOSException', fake_module)
-    sys.modules['django.contrib.gis.geos.GEOSGeometry'] = fake_module
-    setattr(django.contrib.gis.geos, 'GEOSGeometry', fake_module)
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_default)
 django.setup()
 
 # -- General configuration -----------------------------------------------------
@@ -112,7 +96,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -120,7 +104,7 @@ html_theme = 'default'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
