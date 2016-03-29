@@ -53,6 +53,17 @@
   notify:
     - push landsat-tiles
 
+- name: Build pca docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/pca"
+    name: "pca_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push pca
+
 - name: Static example product web server
   tags: init-examples
   docker:

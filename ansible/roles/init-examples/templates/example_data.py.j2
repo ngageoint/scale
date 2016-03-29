@@ -74,17 +74,31 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
     jt.save()
 if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
     jt = job.models.JobType.objects.create_job_type("landsat-tiles", "1.0.0",
+                                                    JobInterface({"output_data": [
+                                                        {"required": True, "type": "files", "name": "tiles"}],
+                                                        "shared_resources": [],
+                                                        "command_arguments": "${image} ${job_output_dir}",
+                                                        "input_data": [
+                                                            {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
+                                                        "version": "1.0", "command": "./landsat_tiles.sh"}),
+                                                    description="Generate map tiles for a landsat 8 product.",
+                                                    docker_image="%slandsat-tiles_1.0:%s" % (registry, docker_tag),
+                                                    priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
+    jt.title = "Landsat Tiles"
+    jt.save()
+if not job.models.JobType.objects.filter(name="pca").exists():
+    jt = job.models.JobType.objects.create_job_type("pca", "1.0.0",
             JobInterface({"output_data": [
-                {"required": True, "type": "files", "name": "tiles"}],
+                {"media_type": "image/tiff", "required": True, "type": "file", "name": "pca"}],
             "shared_resources": [],
             "command_arguments": "${image} ${job_output_dir}",
             "input_data": [
                 {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
-            "version": "1.0", "command": "./landsat_tiles.sh"}),
-        description="Generate map tiles for a landsat 8 product.",
-        docker_image="%slandsat-tiles_1.0:%s" % (registry, docker_tag),
-        priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
-    jt.title = "Landsat Tiles"
+            "version": "1.0", "command": "./runOpticks.sh"}),
+        description="Generate Principal Components image.",
+        docker_image="%spca_1.0:%s" % (registry, docker_tag),
+        priority=250, timeout=300, max_tries=3, cpus_required=2., mem_required=1024.)
+    jt.title = "Principal Components Analysis"
     jt.save()
 
 try:

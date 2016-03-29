@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Wizard xmlns="https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd" batch="true" menuLocation="" name="PCA" type="WizardObject" version="3">
+
+  <item batch="true" batchSupported="true" name="Importer Name" type="Value">
+    <location>-19 235</location>
+    <output name="Importer Name" originalType="string" type="string" version="4">
+      <validType>string</validType>
+      <value>Auto Importer</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Filename" type="Value">
+    <location>-19 190</location>
+    <output name="Filename" originalType="Filename" type="Filename" version="4">
+      <validType>Filename</validType>
+      <value>file:///</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Import Data Set" type="Wizard">
+    <location>110 175</location>
+    <input name="Progress" originalType="Progress" type="Progress" version="4">
+      <description>Progress object for this plugin.</description>
+      <validType>Progress</validType>
+    </input>
+    <input name="Filename" originalType="Filename" type="Filename" version="4">
+      <description>Single filename to be imported.</description>
+      <validType>Filename</validType>
+    </input>
+    <input name="Filenames" originalType="vector&lt;Filename>" type="vector&lt;Filename>" version="4">
+      <description>List of multiple filenames to be imported, if necessary.</description>
+      <validType>vector&lt;Filename&gt;</validType>
+    </input>
+    <input name="Data Descriptor" originalType="DataDescriptor" type="DataDescriptor" version="4">
+      <description>Data descriptor to load data from.</description>
+      <validType>DataDescriptor</validType>
+    </input>
+    <input name="Importer Name" originalType="string" type="string" version="4">
+      <description>Name of importer to be used.</description>
+      <validType>string</validType>
+    </input>
+    <output name="Data Set" originalType="DataElement" type="DataElement" version="4">
+      <description>Data set resulting from the import operation.</description>
+      <validType>DataElement</validType>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Transform Type" type="Value">
+    <location>141 242</location>
+    <output name="Transform Type" originalType="string" type="string" version="4">
+      <validType>string</validType>
+      <value>Second Moment</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Components" type="Value">
+    <location>144 287</location>
+    <output name="Components" originalType="int" type="int" version="4">
+      <validType>int</validType>
+      <value>3</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Max Scale Value" type="Value">
+    <location>136 317</location>
+    <output name="Max Scale Value" originalType="int" type="int" version="4">
+      <validType>int</validType>
+      <value>255</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Min Scale Value" type="Value">
+    <location>138 332</location>
+    <output name="Min Scale Value" originalType="int" type="int" version="4">
+      <validType>int</validType>
+      <value>0</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Principal Component Analysis" type="Algorithm">
+    <location>232 182</location>
+    <input name="Progress" originalType="Progress" type="Progress" version="4">
+      <description>Progress object for this plugin.</description>
+      <validType>Progress</validType>
+    </input>
+    <input name="Data Element" originalType="RasterElement" type="DataElement" version="4">
+      <description>Element to run PCA on.</description>
+      <validType>RasterElement</validType>
+      <validType>DataElement</validType>
+    </input>
+    <input name="Use Transform File" originalType="bool" type="bool" version="4">
+      <description>Whether to use an external transform file.</description>
+      <validType>bool</validType>
+    </input>
+    <input name="Transform Filename" originalType="Filename" type="Filename" version="4">
+      <description>Filename for external transform file, if applicable.</description>
+      <validType>Filename</validType>
+    </input>
+    <input name="Transform Type" originalType="string" type="string" version="4">
+      <description>Type of statistics matrix to be used by PCA (Covariance, Second Moment, or Correlation Coefficient).</description>
+      <validType>string</validType>
+    </input>
+    <input name="Use AOI" originalType="bool" type="bool" version="4">
+      <description>Whether to perform PCA over a specific AOI.</description>
+      <validType>bool</validType>
+    </input>
+    <input name="AOI Name" originalType="string" type="string" version="4">
+      <description>Name of AOI to perform PCA over, if applicable.</description>
+      <validType>string</validType>
+    </input>
+    <input name="Components" originalType="int" type="int" version="4">
+      <description>Number of components.</description>
+      <validType>int</validType>
+    </input>
+    <input name="Output Encoding Type" originalType="EncodingType" type="EncodingType" version="4">
+      <description>Encoding type for the output of PCA.</description>
+      <validType>EncodingType</validType>
+    </input>
+    <input name="Max Scale Value" originalType="int" type="int" version="4">
+      <description>Value to which the maximum component should be scaled.</description>
+      <validType>int</validType>
+    </input>
+    <input name="Min Scale Value" originalType="int" type="int" version="4">
+      <description>Value to which the minimum component should be scaled.</description>
+      <validType>int</validType>
+    </input>
+    <input name="Second Moment Matrix" originalType="RasterElement" type="RasterElement" version="4">
+      <description>Element containing the second moment matrix.</description>
+      <validType>RasterElement</validType>
+      <validType>DataElement</validType>
+    </input>
+    <input name="Covariance Matrix" originalType="RasterElement" type="RasterElement" version="4">
+      <description>Element containing the covariance matrix.</description>
+      <validType>RasterElement</validType>
+      <validType>DataElement</validType>
+    </input>
+    <input name="Display Results" originalType="bool" type="bool" version="4">
+      <description>Whether to display the results of the analysis.</description>
+      <validType>bool</validType>
+    </input>
+    <output name="View" originalType="SpatialDataView" type="SpatialDataView" version="4">
+      <description>View created from the results of analysis.</description>
+      <validType>SpatialDataView</validType>
+      <validType>PerspectiveView</validType>
+      <validType>View</validType>
+    </output>
+    <output name="Corrected Data Cube" originalType="RasterElement" type="DataElement" version="4">
+      <description>Data cube created from the analysis.</description>
+      <validType>RasterElement</validType>
+      <validType>DataElement</validType>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Exporter Name" type="Value">
+    <location>281 460</location>
+    <output name="Exporter Name" originalType="string" type="string" version="4">
+      <validType>string</validType>
+      <value>GeoTIFF Exporter</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Output Filename" type="Value">
+    <location>80 367</location>
+    <output name="Output Filename" originalType="Filename" type="Filename" version="4">
+      <validType>Filename</validType>
+      <value>file:///</value>
+    </output>
+  </item>
+
+  <item batch="true" batchSupported="true" name="Export Data Set" type="Wizard">
+    <location>404 207</location>
+    <input name="Progress" originalType="Progress" type="Progress" version="4">
+      <description>Progress object for this plugin.</description>
+      <validType>Progress</validType>
+    </input>
+    <input name="View" originalType="View" type="View" version="4">
+      <description>View which the data to be exported belongs.</description>
+      <validType>View</validType>
+    </input>
+    <input name="Layer" originalType="Layer" type="Layer" version="4">
+      <description>Layer to be exported.</description>
+      <validType>Layer</validType>
+    </input>
+    <input name="Data Element" originalType="DataElement" type="DataElement" version="4">
+      <description>Element from which the data will be exported.</description>
+      <validType>DataElement</validType>
+    </input>
+    <input name="Output Width" originalType="unsigned int" type="unsigned int" version="4">
+      <description>Width of the exported image.</description>
+      <validType>unsigned int</validType>
+    </input>
+    <input name="Output Height" originalType="unsigned int" type="unsigned int" version="4">
+      <description>Height of the exported image.</description>
+      <validType>unsigned int</validType>
+    </input>
+    <input name="Filename" originalType="Filename" type="Filename" version="4">
+      <description>Filename for the exported file.</description>
+      <validType>Filename</validType>
+    </input>
+    <input name="File Descriptor" originalType="FileDescriptor" type="FileDescriptor" version="4">
+      <description>File descriptor for the exported file.</description>
+      <validType>FileDescriptor</validType>
+    </input>
+    <input name="Exporter Name" originalType="string" type="string" version="4">
+      <description>Exporter to use when exporting the data set.</description>
+      <validType>string</validType>
+    </input>
+  </item>
+
+  <connection inputItem="2" inputNode="4" outputItem="0" outputNode="0"/>
+
+  <connection inputItem="2" inputNode="1" outputItem="1" outputNode="0"/>
+
+  <connection inputItem="7" inputNode="1" outputItem="2" outputNode="0"/>
+
+  <connection inputItem="7" inputNode="4" outputItem="3" outputNode="0"/>
+
+  <connection inputItem="7" inputNode="7" outputItem="4" outputNode="0"/>
+
+  <connection inputItem="7" inputNode="9" outputItem="5" outputNode="0"/>
+
+  <connection inputItem="7" inputNode="10" outputItem="6" outputNode="0"/>
+
+  <connection inputItem="10" inputNode="3" outputItem="7" outputNode="1"/>
+
+  <connection inputItem="10" inputNode="8" outputItem="8" outputNode="0"/>
+
+  <connection inputItem="10" inputNode="6" outputItem="9" outputNode="0"/>
+
+</Wizard>
