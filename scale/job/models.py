@@ -298,8 +298,8 @@ class JobManager(models.Manager):
 
     def queue_jobs(self, jobs, when, priority=None):
         """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-        the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
-        should have their related job_type and job_type_rev models populated.
+        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
+        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
@@ -317,7 +317,7 @@ class JobManager(models.Manager):
         job_ids = set()
         jobs_to_queue = []
         for job in jobs:
-            if not job.is_ready_to_queue or not job.data:
+            if not job.is_ready_to_queue or not job.data or job.is_superseded:
                 continue
 
             job_ids.add(job.id)
@@ -940,6 +940,9 @@ class JobExecutionManager(models.Manager):
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
             job_exes.append(job_exe)
+
+        if not job_exes:
+            return []
 
         # Create job executions and re-query to get ID fields
         self.bulk_create(job_exes)

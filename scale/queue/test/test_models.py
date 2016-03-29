@@ -549,8 +549,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         self.new_priority = 200
         self.standalone_failed_job = job_test_utils.create_job(status='FAILED', num_exes=3, priority=100)
+        self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', num_exes=1)
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1, priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
+        Job.objects.supersede_jobs([self.standalone_superseded_job], now())
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
         job_type_a_1 = job_test_utils.create_job_type()
@@ -656,6 +658,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(standalone_canceled_job.status, 'QUEUED')
         self.assertEqual(standalone_canceled_job.max_tries, 2)
         self.assertEqual(standalone_canceled_job.priority, self.new_priority)
+
+        # Superseded job should not be re-queued
+        standalone_superseded_job = Job.objects.get(id=self.standalone_superseded_job.id)
+        self.assertEqual(standalone_superseded_job.status, 'FAILED')
 
         # Completed job should not be re-queued
         standalone_completed_job = Job.objects.get(id=self.standalone_completed_job.id)

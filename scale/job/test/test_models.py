@@ -36,6 +36,19 @@ class TestJobManager(TransactionTestCase):
         self.assertIsNone(job.started)
         self.assertIsNone(job.ended)
 
+    def test_queue_superseded_jobs(self):
+        """Tests that JobManager.queue_jobs() does not queue superseded jobs"""
+
+        job = job_test_utils.create_job(status='PENDING')
+        Job.objects.supersede_jobs([job], timezone.now())
+
+        job_exes = Job.objects.queue_jobs([job], timezone.now())
+        job = Job.objects.get(pk=job.id)
+
+        self.assertListEqual(job_exes, [])
+        self.assertEqual(job.status, 'PENDING')
+        self.assertTrue(job.is_superseded)
+
     def test_superseded_job(self):
         """Tests creating a job that supersedes another job"""
 

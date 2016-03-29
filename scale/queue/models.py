@@ -566,8 +566,8 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
-        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
-        ignored. All database changes will occur within an atomic transaction.
+        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
+        superseded will be ignored. All database changes will occur within an atomic transaction.
 
         :param job_ids: The IDs of the jobs to re-queue
         :type job_ids: [int]
@@ -581,7 +581,7 @@ class QueueManager(models.Manager):
         jobs_to_blocked = []
         jobs_to_pending = []
         for job in jobs_to_requeue:
-            if not job.is_ready_to_requeue:
+            if not job.is_ready_to_requeue or job.is_superseded:
                 continue
             all_valid_job_ids.append(job.id)
             if job.num_exes == 0:
@@ -702,10 +702,9 @@ class QueueManager(models.Manager):
             job_exe.save()
 
     def _queue_jobs(self, jobs, priority=None):
-        """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
-        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
-        must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
-        data will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
+        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
+        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
@@ -740,6 +739,9 @@ class QueueManager(models.Manager):
             queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
             queue.queued = when_queued
             queues.append(queue)
+
+        if not queues:
+            return []
 
         self.bulk_create(queues)
         return job_exes

@@ -32,8 +32,8 @@ class RecipeGraph(object):
         child_node = self.get_node(child_job_name)
         dependency_connections = []
         for connection in connections:
-            input_name = connection[0]
-            output_name = connection[1]
+            output_name = connection[0]
+            input_name = connection[1]
             dependency_connection = DependencyInputConnection(input_name, parent_node, output_name)
             dependency_connections.append(dependency_connection)
 
