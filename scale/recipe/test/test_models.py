@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.db import transaction
 from django.test import TransactionTestCase
+from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
@@ -233,6 +234,111 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         self.assertEqual(job_type.revision_num, 1)
         num_of_revs = JobTypeRevision.objects.filter(job_type_id=job_type.id).count()
         self.assertEqual(num_of_revs, 1)
+
+
+class TestRecipeManager(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.standalone_job = job_test_utils.create_job(status='RUNNING')
+
+        job_type_a_1 = job_test_utils.create_job_type()
+        job_type_a_2 = job_test_utils.create_job_type()
+        definition_a = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_a_1.name,
+                    'version': job_type_a_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_a_2.name,
+                    'version': job_type_a_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }],
+        }
+        recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', num_exes=1)
+        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED')
+        data_a = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        self.recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, data=data_a)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_a, job_name='Job 1', job=self.job_a_1)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_a, job_name='Job 2', job=self.job_a_2)
+
+        # Create recipe for re-queing a job that should now be BLOCKED (and its dependencies)
+        job_type_b_1 = job_test_utils.create_job_type()
+        job_type_b_2 = job_test_utils.create_job_type()
+        job_type_b_3 = job_test_utils.create_job_type()
+        definition_b = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_b_1.name,
+                    'version': job_type_b_1.version,
+                }
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_b_2.name,
+                    'version': job_type_b_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1'
+                }],
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_b_3.name,
+                    'version': job_type_b_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 2'
+                }],
+            }],
+        }
+        recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED')
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED')
+        data_b = {
+            'version': '1.0',
+            'input_data': [],
+            'workspace_id': 1,
+        }
+        self.recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, data=data_b)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_b, job_name='Job 1', job=self.job_b_1)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_b, job_name='Job 2', job=self.job_b_2)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_b, job_name='Job 3', job=self.job_b_3)
+
+        self.job_ids = [self.standalone_job.id, self.job_a_1.id, self.job_b_2.id]
+        self.dependent_job_ids = {self.job_a_2.id, self.job_b_3.id}
+
+    @patch('recipe.models.Job.objects.lock_jobs')
+    def test_get_recipe_handlers_for_jobs(self, mock_lock_jobs):
+        """Tests calling RecipeManager.get_recipe_handlers_for_jobs() successfully"""
+
+        handlers = Recipe.objects.get_recipe_handlers_for_jobs(self.job_ids)
+
+        mock_lock_jobs.assert_called_with(self.dependent_job_ids)
+        self.assertEqual(len(handlers), 2)
+        recipe_ids = set()
+        for handler in handlers:
+            recipe_ids.add(handler.recipe_id)
+        self.assertSetEqual(recipe_ids, {self.recipe_a.id, self.recipe_b.id})
 
 
 class TestRecipeManagerCreateRecipe(TransactionTestCase):

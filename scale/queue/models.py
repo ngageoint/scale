@@ -601,11 +601,8 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
         # Update dependent recipe jobs (with model locks) that should now go back to PENDING
-        handlers = Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids)
-        for job_id in all_valid_job_ids:
-            if job_id in handlers:
-                handler = handlers[job_id]
-                jobs_to_pending.extend(handler.get_pending_jobs())
+        for handler in Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids):
+            jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
