@@ -6,7 +6,7 @@
         return {
             getWorkspaces: function () {
                 var d = $q.defer();
-                var url = scaleConfig.urls.getWorkspaces();
+                var url = scaleConfig.urls.apiPrefix + 'workspaces/';
 
                 $http({
                     url: url,

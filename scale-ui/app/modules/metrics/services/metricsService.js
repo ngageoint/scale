@@ -19,7 +19,7 @@
         return {
             getDataTypes: function () {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.getMetricsDataTypes()).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'metrics/').success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
@@ -28,7 +28,7 @@
             },
             getDataTypeMetrics: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.getMetricsDataTypeOptions(id)).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'metrics/' + id + '/').success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
@@ -37,7 +37,7 @@
             },
             getDataTypeOptions: function (name) {
                 var d = $q.defer();
-                var url = scaleConfig.urls.getMetricsDataTypeOptions(name);
+                var url = scaleConfig.urls.apiPrefix + 'metrics/' + name + '/';
                 $http.get(url).success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
@@ -51,7 +51,7 @@
 
                 $http({
                     method: 'GET',
-                    url: scaleConfig.urls.getMetricsPlotData(params.dataType),
+                    url: scaleConfig.urls.apiPrefix + 'metrics/' + params.dataType + '/plot-data/',
                     params: params
                 }).success(function (data) {
                     d.resolve(data);

@@ -151,7 +151,7 @@ gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
 var appConfig = function () {
-    return gulp.src('./config/scaleConfig.local.json')
+    return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
         .pipe(gulp.dest('./build/config'));
 };
 gulp.task('app-config', ['clean'],appConfig);
