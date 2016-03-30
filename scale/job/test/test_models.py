@@ -39,15 +39,43 @@ class TestJobManager(TransactionTestCase):
     def test_queue_superseded_jobs(self):
         """Tests that JobManager.queue_jobs() does not queue superseded jobs"""
 
-        job = job_test_utils.create_job(status='PENDING')
+        job = job_test_utils.create_job(status='FAILED')
         Job.objects.supersede_jobs([job], timezone.now())
 
         job_exes = Job.objects.queue_jobs([job], timezone.now())
         job = Job.objects.get(pk=job.id)
 
         self.assertListEqual(job_exes, [])
-        self.assertEqual(job.status, 'PENDING')
+        self.assertEqual(job.status, 'FAILED')
         self.assertTrue(job.is_superseded)
+
+    def test_supersede_jobs(self):
+        """Tests calling JobManager.supersede_jobs()"""
+
+        job_1 = job_test_utils.create_job(status='PENDING')
+        job_2 = job_test_utils.create_job(status='BLOCKED')
+        job_3 = job_test_utils.create_job(status='RUNNING')
+        job_4 = job_test_utils.create_job(status='COMPLETED')
+        when = timezone.now()
+
+        Job.objects.supersede_jobs([job_1, job_2, job_3, job_4], when)
+
+        job_1 = Job.objects.get(pk=job_1.id)
+        self.assertTrue(job_1.is_superseded)
+        self.assertEqual(job_1.superseded, when)
+        self.assertEqual(job_1.status, 'CANCELED')  # PENDING job should be CANCELED when superseded
+        job_2 = Job.objects.get(pk=job_2.id)
+        self.assertTrue(job_2.is_superseded)
+        self.assertEqual(job_2.superseded, when)
+        self.assertEqual(job_2.status, 'CANCELED')  # BLOCKED job should be CANCELED when superseded
+        job_3 = Job.objects.get(pk=job_3.id)
+        self.assertTrue(job_3.is_superseded)
+        self.assertEqual(job_3.superseded, when)
+        self.assertEqual(job_3.status, 'RUNNING')
+        job_4 = Job.objects.get(pk=job_4.id)
+        self.assertTrue(job_4.is_superseded)
+        self.assertEqual(job_4.superseded, when)
+        self.assertEqual(job_4.status, 'COMPLETED')
 
     def test_superseded_job(self):
         """Tests creating a job that supersedes another job"""

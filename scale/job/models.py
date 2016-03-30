@@ -428,14 +428,21 @@ class JobManager(models.Manager):
 
         # Update job models in memory and collect job IDs
         job_ids = set()
+        jobs_to_cancel = []
         for job in jobs:
             job_ids.add(job.id)
             job.is_superseded = True
             job.superseded = when
             job.last_modified = modified
+            if job.status in ['PENDING', 'BLOCKED']:
+                jobs_to_cancel.append(job)
 
         # Update job models in database with single query
         self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=modified)
+
+        # Cancel any jobs that are PENDING or BLOCKED
+        if jobs_to_cancel:
+            self.update_status(jobs_to_cancel, 'CANCELED', when)
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
