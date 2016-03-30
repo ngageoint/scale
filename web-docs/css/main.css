@@ -8,7 +8,10 @@ body {
     margin-top: 50px; /* Required margin for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 }
 
-
+h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 32px;
+}
 .image-bg-fluid-height,
 .image-bg-fixed-height {
     text-align: center;
@@ -19,12 +22,13 @@ body {
 }
 
 .image-bg-fluid-height {
-	background: url('../images/shutterstock_128679269.jpg') no-repeat center center scroll;
+	background: url('../images/horizon-2.jpg') no-repeat center center scroll;
     padding: 100px 0;
+    darken: 50%;
 }
 
 .image-bg-fixed-height {
-	background: url('../images/shutterstock_128679269.jpg') no-repeat center center scroll;
+	background: url('../images/horizon-2.jpg') no-repeat center center scroll;
     height: 150px;
 }
 
@@ -38,6 +42,10 @@ body {
     vertical-align: middle;
     margin-top: 15px;
     margin-right: 5px;
+}
+
+#overview li {
+    font-size: 21px;
 }
 
 section {
@@ -89,6 +97,42 @@ section {
     color: #FFF;
     font-weight: 400;
 }
+#tutorials .tutorial img {
+    width: 100%;
+    height: 100%; }
+
+
+#examples {
+    margin-top: 20px;
+    padding: 40px 0;
+}
+#examples .example {
+    width: 100%;
+    min-height: 200px;
+    background: #7d8b8d;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#examples .example h4 {
+    position: absolute;
+    bottom: 0;
+    background: #3c7cbf;
+    margin: 0;
+    padding: 14px 12px;
+    width: 100%;
+    font-family: "Lato", sans-serif;
+    font-size: 1.6rem;
+    color: #FFF;
+    font-weight: 400;
+}
+#examples .example img {
+    width: 100%;
+    height: auto;
+}
+
 
 footer {
     margin: 50px 0;
