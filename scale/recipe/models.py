@@ -283,10 +283,23 @@ class Recipe(models.Model):
     :keyword data: JSON description defining the data for this recipe
     :type data: :class:`djorm_pgjson.fields.JSONField`
 
+    :keyword is_superseded: Whether this recipe has been superseded and is obsolete. This may be true while
+        superseded_by_recipe (the reverse relationship of superseded_recipe) is null, indicating that this recipe is
+        obsolete, but there is no new recipe that has directly taken its place.
+    :type is_superseded: :class:`django.db.models.BooleanField`
+    :keyword root_superseded_recipe: The first recipe in the chain of superseded recipes. This field will be null for
+        the first recipe in the chain (i.e. recipes that have a null superseded_recipe field).
+    :type root_superseded_recipe: :class:`django.db.models.ForeignKey`
+    :keyword superseded_recipe: The recipe that was directly superseded by this recipe. The reverse relationship can be
+        accessed using 'superseded_by_recipe'.
+    :type superseded_recipe: :class:`django.db.models.ForeignKey`
+
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword completed: When every job in the recipe was completed successfully
     :type completed: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this recipe was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the recipe was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -297,8 +310,15 @@ class Recipe(models.Model):
 
     data = djorm_pgjson.fields.JSONField()
 
+    is_superseded = models.BooleanField(default=False)
+    root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
+                                               null=True, on_delete=models.PROTECT)
+    superseded_recipe = models.OneToOneField('recipe.Recipe', related_name='superseded_by_recipe', blank=True,
+                                             null=True, on_delete=models.PROTECT)
+
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeManager()

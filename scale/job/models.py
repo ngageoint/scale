@@ -555,8 +555,8 @@ class Job(models.Model):
     :type disk_out_required: :class:`django.db.models.FloatField`
 
     :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
-        superseded_by_job (the reverse relationship of superded_job) is null, indicating that this job is obsolete (its
-        recipe has been superseded), but there is no new job that has directly taken its place.
+        superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
+        (its recipe has been superseded), but there is no new job that has directly taken its place.
     :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword root_superseded_job: The first job in the chain of superseded jobs. This field will be null for the first
         job in the chain (i.e. jobs that have a null superseded_job field).
@@ -613,8 +613,10 @@ class Job(models.Model):
     disk_out_required = models.FloatField(blank=True, null=True)
 
     is_superseded = models.BooleanField(default=False)
-    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True, on_delete=models.PROTECT)
-    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True, on_delete=models.PROTECT)
+    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
+                                            on_delete=models.PROTECT)
+    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True,
+                                          on_delete=models.PROTECT)
     delete_superseded = models.BooleanField(default=True)
 
     created = models.DateTimeField(auto_now_add=True)
