@@ -1,0 +1,7 @@
+{
+    "scaleConfigLocal": {
+        "urls": {
+            "prefixProd": "http://52.91.113.165/api/"
+        }
+    }
+}
