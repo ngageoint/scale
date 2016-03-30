@@ -388,18 +388,21 @@ class QueueManager(models.Manager):
                 logger.exception('Unable to call queue processor for failed job execution: %s -> %s', processor_class,
                                  job_exe_id)
 
-        # Re-queue job if a system error occurred and there are more tries left
-        requeue = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
-        # Also re-queue long running jobs
-        requeue = requeue or job_exe.job.job_type.is_long_running
-        if requeue:
-            self._queue_jobs([job_exe.job])
+        # Re-try job if a system error occurred and there are more tries left
+        retry = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
+        # Also re-try long running jobs
+        retry = retry or job_exe.job.job_type.is_long_running
+        # Do not re-try superseded jobs
+        retry = retry and not job_exe.job.is_superseded
 
-        # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
-        if handler:
-            jobs_to_blocked = handler.get_blocked_jobs()
-            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+        if retry:
+            self._queue_jobs([job_exe.job])
+        else:
+            # If this job is in a recipe, update dependent jobs so that they are BLOCKED
+            handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+            if handler:
+                jobs_to_blocked = handler.get_blocked_jobs()
+                Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):

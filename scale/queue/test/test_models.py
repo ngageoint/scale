@@ -15,6 +15,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
+from error.models import CACHED_BUILTIN_ERRORS, Error
 from job.configuration.data.exceptions import StatusError
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
@@ -98,6 +99,76 @@ class TestJobLoadManager(TestCase):
                 self.assertEqual(result.total_count, 3)
             else:
                 self.fail('Found unexpected job type: %s', result.job_type_id)
+
+
+class TestQueueManager(TransactionTestCase):
+
+    fixtures = ['basic_errors.json']
+
+    def setUp(self):
+        django.setup()
+
+        CACHED_BUILTIN_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+
+    def test_handle_job_failure(self):
+        """Tests calling QueueManager.handle_job_failure() when the job fails"""
+
+        job_type = job_test_utils.create_job_type(max_tries=1)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
+        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+
+        # Call method to test
+        Queue.objects.handle_job_failure(job_exe.id, now())
+
+        # Make sure job and execution are failed
+        job = Job.objects.get(pk=job.id)
+        job_exe = JobExecution.objects.get(pk=job_exe.id)
+        unknown_error = Error.objects.get_unknown_error()
+        self.assertEqual(job.status, 'FAILED')
+        self.assertEqual(job.error_id, unknown_error.id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error_id, unknown_error.id)
+
+    def test_handle_job_failure_retry(self):
+        """Tests calling QueueManager.handle_job_failure() when the job retries"""
+
+        job_type = job_test_utils.create_job_type(max_tries=2)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
+        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+
+        # Call method to test
+        Queue.objects.handle_job_failure(job_exe.id, now())
+
+        # Make sure execution failed and job retried
+        job = Job.objects.get(pk=job.id)
+        job_exe = JobExecution.objects.get(pk=job_exe.id)
+        unknown_error = Error.objects.get_unknown_error()
+        self.assertEqual(job.status, 'QUEUED')
+        self.assertIsNone(job.error)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error_id, unknown_error.id)
+
+    def test_handle_job_failure_superseded(self):
+        """Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded"""
+
+        job_type = job_test_utils.create_job_type(max_tries=2)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
+        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+
+        Job.objects.supersede_jobs([job], now())
+
+        # Call method to test
+        Queue.objects.handle_job_failure(job_exe.id, now())
+
+        # Make sure job and execution are failed
+        job = Job.objects.get(pk=job.id)
+        job_exe = JobExecution.objects.get(pk=job_exe.id)
+        unknown_error = Error.objects.get_unknown_error()
+        self.assertEqual(job.status, 'FAILED')
+        self.assertEqual(job.error_id, unknown_error.id)
+        self.assertTrue(job.is_superseded)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error_id, unknown_error.id)
 
 
 class TestQueueManagerHandleJobCancellation(TransactionTestCase):
