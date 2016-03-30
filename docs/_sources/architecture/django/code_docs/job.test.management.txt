@@ -1,5 +1,5 @@
-management Package
-==================
+job.test.management package
+===========================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     job.test.management.commands
 
+Module contents
+---------------
+
+.. automodule:: job.test.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

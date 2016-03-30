@@ -1,19 +1,30 @@
-results_manifest Package
-========================
+job.configuration.results.results_manifest package
+==================================================
 
-:mod:`results_manifest` Module
-------------------------------
+Submodules
+----------
+
+job.configuration.results.results_manifest.results_manifest module
+------------------------------------------------------------------
 
 .. automodule:: job.configuration.results.results_manifest.results_manifest
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`results_manifest_1_0` Module
-----------------------------------
+job.configuration.results.results_manifest.results_manifest_1_0 module
+----------------------------------------------------------------------
 
 .. automodule:: job.configuration.results.results_manifest.results_manifest_1_0
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.results.results_manifest
+    :members:
+    :undoc-members:
+    :show-inheritance:

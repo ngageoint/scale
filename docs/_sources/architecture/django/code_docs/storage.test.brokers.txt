@@ -1,11 +1,22 @@
-brokers Package
-===============
+storage.test.brokers package
+============================
 
-:mod:`test_nfs_broker` Module
------------------------------
+Submodules
+----------
+
+storage.test.brokers.test_nfs_broker module
+-------------------------------------------
 
 .. automodule:: storage.test.brokers.test_nfs_broker
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: storage.test.brokers
+    :members:
+    :undoc-members:
+    :show-inheritance:

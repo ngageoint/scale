@@ -1,67 +1,194 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.migrations package &mdash; Scale 3.0 documentation</title>
+  
 
+  
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>migrations Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="job Package" href="job.html" />
-    <link rel="next" title="test Package" href="job.test.html" />
-    <link rel="prev" title="commands Package" href="job.management.commands.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="job.test.html" title="test Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="job.management.commands.html" title="commands Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="job.html" accesskey="U">job Package</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="job package" href="job.html"/>
+        <link rel="next" title="job.test package" href="job.test.html"/>
+        <link rel="prev" title="job.management.commands package" href="job.management.commands.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="migrations-package">
-<h1>migrations Package<a class="headerlink" href="#migrations-package" title="Permalink to this headline">¶</a></h1>
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="job.html">job package</a> &raquo;</li>
+      
+    <li>job.migrations package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/job.migrations.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-migrations-package">
+<h1>job.migrations package<a class="headerlink" href="#job-migrations-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-job.migrations.0001_initial">
-<span id="initial-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0001_initial</span></tt> Module<a class="headerlink" href="#module-job.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0001-initial-module"></span><h2>job.migrations.0001_initial module<a class="headerlink" href="#module-job.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0001_initial.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0001_initial.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
@@ -80,7 +207,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0002_jobexecution_job_metrics">
-<span id="jobexecution-job-metrics-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0002_jobexecution_job_metrics</span></tt> Module<a class="headerlink" href="#module-job.migrations.0002_jobexecution_job_metrics" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0002-jobexecution-job-metrics-module"></span><h2>job.migrations.0002_jobexecution_job_metrics module<a class="headerlink" href="#module-job.migrations.0002_jobexecution_job_metrics" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0002_jobexecution_job_metrics.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0002_jobexecution_job_metrics.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0002_jobexecution_job_metrics.Migration" title="Permalink to this definition">¶</a></dt>
@@ -99,7 +226,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0003_auto_20151016_0849">
-<span id="auto-20151016-0849-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0003_auto_20151016_0849</span></tt> Module<a class="headerlink" href="#module-job.migrations.0003_auto_20151016_0849" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0003-auto-20151016-0849-module"></span><h2>job.migrations.0003_auto_20151016_0849 module<a class="headerlink" href="#module-job.migrations.0003_auto_20151016_0849" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0003_auto_20151016_0849.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0003_auto_20151016_0849.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0003_auto_20151016_0849.Migration" title="Permalink to this definition">¶</a></dt>
@@ -118,7 +245,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0004_auto_20151020_1059">
-<span id="auto-20151020-1059-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0004_auto_20151020_1059</span></tt> Module<a class="headerlink" href="#module-job.migrations.0004_auto_20151020_1059" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0004-auto-20151020-1059-module"></span><h2>job.migrations.0004_auto_20151020_1059 module<a class="headerlink" href="#module-job.migrations.0004_auto_20151020_1059" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0004_auto_20151020_1059.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0004_auto_20151020_1059.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0004_auto_20151020_1059.Migration" title="Permalink to this definition">¶</a></dt>
@@ -137,7 +264,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0005_auto_20151030_1402">
-<span id="auto-20151030-1402-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0005_auto_20151030_1402</span></tt> Module<a class="headerlink" href="#module-job.migrations.0005_auto_20151030_1402" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0005-auto-20151030-1402-module"></span><h2>job.migrations.0005_auto_20151030_1402 module<a class="headerlink" href="#module-job.migrations.0005_auto_20151030_1402" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0005_auto_20151030_1402.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0005_auto_20151030_1402.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0005_auto_20151030_1402.Migration" title="Permalink to this definition">¶</a></dt>
@@ -156,7 +283,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0006_auto_20151106_1608">
-<span id="auto-20151106-1608-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0006_auto_20151106_1608</span></tt> Module<a class="headerlink" href="#module-job.migrations.0006_auto_20151106_1608" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0006-auto-20151106-1608-module"></span><h2>job.migrations.0006_auto_20151106_1608 module<a class="headerlink" href="#module-job.migrations.0006_auto_20151106_1608" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0006_auto_20151106_1608.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0006_auto_20151106_1608.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0006_auto_20151106_1608.Migration" title="Permalink to this definition">¶</a></dt>
@@ -175,7 +302,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0007_job_job_type_rev">
-<span id="job-job-type-rev-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0007_job_job_type_rev</span></tt> Module<a class="headerlink" href="#module-job.migrations.0007_job_job_type_rev" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0007-job-job-type-rev-module"></span><h2>job.migrations.0007_job_job_type_rev module<a class="headerlink" href="#module-job.migrations.0007_job_job_type_rev" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0007_job_job_type_rev.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0007_job_job_type_rev.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0007_job_job_type_rev.Migration" title="Permalink to this definition">¶</a></dt>
@@ -194,7 +321,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0008_jobtype_trigger_rule">
-<span id="jobtype-trigger-rule-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0008_jobtype_trigger_rule</span></tt> Module<a class="headerlink" href="#module-job.migrations.0008_jobtype_trigger_rule" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0008-jobtype-trigger-rule-module"></span><h2>job.migrations.0008_jobtype_trigger_rule module<a class="headerlink" href="#module-job.migrations.0008_jobtype_trigger_rule" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0008_jobtype_trigger_rule.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0008_jobtype_trigger_rule.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0008_jobtype_trigger_rule.Migration" title="Permalink to this definition">¶</a></dt>
@@ -213,7 +340,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0009_jobtype_revision_num">
-<span id="jobtype-revision-num-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0009_jobtype_revision_num</span></tt> Module<a class="headerlink" href="#module-job.migrations.0009_jobtype_revision_num" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0009-jobtype-revision-num-module"></span><h2>job.migrations.0009_jobtype_revision_num module<a class="headerlink" href="#module-job.migrations.0009_jobtype_revision_num" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0009_jobtype_revision_num.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0009_jobtype_revision_num.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0009_jobtype_revision_num.Migration" title="Permalink to this definition">¶</a></dt>
@@ -232,7 +359,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0010_auto_20151208_1503">
-<span id="auto-20151208-1503-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0010_auto_20151208_1503</span></tt> Module<a class="headerlink" href="#module-job.migrations.0010_auto_20151208_1503" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0010-auto-20151208-1503-module"></span><h2>job.migrations.0010_auto_20151208_1503 module<a class="headerlink" href="#module-job.migrations.0010_auto_20151208_1503" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0010_auto_20151208_1503.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0010_auto_20151208_1503.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0010_auto_20151208_1503.Migration" title="Permalink to this definition">¶</a></dt>
@@ -251,7 +378,7 @@
 
 </div>
 <div class="section" id="module-job.migrations.0011_jobtype_max_scheduled">
-<span id="jobtype-max-scheduled-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">0011_jobtype_max_scheduled</span></tt> Module<a class="headerlink" href="#module-job.migrations.0011_jobtype_max_scheduled" title="Permalink to this headline">¶</a></h2>
+<span id="job-migrations-0011-jobtype-max-scheduled-module"></span><h2>job.migrations.0011_jobtype_max_scheduled module<a class="headerlink" href="#module-job.migrations.0011_jobtype_max_scheduled" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.migrations.0011_jobtype_max_scheduled.Migration">
 <em class="property">class </em><tt class="descclassname">job.migrations.0011_jobtype_max_scheduled.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0011_jobtype_max_scheduled.Migration" title="Permalink to this definition">¶</a></dt>
@@ -269,84 +396,134 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0012_auto_20160310_1318">
+<span id="job-migrations-0012-auto-20160310-1318-module"></span><h2>job.migrations.0012_auto_20160310_1318 module<a class="headerlink" href="#module-job.migrations.0012_auto_20160310_1318" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0012_auto_20160310_1318.Migration">
+<em class="property">class </em><tt class="descclassname">job.migrations.0012_auto_20160310_1318.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0012_auto_20160310_1318.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<dl class="attribute">
+<dt id="job.migrations.0012_auto_20160310_1318.Migration.dependencies">
+<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0011_jobtype_max_scheduled')]</em><a class="headerlink" href="#job.migrations.0012_auto_20160310_1318.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0012_auto_20160310_1318.Migration.operations">
+<tt class="descname">operations</tt><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'last_modified', model_name=u'job'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'last_modified', model_name=u'jobexecution'&gt;]</em><a class="headerlink" href="#job.migrations.0012_auto_20160310_1318.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0013_auto_20160316_1805">
+<span id="job-migrations-0013-auto-20160316-1805-module"></span><h2>job.migrations.0013_auto_20160316_1805 module<a class="headerlink" href="#module-job.migrations.0013_auto_20160316_1805" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0013_auto_20160316_1805.Migration">
+<em class="property">class </em><tt class="descclassname">job.migrations.0013_auto_20160316_1805.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0013_auto_20160316_1805.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<dl class="attribute">
+<dt id="job.migrations.0013_auto_20160316_1805.Migration.dependencies">
+<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0012_auto_20160310_1318')]</em><a class="headerlink" href="#job.migrations.0013_auto_20160316_1805.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0013_auto_20160316_1805.Migration.operations">
+<tt class="descname">operations</tt><em class="property"> = [&lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'docker_params', model_name=u'job'&gt;, &lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'docker_params', model_name=u'jobexecution'&gt;, &lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'docker_params', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0013_auto_20160316_1805.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0014_auto_20160317_1208">
+<span id="job-migrations-0014-auto-20160317-1208-module"></span><h2>job.migrations.0014_auto_20160317_1208 module<a class="headerlink" href="#module-job.migrations.0014_auto_20160317_1208" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0014_auto_20160317_1208.Migration">
+<em class="property">class </em><tt class="descclassname">job.migrations.0014_auto_20160317_1208.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#job.migrations.0014_auto_20160317_1208.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<dl class="attribute">
+<dt id="job.migrations.0014_auto_20160317_1208.Migration.dependencies">
+<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0013_auto_20160316_1805')]</em><a class="headerlink" href="#job.migrations.0014_auto_20160317_1208.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0014_auto_20160317_1208.Migration.operations">
+<tt class="descname">operations</tt><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'delete_superseded', model_name=u'job'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_superseded', model_name=u'job'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'root_superseded_job', model_name=u'job'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'superseded', model_name=u'job'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.OneToOneField&gt;, preserve_default=True, name=u'superseded_job', model_name=u'job'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'last_modified', model_name=u'job'&gt;, &lt;AlterIndexTogether  name=u'job', index_together=set([(u'last_modified', u'job_type', u'status')])&gt;]</em><a class="headerlink" href="#job.migrations.0014_auto_20160317_1208.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">migrations Package</a><ul>
-<li><a class="reference internal" href="#module-job.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0002_jobexecution_job_metrics"><tt class="docutils literal"><span class="pre">0002_jobexecution_job_metrics</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0003_auto_20151016_0849"><tt class="docutils literal"><span class="pre">0003_auto_20151016_0849</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0004_auto_20151020_1059"><tt class="docutils literal"><span class="pre">0004_auto_20151020_1059</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0005_auto_20151030_1402"><tt class="docutils literal"><span class="pre">0005_auto_20151030_1402</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0006_auto_20151106_1608"><tt class="docutils literal"><span class="pre">0006_auto_20151106_1608</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0007_job_job_type_rev"><tt class="docutils literal"><span class="pre">0007_job_job_type_rev</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0008_jobtype_trigger_rule"><tt class="docutils literal"><span class="pre">0008_jobtype_trigger_rule</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0009_jobtype_revision_num"><tt class="docutils literal"><span class="pre">0009_jobtype_revision_num</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0010_auto_20151208_1503"><tt class="docutils literal"><span class="pre">0010_auto_20151208_1503</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.migrations.0011_jobtype_max_scheduled"><tt class="docutils literal"><span class="pre">0011_jobtype_max_scheduled</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.test.html" class="btn btn-neutral float-right" title="job.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.management.commands.html" class="btn btn-neutral" title="job.management.commands package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="job.management.commands.html"
-                        title="previous chapter">commands Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="job.test.html"
-                        title="next chapter">test Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/job.migrations.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="job.test.html" title="test Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="job.management.commands.html" title="commands Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="job.html" >job Package</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

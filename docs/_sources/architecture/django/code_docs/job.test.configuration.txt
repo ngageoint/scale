@@ -1,5 +1,5 @@
-configuration Package
-=====================
+job.test.configuration package
+==============================
 
 Subpackages
 -----------
@@ -10,3 +10,10 @@ Subpackages
     job.test.configuration.interface
     job.test.configuration.results
 
+Module contents
+---------------
+
+.. automodule:: job.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,69 +1,221 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>queue package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="queue.fixtures package" href="queue.fixtures.html"/>
+        <link rel="prev" title="product.test.configuration package" href="product.test.configuration.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">queue package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.apps">queue.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.job_exe">queue.job_exe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.job_load">queue.job_load module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.models">queue.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.serializers">queue.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.urls">queue.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue.views">queue.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queue">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>queue Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="fixtures Package" href="queue.fixtures.html" />
-    <link rel="prev" title="configuration Package" href="product.test.configuration.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="queue.fixtures.html" title="fixtures Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="product.test.configuration.html" title="configuration Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>queue package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/queue.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="queue-package">
-<h1>queue Package<a class="headerlink" href="#queue-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-queue" title="queue"><tt class="xref py py-mod docutils literal"><span class="pre">queue</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-queue"></span></div>
+<h1>queue package<a class="headerlink" href="#queue-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="queue.fixtures.html">queue.fixtures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.fixtures.html#module-queue.fixtures">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="queue.migrations.html">queue.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0001_initial">queue.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0002_jobload">queue.migrations.0002_jobload module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0003_auto_20151023_1104">queue.migrations.0003_auto_20151023_1104 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0004_remove_queue_is_job_type_paused">queue.migrations.0004_remove_queue_is_job_type_paused module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0005_queue_node_required">queue.migrations.0005_queue_node_required module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0006_auto_20160316_1625">queue.migrations.0006_auto_20160316_1625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="queue.test.html">queue.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_job_load">queue.test.test_job_load module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_models">queue.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_views">queue.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.utils">queue.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-queue.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-queue.apps" title="Permalink to this headline">¶</a></h2>
+<span id="queue-apps-module"></span><h2>queue.apps module<a class="headerlink" href="#module-queue.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the application configuration for the queue application</p>
 <dl class="class">
 <dt id="queue.apps.QueueConfig">
@@ -95,7 +247,7 @@
 
 </div>
 <div class="section" id="module-queue.job_exe">
-<span id="job-exe-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_exe</span></tt> Module<a class="headerlink" href="#module-queue.job_exe" title="Permalink to this headline">¶</a></h2>
+<span id="queue-job-exe-module"></span><h2>queue.job_exe module<a class="headerlink" href="#module-queue.job_exe" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents queued job executions being considered to be scheduled</p>
 <dl class="class">
 <dt id="queue.job_exe.QueuedJobExecution">
@@ -223,7 +375,7 @@ provided</p>
 
 </div>
 <div class="section" id="module-queue.job_load">
-<span id="job-load-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_load</span></tt> Module<a class="headerlink" href="#module-queue.job_load" title="Permalink to this headline">¶</a></h2>
+<span id="queue-job-load-module"></span><h2>queue.job_load module<a class="headerlink" href="#module-queue.job_load" title="Permalink to this headline">¶</a></h2>
 <p>Defines the clock event processor for tracking historical job load.</p>
 <dl class="class">
 <dt id="queue.job_load.JobLoadProcessor">
@@ -241,7 +393,7 @@ provided</p>
 
 </div>
 <div class="section" id="module-queue.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-queue.models" title="Permalink to this headline">¶</a></h2>
+<span id="queue-models-module"></span><h2>queue.models module<a class="headerlink" href="#module-queue.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database model for a queue entry</p>
 <dl class="class">
 <dt id="queue.models.JobLoad">
@@ -293,7 +445,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.models.JobLoad.objects">
-<tt class="descclassname">JobLoad.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.JobLoadManager object at 0x2f3c950&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">JobLoad.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.JobLoadManager object at 0x2b06bc6bbfd0&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -466,157 +618,8 @@ job</li>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.objects">
-<tt class="descclassname">Queue.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.QueueManager object at 0x2f43450&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Queue.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.QueueManager object at 0x2b06bc6c5c10&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.models.QueueDepthByJobType">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueDepthByJobType</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
-<p>Represents the queue depth counts for each job type at various points in time</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The job type</li>
-<li><strong>depth_time</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the depth was measured</li>
-<li><strong>depth</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The queue depth for this job type at this time</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="exception">
-<dt id="queue.models.QueueDepthByJobType.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#queue.models.QueueDepthByJobType.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="queue.models.QueueDepthByJobType.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">QueueDepthByJobType.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#queue.models.QueueDepthByJobType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueDepthByJobType.get_next_by_depth_time">
-<tt class="descclassname">QueueDepthByJobType.</tt><tt class="descname">get_next_by_depth_time</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByJobType.get_next_by_depth_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueDepthByJobType.get_previous_by_depth_time">
-<tt class="descclassname">QueueDepthByJobType.</tt><tt class="descname">get_previous_by_depth_time</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByJobType.get_previous_by_depth_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.QueueDepthByJobType.job_type">
-<tt class="descclassname">QueueDepthByJobType.</tt><tt class="descname">job_type</tt><a class="headerlink" href="#queue.models.QueueDepthByJobType.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.QueueDepthByJobType.objects">
-<tt class="descclassname">QueueDepthByJobType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.QueueDepthByJobTypeManager object at 0x2f43a10&gt;</em><a class="headerlink" href="#queue.models.QueueDepthByJobType.objects" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.models.QueueDepthByJobTypeManager">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueDepthByJobTypeManager</tt><a class="headerlink" href="#queue.models.QueueDepthByJobTypeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
-<p>This class manages the QueueDepthByJobType model</p>
-<dl class="method">
-<dt id="queue.models.QueueDepthByJobTypeManager.save_depths">
-<tt class="descname">save_depths</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByJobTypeManager.save_depths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>depth_time</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the depth was measured</li>
-<li><strong>depths</strong> (<em>dict of {int: int}</em>) &#8211; Dict with job type IDs mapping to their corresponding depth counts</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.models.QueueDepthByPriority">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueDepthByPriority</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByPriority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
-<p>Represents the queue depth counts for each priority level at various points in time</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>priority</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The priority level</li>
-<li><strong>depth_time</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the depth was measured</li>
-<li><strong>depth</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The queue depth for this priority at this time</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="exception">
-<dt id="queue.models.QueueDepthByPriority.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#queue.models.QueueDepthByPriority.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="queue.models.QueueDepthByPriority.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">QueueDepthByPriority.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#queue.models.QueueDepthByPriority.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueDepthByPriority.get_next_by_depth_time">
-<tt class="descclassname">QueueDepthByPriority.</tt><tt class="descname">get_next_by_depth_time</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByPriority.get_next_by_depth_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueDepthByPriority.get_previous_by_depth_time">
-<tt class="descclassname">QueueDepthByPriority.</tt><tt class="descname">get_previous_by_depth_time</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByPriority.get_previous_by_depth_time" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.QueueDepthByPriority.objects">
-<tt class="descclassname">QueueDepthByPriority.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.QueueDepthByPriorityManager object at 0x2f43f90&gt;</em><a class="headerlink" href="#queue.models.QueueDepthByPriority.objects" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.models.QueueDepthByPriorityManager">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueDepthByPriorityManager</tt><a class="headerlink" href="#queue.models.QueueDepthByPriorityManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
-<p>This class manages the QueueDepthByPriority model</p>
-<dl class="method">
-<dt id="queue.models.QueueDepthByPriorityManager.save_depths">
-<tt class="descname">save_depths</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueDepthByPriorityManager.save_depths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the given queue depth statistics. The new models are saved in the database in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>depth_time</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the depth was measured</li>
-<li><strong>depths</strong> (<em>dict of {int: int}</em>) &#8211; Dict with priorities mapping to their corresponding depth counts</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
 
 </dd></dl>
 
@@ -678,50 +681,6 @@ job</li>
 <em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueManager</tt><a class="headerlink" href="#queue.models.QueueManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
 <p>Provides additional methods for managing the queue</p>
-<dl class="method">
-<dt id="queue.models.QueueManager.get_current_queue_depth">
-<tt class="descname">get_current_queue_depth</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.models.QueueManager.get_current_queue_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current queue depth, both for each job type and for each priority level</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple of two dicts where the first has each job type ID map to its depth count and the second has each
-priority level map to its depth count</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple of ({int: int}, {int: int})</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.models.QueueManager.get_historical_queue_depth">
-<tt class="descname">get_historical_queue_depth</tt><big>(</big><em>started</em>, <em>ended</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.get_historical_queue_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the historical queue depth for the given range. The queue depth is returned as a dict with three
-keys: a &#8220;job_types&#8221; array that lists the job types that had a depth during the time range, a &#8220;priorities&#8221; array
-that contains the priority levels that had a depth, and a &#8220;queue_depth&#8221; array with the total depth, depth by job
-type, and depth by priority for each time that the queue depth was measured.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; the start of the time range</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; the end of the time range</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict with the queue depth measurements for the given time range</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue">
 <tt class="descname">get_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
@@ -812,38 +771,6 @@ Otherwise it is marked failed. All database changes occur in an atomic transacti
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.queue_existing_job">
-<tt class="descname">queue_existing_job</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_existing_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Puts an existing task on the queue to run with the given arguments. The data should be set to None if this is
-not the first time the job has been queued. The given job model must have already been saved in the database (it
-must have an ID), it must have its related job_type and job_type_rev models, and the caller must have obtained a
-lock on the job model using select_for_update(). The new job_exe and queue models are saved in the database in
-an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job</strong> (<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>) &#8211; The job to put on the queue</li>
-<li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the job data to run on</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job execution id</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidData:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the job data is invalid</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job">
 <tt class="descname">queue_new_job</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
@@ -865,7 +792,11 @@ in the database in an atomic transaction. If the data is invalid, a
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ID of the new job and the ID of the job execution</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple of (int, int)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData">job.configuration.data.exceptions.InvalidData</a>:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the job data is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -1007,6 +938,25 @@ model. The new job_exe and queue models are saved in the database in an atomic t
 </dd></dl>
 
 <dl class="method">
+<dt id="queue.models.QueueManager.requeue_jobs">
+<tt class="descname">requeue_jobs</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.requeue_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
+ignored. All database changes will occur within an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; The IDs of the jobs to re-queue</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority before they are queued</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.models.QueueManager.schedule_job_executions">
 <tt class="descname">schedule_job_executions</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.schedule_job_executions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
@@ -1029,26 +979,8 @@ run</td>
 </dd></dl>
 
 </div>
-<div class="section" id="module-queue.queue_depth_processor">
-<span id="queue-depth-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">queue_depth_processor</span></tt> Module<a class="headerlink" href="#module-queue.queue_depth_processor" title="Permalink to this headline">¶</a></h2>
-<p>Defines the QueueDepthProcessor for tracking historical queue depth.</p>
-<dl class="class">
-<dt id="queue.queue_depth_processor.QueueDepthProcessor">
-<em class="property">class </em><tt class="descclassname">queue.queue_depth_processor.</tt><tt class="descname">QueueDepthProcessor</tt><a class="headerlink" href="#queue.queue_depth_processor.QueueDepthProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.clock.ClockEventProcessor" title="job.clock.ClockEventProcessor"><tt class="xref py py-class docutils literal"><span class="pre">job.clock.ClockEventProcessor</span></tt></a></p>
-<p>This class queries and stores job queue depth statistics for tracking and trending.</p>
-<dl class="method">
-<dt id="queue.queue_depth_processor.QueueDepthProcessor.process_event">
-<tt class="descname">process_event</tt><big>(</big><em>event</em>, <em>last_event=None</em><big>)</big><a class="headerlink" href="#queue.queue_depth_processor.QueueDepthProcessor.process_event" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.html#job.clock.ClockEventProcessor.process_event" title="job.clock.ClockEventProcessor.process_event"><tt class="xref py py-meth docutils literal"><span class="pre">job.clock.ClockEventProcessor.process_event()</span></tt></a>.</p>
-<p>Calculates metrics for the queue depth over time.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-queue.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-queue.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="queue-serializers-module"></span><h2>queue.serializers module<a class="headerlink" href="#module-queue.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for queue models</p>
 <dl class="class">
 <dt id="queue.serializers.JobLoadGroupListSerializer">
@@ -1068,7 +1000,7 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.serializers.JobLoadGroupListSerializer.base_fields">
-<tt class="descclassname">JobLoadGroupListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#queue.serializers.JobLoadGroupListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">JobLoadGroupListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#queue.serializers.JobLoadGroupListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1080,18 +1012,18 @@ run</td>
 <p>Converts job load model fields to REST output</p>
 <dl class="attribute">
 <dt id="queue.serializers.JobLoadGroupSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0xc4f05d0&gt;, 'pending_count': &lt;rest_framework.fields.IntegerField object at 0xc4fb6d0&gt;, 'queued_count': &lt;rest_framework.fields.IntegerField object at 0xc4fb850&gt;, 'running_count': &lt;rest_framework.fields.IntegerField object at 0xc4fb550&gt;}</em><a class="headerlink" href="#queue.serializers.JobLoadGroupSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0x2b06c276f2d0&gt;, 'pending_count': &lt;rest_framework.fields.IntegerField object at 0x2b06c276f350&gt;, 'queued_count': &lt;rest_framework.fields.IntegerField object at 0x2b06c188c450&gt;, 'running_count': &lt;rest_framework.fields.IntegerField object at 0x2b06c276f410&gt;}</em><a class="headerlink" href="#queue.serializers.JobLoadGroupSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-queue.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-queue.urls" title="Permalink to this headline">¶</a></h2>
+<span id="queue-urls-module"></span><h2>queue.urls module<a class="headerlink" href="#module-queue.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful queue services</p>
 </div>
 <div class="section" id="module-queue.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-queue.views" title="Permalink to this headline">¶</a></h2>
+<span id="queue-views-module"></span><h2>queue.views module<a class="headerlink" href="#module-queue.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful queue services</p>
 <dl class="class">
 <dt id="queue.views.JobLoadView">
@@ -1119,36 +1051,6 @@ run</td>
 <dl class="attribute">
 <dt id="queue.views.JobLoadView.renderer_classes">
 <tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#queue.views.JobLoadView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.views.QueueDepthView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">QueueDepthView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.QueueDepthView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
-<p>This view is the endpoint for retrieving the queue depth for a given time range.</p>
-<dl class="method">
-<dt id="queue.views.QueueDepthView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.QueueDepthView.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the queue depth for a given time range and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.QueueDepthView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#queue.views.QueueDepthView.renderer_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1294,113 +1196,111 @@ run</td>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="queue.views.RequeueJobsView">
+<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">RequeueJobsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<p>This view is the endpoint for requeuing jobs which have already been executed.</p>
+<dl class="attribute">
+<dt id="queue.views.RequeueJobsView.parser_classes">
+<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.views.RequeueJobsView.post">
+<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.RequeueJobsView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase max_tries, place it on the queue, and returns the new job information in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.views.RequeueJobsView.renderer_classes">
+<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#queue.views.RequeueJobsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="queue.fixtures.html">fixtures Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="queue.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="queue.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0002_jobload"><tt class="docutils literal"><span class="pre">0002_jobload</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0003_auto_20151023_1104"><tt class="docutils literal"><span class="pre">0003_auto_20151023_1104</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0004_remove_queue_is_job_type_paused"><tt class="docutils literal"><span class="pre">0004_remove_queue_is_job_type_paused</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0005_queue_node_required"><tt class="docutils literal"><span class="pre">0005_queue_node_required</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="queue.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_job_load"><tt class="docutils literal"><span class="pre">test_job_load</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_queue_depth_processor"><tt class="docutils literal"><span class="pre">test_queue_depth_processor</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-queue">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-queue" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">queue Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">queue</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-queue.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.job_exe"><tt class="docutils literal"><span class="pre">job_exe</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.job_load"><tt class="docutils literal"><span class="pre">job_load</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.queue_depth_processor"><tt class="docutils literal"><span class="pre">queue_depth_processor</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-queue.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="queue.fixtures.html" class="btn btn-neutral float-right" title="queue.fixtures package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="product.test.configuration.html" class="btn btn-neutral" title="product.test.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="product.test.configuration.html"
-                        title="previous chapter">configuration Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="queue.fixtures.html"
-                        title="next chapter">fixtures Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/queue.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="queue.fixtures.html" title="fixtures Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="product.test.configuration.html" title="configuration Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

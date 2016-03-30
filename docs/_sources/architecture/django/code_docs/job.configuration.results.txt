@@ -1,21 +1,5 @@
-results Package
-===============
-
-:mod:`exceptions` Module
-------------------------
-
-.. automodule:: job.configuration.results.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`job_results` Module
--------------------------
-
-.. automodule:: job.configuration.results.job_results
-    :members:
-    :undoc-members:
-    :show-inheritance:
+job.configuration.results package
+=================================
 
 Subpackages
 -----------
@@ -24,3 +8,30 @@ Subpackages
 
     job.configuration.results.results_manifest
 
+Submodules
+----------
+
+job.configuration.results.exceptions module
+-------------------------------------------
+
+.. automodule:: job.configuration.results.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.configuration.results.job_results module
+--------------------------------------------
+
+.. automodule:: job.configuration.results.job_results
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.results
+    :members:
+    :undoc-members:
+    :show-inheritance:

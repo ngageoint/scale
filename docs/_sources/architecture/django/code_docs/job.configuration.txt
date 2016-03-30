@@ -1,5 +1,5 @@
-configuration Package
-=====================
+job.configuration package
+=========================
 
 Subpackages
 -----------
@@ -11,3 +11,10 @@ Subpackages
     job.configuration.interface
     job.configuration.results
 
+Module contents
+---------------
+
+.. automodule:: job.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

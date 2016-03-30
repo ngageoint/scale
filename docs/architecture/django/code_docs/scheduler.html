@@ -1,69 +1,281 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>scheduler package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="scheduler.fixtures package" href="scheduler.fixtures.html"/>
+        <link rel="prev" title="scale package" href="scale.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">scheduler package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.admin">scheduler.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.apps">scheduler.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.models">scheduler.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.serializers">scheduler.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.urls">scheduler.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.views">scheduler.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>scheduler Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="fixtures Package" href="scheduler.fixtures.html" />
-    <link rel="prev" title="scale Package" href="scale.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="scheduler.fixtures.html" title="fixtures Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="scale.html" title="scale Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>scheduler package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="scheduler-package">
-<h1>scheduler Package<a class="headerlink" href="#scheduler-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-scheduler" title="scheduler"><tt class="xref py py-mod docutils literal"><span class="pre">scheduler</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-scheduler"></span></div>
+<h1>scheduler package<a class="headerlink" href="#scheduler-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.fixtures.html">scheduler.fixtures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.fixtures.html#module-scheduler.fixtures">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.management.html">scheduler.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.management.commands.html">scheduler.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.load_all_data">scheduler.management.commands.load_all_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler">scheduler.management.commands.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.management.html#module-scheduler.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.migrations.html">scheduler.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0001_initial">scheduler.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0002_auto_20151007_1352">scheduler.migrations.0002_auto_20151007_1352 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846">scheduler.migrations.0003_auto_20160201_0846 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.offer.html">scheduler.offer package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.manager">scheduler.offer.manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.node">scheduler.offer.node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.offer">scheduler.offer.offer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.sync.html">scheduler.sync package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.job_type_manager">scheduler.sync.job_type_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.node_manager">scheduler.sync.node_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.scheduler_manager">scheduler.sync.scheduler_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.test.html">scheduler.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.offer.html">scheduler.test.offer package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_manager">scheduler.test.offer.test_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_node">scheduler.test.offer.test_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.sync.html">scheduler.test.sync package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_job_type_manager">scheduler.test.sync.test_job_type_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_node_manager">scheduler.test.sync.test_node_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_scheduler_manager">scheduler.test.sync.test_scheduler_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.threads.html">scheduler.test.threads package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.threads.html#module-scheduler.test.threads.test_schedule">scheduler.test.threads.test_schedule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.threads.html#module-scheduler.test.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_initialize">scheduler.test.test_initialize module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_scheduler">scheduler.test.test_scheduler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_views">scheduler.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.threads.html">scheduler.threads package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.db_sync">scheduler.threads.db_sync module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.recon">scheduler.threads.recon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.schedule">scheduler.threads.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-scheduler.admin">
-<span id="admin-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">admin</span></tt> Module<a class="headerlink" href="#module-scheduler.admin" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-admin-module"></span><h2>scheduler.admin module<a class="headerlink" href="#module-scheduler.admin" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.admin.SchedulerAdmin">
 <em class="property">class </em><tt class="descclassname">scheduler.admin.</tt><tt class="descname">SchedulerAdmin</tt><big>(</big><em>model</em>, <em>admin_site</em><big>)</big><a class="headerlink" href="#scheduler.admin.SchedulerAdmin" title="Permalink to this definition">¶</a></dt>
@@ -82,7 +294,7 @@
 
 </div>
 <div class="section" id="module-scheduler.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-scheduler.apps" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-apps-module"></span><h2>scheduler.apps module<a class="headerlink" href="#module-scheduler.apps" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.apps.SchedulerConfig">
 <em class="property">class </em><tt class="descclassname">scheduler.apps.</tt><tt class="descname">SchedulerConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#scheduler.apps.SchedulerConfig" title="Permalink to this definition">¶</a></dt>
@@ -107,7 +319,7 @@
 
 </div>
 <div class="section" id="module-scheduler.cluster_utils">
-<span id="cluster-utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cluster_utils</span></tt> Module<a class="headerlink" href="#module-scheduler.cluster_utils" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-cluster-utils-module"></span><h2>scheduler.cluster_utils module<a class="headerlink" href="#module-scheduler.cluster_utils" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="scheduler.cluster_utils.wait_for_leader">
 <tt class="descclassname">scheduler.cluster_utils.</tt><tt class="descname">wait_for_leader</tt><big>(</big><em>zk_url</em>, <em>my_id</em>, <em>func</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#scheduler.cluster_utils.wait_for_leader" title="Permalink to this definition">¶</a></dt>
@@ -115,7 +327,7 @@
 
 </div>
 <div class="section" id="module-scheduler.initialize">
-<span id="initialize-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">initialize</span></tt> Module<a class="headerlink" href="#module-scheduler.initialize" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-initialize-module"></span><h2>scheduler.initialize module<a class="headerlink" href="#module-scheduler.initialize" title="Permalink to this headline">¶</a></h2>
 <p>Provides initialization functionality for the Scale system</p>
 <dl class="function">
 <dt id="scheduler.initialize.initialize_system">
@@ -125,7 +337,7 @@
 
 </div>
 <div class="section" id="module-scheduler.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-scheduler.models" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-models-module"></span><h2>scheduler.models module<a class="headerlink" href="#module-scheduler.models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.models.Scheduler">
 <em class="property">class </em><tt class="descclassname">scheduler.models.</tt><tt class="descname">Scheduler</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.models.Scheduler" title="Permalink to this definition">¶</a></dt>
@@ -162,7 +374,7 @@ storing cluster-wide state related to scheduling in mesos.</p>
 
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.objects">
-<tt class="descclassname">Scheduler.</tt><tt class="descname">objects</tt><em class="property"> = &lt;scheduler.models.SchedulerManager object at 0x304a5d0&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Scheduler.</tt><tt class="descname">objects</tt><em class="property"> = &lt;scheduler.models.SchedulerManager object at 0x2b06bc722c90&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -255,181 +467,8 @@ storing cluster-wide state related to scheduling in mesos.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.scale_job_exe">
-<span id="scale-job-exe-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scale_job_exe</span></tt> Module<a class="headerlink" href="#module-scheduler.scale_job_exe" title="Permalink to this headline">¶</a></h2>
-<p>Scale Job Execution handles running Scale jobs within Mesos</p>
-<dl class="class">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution">
-<em class="property">class </em><tt class="descclassname">scheduler.scale_job_exe.</tt><tt class="descname">ScaleJobExecution</tt><big>(</big><em>job_exe</em>, <em>cpus</em>, <em>mem</em>, <em>disk_in</em>, <em>disk_out</em>, <em>disk_total</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>This class encapsulates the information about a Scale job execution that the scheduler needs to perform Mesos
-task scheduling.</p>
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.current_task">
-<tt class="descname">current_task</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.current_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the ID of the current task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.get_current_task_resources">
-<tt class="descname">get_current_task_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.get_current_task_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the resources scheduled for the current task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the CPU, memory, and disk resources</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(float, float, float)</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.get_job_exe_id">
-<em class="property">static </em><tt class="descname">get_job_exe_id</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.get_job_exe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the job execution ID for the given task ID</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.is_finished">
-<tt class="descname">is_finished</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.is_finished" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether this job execution is finished with all Mesos tasks</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if all tasks are finished, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.is_next_task_ready">
-<tt class="descname">is_next_task_ready</tt><big>(</big><em>cpus</em>, <em>mem</em>, <em>disk</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.is_next_task_ready" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether the next Mesos task for this job execution is ready and able to run with the given resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cpus</strong> (<em>float</em>) &#8211; The number of CPUs available</li>
-<li><strong>mem</strong> (<em>float</em>) &#8211; The amount of memory in MiB available</li>
-<li><strong>disk</strong> (<em>float</em>) &#8211; The amount of disk space in MiB available</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the next task is ready, False otherwise</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.start_next_task">
-<tt class="descname">start_next_task</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.start_next_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the next Mesos task to be scheduled</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next Mesos task to schedule</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskInfo</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_completed">
-<tt class="descname">task_completed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates that a Mesos task for this job execution has completed</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that was completed</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_failed">
-<tt class="descname">task_failed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates that a Mesos task for this job execution has failed</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that failed</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.scale_job_exe.ScaleJobExecution.task_running">
-<tt class="descname">task_running</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_job_exe.ScaleJobExecution.task_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates that a Mesos task for this job execution has started running</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that has started running</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-scheduler.scale_scheduler">
-<span id="scale-scheduler-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scale_scheduler</span></tt> Module<a class="headerlink" href="#module-scheduler.scale_scheduler" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-scale-scheduler-module"></span><h2>scheduler.scale_scheduler module<a class="headerlink" href="#module-scheduler.scale_scheduler" title="Permalink to this headline">¶</a></h2>
 <p>The Scale Mesos scheduler</p>
 <dl class="class">
 <dt id="scheduler.scale_scheduler.ScaleScheduler">
@@ -438,12 +477,12 @@ task scheduling.</p>
 <p>Mesos scheduler for the Scale framework</p>
 <dl class="attribute">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.DATABASE_WARN_THRESHOLD">
-<tt class="descname">DATABASE_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 200000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.DATABASE_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DATABASE_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 100000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.DATABASE_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD">
-<tt class="descname">NORMAL_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 10000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">NORMAL_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 5000)</em><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -562,76 +601,8 @@ fails during that time.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.scheduler_errors">
-<span id="scheduler-errors-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scheduler_errors</span></tt> Module<a class="headerlink" href="#module-scheduler.scheduler_errors" title="Permalink to this headline">¶</a></h2>
-<p>Defines errors relevant to the scheduler</p>
-<dl class="function">
-<dt id="scheduler.scheduler_errors.get_mesos_error">
-<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_mesos_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_mesos_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for Mesos losing the job</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Mesos error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="scheduler.scheduler_errors.get_node_lost_error">
-<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_node_lost_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_node_lost_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a lost node</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node lost error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="scheduler.scheduler_errors.get_scheduler_error">
-<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_scheduler_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_scheduler_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for the scheduler losing the job</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduler error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="scheduler.scheduler_errors.get_timeout_error">
-<tt class="descclassname">scheduler.scheduler_errors.</tt><tt class="descname">get_timeout_error</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.scheduler_errors.get_timeout_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a job timeout</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The timeout error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
 <div class="section" id="module-scheduler.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-scheduler.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-serializers-module"></span><h2>scheduler.serializers module<a class="headerlink" href="#module-scheduler.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for schedulers</p>
 <dl class="class">
 <dt id="scheduler.serializers.SchedulerSerializer">
@@ -665,11 +636,11 @@ fails during that time.</p>
 
 </div>
 <div class="section" id="module-scheduler.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-scheduler.urls" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-urls-module"></span><h2>scheduler.urls module<a class="headerlink" href="#module-scheduler.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful node services</p>
 </div>
 <div class="section" id="module-scheduler.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-scheduler.views" title="Permalink to this headline">¶</a></h2>
+<span id="scheduler-views-module"></span><h2>scheduler.views module<a class="headerlink" href="#module-scheduler.views" title="Permalink to this headline">¶</a></h2>
 <p>Scheduler Views</p>
 <dl class="class">
 <dt id="scheduler.views.SchedulerView">
@@ -755,158 +726,77 @@ fails during that time.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.fixtures.html">fixtures Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.management.html">management Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.management.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.management.commands.html">commands Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.load_all_data"><tt class="docutils literal"><span class="pre">load_all_data</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler"><tt class="docutils literal"><span class="pre">scale_scheduler</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0002_auto_20151007_1352"><tt class="docutils literal"><span class="pre">0002_auto_20151007_1352</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846"><tt class="docutils literal"><span class="pre">0003_auto_20160201_0846</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.offer.html">offer Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.node"><tt class="docutils literal"><span class="pre">node</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.offer"><tt class="docutils literal"><span class="pre">offer</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.sync.html">sync Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.job_type_manager"><tt class="docutils literal"><span class="pre">job_type_manager</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.node_manager"><tt class="docutils literal"><span class="pre">node_manager</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.scheduler_manager"><tt class="docutils literal"><span class="pre">scheduler_manager</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_initialize"><tt class="docutils literal"><span class="pre">test_initialize</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_scheduler"><tt class="docutils literal"><span class="pre">test_scheduler</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#module-scheduler.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.test.offer.html">offer Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_manager"><tt class="docutils literal"><span class="pre">test_manager</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_node"><tt class="docutils literal"><span class="pre">test_node</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.test.sync.html">sync Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_job_type_manager"><tt class="docutils literal"><span class="pre">test_job_type_manager</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_node_manager"><tt class="docutils literal"><span class="pre">test_node_manager</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_scheduler_manager"><tt class="docutils literal"><span class="pre">test_scheduler_manager</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.test.threads.html">threads Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.threads.html#module-scheduler.test.threads.test_schedule"><tt class="docutils literal"><span class="pre">test_schedule</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.threads.html">threads Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.db_sync"><tt class="docutils literal"><span class="pre">db_sync</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.recon"><tt class="docutils literal"><span class="pre">recon</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.schedule"><tt class="docutils literal"><span class="pre">schedule</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-scheduler">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">scheduler Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">scheduler</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-scheduler.admin"><tt class="docutils literal"><span class="pre">admin</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.cluster_utils"><tt class="docutils literal"><span class="pre">cluster_utils</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.initialize"><tt class="docutils literal"><span class="pre">initialize</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.scale_job_exe"><tt class="docutils literal"><span class="pre">scale_job_exe</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.scale_scheduler"><tt class="docutils literal"><span class="pre">scale_scheduler</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.scheduler_errors"><tt class="docutils literal"><span class="pre">scheduler_errors</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-scheduler.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scheduler.fixtures.html" class="btn btn-neutral float-right" title="scheduler.fixtures package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="scale.html" class="btn btn-neutral" title="scale package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="scale.html"
-                        title="previous chapter">scale Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="scheduler.fixtures.html"
-                        title="next chapter">fixtures Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/scheduler.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="scheduler.fixtures.html" title="fixtures Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="scale.html" title="scale Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

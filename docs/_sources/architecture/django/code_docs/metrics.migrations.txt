@@ -1,35 +1,46 @@
-migrations Package
-==================
+metrics.migrations package
+==========================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+metrics.migrations.0001_initial module
+--------------------------------------
 
 .. automodule:: metrics.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0002_auto_20151007_1352` Module
--------------------------------------
+metrics.migrations.0002_auto_20151007_1352 module
+-------------------------------------------------
 
 .. automodule:: metrics.migrations.0002_auto_20151007_1352
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0003_metricsingest` Module
---------------------------------
+metrics.migrations.0003_metricsingest module
+--------------------------------------------
 
 .. automodule:: metrics.migrations.0003_metricsingest
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0004_auto_20151104_1640` Module
--------------------------------------
+metrics.migrations.0004_auto_20151104_1640 module
+-------------------------------------------------
 
 .. automodule:: metrics.migrations.0004_auto_20151104_1640
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: metrics.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

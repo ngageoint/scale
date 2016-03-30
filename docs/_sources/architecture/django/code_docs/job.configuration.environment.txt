@@ -1,11 +1,22 @@
-environment Package
-===================
+job.configuration.environment package
+=====================================
 
-:mod:`job_environment` Module
------------------------------
+Submodules
+----------
+
+job.configuration.environment.job_environment module
+----------------------------------------------------
 
 .. automodule:: job.configuration.environment.job_environment
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.environment
+    :members:
+    :undoc-members:
+    :show-inheritance:

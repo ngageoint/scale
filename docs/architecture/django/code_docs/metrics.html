@@ -1,69 +1,234 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>metrics package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="metrics.fixtures package" href="metrics.fixtures.html"/>
+        <link rel="prev" title="mesos_api package" href="mesos_api.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">metrics package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.apps">metrics.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.daily_metrics">metrics.daily_metrics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.metrics_processor">metrics.metrics_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.models">metrics.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.registry">metrics.registry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.serializers">metrics.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.urls">metrics.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics.views">metrics.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-metrics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>metrics Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="fixtures Package" href="metrics.fixtures.html" />
-    <link rel="prev" title="mesos_api Package" href="mesos_api.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="metrics.fixtures.html" title="fixtures Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="mesos_api.html" title="mesos_api Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>metrics package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/metrics.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="metrics-package">
-<h1>metrics Package<a class="headerlink" href="#metrics-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-metrics" title="metrics"><tt class="xref py py-mod docutils literal"><span class="pre">metrics</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-metrics"></span></div>
+<h1>metrics package<a class="headerlink" href="#metrics-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="metrics.fixtures.html">metrics.fixtures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.fixtures.html#module-metrics.fixtures">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.management.html">metrics.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="metrics.management.commands.html">metrics.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="metrics.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.management.commands.html#module-metrics.management.commands.scale_daily_metrics">metrics.management.commands.scale_daily_metrics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.management.commands.html#module-metrics.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.management.html#module-metrics.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.migrations.html">metrics.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0001_initial">metrics.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0002_auto_20151007_1352">metrics.migrations.0002_auto_20151007_1352 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0003_metricsingest">metrics.migrations.0003_metricsingest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0004_auto_20151104_1640">metrics.migrations.0004_auto_20151104_1640 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.test.html">metrics.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_daily_metrics">metrics.test.test_daily_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_metrics_processor">metrics.test.test_metrics_processor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_models">metrics.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_views">metrics.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.utils">metrics.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-metrics.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-metrics.apps" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-apps-module"></span><h2>metrics.apps module<a class="headerlink" href="#module-metrics.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the application configuration for the scale metrics application</p>
 <dl class="class">
 <dt id="metrics.apps.MetricsConfig">
@@ -95,7 +260,7 @@
 
 </div>
 <div class="section" id="module-metrics.daily_metrics">
-<span id="daily-metrics-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">daily_metrics</span></tt> Module<a class="headerlink" href="#module-metrics.daily_metrics" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-daily-metrics-module"></span><h2>metrics.daily_metrics module<a class="headerlink" href="#module-metrics.daily_metrics" title="Permalink to this headline">¶</a></h2>
 <p>Defines the clock event processor for daily system metrics.</p>
 <dl class="class">
 <dt id="metrics.daily_metrics.DailyMetricsProcessor">
@@ -113,7 +278,7 @@
 
 </div>
 <div class="section" id="module-metrics.metrics_processor">
-<span id="metrics-processor-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">metrics_processor</span></tt> Module<a class="headerlink" href="#module-metrics.metrics_processor" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-metrics-processor-module"></span><h2>metrics.metrics_processor module<a class="headerlink" href="#module-metrics.metrics_processor" title="Permalink to this headline">¶</a></h2>
 <p>Defines the MetricsProcessor for tracking various usage metrics</p>
 <dl class="class">
 <dt id="metrics.metrics_processor.MetricsProcessor">
@@ -144,7 +309,7 @@
 
 </div>
 <div class="section" id="module-metrics.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-metrics.models" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-models-module"></span><h2>metrics.models module<a class="headerlink" href="#module-metrics.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database models for various system metrics.</p>
 <dl class="class">
 <dt id="metrics.models.MetricsIngest">
@@ -188,7 +353,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.GROUPS">
-<tt class="descclassname">MetricsIngest.</tt><tt class="descname">GROUPS</tt><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x305fa90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x305f990&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x305fa10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x305fa50&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsIngest.</tt><tt class="descname">GROUPS</tt><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744150&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744050&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc7440d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744110&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -219,7 +384,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.objects">
-<tt class="descclassname">MetricsIngest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;metrics.models.MetricsIngestManager object at 0x30660d0&gt;</em><a class="headerlink" href="#metrics.models.MetricsIngest.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsIngest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;metrics.models.MetricsIngestManager object at 0x2b06bc744750&gt;</em><a class="headerlink" href="#metrics.models.MetricsIngest.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -308,7 +473,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.GROUPS">
-<tt class="descclassname">MetricsJobType.</tt><tt class="descname">GROUPS</tt><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x3066610&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x30664d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x3066590&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x30665d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x3066650&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x3066690&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x30666d0&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsJobType.</tt><tt class="descname">GROUPS</tt><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744c90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744b50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744c10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744c50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744cd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744d10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b06bc744d50&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -344,7 +509,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.objects">
-<tt class="descclassname">MetricsJobType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;metrics.models.MetricsJobTypeManager object at 0x3066f50&gt;</em><a class="headerlink" href="#metrics.models.MetricsJobType.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsJobType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;metrics.models.MetricsJobTypeManager object at 0x2b06bc753610&gt;</em><a class="headerlink" href="#metrics.models.MetricsJobType.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -422,7 +587,7 @@ aggregate variations that all reference the same base attribute.</li>
 
 </div>
 <div class="section" id="module-metrics.registry">
-<span id="registry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">registry</span></tt> Module<a class="headerlink" href="#module-metrics.registry" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-registry-module"></span><h2>metrics.registry module<a class="headerlink" href="#module-metrics.registry" title="Permalink to this headline">¶</a></h2>
 <p>Defines general classes used to manage metrics</p>
 <dl class="class">
 <dt id="metrics.registry.MetricsPlotData">
@@ -875,7 +1040,7 @@ are not included by default.</li>
 
 </div>
 <div class="section" id="module-metrics.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-metrics.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-serializers-module"></span><h2>metrics.serializers module<a class="headerlink" href="#module-metrics.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for metrics</p>
 <dl class="class">
 <dt id="metrics.serializers.MetricsIngestDetailsSerializer">
@@ -889,14 +1054,14 @@ are not included by default.</li>
 <p>Converts strike model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsIngestDetailsSerializer.StrikeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x3505b10&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsIngestDetailsSerializer.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8c0590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8c06d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8c7610&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x2b06bc8c7c10&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsIngestDetailsSerializer.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsIngestDetailsSerializer.base_fields">
-<tt class="descclassname">MetricsIngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9dd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9ed0&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x34f9f50&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x34fd050&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd190&gt;, 'choices': &lt;ingest.serializers.StrikeBaseSerializer object at 0x3500290&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsIngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsIngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1f50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1fd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8b2090&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x2b06bc8b2110&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x2b06bc8b21d0&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2310&gt;, 'choices': &lt;ingest.serializers.StrikeBaseSerializer object at 0x2b06bc8c0410&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsIngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -913,14 +1078,14 @@ are not included by default.</li>
 <p>Converts job type model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsJobTypeDetailsSerializer.JobTypeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x350c6d0&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x350c810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x350c890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x350c910&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x350c990&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x350ca10&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x350ca90&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x350cb10&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x350cb90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x350cc10&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x350cc90&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x350cd10&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x350cd90&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsJobTypeDetailsSerializer.JobTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2910&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2a50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2ad0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2b50&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2bd0&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2c50&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2cd0&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2d50&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2dd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2e50&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2ed0&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2f50&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2fd0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsJobTypeDetailsSerializer.JobTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsJobTypeDetailsSerializer.base_fields">
-<tt class="descclassname">MetricsJobTypeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9dd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9ed0&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x34f9f50&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x34fd050&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd190&gt;, 'choices': &lt;job.serializers.JobTypeBaseSerializer object at 0x365b910&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsJobTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsJobTypeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1f50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1fd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8b2090&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x2b06bc8b2110&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x2b06bc8b21d0&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2310&gt;, 'choices': &lt;job.serializers.JobTypeBaseSerializer object at 0x2b06bc9af790&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsJobTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -945,7 +1110,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotListSerializer.base_fields">
-<tt class="descclassname">MetricsPlotListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsPlotListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -970,7 +1135,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotMultiListSerializer.base_fields">
-<tt class="descclassname">MetricsPlotMultiListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsPlotMultiListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -982,7 +1147,7 @@ are not included by default.</li>
 <p>Converts metrics plot values to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotMultiSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'column': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd690&gt;, 'min_x': &lt;rest_framework.fields.IntegerField object at 0x34fd750&gt;, 'max_x': &lt;rest_framework.fields.IntegerField object at 0x34fd950&gt;, 'min_y': &lt;rest_framework.fields.IntegerField object at 0x34fd9d0&gt;, 'max_y': &lt;rest_framework.fields.IntegerField object at 0x34fda50&gt;, 'values': &lt;metrics.serializers.MetricsPlotMultiValueSerializer object at 0x34fdb90&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'column': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2810&gt;, 'min_x': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b28d0&gt;, 'max_x': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2ad0&gt;, 'min_y': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2b50&gt;, 'max_y': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2bd0&gt;, 'values': &lt;metrics.serializers.MetricsPlotMultiValueSerializer object at 0x2b06bc8b2d10&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -994,7 +1159,7 @@ are not included by default.</li>
 <p>Converts metrics plot values to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotMultiValueSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'date': &lt;rest_framework.fields.DateField object at 0x34fd510&gt;, 'value': &lt;rest_framework.fields.IntegerField object at 0x34fd590&gt;, 'id': &lt;rest_framework.fields.IntegerField object at 0x34fd610&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiValueSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'date': &lt;rest_framework.fields.DateField object at 0x2b06bc8b2690&gt;, 'value': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2710&gt;, 'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2790&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotMultiValueSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1006,7 +1171,7 @@ are not included by default.</li>
 <p>Converts metrics plot values to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'column': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd690&gt;, 'min_x': &lt;rest_framework.fields.IntegerField object at 0x34fd750&gt;, 'max_x': &lt;rest_framework.fields.IntegerField object at 0x34fd950&gt;, 'min_y': &lt;rest_framework.fields.IntegerField object at 0x34fd9d0&gt;, 'max_y': &lt;rest_framework.fields.IntegerField object at 0x34fda50&gt;, 'values': &lt;metrics.serializers.MetricsPlotValueSerializer object at 0x34fdad0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'column': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2810&gt;, 'min_x': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b28d0&gt;, 'max_x': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2ad0&gt;, 'min_y': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2b50&gt;, 'max_y': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2bd0&gt;, 'values': &lt;metrics.serializers.MetricsPlotValueSerializer object at 0x2b06bc8b2c50&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1018,7 +1183,7 @@ are not included by default.</li>
 <p>Converts metrics plot values to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsPlotValueSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'date': &lt;rest_framework.fields.DateField object at 0x34fd510&gt;, 'value': &lt;rest_framework.fields.IntegerField object at 0x34fd590&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotValueSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'date': &lt;rest_framework.fields.DateField object at 0x2b06bc8b2690&gt;, 'value': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8b2710&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsPlotValueSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1030,7 +1195,7 @@ are not included by default.</li>
 <p>Converts metrics type model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x31f6a10&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9750&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f97d0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc7f9d10&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a18d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1950&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1042,7 +1207,7 @@ are not included by default.</li>
 <p>Converts metrics column model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeColumnSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9950&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f99d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9a50&gt;, 'units': &lt;rest_framework.fields.CharField object at 0x34f9ad0&gt;, 'group': &lt;rest_framework.fields.CharField object at 0x34f9b50&gt;, 'aggregate': &lt;rest_framework.fields.CharField object at 0x34f9bd0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeColumnSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1ad0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1b50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1bd0&gt;, 'units': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1c50&gt;, 'group': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1cd0&gt;, 'aggregate': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1d50&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeColumnSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1054,7 +1219,7 @@ are not included by default.</li>
 <p>Converts metrics details model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9dd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9ed0&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x34f9f50&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x34fd050&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd190&gt;, 'choices': &lt;rest_framework.fields.CharField object at 0x34fd310&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1f50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1fd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8b2090&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x2b06bc8b2110&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x2b06bc8b21d0&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2310&gt;, 'choices': &lt;rest_framework.fields.CharField object at 0x2b06bc8b2490&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1066,7 +1231,7 @@ are not included by default.</li>
 <p>Converts metrics filter model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeFilterSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'param': &lt;rest_framework.fields.CharField object at 0x34f9850&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x34f98d0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeFilterSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'param': &lt;rest_framework.fields.CharField object at 0x2b06bc8a19d0&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1a50&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeFilterSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1078,7 +1243,7 @@ are not included by default.</li>
 <p>Converts metrics group model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeGroupSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9c50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9cd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9d50&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeGroupSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1dd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1ed0&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeGroupSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1103,7 +1268,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeListSerializer.base_fields">
-<tt class="descclassname">MetricsTypeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">MetricsTypeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1115,18 +1280,18 @@ are not included by default.</li>
 <p>Converts metrics type model fields to REST output</p>
 <dl class="attribute">
 <dt id="metrics.serializers.MetricsTypeSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x34f9dd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x34f9e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x34f9ed0&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x34f9f50&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x34fd050&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x34fd190&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1f50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8a1fd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8b2090&gt;, 'filters': &lt;metrics.serializers.MetricsTypeFilterSerializer object at 0x2b06bc8b2110&gt;, 'groups': &lt;metrics.serializers.MetricsTypeGroupSerializer object at 0x2b06bc8b21d0&gt;, 'columns': &lt;metrics.serializers.MetricsTypeColumnSerializer object at 0x2b06bc8b2310&gt;}</em><a class="headerlink" href="#metrics.serializers.MetricsTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-metrics.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-metrics.urls" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-urls-module"></span><h2>metrics.urls module<a class="headerlink" href="#module-metrics.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful metrics services</p>
 </div>
 <div class="section" id="module-metrics.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-metrics.views" title="Permalink to this headline">¶</a></h2>
+<span id="metrics-views-module"></span><h2>metrics.views module<a class="headerlink" href="#module-metrics.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful metrics services</p>
 <dl class="class">
 <dt id="metrics.views.MetricDetailsView">
@@ -1219,120 +1384,77 @@ are not included by default.</li>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="metrics.fixtures.html">fixtures Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.management.html">management Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.management.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="metrics.management.commands.html">commands Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="metrics.management.commands.html#module-metrics.management.commands.scale_daily_metrics"><tt class="docutils literal"><span class="pre">scale_daily_metrics</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0002_auto_20151007_1352"><tt class="docutils literal"><span class="pre">0002_auto_20151007_1352</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0003_metricsingest"><tt class="docutils literal"><span class="pre">0003_metricsingest</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.migrations.html#module-metrics.migrations.0004_auto_20151104_1640"><tt class="docutils literal"><span class="pre">0004_auto_20151104_1640</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_daily_metrics"><tt class="docutils literal"><span class="pre">test_daily_metrics</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_metrics_processor"><tt class="docutils literal"><span class="pre">test_metrics_processor</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-metrics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-metrics" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">metrics Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">metrics</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-metrics.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.daily_metrics"><tt class="docutils literal"><span class="pre">daily_metrics</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.metrics_processor"><tt class="docutils literal"><span class="pre">metrics_processor</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.registry"><tt class="docutils literal"><span class="pre">registry</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-metrics.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metrics.fixtures.html" class="btn btn-neutral float-right" title="metrics.fixtures package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mesos_api.html" class="btn btn-neutral" title="mesos_api package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="mesos_api.html"
-                        title="previous chapter">mesos_api Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="metrics.fixtures.html"
-                        title="next chapter">fixtures Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/metrics.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="metrics.fixtures.html" title="fixtures Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="mesos_api.html" title="mesos_api Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

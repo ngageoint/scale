@@ -1,69 +1,188 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mesos_api package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="metrics package" href="metrics.html"/>
+        <link rel="prev" title="job.triggers.configuration package" href="job.triggers.configuration.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">mesos_api package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.api">mesos_api.api module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.apps">mesos_api.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mesos-api-mesos-module">mesos_api.mesos module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.mesos_pb2">mesos_api.mesos_pb2 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.tasks">mesos_api.tasks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api.utils">mesos_api.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mesos_api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>mesos_api Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="metrics Package" href="metrics.html" />
-    <link rel="prev" title="configuration Package" href="job.triggers.configuration.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="metrics.html" title="metrics Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="job.triggers.configuration.html" title="configuration Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>mesos_api package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/mesos_api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="mesos-api-package">
-<h1>mesos_api Package<a class="headerlink" href="#mesos-api-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-mesos_api" title="mesos_api"><tt class="xref py py-mod docutils literal"><span class="pre">mesos_api</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-mesos_api"></span></div>
+<h1>mesos_api package<a class="headerlink" href="#mesos-api-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-mesos_api.api">
-<span id="api-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">api</span></tt> Module<a class="headerlink" href="#module-mesos_api.api" title="Permalink to this headline">¶</a></h2>
+<span id="mesos-api-api-module"></span><h2>mesos_api.api module<a class="headerlink" href="#module-mesos_api.api" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="mesos_api.api.HardwareResources">
 <em class="property">class </em><tt class="descclassname">mesos_api.api.</tt><tt class="descname">HardwareResources</tt><big>(</big><em>cpus=0.0</em>, <em>mem=0.0</em>, <em>disk=0.0</em><big>)</big><a class="headerlink" href="#mesos_api.api.HardwareResources" title="Permalink to this definition">¶</a></dt>
@@ -376,7 +495,7 @@
 
 </div>
 <div class="section" id="module-mesos_api.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-mesos_api.apps" title="Permalink to this headline">¶</a></h2>
+<span id="mesos-api-apps-module"></span><h2>mesos_api.apps module<a class="headerlink" href="#module-mesos_api.apps" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="mesos_api.apps.MesosConfig">
 <em class="property">class </em><tt class="descclassname">mesos_api.apps.</tt><tt class="descname">MesosConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#mesos_api.apps.MesosConfig" title="Permalink to this definition">¶</a></dt>
@@ -400,8 +519,8 @@
 </dd></dl>
 
 </div>
-<div class="section" id="mesos-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">mesos</span></tt> Module<a class="headerlink" href="#mesos-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mesos-api-mesos-module">
+<h2>mesos_api.mesos module<a class="headerlink" href="#mesos-api-mesos-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-mesos_api.mesos"></span><p>Python bindings for Mesos.</p>
 <dl class="class">
 <dt id="mesos_api.mesos.Executor">
@@ -600,7 +719,7 @@ machine.)</p>
 
 </div>
 <div class="section" id="module-mesos_api.mesos_pb2">
-<span id="mesos-pb2-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">mesos_pb2</span></tt> Module<a class="headerlink" href="#module-mesos_api.mesos_pb2" title="Permalink to this headline">¶</a></h2>
+<span id="mesos-api-mesos-pb2-module"></span><h2>mesos_api.mesos_pb2 module<a class="headerlink" href="#module-mesos_api.mesos_pb2" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="mesos_api.mesos_pb2.ACL">
 <em class="property">class </em><tt class="descclassname">mesos_api.mesos_pb2.</tt><tt class="descname">ACL</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#mesos_api.mesos_pb2.ACL" title="Permalink to this definition">¶</a></dt>
@@ -622,7 +741,7 @@ machine.)</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c103d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0610&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
@@ -651,7 +770,7 @@ machine.)</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.Entity.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10f10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.Entity.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0d10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.Entity.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -745,7 +864,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.Entity.Type">
-<tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x6a64210&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.Entity.Type" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bdfa8710&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.Entity.Type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -851,7 +970,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.RegisterFramework.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c102d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.RegisterFramework.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b07d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.RegisterFramework.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -979,7 +1098,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.RunTask.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10450&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.RunTask.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b05d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.RunTask.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1124,7 +1243,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACL.ShutdownFramework.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10690&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.ShutdownFramework.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0710&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACL.ShutdownFramework.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1260,7 +1379,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ACLs.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c109d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACLs.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b09d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ACLs.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1410,7 +1529,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Attribute.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7ac6350&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Attribute.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24ae90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Attribute.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1611,7 +1730,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.CommandInfo.ContainerInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3890&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.ContainerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00af10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.ContainerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1720,7 +1839,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.CommandInfo.DESCRIPTOR">
-<tt class="descclassname">CommandInfo.</tt><tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3950&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">CommandInfo.</tt><tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4edad0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1828,7 +1947,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.CommandInfo.URI.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3490&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.URI.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a190&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.CommandInfo.URI.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2032,7 +2151,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x5366d90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a3d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2149,7 +2268,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7aa2cd0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd8aab50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2188,7 +2307,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerInfo.DockerInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7aa24d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b00d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2265,7 +2384,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerInfo.DockerInfo.Network">
-<tt class="descname">Network</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x7caae50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.Network" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Network</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bef17990&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.Network" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2309,7 +2428,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerInfo.DockerInfo.PortMapping.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10b90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.PortMapping.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0a50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.PortMapping.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2573,7 +2692,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ContainerInfo.Type">
-<tt class="descclassname">ContainerInfo.</tt><tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x7cae390&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.Type" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ContainerInfo.</tt><tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bef17ed0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ContainerInfo.Type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2634,7 +2753,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Credential.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10d50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Credential.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677550&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Credential.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2767,7 +2886,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Credentials.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10d90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Credentials.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677450&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Credentials.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2879,7 +2998,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Environment.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10390&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Environment.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd6776d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Environment.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -2982,7 +3101,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Environment.Variable.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10150&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Environment.Variable.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677ed0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Environment.Variable.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3124,7 +3243,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ExecutorID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x53662d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ExecutorID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a1d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ExecutorID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3256,7 +3375,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ExecutorInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3250&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ExecutorInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4ed850&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ExecutorInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3435,7 +3554,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Filters.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10090&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Filters.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677f50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Filters.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3552,7 +3671,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.FrameworkID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x6fb39d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.FrameworkID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a950&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.FrameworkID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3674,7 +3793,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.FrameworkInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x53663d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.FrameworkInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00af50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.FrameworkInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -3889,7 +4008,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.HealthCheck.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af31d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.HealthCheck.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a350&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.HealthCheck.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -3934,7 +4053,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.HealthCheck.HTTP.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x5366650&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.HealthCheck.HTTP.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a750&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.HealthCheck.HTTP.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4196,7 +4315,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.MasterInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3b90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.MasterInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4ed890&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.MasterInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4362,7 +4481,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Offer.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7b02890&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Offer.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677710&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Offer.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -4540,7 +4659,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.OfferID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x6fb3b50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.OfferID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00aa50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.OfferID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4657,7 +4776,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Parameter.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10610&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Parameter.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677c90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Parameter.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4785,7 +4904,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Parameters.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10e10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Parameters.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677910&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Parameters.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -4962,7 +5081,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.PerfStatistics.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7b02790&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.PerfStatistics.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677110&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.PerfStatistics.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -5596,7 +5715,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.RateLimit.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10550&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.RateLimit.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0850&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.RateLimit.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -5740,7 +5859,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.RateLimits.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10410&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.RateLimits.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0650&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.RateLimits.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -5869,7 +5988,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Request.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7b026d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Request.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677590&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Request.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -5997,7 +6116,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Resource.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7ac6650&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Resource.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24a590&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Resource.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -6199,7 +6318,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ResourceStatistics.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7ac6f50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ResourceStatistics.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be48a910&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ResourceStatistics.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -6550,7 +6669,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.ResourceUsage.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7ac68d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ResourceUsage.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be48ac50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.ResourceUsage.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -6722,7 +6841,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.SlaveID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x6fb3950&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.SlaveID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a110&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.SlaveID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -6849,7 +6968,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.SlaveInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af32d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.SlaveInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4eda10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.SlaveInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -7011,7 +7130,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.TaskID.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x5366390&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd00a310&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskID.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -7143,7 +7262,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.TaskInfo.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7b02f10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677a10&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskInfo.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -7338,7 +7457,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.TaskStatus.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10750&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd677ad0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -7500,7 +7619,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.TaskStatus.Reason">
-<tt class="descname">Reason</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x7b27850&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.Reason" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Reason</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bd1b73d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.Reason" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -7557,7 +7676,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.TaskStatus.Source">
-<tt class="descname">Source</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x7b27290&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.Source" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Source</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bd1b7110&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.TaskStatus.Source" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -7659,7 +7778,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3210&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24a210&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -7750,7 +7869,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Range.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3110&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Range.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4ed910&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Range.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -7873,7 +7992,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Ranges.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3750&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Ranges.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24a090&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Ranges.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8015,7 +8134,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Scalar.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3c50&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Scalar.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd4ed810&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Scalar.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8142,7 +8261,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Set.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3090&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Set.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24aed0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Set.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8281,7 +8400,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Text.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7af3410&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Text.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06be24a0d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Text.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8379,7 +8498,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Value.Type">
-<tt class="descclassname">Value.</tt><tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x52e43d0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Type" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Value.</tt><tt class="descname">Type</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bef43490&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Value.Type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8446,7 +8565,7 @@ and propagates this to our listener iff this was a state change.</p>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Volume.DESCRIPTOR">
-<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x7c10310&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Volume.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">DESCRIPTOR</tt><em class="property"> = &lt;google.protobuf.descriptor.Descriptor object at 0x2b06bd3b0550&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Volume.DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -8513,7 +8632,7 @@ the top-level message, e.g. &#8220;foo.bar[5].baz&#8221;.</dd>
 
 <dl class="attribute">
 <dt id="mesos_api.mesos_pb2.Volume.Mode">
-<tt class="descname">Mode</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x7c34fd0&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Volume.Mode" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Mode</tt><em class="property"> = &lt;google.protobuf.internal.enum_type_wrapper.EnumTypeWrapper object at 0x2b06bdccfb90&gt;</em><a class="headerlink" href="#mesos_api.mesos_pb2.Volume.Mode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -8575,9 +8694,67 @@ and propagates this to our listener iff this was a state change.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mesos_api.tasks">
+<span id="mesos-api-tasks-module"></span><h2>mesos_api.tasks module<a class="headerlink" href="#module-mesos_api.tasks" title="Permalink to this headline">¶</a></h2>
+<p>Defines the functions for generating Mesos tasks</p>
+<dl class="function">
+<dt id="mesos_api.tasks.create_mesos_task">
+<tt class="descclassname">mesos_api.tasks.</tt><tt class="descname">create_mesos_task</tt><big>(</big><em>task</em><big>)</big><a class="headerlink" href="#mesos_api.tasks.create_mesos_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a Mesos task from a Scale task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></tt></a>) &#8211; The task</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Mesos task</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskInfo</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-mesos_api.utils">
-<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-mesos_api.utils" title="Permalink to this headline">¶</a></h2>
+<span id="mesos-api-utils-module"></span><h2>mesos_api.utils module<a class="headerlink" href="#module-mesos_api.utils" title="Permalink to this headline">¶</a></h2>
 <p>Provides utility functions for handling Mesos</p>
+<dl class="function">
+<dt id="mesos_api.utils.get_status_timestamp">
+<tt class="descclassname">mesos_api.utils.</tt><tt class="descname">get_status_timestamp</tt><big>(</big><em>status</em><big>)</big><a class="headerlink" href="#mesos_api.utils.get_status_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the timestamp of the given Mesos task status, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status timestamp</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.parse_exit_code">
+<tt class="descclassname">mesos_api.utils.</tt><tt class="descname">parse_exit_code</tt><big>(</big><em>status</em><big>)</big><a class="headerlink" href="#mesos_api.utils.parse_exit_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses and returns an exit code from the task status, returns None if no exit code can be parsed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The exit code, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="mesos_api.utils.status_to_string">
 <tt class="descclassname">mesos_api.utils.</tt><tt class="descname">status_to_string</tt><big>(</big><em>status</em><big>)</big><a class="headerlink" href="#mesos_api.utils.status_to_string" title="Permalink to this definition">¶</a></dt>
@@ -8615,78 +8792,77 @@ and propagates this to our listener iff this was a state change.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-mesos_api">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mesos_api" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">mesos_api Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">mesos_api</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-mesos_api.api"><tt class="docutils literal"><span class="pre">api</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-mesos_api.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#mesos-module"><tt class="docutils literal"><span class="pre">mesos</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-mesos_api.mesos_pb2"><tt class="docutils literal"><span class="pre">mesos_pb2</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-mesos_api.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metrics.html" class="btn btn-neutral float-right" title="metrics package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.triggers.configuration.html" class="btn btn-neutral" title="job.triggers.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="job.triggers.configuration.html"
-                        title="previous chapter">configuration Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="metrics.html"
-                        title="next chapter">metrics Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/mesos_api.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="metrics.html" title="metrics Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="job.triggers.configuration.html" title="configuration Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

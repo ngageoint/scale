@@ -1,27 +1,38 @@
-brokers Package
-===============
+storage.brokers package
+=======================
 
-:mod:`broker` Module
---------------------
+Submodules
+----------
+
+storage.brokers.broker module
+-----------------------------
 
 .. automodule:: storage.brokers.broker
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`factory` Module
----------------------
+storage.brokers.factory module
+------------------------------
 
 .. automodule:: storage.brokers.factory
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`nfs_broker` Module
-------------------------
+storage.brokers.nfs_broker module
+---------------------------------
 
 .. automodule:: storage.brokers.nfs_broker
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: storage.brokers
+    :members:
+    :undoc-members:
+    :show-inheritance:

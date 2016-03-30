@@ -1,11 +1,10 @@
-fixtures Package
-================
+scheduler.fixtures package
+==========================
 
-:mod:`fixtures` Package
------------------------
+Module contents
+---------------
 
 .. automodule:: scheduler.fixtures
     :members:
     :undoc-members:
     :show-inheritance:
-

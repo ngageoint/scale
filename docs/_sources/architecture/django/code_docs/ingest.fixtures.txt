@@ -1,11 +1,10 @@
-fixtures Package
-================
+ingest.fixtures package
+=======================
 
-:mod:`fixtures` Package
------------------------
+Module contents
+---------------
 
 .. automodule:: ingest.fixtures
     :members:
     :undoc-members:
     :show-inheritance:
-

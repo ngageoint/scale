@@ -1,45 +1,5 @@
-trigger Package
+trigger package
 ===============
-
-:mod:`trigger` Package
-----------------------
-
-.. automodule:: trigger
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: trigger.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`handler` Module
----------------------
-
-.. automodule:: trigger.handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: trigger.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: trigger.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -50,3 +10,46 @@ Subpackages
     trigger.migrations
     trigger.test
 
+Submodules
+----------
+
+trigger.apps module
+-------------------
+
+.. automodule:: trigger.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger.handler module
+----------------------
+
+.. automodule:: trigger.handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger.models module
+---------------------
+
+.. automodule:: trigger.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger.serializers module
+--------------------------
+
+.. automodule:: trigger.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: trigger
+    :members:
+    :undoc-members:
+    :show-inheritance:

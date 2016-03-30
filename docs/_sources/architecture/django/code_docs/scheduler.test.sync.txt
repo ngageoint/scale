@@ -1,27 +1,38 @@
-sync Package
-============
+scheduler.test.sync package
+===========================
 
-:mod:`test_job_type_manager` Module
------------------------------------
+Submodules
+----------
+
+scheduler.test.sync.test_job_type_manager module
+------------------------------------------------
 
 .. automodule:: scheduler.test.sync.test_job_type_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_node_manager` Module
--------------------------------
+scheduler.test.sync.test_node_manager module
+--------------------------------------------
 
 .. automodule:: scheduler.test.sync.test_node_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_scheduler_manager` Module
-------------------------------------
+scheduler.test.sync.test_scheduler_manager module
+-------------------------------------------------
 
 .. automodule:: scheduler.test.sync.test_scheduler_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.sync
+    :members:
+    :undoc-members:
+    :show-inheritance:

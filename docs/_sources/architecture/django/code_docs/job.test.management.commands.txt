@@ -1,19 +1,30 @@
-commands Package
-================
+job.test.management.commands package
+====================================
 
-:mod:`test_scale_post_steps` Module
------------------------------------
+Submodules
+----------
+
+job.test.management.commands.test_scale_post_steps module
+---------------------------------------------------------
 
 .. automodule:: job.test.management.commands.test_scale_post_steps
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_scale_pre_steps` Module
-----------------------------------
+job.test.management.commands.test_scale_pre_steps module
+--------------------------------------------------------
 
 .. automodule:: job.test.management.commands.test_scale_pre_steps
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.test.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

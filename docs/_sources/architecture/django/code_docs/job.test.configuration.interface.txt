@@ -1,27 +1,38 @@
-interface Package
-=================
+job.test.configuration.interface package
+========================================
 
-:mod:`test_error_interface` Module
-----------------------------------
+Submodules
+----------
+
+job.test.configuration.interface.test_error_interface module
+------------------------------------------------------------
 
 .. automodule:: job.test.configuration.interface.test_error_interface
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_job_interface` Module
---------------------------------
+job.test.configuration.interface.test_job_interface module
+----------------------------------------------------------
 
 .. automodule:: job.test.configuration.interface.test_job_interface
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_scale_file` Module
------------------------------
+job.test.configuration.interface.test_scale_file module
+-------------------------------------------------------
 
 .. automodule:: job.test.configuration.interface.test_scale_file
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.test.configuration.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:

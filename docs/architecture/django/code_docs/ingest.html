@@ -1,70 +1,298 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ingest package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="ingest.fixtures package" href="ingest.fixtures.html"/>
+        <link rel="prev" title="error.test package" href="error.test.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">ingest package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.cleanup">ingest.cleanup module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.file_system">ingest.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.ingest_job">ingest.ingest_job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.models">ingest.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.serializers">ingest.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.urls">ingest.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.views">ingest.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>ingest Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="fixtures Package" href="ingest.fixtures.html" />
-    <link rel="prev" title="test Package" href="error.test.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ingest.fixtures.html" title="fixtures Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="error.test.html" title="test Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>ingest package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/ingest.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="ingest-package">
-<h1>ingest Package<a class="headerlink" href="#ingest-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-ingest" title="ingest"><tt class="xref py py-mod docutils literal"><span class="pre">ingest</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-ingest"></span><p>This model handles the ingestion of new data into scale</p>
+<h1>ingest package<a class="headerlink" href="#ingest-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.fixtures.html">ingest.fixtures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.fixtures.html#module-ingest.fixtures">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.management.html">ingest.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.management.commands.html">ingest.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_ingest">ingest.management.commands.scale_ingest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_strike">ingest.management.commands.scale_strike module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#module-ingest.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.migrations.html">ingest.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0001_initial">ingest.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.strike.html">ingest.strike package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.strike.configuration.html">ingest.strike.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions">ingest.strike.configuration.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.cleanup">ingest.strike.cleanup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.strike_processor">ingest.strike.strike_processor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.html">ingest.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.html">ingest.test.strike package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.strike.configuration.html">ingest.test.strike.configuration package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration">ingest.test.strike.configuration.test_strike_configuration module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#module-ingest.test.strike.test_strike_processor">ingest.test.strike.test_strike_processor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#module-ingest.test.strike">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.triggers.html">ingest.test.triggers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.triggers.configuration.html">ingest.test.triggers.configuration package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.triggers.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule">ingest.test.triggers.configuration.test_ingest_trigger_rule module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition">ingest.test.triggers.test_ingest_trigger_condition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler">ingest.test.triggers.test_ingest_trigger_handler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_ingest_job">ingest.test.test_ingest_job module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_models">ingest.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_views">ingest.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.utils">ingest.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.triggers.html">ingest.triggers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.triggers.configuration.html">ingest.triggers.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.triggers.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.triggers.configuration.html#module-ingest.triggers.configuration.ingest_trigger_rule">ingest.triggers.configuration.ingest_trigger_rule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.triggers.configuration.html#module-ingest.triggers.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition">ingest.triggers.ingest_trigger_condition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler">ingest.triggers.ingest_trigger_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-ingest.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-ingest.apps" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-apps-module"></span><h2>ingest.apps module<a class="headerlink" href="#module-ingest.apps" title="Permalink to this headline">¶</a></h2>
 <p>The scale ingest application</p>
 <dl class="class">
 <dt id="ingest.apps.IngestConfig">
@@ -96,7 +324,7 @@
 
 </div>
 <div class="section" id="module-ingest.cleanup">
-<span id="cleanup-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cleanup</span></tt> Module<a class="headerlink" href="#module-ingest.cleanup" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-cleanup-module"></span><h2>ingest.cleanup module<a class="headerlink" href="#module-ingest.cleanup" title="Permalink to this headline">¶</a></h2>
 <p>Defines the abstract base class used for cleaning up job executions</p>
 <dl class="class">
 <dt id="ingest.cleanup.IngestJobExecutionCleaner">
@@ -113,7 +341,7 @@
 
 </div>
 <div class="section" id="module-ingest.file_system">
-<span id="file-system-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">file_system</span></tt> Module<a class="headerlink" href="#module-ingest.file_system" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-file-system-module"></span><h2>ingest.file_system module<a class="headerlink" href="#module-ingest.file_system" title="Permalink to this headline">¶</a></h2>
 <p>Defines methods for necessary file system interactions to perform file ingests</p>
 <dl class="function">
 <dt id="ingest.file_system.get_ingest_work_dir">
@@ -135,7 +363,7 @@
 
 </div>
 <div class="section" id="module-ingest.ingest_job">
-<span id="ingest-job-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ingest_job</span></tt> Module<a class="headerlink" href="#module-ingest.ingest_job" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-ingest-job-module"></span><h2>ingest.ingest_job module<a class="headerlink" href="#module-ingest.ingest_job" title="Permalink to this headline">¶</a></h2>
 <p>Defines the functions necessary to perform the ingest of a source file</p>
 <dl class="function">
 <dt id="ingest.ingest_job.perform_ingest">
@@ -157,7 +385,7 @@
 
 </div>
 <div class="section" id="module-ingest.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-ingest.models" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-models-module"></span><h2>ingest.models module<a class="headerlink" href="#module-ingest.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database models related to ingesting files</p>
 <dl class="class">
 <dt id="ingest.models.Ingest">
@@ -286,7 +514,7 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.objects">
-<tt class="descclassname">Ingest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.IngestManager object at 0x3041050&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Ingest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.IngestManager object at 0x2b06bc718710&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -533,7 +761,7 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.objects">
-<tt class="descclassname">Strike.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.StrikeManager object at 0x3041a50&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Strike.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.StrikeManager object at 0x2b06bc722150&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -595,7 +823,7 @@ the database will occur in an atomic transaction.</p>
 
 </div>
 <div class="section" id="module-ingest.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-ingest.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-serializers-module"></span><h2>ingest.serializers module<a class="headerlink" href="#module-ingest.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for ingests</p>
 <dl class="class">
 <dt id="ingest.serializers.IngestBaseSerializer">
@@ -639,7 +867,7 @@ the database will occur in an atomic transaction.</p>
 
 <dl class="attribute">
 <dt id="ingest.serializers.IngestBaseSerializer.base_fields">
-<tt class="descclassname">IngestBaseSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;util.rest.ModelIdSerializer object at 0x3656790&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;util.rest.ModelIdSerializer object at 0x3656d10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">IngestBaseSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc99c590&gt;, 'strike': &lt;util.rest.ModelIdSerializer object at 0x2b06bc99c610&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc99c6d0&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c790&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c810&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c890&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc99c910&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c990&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc99ca10&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99ca90&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cb10&gt;, 'source_file': &lt;util.rest.ModelIdSerializer object at 0x2b06bc99cb90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cc50&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cd10&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -656,14 +884,14 @@ the database will occur in an atomic transaction.</p>
 <p>Converts source file model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x3642790&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x3642890&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x2b06bc925290&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc925390&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc9254d0&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc925550&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc9255d0&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x2b06bc925650&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x2b06bc9256d0&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x2b06bc925750&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925810&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925890&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925910&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925990&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x2b06bc925a10&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x2b06bc925a90&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x2b06bc925b10&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x2b06bc925b90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925c50&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x2b06bc93b110&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc93b210&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.serializers.IngestDetailsSerializer.base_fields">
-<tt class="descclassname">IngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;ingest.serializers.StrikeDetailsSerializer object at 0x36598d0&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;source.serializers.SourceFileSerializer object at 0x3659990&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;, 'transfer_path': &lt;rest_framework.fields.CharField object at 0x3659750&gt;, 'file_path': &lt;rest_framework.fields.CharField object at 0x36597d0&gt;, 'ingest_path': &lt;rest_framework.fields.CharField object at 0x3659850&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">IngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc99c590&gt;, 'strike': &lt;ingest.serializers.StrikeDetailsSerializer object at 0x2b06bc9a6750&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc99c6d0&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c790&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c810&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c890&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc99c910&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c990&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc99ca10&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99ca90&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cb10&gt;, 'source_file': &lt;source.serializers.SourceFileSerializer object at 0x2b06bc9a6810&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cc50&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cd10&gt;, 'transfer_path': &lt;rest_framework.fields.CharField object at 0x2b06bc9a65d0&gt;, 'file_path': &lt;rest_framework.fields.CharField object at 0x2b06bc9a6650&gt;, 'ingest_path': &lt;rest_framework.fields.CharField object at 0x2b06bc9a66d0&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -686,7 +914,7 @@ the database will occur in an atomic transaction.</p>
 
 <dl class="attribute">
 <dt id="ingest.serializers.IngestListSerializer.base_fields">
-<tt class="descclassname">IngestListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">IngestListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -703,14 +931,14 @@ the database will occur in an atomic transaction.</p>
 <p>Converts source file model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x3642790&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x3642890&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x2b06bc925290&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc925390&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc9254d0&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc925550&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc9255d0&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x2b06bc925650&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x2b06bc9256d0&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x2b06bc925750&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925810&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925890&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925910&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925990&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x2b06bc925a10&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x2b06bc925a90&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x2b06bc925b10&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x2b06bc925b90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925c50&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x2b06bc93b110&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc93b210&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.serializers.IngestSerializer.base_fields">
-<tt class="descclassname">IngestSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x3656710&gt;, 'strike': &lt;ingest.serializers.StrikeBaseSerializer object at 0x3656f10&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x3656850&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x3656910&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x3656990&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656a10&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3656a90&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3656b10&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3656b90&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x3656c10&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x3656c90&gt;, 'source_file': &lt;source.serializers.SourceFileBaseSerializer object at 0x3656fd0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656dd0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656e90&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">IngestSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc99c590&gt;, 'strike': &lt;ingest.serializers.StrikeBaseSerializer object at 0x2b06bc99cd90&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc99c6d0&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c790&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c810&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c890&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc99c910&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc99c990&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc99ca10&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99ca90&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cb10&gt;, 'source_file': &lt;source.serializers.SourceFileBaseSerializer object at 0x2b06bc99ce50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cc50&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99cd10&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -733,7 +961,7 @@ the database will occur in an atomic transaction.</p>
 
 <dl class="attribute">
 <dt id="ingest.serializers.IngestStatusListSerializer.base_fields">
-<tt class="descclassname">IngestStatusListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">IngestStatusListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -745,7 +973,7 @@ the database will occur in an atomic transaction.</p>
 <p>Converts ingest model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.IngestStatusSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'strike': &lt;ingest.serializers.StrikeSerializer object at 0x365b310&gt;, 'most_recent': &lt;rest_framework.fields.DateTimeField object at 0x365b3d0&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x365b610&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x365b690&gt;, 'values': &lt;ingest.serializers.IngestStatusValuesSerializer object at 0x365b710&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'strike': &lt;ingest.serializers.StrikeSerializer object at 0x2b06bc9af190&gt;, 'most_recent': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc9af250&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x2b06bc9af490&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc9af510&gt;, 'values': &lt;ingest.serializers.IngestStatusValuesSerializer object at 0x2b06bc9af590&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -757,7 +985,7 @@ the database will occur in an atomic transaction.</p>
 <p>Converts ingest model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.IngestStatusValuesSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0x3659c50&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x365b210&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x365b290&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc9a6ad0&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x2b06bc9af090&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc9af110&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -769,7 +997,7 @@ the database will occur in an atomic transaction.</p>
 <p>Converts strike model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.StrikeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x3505b10&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8c0590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8c06d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8c7610&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x2b06bc8c7c10&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -781,7 +1009,7 @@ the database will occur in an atomic transaction.</p>
 <p>Converts strike model fields to REST output</p>
 <dl class="attribute">
 <dt id="ingest.serializers.StrikeDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x3505c50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656390&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656610&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x3656690&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8c0590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8c06d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8c7610&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x2b06bc8c7d50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c210&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c490&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x2b06bc99c510&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -798,25 +1026,25 @@ the database will occur in an atomic transaction.</p>
 <p>Converts job model fields to REST output.</p>
 <dl class="attribute">
 <dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x3518f90&gt;, 'job_type_rev': &lt;util.rest.ModelIdSerializer object at 0x351a0d0&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x351a550&gt;, 'error': &lt;util.rest.ModelIdSerializer object at 0x351a650&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x351a750&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x351a810&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x351a890&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x2b06bc904290&gt;, 'job_type_rev': &lt;util.rest.ModelIdSerializer object at 0x2b06bc904390&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x2b06bc904810&gt;, 'error': &lt;util.rest.ModelIdSerializer object at 0x2b06bc904910&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc904a10&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904ad0&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904b50&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.serializers.StrikeSerializer.base_fields">
-<tt class="descclassname">StrikeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3500410&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3500550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3505510&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x3505c50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3656390&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3656610&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">StrikeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8c0590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8c06d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8c7610&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x2b06bc8c7d50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c210&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc99c490&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-ingest.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-ingest.urls" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-urls-module"></span><h2>ingest.urls module<a class="headerlink" href="#module-ingest.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful ingest and Strike services</p>
 </div>
 <div class="section" id="module-ingest.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-ingest.views" title="Permalink to this headline">¶</a></h2>
+<span id="ingest-views-module"></span><h2>ingest.views module<a class="headerlink" href="#module-ingest.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful ingest and Strike services</p>
 <dl class="class">
 <dt id="ingest.views.CreateStrikeView">
@@ -950,172 +1178,78 @@ the database will occur in an atomic transaction.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ingest.fixtures.html">fixtures Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.fixtures.html#id1"><tt class="docutils literal"><span class="pre">fixtures</span></tt> Package</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.management.html">management Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#id1"><tt class="docutils literal"><span class="pre">management</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.management.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ingest.management.commands.html">commands Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#id1"><tt class="docutils literal"><span class="pre">commands</span></tt> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_ingest"><tt class="docutils literal"><span class="pre">scale_ingest</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_strike"><tt class="docutils literal"><span class="pre">scale_strike</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.strike.html">strike Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.cleanup"><tt class="docutils literal"><span class="pre">cleanup</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.strike_processor"><tt class="docutils literal"><span class="pre">strike_processor</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ingest.strike.configuration.html">configuration Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration"><tt class="docutils literal"><span class="pre">strike_configuration</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_ingest_job"><tt class="docutils literal"><span class="pre">test_ingest_job</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#module-ingest.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.test.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.html">strike Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#module-ingest.test.strike.test_strike_processor"><tt class="docutils literal"><span class="pre">test_strike_processor</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="ingest.test.strike.configuration.html">configuration Package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration"><tt class="docutils literal"><span class="pre">test_strike_configuration</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.test.triggers.html">triggers Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition"><tt class="docutils literal"><span class="pre">test_ingest_trigger_condition</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler"><tt class="docutils literal"><span class="pre">test_ingest_trigger_handler</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.test.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="ingest.test.triggers.configuration.html">configuration Package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="ingest.test.triggers.configuration.html#module-ingest.test.triggers.configuration.test_ingest_trigger_rule"><tt class="docutils literal"><span class="pre">test_ingest_trigger_rule</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.triggers.html">triggers Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#id1"><tt class="docutils literal"><span class="pre">triggers</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition"><tt class="docutils literal"><span class="pre">ingest_trigger_condition</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler"><tt class="docutils literal"><span class="pre">ingest_trigger_handler</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ingest.triggers.configuration.html">configuration Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.triggers.configuration.html#module-ingest.triggers.configuration.ingest_trigger_rule"><tt class="docutils literal"><span class="pre">ingest_trigger_rule</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-ingest">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest" title="Permalink to this headline">¶</a></h2>
+<p>This model handles the ingestion of new data into scale</p>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">ingest Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">ingest</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-ingest.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.cleanup"><tt class="docutils literal"><span class="pre">cleanup</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.file_system"><tt class="docutils literal"><span class="pre">file_system</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.ingest_job"><tt class="docutils literal"><span class="pre">ingest_job</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-ingest.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ingest.fixtures.html" class="btn btn-neutral float-right" title="ingest.fixtures package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="error.test.html" class="btn btn-neutral" title="error.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="error.test.html"
-                        title="previous chapter">test Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ingest.fixtures.html"
-                        title="next chapter">fixtures Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/ingest.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ingest.fixtures.html" title="fixtures Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="error.test.html" title="test Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

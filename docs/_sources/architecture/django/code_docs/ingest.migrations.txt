@@ -1,11 +1,22 @@
-migrations Package
-==================
+ingest.migrations package
+=========================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+ingest.migrations.0001_initial module
+-------------------------------------
 
 .. automodule:: ingest.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: ingest.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

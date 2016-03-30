@@ -1,11 +1,10 @@
-fixtures Package
-================
+metrics.fixtures package
+========================
 
-:mod:`fixtures` Package
------------------------
+Module contents
+---------------
 
 .. automodule:: metrics.fixtures
     :members:
     :undoc-members:
     :show-inheritance:
-

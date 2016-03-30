@@ -1,11 +1,22 @@
-threads Package
-===============
+scheduler.test.threads package
+==============================
 
-:mod:`test_schedule` Module
----------------------------
+Submodules
+----------
+
+scheduler.test.threads.test_schedule module
+-------------------------------------------
 
 .. automodule:: scheduler.test.threads.test_schedule
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.threads
+    :members:
+    :undoc-members:
+    :show-inheritance:

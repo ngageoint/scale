@@ -1,27 +1,38 @@
-migrations Package
-==================
+node.migrations package
+=======================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+node.migrations.0001_initial module
+-----------------------------------
 
 .. automodule:: node.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0002_node_pause_reason` Module
-------------------------------------
+node.migrations.0002_node_pause_reason module
+---------------------------------------------
 
 .. automodule:: node.migrations.0002_node_pause_reason
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0003_node_is_paused_errors` Module
-----------------------------------------
+node.migrations.0003_node_is_paused_errors module
+-------------------------------------------------
 
 .. automodule:: node.migrations.0003_node_is_paused_errors
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: node.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

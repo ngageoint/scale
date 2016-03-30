@@ -1,61 +1,5 @@
-product Package
+product package
 ===============
-
-:mod:`product` Package
-----------------------
-
-.. automodule:: product
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: product.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: product.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`queue_processor` Module
------------------------------
-
-.. automodule:: product.queue_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: product.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: product.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: product.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -66,3 +10,62 @@ Subpackages
     product.migrations
     product.test
 
+Submodules
+----------
+
+product.apps module
+-------------------
+
+.. automodule:: product.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.models module
+---------------------
+
+.. automodule:: product.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.queue_processor module
+------------------------------
+
+.. automodule:: product.queue_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.serializers module
+--------------------------
+
+.. automodule:: product.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.urls module
+-------------------
+
+.. automodule:: product.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.views module
+--------------------
+
+.. automodule:: product.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: product
+    :members:
+    :undoc-members:
+    :show-inheritance:

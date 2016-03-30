@@ -1,21 +1,5 @@
-strike Package
-==============
-
-:mod:`cleanup` Module
----------------------
-
-.. automodule:: ingest.strike.cleanup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`strike_processor` Module
-------------------------------
-
-.. automodule:: ingest.strike.strike_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
+ingest.strike package
+=====================
 
 Subpackages
 -----------
@@ -24,3 +8,30 @@ Subpackages
 
     ingest.strike.configuration
 
+Submodules
+----------
+
+ingest.strike.cleanup module
+----------------------------
+
+.. automodule:: ingest.strike.cleanup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.strike.strike_processor module
+-------------------------------------
+
+.. automodule:: ingest.strike.strike_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.strike
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,27 +1,38 @@
-data Package
-============
+recipe.configuration.data package
+=================================
 
-:mod:`exceptions` Module
-------------------------
+Submodules
+----------
+
+recipe.configuration.data.exceptions module
+-------------------------------------------
 
 .. automodule:: recipe.configuration.data.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`recipe_connection` Module
--------------------------------
+recipe.configuration.data.recipe_connection module
+--------------------------------------------------
 
 .. automodule:: recipe.configuration.data.recipe_connection
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`recipe_data` Module
--------------------------
+recipe.configuration.data.recipe_data module
+--------------------------------------------
 
 .. automodule:: recipe.configuration.data.recipe_data
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: recipe.configuration.data
+    :members:
+    :undoc-members:
+    :show-inheritance:

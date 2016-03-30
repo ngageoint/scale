@@ -1,5 +1,5 @@
-configuration Package
-=====================
+recipe.configuration package
+============================
 
 Subpackages
 -----------
@@ -9,3 +9,10 @@ Subpackages
     recipe.configuration.data
     recipe.configuration.definition
 
+Module contents
+---------------
+
+.. automodule:: recipe.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

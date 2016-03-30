@@ -1,61 +1,165 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Import/Export Services &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../index.html"/>
+        <link rel="up" title="RESTful HTTP Interface" href="index.html"/>
+        <link rel="next" title="Product Services" href="product.html"/>
+        <link rel="prev" title="Node Services" href="node.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RESTful HTTP Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Import/Export Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Import/Export Services &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../index.html" />
-    <link rel="up" title="RESTful HTTP Interface" href="index.html" />
-    <link rel="next" title="Product Services" href="product.html" />
-    <link rel="prev" title="Node Services" href="node.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="product.html" title="Product Services"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="node.html" title="Node Services"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Interface</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">RESTful HTTP Interface</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Interface</a> &raquo;</li>
+      
+          <li><a href="index.html">RESTful HTTP Interface</a> &raquo;</li>
+      
+    <li>Import/Export Services</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/interface/rest/port.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="import-export-services">
 <span id="rest-port"></span><h1>Import/Export Services<a class="headerlink" href="#import-export-services" title="Permalink to this headline">¶</a></h1>
@@ -156,7 +260,7 @@ Duplicate it to filter by multiple values.</td>
 <td colspan="2">List of exported errors.
 (See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;recipe_types&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
@@ -187,6 +291,7 @@ Duplicate it to filter by multiple values.</td>
             <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
             <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
             <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
@@ -285,7 +390,7 @@ Defaults to the latest version.</td>
 <td>String</td>
 <td colspan="2">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
@@ -344,7 +449,7 @@ Defaults to the latest version.</td>
 <td>String</td>
 <td colspan="2">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
@@ -373,7 +478,7 @@ All the request parameters and response fields are identical to the normal expor
 </tr>
 <tr class="row-odd"><td><strong>GET</strong> /configuration/download/</td>
 </tr>
-<tr class="row-even"><td><div class="first last highlight-javascript"><div class="highlight"><pre><span class="nx">No</span> <span class="nx">Response</span>
+<tr class="row-even"><td><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">No</span> <span class="nx">Response</span>
 </pre></div>
 </div>
 </td>
@@ -394,7 +499,7 @@ All the request parameters and response fields are identical to the normal impor
 (See <a class="reference internal" href="#rest-port-import"><em>Import</em></a>)</p>
 <p>This is purely a convenience API for web applications to provide a <em>Browse...</em> file input to users.
 The API supports traditional file uploads using a form element like this:</p>
-<div class="highlight-html"><div class="highlight"><pre><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&quot;multipart/form-data&quot;</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;SERVER/configuration/upload/&quot;</span><span class="p">&gt;</span>
+<div class="highlight-html"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&quot;multipart/form-data&quot;</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;SERVER/configuration/upload/&quot;</span><span class="p">&gt;</span>
    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;file&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;import&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">input</span><span class="p">&gt;</span>
    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span><span class="p">&gt;</span>Import<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
@@ -410,62 +515,71 @@ The API supports traditional file uploads using a form element like this:</p>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="node.html"
-                        title="previous chapter">Node Services</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="product.html"
-                        title="next chapter">Product Services</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../_sources/interface/rest/port.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="product.html" class="btn btn-neutral float-right" title="Product Services" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="node.html" class="btn btn-neutral" title="Node Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="product.html" title="Product Services"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="node.html" title="Node Services"
-             >previous</a> |</li>
-        <li><a href="../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Interface</a> &raquo;</li>
-          <li><a href="index.html" >RESTful HTTP Interface</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
         &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

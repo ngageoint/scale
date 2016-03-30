@@ -1,45 +1,5 @@
-test Package
-============
-
-:mod:`test` Package
--------------------
-
-.. automodule:: storage.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_geospatial_utils` Module
------------------------------------
-
-.. automodule:: storage.test.test_geospatial_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_models` Module
--------------------------
-
-.. automodule:: storage.test.test_models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_views` Module
-------------------------
-
-.. automodule:: storage.test.test_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`utils` Module
--------------------
-
-.. automodule:: storage.test.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+storage.test package
+====================
 
 Subpackages
 -----------
@@ -48,3 +8,46 @@ Subpackages
 
     storage.test.brokers
 
+Submodules
+----------
+
+storage.test.test_geospatial_utils module
+-----------------------------------------
+
+.. automodule:: storage.test.test_geospatial_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.test.test_models module
+-------------------------------
+
+.. automodule:: storage.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.test.test_views module
+------------------------------
+
+.. automodule:: storage.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.test.utils module
+-------------------------
+
+.. automodule:: storage.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

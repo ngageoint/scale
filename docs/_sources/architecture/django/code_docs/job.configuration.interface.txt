@@ -1,35 +1,46 @@
-interface Package
-=================
+job.configuration.interface package
+===================================
 
-:mod:`error_interface` Module
------------------------------
+Submodules
+----------
+
+job.configuration.interface.error_interface module
+--------------------------------------------------
 
 .. automodule:: job.configuration.interface.error_interface
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`exceptions` Module
-------------------------
+job.configuration.interface.exceptions module
+---------------------------------------------
 
 .. automodule:: job.configuration.interface.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`job_interface` Module
----------------------------
+job.configuration.interface.job_interface module
+------------------------------------------------
 
 .. automodule:: job.configuration.interface.job_interface
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scale_file` Module
-------------------------
+job.configuration.interface.scale_file module
+---------------------------------------------
 
 .. automodule:: job.configuration.interface.scale_file
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:

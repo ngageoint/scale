@@ -1,85 +1,5 @@
-job Package
+job package
 ===========
-
-:mod:`job` Package
-------------------
-
-.. automodule:: job
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: job.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`clock` Module
--------------------
-
-.. automodule:: job.clock
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`exceptions` Module
-------------------------
-
-.. automodule:: job.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: job.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`resources` Module
------------------------
-
-.. automodule:: job.resources
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: job.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`settings` Module
-----------------------
-
-.. automodule:: job.settings
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: job.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: job.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -94,3 +14,86 @@ Subpackages
     job.test
     job.triggers
 
+Submodules
+----------
+
+job.apps module
+---------------
+
+.. automodule:: job.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.clock module
+----------------
+
+.. automodule:: job.clock
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.exceptions module
+---------------------
+
+.. automodule:: job.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.models module
+-----------------
+
+.. automodule:: job.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.resources module
+--------------------
+
+.. automodule:: job.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.serializers module
+----------------------
+
+.. automodule:: job.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.settings module
+-------------------
+
+.. automodule:: job.settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.urls module
+---------------
+
+.. automodule:: job.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.views module
+----------------
+
+.. automodule:: job.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job
+    :members:
+    :undoc-members:
+    :show-inheritance:

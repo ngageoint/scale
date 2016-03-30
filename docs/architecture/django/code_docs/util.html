@@ -1,69 +1,205 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>util package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="util.test package" href="util.test.html"/>
+        <link rel="prev" title="trigger.test package" href="trigger.test.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.apps">util.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.middleware">util.middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.parse">util.parse module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.rest">util.rest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.retry">util.retry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>util Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="test Package" href="util.test.html" />
-    <link rel="prev" title="test Package" href="trigger.test.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="util.test.html" title="test Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="trigger.test.html" title="test Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>util package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/util.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="util-package">
-<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-util" title="util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-util"></span></div>
+<h1>util package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="util.test.html">util.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse">util.test.test_parse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest">util.test.test_rest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry">util.test.test_retry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-util.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-util.apps" title="Permalink to this headline">¶</a></h2>
+<span id="util-apps-module"></span><h2>util.apps module<a class="headerlink" href="#module-util.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the application configuration for the util application</p>
 <dl class="class">
 <dt id="util.apps.UtilConfig">
@@ -89,7 +225,7 @@
 
 </div>
 <div class="section" id="module-util.command">
-<span id="command-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">command</span></tt> Module<a class="headerlink" href="#module-util.command" title="Permalink to this headline">¶</a></h2>
+<span id="util-command-module"></span><h2>util.command module<a class="headerlink" href="#module-util.command" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility functions for executing commands on the command line.</p>
 <dl class="exception">
 <dt id="util.command.CommandError">
@@ -113,7 +249,7 @@
 
 </div>
 <div class="section" id="module-util.exceptions">
-<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-util.exceptions" title="Permalink to this headline">¶</a></h2>
+<span id="util-exceptions-module"></span><h2>util.exceptions module<a class="headerlink" href="#module-util.exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility exceptions</p>
 <dl class="exception">
 <dt id="util.exceptions.RollbackTransaction">
@@ -124,7 +260,7 @@
 
 </div>
 <div class="section" id="module-util.middleware">
-<span id="middleware-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">middleware</span></tt> Module<a class="headerlink" href="#module-util.middleware" title="Permalink to this headline">¶</a></h2>
+<span id="util-middleware-module"></span><h2>util.middleware module<a class="headerlink" href="#module-util.middleware" title="Permalink to this headline">¶</a></h2>
 <p>Common middleware classes used in the web server configuration.</p>
 <dl class="class">
 <dt id="util.middleware.MultipleProxyMiddleware">
@@ -152,7 +288,7 @@ users however, we want to always take that name instead.</p>
 
 </div>
 <div class="section" id="module-util.parse">
-<span id="parse-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">parse</span></tt> Module<a class="headerlink" href="#module-util.parse" title="Permalink to this headline">¶</a></h2>
+<span id="util-parse-module"></span><h2>util.parse module<a class="headerlink" href="#module-util.parse" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility functions for parsing data.</p>
 <dl class="exception">
 <dt id="util.parse.ParseError">
@@ -193,7 +329,7 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 
 </div>
 <div class="section" id="module-util.rest">
-<span id="rest-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rest</span></tt> Module<a class="headerlink" href="#module-util.rest" title="Permalink to this headline">¶</a></h2>
+<span id="util-rest-module"></span><h2>util.rest module<a class="headerlink" href="#module-util.rest" title="Permalink to this headline">¶</a></h2>
 <p>Defines utilities for building RESTful APIs.</p>
 <dl class="exception">
 <dt id="util.rest.BadParameter">
@@ -247,7 +383,7 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 <p>Converts a model to a lightweight place holder object with only an identifier to REST output</p>
 <dl class="attribute">
 <dt id="util.rest.ModelIdSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;}</em><a class="headerlink" href="#util.rest.ModelIdSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;}</em><a class="headerlink" href="#util.rest.ModelIdSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -299,7 +435,7 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>names</strong> (<em>list[str]</em>) &#8211; The list of field names to check.</li>
+<li><strong>names</strong> (<em>list[string]</em>) &#8211; The list of field names to check.</li>
 <li><strong>values</strong> (<em>list[object]</em>) &#8211; The list of field values to check.</li>
 </ul>
 </td>
@@ -325,7 +461,7 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>fields</strong> (<em>list[str]</em>) &#8211; A list of field names that are permitted.</li>
+<li><strong>fields</strong> (<em>list[string]</em>) &#8211; A list of field names that are permitted.</li>
 </ul>
 </td>
 </tr>
@@ -372,7 +508,7 @@ when computing an absolute time stamp.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>names</strong> (<em>str</em>) &#8211; One or more parameter names to check.</li>
+<li><strong>names</strong> (<em>string</em>) &#8211; One or more parameter names to check.</li>
 </ul>
 </td>
 </tr>
@@ -396,7 +532,7 @@ when computing an absolute time stamp.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>bool</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -424,7 +560,7 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>datetime.datetime</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -452,7 +588,7 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>dict</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -480,8 +616,8 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>datetime.timedelta</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.timedelta or string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
 </ul>
@@ -508,7 +644,7 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>float</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -537,7 +673,7 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>int</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -566,7 +702,7 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>default_value</strong> (<em>list[int]</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
@@ -577,7 +713,7 @@ does not exist, there is no default value, and required is True.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
 </td>
 </tr>
 </tbody>
@@ -595,18 +731,18 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[str]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>list[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
 </td>
 </tr>
 </tbody>
@@ -624,18 +760,18 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>list[str]</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>list[string]</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[str]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>list[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
 </td>
 </tr>
 </tbody>
@@ -653,8 +789,8 @@ does not exist, there is no default value, and required is True.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>datetime.timedelta</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.timedelta or string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
 </ul>
@@ -697,7 +833,7 @@ does not exist, there is no default value, and required is True.</li>
 
 </div>
 <div class="section" id="module-util.retry">
-<span id="retry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">retry</span></tt> Module<a class="headerlink" href="#module-util.retry" title="Permalink to this headline">¶</a></h2>
+<span id="util-retry-module"></span><h2>util.retry module<a class="headerlink" href="#module-util.retry" title="Permalink to this headline">¶</a></h2>
 <p>Defines decorators for performing function retries with exponential backoff</p>
 <dl class="function">
 <dt id="util.retry.retry">
@@ -746,97 +882,77 @@ exceed max_ms_delay milliseconds.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="util.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="util.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse"><tt class="docutils literal"><span class="pre">test_parse</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest"><tt class="docutils literal"><span class="pre">test_rest</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry"><tt class="docutils literal"><span class="pre">test_retry</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-util">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-util" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">util Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-util.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.command"><tt class="docutils literal"><span class="pre">command</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.middleware"><tt class="docutils literal"><span class="pre">middleware</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.parse"><tt class="docutils literal"><span class="pre">parse</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.rest"><tt class="docutils literal"><span class="pre">rest</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.retry"><tt class="docutils literal"><span class="pre">retry</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="util.test.html" class="btn btn-neutral float-right" title="util.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="trigger.test.html" class="btn btn-neutral" title="trigger.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="trigger.test.html"
-                        title="previous chapter">test Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="util.test.html"
-                        title="next chapter">test Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/util.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="util.test.html" title="test Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="trigger.test.html" title="test Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

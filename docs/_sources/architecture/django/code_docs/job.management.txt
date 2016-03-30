@@ -1,5 +1,5 @@
-management Package
-==================
+job.management package
+======================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     job.management.commands
 
+Module contents
+---------------
+
+.. automodule:: job.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,51 +1,78 @@
-migrations Package
-==================
+recipe.migrations package
+=========================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+recipe.migrations.0001_initial module
+-------------------------------------
 
 .. automodule:: recipe.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0002_auto_20151106_1409` Module
--------------------------------------
+recipe.migrations.0002_auto_20151106_1409 module
+------------------------------------------------
 
 .. automodule:: recipe.migrations.0002_auto_20151106_1409
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0003_recipe_recipe_type_rev` Module
------------------------------------------
+recipe.migrations.0003_recipe_recipe_type_rev module
+----------------------------------------------------
 
 .. automodule:: recipe.migrations.0003_recipe_recipe_type_rev
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0004_recipetype_trigger_rule` Module
-------------------------------------------
+recipe.migrations.0004_recipetype_trigger_rule module
+-----------------------------------------------------
 
 .. automodule:: recipe.migrations.0004_recipetype_trigger_rule
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0005_recipetype_revision_num` Module
-------------------------------------------
+recipe.migrations.0005_recipetype_revision_num module
+-----------------------------------------------------
 
 .. automodule:: recipe.migrations.0005_recipetype_revision_num
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0006_auto_20151125_1404` Module
--------------------------------------
+recipe.migrations.0006_auto_20151125_1404 module
+------------------------------------------------
 
 .. automodule:: recipe.migrations.0006_auto_20151125_1404
     :members:
     :undoc-members:
     :show-inheritance:
 
+recipe.migrations.0007_auto_20160310_1318 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0007_auto_20160310_1318
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0008_auto_20160317_1208 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0008_auto_20160317_1208
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

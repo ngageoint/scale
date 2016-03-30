@@ -1,11 +1,10 @@
-fixtures Package
-================
+queue.fixtures package
+======================
 
-:mod:`fixtures` Package
------------------------
+Module contents
+---------------
 
 .. automodule:: queue.fixtures
     :members:
     :undoc-members:
     :show-inheritance:
-

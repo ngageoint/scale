@@ -1,85 +1,230 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.execution.running package &mdash; Scale 3.0 documentation</title>
+  
 
+  
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>running Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="execution Package" href="job.execution.html" />
-    <link rel="next" title="fixtures Package" href="job.fixtures.html" />
-    <link rel="prev" title="execution Package" href="job.execution.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="job.fixtures.html" title="fixtures Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="job.execution.html" title="execution Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="job.html" >job Package</a> &raquo;</li>
-          <li><a href="job.execution.html" accesskey="U">execution Package</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="job.execution package" href="job.execution.html"/>
+        <link rel="next" title="job.execution.running.tasks package" href="job.execution.running.tasks.html"/>
+        <link rel="prev" title="job.execution package" href="job.execution.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="running-package">
-<h1>running Package<a class="headerlink" href="#running-package" title="Permalink to this headline">¶</a></h1>
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="job.html">job package</a> &raquo;</li>
+      
+          <li><a href="job.execution.html">job.execution package</a> &raquo;</li>
+      
+    <li>job.execution.running package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/job.execution.running.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-execution-running-package">
+<h1>job.execution.running package<a class="headerlink" href="#job-execution-running-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.execution.running.tasks.html">job.execution.running.tasks package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.base_task">job.execution.running.tasks.base_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.job_task">job.execution.running.tasks.job_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.post_task">job.execution.running.tasks.post_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.pre_task">job.execution.running.tasks.pre_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.results">job.execution.running.tasks.results module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-job.execution.running.job_exe">
-<span id="job-exe-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">job_exe</span></tt> Module<a class="headerlink" href="#module-job.execution.running.job_exe" title="Permalink to this headline">¶</a></h2>
+<span id="job-execution-running-job-exe-module"></span><h2>job.execution.running.job_exe module<a class="headerlink" href="#module-job.execution.running.job_exe" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents running job executions</p>
 <dl class="class">
 <dt id="job.execution.running.job_exe.RunningJobExecution">
 <em class="property">class </em><tt class="descclassname">job.execution.running.job_exe.</tt><tt class="descname">RunningJobExecution</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>This class represents a currently running job execution. This class is thread-safe.</p>
-<dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.current_task_id">
-<tt class="descname">current_task_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.current_task_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the ID of the current task</p>
+<dl class="attribute">
+<dt id="job.execution.running.job_exe.RunningJobExecution.current_task">
+<tt class="descname">current_task</tt><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.current_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the currently running task of the job execution, or None if no task is currently running</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The current task, possibly None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -88,14 +233,14 @@
 <dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.execution_canceled">
 <tt class="descname">execution_canceled</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancels this job execution and returns the ID of the current task</p>
+<dd><p>Cancels this job execution and returns the current task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The current task, possibly None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -103,35 +248,27 @@
 
 <dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.execution_lost">
-<tt class="descname">execution_lost</tt><big>(</big><em>when</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_lost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fails this job execution for its node becoming lost and returns the ID of the current task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the node was lost</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<tt class="descname">execution_lost</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_lost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.execution_timed_out">
-<tt class="descname">execution_timed_out</tt><big>(</big><em>when</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_timed_out" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fails this job execution for timing out and returns the ID of the current task</p>
+<tt class="descname">execution_timed_out</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_timed_out" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.execution.running.job_exe.RunningJobExecution.get_job_exe_id">
+<em class="property">static </em><tt class="descname">get_job_exe_id</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.get_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job execution ID for the given task ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the job execution timed out</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ID of the current task, possibly None</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
@@ -243,73 +380,34 @@ tasks remain.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next Mesos task to schedule</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new task that was started, possibly None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskInfo</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_completed">
-<tt class="descname">task_completed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Completes a Mesos task for this job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that was completed</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_failed">
-<tt class="descname">task_failed</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fails a Mesos task for this job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that failed</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dt id="job.execution.running.job_exe.RunningJobExecution.task_complete">
+<tt class="descname">task_complete</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_complete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.running.job_exe.RunningJobExecution.task_fail">
+<tt class="descname">task_fail</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_fail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.task_running">
-<tt class="descname">task_running</tt><big>(</big><em>task_id</em>, <em>status</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tells this job execution that one of its tasks has started running</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the task that has started running</li>
-<li><strong>status</strong> (<tt class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></tt>) &#8211; The task status</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<tt class="descname">task_running</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_running" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-job.execution.running.manager">
-<span id="manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">manager</span></tt> Module<a class="headerlink" href="#module-job.execution.running.manager" title="Permalink to this headline">¶</a></h2>
+<span id="job-execution-running-manager-module"></span><h2>job.execution.running.manager module<a class="headerlink" href="#module-job.execution.running.manager" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that managers the currently running job executions</p>
 <dl class="class">
 <dt id="job.execution.running.manager.RunningJobExecutionManager">
@@ -415,242 +513,77 @@ tasks remain.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.execution.running.tasks">
-<span id="tasks-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tasks</span></tt> Module<a class="headerlink" href="#module-job.execution.running.tasks" title="Permalink to this headline">¶</a></h2>
-<p>Defines the classes for the tasks that make up a job execution</p>
-<dl class="class">
-<dt id="job.execution.running.tasks.JobTask">
-<em class="property">class </em><tt class="descclassname">job.execution.running.tasks.</tt><tt class="descname">JobTask</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.JobTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.execution.running.tasks.Task" title="job.execution.running.tasks.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.Task</span></tt></a></p>
-<p>Represents a job execution job task (runs the actual job/algorithm)</p>
-<dl class="method">
-<dt id="job.execution.running.tasks.JobTask.get_resources">
-<tt class="descname">get_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.tasks.JobTask.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.Task.get_resources()</span></tt></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.execution.running.tasks.PostTask">
-<em class="property">class </em><tt class="descclassname">job.execution.running.tasks.</tt><tt class="descname">PostTask</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.PostTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.execution.running.tasks.Task" title="job.execution.running.tasks.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.Task</span></tt></a></p>
-<p>Represents a job execution post-task</p>
-<dl class="method">
-<dt id="job.execution.running.tasks.PostTask.get_resources">
-<tt class="descname">get_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.tasks.PostTask.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.Task.get_resources()</span></tt></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.execution.running.tasks.PreTask">
-<em class="property">class </em><tt class="descclassname">job.execution.running.tasks.</tt><tt class="descname">PreTask</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.PreTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.execution.running.tasks.Task" title="job.execution.running.tasks.Task"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.Task</span></tt></a></p>
-<p>Represents a job execution pre-task</p>
-<dl class="method">
-<dt id="job.execution.running.tasks.PreTask.get_resources">
-<tt class="descname">get_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.tasks.PreTask.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.Task.get_resources()</span></tt></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.execution.running.tasks.Task">
-<em class="property">class </em><tt class="descclassname">job.execution.running.tasks.</tt><tt class="descname">Task</tt><big>(</big><em>task_id</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.Task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Abstract base class for a job execution task</p>
-<dl class="method">
-<dt id="job.execution.running.tasks.Task.are_resources_enough">
-<tt class="descname">are_resources_enough</tt><big>(</big><em>resources</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.Task.are_resources_enough" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the given node resources are sufficient to run the task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></tt></a>) &#8211; The available node resources</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the resources are enough to run this task, False otherwise</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.tasks.Task.get_id">
-<tt class="descname">get_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.tasks.Task.get_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the unique ID of the task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The task ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.tasks.Task.get_resources">
-<tt class="descname">get_resources</tt><big>(</big><big>)</big><a class="headerlink" href="#job.execution.running.tasks.Task.get_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the resources that are required/have been scheduled for this task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduled resources for this task</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.execution.running.tasks.TaskFactory">
-<em class="property">class </em><tt class="descclassname">job.execution.running.tasks.</tt><tt class="descname">TaskFactory</tt><a class="headerlink" href="#job.execution.running.tasks.TaskFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>A factory that produces the tasks for a task manager. This class can be overridden to produce custom task
-implementations.</p>
-<dl class="method">
-<dt id="job.execution.running.tasks.TaskFactory.create_job_task">
-<tt class="descname">create_job_task</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.TaskFactory.create_job_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates and returns a job-task for the given job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution, which must be in RUNNING status and have its related node, job, and job_type
-models populated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution job-task</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.JobTask</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.tasks.TaskFactory.create_post_task">
-<tt class="descname">create_post_task</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.TaskFactory.create_post_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates and returns a post-task for the given job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution, which must be in RUNNING status and have its related node, job, and job_type
-models populated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution post-task</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.PostTask</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.tasks.TaskFactory.create_pre_task">
-<tt class="descname">create_pre_task</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#job.execution.running.tasks.TaskFactory.create_pre_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates and returns a pre-task for the given job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The job execution, which must be in RUNNING status and have its related node, job, and job_type
-models populated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution pre-task</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.PreTask</span></tt></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="module-job.execution.running">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.execution.running" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">running Package</a><ul>
-<li><a class="reference internal" href="#module-job.execution.running.job_exe"><tt class="docutils literal"><span class="pre">job_exe</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.execution.running.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-job.execution.running.tasks"><tt class="docutils literal"><span class="pre">tasks</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.execution.running.tasks.html" class="btn btn-neutral float-right" title="job.execution.running.tasks package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.execution.html" class="btn btn-neutral" title="job.execution package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="job.execution.html"
-                        title="previous chapter">execution Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="job.fixtures.html"
-                        title="next chapter">fixtures Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/job.execution.running.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="job.fixtures.html" title="fixtures Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="job.execution.html" title="execution Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="job.html" >job Package</a> &raquo;</li>
-          <li><a href="job.execution.html" >execution Package</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

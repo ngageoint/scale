@@ -1,21 +1,5 @@
-triggers Package
-================
-
-:mod:`test_ingest_trigger_condition` Module
--------------------------------------------
-
-.. automodule:: ingest.test.triggers.test_ingest_trigger_condition
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_ingest_trigger_handler` Module
------------------------------------------
-
-.. automodule:: ingest.test.triggers.test_ingest_trigger_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
+ingest.test.triggers package
+============================
 
 Subpackages
 -----------
@@ -24,3 +8,30 @@ Subpackages
 
     ingest.test.triggers.configuration
 
+Submodules
+----------
+
+ingest.test.triggers.test_ingest_trigger_condition module
+---------------------------------------------------------
+
+.. automodule:: ingest.test.triggers.test_ingest_trigger_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.test.triggers.test_ingest_trigger_handler module
+-------------------------------------------------------
+
+.. automodule:: ingest.test.triggers.test_ingest_trigger_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

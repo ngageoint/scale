@@ -1,27 +1,38 @@
-threads Package
-===============
+scheduler.threads package
+=========================
 
-:mod:`db_sync` Module
----------------------
+Submodules
+----------
+
+scheduler.threads.db_sync module
+--------------------------------
 
 .. automodule:: scheduler.threads.db_sync
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`recon` Module
--------------------
+scheduler.threads.recon module
+------------------------------
 
 .. automodule:: scheduler.threads.recon
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`schedule` Module
-----------------------
+scheduler.threads.schedule module
+---------------------------------
 
 .. automodule:: scheduler.threads.schedule
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.threads
+    :members:
+    :undoc-members:
+    :show-inheritance:

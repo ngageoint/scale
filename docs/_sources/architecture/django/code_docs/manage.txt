@@ -1,4 +1,4 @@
-manage Module
+manage module
 =============
 
 .. automodule:: manage

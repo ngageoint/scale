@@ -1,61 +1,5 @@
-error Package
+error package
 =============
-
-:mod:`error` Package
---------------------
-
-.. automodule:: error
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: error.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`handlers` Module
-----------------------
-
-.. automodule:: error.handlers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: error.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: error.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: error.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: error.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -66,3 +10,62 @@ Subpackages
     error.migrations
     error.test
 
+Submodules
+----------
+
+error.apps module
+-----------------
+
+.. automodule:: error.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error.handlers module
+---------------------
+
+.. automodule:: error.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error.models module
+-------------------
+
+.. automodule:: error.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error.serializers module
+------------------------
+
+.. automodule:: error.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error.urls module
+-----------------
+
+.. automodule:: error.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error.views module
+------------------
+
+.. automodule:: error.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: error
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,27 +1,38 @@
-sync Package
-============
+scheduler.sync package
+======================
 
-:mod:`job_type_manager` Module
-------------------------------
+Submodules
+----------
+
+scheduler.sync.job_type_manager module
+--------------------------------------
 
 .. automodule:: scheduler.sync.job_type_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`node_manager` Module
---------------------------
+scheduler.sync.node_manager module
+----------------------------------
 
 .. automodule:: scheduler.sync.node_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scheduler_manager` Module
--------------------------------
+scheduler.sync.scheduler_manager module
+---------------------------------------
 
 .. automodule:: scheduler.sync.scheduler_manager
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.sync
+    :members:
+    :undoc-members:
+    :show-inheritance:

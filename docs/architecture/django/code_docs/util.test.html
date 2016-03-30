@@ -1,70 +1,192 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>util.test package &mdash; Scale 3.0 documentation</title>
+  
 
+  
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>test Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="util Package" href="util.html" />
-    <link rel="next" title="manage Module" href="manage.html" />
-    <link rel="prev" title="util Package" href="util.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="manage.html" title="manage Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="util.html" title="util Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="util.html" accesskey="U">util Package</a> &raquo;</li> 
-      </ul>
-    </div>  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="util package" href="util.html"/>
+        <link rel="next" title="manage module" href="manage.html"/>
+        <link rel="prev" title="util package" href="util.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="test-package">
-<h1>test Package<a class="headerlink" href="#test-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">test</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-util.test"></span></div>
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="util.html">util package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="util.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.apps">util.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.command">util.command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.exceptions">util.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.middleware">util.middleware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.parse">util.parse module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.rest">util.rest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.retry">util.retry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="util.html">util package</a> &raquo;</li>
+      
+    <li>util.test package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/util.test.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="util-test-package">
+<h1>util.test package<a class="headerlink" href="#util-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-util.test.test_parse">
-<span id="test-parse-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_parse</span></tt> Module<a class="headerlink" href="#module-util.test.test_parse" title="Permalink to this headline">¶</a></h2>
+<span id="util-test-test-parse-module"></span><h2>util.test.test_parse module<a class="headerlink" href="#module-util.test.test_parse" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="util.test.test_parse.TestParse">
 <em class="property">class </em><tt class="descclassname">util.test.test_parse.</tt><tt class="descname">TestParse</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_parse.TestParse" title="Permalink to this definition">¶</a></dt>
@@ -120,7 +242,7 @@
 
 </div>
 <div class="section" id="module-util.test.test_rest">
-<span id="test-rest-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_rest</span></tt> Module<a class="headerlink" href="#module-util.test.test_rest" title="Permalink to this headline">¶</a></h2>
+<span id="util-test-test-rest-module"></span><h2>util.test.test_rest module<a class="headerlink" href="#module-util.test.test_rest" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="util.test.test_rest.TestRest">
 <em class="property">class </em><tt class="descclassname">util.test.test_rest.</tt><tt class="descname">TestRest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_rest.TestRest" title="Permalink to this definition">¶</a></dt>
@@ -614,7 +736,7 @@
 
 </div>
 <div class="section" id="module-util.test.test_retry">
-<span id="test-retry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">test_retry</span></tt> Module<a class="headerlink" href="#module-util.test.test_retry" title="Permalink to this headline">¶</a></h2>
+<span id="util-test-test-retry-module"></span><h2>util.test.test_retry module<a class="headerlink" href="#module-util.test.test_retry" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="util.test.test_retry.TestRetry">
 <em class="property">class </em><tt class="descclassname">util.test.test_retry.</tt><tt class="descname">TestRetry</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#util.test.test_retry.TestRetry" title="Permalink to this definition">¶</a></dt>
@@ -718,77 +840,77 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-util.test">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-util.test" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">test Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-util.test.test_parse"><tt class="docutils literal"><span class="pre">test_parse</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.test.test_rest"><tt class="docutils literal"><span class="pre">test_rest</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-util.test.test_retry"><tt class="docutils literal"><span class="pre">test_retry</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="manage.html" class="btn btn-neutral float-right" title="manage module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="util.html" class="btn btn-neutral" title="util package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="util.html"
-                        title="previous chapter">util Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="manage.html"
-                        title="next chapter">manage Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/util.test.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="manage.html" title="manage Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="util.html" title="util Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li>
-          <li><a href="util.html" >util Package</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

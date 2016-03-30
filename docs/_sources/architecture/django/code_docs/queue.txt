@@ -1,77 +1,5 @@
-queue Package
+queue package
 =============
-
-:mod:`queue` Package
---------------------
-
-.. automodule:: queue
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: queue.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`job_exe` Module
----------------------
-
-.. automodule:: queue.job_exe
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`job_load` Module
-----------------------
-
-.. automodule:: queue.job_load
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: queue.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`queue_depth_processor` Module
------------------------------------
-
-.. automodule:: queue.queue_depth_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: queue.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: queue.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: queue.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -82,3 +10,70 @@ Subpackages
     queue.migrations
     queue.test
 
+Submodules
+----------
+
+queue.apps module
+-----------------
+
+.. automodule:: queue.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.job_exe module
+--------------------
+
+.. automodule:: queue.job_exe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.job_load module
+---------------------
+
+.. automodule:: queue.job_load
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.models module
+-------------------
+
+.. automodule:: queue.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.serializers module
+------------------------
+
+.. automodule:: queue.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.urls module
+-----------------
+
+.. automodule:: queue.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.views module
+------------------
+
+.. automodule:: queue.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: queue
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,69 +1,5 @@
-node Package
+node package
 ============
-
-:mod:`node` Package
--------------------
-
-.. automodule:: node
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`admin` Module
--------------------
-
-.. automodule:: node.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: node.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: node.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: node.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers_extra` Module
--------------------------------
-
-.. automodule:: node.serializers_extra
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: node.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: node.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -73,3 +9,70 @@ Subpackages
     node.migrations
     node.test
 
+Submodules
+----------
+
+node.admin module
+-----------------
+
+.. automodule:: node.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.apps module
+----------------
+
+.. automodule:: node.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.models module
+------------------
+
+.. automodule:: node.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.serializers module
+-----------------------
+
+.. automodule:: node.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.serializers_extra module
+-----------------------------
+
+.. automodule:: node.serializers_extra
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.urls module
+----------------
+
+.. automodule:: node.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node.views module
+-----------------
+
+.. automodule:: node.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: node
+    :members:
+    :undoc-members:
+    :show-inheritance:

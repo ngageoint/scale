@@ -1,5 +1,5 @@
-triggers Package
-================
+job.triggers package
+====================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     job.triggers.configuration
 
+Module contents
+---------------
+
+.. automodule:: job.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,69 +1,275 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="recipe.configuration package" href="recipe.configuration.html"/>
+        <link rel="prev" title="queue.test package" href="queue.test.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">recipe package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.handler">recipe.handler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>recipe Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="configuration Package" href="recipe.configuration.html" />
-    <link rel="prev" title="test Package" href="queue.test.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="recipe.configuration.html" title="configuration Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="queue.test.html" title="test Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>recipe package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/recipe.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="recipe-package">
-<h1>recipe Package<a class="headerlink" href="#recipe-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-recipe" title="recipe"><tt class="xref py py-mod docutils literal"><span class="pre">recipe</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-recipe"></span></div>
+<h1>recipe package<a class="headerlink" href="#recipe-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipe.configuration.html">recipe.configuration package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.configuration.data.html">recipe.configuration.data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.exceptions">recipe.configuration.data.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.recipe_connection">recipe.configuration.data.recipe_connection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.recipe_data">recipe.configuration.data.recipe_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.configuration.definition.html">recipe.configuration.definition package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition.exceptions">recipe.configuration.definition.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition.recipe_definition">recipe.configuration.definition.recipe_definition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#module-recipe.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.migrations.html">recipe.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0001_initial">recipe.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0002_auto_20151106_1409">recipe.migrations.0002_auto_20151106_1409 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0003_recipe_recipe_type_rev">recipe.migrations.0003_recipe_recipe_type_rev module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0004_recipetype_trigger_rule">recipe.migrations.0004_recipetype_trigger_rule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0005_recipetype_revision_num">recipe.migrations.0005_recipetype_revision_num module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0006_auto_20151125_1404">recipe.migrations.0006_auto_20151125_1404 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0007_auto_20160310_1318">recipe.migrations.0007_auto_20160310_1318 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0008_auto_20160317_1208">recipe.migrations.0008_auto_20160317_1208 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.test.html">recipe.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.test.configuration.html">recipe.test.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="recipe.test.configuration.data.html">recipe.test.configuration.data package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.data.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data.test_recipe_data">recipe.test.configuration.data.test_recipe_data module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="recipe.test.configuration.definition.html">recipe.test.configuration.definition package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.definition.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition">recipe.test.configuration.definition.test_recipe_definition module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#module-recipe.test.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.test_handler">recipe.test.test_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.test_models">recipe.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.test_views">recipe.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.utils">recipe.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.triggers.html">recipe.triggers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.triggers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.triggers.configuration.html">recipe.triggers.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#module-recipe.triggers.configuration.trigger_rule">recipe.triggers.configuration.trigger_rule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#module-recipe.triggers.configuration">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.triggers.html#module-recipe.triggers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-recipe.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-recipe.apps" title="Permalink to this headline">¶</a></h2>
+<span id="recipe-apps-module"></span><h2>recipe.apps module<a class="headerlink" href="#module-recipe.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the application configuration for the recipe application</p>
 <dl class="class">
 <dt id="recipe.apps.RecipeConfig">
@@ -88,15 +294,136 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.handler">
+<span id="recipe-handler-module"></span><h2>recipe.handler module<a class="headerlink" href="#module-recipe.handler" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that handles recipe logic</p>
+<dl class="class">
+<dt id="recipe.handler.RecipeHandler">
+<em class="property">class </em><tt class="descclassname">recipe.handler.</tt><tt class="descname">RecipeHandler</tt><big>(</big><em>recipe</em>, <em>recipe_jobs</em><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class handles the logic for a recipe</p>
+<dl class="attribute">
+<dt id="recipe.handler.RecipeHandler.BLOCKING_STATUSES">
+<tt class="descname">BLOCKING_STATUSES</tt><em class="property"> = [u'BLOCKED', u'FAILED', u'CANCELED']</em><a class="headerlink" href="#recipe.handler.RecipeHandler.BLOCKING_STATUSES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.handler.RecipeHandler.get_blocked_jobs">
+<tt class="descname">get_blocked_jobs</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the jobs within this recipe that should be updated to BLOCKED status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to BLOCKED</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handler.RecipeHandler.get_dependent_job_ids">
+<tt class="descname">get_dependent_job_ids</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IDs of the jobs that depend upon the job with the given ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The set of job IDs that depend on the given job</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handler.RecipeHandler.get_existing_jobs_to_queue">
+<tt class="descname">get_existing_jobs_to_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of the existing recipe jobs that are ready to be queued</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of existing jobs that are ready to be queued along with their data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>, <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>)]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handler.RecipeHandler.get_pending_jobs">
+<tt class="descname">get_pending_jobs</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the jobs within this recipe that should be updated to PENDING status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to PENDING</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handler.RecipeHandler.is_completed">
+<tt class="descname">is_completed</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this recipe has been completed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this recipe has been completed, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.handler.RecipeHandler.recipe_id">
+<tt class="descname">recipe_id</tt><a class="headerlink" href="#recipe.handler.RecipeHandler.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of the recipe for this handler</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.handler.RecipeNode">
+<em class="property">class </em><tt class="descclassname">recipe.handler.</tt><tt class="descname">RecipeNode</tt><a class="headerlink" href="#recipe.handler.RecipeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class represents a node within a recipe. A node contains a job along with links to its parent jobs and
+dependent jobs.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-recipe.models" title="Permalink to this headline">¶</a></h2>
+<span id="recipe-models-module"></span><h2>recipe.models module<a class="headerlink" href="#module-recipe.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database models for recipes and recipe types</p>
 <dl class="class">
 <dt id="recipe.models.Recipe">
 <em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">Recipe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
-<p>Represents a recipe to be run on the cluster. Any updates to a recipe model requires obtaining a lock on the
-model using select_for_update().</p>
+<p>Represents a recipe to be run on the cluster</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -196,7 +523,7 @@ model using select_for_update().</p>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.objects">
-<tt class="descclassname">Recipe.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeManager object at 0x2f2f410&gt;</em><a class="headerlink" href="#recipe.models.Recipe.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Recipe.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeManager object at 0x2b06bc6ae1d0&gt;</em><a class="headerlink" href="#recipe.models.Recipe.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -253,7 +580,7 @@ model using select_for_update().</p>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeJob.objects">
-<tt class="descclassname">RecipeJob.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeJobManager object at 0x2f2fb50&gt;</em><a class="headerlink" href="#recipe.models.RecipeJob.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeJob.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeJobManager object at 0x2b06bc6ae950&gt;</em><a class="headerlink" href="#recipe.models.RecipeJob.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -269,26 +596,19 @@ model using select_for_update().</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
 <p>Provides additional methods for handling jobs linked to a recipe</p>
 <dl class="method">
-<dt id="recipe.models.RecipeJobManager.get_recipe_jobs">
-<tt class="descname">get_recipe_jobs</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeJobManager.get_recipe_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the recipe_job models for the given recipe ID. Each recipe_job model with have its related job model
-populated.</p>
+<dt id="recipe.models.RecipeJobManager.get_recipe_data">
+<tt class="descname">get_recipe_data</tt><big>(</big><em>recipe_ids</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeJobManager.get_recipe_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe, recipe_job, and job models for the given recipe IDs with the recipe/job type and revision
+models included</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</li>
-<li><strong>jobs_related</strong> (<em>bool</em>) &#8211; Whether to include the related models (job_type, job_type_rev) on each related job model</li>
-<li><strong>jobs_lock</strong> (<em>bool</em>) &#8211; Whether to obtain a select_for_update() lock on each related job model</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<em>[int]</em>) &#8211; The recipe IDs</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe jobs</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict where each recipe ID maps to a tuple of its recipe model and a list of its recipe_job models</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of <a class="reference internal" href="#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></tt></a></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a>, [<a class="reference internal" href="#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></tt></a>])}</td>
 </tr>
 </tbody>
 </table>
@@ -302,12 +622,30 @@ populated.</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
 <p>Provides additional methods for handling recipes</p>
 <dl class="method">
+<dt id="recipe.models.RecipeManager.complete">
+<tt class="descname">complete</tt><big>(</big><em>recipe_id</em>, <em>when</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the recipe with the given ID as being completed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_id</strong> (<em>:int</em>) &#8211; The recipe ID</li>
+<li><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the recipe was completed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeManager.create_recipe">
 <tt class="descname">create_recipe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new recipe for the given type and returns the saved recipe model. All jobs for the recipe will also
-be created. The given recipe type model must have already been saved in the database (it must have an ID). The
-given event model must have already been saved in the database (it must have an ID). All database changes occur
-in an atomic transaction.</p>
+<dd><p>Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
+also be created. The given recipe type model must have already been saved in the database (it must have an ID).
+The given event model must have already been saved in the database (it must have an ID). All database changes
+occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -319,10 +657,10 @@ in an atomic transaction.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -349,19 +687,60 @@ in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.models.RecipeManager.get_locked_recipe_for_job">
-<tt class="descname">get_locked_recipe_for_job</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipe_for_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the recipe model for the given job. The returned recipe model (None if job does not have a recipe)
-will have its related recipe_type field populated and have a lock obtained by select_for_update().</p>
+<dt id="recipe.models.RecipeManager.get_recipe_for_job">
+<tt class="descname">get_recipe_for_job</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_for_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe, possibly None, for the job with the given ID. The returned model will have its related
+recipe_type and recipe_type_rev models populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The ID of the job</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job&#8217;s recipe, possibly None, with populated recipe_type and model lock</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe model with related recipe_type and recipe_type-rev, possibly None</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.get_recipe_handler_for_job">
+<tt class="descname">get_recipe_handler_for_job</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handler_for_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
+must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
+all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe handler, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.get_recipe_handlers_for_jobs">
+<tt class="descname">get_recipe_handlers_for_jobs</tt><big>(</big><em>job_ids</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handlers_for_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
+have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
+all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
+that a given job ID will not appear in the results if it does not exist within a recipe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em>[int]</em>) &#8211; The job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe handlers by job ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: <a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a>}</td>
 </tr>
 </tbody>
 </table>
@@ -479,7 +858,7 @@ a lock on the model using select_for_update().</p>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.objects">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeManager object at 0x2f35550&gt;</em><a class="headerlink" href="#recipe.models.RecipeType.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeManager object at 0x2b06bc6bb2d0&gt;</em><a class="headerlink" href="#recipe.models.RecipeType.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -748,7 +1127,7 @@ recipe type model.</p>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.objects">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeRevisionManager object at 0x2f35b90&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeRevision.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeRevisionManager object at 0x2b06bc6bb950&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeRevision.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -812,7 +1191,7 @@ model.</p>
 
 </div>
 <div class="section" id="module-recipe.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-recipe.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="recipe-serializers-module"></span><h2>recipe.serializers module<a class="headerlink" href="#module-recipe.serializers" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.serializers.RecipeBaseSerializer">
 <em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer" title="Permalink to this definition">¶</a></dt>
@@ -820,7 +1199,7 @@ model.</p>
 <p>Converts recipe model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x3644e50&gt;, 'recipe_type_rev': &lt;util.rest.ModelIdSerializer object at 0x3644f50&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x36470d0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x2b06bc959710&gt;, 'recipe_type_rev': &lt;util.rest.ModelIdSerializer object at 0x2b06bc959810&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x2b06bc959950&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -837,7 +1216,7 @@ model.</p>
 <p>Converts Scale file model fields to REST output</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x2b06bc925290&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc925390&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc9254d0&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc925550&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc9255d0&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x2b06bc925650&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x2b06bc9256d0&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x2b06bc925750&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925810&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925890&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925910&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925990&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x2b06bc925a10&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x2b06bc925a90&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x2b06bc925b10&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x2b06bc925b90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925c50&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -849,14 +1228,14 @@ model.</p>
 <p>Converts trigger event model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x3514650&gt;, 'rule': &lt;trigger.serializers.TriggerRuleDetailsSerializer object at 0x3514990&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x35147d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3514c50&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4910&gt;, 'rule': &lt;trigger.serializers.TriggerRuleDetailsSerializer object at 0x2b06bc8e4c50&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc8e4a90&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4f10&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeDetailsSerializer.base_fields">
-<tt class="descclassname">RecipeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'recipe_type': &lt;recipe.serializers.RecipeTypeSerializer object at 0x3649190&gt;, 'recipe_type_rev': &lt;recipe.serializers.RecipeTypeRevisionSerializer object at 0x3649790&gt;, 'event': &lt;trigger.serializers.TriggerEventDetailsSerializer object at 0x3649b90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3647690&gt;, 'completed': &lt;rest_framework.fields.DateTimeField object at 0x3647810&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3647890&gt;, 'data': &lt;rest_framework.fields.CharField object at 0x3649d90&gt;, 'input_files': &lt;storage.serializers.ScaleFileBaseSerializer object at 0x3649f50&gt;, 'jobs': &lt;recipe.serializers.RecipeJobsDetailsSerializer object at 0x364b050&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'recipe_type': &lt;recipe.serializers.RecipeTypeSerializer object at 0x2b06bc965a10&gt;, 'recipe_type_rev': &lt;recipe.serializers.RecipeTypeRevisionSerializer object at 0x2b06bc96e050&gt;, 'event': &lt;trigger.serializers.TriggerEventDetailsSerializer object at 0x2b06bc96e450&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc959f10&gt;, 'completed': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc9650d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc965150&gt;, 'data': &lt;rest_framework.fields.CharField object at 0x2b06bc96e650&gt;, 'input_files': &lt;storage.serializers.ScaleFileBaseSerializer object at 0x2b06bc96e810&gt;, 'jobs': &lt;recipe.serializers.RecipeJobsDetailsSerializer object at 0x2b06bc96e8d0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -873,14 +1252,14 @@ model.</p>
 <p>Converts job model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x3518f90&gt;, 'job_type_rev': &lt;job.serializers.JobTypeRevisionSerializer object at 0x351c4d0&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x351a9d0&gt;, 'error': &lt;error.serializers.ErrorBaseSerializer object at 0x351ab90&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x351a750&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x351a810&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x351a890&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x351ad50&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x351af10&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x351af90&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x351c050&gt;, 'disk_in_required': &lt;rest_framework.fields.FloatField object at 0x351c0d0&gt;, 'disk_out_required': &lt;rest_framework.fields.FloatField object at 0x351c150&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351c1d0&gt;, 'queued': &lt;rest_framework.fields.DateTimeField object at 0x351c250&gt;, 'started': &lt;rest_framework.fields.DateTimeField object at 0x351c2d0&gt;, 'ended': &lt;rest_framework.fields.DateTimeField object at 0x351c350&gt;, 'last_status_change': &lt;rest_framework.fields.DateTimeField object at 0x351c3d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351c450&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x2b06bc904290&gt;, 'job_type_rev': &lt;job.serializers.JobTypeRevisionSerializer object at 0x2b06bc90f790&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x2b06bc904c90&gt;, 'error': &lt;error.serializers.ErrorBaseSerializer object at 0x2b06bc904e50&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc904a10&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904ad0&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904b50&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x2b06bc90f050&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x2b06bc90f210&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f290&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f310&gt;, 'disk_in_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f390&gt;, 'disk_out_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f410&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f490&gt;, 'queued': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f510&gt;, 'started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f590&gt;, 'ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f610&gt;, 'last_status_change': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f690&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f710&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsDetailsSerializer.base_fields">
-<tt class="descclassname">RecipeJobsDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'job': &lt;job.serializers.JobRevisionSerializer object at 0x3649090&gt;, 'job_name': &lt;rest_framework.fields.CharField object at 0x36479d0&gt;, 'recipe': &lt;util.rest.ModelIdSerializer object at 0x3647f90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeJobsDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'job': &lt;job.serializers.JobRevisionSerializer object at 0x2b06bc965910&gt;, 'job_name': &lt;rest_framework.fields.CharField object at 0x2b06bc965290&gt;, 'recipe': &lt;util.rest.ModelIdSerializer object at 0x2b06bc965850&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -902,7 +1281,7 @@ model.</p>
 <p>Converts error model fields to REST output</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x35119d0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x3511b10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x3511b90&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x3511c10&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8dac90&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8dadd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8dae50&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06bc8daed0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -914,21 +1293,21 @@ model.</p>
 <p>Converts trigger event model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x3514650&gt;, 'rule': &lt;util.rest.ModelIdSerializer object at 0x3514710&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x35147d0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4910&gt;, 'rule': &lt;util.rest.ModelIdSerializer object at 0x2b06bc8e49d0&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc8e4a90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer.base_fields">
-<tt class="descclassname">RecipeJobsSerializer.JobSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x3518f90&gt;, 'job_type_rev': &lt;job.serializers.JobTypeRevisionBaseSerializer object at 0x351a910&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x351a9d0&gt;, 'error': &lt;error.serializers.ErrorBaseSerializer object at 0x351ab90&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x351a750&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x351a810&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x351a890&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x351ad50&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x351af10&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x351af90&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x351c050&gt;, 'disk_in_required': &lt;rest_framework.fields.FloatField object at 0x351c0d0&gt;, 'disk_out_required': &lt;rest_framework.fields.FloatField object at 0x351c150&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351c1d0&gt;, 'queued': &lt;rest_framework.fields.DateTimeField object at 0x351c250&gt;, 'started': &lt;rest_framework.fields.DateTimeField object at 0x351c2d0&gt;, 'ended': &lt;rest_framework.fields.DateTimeField object at 0x351c350&gt;, 'last_status_change': &lt;rest_framework.fields.DateTimeField object at 0x351c3d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351c450&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeJobsSerializer.JobSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x2b06bc904290&gt;, 'job_type_rev': &lt;job.serializers.JobTypeRevisionBaseSerializer object at 0x2b06bc904bd0&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x2b06bc904c90&gt;, 'error': &lt;error.serializers.ErrorBaseSerializer object at 0x2b06bc904e50&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x2b06bc904a10&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904ad0&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x2b06bc904b50&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x2b06bc90f050&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x2b06bc90f210&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f290&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f310&gt;, 'disk_in_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f390&gt;, 'disk_out_required': &lt;rest_framework.fields.FloatField object at 0x2b06bc90f410&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f490&gt;, 'queued': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f510&gt;, 'started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f590&gt;, 'ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f610&gt;, 'last_status_change': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f690&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc90f710&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeJobsSerializer.base_fields">
-<tt class="descclassname">RecipeJobsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'job': &lt;job.serializers.JobSerializer object at 0x3647910&gt;, 'job_name': &lt;rest_framework.fields.CharField object at 0x36479d0&gt;, 'recipe': &lt;util.rest.ModelIdSerializer object at 0x3647f90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeJobsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'job': &lt;job.serializers.JobSerializer object at 0x2b06bc9651d0&gt;, 'job_name': &lt;rest_framework.fields.CharField object at 0x2b06bc965290&gt;, 'recipe': &lt;util.rest.ModelIdSerializer object at 0x2b06bc965850&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -951,7 +1330,7 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeListSerializer.base_fields">
-<tt class="descclassname">RecipeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -968,14 +1347,14 @@ model.</p>
 <p>Converts trigger event model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x3514650&gt;, 'rule': &lt;util.rest.ModelIdSerializer object at 0x3514710&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x35147d0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4910&gt;, 'rule': &lt;util.rest.ModelIdSerializer object at 0x2b06bc8e49d0&gt;, 'occurred': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc8e4a90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeSerializer.base_fields">
-<tt class="descclassname">RecipeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'recipe_type': &lt;recipe.serializers.RecipeTypeBaseSerializer object at 0x36471d0&gt;, 'recipe_type_rev': &lt;recipe.serializers.RecipeTypeRevisionBaseSerializer object at 0x36472d0&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x3647510&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3647690&gt;, 'completed': &lt;rest_framework.fields.DateTimeField object at 0x3647810&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3647890&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'recipe_type': &lt;recipe.serializers.RecipeTypeBaseSerializer object at 0x2b06bc959a50&gt;, 'recipe_type_rev': &lt;recipe.serializers.RecipeTypeRevisionBaseSerializer object at 0x2b06bc959b50&gt;, 'event': &lt;trigger.serializers.TriggerEventBaseSerializer object at 0x2b06bc959d90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc959f10&gt;, 'completed': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc9650d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc965150&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -987,7 +1366,7 @@ model.</p>
 <p>Converts recipe type model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x363fb90&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x363fcd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x363fd50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x363fdd0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc94f490&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc94f590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc94f610&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc94f690&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1004,7 +1383,7 @@ model.</p>
 <p>Converts job type model fields to REST output</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x350c6d0&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x350c810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x350c890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x350c910&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x350c990&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x350ca10&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x350ca90&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x350cb10&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x350cb90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x350cc10&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x350cc90&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x350cd10&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x350cd90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2910&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2a50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2ad0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2b50&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2bd0&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2c50&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2cd0&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2d50&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2dd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2e50&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2ed0&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2f50&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2fd0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1015,7 +1394,7 @@ model.</p>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobTypeBaseSerializer" title="job.serializers.JobTypeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeBaseSerializer</span></tt></a></p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x350c6d0&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x350c810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x350c890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x350c910&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x350c990&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x350ca10&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x350ca90&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x350cb10&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x350cb90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x350cc10&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x350cc90&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x350cd10&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x350cd90&gt;, 'interface': &lt;rest_framework.fields.CharField object at 0x3644290&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2910&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2a50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2ad0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2b50&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2bd0&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2c50&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2cd0&gt;, 'is_system': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2d50&gt;, 'is_long_running': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2dd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2e50&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2ed0&gt;, 'is_paused': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8d2f50&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x2b06bc8d2fd0&gt;, 'interface': &lt;rest_framework.fields.CharField object at 0x2b06bc94fb10&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1027,14 +1406,14 @@ model.</p>
 <p>Converts trigger rule model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x3514150&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x3514290&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x3514310&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x3514550&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'type': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4410&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4550&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc8e45d0&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x2b06bc8e4810&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.base_fields">
-<tt class="descclassname">RecipeTypeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x363fb90&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x363fcd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x363fd50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x363fdd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x363fe50&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x363fed0&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x363ff90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3644050&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x36440d0&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x3644150&gt;, 'trigger_rule': &lt;trigger.serializers.TriggerRuleDetailsSerializer object at 0x36443d0&gt;, 'job_types': &lt;recipe.serializers.RecipeTypeDetailsJobSerializer object at 0x3644490&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeTypeDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc94f490&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc94f590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc94f610&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc94f690&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc94f710&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x2b06bc94f790&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x2b06bc94f850&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f8d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f950&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f9d0&gt;, 'trigger_rule': &lt;trigger.serializers.TriggerRuleDetailsSerializer object at 0x2b06bc94fc50&gt;, 'job_types': &lt;recipe.serializers.RecipeTypeDetailsJobSerializer object at 0x2b06bc94fd10&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1057,7 +1436,7 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeListSerializer.base_fields">
-<tt class="descclassname">RecipeTypeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">RecipeTypeListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1069,7 +1448,7 @@ model.</p>
 <p>Converts recipe type revision model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeRevisionBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x3644ad0&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x3644bd0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x2b06bc959390&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x2b06bc959490&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1081,7 +1460,7 @@ model.</p>
 <p>Converts recipe type revision model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeRevisionSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x3644ad0&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x3644bd0&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x3644d10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3644d90&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'recipe_type': &lt;util.rest.ModelIdSerializer object at 0x2b06bc959390&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x2b06bc959490&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x2b06bc9595d0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc959650&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1093,18 +1472,18 @@ model.</p>
 <p>Converts recipe type model fields to REST output.</p>
 <dl class="attribute">
 <dt id="recipe.serializers.RecipeTypeSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x363fb90&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x363fcd0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x363fd50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x363fdd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x363fe50&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x363fed0&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x363ff90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3644050&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x36440d0&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x3644150&gt;, 'trigger_rule': &lt;util.rest.ModelIdSerializer object at 0x36441d0&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc94f490&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06bc94f590&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc94f610&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc94f690&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc94f710&gt;, 'definition': &lt;rest_framework.fields.CharField object at 0x2b06bc94f790&gt;, 'revision_num': &lt;rest_framework.fields.IntegerField object at 0x2b06bc94f850&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f8d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f950&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc94f9d0&gt;, 'trigger_rule': &lt;util.rest.ModelIdSerializer object at 0x2b06bc94fa50&gt;}</em><a class="headerlink" href="#recipe.serializers.RecipeTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-recipe.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-recipe.urls" title="Permalink to this headline">¶</a></h2>
+<span id="recipe-urls-module"></span><h2>recipe.urls module<a class="headerlink" href="#module-recipe.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful recipe services</p>
 </div>
 <div class="section" id="module-recipe.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-recipe.views" title="Permalink to this headline">¶</a></h2>
+<span id="recipe-views-module"></span><h2>recipe.views module<a class="headerlink" href="#module-recipe.views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.views.RecipeDetailsView">
 <em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipeDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeDetailsView" title="Permalink to this definition">¶</a></dt>
@@ -1310,148 +1689,77 @@ model.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="recipe.configuration.html">configuration Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe.configuration.data.html">data Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.recipe_connection"><tt class="docutils literal"><span class="pre">recipe_connection</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.data.html#module-recipe.configuration.data.recipe_data"><tt class="docutils literal"><span class="pre">recipe_data</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.configuration.definition.html">definition Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.configuration.definition.html#module-recipe.configuration.definition.recipe_definition"><tt class="docutils literal"><span class="pre">recipe_definition</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0002_auto_20151106_1409"><tt class="docutils literal"><span class="pre">0002_auto_20151106_1409</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0003_recipe_recipe_type_rev"><tt class="docutils literal"><span class="pre">0003_recipe_recipe_type_rev</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0004_recipetype_trigger_rule"><tt class="docutils literal"><span class="pre">0004_recipetype_trigger_rule</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0005_recipetype_revision_num"><tt class="docutils literal"><span class="pre">0005_recipetype_revision_num</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0006_auto_20151125_1404"><tt class="docutils literal"><span class="pre">0006_auto_20151125_1404</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#module-recipe.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe.test.configuration.html">configuration Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="recipe.test.configuration.data.html">data Package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.data.html#module-recipe.test.configuration.data.test_recipe_data"><tt class="docutils literal"><span class="pre">test_recipe_data</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="recipe.test.configuration.definition.html">definition Package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition"><tt class="docutils literal"><span class="pre">test_recipe_definition</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe.triggers.html">triggers Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.triggers.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe.triggers.configuration.html">configuration Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe.triggers.configuration.html#module-recipe.triggers.configuration.trigger_rule"><tt class="docutils literal"><span class="pre">trigger_rule</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-recipe">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">recipe Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">recipe</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-recipe.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-recipe.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-recipe.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-recipe.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-recipe.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.configuration.html" class="btn btn-neutral float-right" title="recipe.configuration package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="queue.test.html" class="btn btn-neutral" title="queue.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="queue.test.html"
-                        title="previous chapter">test Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="recipe.configuration.html"
-                        title="next chapter">configuration Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/recipe.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="recipe.configuration.html" title="configuration Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="queue.test.html" title="test Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

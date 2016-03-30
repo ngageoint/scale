@@ -1,13 +1,5 @@
-strike Package
-==============
-
-:mod:`test_strike_processor` Module
------------------------------------
-
-.. automodule:: ingest.test.strike.test_strike_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
+ingest.test.strike package
+==========================
 
 Subpackages
 -----------
@@ -16,3 +8,22 @@ Subpackages
 
     ingest.test.strike.configuration
 
+Submodules
+----------
+
+ingest.test.strike.test_strike_processor module
+-----------------------------------------------
+
+.. automodule:: ingest.test.strike.test_strike_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.strike
+    :members:
+    :undoc-members:
+    :show-inheritance:

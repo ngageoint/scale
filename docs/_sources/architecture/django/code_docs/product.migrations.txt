@@ -1,11 +1,22 @@
-migrations Package
-==================
+product.migrations package
+==========================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+product.migrations.0001_initial module
+--------------------------------------
 
 .. automodule:: product.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: product.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

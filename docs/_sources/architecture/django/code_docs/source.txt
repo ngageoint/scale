@@ -1,53 +1,5 @@
-source Package
+source package
 ==============
-
-:mod:`source` Package
----------------------
-
-.. automodule:: source
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: source.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: source.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: source.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: source.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: source.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -59,3 +11,54 @@ Subpackages
     source.test
     source.triggers
 
+Submodules
+----------
+
+source.apps module
+------------------
+
+.. automodule:: source.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source.models module
+--------------------
+
+.. automodule:: source.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source.serializers module
+-------------------------
+
+.. automodule:: source.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source.urls module
+------------------
+
+.. automodule:: source.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source.views module
+-------------------
+
+.. automodule:: source.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source
+    :members:
+    :undoc-members:
+    :show-inheritance:

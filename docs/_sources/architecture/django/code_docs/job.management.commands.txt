@@ -1,35 +1,46 @@
-commands Package
-================
+job.management.commands package
+===============================
 
-:mod:`scale_cleanup` Module
----------------------------
+Submodules
+----------
+
+job.management.commands.scale_cleanup module
+--------------------------------------------
 
 .. automodule:: job.management.commands.scale_cleanup
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scale_clock` Module
--------------------------
+job.management.commands.scale_clock module
+------------------------------------------
 
 .. automodule:: job.management.commands.scale_clock
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scale_post_steps` Module
-------------------------------
+job.management.commands.scale_post_steps module
+-----------------------------------------------
 
 .. automodule:: job.management.commands.scale_post_steps
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scale_pre_steps` Module
------------------------------
+job.management.commands.scale_pre_steps module
+----------------------------------------------
 
 .. automodule:: job.management.commands.scale_pre_steps
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

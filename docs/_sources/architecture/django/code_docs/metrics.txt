@@ -1,77 +1,5 @@
-metrics Package
+metrics package
 ===============
-
-:mod:`metrics` Package
-----------------------
-
-.. automodule:: metrics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: metrics.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`daily_metrics` Module
----------------------------
-
-.. automodule:: metrics.daily_metrics
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`metrics_processor` Module
--------------------------------
-
-.. automodule:: metrics.metrics_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: metrics.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`registry` Module
-----------------------
-
-.. automodule:: metrics.registry
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: metrics.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: metrics.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: metrics.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -83,3 +11,78 @@ Subpackages
     metrics.migrations
     metrics.test
 
+Submodules
+----------
+
+metrics.apps module
+-------------------
+
+.. automodule:: metrics.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.daily_metrics module
+----------------------------
+
+.. automodule:: metrics.daily_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.metrics_processor module
+--------------------------------
+
+.. automodule:: metrics.metrics_processor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.models module
+---------------------
+
+.. automodule:: metrics.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.registry module
+-----------------------
+
+.. automodule:: metrics.registry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.serializers module
+--------------------------
+
+.. automodule:: metrics.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.urls module
+-------------------
+
+.. automodule:: metrics.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.views module
+--------------------
+
+.. automodule:: metrics.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:

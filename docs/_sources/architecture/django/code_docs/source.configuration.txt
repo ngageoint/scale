@@ -1,11 +1,22 @@
-configuration Package
-=====================
+source.configuration package
+============================
 
-:mod:`source_data_file` Module
-------------------------------
+Submodules
+----------
+
+source.configuration.source_data_file module
+--------------------------------------------
 
 .. automodule:: source.configuration.source_data_file
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: source.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

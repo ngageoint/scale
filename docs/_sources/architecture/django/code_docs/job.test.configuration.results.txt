@@ -1,19 +1,30 @@
-results Package
-===============
+job.test.configuration.results package
+======================================
 
-:mod:`test_job_results` Module
-------------------------------
+Submodules
+----------
+
+job.test.configuration.results.test_job_results module
+------------------------------------------------------
 
 .. automodule:: job.test.configuration.results.test_job_results
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_results_manifest` Module
------------------------------------
+job.test.configuration.results.test_results_manifest module
+-----------------------------------------------------------
 
 .. automodule:: job.test.configuration.results.test_results_manifest
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.test.configuration.results
+    :members:
+    :undoc-members:
+    :show-inheritance:

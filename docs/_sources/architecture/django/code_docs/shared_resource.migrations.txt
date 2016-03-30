@@ -1,11 +1,22 @@
-migrations Package
-==================
+shared_resource.migrations package
+==================================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+shared_resource.migrations.0001_initial module
+----------------------------------------------
 
 .. automodule:: shared_resource.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: shared_resource.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

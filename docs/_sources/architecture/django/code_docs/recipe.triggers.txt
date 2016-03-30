@@ -1,5 +1,5 @@
-triggers Package
-================
+recipe.triggers package
+=======================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     recipe.triggers.configuration
 
+Module contents
+---------------
+
+.. automodule:: recipe.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

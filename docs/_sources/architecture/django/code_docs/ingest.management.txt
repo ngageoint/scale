@@ -1,13 +1,5 @@
-management Package
-==================
-
-:mod:`management` Package
--------------------------
-
-.. automodule:: ingest.management
-    :members:
-    :undoc-members:
-    :show-inheritance:
+ingest.management package
+=========================
 
 Subpackages
 -----------
@@ -16,3 +8,10 @@ Subpackages
 
     ingest.management.commands
 
+Module contents
+---------------
+
+.. automodule:: ingest.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

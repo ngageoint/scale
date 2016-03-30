@@ -1,69 +1,5 @@
-port Package
+port package
 ============
-
-:mod:`port` Package
--------------------
-
-.. automodule:: port
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: port.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`exporter` Module
-----------------------
-
-.. automodule:: port.exporter
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`importer` Module
-----------------------
-
-.. automodule:: port.importer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`schema` Module
---------------------
-
-.. automodule:: port.schema
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: port.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: port.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: port.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -72,3 +8,70 @@ Subpackages
 
     port.test
 
+Submodules
+----------
+
+port.apps module
+----------------
+
+.. automodule:: port.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.exporter module
+--------------------
+
+.. automodule:: port.exporter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.importer module
+--------------------
+
+.. automodule:: port.importer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.schema module
+------------------
+
+.. automodule:: port.schema
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.serializers module
+-----------------------
+
+.. automodule:: port.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.urls module
+----------------
+
+.. automodule:: port.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+port.views module
+-----------------
+
+.. automodule:: port.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: port
+    :members:
+    :undoc-members:
+    :show-inheritance:

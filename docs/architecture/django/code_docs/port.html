@@ -1,69 +1,203 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>port package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="port.test package" href="port.test.html"/>
+        <link rel="prev" title="node.test package" href="node.test.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">port package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.apps">port.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.exporter">port.exporter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.importer">port.importer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.schema">port.schema module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.serializers">port.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.urls">port.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port.views">port.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-port">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>port Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="test Package" href="port.test.html" />
-    <link rel="prev" title="test Package" href="node.test.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="port.test.html" title="test Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="node.test.html" title="test Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>port package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/port.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="port-package">
-<h1>port Package<a class="headerlink" href="#port-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-port" title="port"><tt class="xref py py-mod docutils literal"><span class="pre">port</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-port"></span></div>
+<h1>port package<a class="headerlink" href="#port-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="port.test.html">port.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="port.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="port.test.html#module-port.test.test_views">port.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="port.test.html#module-port.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-port.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-port.apps" title="Permalink to this headline">¶</a></h2>
+<span id="port-apps-module"></span><h2>port.apps module<a class="headerlink" href="#module-port.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the application configuration for the scale import/export application</p>
 <dl class="class">
 <dt id="port.apps.PortConfig">
@@ -89,7 +223,7 @@
 
 </div>
 <div class="section" id="module-port.exporter">
-<span id="exporter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exporter</span></tt> Module<a class="headerlink" href="#module-port.exporter" title="Permalink to this headline">¶</a></h2>
+<span id="port-exporter-module"></span><h2>port.exporter module<a class="headerlink" href="#module-port.exporter" title="Permalink to this headline">¶</a></h2>
 <p>Defines the functions used to export configuration</p>
 <dl class="function">
 <dt id="port.exporter.export_config">
@@ -173,7 +307,7 @@
 
 </div>
 <div class="section" id="module-port.importer">
-<span id="importer-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">importer</span></tt> Module<a class="headerlink" href="#module-port.importer" title="Permalink to this headline">¶</a></h2>
+<span id="port-importer-module"></span><h2>port.importer module<a class="headerlink" href="#module-port.importer" title="Permalink to this headline">¶</a></h2>
 <p>Defines the functions used to import configuration</p>
 <dl class="function">
 <dt id="port.importer.import_config">
@@ -215,7 +349,7 @@
 
 </div>
 <div class="section" id="module-port.schema">
-<span id="schema-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">schema</span></tt> Module<a class="headerlink" href="#module-port.schema" title="Permalink to this headline">¶</a></h2>
+<span id="port-schema-module"></span><h2>port.schema module<a class="headerlink" href="#module-port.schema" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class for managing a configuration export.</p>
 <dl class="class">
 <dt id="port.schema.Configuration">
@@ -282,7 +416,7 @@
 
 </div>
 <div class="section" id="module-port.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-port.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="port-serializers-module"></span><h2>port.serializers module<a class="headerlink" href="#module-port.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for import/export configuration</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationErrorSerializer">
@@ -307,7 +441,7 @@
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationErrorSerializer.base_fields">
-<tt class="descclassname">ConfigurationErrorSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0xb9b0390&gt;, 'title': &lt;rest_framework.fields.CharField object at 0xb9b0550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0xb9b0510&gt;, 'category': &lt;rest_framework.fields.CharField object at 0xb9b0710&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ConfigurationErrorSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06c199c710&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06c199c510&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06c199c310&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06c199c4d0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -322,7 +456,7 @@
 <em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="port.serializers.ConfigurationJobTypeSerializer.Meta.fields">
-<tt class="descname">fields</tt><em class="property"> = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational', 'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_tries', 'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface', 'error_mapping', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fields</tt><em class="property"> = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational', 'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_scheduled', 'max_tries', 'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface', 'error_mapping', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -335,7 +469,7 @@
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationJobTypeSerializer.base_fields">
-<tt class="descclassname">ConfigurationJobTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0xb975a90&gt;, 'version': &lt;rest_framework.fields.CharField object at 0xb975390&gt;, 'title': &lt;rest_framework.fields.CharField object at 0xb9757d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0xb975090&gt;, 'category': &lt;rest_framework.fields.CharField object at 0xba891d0&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0xba89250&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0xba892d0&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0xba89350&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0xba893d0&gt;, 'docker_privileged': &lt;rest_framework.fields.BooleanField object at 0xba89450&gt;, 'docker_image': &lt;rest_framework.fields.CharField object at 0xba894d0&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0xba89550&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0xba895d0&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0xba89650&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0xba896d0&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0xba89750&gt;, 'disk_out_const_required': &lt;rest_framework.fields.FloatField object at 0xba897d0&gt;, 'disk_out_mult_required': &lt;rest_framework.fields.FloatField object at 0xba89850&gt;, 'interface': &lt;util.rest.JSONField object at 0xba898d0&gt;, 'error_mapping': &lt;util.rest.JSONField object at 0xba89950&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0xba899d0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ConfigurationJobTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06c199c250&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06c199c090&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06c199c410&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06c199c750&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x2b06c199c810&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x2b06c199c890&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x2b06c199c910&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x2b06c199c950&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x2b06c199ca10&gt;, 'docker_privileged': &lt;rest_framework.fields.BooleanField object at 0x2b06c199ca50&gt;, 'docker_image': &lt;rest_framework.fields.CharField object at 0x2b06c199cb10&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x2b06c199cb90&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x2b06c199cc10&gt;, 'max_scheduled': &lt;rest_framework.fields.IntegerField object at 0x2b06c199cc90&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x2b06c199cd10&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x2b06c199cd90&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x2b06c199ce10&gt;, 'disk_out_const_required': &lt;rest_framework.fields.FloatField object at 0x2b06c199ce90&gt;, 'disk_out_mult_required': &lt;rest_framework.fields.FloatField object at 0x2b06c199cf10&gt;, 'interface': &lt;util.rest.JSONField object at 0x2b06c199cf90&gt;, 'error_mapping': &lt;util.rest.JSONField object at 0x2b06c1992050&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0x2b06c19920d0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -363,7 +497,7 @@
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer.base_fields">
-<tt class="descclassname">ConfigurationRecipeTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0xb7a7cd0&gt;, 'version': &lt;rest_framework.fields.CharField object at 0xba89c50&gt;, 'title': &lt;rest_framework.fields.CharField object at 0xba89e50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0xba89e90&gt;, 'definition': &lt;util.rest.JSONField object at 0xba89c90&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0xba91a90&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ConfigurationRecipeTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x2b06c2082390&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x2b06c1992350&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06c1992550&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06c1992f50&gt;, 'definition': &lt;util.rest.JSONField object at 0x2b06c1992fd0&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0x2b06c1992f10&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -375,7 +509,7 @@
 <p>Converts export fields to REST output</p>
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'version': &lt;rest_framework.fields.CharField object at 0xba91ed0&gt;, 'recipe_types': &lt;port.serializers.ConfigurationRecipeTypeSerializer object at 0xba91910&gt;, 'job_types': &lt;port.serializers.ConfigurationJobTypeSerializer object at 0xba91c50&gt;, 'errors': &lt;port.serializers.ConfigurationErrorSerializer object at 0xb7a7e50&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'version': &lt;rest_framework.fields.CharField object at 0x2b06c16b95d0&gt;, 'recipe_types': &lt;port.serializers.ConfigurationRecipeTypeSerializer object at 0x2b06c16b9190&gt;, 'job_types': &lt;port.serializers.ConfigurationJobTypeSerializer object at 0x2b06c16b9c10&gt;, 'errors': &lt;port.serializers.ConfigurationErrorSerializer object at 0x2b06c16b9cd0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -403,18 +537,18 @@
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer.base_fields">
-<tt class="descclassname">ConfigurationTriggerRuleSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'type': &lt;rest_framework.fields.CharField object at 0xb7af090&gt;, 'name': &lt;rest_framework.fields.CharField object at 0xb7a7fd0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0xb7a7c10&gt;, 'configuration': &lt;util.rest.JSONField object at 0xb985dd0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ConfigurationTriggerRuleSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'type': &lt;rest_framework.fields.CharField object at 0x2b06c199c450&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06c199c3d0&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06c199c2d0&gt;, 'configuration': &lt;util.rest.JSONField object at 0x2b06c199c210&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-port.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-port.urls" title="Permalink to this headline">¶</a></h2>
+<span id="port-urls-module"></span><h2>port.urls module<a class="headerlink" href="#module-port.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful import/export services</p>
 </div>
 <div class="section" id="module-port.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-port.views" title="Permalink to this headline">¶</a></h2>
+<span id="port-views-module"></span><h2>port.views module<a class="headerlink" href="#module-port.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful import/export services</p>
 <dl class="class">
 <dt id="port.views.ConfigurationDownloadView">
@@ -536,95 +670,77 @@
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="port.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="port.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="port.test.html#module-port.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-port">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-port" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">port Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">port</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-port.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.exporter"><tt class="docutils literal"><span class="pre">exporter</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.importer"><tt class="docutils literal"><span class="pre">importer</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.schema"><tt class="docutils literal"><span class="pre">schema</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-port.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="port.test.html" class="btn btn-neutral float-right" title="port.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="node.test.html" class="btn btn-neutral" title="node.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="node.test.html"
-                        title="previous chapter">test Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="port.test.html"
-                        title="next chapter">test Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/port.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="port.test.html" title="test Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="node.test.html" title="test Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

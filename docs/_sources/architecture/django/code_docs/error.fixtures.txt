@@ -1,11 +1,10 @@
-fixtures Package
-================
+error.fixtures package
+======================
 
-:mod:`fixtures` Package
------------------------
+Module contents
+---------------
 
 .. automodule:: error.fixtures
     :members:
     :undoc-members:
     :show-inheritance:
-

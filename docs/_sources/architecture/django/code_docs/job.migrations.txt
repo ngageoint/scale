@@ -1,91 +1,126 @@
-migrations Package
-==================
+job.migrations package
+======================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+job.migrations.0001_initial module
+----------------------------------
 
 .. automodule:: job.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0002_jobexecution_job_metrics` Module
--------------------------------------------
+job.migrations.0002_jobexecution_job_metrics module
+---------------------------------------------------
 
 .. automodule:: job.migrations.0002_jobexecution_job_metrics
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0003_auto_20151016_0849` Module
--------------------------------------
+job.migrations.0003_auto_20151016_0849 module
+---------------------------------------------
 
 .. automodule:: job.migrations.0003_auto_20151016_0849
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0004_auto_20151020_1059` Module
--------------------------------------
+job.migrations.0004_auto_20151020_1059 module
+---------------------------------------------
 
 .. automodule:: job.migrations.0004_auto_20151020_1059
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0005_auto_20151030_1402` Module
--------------------------------------
+job.migrations.0005_auto_20151030_1402 module
+---------------------------------------------
 
 .. automodule:: job.migrations.0005_auto_20151030_1402
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0006_auto_20151106_1608` Module
--------------------------------------
+job.migrations.0006_auto_20151106_1608 module
+---------------------------------------------
 
 .. automodule:: job.migrations.0006_auto_20151106_1608
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0007_job_job_type_rev` Module
------------------------------------
+job.migrations.0007_job_job_type_rev module
+-------------------------------------------
 
 .. automodule:: job.migrations.0007_job_job_type_rev
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0008_jobtype_trigger_rule` Module
----------------------------------------
+job.migrations.0008_jobtype_trigger_rule module
+-----------------------------------------------
 
 .. automodule:: job.migrations.0008_jobtype_trigger_rule
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0009_jobtype_revision_num` Module
----------------------------------------
+job.migrations.0009_jobtype_revision_num module
+-----------------------------------------------
 
 .. automodule:: job.migrations.0009_jobtype_revision_num
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0010_auto_20151208_1503` Module
--------------------------------------
+job.migrations.0010_auto_20151208_1503 module
+---------------------------------------------
 
 .. automodule:: job.migrations.0010_auto_20151208_1503
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0011_jobtype_max_scheduled` Module
-----------------------------------------
+job.migrations.0011_jobtype_max_scheduled module
+------------------------------------------------
 
 .. automodule:: job.migrations.0011_jobtype_max_scheduled
     :members:
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0012_auto_20160310_1318 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0012_auto_20160310_1318
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.migrations.0013_auto_20160316_1805 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0013_auto_20160316_1805
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.migrations.0014_auto_20160317_1208 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0014_auto_20160317_1208
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

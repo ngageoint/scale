@@ -1,21 +1,5 @@
-triggers Package
-================
-
-:mod:`test_parse_trigger_condition` Module
-------------------------------------------
-
-.. automodule:: source.test.triggers.test_parse_trigger_condition
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_parse_trigger_handler` Module
-----------------------------------------
-
-.. automodule:: source.test.triggers.test_parse_trigger_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
+source.test.triggers package
+============================
 
 Subpackages
 -----------
@@ -24,3 +8,30 @@ Subpackages
 
     source.test.triggers.configuration
 
+Submodules
+----------
+
+source.test.triggers.test_parse_trigger_condition module
+--------------------------------------------------------
+
+.. automodule:: source.test.triggers.test_parse_trigger_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source.test.triggers.test_parse_trigger_handler module
+------------------------------------------------------
+
+.. automodule:: source.test.triggers.test_parse_trigger_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source.test.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

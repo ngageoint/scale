@@ -1,11 +1,22 @@
-data Package
-============
+recipe.test.configuration.data package
+======================================
 
-:mod:`test_recipe_data` Module
-------------------------------
+Submodules
+----------
+
+recipe.test.configuration.data.test_recipe_data module
+------------------------------------------------------
 
 .. automodule:: recipe.test.configuration.data.test_recipe_data
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.configuration.data
+    :members:
+    :undoc-members:
+    :show-inheritance:

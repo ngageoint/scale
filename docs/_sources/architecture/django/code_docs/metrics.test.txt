@@ -1,43 +1,54 @@
-test Package
-============
+metrics.test package
+====================
 
-:mod:`test_daily_metrics` Module
---------------------------------
+Submodules
+----------
+
+metrics.test.test_daily_metrics module
+--------------------------------------
 
 .. automodule:: metrics.test.test_daily_metrics
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_metrics_processor` Module
-------------------------------------
+metrics.test.test_metrics_processor module
+------------------------------------------
 
 .. automodule:: metrics.test.test_metrics_processor
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_models` Module
--------------------------
+metrics.test.test_models module
+-------------------------------
 
 .. automodule:: metrics.test.test_models
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_views` Module
-------------------------
+metrics.test.test_views module
+------------------------------
 
 .. automodule:: metrics.test.test_views
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`utils` Module
--------------------
+metrics.test.utils module
+-------------------------
 
 .. automodule:: metrics.test.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: metrics.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

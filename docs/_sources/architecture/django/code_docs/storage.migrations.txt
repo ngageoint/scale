@@ -1,11 +1,30 @@
-migrations Package
-==================
+storage.migrations package
+==========================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+storage.migrations.0001_initial module
+--------------------------------------
 
 .. automodule:: storage.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
+storage.migrations.0002_workspace_is_move_enabled module
+--------------------------------------------------------
+
+.. automodule:: storage.migrations.0002_workspace_is_move_enabled
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

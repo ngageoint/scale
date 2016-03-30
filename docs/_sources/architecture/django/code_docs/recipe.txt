@@ -1,53 +1,5 @@
-recipe Package
+recipe package
 ==============
-
-:mod:`recipe` Package
----------------------
-
-.. automodule:: recipe
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: recipe.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: recipe.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: recipe.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: recipe.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: recipe.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -59,3 +11,62 @@ Subpackages
     recipe.test
     recipe.triggers
 
+Submodules
+----------
+
+recipe.apps module
+------------------
+
+.. automodule:: recipe.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.handler module
+---------------------
+
+.. automodule:: recipe.handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.models module
+--------------------
+
+.. automodule:: recipe.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.serializers module
+-------------------------
+
+.. automodule:: recipe.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.urls module
+------------------
+
+.. automodule:: recipe.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.views module
+-------------------
+
+.. automodule:: recipe.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:

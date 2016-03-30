@@ -1,5 +1,5 @@
-management Package
-==================
+metrics.management package
+==========================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     metrics.management.commands
 
+Module contents
+---------------
+
+.. automodule:: metrics.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

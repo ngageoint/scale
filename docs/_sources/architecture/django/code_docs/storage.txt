@@ -1,85 +1,5 @@
-storage Package
+storage package
 ===============
-
-:mod:`storage` Package
-----------------------
-
-.. automodule:: storage
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: storage.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`exceptions` Module
-------------------------
-
-.. automodule:: storage.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`geospatial_utils` Module
-------------------------------
-
-.. automodule:: storage.geospatial_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`media_type` Module
-------------------------
-
-.. automodule:: storage.media_type
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: storage.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`nfs` Module
------------------
-
-.. automodule:: storage.nfs
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: storage.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: storage.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: storage.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -90,3 +10,86 @@ Subpackages
     storage.migrations
     storage.test
 
+Submodules
+----------
+
+storage.apps module
+-------------------
+
+.. automodule:: storage.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.exceptions module
+-------------------------
+
+.. automodule:: storage.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.geospatial_utils module
+-------------------------------
+
+.. automodule:: storage.geospatial_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.media_type module
+-------------------------
+
+.. automodule:: storage.media_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.models module
+---------------------
+
+.. automodule:: storage.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.nfs module
+------------------
+
+.. automodule:: storage.nfs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.serializers module
+--------------------------
+
+.. automodule:: storage.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.urls module
+-------------------
+
+.. automodule:: storage.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.views module
+--------------------
+
+.. automodule:: storage.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage
+    :members:
+    :undoc-members:
+    :show-inheritance:

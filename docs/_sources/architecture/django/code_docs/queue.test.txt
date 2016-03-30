@@ -1,51 +1,46 @@
-test Package
-============
+queue.test package
+==================
 
-:mod:`test` Package
--------------------
+Submodules
+----------
 
-.. automodule:: queue.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_job_load` Module
----------------------------
+queue.test.test_job_load module
+-------------------------------
 
 .. automodule:: queue.test.test_job_load
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_models` Module
--------------------------
+queue.test.test_models module
+-----------------------------
 
 .. automodule:: queue.test.test_models
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_queue_depth_processor` Module
-----------------------------------------
-
-.. automodule:: queue.test.test_queue_depth_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_views` Module
-------------------------
+queue.test.test_views module
+----------------------------
 
 .. automodule:: queue.test.test_views
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`utils` Module
--------------------
+queue.test.utils module
+-----------------------
 
 .. automodule:: queue.test.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: queue.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

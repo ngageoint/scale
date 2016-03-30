@@ -1,101 +1,5 @@
-scheduler Package
+scheduler package
 =================
-
-:mod:`scheduler` Package
-------------------------
-
-.. automodule:: scheduler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`admin` Module
--------------------
-
-.. automodule:: scheduler.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: scheduler.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`cluster_utils` Module
----------------------------
-
-.. automodule:: scheduler.cluster_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`initialize` Module
-------------------------
-
-.. automodule:: scheduler.initialize
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`models` Module
---------------------
-
-.. automodule:: scheduler.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`scale_job_exe` Module
----------------------------
-
-.. automodule:: scheduler.scale_job_exe
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`scale_scheduler` Module
------------------------------
-
-.. automodule:: scheduler.scale_scheduler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`scheduler_errors` Module
-------------------------------
-
-.. automodule:: scheduler.scheduler_errors
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`serializers` Module
--------------------------
-
-.. automodule:: scheduler.serializers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`urls` Module
-------------------
-
-.. automodule:: scheduler.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`views` Module
--------------------
-
-.. automodule:: scheduler.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -110,3 +14,86 @@ Subpackages
     scheduler.test
     scheduler.threads
 
+Submodules
+----------
+
+scheduler.admin module
+----------------------
+
+.. automodule:: scheduler.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.apps module
+---------------------
+
+.. automodule:: scheduler.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.cluster_utils module
+------------------------------
+
+.. automodule:: scheduler.cluster_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.initialize module
+---------------------------
+
+.. automodule:: scheduler.initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.models module
+-----------------------
+
+.. automodule:: scheduler.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.scale_scheduler module
+--------------------------------
+
+.. automodule:: scheduler.scale_scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.serializers module
+----------------------------
+
+.. automodule:: scheduler.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.urls module
+---------------------
+
+.. automodule:: scheduler.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.views module
+----------------------
+
+.. automodule:: scheduler.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:

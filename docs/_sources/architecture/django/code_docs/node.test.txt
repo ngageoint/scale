@@ -1,27 +1,30 @@
-test Package
-============
+node.test package
+=================
 
-:mod:`test` Package
--------------------
+Submodules
+----------
 
-.. automodule:: node.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_views` Module
-------------------------
+node.test.test_views module
+---------------------------
 
 .. automodule:: node.test.test_views
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`utils` Module
--------------------
+node.test.utils module
+----------------------
 
 .. automodule:: node.test.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: node.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,37 +1,5 @@
-test Package
-============
-
-:mod:`test` Package
--------------------
-
-.. automodule:: scheduler.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_initialize` Module
------------------------------
-
-.. automodule:: scheduler.test.test_initialize
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_scheduler` Module
-----------------------------
-
-.. automodule:: scheduler.test.test_scheduler
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_views` Module
-------------------------
-
-.. automodule:: scheduler.test.test_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
+scheduler.test package
+======================
 
 Subpackages
 -----------
@@ -42,3 +10,38 @@ Subpackages
     scheduler.test.sync
     scheduler.test.threads
 
+Submodules
+----------
+
+scheduler.test.test_initialize module
+-------------------------------------
+
+.. automodule:: scheduler.test.test_initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.test.test_scheduler module
+------------------------------------
+
+.. automodule:: scheduler.test.test_scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.test.test_views module
+--------------------------------
+
+.. automodule:: scheduler.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

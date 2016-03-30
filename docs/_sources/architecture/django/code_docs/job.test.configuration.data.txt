@@ -1,19 +1,30 @@
-data Package
-============
+job.test.configuration.data package
+===================================
 
-:mod:`test_job_connection` Module
----------------------------------
+Submodules
+----------
+
+job.test.configuration.data.test_job_connection module
+------------------------------------------------------
 
 .. automodule:: job.test.configuration.data.test_job_connection
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`test_job_data` Module
----------------------------
+job.test.configuration.data.test_job_data module
+------------------------------------------------
 
 .. automodule:: job.test.configuration.data.test_job_data
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: job.test.configuration.data
+    :members:
+    :undoc-members:
+    :show-inheritance:

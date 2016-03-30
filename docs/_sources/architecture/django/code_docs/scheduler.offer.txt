@@ -1,27 +1,38 @@
-offer Package
-=============
+scheduler.offer package
+=======================
 
-:mod:`manager` Module
----------------------
+Submodules
+----------
+
+scheduler.offer.manager module
+------------------------------
 
 .. automodule:: scheduler.offer.manager
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`node` Module
-------------------
+scheduler.offer.node module
+---------------------------
 
 .. automodule:: scheduler.offer.node
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`offer` Module
--------------------
+scheduler.offer.offer module
+----------------------------
 
 .. automodule:: scheduler.offer.offer
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,19 +1,30 @@
-commands Package
-================
+scheduler.management.commands package
+=====================================
 
-:mod:`load_all_data` Module
----------------------------
+Submodules
+----------
+
+scheduler.management.commands.load_all_data module
+--------------------------------------------------
 
 .. automodule:: scheduler.management.commands.load_all_data
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`scale_scheduler` Module
------------------------------
+scheduler.management.commands.scale_scheduler module
+----------------------------------------------------
 
 .. automodule:: scheduler.management.commands.scale_scheduler
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

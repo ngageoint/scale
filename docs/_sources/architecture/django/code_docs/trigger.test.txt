@@ -1,19 +1,30 @@
-test Package
-============
+trigger.test package
+====================
 
-:mod:`tests` Module
--------------------
+Submodules
+----------
+
+trigger.test.tests module
+-------------------------
 
 .. automodule:: trigger.test.tests
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`utils` Module
--------------------
+trigger.test.utils module
+-------------------------
 
 .. automodule:: trigger.test.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: trigger.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

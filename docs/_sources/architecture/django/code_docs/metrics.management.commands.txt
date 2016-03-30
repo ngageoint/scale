@@ -1,11 +1,22 @@
-commands Package
-================
+metrics.management.commands package
+===================================
 
-:mod:`scale_daily_metrics` Module
----------------------------------
+Submodules
+----------
+
+metrics.management.commands.scale_daily_metrics module
+------------------------------------------------------
 
 .. automodule:: metrics.management.commands.scale_daily_metrics
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: metrics.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,69 +1,232 @@
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>storage package &mdash; Scale 3.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Django/Code Base" href="../index.html"/>
+        <link rel="next" title="storage.brokers package" href="storage.brokers.html"/>
+        <link rel="prev" title="source.triggers.configuration package" href="source.triggers.configuration.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">storage package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.apps">storage.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.exceptions">storage.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.media_type">storage.media_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.models">storage.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.nfs">storage.nfs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.serializers">storage.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.urls">storage.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.views">storage.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>storage Package &mdash; Scale 3.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../../',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html" />
-    <link rel="up" title="Django/Code Base" href="../index.html" />
-    <link rel="next" title="brokers Package" href="storage.brokers.html" />
-    <link rel="prev" title="configuration Package" href="source.triggers.configuration.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="storage.brokers.html" title="brokers Package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="source.triggers.configuration.html" title="configuration Package"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>  
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+    <li>storage package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/storage.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="storage-package">
-<h1>storage Package<a class="headerlink" href="#storage-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><a class="reference internal" href="#module-storage" title="storage"><tt class="xref py py-mod docutils literal"><span class="pre">storage</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-storage"></span></div>
+<h1>storage package<a class="headerlink" href="#storage-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="storage.brokers.html">storage.brokers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.broker">storage.brokers.broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.factory">storage.brokers.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.nfs_broker">storage.brokers.nfs_broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.migrations.html">storage.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0001_initial">storage.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0002_workspace_is_move_enabled">storage.migrations.0002_workspace_is_move_enabled module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.test.html">storage.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="storage.test.brokers.html">storage.test.brokers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker">storage.test.brokers.test_nfs_broker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_geospatial_utils">storage.test.test_geospatial_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_models">storage.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_views">storage.test.test_views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.utils">storage.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-storage.apps">
-<span id="apps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">apps</span></tt> Module<a class="headerlink" href="#module-storage.apps" title="Permalink to this headline">¶</a></h2>
+<span id="storage-apps-module"></span><h2>storage.apps module<a class="headerlink" href="#module-storage.apps" title="Permalink to this headline">¶</a></h2>
 <p>Defines the configuration for the storage app</p>
 <dl class="class">
 <dt id="storage.apps.StorageConfig">
@@ -89,7 +252,7 @@
 
 </div>
 <div class="section" id="module-storage.exceptions">
-<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-storage.exceptions" title="Permalink to this headline">¶</a></h2>
+<span id="storage-exceptions-module"></span><h2>storage.exceptions module<a class="headerlink" href="#module-storage.exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Defines the exceptions related to files and storage methods</p>
 <dl class="exception">
 <dt id="storage.exceptions.ArchivedWorkspace">
@@ -129,7 +292,7 @@ workspace</p>
 
 </div>
 <div class="section" id="module-storage.geospatial_utils">
-<span id="geospatial-utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">geospatial_utils</span></tt> Module<a class="headerlink" href="#module-storage.geospatial_utils" title="Permalink to this headline">¶</a></h2>
+<span id="storage-geospatial-utils-module"></span><h2>storage.geospatial_utils module<a class="headerlink" href="#module-storage.geospatial_utils" title="Permalink to this headline">¶</a></h2>
 <p>Defines functions for geospatial information</p>
 <dl class="function">
 <dt id="storage.geospatial_utils.get_center_point">
@@ -187,7 +350,7 @@ workspace</p>
 
 </div>
 <div class="section" id="module-storage.media_type">
-<span id="media-type-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">media_type</span></tt> Module<a class="headerlink" href="#module-storage.media_type" title="Permalink to this headline">¶</a></h2>
+<span id="storage-media-type-module"></span><h2>storage.media_type module<a class="headerlink" href="#module-storage.media_type" title="Permalink to this headline">¶</a></h2>
 <p>Defines functions for determining the media type of a file</p>
 <dl class="function">
 <dt id="storage.media_type.get_media_type">
@@ -209,7 +372,7 @@ workspace</p>
 
 </div>
 <div class="section" id="module-storage.models">
-<span id="models-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">models</span></tt> Module<a class="headerlink" href="#module-storage.models" title="Permalink to this headline">¶</a></h2>
+<span id="storage-models-module"></span><h2>storage.models module<a class="headerlink" href="#module-storage.models" title="Permalink to this headline">¶</a></h2>
 <p>Defines the database models for file information and workspaces</p>
 <dl class="class">
 <dt id="storage.models.CountryData">
@@ -287,7 +450,7 @@ workspace</p>
 
 <dl class="attribute">
 <dt id="storage.models.CountryData.objects">
-<tt class="descclassname">CountryData.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.CountryDataManager object at 0x1b42050&gt;</em><a class="headerlink" href="#storage.models.CountryData.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">CountryData.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.CountryDataManager object at 0x2b06bc545f90&gt;</em><a class="headerlink" href="#storage.models.CountryData.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -318,7 +481,7 @@ recent entry whose effective date is before the target.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Rval :</th><td class="field-body"><p class="first">A query set</p>
+<tr class="field-even field"><th class="field-name">Rval:</th><td class="field-body"><p class="first">A query set</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">django.db.models.query.QuerySet</span></tt></p>
@@ -343,7 +506,7 @@ is before the target.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Rval :</th><td class="field-body"><p class="first">A dict of intersected countries mapped to enties</p>
+<tr class="field-even field"><th class="field-name">Rval:</th><td class="field-body"><p class="first">A dict of intersected countries mapped to enties</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
@@ -502,7 +665,7 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.objects">
-<tt class="descclassname">ScaleFile.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.ScaleFileManager object at 0x1b42bd0&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">ScaleFile.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.ScaleFileManager object at 0x2b06bc550b50&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -754,6 +917,7 @@ for processing</p>
 <li><strong>base_url</strong> (<em>str</em>) &#8211; The base URL used to retrieve files from this workspace if supported.</li>
 <li><strong>is_active</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the workspace is active (can be used and displayed)</li>
 <li><strong>json_config</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON configuration describing how to store/retrieve files for this workspace</li>
+<li><strong>is_move_enabled</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the workspace allows files to be moved within it</li>
 <li><strong>used_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The number of used bytes, may be None (unknown)</li>
 <li><strong>total_size</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></tt>) &#8211; The total size of the workspace file system in bytes, may be None (unknown)</li>
 <li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the workspace was created</li>
@@ -902,7 +1066,7 @@ download directory)</li>
 
 <dl class="attribute">
 <dt id="storage.models.Workspace.objects">
-<tt class="descclassname">Workspace.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.WorkspaceManager object at 0x1b46ad0&gt;</em><a class="headerlink" href="#storage.models.Workspace.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Workspace.</tt><tt class="descname">objects</tt><em class="property"> = &lt;storage.models.WorkspaceManager object at 0x2b06bc55db10&gt;</em><a class="headerlink" href="#storage.models.Workspace.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1023,7 +1187,7 @@ file)</li>
 
 </div>
 <div class="section" id="module-storage.nfs">
-<span id="nfs-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">nfs</span></tt> Module<a class="headerlink" href="#module-storage.nfs" title="Permalink to this headline">¶</a></h2>
+<span id="storage-nfs-module"></span><h2>storage.nfs module<a class="headerlink" href="#module-storage.nfs" title="Permalink to this headline">¶</a></h2>
 <p>Defines methods and classes for handling network file systems</p>
 <dl class="function">
 <dt id="storage.nfs.nfs_mount">
@@ -1060,7 +1224,7 @@ file)</li>
 
 </div>
 <div class="section" id="module-storage.serializers">
-<span id="serializers-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">serializers</span></tt> Module<a class="headerlink" href="#module-storage.serializers" title="Permalink to this headline">¶</a></h2>
+<span id="storage-serializers-module"></span><h2>storage.serializers module<a class="headerlink" href="#module-storage.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for Scale files and workspaces</p>
 <dl class="class">
 <dt id="storage.serializers.DataTypeField">
@@ -1139,7 +1303,7 @@ file)</li>
 <p>Converts Scale file model fields to REST output</p>
 <dl class="attribute">
 <dt id="storage.serializers.ScaleFileBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x351ef90&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x2b06bc925290&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc925390&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc9254d0&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc925550&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc9255d0&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x2b06bc925650&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x2b06bc9256d0&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x2b06bc925750&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925810&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925890&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925910&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925990&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x2b06bc925a10&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x2b06bc925a90&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x2b06bc925b10&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x2b06bc925b90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925c50&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1151,7 +1315,7 @@ file)</li>
 <p>Converts Scale file model fields to REST output</p>
 <dl class="attribute">
 <dt id="storage.serializers.ScaleFileSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'workspace': &lt;storage.serializers.WorkspaceSerializer object at 0x3521a10&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x35210d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x3521210&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x3521290&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x3521310&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x3521390&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x3521410&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x3521490&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x3521550&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x35215d0&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x3521650&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x35216d0&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x3521750&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x35217d0&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x3521850&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x35218d0&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x3521990&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'workspace': &lt;storage.serializers.WorkspaceSerializer object at 0x2b06bc925cd0&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x2b06bc925390&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x2b06bc9254d0&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc925550&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x2b06bc9255d0&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x2b06bc925650&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x2b06bc9256d0&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x2b06bc925750&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925810&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925890&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925910&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925990&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x2b06bc925a10&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x2b06bc925a90&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x2b06bc925b10&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x2b06bc925b90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925c50&gt;}</em><a class="headerlink" href="#storage.serializers.ScaleFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1198,7 +1362,7 @@ file)</li>
 <p>Converts workspace model fields to REST output</p>
 <dl class="attribute">
 <dt id="storage.serializers.WorkspaceBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc91bad0&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1210,7 +1374,7 @@ file)</li>
 <p>Converts workspace model fields to REST output</p>
 <dl class="attribute">
 <dt id="storage.serializers.WorkspaceDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x351e950&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x351ea10&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x351ea90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x351eb90&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x351ec10&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x351ec90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351ed10&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x351ed90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351ee10&gt;, 'json_config': &lt;rest_framework.fields.CharField object at 0x351ee90&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc91bad0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc91bc10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc91bcd0&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x2b06bc91bd50&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc91be50&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc91bed0&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc91bf50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc91bfd0&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925090&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925110&gt;, 'json_config': &lt;rest_framework.fields.CharField object at 0x2b06bc925190&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1233,7 +1397,7 @@ file)</li>
 
 <dl class="attribute">
 <dt id="storage.serializers.WorkspaceListSerializer.base_fields">
-<tt class="descclassname">WorkspaceListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x31fd310&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x34eff10&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x34f9690&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">WorkspaceListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x2b06bc802610&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x2b06bc812050&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x2b06bc898110&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1245,18 +1409,18 @@ file)</li>
 <p>Converts workspace model fields to REST output</p>
 <dl class="attribute">
 <dt id="storage.serializers.WorkspaceSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x3505790&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x351e810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x351e950&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x351ea10&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x351ea90&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x351eb90&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x351ec10&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x351ec90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x351ed10&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x351ed90&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x351ee10&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x2b06bc8c7890&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x2b06bc91bad0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x2b06bc91bc10&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x2b06bc91bcd0&gt;, 'base_url': &lt;rest_framework.fields.URLField object at 0x2b06bc91bd50&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x2b06bc91be50&gt;, 'used_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc91bed0&gt;, 'total_size': &lt;rest_framework.fields.IntegerField object at 0x2b06bc91bf50&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc91bfd0&gt;, 'archived': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925090&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x2b06bc925110&gt;}</em><a class="headerlink" href="#storage.serializers.WorkspaceSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-storage.urls">
-<span id="urls-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">urls</span></tt> Module<a class="headerlink" href="#module-storage.urls" title="Permalink to this headline">¶</a></h2>
+<span id="storage-urls-module"></span><h2>storage.urls module<a class="headerlink" href="#module-storage.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful storage services</p>
 </div>
 <div class="section" id="module-storage.views">
-<span id="views-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">views</span></tt> Module<a class="headerlink" href="#module-storage.views" title="Permalink to this headline">¶</a></h2>
+<span id="storage-views-module"></span><h2>storage.views module<a class="headerlink" href="#module-storage.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful storage services</p>
 <dl class="class">
 <dt id="storage.views.WorkspaceDetailsView">
@@ -1325,117 +1489,77 @@ file)</li>
 </dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="storage.brokers.html">brokers Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.broker"><tt class="docutils literal"><span class="pre">broker</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.factory"><tt class="docutils literal"><span class="pre">factory</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.nfs_broker"><tt class="docutils literal"><span class="pre">nfs_broker</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="storage.migrations.html">migrations Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0001_initial"><tt class="docutils literal"><span class="pre">0001_initial</span></tt> Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="storage.test.html">test Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#id1"><tt class="docutils literal"><span class="pre">test</span></tt> Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_geospatial_utils"><tt class="docutils literal"><span class="pre">test_geospatial_utils</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_models"><tt class="docutils literal"><span class="pre">test_models</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.test_views"><tt class="docutils literal"><span class="pre">test_views</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#module-storage.test.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.test.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="storage.test.brokers.html">brokers Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker"><tt class="docutils literal"><span class="pre">test_nfs_broker</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="module-storage">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">storage Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">storage</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-storage.apps"><tt class="docutils literal"><span class="pre">apps</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.geospatial_utils"><tt class="docutils literal"><span class="pre">geospatial_utils</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.media_type"><tt class="docutils literal"><span class="pre">media_type</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.models"><tt class="docutils literal"><span class="pre">models</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.nfs"><tt class="docutils literal"><span class="pre">nfs</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.serializers"><tt class="docutils literal"><span class="pre">serializers</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.urls"><tt class="docutils literal"><span class="pre">urls</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-storage.views"><tt class="docutils literal"><span class="pre">views</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="storage.brokers.html" class="btn btn-neutral float-right" title="storage.brokers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="source.triggers.configuration.html" class="btn btn-neutral" title="source.triggers.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="source.triggers.configuration.html"
-                        title="previous chapter">configuration Package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="storage.brokers.html"
-                        title="next chapter">brokers Package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../../_sources/architecture/django/code_docs/storage.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="storage.brokers.html" title="brokers Package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="source.triggers.configuration.html" title="configuration Package"
-             >previous</a> |</li>
-        <li><a href="../../../index.html">Scale 3.0 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Architecture</a> &raquo;</li>
-          <li><a href="../index.html" >Django/Code Base</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2015, NGA.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

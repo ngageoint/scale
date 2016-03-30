@@ -1,27 +1,38 @@
-migrations Package
-==================
+scheduler.migrations package
+============================
 
-:mod:`0001_initial` Module
---------------------------
+Submodules
+----------
+
+scheduler.migrations.0001_initial module
+----------------------------------------
 
 .. automodule:: scheduler.migrations.0001_initial
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0002_auto_20151007_1352` Module
--------------------------------------
+scheduler.migrations.0002_auto_20151007_1352 module
+---------------------------------------------------
 
 .. automodule:: scheduler.migrations.0002_auto_20151007_1352
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`0003_auto_20160201_0846` Module
--------------------------------------
+scheduler.migrations.0003_auto_20160201_0846 module
+---------------------------------------------------
 
 .. automodule:: scheduler.migrations.0003_auto_20160201_0846
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: scheduler.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

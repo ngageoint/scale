@@ -1,69 +1,5 @@
-util Package
+util package
 ============
-
-:mod:`util` Package
--------------------
-
-.. automodule:: util
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`apps` Module
-------------------
-
-.. automodule:: util.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`command` Module
----------------------
-
-.. automodule:: util.command
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`exceptions` Module
-------------------------
-
-.. automodule:: util.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`middleware` Module
-------------------------
-
-.. automodule:: util.middleware
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`parse` Module
--------------------
-
-.. automodule:: util.parse
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`rest` Module
-------------------
-
-.. automodule:: util.rest
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`retry` Module
--------------------
-
-.. automodule:: util.retry
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -72,3 +8,70 @@ Subpackages
 
     util.test
 
+Submodules
+----------
+
+util.apps module
+----------------
+
+.. automodule:: util.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.command module
+-------------------
+
+.. automodule:: util.command
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.exceptions module
+----------------------
+
+.. automodule:: util.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.middleware module
+----------------------
+
+.. automodule:: util.middleware
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.parse module
+-----------------
+
+.. automodule:: util.parse
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.rest module
+----------------
+
+.. automodule:: util.rest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util.retry module
+-----------------
+
+.. automodule:: util.retry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: util
+    :members:
+    :undoc-members:
+    :show-inheritance:

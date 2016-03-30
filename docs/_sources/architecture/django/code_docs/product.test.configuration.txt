@@ -1,11 +1,22 @@
-configuration Package
-=====================
+product.test.configuration package
+==================================
 
-:mod:`test_product_data_file` Module
-------------------------------------
+Submodules
+----------
+
+product.test.configuration.test_product_data_file module
+--------------------------------------------------------
 
 .. automodule:: product.test.configuration.test_product_data_file
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: product.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

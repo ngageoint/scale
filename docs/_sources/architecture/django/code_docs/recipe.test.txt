@@ -1,37 +1,5 @@
-test Package
-============
-
-:mod:`test` Package
--------------------
-
-.. automodule:: recipe.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_models` Module
--------------------------
-
-.. automodule:: recipe.test.test_models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`test_views` Module
-------------------------
-
-.. automodule:: recipe.test.test_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`utils` Module
--------------------
-
-.. automodule:: recipe.test.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+recipe.test package
+===================
 
 Subpackages
 -----------
@@ -40,3 +8,46 @@ Subpackages
 
     recipe.test.configuration
 
+Submodules
+----------
+
+recipe.test.test_handler module
+-------------------------------
+
+.. automodule:: recipe.test.test_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.test.test_models module
+------------------------------
+
+.. automodule:: recipe.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.test.test_views module
+-----------------------------
+
+.. automodule:: recipe.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.test.utils module
+------------------------
+
+.. automodule:: recipe.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
