@@ -26,11 +26,12 @@ script:
   - cd docs
   - make code_docs html
 # Update gh-pages api docs
+  - git remote set-url origin git@github.com:ngageoint/scale.git
   - git checkout gh-pages
   - cp -R _build/html/ ../../docs
   - git rm -fr ../../docs
   - git add ../../docs
-  - git commit -m "Build updated from Travis build #$TRAVIS_BUILD_NUMBER"
+  - git commit -m "Build updated from Travis build $TRAVIS_BUILD_NUMBER"
   - git push
 
 # branch whitelist
