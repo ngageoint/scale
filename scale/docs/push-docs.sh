@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Add custom web docs
-cp -R ../../web-docs/* ../../
+# Copy custom web docs from tracked location prior to checkout
+cp -R ../../web-docs ../../tmp-web-docs
 
 chmod u=rw,og= ~/.ssh/publish-key
 echo "Host github.com" >> ~/.ssh/config
@@ -12,9 +12,10 @@ git checkout gh-pages
 
 git rm -fr ../../docs
 
-# Add sphinx docs
+# Add sphinx docs and web docs
 cp -R _build/html/ ../../docs
-git add ../../{*.html,css,fonts,images,js, docs}
+cp -R ../../tmp-web-docs/* ../../
+git add ../../{*.html,css,fonts,images,js,docs}
 
 
 git config --global user.email "no-reply@travis-ci.org"
