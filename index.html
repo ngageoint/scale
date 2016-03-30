@@ -1,118 +1,133 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Scale by ngageoint</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Full Width Pics - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Scale</h1>
-        <p class="header">containerized processing framework for algorithms focused on remote sensing</p>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/ngageoint/scale/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/ngageoint/scale/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/ngageoint/scale">View On GitHub</a></li>
-        </ul>
+</head>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/ngageoint">ngageoint</a></p>
+<body>
 
-
-      </header>
-      <section>
-        <h1>
-<a id="scale" class="anchor" href="#scale" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scale</h1>
-
-<p>Scale is a system that provides management of automated processing on a cluster of machines. It allows
-users to define jobs, which can be any type of script or algorithm. These jobs run on ingested source
-data and produce product files. The produced products can be disseminated to appropriate users and/or
-used to evaluate the producing algorithm in terms of performance and accuracy.</p>
-
-<h2>
-<a id="mesos-and-nodes-" class="anchor" href="#mesos-and-nodes-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mesos and Nodes </h2>
-
-<p>Scale runs across a cluster of networked machines (called nodes) that process the jobs. Scale utilizes
-Apache Mesos, a free and open source project, for managing the available resources on the nodes. Mesos
-informs Scale of available computing resources and Scale schedules jobs to run on those resources.</p>
-
-<h2>
-<a id="ingest-" class="anchor" href="#ingest-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ingest </h2>
-
-<p>Scale ingests source files using a Scale component called Strike. Strike is a process that monitors an
-ingest directory into which source data files are being copied. After a new source data file has been
-ingested, Scale produces and places jobs on the queue depending on the type of the ingested file.
-Many Strike processes can be run simultaneously, allowing Scale to monitor many different ingest directories.</p>
-
-<h2>
-<a id="jobs-" class="anchor" href="#jobs-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Jobs </h2>
-
-<p>Scale creates jobs based on its known job types. A job type defines key characteristics about an algorithm
-that Scale needs to know in order to run it (what command to run, the algorithm.s inputs and outputs, etc.)
-Job types are labeled with versions, allowing Scale to run multiple versions of the same algorithm. Jobs may
-be created automatically due to an event, such as the ingest of a particular type of source data file, or
-they may be created manually by a user. Jobs that need to be executed are placed onto and prioritized within
-a queue before being scheduled onto an available node. When multiple jobs need to be run in a serial or parallel
-sequence, a recipe can be created that defines the job workflow.</p>
-
-<h2>
-<a id="products-" class="anchor" href="#products-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Products </h2>
-
-<p>Jobs can produce products as a result of their successful execution. Products may be disseminated to users
-or used to analyze and improve the algorithms that produced them. Scale allows the creation of different
-workspaces. A workspace defines a separate location for storing source or product files. When a job is created,
-it is given a workspace to use for storing its results, allowing a user to control whether the job.s results
-are available to a wider audience or are restricted to a private workspace for the user's own use.</p>
-
-<h1>
-<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick Start</h1>
-
-<p>We've provided a vagrant and ansible setup to get you going quickly. Make sure vagrant, virtualbox, and ansible are installed then.</p>
-
-<pre><code>cd vagrant
-vagrant up
-</code></pre>
-
-<p>This will download a centos7 base image and start 2 virtual machines, a master and a slave. You can add additional slaves by editing <code>Vagrantfile</code> and adding them to the <code>HOSTS</code> and <code>mesos-slaves</code> sections before doing the <code>vagrant up</code>. Ansible will be used to push the configuration out and can take a while to run. You make need to modify <code>ansible/group_vars/all</code> or <code>ansible/vagrant.yml</code> if you need to specify a local docker index, etc.</p>
-
-<h1>
-<a id="resources" class="anchor" href="#resources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resources</h1>
-
-<p>Check out the <a href="https://github.com/ngageoint/scale">source code</a> for more information on developing and deploying scale.
-If you've got a question you can check out our <a href="https://chat.notcows.com/#narrow/stream/scale">online chat</a>.
-<a href="docs">Online documentation</a> is also available for the current develop branch.</p>
-
-<h1>
-<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h1>
-
-<p>Scale was developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with <a href="http://www.ballaerospace.com/">Ball Aerospace</a> and <a href="http://www.appliedis.com/">Applied Information Sciences (AIS)</a>. The government has "unlimited rights" and is releasing this software to increase the impact of government investments by providing developers with the opportunity to take things in new directions. The software use, modification, and distribution rights are stipulated within the Apache 2.0 license.</p>
-
-<p>All pull request contributions to this project will be released under the Apache 2.0 or compatible license. Software source code previously released under an open source license and then modified by NGA staff is considered a "joint work" (see 17 USC § 101); it is partially copyrighted, partially public domain, and as a whole is protected by the copyrights of the non-government authors and must be released according to the terms of the original open source license.</p>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img class="nav-logo" src="images/scale3-transparent-128.png">
+            <a class="navbar-brand" href="index.html">Scale</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index.html">Overview</a>
+                </li>
+                <li>
+                    <a href="docs.html">Documentation</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		          <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-3479806-6");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
+    <!-- /.container -->
+</nav>
 
-  </body>
+<!-- Full Width Image Header with Logo -->
+<!-- Image backgrounds are set within the full-width-pics.css file. -->
+<header class="image-bg-fluid-height">
+    <img class="img-responsive img-center" src="images/scale3-transparent-128.png" alt="">
+</header>
+
+<!-- Content Section -->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="section-heading">What does Scale do?</h1>
+                <p class="lead section-lead">Scale provides automated processing of large file-based
+                    datasets by executing containerized algorithms across a cluster of commodity machines.
+                    Scale runs your algorithms to efficiently process
+                    petabytes of large scientific datasets seamlessly
+                    across thousands of CPU cores. Scale leverages
+                    Docker for algorithm containerization and
+                    Apache Mesos for elasticity.</p>
+                <h1 class="section-heading">Why would I use Scale?</h1>
+                <ul>
+                    <li>Rapidly integrate algorithms written in
+                        Java, Python, IDL, Matlab, C/C++, ...</li>
+                    <li>Compose complex algorithms using Recipes for
+                        advanced data processing</li>
+                    <li>Increase your agility as an organization by running
+                        containerized developmental algorithms on
+                        the same cluster as operational algorithms</li>
+                    <li>Adjust algorithm prioritization to ensure the most
+                        critical data is processed first</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row" id="tutorials">
+            <div class="col-sm-4">
+                <h3>Tutorials</h3>
+                Check out these tutorials to learn how to process your data feeds with Scale.
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="tutorial">
+                    <h4>Quickstart</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Footer, copyright, licensing</p>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+
 </html>
