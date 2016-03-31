@@ -3,7 +3,7 @@
 # Only push docs to gh-pages on explicit builds from master. Pull requests will be ignored
 if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]; then
   echo "Skipping update of Github hosted documentation. Updates are made only via explicit builds of master - pull requests are skipped."
-  exit 1
+  exit 0
 fi
 
 # Copy custom web docs from tracked location prior to checkout
