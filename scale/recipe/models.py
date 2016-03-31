@@ -112,8 +112,9 @@ class RecipeManager(models.Manager):
         return results
 
     def get_recipe_for_job(self, job_id):
-        """Returns the recipe, possibly None, for the job with the given ID. The returned model will have its related
-        recipe_type and recipe_type_rev models populated.
+        """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
+        returned model will have its related recipe_type and recipe_type_rev models populated. If the job exists in
+        multiple recipes due to superseding, the original (first) recipe is returned.
 
         :param job_id: The job ID
         :type job_id: int
@@ -123,7 +124,7 @@ class RecipeManager(models.Manager):
 
         recipe_job_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         try:
-            recipe_job = recipe_job_qry.get(job_id=job_id)
+            recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)
         except RecipeJob.DoesNotExist:
             return None
         return recipe_job.recipe
