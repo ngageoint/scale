@@ -10,7 +10,7 @@ from django.db import transaction
 from django.db.models import Q
 
 import storage.geospatial_utils as geo_utils
-from recipe.models import RecipeJob
+from recipe.models import Recipe
 from source.models import SourceFile
 from storage.models import ScaleFile
 from util.parse import parse_datetime
@@ -44,12 +44,7 @@ class FileAncestryLinkManager(models.Manager):
         FileAncestryLink.objects.filter(job_exe=job_exe).delete()
 
         # Not all jobs have a recipe so attempt to get one if applicable
-        recipe = None
-        try:
-            recipe_job = RecipeJob.objects.get(job=job_exe.job)
-            recipe = recipe_job.recipe
-        except RecipeJob.DoesNotExist:
-            pass
+        recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
 
         # Grab ancestors for the parents
         ancestor_map = dict()
