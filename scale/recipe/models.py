@@ -375,8 +375,8 @@ class RecipeJobManager(models.Manager):
         return recipes
 
 
-class RecipeJob(models.Model):
-    """Links a job to its recipe
+class RecipeJobOld(models.Model):
+    """Links a job to its recipe. This model is old and deprecated. Use RecipeJob instead.
 
     :keyword job: A job in a recipe
     :type job: :class:`django.db.models.OneToOneField`
@@ -388,7 +388,35 @@ class RecipeJob(models.Model):
 
     job = models.OneToOneField('job.Job', primary_key=True, on_delete=models.PROTECT)
     job_name = models.CharField(max_length=100)
+    recipe = models.ForeignKey('recipe.Recipe', db_index=False, on_delete=models.PROTECT)
+
+    objects = RecipeJobManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_job_old'
+
+
+class RecipeJob(models.Model):
+    """Links a job and a recipe together. Jobs may exist in multiple recipes due to superseding. For an original job and
+    recipe combination, the is_original flag is True. When recipe B supersedes recipe A, the non-superseded jobs from
+    recipe A that are being copied to recipe B will have models with is_original set to False.
+
+    :keyword recipe: The recipe that the job is linked to
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that the recipe is linked to
+    :type job: :class:`django.db.models.OneToOneField`
+    :keyword job_name: The unique name of the job within the recipe
+    :type job_name: :class:`django.db.models.CharField`
+    :keyword is_original: Whether this is the original recipe for the job (True) or the job is copied from a superseded
+        recipe (False)
+    :type is_original: :class:`django.db.models.BooleanField`
+    """
+
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    job_name = models.CharField(max_length=100)
+    is_original = models.BooleanField(default=True)
 
     objects = RecipeJobManager()
 
