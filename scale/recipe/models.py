@@ -132,7 +132,8 @@ class RecipeManager(models.Manager):
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
-        all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs.
+        all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs. No
+        handler will be returned for a job that is not in a non-superseded recipe.
 
         :param job_id: The job ID
         :type job_id: int
@@ -149,6 +150,7 @@ class RecipeManager(models.Manager):
         """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
         have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
         all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs.
+        Handlers will not be returned for jobs that are not in a recipe or for recipes that are superseded.
 
         :param job_ids: The job IDs
         :type job_ids: [int]
@@ -156,9 +158,10 @@ class RecipeManager(models.Manager):
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
         """
 
-        # Figure out the recipe ID (if applicable) for each job ID
+        # Figure out the non-superseded recipe ID (if applicable) for each job ID
         recipe_id_per_job_id = {}  # {Job ID: Recipe ID}
-        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids).iterator():
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids, recipe__is_superseded=False).iterator():
+            # A job should match at most one non-superseded recipe
             recipe_id_per_job_id[recipe_job.job_id] = recipe_job.recipe_id
         if not recipe_id_per_job_id:
             return {}
@@ -251,7 +254,7 @@ class RecipeManager(models.Manager):
         return recipe
 
     def _get_recipe_handlers(self, recipe_ids):
-        """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid, it will not be included in
+        """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
         the results.
 
         :param recipe_ids: The recipe IDs
@@ -261,13 +264,14 @@ class RecipeManager(models.Manager):
         """
 
         handlers = {}  # {Recipe ID: Recipe handler}
-        recipe_data = RecipeJob.objects.get_recipe_data(recipe_ids)
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_ids)
         for recipe_id in recipe_ids:
-            recipe_jobs = recipe_data[recipe_id]
-            if recipe_jobs:
-                recipe = recipe_jobs[0].recipe
-                handler = RecipeHandler(recipe, recipe_jobs)
-                handlers[recipe.id] = handler
+            if recipe_id in recipe_jobs_dict:
+                recipe_jobs = recipe_jobs_dict[recipe_id]
+                if recipe_jobs:
+                    recipe = recipe_jobs[0].recipe
+                    handler = RecipeHandler(recipe, recipe_jobs)
+                    handlers[recipe.id] = handler
         return handlers
 
 
@@ -352,7 +356,7 @@ class RecipeJobManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
-    def get_recipe_data(self, recipe_ids):
+    def get_recipe_jobs(self, recipe_ids):
         """Returns the recipe_job models with related recipe, recipe_type, recipe_type_rev, job, job_type, and
         job_type_rev models for the given recipe IDs
 
