@@ -375,28 +375,6 @@ class RecipeJobManager(models.Manager):
         return recipes
 
 
-class RecipeJobOld(models.Model):
-    """Links a job to its recipe. This model is old and deprecated. Use RecipeJob instead.
-
-    :keyword job: A job in a recipe
-    :type job: :class:`django.db.models.OneToOneField`
-    :keyword job_name: The name of the job within the recipe
-    :type job_name: :class:`django.db.models.CharField`
-    :keyword recipe: The recipe that the job belongs to
-    :type recipe: :class:`django.db.models.ForeignKey`
-    """
-
-    job = models.OneToOneField('job.Job', primary_key=True, on_delete=models.PROTECT)
-    job_name = models.CharField(max_length=100)
-    recipe = models.ForeignKey('recipe.Recipe', db_index=False, on_delete=models.PROTECT)
-
-    objects = RecipeJobManager()
-
-    class Meta(object):
-        """meta information for the db"""
-        db_table = 'recipe_job_old'
-
-
 class RecipeJob(models.Model):
     """Links a job and a recipe together. Jobs may exist in multiple recipes due to superseding. For an original job and
     recipe combination, the is_original flag is True. When recipe B supersedes recipe A, the non-superseded jobs from
