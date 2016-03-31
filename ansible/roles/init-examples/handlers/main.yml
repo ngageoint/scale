@@ -15,3 +15,7 @@
 - name: push pca
   command: sh -c 'docker tag -f pca_1.0:dev {{ docker_registry }}pca_1.0:dev; docker push {{ docker_registry }}pca_1.0:dev'
   become: true
+
+- name: push ace
+  command: sh -c 'docker tag -f ace_1.0:dev {{ docker_registry }}ace_1.0:dev; docker push {{ docker_registry }}ace_1.0:dev'
+  become: true

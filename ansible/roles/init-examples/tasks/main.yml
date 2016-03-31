@@ -64,6 +64,17 @@
   notify:
     - push pca
 
+- name: Build ave docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/ace"
+    name: "ace_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push ace
+
 - name: Static example product web server
   tags: init-examples
   docker:

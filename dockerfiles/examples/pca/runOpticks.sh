@@ -1,8 +1,17 @@
 #!/bin/bash -x
 
 export outfile=$2/$(basename -s .tif $1)_pca.tif
-cp /wizards/pca.*wiz /tmp/
-sed -e "s@INFILE@$1@;s@OUTFILE@${outfile}@" -i /tmp/pca.batchwiz
+cp /wizards/pca.wiz /tmp/
+cat << EOF | python
+import xml.etree.ElementTree as ET
+ET.register_namespace('', "https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd")
+tree = ET.parse('/wizards/pca.batchwiz')
+ns={"opticks":"https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd"}
+
+tree.find('.//opticks:parameter[@name="Filename"]/opticks:value', ns).text = "file://$1"
+tree.find('.//opticks:parameter[@name="Output Filename"]/opticks:value', ns).text = "file://${outfile}"
+tree.write('/tmp/pca.batchwiz')
+EOF
 
 /opt/Opticks/Bin/OpticksBatch -input:/tmp/pca.batchwiz
 

@@ -86,6 +86,20 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
                                                     priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat Tiles"
     jt.save()
+if not job.models.JobType.objects.filter(name="ace").exists():
+    jt = job.models.JobType.objects.create_job_type("ace", "1.0.0",
+            JobInterface({"output_data": [
+                {"media_type": "image/tiff", "required": True, "type": "file", "name": "results"}],
+            "shared_resources": [],
+            "command_arguments": "${image} ${job_output_dir}",
+            "input_data": [
+                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
+            "version": "1.0", "command": "./runOpticks.sh"}),
+        description="Generate Principal Components image.",
+        docker_image="%sace_1.0:%s" % (registry, docker_tag),
+        priority=250, timeout=300, max_tries=3, cpus_required=2., mem_required=1024.)
+    jt.title = "Adaptive Cosine Estimation"
+    jt.save()
 if not job.models.JobType.objects.filter(name="pca").exists():
     jt = job.models.JobType.objects.create_job_type("pca", "1.0.0",
             JobInterface({"output_data": [
