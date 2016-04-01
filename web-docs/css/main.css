@@ -54,6 +54,11 @@ body {
     height: auto;
 }
 
+#flow img {
+    width: 100%;
+    height: auto;
+}
+
 h2 {
     font-size: 32px;
 }
