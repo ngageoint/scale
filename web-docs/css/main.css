@@ -58,6 +58,9 @@ body {
     width: 100%;
     height: auto;
 }
+#flow .row{
+    margin-top: 20px;
+}
 
 h2 {
     font-size: 32px;
