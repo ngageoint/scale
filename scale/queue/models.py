@@ -340,17 +340,18 @@ class QueueManager(models.Manager):
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
         handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
         if handler:
-            jobs_to_queue = []
-            for job_tuple in handler.get_existing_jobs_to_queue():
-                job = job_tuple[0]
-                job_data = job_tuple[1]
-                try:
-                    Job.objects.populate_job_data(job, job_data)
-                except InvalidData as ex:
-                    raise Exception('Scale created invalid job data: %s' % str(ex))
-                jobs_to_queue.append(job)
-            if jobs_to_queue:
-                self._queue_jobs(jobs_to_queue)
+            if not job_exe.job.is_superseded:  # Do not queue dependent jobs for superseded jobs
+                jobs_to_queue = []
+                for job_tuple in handler.get_existing_jobs_to_queue():
+                    job = job_tuple[0]
+                    job_data = job_tuple[1]
+                    try:
+                        Job.objects.populate_job_data(job, job_data)
+                    except InvalidData as ex:
+                        raise Exception('Scale created invalid job data: %s' % str(ex))
+                    jobs_to_queue.append(job)
+                if jobs_to_queue:
+                    self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
                 Recipe.objects.complete(handler.recipe_id, when)
 
