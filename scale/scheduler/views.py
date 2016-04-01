@@ -44,13 +44,13 @@ class SchedulerView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         '''
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.DATA.keys())
+        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
             return Response(u'Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
-        if len(request.DATA) == 0:
+        if len(request.data) == 0:
             return Response(u'No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
         try:
-            Scheduler.objects.update_scheduler(dict(request.DATA))
+            Scheduler.objects.update_scheduler(dict(request.data))
             scheduler = Scheduler.objects.get_master()
         except Scheduler.DoesNotExist:
             raise Http404

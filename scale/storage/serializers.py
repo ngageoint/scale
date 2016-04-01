@@ -3,7 +3,7 @@ import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
-from util.rest import ModelIdSerializer
+from util.rest import JSONField, ModelIdSerializer
 
 
 class DataTypeField(CharField):
@@ -12,7 +12,7 @@ class DataTypeField(CharField):
     type_name = 'DataTypeField'
     type_label = 'datatype'
 
-    def to_native(self, value):
+    def to_representation(self, value):
         '''Converts the model field to a list of data type tags
 
         :param value: the comma-separated data types for the Scale file
@@ -34,7 +34,7 @@ class WktField(CharField):
     type_name = 'WktField'
     type_label = 'wtk'
 
-    def to_native(self, value):
+    def to_representation(self, value):
         '''Converts the model field to WKT
 
         :param value: the associated geometry info
@@ -52,7 +52,7 @@ class GeoJsonField(CharField):
     type_name = 'GeoJsonField'
     type_label = 'geojson'
 
-    def to_native(self, value):
+    def to_representation(self, value):
         '''Converts the model field to GeoJson
 
         :param value: the associated geometry info
@@ -86,7 +86,7 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
 
 class WorkspaceDetailsSerializer(WorkspaceSerializer):
     '''Converts workspace model fields to REST output'''
-    json_config = serializers.CharField()
+    json_config = JSONField()
 
 
 class WorkspaceListSerializer(pagination.PaginationSerializer):
@@ -115,8 +115,8 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
     # TODO: update to use GeoJson instead of WKT
     geometry = WktField()
     center_point = WktField()
-    meta_data = serializers.CharField()
-    countries = serializers.RelatedField(many=True)
+    meta_data = JSONField()
+    countries = serializers.RelatedField(many=True, read_only=True)
     last_modified = serializers.DateTimeField()
 
 

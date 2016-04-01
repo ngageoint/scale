@@ -40,9 +40,9 @@ class MetricsTypeSerializer(serializers.Serializer):
     name = serializers.CharField()
     title = serializers.CharField()
     description = serializers.CharField()
-    filters = MetricsTypeFilterSerializer()
-    groups = MetricsTypeGroupSerializer()
-    columns = MetricsTypeColumnSerializer()
+    filters = MetricsTypeFilterSerializer(many=True)
+    groups = MetricsTypeGroupSerializer(many=True)
+    columns = MetricsTypeColumnSerializer(many=True)
 
 
 class MetricsTypeListSerializer(pagination.PaginationSerializer):
@@ -76,12 +76,12 @@ class MetricsPlotSerializer(serializers.Serializer):
     max_x = serializers.IntegerField()
     min_y = serializers.IntegerField()
     max_y = serializers.IntegerField()
-    values = MetricsPlotValueSerializer()
+    values = MetricsPlotValueSerializer(many=True)
 
 
 class MetricsPlotMultiSerializer(MetricsPlotSerializer):
     '''Converts metrics plot values to REST output'''
-    values = MetricsPlotMultiValueSerializer()
+    values = MetricsPlotMultiValueSerializer(many=True)
 
 
 class MetricsPlotListSerializer(pagination.PaginationSerializer):
@@ -104,11 +104,11 @@ class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):
     '''Converts ingest metrics details model fields to REST output'''
     from ingest.serializers import StrikeBaseSerializer
 
-    choices = StrikeBaseSerializer()
+    choices = StrikeBaseSerializer(many=True)
 
 
 class MetricsJobTypeDetailsSerializer(MetricsTypeDetailsSerializer):
     '''Converts job type metrics details model fields to REST output'''
     from job.serializers import JobTypeBaseSerializer
 
-    choices = JobTypeBaseSerializer()
+    choices = JobTypeBaseSerializer(many=True)

@@ -201,7 +201,7 @@ class RequeueExistingJobView(APIView):
         :rtype: int
         :returns: the HTTP response to send back to the user
         """
-        job_id = request.DATA['job_id']
+        job_id = request.data['job_id']
 
         try:
             Queue.objects.requeue_existing_job(job_id)

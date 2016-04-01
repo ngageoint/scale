@@ -126,9 +126,9 @@ class ConfigurationUploadView(APIView):
         else:
 
             # File content must be already processed by the request
-            if len(request.FILES) != 1:
+            if len(request.data) != 1:
                 return Response('Missing embedded file content.', status=status.HTTP_400_BAD_REQUEST)
-            file_handle = request.FILES.values()[0]
+            file_handle = request.data.values()[0]
             file_name = file_handle.name
             file_content = file_handle
 

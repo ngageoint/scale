@@ -2,7 +2,8 @@
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
-from util.rest import ModelIdSerializer
+from ingest.models import Ingest
+from util.rest import JSONField, ModelIdSerializer
 
 
 class StrikeBaseSerializer(ModelIdSerializer):
@@ -25,7 +26,7 @@ class StrikeSerializer(StrikeBaseSerializer):
 
 class StrikeDetailsSerializer(StrikeSerializer):
     '''Converts strike model fields to REST output'''
-    configuration = serializers.CharField()
+    configuration = JSONField()
 
 
 class IngestBaseSerializer(ModelIdSerializer):
@@ -34,7 +35,7 @@ class IngestBaseSerializer(ModelIdSerializer):
 
     file_name = serializers.CharField()
     strike = ModelIdSerializer()
-    status = serializers.CharField()
+    status = serializers.ChoiceField(choices=Ingest.INGEST_STATUSES)
 
     bytes_transferred = serializers.IntegerField()  # TODO: BigIntegerField?
     transfer_started = serializers.DateTimeField()
@@ -91,7 +92,7 @@ class IngestStatusSerializer(serializers.Serializer):
     most_recent = serializers.DateTimeField()
     files = serializers.IntegerField()
     size = serializers.IntegerField()
-    values = IngestStatusValuesSerializer()
+    values = IngestStatusValuesSerializer(many=True)
 
 
 class IngestStatusListSerializer(pagination.PaginationSerializer):

@@ -2,7 +2,7 @@
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
-from util.rest import ModelIdSerializer
+from util.rest import JSONField, ModelIdSerializer
 
 
 class TriggerRuleBaseSerializer(ModelIdSerializer):
@@ -21,7 +21,7 @@ class TriggerRuleSerializer(TriggerRuleBaseSerializer):
 
 class TriggerRuleDetailsSerializer(TriggerRuleBaseSerializer):
     '''Converts trigger rule model fields to REST output.'''
-    configuration = serializers.CharField()
+    configuration = JSONField()
 
 
 class TriggerRuleListSerializer(pagination.PaginationSerializer):
@@ -45,7 +45,7 @@ class TriggerEventSerializer(TriggerEventBaseSerializer):
 class TriggerEventDetailsSerializer(TriggerEventBaseSerializer):
     '''Converts trigger event model fields to REST output.'''
     rule = TriggerRuleDetailsSerializer()
-    description = serializers.CharField()
+    description = JSONField()
 
 
 class TriggerEventListSerializer(pagination.PaginationSerializer):

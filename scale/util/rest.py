@@ -21,29 +21,25 @@ class ModelIdSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
 
-class JSONField(serializers.CharField):
-    """Represents JSON content for use in REST serializers."""
-    type_name = 'JSONField'
-    type_label = 'json'
-    empty = {}
+# TODO Remove this in favor of the built-in JSONField in DRF 3.3.x
+class JSONField(serializers.Field):
 
     default_error_messages = {
-        'invalid': '"%s" value must be JSON.',
+        'invalid': 'Value must be valid JSON.'
     }
 
-    def from_native(self, value):
-        """Converts the given raw value to a Python object."""
-        if value in validators.EMPTY_VALUES:
-            return None
+    def __init__(self, *args, **kwargs):
+        super(JSONField, self).__init__(*args, **kwargs)
 
-        if not isinstance(value, basestring):
-            return value
-
+    def to_internal_value(self, data):
         try:
-            return json.loads(value)
+            json.dumps(data)
         except (TypeError, ValueError):
-            msg = self.error_messages['invalid'] % value
-            raise ValidationError(msg)
+            self.fail('invalid')
+        return data
+
+    def to_representation(self, value):
+        return value
 
 
 class BadParameter(APIException):
@@ -71,7 +67,7 @@ def check_update(request, fields):
     """
     fields = fields or []
     assert(type(fields) == type([]))
-    extra = filter(lambda x, y=fields: x not in y, request.DATA.keys())
+    extra = filter(lambda x, y=fields: x not in y, request.data.keys())
     if extra:
         raise ReadOnly('Fields do not allow updates: %s' % ', '.join(extra))
     return True
@@ -144,7 +140,7 @@ def has_params(request, *names):
     if not names:
         return False
     for name in names:
-        if name not in request.QUERY_PARAMS and name not in request.DATA:
+        if name not in request.query_params and name not in request.data:
             return False
     return True
 
@@ -465,11 +461,11 @@ def perform_paging(request, objects):
     # TODO: Replace this function with the paging features added to DRF 3.x
 
     try:
-        page = int(request.QUERY_PARAMS.get('page', 1))
+        page = int(request.query_params.get('page', 1))
     except (TypeError, ValueError):
         raise BadParameter('"page" must be an integer')
     try:
-        page_size = int(request.QUERY_PARAMS.get('page_size', 100))
+        page_size = int(request.query_params.get('page_size', 100))
     except (TypeError, ValueError):
         raise BadParameter('"page_size" must be an integer')
 
@@ -499,10 +495,10 @@ def _get_param(request, name, default_value=None, required=True):
     :rtype: object
     """
     value = None
-    if name in request.QUERY_PARAMS:
-        value = request.QUERY_PARAMS.get(name)
-    if value is None and name in request.DATA:
-        value = request.DATA.get(name)
+    if name in request.query_params:
+        value = request.query_params.get(name)
+    if value is None and name in request.data:
+        value = request.data.get(name)
 
     if value is None and default_value is not None:
         return default_value
@@ -525,10 +521,10 @@ def _get_param_list(request, name, default_value=None, required=True):
     :rtype: list[object]
     """
     value = None
-    if name in request.QUERY_PARAMS:
-        value = request.QUERY_PARAMS.getlist(name)
-    if value is None and name in request.DATA:
-        value = request.DATA.get(name)
+    if name in request.query_params:
+        value = request.query_params.getlist(name)
+    if value is None and name in request.data:
+        value = request.data.get(name)
 
     if value is None and default_value is not None:
         return default_value

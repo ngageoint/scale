@@ -9,7 +9,7 @@ class NodeBaseSerializer(ModelIdSerializer):
     '''Converts node model fields to REST output.'''
     hostname = serializers.CharField()
     port = serializers.IntegerField()
-    slave_id = serializers.IntegerField()
+    slave_id = serializers.CharField()
 
 
 class NodeSerializer(NodeBaseSerializer):

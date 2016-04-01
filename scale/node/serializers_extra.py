@@ -21,7 +21,7 @@ class NodeDetailsSerializer(NodeSerializer):
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 
-        job_exes_running = NodeStatusJobExecutionSerializer()
+        job_exes_running = NodeStatusJobExecutionSerializer(many=True)
     except:
         pass
 
@@ -38,7 +38,7 @@ class NodeStatusSerializer(serializers.Serializer):
     '''Converts node model fields with job execution counts to REST output.'''
     node = NodeSerializer()
     is_online = serializers.BooleanField()
-    job_exe_counts = NodeStatusCountsSerializer()
+    job_exe_counts = NodeStatusCountsSerializer(many=True)
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
@@ -55,7 +55,7 @@ class NodeStatusSerializer(serializers.Serializer):
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 
-        job_exes_running = NodeStatusJobExecutionSerializer()
+        job_exes_running = NodeStatusJobExecutionSerializer(many=True)
     except:
         pass
 

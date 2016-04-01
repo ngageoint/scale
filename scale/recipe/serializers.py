@@ -1,7 +1,7 @@
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
-from util.rest import ModelIdSerializer
+from util.rest import JSONField, ModelIdSerializer
 
 
 class RecipeTypeBaseSerializer(ModelIdSerializer):
@@ -15,7 +15,7 @@ class RecipeTypeBaseSerializer(ModelIdSerializer):
 class RecipeTypeSerializer(RecipeTypeBaseSerializer):
     '''Converts recipe type model fields to REST output.'''
     is_active = serializers.BooleanField()
-    definition = serializers.CharField()
+    definition = JSONField()
     revision_num = serializers.IntegerField()
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
@@ -30,10 +30,10 @@ class RecipeTypeDetailsSerializer(RecipeTypeSerializer):
     from trigger.serializers import TriggerRuleDetailsSerializer
 
     class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializer):
-        interface = serializers.CharField()
+        interface = JSONField()
 
     trigger_rule = TriggerRuleDetailsSerializer()
-    job_types = RecipeTypeDetailsJobSerializer()
+    job_types = RecipeTypeDetailsJobSerializer(many=True)
 
 
 class RecipeTypeListSerializer(pagination.PaginationSerializer):
@@ -50,7 +50,7 @@ class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
 
 class RecipeTypeRevisionSerializer(RecipeTypeRevisionBaseSerializer):
     '''Converts recipe type revision model fields to REST output.'''
-    definition = serializers.CharField()
+    definition = JSONField()
     created = serializers.DateTimeField()
 
 
@@ -98,10 +98,10 @@ class RecipeDetailsSerializer(RecipeSerializer):
     recipe_type = RecipeTypeSerializer()
     recipe_type_rev = RecipeTypeRevisionSerializer()
     event = TriggerEventDetailsSerializer()
-    data = serializers.CharField()
+    data = JSONField()
 
-    input_files = ScaleFileBaseSerializer()
-    jobs = RecipeJobsDetailsSerializer()
+    input_files = ScaleFileBaseSerializer(many=True)
+    jobs = RecipeJobsDetailsSerializer(many=True)
 
 
 class RecipeListSerializer(pagination.PaginationSerializer):

@@ -107,7 +107,7 @@ class JobTypesView(APIView):
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
         base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
-        for key, value in request.DATA.iteritems():
+        for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
 
@@ -215,7 +215,7 @@ class JobTypeDetailsView(APIView):
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
         base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
-        for key, value in request.DATA.iteritems():
+        for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
 

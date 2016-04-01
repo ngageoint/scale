@@ -84,9 +84,9 @@ class SlaveInfo(object):
     '''Represents information about a host system.
 
     :keyword hostname: The network name of the host.
-    :type hostname: float
+    :type hostname: string
     :keyword port: The network port of the host.
-    :type port: float
+    :type port: int
     :keyword total: The total hardware resources available to the host.
     :type total: :class:`mesos_api.api.HardwareResources`
     :keyword scheduled: The hardware resources allocated for potential use by the host.
@@ -94,7 +94,7 @@ class SlaveInfo(object):
     :keyword used: The hardware resources actively being used by the host.
     :type used: :class:`mesos_api.api.HardwareResources`
     :keyword slave_id: The ID of the slave.
-    :type slave_id: str
+    :type slave_id: string
     '''
     def __init__(self, hostname=None, port=0, total=None, scheduled=None, used=None, slave_id=None):
         self.slave_id = slave_id

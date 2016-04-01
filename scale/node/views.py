@@ -85,7 +85,7 @@ class NodeDetailsView(APIView):
         else:
             result['disconnected'] = True
 
-        return Response(serializer.data)
+        return Response(result)
 
     def put(self, request, node_id):
         '''Modify node info by replacing an object
@@ -98,11 +98,11 @@ class NodeDetailsView(APIView):
         :returns: the HTTP response to send back to the user
         '''
 
-        missing = filter(lambda x, y=request.DATA.keys(): x not in y, self.required_fields)
+        missing = filter(lambda x, y=request.data.keys(): x not in y, self.required_fields)
         if len(missing):
             return Response('Missing required fields: %s' % ', '.join(missing), status=status.HTTP_400_BAD_REQUEST)
 
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.DATA.keys())
+        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra):
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,7 +111,7 @@ class NodeDetailsView(APIView):
         except Node.DoesNotExist:
             raise Http404
 
-        Node.objects.update_node(dict(request.DATA), node_id=node_id)
+        Node.objects.update_node(dict(request.data), node_id=node_id)
 
         node = Node.objects.get(id=node_id)
         serializer = NodeSerializer(node)
@@ -129,11 +129,11 @@ class NodeDetailsView(APIView):
         :returns: the HTTP response to send back to the user
         '''
 
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.DATA.keys())
+        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
 
-        if not len(request.DATA):
+        if not len(request.data):
             return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -141,7 +141,7 @@ class NodeDetailsView(APIView):
         except Node.DoesNotExist:
             raise Http404
 
-        Node.objects.update_node(dict(request.DATA), node_id=node_id)
+        Node.objects.update_node(dict(request.data), node_id=node_id)
         node = Node.objects.get(id=node_id)
         serializer = NodeSerializer(node)
         return Response(serializer.data, status=status.HTTP_201_CREATED,

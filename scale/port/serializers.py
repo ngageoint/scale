@@ -13,7 +13,7 @@ class ConfigurationErrorSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     title = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
-    category = serializers.CharField(required=False)
+    category = serializers.ChoiceField(choices=Error.CATEGORIES, required=False)
 
     class Meta:
         model = Error
@@ -62,7 +62,7 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
 
     interface = JSONField(required=False)
     error_mapping = JSONField(required=False)
-    trigger_rule = ConfigurationTriggerRuleSerializer(required=False)
+    trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
         model = JobType
@@ -80,7 +80,7 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
     description = serializers.CharField(required=False)
 
     definition = JSONField(required=False)
-    trigger_rule = ConfigurationTriggerRuleSerializer(required=False)
+    trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
         model = RecipeType
@@ -90,6 +90,6 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
 class ConfigurationSerializer(serializers.Serializer):
     '''Converts export fields to REST output'''
     version = serializers.CharField()
-    recipe_types = ConfigurationRecipeTypeSerializer()
-    job_types = ConfigurationJobTypeSerializer()
-    errors = ConfigurationErrorSerializer()
+    recipe_types = ConfigurationRecipeTypeSerializer(many=True)
+    job_types = ConfigurationJobTypeSerializer(many=True)
+    errors = ConfigurationErrorSerializer(many=True)

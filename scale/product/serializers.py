@@ -1,9 +1,9 @@
 '''Defines the serializers for products'''
 from __future__ import unicode_literals
 
+import rest_framework.fields as fields
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
-from rest_framework.fields import WritableField
 
 from storage.serializers import ScaleFileBaseSerializer
 from util.rest import ModelIdSerializer
@@ -35,13 +35,13 @@ class ProductFileListSerializer(pagination.PaginationSerializer):
         object_serializer_class = ProductFileSerializer
 
 
-class ProductFileUpdateField(WritableField):
+class ProductFileUpdateField(fields.Field):
     '''Field for displaying the update information for a product file'''
 
     type_name = 'UpdateField'
     type_label = 'update'
 
-    def to_native(self, value):
+    def to_representation(self, value):
         '''Converts the model to its update information
 
         :param value: the product file model
@@ -68,7 +68,7 @@ class ProductFileUpdateSerializer(ProductFileSerializer):
     from source.serializers import SourceFileBaseSerializer
 
     update = ProductFileUpdateField(source='*')
-    source_files = SourceFileBaseSerializer()
+    source_files = SourceFileBaseSerializer(many=True)
 
 
 class ProductFileUpdateListSerializer(pagination.PaginationSerializer):

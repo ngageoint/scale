@@ -2,7 +2,8 @@
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
-from util.rest import ModelIdSerializer
+from job.models import Job, JobExecution
+from util.rest import JSONField, ModelIdSerializer
 
 
 class JobTypeBaseSerializer(ModelIdSerializer):
@@ -48,7 +49,7 @@ class JobTypeSerializer(JobTypeBaseSerializer):
 
 class JobTypeStatusCountsSerializer(serializers.Serializer):
     """Converts node status count object fields to REST output."""
-    status = serializers.CharField()
+    status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
     count = serializers.IntegerField()
     most_recent = serializers.DateTimeField()
     category = serializers.CharField()
@@ -59,14 +60,14 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.CharField()
-    error_mapping = serializers.CharField()
-    errors = ErrorSerializer()
+    interface = JSONField()
+    error_mapping = JSONField()
+    errors = ErrorSerializer(many=True)
     trigger_rule = TriggerRuleDetailsSerializer()
 
-    job_counts_6h = JobTypeStatusCountsSerializer()
-    job_counts_12h = JobTypeStatusCountsSerializer()
-    job_counts_24h = JobTypeStatusCountsSerializer()
+    job_counts_6h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_12h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_24h = JobTypeStatusCountsSerializer(many=True)
 
 
 class JobTypeListSerializer(pagination.PaginationSerializer):
@@ -78,7 +79,7 @@ class JobTypeListSerializer(pagination.PaginationSerializer):
 class JobTypeStatusSerializer(serializers.Serializer):
     """Converts job type status model and extra statistic fields to REST output."""
     job_type = JobTypeBaseSerializer()
-    job_counts = JobTypeStatusCountsSerializer()
+    job_counts = JobTypeStatusCountsSerializer(many=True)
 
 
 class JobTypeStatusListSerializer(pagination.PaginationSerializer):
@@ -125,7 +126,7 @@ class JobTypeRevisionBaseSerializer(ModelIdSerializer):
 
 class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    interface = serializers.CharField()
+    interface = JSONField()
     created = serializers.DateTimeField()
 
 
@@ -136,7 +137,7 @@ class JobBaseSerializer(ModelIdSerializer):
     event = ModelIdSerializer()
     error = ModelIdSerializer()
 
-    status = serializers.CharField()
+    status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
     priority = serializers.IntegerField()
     num_exes = serializers.IntegerField()
 
@@ -173,7 +174,7 @@ class JobRevisionSerializer(JobSerializer):
 
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
-    status = serializers.CharField()
+    status = serializers.ChoiceField(choices=JobExecution.JOB_EXE_STATUSES)
     command_arguments = serializers.CharField()
     timeout = serializers.IntegerField()
 
@@ -202,35 +203,37 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
 
 class JobDetailsInputSerializer(serializers.Serializer):
     """Converts job detail model input fields to REST output"""
-    from storage.serializers import ScaleFileBaseSerializer
 
     name = serializers.CharField()
     type = serializers.CharField()
 
-    FILE_SERIALIZER = ScaleFileBaseSerializer
-
-    def to_native(self, obj):
-        result = super(JobDetailsInputSerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        result = super(JobDetailsInputSerializer, self).to_representation(obj)
 
         value = None
         if 'value' in obj:
             if obj['type'] == 'file':
-                value = self.FILE_SERIALIZER().to_native(obj['value'])
+                value = self.Meta.FILE_SERIALIZER().to_representation(obj['value'])
             elif obj['type'] == 'files':
-                value = [self.FILE_SERIALIZER().to_native(v) for v in obj['value']]
+                value = [self.Meta.FILE_SERIALIZER().to_representation(v) for v in obj['value']]
             else:
                 value = obj['value']
         result['value'] = value
         return result
 
+    class Meta:
+        from storage.serializers import ScaleFileBaseSerializer
+        FILE_SERIALIZER = ScaleFileBaseSerializer
+
 
 class JobDetailsOutputSerializer(JobDetailsInputSerializer):
     """Converts job detail model output fields to REST output"""
-    try:
-        from product.serializers import ProductFileBaseSerializer
-        FILE_SERIALIZER = ProductFileBaseSerializer()
-    except:
-        pass
+    class Meta:
+        try:
+            from product.serializers import ProductFileBaseSerializer
+            FILE_SERIALIZER = ProductFileBaseSerializer
+        except:
+            pass
 
 
 class JobDetailsSerializer(JobSerializer):
@@ -244,29 +247,29 @@ class JobDetailsSerializer(JobSerializer):
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
-    data = serializers.CharField()
-    results = serializers.CharField()
+    data = JSONField()
+    results = JSONField()
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
     try:
         from recipe.serializers import RecipeSerializer
-        recipes = RecipeSerializer()
+        recipes = RecipeSerializer(many=True)
     except:
         recipes = []
 
-    job_exes = JobExecutionBaseSerializer()
+    job_exes = JobExecutionBaseSerializer(many=True)
 
-    inputs = JobDetailsInputSerializer()
-    outputs = JobDetailsOutputSerializer()
+    inputs = JobDetailsInputSerializer(many=True)
+    outputs = JobDetailsOutputSerializer(many=True)
 
     # TODO Remove this attribute once the UI migrates to "inputs"
-    input_files = ScaleFileBaseSerializer()
+    input_files = ScaleFileBaseSerializer(many=True)
 
     # TODO Remove this attribute once the UI migrates to "outputs"
     try:
         from product.serializers import ProductFileBaseSerializer
-        products = ProductFileBaseSerializer()
+        products = ProductFileBaseSerializer(many=True)
     except:
         products = []
 
@@ -281,7 +284,7 @@ class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
     from storage.serializers import ScaleFileBaseSerializer
 
-    input_files = ScaleFileBaseSerializer()
+    input_files = ScaleFileBaseSerializer(many=True)
 
 
 class JobUpdateListSerializer(pagination.PaginationSerializer):
@@ -315,19 +318,19 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     node = NodeSerializer()
     error = ErrorSerializer()
 
-    environment = serializers.CharField()
+    environment = JSONField()
     cpus_scheduled = serializers.FloatField()
     mem_scheduled = serializers.FloatField()
     disk_in_scheduled = serializers.FloatField()
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
-    results = serializers.CharField()
+    results = JSONField()
 
     current_stdout_url = serializers.CharField()
     current_stderr_url = serializers.CharField()
 
-    results_manifest = serializers.CharField()
+    results_manifest = JSONField()
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):
