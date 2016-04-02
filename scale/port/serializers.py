@@ -61,7 +61,7 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     disk_out_mult_required = serializers.FloatField(required=False)
 
     interface = JSONField(required=False)
-    error_mapping = JSONField(required=False)
+    error_mapping = JSONField(allow_null=True, required=False)
     trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
