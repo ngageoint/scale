@@ -1,5 +1,4 @@
 """Defines the serializers for jobs and job types"""
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from job.models import Job, JobExecution
@@ -70,22 +69,10 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     job_counts_24h = JobTypeStatusCountsSerializer(many=True)
 
 
-class JobTypeListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job type models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobTypeSerializer
-
-
 class JobTypeStatusSerializer(serializers.Serializer):
     """Converts job type status model and extra statistic fields to REST output."""
     job_type = JobTypeBaseSerializer()
     job_counts = JobTypeStatusCountsSerializer(many=True)
-
-
-class JobTypeStatusListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job type status models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobTypeStatusSerializer
 
 
 class JobTypeRunningStatusSerializer(serializers.Serializer):
@@ -93,12 +80,6 @@ class JobTypeRunningStatusSerializer(serializers.Serializer):
     job_type = JobTypeBaseSerializer()
     count = serializers.IntegerField()
     longest_running = serializers.DateTimeField()
-
-
-class JobTypeRunningStatusListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job type running status models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobTypeRunningStatusSerializer
 
 
 class JobTypeFailedStatusSerializer(serializers.Serializer):
@@ -110,12 +91,6 @@ class JobTypeFailedStatusSerializer(serializers.Serializer):
     count = serializers.IntegerField()
     first_error = serializers.DateTimeField()
     last_error = serializers.DateTimeField()
-
-
-class JobTypeFailedStatusListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job type failed status models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobTypeFailedStatusSerializer
 
 
 class JobTypeRevisionBaseSerializer(ModelIdSerializer):
@@ -274,23 +249,11 @@ class JobDetailsSerializer(JobSerializer):
         products = []
 
 
-class JobListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobSerializer
-
-
 class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
     from storage.serializers import ScaleFileBaseSerializer
 
     input_files = ScaleFileBaseSerializer(many=True)
-
-
-class JobUpdateListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job update models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobUpdateSerializer
 
 
 class JobExecutionSerializer(JobExecutionBaseSerializer):
@@ -301,12 +264,6 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     job = JobBaseSerializer()
     node = NodeBaseSerializer()
     error = ErrorBaseSerializer()
-
-
-class JobExecutionListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job execution models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobExecutionSerializer
 
 
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
@@ -343,9 +300,3 @@ class JobExecutionLogSerializer(JobExecutionSerializer):
 class JobWithExecutionSerializer(JobSerializer):
     """Converts job with latest execution model fields to REST output"""
     latest_job_exe = JobExecutionBaseSerializer()
-
-
-class JobWithExecutionListSerializer(pagination.PaginationSerializer):
-    """Converts a list of job with latest execution models to paginated REST output."""
-    class Meta:
-        object_serializer_class = JobWithExecutionSerializer

@@ -1,5 +1,4 @@
 '''Defines the serializers for ingests'''
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
@@ -61,12 +60,6 @@ class IngestSerializer(IngestBaseSerializer):
     source_file = SourceFileBaseSerializer()
 
 
-class IngestListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of ingest models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = IngestSerializer
-
-
 class IngestDetailsSerializer(IngestBaseSerializer):
     '''Converts ingest model fields to REST output'''
     from source.serializers import SourceFileSerializer
@@ -93,9 +86,3 @@ class IngestStatusSerializer(serializers.Serializer):
     files = serializers.IntegerField()
     size = serializers.IntegerField()
     values = IngestStatusValuesSerializer(many=True)
-
-
-class IngestStatusListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of ingest models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = IngestStatusSerializer

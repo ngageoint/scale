@@ -1,7 +1,6 @@
 '''Defines the serializers for metrics'''
 from __future__ import unicode_literals
 
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 
@@ -45,14 +44,6 @@ class MetricsTypeSerializer(serializers.Serializer):
     columns = MetricsTypeColumnSerializer(many=True)
 
 
-class MetricsTypeListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of metrics type models to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = MetricsTypeSerializer
-
-
 class MetricsTypeDetailsSerializer(MetricsTypeSerializer):
     '''Converts metrics details model fields to REST output'''
     choices = serializers.CharField()
@@ -82,22 +73,6 @@ class MetricsPlotSerializer(serializers.Serializer):
 class MetricsPlotMultiSerializer(MetricsPlotSerializer):
     '''Converts metrics plot values to REST output'''
     values = MetricsPlotMultiValueSerializer(many=True)
-
-
-class MetricsPlotListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of metrics plot models to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = MetricsPlotSerializer
-
-
-class MetricsPlotMultiListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of metrics plot models to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = MetricsPlotMultiSerializer
 
 
 class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):

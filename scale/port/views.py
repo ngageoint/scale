@@ -7,9 +7,9 @@ import os
 
 import django.utils.timezone as timezone
 import rest_framework.status as status
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import GenericAPIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 import port.exporter as exporter
 import port.importer as importer
@@ -35,10 +35,8 @@ class DownloadRenderer(JSONRenderer):
         return result
 
 
-class ConfigurationView(APIView):
+class ConfigurationView(GenericAPIView):
     '''This view is the endpoint for importing/exporting job and recipe configuration.'''
-
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
         '''Exports the job and recipe configuration and returns it in JSON form.
@@ -78,7 +76,7 @@ class ConfigurationView(APIView):
         errors = errors if 'errors' in includes else None
 
         export_config = exporter.export_config(recipe_types, job_types, errors)
-        return Response(export_config.get_dict(), status=status.HTTP_200_OK)
+        return Response(export_config.get_dict())
 
     def post(self, request):
         '''Imports job and recipe configuration and updates the corresponding models.
@@ -97,19 +95,16 @@ class ConfigurationView(APIView):
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results}, status=status.HTTP_200_OK)
+        return Response({'warnings': results})
 
 
 class ConfigurationDownloadView(ConfigurationView):
     '''This view is the endpoint for downloading an export of job and recipe configuration.'''
-
     renderer_classes = (DownloadRenderer,)
 
 
-class ConfigurationUploadView(APIView):
+class ConfigurationUploadView(GenericAPIView):
     '''This view is the endpoint for uploading an import file of job and recipe configuration.'''
-
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def post(self, request, *args, **kwargs):
         file_name = None
@@ -150,13 +145,11 @@ class ConfigurationUploadView(APIView):
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results}, status=status.HTTP_200_OK)
+        return Response({'warnings': results})
 
 
-class ConfigurationValidationView(APIView):
+class ConfigurationValidationView(GenericAPIView):
     '''This view is the endpoint for validation an exported job and recipe configuration.'''
-
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def post(self, request):
         '''Validates job and recipe configuration to make sure it can be imported.
@@ -175,4 +168,4 @@ class ConfigurationValidationView(APIView):
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results}, status=status.HTTP_200_OK)
+        return Response({'warnings': results})

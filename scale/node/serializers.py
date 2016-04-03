@@ -1,5 +1,4 @@
 '''Defines the serializers for nodes'''
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from util.rest import ModelIdSerializer
@@ -23,9 +22,3 @@ class NodeSerializer(NodeBaseSerializer):
     created = serializers.DateTimeField()
     last_offer = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-
-
-class NodeListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of node models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = NodeSerializer

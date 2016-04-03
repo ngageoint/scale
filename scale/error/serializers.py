@@ -1,5 +1,4 @@
 '''Defines the serializers for errors'''
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from util.rest import ModelIdSerializer
@@ -22,9 +21,3 @@ class ErrorSerializer(ErrorBaseSerializer):
 class ErrorDetailsSerializer(ErrorSerializer):
     '''Converts error model fields to REST output'''
     pass
-
-
-class ErrorListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of job type models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = ErrorSerializer

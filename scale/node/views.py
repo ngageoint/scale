@@ -5,25 +5,24 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 import mesos_api.api as mesos_api
 import util.rest as rest_util
 from node.models import Node
-from node.serializers import NodeSerializer, NodeListSerializer
-from node.serializers_extra import NodeDetailsSerializer, NodeStatusListSerializer
+from node.serializers import NodeSerializer
+from node.serializers_extra import NodeDetailsSerializer, NodeStatusSerializer
 from scheduler.models import Scheduler
 
 logger = logging.getLogger(__name__)
 
 
-class NodesView(APIView):
+class NodesView(ListAPIView):
     '''This view is the endpoint for viewing a list of nodes with metadata'''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = NodeSerializer
 
-    def get(self, request):
+    def list(self, request):
         '''Retrieves the list of all nodes and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -40,15 +39,13 @@ class NodesView(APIView):
 
         nodes = Node.objects.get_nodes(started, ended, order, include_inactive=include_inactive)
 
-        page = rest_util.perform_paging(request, nodes)
-        serializer = NodeListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(nodes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class NodeDetailsView(APIView):
+class NodeDetailsView(GenericAPIView):
     '''This view is the endpoint for viewing and modifying a node'''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
     update_fields = ('hostname', 'port', 'pause_reason', 'is_paused', 'is_active')
     required_fields = ('hostname', 'port', 'is_paused', 'is_active')
 
@@ -148,12 +145,11 @@ class NodeDetailsView(APIView):
                         headers={'Location': request.build_absolute_uri()})
 
 
-class NodesStatusView(APIView):
+class NodesStatusView(ListAPIView):
     '''This view is the endpoint for retrieving overall node status information.'''
+    serializer_class = NodeStatusSerializer
 
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
-    def get(self, request):
+    def list(self, request):
         '''Retrieves the list of all nodes with execution status and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -180,6 +176,6 @@ class NodesStatusView(APIView):
         for node_status in node_statuses:
             node_status.is_online = node_status.node.hostname in slaves_dict
 
-        page = rest_util.perform_paging(request, node_statuses)
-        serializer = NodeStatusListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(node_statuses)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

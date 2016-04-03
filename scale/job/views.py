@@ -7,9 +7,8 @@ import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
@@ -18,10 +17,10 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.exceptions import InvalidJobField
-from job.serializers import (JobDetailsSerializer, JobListSerializer, JobTypeDetailsSerializer,
-                             JobTypeFailedStatusListSerializer, JobTypeListSerializer,
-                             JobTypeRunningStatusListSerializer, JobTypeStatusListSerializer, JobUpdateListSerializer,
-                             JobWithExecutionListSerializer, JobExecutionListSerializer,
+from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
+                             JobTypeFailedStatusSerializer, JobTypeSerializer,
+                             JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
+                             JobWithExecutionSerializer, JobExecutionSerializer,
                              JobExecutionDetailsSerializer, JobExecutionLogSerializer)
 from models import Job, JobExecution, JobType
 from queue.models import Queue
@@ -31,11 +30,11 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
-class JobTypesView(APIView):
+class JobTypesView(ListAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobTypeSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -54,9 +53,9 @@ class JobTypesView(APIView):
 
         job_types = JobType.objects.get_job_types(started, ended, names, categories, order)
 
-        page = rest_util.perform_paging(request, job_types)
-        serializer = JobTypeListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(job_types)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def post(self, request):
         """Creates a new job type and returns a link to the detail URL
@@ -137,9 +136,9 @@ class JobTypesView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
-class JobTypeDetailsView(APIView):
+class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobTypeDetailsSerializer
 
     def get(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
@@ -156,8 +155,8 @@ class JobTypeDetailsView(APIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        serializer = JobTypeDetailsSerializer(job_type)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
 
     def patch(self, request, job_type_id):
         """Edits an existing job type and returns the updated details
@@ -253,14 +252,13 @@ class JobTypeDetailsView(APIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        serializer = JobTypeDetailsSerializer(job_type)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
 
 
-class JobTypesValidationView(APIView):
+class JobTypesValidationView(GenericAPIView):
     """This view is the endpoint for validating a new job type before attempting to actually create it
     """
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def post(self, request):
         """Validates a new job type and returns any warnings discovered
@@ -329,14 +327,14 @@ class JobTypesValidationView(APIView):
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results}, status=status.HTTP_200_OK)
+        return Response({'warnings': results})
 
 
-class JobTypesRunningView(APIView):
+class JobTypesRunningView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently running job types."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobTypeRunningStatusSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the current status of running job types and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -349,16 +347,16 @@ class JobTypesRunningView(APIView):
         running_status = JobType.objects.get_running_status()
 
         # Wrap the response with paging information
-        page = rest_util.perform_paging(request, running_status)
-        serializer = JobTypeRunningStatusListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(running_status)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobTypesSystemFailuresView(APIView):
+class JobTypesSystemFailuresView(ListAPIView):
     """This view is the endpoint for viewing system errors organized by job type."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobTypeFailedStatusSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the job types that have failed with system errors and returns them in JSON form
 
         :param request: the HTTP GET request
@@ -371,17 +369,16 @@ class JobTypesSystemFailuresView(APIView):
         failed_status = JobType.objects.get_failed_status()
 
         # Wrap the response with paging information
-        page = rest_util.perform_paging(request, failed_status)
-        serializer = JobTypeFailedStatusListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(failed_status)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobTypesStatusView(APIView):
+class JobTypesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall job type status information."""
+    serializer_class = JobTypeStatusSerializer
 
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
-    def get(self, request):
+    def list(self, request):
         """Retrieves the list of all job types with status and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -393,18 +390,19 @@ class JobTypesStatusView(APIView):
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
+
         job_type_statuses = JobType.objects.get_status(started, ended)
 
-        page = rest_util.perform_paging(request, job_type_statuses)
-        serializer = JobTypeStatusListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(job_type_statuses)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobsView(APIView):
+class JobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all available jobs."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves jobs and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -428,14 +426,14 @@ class JobsView(APIView):
         jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
                                     job_type_categories, order)
 
-        page = rest_util.perform_paging(request, jobs)
-        serializer = JobListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(jobs)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobDetailsView(APIView):
+class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobDetailsSerializer
 
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
@@ -453,8 +451,8 @@ class JobDetailsView(APIView):
         except Job.DoesNotExist:
             raise Http404
 
-        serializer = JobDetailsSerializer(job)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job)
+        return Response(serializer.data)
 
     def patch(self, request, job_id):
         """Modify job info with a subset of fields
@@ -481,14 +479,13 @@ class JobDetailsView(APIView):
         except (Job.DoesNotExist, JobExecution.DoesNotExist):
             raise Http404
 
-        serializer = JobDetailsSerializer(job)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job)
+        return Response(serializer.data)
 
 
-class JobUpdatesView(APIView):
+class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""
-
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobUpdateSerializer
 
     def get(self, request):
         """Retrieves the job updates for a given time range and returns it in JSON form
@@ -512,17 +509,17 @@ class JobUpdatesView(APIView):
         jobs = Job.objects.get_job_updates(started, ended, job_status, job_type_ids, job_type_names,
                                            job_type_categories, order)
 
-        page = rest_util.perform_paging(request, jobs)
+        page = self.paginate_queryset(jobs)
         Job.objects.populate_input_files(page)
-        serializer = JobUpdateListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobsWithExecutionView(APIView):
+class JobsWithExecutionView(ListAPIView):
     """This view is the endpoint for viewing jobs and their associated latest execution"""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobWithExecutionSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Gets jobs and their associated latest execution
 
         :param request: the HTTP GET request
@@ -544,24 +541,21 @@ class JobsWithExecutionView(APIView):
 
         jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
                                     job_type_categories, order)
-        page = rest_util.perform_paging(request, jobs)
 
         # Add the latest execution for each matching job
-        paged_jobs = list(page.object_list)
-        job_exes_dict = JobExecution.objects.get_latest(page.object_list)
-        for job in paged_jobs:
+        page = self.paginate_queryset(jobs)
+        job_exes_dict = JobExecution.objects.get_latest(page)
+        for job in page:
             job.latest_job_exe = job_exes_dict[job.id] if job.id in job_exes_dict else None
-        page.object_list = paged_jobs
-
-        serializer = JobWithExecutionListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobExecutionsView(APIView):
+class JobExecutionsView(ListAPIView):
     """This view is the endpoint for viewing job executions and their associated job_type id, name, and version"""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobExecutionSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request
@@ -584,17 +578,17 @@ class JobExecutionsView(APIView):
 
         job_exes = JobExecution.objects.get_exes(started, ended, job_status, job_type_ids, job_type_names,
                                                  job_type_categories, node_ids, order)
-        page = rest_util.perform_paging(request, job_exes)
 
-        serializer = JobExecutionListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(job_exes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class JobExecutionDetailsView(APIView):
+class JobExecutionDetailsView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution detail"""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobExecutionDetailsSerializer
 
-    def get(self, request, job_exe_id):
+    def retrieve(self, request, job_exe_id):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
@@ -609,15 +603,15 @@ class JobExecutionDetailsView(APIView):
         except JobExecution.DoesNotExist:
             raise Http404
 
-        serializer = JobExecutionDetailsSerializer(job_exe)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job_exe)
+        return Response(serializer.data)
 
 
-class JobExecutionLogView(APIView):
+class JobExecutionLogView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution logs"""
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobExecutionLogSerializer
 
-    def get(self, request, job_exe_id):
+    def retrieve(self, request, job_exe_id):
         """Gets job execution logs. This can be a slightly slow operation so it's a separate view from the details.
 
         :param request: the HTTP GET request
@@ -632,5 +626,5 @@ class JobExecutionLogView(APIView):
         except JobExecution.DoesNotExist:
             raise Http404
 
-        serializer = JobExecutionLogSerializer(job_exe)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(job_exe)
+        return Response(serializer.data)

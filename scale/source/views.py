@@ -3,23 +3,20 @@ from __future__ import unicode_literals
 
 import logging
 
-import rest_framework.status as status
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 import util.rest as rest_util
 from source.models import SourceFile
-from source.serializers import SourceFileListSerializer, SourceFileUpdateListSerializer
+from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class SourcesView(APIView):
+class SourcesView(ListAPIView):
     '''This view is the endpoint for retrieving source files.'''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = SourceFileSerializer
 
-    def get(self, request):
+    def list(self, request):
         '''Retrieves the source files for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -37,17 +34,17 @@ class SourcesView(APIView):
         order = rest_util.parse_string_list(request, u'order', required=False)
 
         sources = SourceFile.objects.get_sources(started, ended, is_parsed, file_name, order)
-        page = rest_util.perform_paging(request, sources)
-        serializer = SourceFileListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        page = self.paginate_queryset(sources)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class SourceUpdatesView(APIView):
+class SourceUpdatesView(ListAPIView):
     '''This view is the endpoint for retrieving source file updates over a given time range.'''
+    serializer_class = SourceFileUpdateSerializer
 
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
-    def get(self, request):
+    def list(self, request):
         '''Retrieves the source file updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -65,6 +62,7 @@ class SourceUpdatesView(APIView):
         order = rest_util.parse_string_list(request, u'order', required=False)
 
         sources = SourceFile.objects.get_sources(started, ended, is_parsed, file_name, order)
-        page = rest_util.perform_paging(request, sources)
-        serializer = SourceFileUpdateListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        page = self.paginate_queryset(sources)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

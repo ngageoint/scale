@@ -1,6 +1,5 @@
 '''Defines the serializers for source files'''
 import rest_framework.fields as fields
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from storage.serializers import ScaleFileBaseSerializer
@@ -15,14 +14,6 @@ class SourceFileBaseSerializer(ScaleFileBaseSerializer):
 class SourceFileSerializer(SourceFileBaseSerializer):
     '''Converts source file model fields to REST output'''
     pass
-
-
-class SourceFileListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of source file models to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = SourceFileSerializer
 
 
 class SourceFileUpdateField(fields.Field):
@@ -56,11 +47,3 @@ class SourceFileUpdateField(fields.Field):
 class SourceFileUpdateSerializer(SourceFileSerializer):
     '''Converts source file updates to REST output'''
     update = SourceFileUpdateField(source='*')
-
-
-class SourceFileUpdateListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of source file updates to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = SourceFileUpdateSerializer

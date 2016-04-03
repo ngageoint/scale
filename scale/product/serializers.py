@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import rest_framework.fields as fields
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from storage.serializers import ScaleFileBaseSerializer
@@ -25,14 +24,6 @@ class ProductFileSerializer(ProductFileBaseSerializer):
     from job.serializers import JobTypeBaseSerializer
 
     job_type = JobTypeBaseSerializer()
-
-
-class ProductFileListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of product file models to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = ProductFileSerializer
 
 
 class ProductFileUpdateField(fields.Field):
@@ -69,11 +60,3 @@ class ProductFileUpdateSerializer(ProductFileSerializer):
 
     update = ProductFileUpdateField(source='*')
     source_files = SourceFileBaseSerializer(many=True)
-
-
-class ProductFileUpdateListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of product file updates to paginated REST output'''
-
-    class Meta(object):
-        '''meta information for the serializer'''
-        object_serializer_class = ProductFileUpdateSerializer

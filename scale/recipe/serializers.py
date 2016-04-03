@@ -1,4 +1,3 @@
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from util.rest import JSONField, ModelIdSerializer
@@ -34,12 +33,6 @@ class RecipeTypeDetailsSerializer(RecipeTypeSerializer):
 
     trigger_rule = TriggerRuleDetailsSerializer()
     job_types = RecipeTypeDetailsJobSerializer(many=True)
-
-
-class RecipeTypeListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of recipe type models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = RecipeTypeSerializer
 
 
 class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
@@ -102,9 +95,3 @@ class RecipeDetailsSerializer(RecipeSerializer):
 
     input_files = ScaleFileBaseSerializer(many=True)
     jobs = RecipeJobsDetailsSerializer(many=True)
-
-
-class RecipeListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of recipe models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = RecipeSerializer

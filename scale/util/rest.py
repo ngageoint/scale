@@ -4,12 +4,10 @@ from __future__ import unicode_literals
 import datetime
 import json
 
-import django.core.validators as validators
 import django.utils.timezone as timezone
+import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 import rest_framework.status as status
-from django.core.validators import ValidationError
-from django.core.paginator import Paginator, EmptyPage
 from rest_framework.exceptions import APIException
 
 import util.parse as parse_util
@@ -40,6 +38,13 @@ class JSONField(serializers.Field):
 
     def to_representation(self, value):
         return value
+
+
+class DefaultPagination(pagination.PageNumberPagination):
+    """Default configuration class for the paging system."""
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 class BadParameter(APIException):
@@ -446,37 +451,6 @@ def parse_dict(request, name, default_value=None, required=True):
     if required and not isinstance(value, dict):
         raise BadParameter('Parameter must be a valid JSON object: "%s"' % name)
     return value or {}
-
-
-def perform_paging(request, objects):
-    """Performs paging on the given objects using the given request parameters
-
-    :param request: The context of an active HTTP request.
-    :type request: :class:`rest_framework.request.Request`
-    :param objects: List of objects, typically a queryset
-    :type objects: list
-    :returns: the created page
-    :rtype: :class:`django.core.paginator.Page`
-    """
-    # TODO: Replace this function with the paging features added to DRF 3.x
-
-    try:
-        page = int(request.query_params.get('page', 1))
-    except (TypeError, ValueError):
-        raise BadParameter('"page" must be an integer')
-    try:
-        page_size = int(request.query_params.get('page_size', 100))
-    except (TypeError, ValueError):
-        raise BadParameter('"page_size" must be an integer')
-
-    if page_size < 1 or page_size > 1000:
-        raise BadParameter('"page_size" must be between 1 and 1000 inclusive')
-
-    paginator = Paginator(objects, page_size)
-    try:
-        return paginator.page(page)
-    except EmptyPage:
-        raise BadParameter('Bad "page" number')
 
 
 def _get_param(request, name, default_value=None, required=True):

@@ -1,5 +1,4 @@
 '''Defines the serializers for nodes that require extra fields from other applications'''
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from node.serializers import NodeSerializer
@@ -58,9 +57,3 @@ class NodeStatusSerializer(serializers.Serializer):
         job_exes_running = NodeStatusJobExecutionSerializer(many=True)
     except:
         pass
-
-
-class NodeStatusListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of node models with job execution counts to paginated REST output.'''
-    class Meta:
-        object_serializer_class = NodeStatusSerializer

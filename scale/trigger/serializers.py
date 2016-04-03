@@ -1,5 +1,4 @@
 '''Defines the serializers for trigger events and rules'''
-import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 
 from util.rest import JSONField, ModelIdSerializer
@@ -24,12 +23,6 @@ class TriggerRuleDetailsSerializer(TriggerRuleBaseSerializer):
     configuration = JSONField()
 
 
-class TriggerRuleListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of trigger rule models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = TriggerRuleSerializer
-
-
 class TriggerEventBaseSerializer(ModelIdSerializer):
     '''Converts trigger event model fields to REST output.'''
     type = serializers.CharField()
@@ -46,9 +39,3 @@ class TriggerEventDetailsSerializer(TriggerEventBaseSerializer):
     '''Converts trigger event model fields to REST output.'''
     rule = TriggerRuleDetailsSerializer()
     description = JSONField()
-
-
-class TriggerEventListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of trigger event models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = TriggerEventSerializer

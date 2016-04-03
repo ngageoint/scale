@@ -3,9 +3,8 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from scheduler.models import Scheduler
 from scheduler.serializers import SchedulerSerializer
@@ -14,10 +13,8 @@ from scheduler.serializers import SchedulerSerializer
 logger = logging.getLogger(__name__)
 
 
-class SchedulerView(APIView):
+class SchedulerView(GenericAPIView):
     '''This view is the endpoint for viewing and modifying the scheduler'''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
     update_fields = (u'is_paused', )
 
     def get(self, request):
@@ -59,9 +56,8 @@ class SchedulerView(APIView):
                         headers={'Location': request.build_absolute_uri()})
 
 
-class StatusView(APIView):
+class StatusView(GenericAPIView):
     '''This view is the endpoint for viewing overall system information'''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request):
         '''Gets high level status information
