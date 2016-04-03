@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 
 from job.models import Job, JobExecution
-from util.rest import JSONField, ModelIdSerializer
+from util.rest import ModelIdSerializer
 
 
 class JobTypeBaseSerializer(ModelIdSerializer):
@@ -59,8 +59,8 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = JSONField()
-    error_mapping = JSONField()
+    interface = serializers.JSONField()
+    error_mapping = serializers.JSONField()
     errors = ErrorSerializer(many=True)
     trigger_rule = TriggerRuleDetailsSerializer()
 
@@ -101,7 +101,7 @@ class JobTypeRevisionBaseSerializer(ModelIdSerializer):
 
 class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    interface = JSONField()
+    interface = serializers.JSONField()
     created = serializers.DateTimeField()
 
 
@@ -222,8 +222,8 @@ class JobDetailsSerializer(JobSerializer):
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
-    data = JSONField()
-    results = JSONField()
+    data = serializers.JSONField()
+    results = serializers.JSONField()
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
@@ -275,19 +275,19 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     node = NodeSerializer()
     error = ErrorSerializer()
 
-    environment = JSONField()
+    environment = serializers.JSONField()
     cpus_scheduled = serializers.FloatField()
     mem_scheduled = serializers.FloatField()
     disk_in_scheduled = serializers.FloatField()
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
-    results = JSONField()
+    results = serializers.JSONField()
 
     current_stdout_url = serializers.CharField()
     current_stderr_url = serializers.CharField()
 
-    results_manifest = JSONField()
+    results_manifest = serializers.JSONField()
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):

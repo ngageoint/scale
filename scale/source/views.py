@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class SourcesView(ListAPIView):
     '''This view is the endpoint for retrieving source files.'''
+    queryset = SourceFile.objects.all()
     serializer_class = SourceFileSerializer
 
     def list(self, request):
@@ -42,6 +43,7 @@ class SourcesView(ListAPIView):
 
 class SourceUpdatesView(ListAPIView):
     '''This view is the endpoint for retrieving source file updates over a given time range.'''
+    queryset = SourceFile.objects.all()
     serializer_class = SourceFileUpdateSerializer
 
     def list(self, request):

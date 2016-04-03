@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class ProductsView(ListAPIView):
     '''This view is the endpoint for retrieving a product by filename'''
+    queryset = ProductFile.objects.all()
     serializer_class = ProductFileSerializer
 
     def list(self, request):
@@ -46,6 +47,7 @@ class ProductsView(ListAPIView):
 
 class ProductUpdatesView(ListAPIView):
     '''This view is the endpoint for retrieving product updates over a given time range.'''
+    queryset = ProductFile.objects.all()
     serializer_class = ProductFileUpdateSerializer
 
     def list(self, request):

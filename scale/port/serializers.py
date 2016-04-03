@@ -5,7 +5,6 @@ from error.models import Error
 from job.models import JobType
 from recipe.models import RecipeType
 from trigger.models import TriggerRule
-from util.rest import JSONField
 
 
 class ConfigurationErrorSerializer(serializers.ModelSerializer):
@@ -26,7 +25,7 @@ class ConfigurationTriggerRuleSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False)
     is_active = serializers.BooleanField(required=False)
 
-    configuration = JSONField()
+    configuration = serializers.JSONField()
 
     class Meta:
         model = TriggerRule
@@ -60,8 +59,8 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     disk_out_const_required = serializers.FloatField(required=False)
     disk_out_mult_required = serializers.FloatField(required=False)
 
-    interface = JSONField(required=False)
-    error_mapping = JSONField(allow_null=True, required=False)
+    interface = serializers.JSONField(required=False)
+    error_mapping = serializers.JSONField(allow_null=True, required=False)
     trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:
@@ -79,7 +78,7 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
 
-    definition = JSONField(required=False)
+    definition = serializers.JSONField(required=False)
     trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
 
     class Meta:

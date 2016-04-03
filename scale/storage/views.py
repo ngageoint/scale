@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class WorkspacesView(ListAPIView):
     '''This view is the endpoint for retrieving the list of all workspaces.'''
+    queryset = Workspace.objects.all()
     serializer_class = WorkspaceSerializer
 
     def get(self, request):

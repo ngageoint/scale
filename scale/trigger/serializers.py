@@ -1,7 +1,7 @@
 '''Defines the serializers for trigger events and rules'''
 import rest_framework.serializers as serializers
 
-from util.rest import JSONField, ModelIdSerializer
+from util.rest import ModelIdSerializer
 
 
 class TriggerRuleBaseSerializer(ModelIdSerializer):
@@ -20,7 +20,7 @@ class TriggerRuleSerializer(TriggerRuleBaseSerializer):
 
 class TriggerRuleDetailsSerializer(TriggerRuleBaseSerializer):
     '''Converts trigger rule model fields to REST output.'''
-    configuration = JSONField()
+    configuration = serializers.JSONField()
 
 
 class TriggerEventBaseSerializer(ModelIdSerializer):
@@ -38,4 +38,4 @@ class TriggerEventSerializer(TriggerEventBaseSerializer):
 class TriggerEventDetailsSerializer(TriggerEventBaseSerializer):
     '''Converts trigger event model fields to REST output.'''
     rule = TriggerRuleDetailsSerializer()
-    description = JSONField()
+    description = serializers.JSONField()

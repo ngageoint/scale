@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
-from util.rest import JSONField, ModelIdSerializer
+from util.rest import ModelIdSerializer
 
 
 class StrikeBaseSerializer(ModelIdSerializer):
@@ -25,7 +25,7 @@ class StrikeSerializer(StrikeBaseSerializer):
 
 class StrikeDetailsSerializer(StrikeSerializer):
     '''Converts strike model fields to REST output'''
-    configuration = JSONField()
+    configuration = serializers.JSONField()
 
 
 class IngestBaseSerializer(ModelIdSerializer):

@@ -7,9 +7,9 @@ import os
 
 import django.utils.timezone as timezone
 import rest_framework.status as status
-from rest_framework.generics import GenericAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import port.exporter as exporter
 import port.importer as importer
@@ -35,7 +35,7 @@ class DownloadRenderer(JSONRenderer):
         return result
 
 
-class ConfigurationView(GenericAPIView):
+class ConfigurationView(APIView):
     '''This view is the endpoint for importing/exporting job and recipe configuration.'''
 
     def get(self, request):
@@ -103,7 +103,7 @@ class ConfigurationDownloadView(ConfigurationView):
     renderer_classes = (DownloadRenderer,)
 
 
-class ConfigurationUploadView(GenericAPIView):
+class ConfigurationUploadView(APIView):
     '''This view is the endpoint for uploading an import file of job and recipe configuration.'''
 
     def post(self, request, *args, **kwargs):
@@ -148,7 +148,7 @@ class ConfigurationUploadView(GenericAPIView):
         return Response({'warnings': results})
 
 
-class ConfigurationValidationView(GenericAPIView):
+class ConfigurationValidationView(APIView):
     '''This view is the endpoint for validation an exported job and recipe configuration.'''
 
     def post(self, request):

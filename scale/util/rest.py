@@ -14,37 +14,16 @@ import util.parse as parse_util
 from util.parse import ParseError
 
 
-class ModelIdSerializer(serializers.Serializer):
-    """Converts a model to a lightweight place holder object with only an identifier to REST output"""
-    id = serializers.IntegerField()
-
-
-# TODO Remove this in favor of the built-in JSONField in DRF 3.3.x
-class JSONField(serializers.Field):
-
-    default_error_messages = {
-        'invalid': 'Value must be valid JSON.'
-    }
-
-    def __init__(self, *args, **kwargs):
-        super(JSONField, self).__init__(*args, **kwargs)
-
-    def to_internal_value(self, data):
-        try:
-            json.dumps(data)
-        except (TypeError, ValueError):
-            self.fail('invalid')
-        return data
-
-    def to_representation(self, value):
-        return value
-
-
 class DefaultPagination(pagination.PageNumberPagination):
     """Default configuration class for the paging system."""
     page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+
+class ModelIdSerializer(serializers.Serializer):
+    """Converts a model to a lightweight place holder object with only an identifier to REST output"""
+    id = serializers.IntegerField()
 
 
 class BadParameter(APIException):

@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class SchedulerView(GenericAPIView):
     '''This view is the endpoint for viewing and modifying the scheduler'''
+    serializer_class = SchedulerSerializer
     update_fields = (u'is_paused', )
 
     def get(self, request):
@@ -31,7 +32,8 @@ class SchedulerView(GenericAPIView):
         except Scheduler.DoesNotExist:
             raise Http404
 
-        return Response(SchedulerSerializer(scheduler).data)
+        serializer = self.get_serializer(scheduler)
+        return Response(serializer.data)
 
     def patch(self, request):
         '''Modify scheduler info with a subset of fields
@@ -52,7 +54,8 @@ class SchedulerView(GenericAPIView):
         except Scheduler.DoesNotExist:
             raise Http404
 
-        return Response(SchedulerSerializer(scheduler).data, status=status.HTTP_201_CREATED,
+        serializer = self.get_serializer(scheduler)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
                         headers={'Location': request.build_absolute_uri()})
 
 

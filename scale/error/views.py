@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class ErrorsView(GenericAPIView):
     '''This view is the endpoint for retrieving the list of all errors and creating a new error.'''
+    queryset = Error.objects.all()
     serializer_class = ErrorSerializer
 
     def get(self, request):

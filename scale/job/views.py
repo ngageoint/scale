@@ -9,6 +9,7 @@ from django.db import transaction
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
@@ -32,6 +33,7 @@ logger = logging.getLogger(__name__)
 
 class JobTypesView(ListAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeSerializer
 
     def list(self, request):
@@ -256,9 +258,8 @@ class JobTypeDetailsView(GenericAPIView):
         return Response(serializer.data)
 
 
-class JobTypesValidationView(GenericAPIView):
-    """This view is the endpoint for validating a new job type before attempting to actually create it
-    """
+class JobTypesValidationView(APIView):
+    """This view is the endpoint for validating a new job type before attempting to actually create it"""
 
     def post(self, request):
         """Validates a new job type and returns any warnings discovered
@@ -332,6 +333,7 @@ class JobTypesValidationView(GenericAPIView):
 
 class JobTypesRunningView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently running job types."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeRunningStatusSerializer
 
     def list(self, request):
@@ -354,6 +356,7 @@ class JobTypesRunningView(ListAPIView):
 
 class JobTypesSystemFailuresView(ListAPIView):
     """This view is the endpoint for viewing system errors organized by job type."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeFailedStatusSerializer
 
     def list(self, request):
@@ -376,6 +379,7 @@ class JobTypesSystemFailuresView(ListAPIView):
 
 class JobTypesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall job type status information."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeStatusSerializer
 
     def list(self, request):
@@ -400,6 +404,7 @@ class JobTypesStatusView(ListAPIView):
 
 class JobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all available jobs."""
+    queryset = Job.objects.all()
     serializer_class = JobSerializer
 
     def list(self, request):
@@ -485,6 +490,7 @@ class JobDetailsView(GenericAPIView):
 
 class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""
+    queryset = Job.objects.all()
     serializer_class = JobUpdateSerializer
 
     def get(self, request):
@@ -517,6 +523,7 @@ class JobUpdatesView(ListAPIView):
 
 class JobsWithExecutionView(ListAPIView):
     """This view is the endpoint for viewing jobs and their associated latest execution"""
+    queryset = Job.objects.all()
     serializer_class = JobWithExecutionSerializer
 
     def list(self, request):
@@ -553,6 +560,7 @@ class JobsWithExecutionView(ListAPIView):
 
 class JobExecutionsView(ListAPIView):
     """This view is the endpoint for viewing job executions and their associated job_type id, name, and version"""
+    queryset = JobExecution.objects.all()
     serializer_class = JobExecutionSerializer
 
     def list(self, request):

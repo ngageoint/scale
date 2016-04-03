@@ -8,6 +8,7 @@ from django.db import transaction
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class RecipeTypesView(GenericAPIView):
     '''This view is the endpoint for retrieving the list of all recipe types'''
+    queryset = RecipeType.objects.all()
     serializer_class = RecipeTypeSerializer
 
     def get(self, request):
@@ -200,7 +202,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         return Response(serializer.data)
 
 
-class RecipeTypesValidationView(GenericAPIView):
+class RecipeTypesValidationView(APIView):
     '''This view is the endpoint for validating a new recipe type before attempting to actually create it'''
 
     def post(self, request):
@@ -256,6 +258,7 @@ class RecipeTypesValidationView(GenericAPIView):
 
 class RecipesView(ListAPIView):
     '''This view is the endpoint for retrieving the list of all recipes'''
+    queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
     def list(self, request):

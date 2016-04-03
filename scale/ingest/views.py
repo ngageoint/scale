@@ -5,9 +5,10 @@ import datetime
 import logging
 
 from django.http.response import Http404
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import util.rest as rest_util
 from ingest.models import Ingest, Strike
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 class IngestsView(ListAPIView):
     '''This view is the endpoint for retrieving the list of all ingests.'''
+    queryset = Ingest.objects.all()
     serializer_class = IngestSerializer
 
     def list(self, request):
@@ -70,6 +72,7 @@ class IngestDetailsView(RetrieveAPIView):
 
 class IngestsStatusView(ListAPIView):
     '''This view is the endpoint for retrieving summarized ingest status.'''
+    queryset = Ingest.objects.all()
     serializer_class = IngestStatusSerializer
 
     def list(self, request):
@@ -94,11 +97,11 @@ class IngestsStatusView(ListAPIView):
         return self.get_paginated_response(serializer.data)
 
 
-class CreateStrikeView(CreateAPIView):
+class CreateStrikeView(APIView):
     '''This view is the endpoint for creating a new Strike process.'''
     parser_classes = (JSONParser,)
 
-    def create(self, request):
+    def post(self, request):
         '''Creates a new Strike process and returns its ID in JSON form
 
         :param request: the HTTP POST request

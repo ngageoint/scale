@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 class JobLoadView(ListAPIView):
     """This view is the endpoint for retrieving the job load for a given time range."""
+    queryset = JobLoad.objects.all()
     serializer_class = JobLoadGroupSerializer
 
     def list(self, request):

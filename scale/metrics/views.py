@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class MetricsView(ListAPIView):
     '''This view is the endpoint for retrieving available types of metrics.'''
+    queryset = registry.get_metrics_types()
     serializer_class = MetricsTypeSerializer
 
     def list(self, request):
@@ -57,6 +58,7 @@ class MetricDetailsView(RetrieveAPIView):
 
 class MetricPlotView(ListAPIView):
     '''This view is the endpoint for retrieving plot values of metrics.'''
+    queryset = []
 
     def list(self, request, name):
         '''Retrieves the plot values for metrics and return them in JSON form

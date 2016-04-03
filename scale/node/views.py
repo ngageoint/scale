@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 class NodesView(ListAPIView):
     '''This view is the endpoint for viewing a list of nodes with metadata'''
+    queryset = Node.objects.all()
     serializer_class = NodeSerializer
 
     def list(self, request):
@@ -147,6 +148,7 @@ class NodeDetailsView(GenericAPIView):
 
 class NodesStatusView(ListAPIView):
     '''This view is the endpoint for retrieving overall node status information.'''
+    queryset = []
     serializer_class = NodeStatusSerializer
 
     def list(self, request):

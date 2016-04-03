@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
-from util.rest import JSONField, ModelIdSerializer
+from util.rest import ModelIdSerializer
 
 
 class DataTypeField(CharField):
@@ -85,7 +85,7 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
 
 class WorkspaceDetailsSerializer(WorkspaceSerializer):
     '''Converts workspace model fields to REST output'''
-    json_config = JSONField()
+    json_config = serializers.JSONField()
 
 
 class ScaleFileBaseSerializer(ModelIdSerializer):
@@ -108,7 +108,7 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
     # TODO: update to use GeoJson instead of WKT
     geometry = WktField()
     center_point = WktField()
-    meta_data = JSONField()
+    meta_data = serializers.JSONField()
     countries = serializers.RelatedField(many=True, read_only=True)
     last_modified = serializers.DateTimeField()
 
