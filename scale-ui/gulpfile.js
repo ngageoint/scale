@@ -19,7 +19,7 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js',],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
@@ -152,8 +152,8 @@ gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
 var appConfig = function () {
-    return gulp.src('./app/modules/scaleConfig.local.js')
-        .pipe(gulp.dest('./build/scripts'));
+    return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
+        .pipe(gulp.dest('./build/config'));
 };
 gulp.task('app-config', ['clean'],appConfig);
 
