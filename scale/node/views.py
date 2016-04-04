@@ -1,4 +1,4 @@
-'''Node Views'''
+"""Node Views"""
 from __future__ import unicode_literals
 
 import logging
@@ -19,18 +19,18 @@ logger = logging.getLogger(__name__)
 
 
 class NodesView(ListAPIView):
-    '''This view is the endpoint for viewing a list of nodes with metadata'''
+    """This view is the endpoint for viewing a list of nodes with metadata"""
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
 
     def list(self, request):
-        '''Retrieves the list of all nodes and returns it in JSON form
+        """Retrieves the list of all nodes and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -46,12 +46,12 @@ class NodesView(ListAPIView):
 
 
 class NodeDetailsView(GenericAPIView):
-    '''This view is the endpoint for viewing and modifying a node'''
+    """This view is the endpoint for viewing and modifying a node"""
     update_fields = ('hostname', 'port', 'pause_reason', 'is_paused', 'is_active')
     required_fields = ('hostname', 'port', 'is_paused', 'is_active')
 
     def get(self, request, node_id):
-        '''Gets node info
+        """Gets node info
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -59,7 +59,7 @@ class NodeDetailsView(GenericAPIView):
         :type node_id: str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Fetch the basic node attributes
         try:
@@ -86,7 +86,7 @@ class NodeDetailsView(GenericAPIView):
         return Response(result)
 
     def put(self, request, node_id):
-        '''Modify node info by replacing an object
+        """Modify node info by replacing an object
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -94,7 +94,7 @@ class NodeDetailsView(GenericAPIView):
         :type node_id: str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         missing = filter(lambda x, y=request.data.keys(): x not in y, self.required_fields)
         if len(missing):
@@ -117,7 +117,7 @@ class NodeDetailsView(GenericAPIView):
                         headers={'Location': request.build_absolute_uri()})
 
     def patch(self, request, node_id):
-        '''Modify node info with a subset of fields
+        """Modify node info with a subset of fields
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -125,7 +125,7 @@ class NodeDetailsView(GenericAPIView):
         :type node_id: str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
@@ -147,18 +147,18 @@ class NodeDetailsView(GenericAPIView):
 
 
 class NodesStatusView(ListAPIView):
-    '''This view is the endpoint for retrieving overall node status information.'''
+    """This view is the endpoint for retrieving overall node status information."""
     queryset = []
     serializer_class = NodeStatusSerializer
 
     def list(self, request):
-        '''Retrieves the list of all nodes with execution status and returns it in JSON form
+        """Retrieves the list of all nodes with execution status and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Get a list of all node status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')

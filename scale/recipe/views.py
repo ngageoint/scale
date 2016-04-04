@@ -26,18 +26,18 @@ logger = logging.getLogger(__name__)
 
 
 class RecipeTypesView(GenericAPIView):
-    '''This view is the endpoint for retrieving the list of all recipe types'''
+    """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
     serializer_class = RecipeTypeSerializer
 
     def get(self, request):
-        '''Retrieves the list of all recipe types returns it in JSON form
+        """Retrieves the list of all recipe types returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -51,13 +51,13 @@ class RecipeTypesView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def post(self, request):
-        '''Creates a new recipe type and returns a link to the detail URL
+        """Creates a new recipe type and returns a link to the detail URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -109,11 +109,11 @@ class RecipeTypesView(GenericAPIView):
 
 
 class RecipeTypeDetailsView(GenericAPIView):
-    '''This view is the endpoint for retrieving details of a recipe type'''
+    """This view is the endpoint for retrieving details of a recipe type"""
     serializer_class = RecipeTypeDetailsSerializer
 
     def get(self, request, recipe_type_id):
-        '''Retrieves the details for a recipe type and return them in JSON form
+        """Retrieves the details for a recipe type and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -121,7 +121,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         :type recipe_type_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             recipe_type = RecipeType.objects.get_details(recipe_type_id)
         except RecipeType.DoesNotExist:
@@ -131,7 +131,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request, recipe_type_id):
-        '''Edits an existing recipe type and returns the updated details
+        """Edits an existing recipe type and returns the updated details
 
         :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
@@ -139,7 +139,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         :type recipe_type_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         definition_dict = rest_util.parse_dict(request, 'definition', required=False)
@@ -203,16 +203,16 @@ class RecipeTypeDetailsView(GenericAPIView):
 
 
 class RecipeTypesValidationView(APIView):
-    '''This view is the endpoint for validating a new recipe type before attempting to actually create it'''
+    """This view is the endpoint for validating a new recipe type before attempting to actually create it"""
 
     def post(self, request):
-        '''Validates a new recipe type and returns any warnings discovered
+        """Validates a new recipe type and returns any warnings discovered
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         name = rest_util.parse_string(request, 'name')
         version = rest_util.parse_string(request, 'version')
         title = rest_util.parse_string(request, 'title', default_value=name)
@@ -257,18 +257,18 @@ class RecipeTypesValidationView(APIView):
 
 
 class RecipesView(ListAPIView):
-    '''This view is the endpoint for retrieving the list of all recipes'''
+    """This view is the endpoint for retrieving the list of all recipes"""
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
     def list(self, request):
-        '''Retrieves the list of all recipes and returns it in JSON form
+        """Retrieves the list of all recipes and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -285,11 +285,11 @@ class RecipesView(ListAPIView):
 
 
 class RecipeDetailsView(RetrieveAPIView):
-    '''This view is the endpoint for retrieving details of a recipe'''
+    """This view is the endpoint for retrieving details of a recipe"""
     serializer_class = RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
-        '''Retrieves the details for a recipe type and return them in JSON form
+        """Retrieves the details for a recipe type and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -297,7 +297,7 @@ class RecipeDetailsView(RetrieveAPIView):
         :type id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             recipe = Recipe.objects.get_details(recipe_id)
         except Recipe.DoesNotExist:

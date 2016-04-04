@@ -1,4 +1,4 @@
-'''Defines the serializers for products'''
+"""Defines the serializers for products"""
 from __future__ import unicode_literals
 
 import rest_framework.fields as fields
@@ -9,7 +9,7 @@ from util.rest import ModelIdSerializer
 
 
 class ProductFileBaseSerializer(ScaleFileBaseSerializer):
-    '''Converts product file model fields to REST output'''
+    """Converts product file model fields to REST output"""
     is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()
     published = serializers.DateTimeField()
@@ -20,26 +20,26 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
 
 
 class ProductFileSerializer(ProductFileBaseSerializer):
-    '''Converts product file model fields to REST output'''
+    """Converts product file model fields to REST output"""
     from job.serializers import JobTypeBaseSerializer
 
     job_type = JobTypeBaseSerializer()
 
 
 class ProductFileUpdateField(fields.Field):
-    '''Field for displaying the update information for a product file'''
+    """Field for displaying the update information for a product file"""
 
     type_name = 'UpdateField'
     type_label = 'update'
 
     def to_representation(self, value):
-        '''Converts the model to its update information
+        """Converts the model to its update information
 
         :param value: the product file model
         :type value: :class:`product.models.ProductFile`
         :rtype: dict
         :returns: the dict with the update information
-        '''
+        """
 
         if value.is_deleted:
             action = 'DELETED'
@@ -55,7 +55,7 @@ class ProductFileUpdateField(fields.Field):
 
 
 class ProductFileUpdateSerializer(ProductFileSerializer):
-    '''Converts product file updates to REST output'''
+    """Converts product file updates to REST output"""
     from source.serializers import SourceFileBaseSerializer
 
     update = ProductFileUpdateField(source='*')

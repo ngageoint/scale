@@ -1,4 +1,4 @@
-'''Defines the views for the RESTful product services'''
+"""Defines the views for the RESTful product services"""
 from __future__ import unicode_literals
 
 import logging
@@ -13,18 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 class ProductsView(ListAPIView):
-    '''This view is the endpoint for retrieving a product by filename'''
+    """This view is the endpoint for retrieving a product by filename"""
     queryset = ProductFile.objects.all()
     serializer_class = ProductFileSerializer
 
     def list(self, request):
-        '''Retrieves the product for a given file name and returns it in JSON form
+        """Retrieves the product for a given file name and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, u'started', required=False)
         ended = rest_util.parse_timestamp(request, u'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -46,18 +46,18 @@ class ProductsView(ListAPIView):
 
 
 class ProductUpdatesView(ListAPIView):
-    '''This view is the endpoint for retrieving product updates over a given time range.'''
+    """This view is the endpoint for retrieving product updates over a given time range."""
     queryset = ProductFile.objects.all()
     serializer_class = ProductFileUpdateSerializer
 
     def list(self, request):
-        '''Retrieves the product updates for a given time range and returns it in JSON form
+        """Retrieves the product updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, u'started', required=False)
         ended = rest_util.parse_timestamp(request, u'ended', required=False)
         rest_util.check_time_range(started, ended)

@@ -1,4 +1,4 @@
-'''Defines the serializers for import/export configuration'''
+"""Defines the serializers for import/export configuration"""
 import rest_framework.serializers as serializers
 
 from error.models import Error
@@ -8,7 +8,7 @@ from trigger.models import TriggerRule
 
 
 class ConfigurationErrorSerializer(serializers.ModelSerializer):
-    '''Converts error model fields to REST output.'''
+    """Converts error model fields to REST output."""
     name = serializers.CharField()
     title = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
@@ -20,7 +20,7 @@ class ConfigurationErrorSerializer(serializers.ModelSerializer):
 
 
 class ConfigurationTriggerRuleSerializer(serializers.ModelSerializer):
-    '''Converts trigger rule model fields to REST output.'''
+    """Converts trigger rule model fields to REST output."""
     type = serializers.CharField(required=False)
     name = serializers.CharField(required=False)
     is_active = serializers.BooleanField(required=False)
@@ -33,7 +33,7 @@ class ConfigurationTriggerRuleSerializer(serializers.ModelSerializer):
 
 
 class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
-    '''Converts job type model fields to REST output.'''
+    """Converts job type model fields to REST output."""
     name = serializers.CharField()
     version = serializers.CharField()
 
@@ -72,7 +72,7 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
 
 
 class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
-    '''Converts recipe type model fields to REST output.'''
+    """Converts recipe type model fields to REST output."""
     name = serializers.CharField()
     version = serializers.CharField()
     title = serializers.CharField(required=False)
@@ -87,7 +87,7 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
 
 
 class ConfigurationSerializer(serializers.Serializer):
-    '''Converts export fields to REST output'''
+    """Converts export fields to REST output"""
     version = serializers.CharField()
     recipe_types = ConfigurationRecipeTypeSerializer(many=True)
     job_types = ConfigurationJobTypeSerializer(many=True)

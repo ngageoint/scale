@@ -1,4 +1,4 @@
-'''Defines the views for the RESTful import/export services'''
+"""Defines the views for the RESTful import/export services"""
 from __future__ import unicode_literals
 
 import json
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class DownloadRenderer(JSONRenderer):
-    '''Renders a JSON response as a file download attachment instead of embedded content.'''
+    """Renders a JSON response as a file download attachment instead of embedded content."""
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         result = super(DownloadRenderer, self).render(data, accepted_media_type, renderer_context)
@@ -36,16 +36,16 @@ class DownloadRenderer(JSONRenderer):
 
 
 class ConfigurationView(APIView):
-    '''This view is the endpoint for importing/exporting job and recipe configuration.'''
+    """This view is the endpoint for importing/exporting job and recipe configuration."""
 
     def get(self, request):
-        '''Exports the job and recipe configuration and returns it in JSON form.
+        """Exports the job and recipe configuration and returns it in JSON form.
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         # Filter and export recipe types
         recipe_type_ids = rest_util.parse_string_list(request, 'recipe_type_id', required=False)
@@ -79,13 +79,13 @@ class ConfigurationView(APIView):
         return Response(export_config.get_dict())
 
     def post(self, request):
-        '''Imports job and recipe configuration and updates the corresponding models.
+        """Imports job and recipe configuration and updates the corresponding models.
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:
@@ -99,12 +99,12 @@ class ConfigurationView(APIView):
 
 
 class ConfigurationDownloadView(ConfigurationView):
-    '''This view is the endpoint for downloading an export of job and recipe configuration.'''
+    """This view is the endpoint for downloading an export of job and recipe configuration."""
     renderer_classes = (DownloadRenderer,)
 
 
 class ConfigurationUploadView(APIView):
-    '''This view is the endpoint for uploading an import file of job and recipe configuration.'''
+    """This view is the endpoint for uploading an import file of job and recipe configuration."""
 
     def post(self, request, *args, **kwargs):
         file_name = None
@@ -149,16 +149,16 @@ class ConfigurationUploadView(APIView):
 
 
 class ConfigurationValidationView(APIView):
-    '''This view is the endpoint for validation an exported job and recipe configuration.'''
+    """This view is the endpoint for validation an exported job and recipe configuration."""
 
     def post(self, request):
-        '''Validates job and recipe configuration to make sure it can be imported.
+        """Validates job and recipe configuration to make sure it can be imported.
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:

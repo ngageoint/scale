@@ -1,4 +1,4 @@
-'''Scheduler Views'''
+"""Scheduler Views"""
 import logging
 
 import rest_framework.status as status
@@ -14,18 +14,18 @@ logger = logging.getLogger(__name__)
 
 
 class SchedulerView(GenericAPIView):
-    '''This view is the endpoint for viewing and modifying the scheduler'''
+    """This view is the endpoint for viewing and modifying the scheduler"""
     serializer_class = SchedulerSerializer
     update_fields = (u'is_paused', )
 
     def get(self, request):
-        '''Gets scheduler info
+        """Gets scheduler info
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         try:
             scheduler = Scheduler.objects.get_master()
@@ -36,13 +36,13 @@ class SchedulerView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request):
-        '''Modify scheduler info with a subset of fields
+        """Modify scheduler info with a subset of fields
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
             return Response(u'Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
@@ -60,15 +60,15 @@ class SchedulerView(GenericAPIView):
 
 
 class StatusView(GenericAPIView):
-    '''This view is the endpoint for viewing overall system information'''
+    """This view is the endpoint for viewing overall system information"""
 
     def get(self, request):
-        '''Gets high level status information
+        """Gets high level status information
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         status = Scheduler.objects.get_status()
         return Response(status)

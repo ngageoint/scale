@@ -1,4 +1,4 @@
-'''Defines the views for the RESTful storage services'''
+"""Defines the views for the RESTful storage services"""
 from __future__ import unicode_literals
 
 import logging
@@ -15,18 +15,18 @@ logger = logging.getLogger(__name__)
 
 
 class WorkspacesView(ListAPIView):
-    '''This view is the endpoint for retrieving the list of all workspaces.'''
+    """This view is the endpoint for retrieving the list of all workspaces."""
     queryset = Workspace.objects.all()
     serializer_class = WorkspaceSerializer
 
     def get(self, request):
-        '''Retrieves the list of all workspaces and returns it in JSON form
+        """Retrieves the list of all workspaces and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -43,11 +43,11 @@ class WorkspacesView(ListAPIView):
 
 
 class WorkspaceDetailsView(RetrieveAPIView):
-    '''This view is the endpoint for retrieving/updating details of a workspace.'''
+    """This view is the endpoint for retrieving/updating details of a workspace."""
     serializer_class = WorkspaceDetailsSerializer
 
     def retrieve(self, request, workspace_id):
-        '''Retrieves the details for a workspace and return them in JSON form
+        """Retrieves the details for a workspace and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -55,7 +55,7 @@ class WorkspaceDetailsView(RetrieveAPIView):
         :type workspace_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             workspace = Workspace.objects.get_details(workspace_id)
         except Workspace.DoesNotExist:
