@@ -15,8 +15,7 @@ var gulp = require('gulp'),
     tar = require('gulp-tar'),
     gzip = require('gulp-gzip'),
     fs = require('fs'),
-    p = require('./package.json'),
-    jeditor = require('gulp-json-editor');
+    p = require('./package.json');
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
@@ -152,33 +151,11 @@ var appJs = function () {
 gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
-gulp.task('app-local-config', ['clean'], function () {
-    gulp.src('./config/scaleConfig.local.json')
-        .pipe(jeditor({
-            'scaleConfigLocal': {
-                'static': false
-            }
-        }))
-        .pipe(gulp.dest('./build/config'));
-});
-
 var appConfig = function () {
-    return gulp.src('./config/scaleConfig.json')
+    return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
         .pipe(gulp.dest('./build/config'));
 };
-gulp.task('app-config', ['app-local-config'], appConfig);
-
-gulp.task('app-local-config-static', ['clean'], function () {
-    gulp.src('./config/scaleConfig.local.json')
-        .pipe(jeditor({
-            'scaleConfigLocal': {
-                'static': true
-            }
-        }))
-        .pipe(gulp.dest('./build/config'));
-});
-
-gulp.task('app-config-static', ['app-local-config-static'], appConfig);
+gulp.task('app-config', ['clean'], appConfig);
 
 // append backendStubs path to scripts path to pull from static data
 var appJsStatic = function () {
@@ -230,7 +207,7 @@ gulp.task('app-test-data-watch', appTestData);
 
 gulp.task('app-build', ['app-js', 'app-config', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
 
-gulp.task('app-build-static', ['app-js-static', 'app-config-static', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
+gulp.task('app-build-static', ['app-js-static', 'app-config', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
 
 // code linting
 gulp.task('lint', function () {
