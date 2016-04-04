@@ -14,28 +14,28 @@
 
         // Status service
         var statusOverrideUrl = 'test/data/status.json';
-        var statusRegex = new RegExp('^' + scaleConfig.urls.getStatus(), 'i');
+        var statusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'status/', 'i');
         $httpBackend.whenGET(statusRegex).respond(function() {
             return getSync(statusOverrideUrl);
         });
 
         // Job type status
         var jobTypeStatusOverrideUrl = 'test/data/jobTypeStatus.json';
-        var jobTypeStatusRegex = new RegExp('^' + scaleConfig.urls.getJobTypeStatus(), 'i');
+        var jobTypeStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/status/', 'i');
         $httpBackend.whenGET(jobTypeStatusRegex).respond(function() {
             return getSync(jobTypeStatusOverrideUrl);
         });
 
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
-        var jobTypesRegex = new RegExp('^' + scaleConfig.urls.getJobTypes(), 'i');
+        var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
         $httpBackend.whenGET(jobTypesRegex).respond(function() {
             return getSync(jobTypesOverrideUrl);
         });
 
         // Node status
         var nodeStatusOverrideUrl = 'test/data/nodeStatus.json';
-        var nodeStatusRegex = new RegExp('^' + scaleConfig.urls.getNodeStatus(), 'i');
+        var nodeStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/status/', 'i');
         $httpBackend.whenGET(nodeStatusRegex).respond(function() {
             return getSync(nodeStatusOverrideUrl);
         });
