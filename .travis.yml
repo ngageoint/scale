@@ -1,33 +1,32 @@
 language: python
-
 env:
   global:
-    - TRAVIS=1
+  - TRAVIS=1
 
 python:
-  - "2.7"
+- '2.7'
 
 services:
-  - postgresql
+- postgresql
 
+before_install:
+- openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv
+  -in publish-key.enc -out ~/.ssh/publish-key -d
 before_script:
-  - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
-  - psql -c 'create database scale;' -U postgres
-  - psql -d scale -U postgres -c "create extension postgis;"
-  - psql -d scale -U postgres -c "create extension postgis_topology;"
-  - python scale/manage.py migrate --noinput
-
+- cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
+- psql -c 'create database scale;' -U postgres
+- psql -d scale -U postgres -c "create extension postgis;"
+- psql -d scale -U postgres -c "create extension postgis_topology;"
+- python scale/manage.py migrate --noinput
 install:
-  - pip install -q -r scale/pip/build_linux.txt
-
+- pip install -q -r scale/pip/build_linux.txt
 script:
-  - cd scale
-  - python manage.py test --noinput
-  - cd docs
-  - make code_docs html
-
-# branch whitelist
+- cd scale
+- python manage.py test --noinput
+- cd docs
+- make code_docs html
+- source push-docs.sh
 branches:
   only:
-    - master
-    - develop
+  - master
+  - develop
