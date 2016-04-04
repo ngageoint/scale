@@ -6,11 +6,69 @@
 
 body {
     margin-top: 50px; /* Required margin for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /*font-family: 'Roboto';
+    font-weight: 500;*/
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Light-webfont.ttf") format(truetype);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Bold-webfont.ttf") format(truetype);
+    font-weight: bold;
+    font-style: normal;
+}
+
+#examples {
+    margin-top: 20px;
+    padding: 40px 0;
+}
+#examples .example {
+    width: 100%;
+    min-height: 200px;
+    background: #7d8b8d;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+#examples .example h4 {
+    position: absolute;
+    bottom: 0;
+    background: #3c7cbf;
+    margin: 0;
+    padding: 14px 12px;
+    width: 100%;
+    font-family: "Lato", sans-serif;
+    font-size: 1.6rem;
+    color: #FFF;
+    font-weight: 400;
+}
+#examples .example img {
+    width: 100%;
+    height: auto;
+}
+
+#flow img {
+    width: 100%;
+    height: auto;
+}
+#flow .row{
+    margin-top: 20px;
 }
 
 h2 {
-    font-family: 'Lato', sans-serif;
     font-size: 32px;
+}
+
+h3 {
+    font-size: 2em;
+    font-weight: 400;
 }
 .image-bg-fluid-height,
 .image-bg-fixed-height {
@@ -46,6 +104,7 @@ h2 {
 
 #overview li {
     font-size: 21px;
+    font-weight: 300;
 }
 
 section {
@@ -55,6 +114,7 @@ section {
 .section-heading {
     margin: 15px 0;
     font-size: 4em;
+    font-weight: 400;
 }
 
 .section-lead {
@@ -84,7 +144,6 @@ section {
     overflow: hidden;
     margin-bottom: 10px;
 }
-
 #tutorials .tutorial h4 {
     position: absolute;
     bottom: 0;
@@ -99,40 +158,8 @@ section {
 }
 #tutorials .tutorial img {
     width: 100%;
-    height: 100%; }
-
-
-#examples {
-    margin-top: 20px;
-    padding: 40px 0;
-}
-#examples .example {
-    width: 100%;
-    min-height: 200px;
-    background: #7d8b8d;
-    position: relative;
-    display: block;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-#examples .example h4 {
-    position: absolute;
-    bottom: 0;
-    background: #3c7cbf;
-    margin: 0;
-    padding: 14px 12px;
-    width: 100%;
-    font-family: "Lato", sans-serif;
-    font-size: 1.6rem;
-    color: #FFF;
-    font-weight: 400;
-}
-#examples .example img {
-    width: 100%;
     height: auto;
 }
-
 
 footer {
     margin: 50px 0;
