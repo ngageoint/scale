@@ -1,0 +1,177 @@
+/*!
+ * Start Bootstrap - Full Width Pics HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+body {
+    margin-top: 50px; /* Required margin for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /*font-family: 'Roboto';
+    font-weight: 500;*/
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Light-webfont.ttf") format(truetype);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("../fonts/roboto-webfont/Roboto-Bold-webfont.ttf") format(truetype);
+    font-weight: bold;
+    font-style: normal;
+}
+
+#examples {
+    margin-top: 20px;
+    padding: 40px 0;
+}
+#examples .example {
+    width: 100%;
+    min-height: 200px;
+    background: #7d8b8d;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+#examples .example h4 {
+    position: absolute;
+    bottom: 0;
+    background: #3c7cbf;
+    margin: 0;
+    padding: 14px 12px;
+    width: 100%;
+    font-family: "Lato", sans-serif;
+    font-size: 1.6rem;
+    color: #FFF;
+    font-weight: 400;
+}
+#examples .example img {
+    width: 100%;
+    height: auto;
+}
+
+#flow img {
+    width: 100%;
+    height: auto;
+}
+#flow .row{
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 32px;
+}
+
+h3 {
+    font-size: 2em;
+    font-weight: 400;
+}
+.image-bg-fluid-height,
+.image-bg-fixed-height {
+    text-align: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.image-bg-fluid-height {
+	background: url('../images/horizon-2.jpg') no-repeat center center scroll;
+    padding: 100px 0;
+    darken: 50%;
+}
+
+.image-bg-fixed-height {
+	background: url('../images/horizon-2.jpg') no-repeat center center scroll;
+    height: 150px;
+}
+
+.img-center {
+	margin: 0 auto;
+}
+
+.nav-logo{
+    width: 20px;
+    float: left;
+    vertical-align: middle;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+#overview li {
+    font-size: 21px;
+    font-weight: 300;
+}
+
+section {
+    padding: 15px 0;
+}
+
+.section-heading {
+    margin: 15px 0;
+    font-size: 4em;
+    font-weight: 400;
+}
+
+.section-lead {
+    margin: 30px 0;
+}
+
+.section-paragraph {
+    margin: 30px 0;
+}
+
+.subsection-heading {
+    margin: 5px 0;
+    font-size: 2em;
+}
+
+#tutorials {
+    margin-top: 20px;
+    background: #ecf0f0;
+    padding: 40px 0;
+}
+#tutorials .tutorial {
+    width: 100%;
+    min-height: 200px;
+    background: #7d8b8d;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+#tutorials .tutorial h4 {
+    position: absolute;
+    bottom: 0;
+    background: #3c7cbf;
+    margin: 0;
+    padding: 14px 12px;
+    width: 100%;
+    font-family: "Lato", sans-serif;
+    font-size: 1.6rem;
+    color: #FFF;
+    font-weight: 400;
+}
+#tutorials .tutorial img {
+    width: 100%;
+    height: auto;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+@media(max-width:768px) {
+    section {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+
+    .section-heading {
+        font-size: 2em;
+    }
+}
