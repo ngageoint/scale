@@ -155,7 +155,7 @@ var appConfig = function () {
     return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
         .pipe(gulp.dest('./build/config'));
 };
-gulp.task('app-config', ['clean'],appConfig);
+gulp.task('app-config', ['clean'], appConfig);
 
 // append backendStubs path to scripts path to pull from static data
 var appJsStatic = function () {
