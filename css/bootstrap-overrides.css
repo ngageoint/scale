@@ -1,0 +1,47 @@
+.navbar-brand img {
+    width: 20px;
+    float: left;
+    vertical-align: middle;
+    margin: 0 5px 0 0;
+}
+
+.jumbotron {
+    background: url('../images/horizon-3.jpg') no-repeat 50% top scroll;
+    background-size: 100%;
+    background-color: #000;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.jumbotron h1 {
+    color: #fff;
+    text-shadow: 2px 2px 2px #000;
+    font-size: 35px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.panel-body {
+    padding: 5px;
+}
+
+@media screen and (min-width: 1025px) {
+    .jumbotron {
+        background: url('../images/horizon-3.jpg') no-repeat 50% 54% scroll;
+        background-size: 100%;
+    }
+
+    .jumbotron h1 {
+        font-size: 58px;
+    }
+}
+
+/*@media (max-width: 1024px) {
+    .jumbotron {
+        padding-bottom: 10px;
+    }
+
+    .jumbotron h1 {
+        font-size: 35px;
+    }
+}*/
