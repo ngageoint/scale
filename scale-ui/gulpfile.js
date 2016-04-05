@@ -19,12 +19,13 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js',],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
     testData: ['./app/test/data/**/*'],
-    tests: ['./tests/*.js']
+    tests: ['./tests/*.js'],
+    stubs: './app/test/scripts/backendStubs.js'
 };
 
 var getVersionJson = function() {
@@ -151,10 +152,18 @@ gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
 var appConfig = function () {
-    return gulp.src('./app/modules/scaleConfig.local.js')
-        .pipe(gulp.dest('./build/scripts'));
+    return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
+        .pipe(gulp.dest('./build/config'));
 };
-gulp.task('app-config', ['clean'],appConfig);
+gulp.task('app-config', ['clean'], appConfig);
+
+// append backendStubs path to scripts path to pull from static data
+var appJsStatic = function () {
+    paths.scripts.push(paths.stubs);
+    appJs();
+};
+gulp.task('app-js-static', ['clean'], appJsStatic);
+gulp.task('app-js-static-watch', appJsStatic);
 
 var appHtml = function () {
     return gulp.src(paths.html)
@@ -190,11 +199,15 @@ gulp.task('app-fonts', ['clean'], appFonts);
 
 var appTestData = function () {
     return gulp.src(paths.testData)
+        .pipe(connect.reload())
         .pipe(gulp.dest('./build/test/data'));
 };
 gulp.task('app-test-data', ['clean'], appTestData);
+gulp.task('app-test-data-watch', appTestData);
 
 gulp.task('app-build', ['app-js', 'app-config', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
+
+gulp.task('app-build-static', ['app-js-static', 'app-config', 'app-html', 'app-css', 'app-images', 'app-fonts', 'app-test-data']);
 
 // code linting
 gulp.task('lint', function () {
@@ -240,6 +253,14 @@ gulp.task('connect', ['build'], function () {
     });
 });
 
+gulp.task('connect-static', ['build-static'], function () {
+    connect.server({
+        port: 9000,
+        root: 'build',
+        livereload: true
+    });
+});
+
 // watch files
 gulp.task('watch', ['connect'], function () {
     gulp.watch(paths.html, ['app-html-watch']);
@@ -247,9 +268,21 @@ gulp.task('watch', ['connect'], function () {
     gulp.watch(paths.scripts, ['app-js-watch']);
     gulp.watch(paths.styles, ['app-css-watch']);
 });
+gulp.task('watch-static', ['connect-static'], function () {
+    gulp.watch(paths.html, ['app-html-watch']);
+    gulp.watch(paths.scripts, ['app-js-static-watch']);
+    gulp.watch(paths.styles, ['app-css-watch']);
+    gulp.watch(paths.testData, ['app-test-data-watch']);
+});
 
 // build
 gulp.task('build', ['vendor-build', 'clean-tmp', 'app-build'], function () {
+    return gulp.src(['app/index.html','app/version.json'],{base: 'app/'})
+        .pipe(gulp.dest('build'));
+});
+
+// use static files
+gulp.task('build-static', ['vendor-build', 'clean-tmp', 'app-build-static'], function () {
     return gulp.src(['app/index.html','app/version.json'],{base: 'app/'})
         .pipe(gulp.dest('build'));
 });
@@ -294,6 +327,9 @@ gulp.task('deploy-scale', ['bump','dist'], function () {
 });
 
 gulp.task('deploy', ['deploy-scale', 'clean-scale']);
+
+// gulp static task
+gulp.task('static', ['watch-static']);
 
 // default gulp task
 gulp.task('default', ['build', 'connect', 'watch']);

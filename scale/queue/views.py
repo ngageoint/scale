@@ -8,30 +8,27 @@ import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.http.response import Http404
 from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData, StatusError
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobListSerializer
+from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupListSerializer
+from queue.serializers import JobLoadGroupSerializer
 from recipe.models import Recipe, RecipeType
 from recipe.serializers import RecipeDetailsSerializer
-from util.rest import BadParameter
-
 
 logger = logging.getLogger(__name__)
 
 
-class JobLoadView(APIView):
+class JobLoadView(ListAPIView):
     """This view is the endpoint for retrieving the job load for a given time range."""
+    queryset = JobLoad.objects.all()
+    serializer_class = JobLoadGroupSerializer
 
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
-    def get(self, request):
+    def list(self, request):
         """Retrieves the job load for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -52,15 +49,15 @@ class JobLoadView(APIView):
                                                   job_type_priorities)
         job_loads_grouped = JobLoad.objects.group_by_time(job_loads)
 
-        page = rest_util.perform_paging(request, job_loads_grouped)
-        serializer = JobLoadGroupListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(job_loads_grouped)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class QueueNewJobView(APIView):
+class QueueNewJobView(GenericAPIView):
     """This view is the endpoint for creating new jobs and putting them on the queue."""
     parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobDetailsSerializer
 
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
@@ -85,16 +82,17 @@ class QueueNewJobView(APIView):
             return Response('Invalid job information.', status=status.HTTP_400_BAD_REQUEST)
 
         job_details = Job.objects.get_details(job_id)
-        serializer = JobDetailsSerializer(job_details, context={'request': request})
+
+        serializer = self.get_serializer(job_details)
         job_exe_url = urlresolvers.reverse('job_execution_details_view', args=[job_exe_id])
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_exe_url))
 
 
-class QueueNewRecipeView(APIView):
+class QueueNewRecipeView(GenericAPIView):
     """This view is the endpoint for queuing recipes and returns the detail information for the recipe that was queued.
     """
     parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = RecipeDetailsSerializer
 
     def post(self, request):
         """Queue a recipe and returns the new job information in JSON form
@@ -119,15 +117,14 @@ class QueueNewRecipeView(APIView):
             return Response('Invalid recipe information.', status=status.HTTP_400_BAD_REQUEST)
 
         recipe_details = Recipe.objects.get_details(recipe_id)
-        serializer = RecipeDetailsSerializer(recipe_details, context={'request': request})
+
+        serializer = self.get_serializer(recipe_details)
         recipe_url = urlresolvers.reverse('recipe_details_view', args=[recipe_id])
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 
-class QueueStatusView(APIView):
-    """This view is the endpoint for retrieving the queue status.
-    """
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+class QueueStatusView(GenericAPIView):
+    """This view is the endpoint for retrieving the queue status."""
 
     def get(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
@@ -142,10 +139,10 @@ class QueueStatusView(APIView):
         return Response({'queue_status': queue_status})
 
 
-class RequeueJobsView(APIView):
+class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobSerializer
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -180,17 +177,17 @@ class RequeueJobsView(APIView):
         # Refresh models to get the new status information for all originally requested jobs
         jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
-        page = rest_util.perform_paging(request, jobs)
-        serializer = JobListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(jobs)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 # TODO: Remove this once the UI migrates to /queue/requeue-jobs/
-class RequeueExistingJobView(APIView):
+class RequeueExistingJobView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed for the maximum number of tries
     """
     parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    serializer_class = JobDetailsSerializer
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -201,13 +198,14 @@ class RequeueExistingJobView(APIView):
         :rtype: int
         :returns: the HTTP response to send back to the user
         """
-        job_id = request.DATA['job_id']
+        job_id = request.data['job_id']
 
         try:
             Queue.objects.requeue_existing_job(job_id)
             job_details = Job.objects.get_details(job_id)
-            serializer = JobDetailsSerializer(job_details, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
+
+            serializer = self.get_serializer(job_details)
+            return Response(serializer.data)
         except Job.DoesNotExist:
             raise Http404
         except InvalidData:

@@ -1,5 +1,4 @@
-'''Defines the serializers for Scale files and workspaces'''
-import rest_framework.pagination as pagination
+"""Defines the serializers for Scale files and workspaces"""
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
@@ -7,19 +6,19 @@ from util.rest import ModelIdSerializer
 
 
 class DataTypeField(CharField):
-    '''Field for displaying the list of data type tags for a Scale file'''
+    """Field for displaying the list of data type tags for a Scale file"""
 
     type_name = 'DataTypeField'
     type_label = 'datatype'
 
-    def to_native(self, value):
-        '''Converts the model field to a list of data type tags
+    def to_representation(self, value):
+        """Converts the model field to a list of data type tags
 
         :param value: the comma-separated data types for the Scale file
         :type value: str
         :rtype: list of str
         :returns: the list of data type tags
-        '''
+        """
 
         tags = []
         if value:
@@ -29,48 +28,48 @@ class DataTypeField(CharField):
 
 
 class WktField(CharField):
-    '''Field for displaying geometry objects as Well Known Text'''
+    """Field for displaying geometry objects as Well Known Text"""
 
     type_name = 'WktField'
     type_label = 'wtk'
 
-    def to_native(self, value):
-        '''Converts the model field to WKT
+    def to_representation(self, value):
+        """Converts the model field to WKT
 
         :param value: the associated geometry info
         :type value: GEOSGeometry
         :rtype: string
         :returns: the WKT representation
-        '''
+        """
         if value:
             return value.wkt
 
 
 class GeoJsonField(CharField):
-    '''Field for displaying geometry objects as Well Known Text'''
+    """Field for displaying geometry objects as Well Known Text"""
 
     type_name = 'GeoJsonField'
     type_label = 'geojson'
 
-    def to_native(self, value):
-        '''Converts the model field to GeoJson
+    def to_representation(self, value):
+        """Converts the model field to GeoJson
 
         :param value: the associated geometry info
         :type value: GEOSGeometry
         :rtype: string
         :returns: the GeoJson representation
-        '''
+        """
         if value:
             return value.geojson
 
 
 class WorkspaceBaseSerializer(ModelIdSerializer):
-    '''Converts workspace model fields to REST output'''
+    """Converts workspace model fields to REST output"""
     name = serializers.CharField()
 
 
 class WorkspaceSerializer(WorkspaceBaseSerializer):
-    '''Converts workspace model fields to REST output'''
+    """Converts workspace model fields to REST output"""
     title = serializers.CharField()
     description = serializers.CharField()
     base_url = serializers.URLField()
@@ -85,18 +84,12 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
 
 
 class WorkspaceDetailsSerializer(WorkspaceSerializer):
-    '''Converts workspace model fields to REST output'''
-    json_config = serializers.CharField()
-
-
-class WorkspaceListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of workspace models to paginated REST output.'''
-    class Meta:
-        object_serializer_class = WorkspaceSerializer
+    """Converts workspace model fields to REST output"""
+    json_config = serializers.JSONField()
 
 
 class ScaleFileBaseSerializer(ModelIdSerializer):
-    '''Converts Scale file model fields to REST output'''
+    """Converts Scale file model fields to REST output"""
     workspace = WorkspaceBaseSerializer()
 
     file_name = serializers.CharField()
@@ -115,11 +108,11 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
     # TODO: update to use GeoJson instead of WKT
     geometry = WktField()
     center_point = WktField()
-    meta_data = serializers.CharField()
-    countries = serializers.RelatedField(many=True)
+    meta_data = serializers.JSONField()
+    countries = serializers.RelatedField(many=True, read_only=True)
     last_modified = serializers.DateTimeField()
 
 
 class ScaleFileSerializer(ScaleFileBaseSerializer):
-    '''Converts Scale file model fields to REST output'''
+    """Converts Scale file model fields to REST output"""
     workspace = WorkspaceSerializer()

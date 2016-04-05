@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Scale</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img class="nav-logo" src="images/scale3-transparent-128.png">
+            <a class="navbar-brand" href="index.html">Scale</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index.html">Overview</a>
+                </li>
+                <li>
+                    <a href="docs.html">Documentation</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Full Width Image Header with Logo -->
+<!-- Image backgrounds are set within the full-width-pics.css file. -->
+<header class="image-bg-fluid-height">
+    <img class="img-responsive img-center" src="images/scale3-transparent-128.png" alt="">
+</header>
+
+<!-- Intro Section -->
+<section id="overview">
+    <div class="container">
+        <!--<div class="row">-->
+            <!--<div class="col-lg-12">-->
+                <!--<h1>Scale processes petabytes of data using a user-defined bank of algorithms.</h1>-->
+                <!--<h1>Scale processes petabytes of data using an extensible bank of algorithms.</h1>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="section-heading">Scale processes petabytes of data using an extensible bank of algorithms.</h1>
+                <!--<h1 class="section-heading">What does Scale do?</h1>-->
+                <p class="lead section-lead">Scale enables on-demand, automated
+                    processing of large satellite, medical, or audio/video datasets
+                    using a dynamic bank of algorithms. Algorithm execution is
+                    seamlessly distributed across thousands of CPU cores.
+                    <a href="https://www.docker.com/">Docker</a> provides algorithm containerization. <a href="http://mesos.apache.org/">Apache Mesos</a> enables optimum resource utilization.</p>
+                <h1 class="section-heading">With Scale you can:</h1>
+                <ul>
+                    <li>Rapidly integrate algorithms written in
+                        Java, Python, IDL, Matlab, C/C++, ...</li>
+                    <li>Compose complex algorithms using Recipes for
+                        advanced data processing</li>
+                    <li>Increase your agility as an organization by running
+                        containerized developmental algorithms on
+                        the same cluster as operational algorithms</li>
+                    <li>Adjust algorithm prioritization to ensure the most
+                        critical data is processed first</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="flow">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Implement Custom Data Flows</h2>
+                <p>Scale provides the flexibility you need in processing high
+                    volume, file-based datasets. It can work with many
+                    individual data feeds. Support for custom algorithms and
+                    Recipes allows you to implement custom data flows and publish
+                    outputs that are accessible via the Scale web UI or REST API.</p>
+                <p>The <a href="flow.html">Data Flow Overview</a> includes more
+                    detail on the data lifecycle.
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <img class="scale-flow" src="images/scale-flow.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Monitor Your Cluster</h2>
+                <p>Scale includes a comprehensive web UI that allows you to
+                    monitor critical aspects of cluster health and job executions.
+                    The UI includes a dashboard that provides important
+                    statistics at a glance. Users can access detailed information
+                    on Job & Recipe executions, restart failed Jobs, monitor
+                    Data Feed status, view processing Metrics and access Products.</p>
+                <p>The <a href="ui-walkthrough.html">UI Walkthrough</a>
+                    highlights important features for monitoring your Scale cluster.</p>
+            </div>
+            <div class="col-sm-6">
+                <img class="scale-flow" src="images/scale-dashboard.jpg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tutorials Section -->
+<section id="tutorials">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h3>Tutorials</h3>
+                Check out these tutorials to learn how to process your data feeds with Scale.
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="tutorial">
+                    <img src="images/tutorial-thumb-quickstart.jpg">
+                    <h4>Quickstart</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="tutorial">
+                    <img src="images/tutorial-thumb-algorithm.jpg">
+                    <h4>Algorithm Integration</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="tutorial">
+                    <img src="images/tutorial-thumb-recipe.jpg">
+                    <h4>Recipe Editor</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                &nbsp;
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Examples Section -->
+<section id="examples">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h3>Examples</h3>
+                Check out these examples see how Scale processes real data sets.
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="example">
+                    <img src="images/example-thumb-hyperspectral.jpg">
+                    <h4>Remote Sensing</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="example">
+                    <img src="images/example-thumb-mri.jpg">
+                    <h4>Medical Imaging</h4>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <a href="#" class="example">
+                    <img src="images/example-thumb-audio.jpg">
+                    <h4>Audio Processing</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Footer, copyright, licensing</p>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
