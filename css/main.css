@@ -43,27 +43,16 @@ header .btn {
 
 .header-content {
     margin-top: 51px;
-    padding: 10px 0;
+    padding: 50px 0 0 0;
 }
 
 .header-content li a:link, .header-content li a:active, .header-content li a:visited {
     color: #fff;
+    text-shadow: 1px 1px 1px #000;
 }
 
 footer {
     margin: 10px 0 0 0;
     padding: 20px 0;
     background: #ddd;
-}
-
-@media screen and (min-width: 768px) {
-    .header-content {
-        padding-top: 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    .header-content {
-        padding-top: 12px;
-    }
 }
