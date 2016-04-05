@@ -92,7 +92,7 @@ class Command(BaseCommand):
             ingest.status = 'TRANSFERRED'
             if options['no_commit']:
                 s = IngestDetailsSerializer()
-                logger.info(s.to_native(ingest))
+                logger.info(s.to_representation(ingest))
             else:
                 ingest.save()
                 ingest_records[filename] = ingest.id

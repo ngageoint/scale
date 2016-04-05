@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import json
@@ -9,6 +8,7 @@ from rest_framework import status
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
+
 
 class TestMetricsView(TestCase):
 
@@ -30,6 +30,7 @@ class TestMetricsView(TestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
 
+
 class TestMetricDetailsView(TestCase):
 
     def setUp(self):
@@ -50,6 +51,7 @@ class TestMetricDetailsView(TestCase):
         self.assertGreaterEqual(len(result['groups']), 1)
         self.assertGreaterEqual(len(result['columns']), 1)
         self.assertEqual(len(result['choices']), 1)
+
 
 class TestMetricPlotView(TestCase):
 
@@ -83,7 +85,7 @@ class TestMetricPlotView(TestCase):
                 self.assertFalse('id' in entry['values'])
 
     def test_choices(self):
-        '''Tests successfully calling the metric plot view.'''
+        '''Tests successfully calling the metric plot view with choice filters.'''
 
         url = '/metrics/job-types/plot-data/?choice_id=%s&choice_id=%s' % (self.job_type1.id, self.job_type2.id)
         response = self.client.generic('GET', url)
@@ -114,7 +116,7 @@ class TestMetricPlotView(TestCase):
         self.assertEqual(len(result['results']), 2)
 
     def test_groups(self):
-        '''Tests successfully calling the metric plot view with column filters.'''
+        '''Tests successfully calling the metric plot view with group filters.'''
 
         url = '/metrics/job-types/plot-data/?group=overview'
         response = self.client.generic('GET', url)
