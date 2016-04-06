@@ -10,8 +10,8 @@
     background-size: 100%;
     background-color: #000;
     padding-top: 0;
-    padding-bottom: 0;
-    height: 55vh;
+    padding-bottom: 15px;
+    min-height: 55vh;
 }
 
 .jumbotron h1 {
