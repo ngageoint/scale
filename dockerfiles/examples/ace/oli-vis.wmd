@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Wavelengths xmlns="http://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd" units="microns" version="1">
+    <value start="0.43" center="0.44" end="0.45">Coastal aerosol</value>
+    <value start="0.45" center="0.48" end="0.51">Blue</value>
+    <value start="0.53" center="0.56" end="0.59">Green</value>
+    <value start="0.64" center="0.655" end="0.67">Red</value>
+    <value start="0.85" center="0.865" end="0.88">NIR</value>
+    <value start="1.57" center="1.61" end="1.65">SWIR 1</value>
+    <value start="2.11" center="2.2" end="2.29">SWIR 2</value>
+</Wavelengths>

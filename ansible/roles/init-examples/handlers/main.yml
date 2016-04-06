@@ -11,3 +11,19 @@
 - name: push landsat-tiles
   command: sh -c 'docker tag -f landsat-tiles_1.0:dev {{ docker_registry }}landsat-tiles_1.0:dev; docker push {{ docker_registry }}landsat-tiles_1.0:dev'
   become: true
+
+- name: push pca
+  command: sh -c 'docker tag -f pca_1.0:dev {{ docker_registry }}pca_1.0:dev; docker push {{ docker_registry }}pca_1.0:dev'
+  become: true
+
+- name: push ace
+  command: sh -c 'docker tag -f ace_1.0:dev {{ docker_registry }}ace_1.0:dev; docker push {{ docker_registry }}ace_1.0:dev'
+  become: true
+
+- name: push vash
+  command: sh -c 'docker tag -f vash_1.0:dev {{ docker_registry }}vash_1.0:dev; docker push {{ docker_registry }}vash_1.0:dev'
+  become: true
+
+- name: push parse-binary
+  command: sh -c 'docker tag -f parse-binary_1.0:dev {{ docker_registry }}parse-binary_1.0:dev; docker push {{ docker_registry }}parse-binary_1.0:dev'
+  become: true

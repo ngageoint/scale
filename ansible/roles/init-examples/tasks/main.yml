@@ -1,7 +1,7 @@
 ---
 # init-examples/tasks/main.yml
 - name: Install initialization script
-  tags: init-examples
+  tags: [ init-examples, example-database ]
   template: src=example_data.py.j2 dest='/tmp/example_data.py'
 
 - name: Install the countries shapefile
@@ -9,7 +9,7 @@
   unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
 
 - name: Initialize example database
-  tags: init-examples
+  tags: [ init-examples, example-database ]
   command: sh -c "echo \"execfile('/tmp/example_data.py')\" | {{ django_build_dir }}/manage.py shell"
 
 - name: Build landsat-base docker image
@@ -52,6 +52,50 @@
   become: true
   notify:
     - push landsat-tiles
+
+- name: Build pca docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/pca"
+    name: "pca_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push pca
+
+- name: Build ace docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/ace"
+    name: "ace_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push ace
+
+- name: Build parse-binary docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/binary-parse"
+    name: "parse-binary_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push parse-binary
+
+- name: Build vash docker image
+  tags: init-examples
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/vash"
+    name: "vash_1.0"
+    tag: "{{ example_image_tag }}"
+    state: build
+  become: true
+  notify:
+    - push vash
 
 - name: Static example product web server
   tags: init-examples

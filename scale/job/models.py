@@ -526,7 +526,7 @@ class Job(models.Model):
         successfully completed.
     :type results: :class:`djorm_pgjson.fields.JSONField`
     :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
+        See the mesos prototype file for further information.
     :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
@@ -1155,7 +1155,7 @@ class JobExecution(models.Model):
     :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
     :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
+        See the mesos prototype file for further information.
     :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword node: The node on which the job execution is being run
@@ -2013,7 +2013,7 @@ class JobType(models.Model):
     :keyword interface: JSON description defining the interface for running a job of this type
     :type interface: :class:`djorm_pgjson.fields.JSONField`
     :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
+        See the mesos prototype file for further information.
     :type docker_params: :class:`djorm_pgjson.fields.JSONField`
     :keyword revision_num: The current revision number of the interface, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
