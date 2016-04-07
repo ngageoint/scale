@@ -1,0 +1,124 @@
+{
+    "id": 1,
+    "name": "Simple Recipe",
+    "version": "1.0",
+    "description": "Data mockup of a simple Scale recipe",
+    "is_active": true,
+    "definition": {
+        "input_data": [
+            {
+                "media_types": [
+                    "image/x-hdf5-image"
+                ],
+                "type": "file",
+                "name": "input_file"
+            }
+        ],
+        "version": "1.0.0",
+        "jobs": [
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "alfa",
+                "job_type": {
+                    "name": "alfa",
+                    "version": "1.0"
+                }
+            },
+            {
+                "recipe_inputs": [
+                    {
+                        "recipe_input": "input_file", "job_input": "input_file"
+                    }
+                ],
+                "name": "bravo",
+                "job_type": {
+                    "name": "bravo",
+                    "version": "1.0"
+                }
+            }
+        ]
+    },
+    "recipe_type": {
+        "id": 1
+    },
+    "created": "2015-06-15T19:03:26.346Z",
+    "last_modified": "2015-06-15T19:03:26.346Z",
+    "archived": null,
+    "job_types": [
+        {
+            "id": 1,
+            "name": "alfa",
+            "version": "1.0",
+            "title": "Alfa",
+            "description": "This is a job type",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f13d",
+            "interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/png"
+                        ],
+                        "type": "file",
+                        "name": "input_file"
+                    }
+                ],
+                "version": "1.0",
+                "command": "command_to_run.sh",
+                "output_data": [
+                    {
+                        "media_type": "image/png",
+                        "type": "file",
+                        "name": "my_file_name"
+                    }
+                ],
+                "command_arguments": "${input_file} ${job_output_dir}"
+            }
+        },
+        {
+            "id": 2,
+            "name": "bravo",
+            "version": "1.0",
+            "title": "Bravo",
+            "description": "This is a job type",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0e7",
+            "interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/png"
+                        ],
+                        "type": "file",
+                        "name": "input_file"
+                    }
+                ],
+                "version": "1.0",
+                "command": "command_to_run.sh",
+                "output_data": [
+                    {
+                        "media_type": "image/png",
+                        "type": "file",
+                        "name": "my_file_name"
+                    }
+                ],
+                "command_arguments": "${input_file} ${job_output_dir}"
+            }
+        }
+    ]
+}

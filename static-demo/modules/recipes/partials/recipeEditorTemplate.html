@@ -1,0 +1,39 @@
+<ais-header name="'Recipe Editor'" show-subnav="true" subnav-links="subnavLinks" loading="loading"></ais-header>
+<div class="row margin-bottom-md">
+    <div class="col-xs-12 recipe-editor form-inline">
+        <label for="recipeName">Name:</label> <input id="recipeName" class="form-control" type="text" ng-model="recipeType.name" />
+        <button type="button" class="btn btn-default" ng-click="saveRecipeType()">Save</button>
+        <button class="btn btn-default" ng-click="openAddJob()">Add Job</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <ais-scale-recipe-graph-viewer recipe-type="recipeType" redraw="redrawGraph"></ais-scale-recipe-graph-viewer>
+    </div>
+</div>
+
+    <script type="text/ng-template" id="addJobContent.html">
+        <div>
+            <div class="modal-header">
+                <h3>Select a Job Type</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="master-container">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedItem.name === jobType.name }" ng-click="selectItem(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
+                            </ul>
+                        </div>
+                        Selected: <b>{{ selectedItem.name }}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="$close()">OK</button>
+                <button class="btn btn-warning" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>
+    </script>
+
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>

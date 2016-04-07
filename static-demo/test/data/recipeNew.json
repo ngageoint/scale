@@ -1,0 +1,32 @@
+{
+    "version": "1.0",
+    "input_data": [
+        {
+            "media_types": ["plain/text"],
+            "type": "file",
+            "name": "input_file"
+        }
+    ],
+    "jobs": [
+        {
+            "recipe_inputs": [
+                {
+                    "job_input": "input_file",
+                    "recipe_input": "input_file"
+                }
+            ],
+            "name": "alfa",
+            "job_type_id": 1
+        },
+        {
+            "recipe_inputs": [
+                {
+                    "job_input": "input_file",
+                    "recipe_input": "input_file"
+                }
+            ],
+            "name": "bravo",
+            "job_type_id": 2
+        }
+    ]
+}

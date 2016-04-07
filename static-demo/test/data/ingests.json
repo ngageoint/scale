@@ -1,0 +1,71 @@
+{
+    "count": 12345,
+    "next": "/api/ingests/?page=2",
+    "previous": null,
+    "results": [
+        {
+            "id": 2,
+            "file_name": "19700000000000_00_0000000000_EXT.h5",
+            "strike":{
+                "id": 1,
+                "job": {
+                    "id": 2
+                }
+            },
+            "status": "INGESTED",
+            "bytes_transferred": 4139388,
+            "transfer_started": "1970-01-01T00:31:03.751Z",
+            "transfer_ended":  "1970-01-01T00:31:03.751Z",
+            "media_type": "image/x-hdf5-image",
+            "file_size": 4139388,
+            "data_type": [
+                "EXT",
+                "DX"
+            ],
+            "ingest_started":  "1970-01-01T00:31:03.751Z",
+            "ingest_ended":  "1970-01-01T00:31:03.751Z",
+            "source_file": {
+                "id": 2,
+                "workspace": {
+                    "id": 1,
+                    "name": "rs"
+                },
+                "file_name": "19700000000000_00_0000000000_EXT.h5",
+                "media_type": "image/x-hdf5-image",
+                "file_size": 4139388,
+                "data_type": [
+                    "EXT",
+                    "ExtStatic",
+                    "DX"
+                ],
+                "is_deleted": false,
+                "uuid": "fe0e000000aa000a0000a000aa000a0a",
+                "url": "http://pathto/file",
+                "created": "1970-01-01T00:31:03.751Z",
+                "deleted": null,
+                "data_started": "1970-01-01T00:31:03.751Z",
+                "data_ended": "1970-01-01T00:31:03.751Z",
+                "geometry": "POLYGON ((0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000, 0.000000 0.000000))",
+                "center_point": "POINT(0.000000, 0.000000)",
+                "meta_data": {
+                    "payload_id": "Delta X",
+                    "product_type": "EXT",
+                    "requirement_id": "D0000000",
+                    "classification": "UNCLASSIFIED",
+                    "collection_start": "1970-01-01T00:31:03.751Z",
+                    "product_name": "19700000000000_00_0000000000_EXT",
+                    "task_name": "DX_XX_0000000000000000_Conf_0000_2359",
+                    "collection_type": "Collection1",
+                    "collection_id": "00000000000",
+                    "collection_end": "1970-01-01T00:31:03.751Z"
+                },
+                "countries": [],
+                "last_modified": "1970-01-01T00:31:03.751Z",
+                "is_parsed": true,
+                "parsed": "1970-01-01T00:31:03.751Z"
+            },
+            "created": "1970-01-01T00:31:03.751Z",
+            "last_modified": "1970-01-01T00:31:03.751Z"
+        }
+    ]
+}

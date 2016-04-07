@@ -1,0 +1,196 @@
+{
+    "count": 28,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "column": {
+                "name": "completed_count",
+                "title": "Completed Count",
+                "description": "Total number of jobs completed.",
+                "units": "count",
+                "group": "overview",
+                "aggregate": "sum"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-10-13",
+            "min_y": 1,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 300,
+                    "id": 1
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "job_time_sum",
+                "title": "Job Task Time (Sum)",
+                "description": "Total time spent running the job task.",
+                "units": "seconds",
+                "group": "job_time",
+                "aggregate": "sum"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 9,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 300,
+                    "id": 1
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "run_time_max",
+                "title": "Run Time (Max)",
+                "description": "Maximum time spent running the pre, job, and post tasks.",
+                "units": "seconds",
+                "group": "run_time",
+                "aggregate": "max"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 14,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 300,
+                    "id": 1
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "post_time_avg",
+                "title": "Post-task Time (Avg)",
+                "description": "Average time spent finalizing the job task.",
+                "units": "seconds",
+                "group": "post_time",
+                "aggregate": "avg"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 1,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 1,
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "canceled_count",
+                "title": "Canceled Count",
+                "description": "Number of incomplete canceled jobs.",
+                "units": "count",
+                "group": "overview",
+                "aggregate": "sum"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 0,
+            "max_y": 0,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 0,
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "queue_time_min",
+                "title": "Queue Time (Min)",
+                "description": "Minimum time the job waited in the queue.",
+                "units": "seconds",
+                "group": "queue_time",
+                "aggregate": "min"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 0,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 0,
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "queue_time_sum",
+                "title": "Queue Time (Sum)",
+                "description": "Total time the job waited in the queue.",
+                "units": "seconds",
+                "group": "queue_time",
+                "aggregate": "sum"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 2,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 2,
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "completed_count",
+                "title": "Completed Count",
+                "description": "Number of successfully completed jobs.",
+                "units": "count",
+                "group": "overview",
+                "aggregate": "sum"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 3,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 3,
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "column": {
+                "name": "stage_time_max",
+                "title": "Stage Time (Max)",
+                "description": "Maximum overhead time spent managing tasks.",
+                "units": "seconds",
+                "group": "stage_time",
+                "aggregate": "min"
+            },
+            "min_x": "2015-10-05",
+            "max_x": "2015-11-01",
+            "min_y": 2,
+            "max_y": 100,
+            "values": [
+                {
+                    "date": "2015-10-05",
+                    "value": 2,
+                    "id": 6
+                }
+            ]
+        }
+    ]
+}

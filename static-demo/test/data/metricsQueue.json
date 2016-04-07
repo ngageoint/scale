@@ -1,0 +1,15 @@
+{
+    "id": 5,
+    "name": "queue",
+    "title": "Queue",
+    "description": "View data for the queue",
+    "metrics": [
+        {
+            "id": 1,
+            "name": "queue_depth",
+            "title": "Queue Depth",
+            "description": "View the average daily queue depth over time",
+            "units": "jobs"
+        }
+    ]
+}

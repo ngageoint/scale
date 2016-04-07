@@ -17,8 +17,9 @@
 .jumbotron h1 {
     color: #fff;
     text-shadow: 2px 2px 2px #000;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 80%;
 }
 
 .panel-body {

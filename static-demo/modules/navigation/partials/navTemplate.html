@@ -1,0 +1,75 @@
+<div class="nav">
+
+    <div class="nav-logo">
+        <div><a ng-click="goto('/')"><img src="images/scale3-transparent-128.png" class="img-responsive"></img></a></div>
+        <div><a ng-click="goto('/')">Scale</a></div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{overview: 'selected'}[activePage]"
+            ng-click="goto('/')">
+            Overview
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{nodes: 'selected'}[activePage]"
+            ng-click="goto('/nodes')">
+            Nodes
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{jobs: 'selected'}[activePage]"
+            ng-click="goto('/jobs/types')">
+            Jobs
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{load: 'selected'}[activePage]"
+            ng-click="goto('/load')">
+            Load
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{recipes: 'selected'}[activePage]"
+            ng-click="goto('/recipes/types')">
+            Recipes
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{metrics: 'selected'}[activePage]"
+             ng-click="goto('/metrics')">
+            Metrics
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{feed: 'selected'}[activePage]"
+             ng-click="goto('/feed')">
+            Data Feed
+        </div>
+    </div>
+    <!--<div class="nav-section">
+        <div class="nav-link" ng-class="{files: 'selected'}[activePage]"
+            ng-click="goto('/files')">
+            Files
+        </div>
+    </div>
+
+    -->
+
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{about: 'selected'}[activePage]"
+            ng-click="goto('/about')">
+            About
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <a class="nav-link" href="{{ docsUrl }}" target="_blank">
+            Docs <i class="fa fa-external-link"></i>
+        </a>
+    </div>
+</div>
