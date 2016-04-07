@@ -25,7 +25,8 @@ var paths = {
     fonts: ['./app/fonts/**/*'],
     testData: ['./app/test/data/**/*'],
     tests: ['./tests/*.js'],
-    stubs: './app/test/scripts/backendStubs.js'
+    stubs: './app/test/scripts/backendStubs.js',
+    config: './config/*.json'
 };
 
 var getVersionJson = function() {
@@ -152,7 +153,7 @@ gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
 var appConfig = function () {
-    return gulp.src(['./config/scaleConfig.json', './config/scaleConfig.local.json'])
+    return gulp.src(paths.config)
         .pipe(gulp.dest('./build/config'));
 };
 gulp.task('app-config', ['clean'], appConfig);
