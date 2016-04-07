@@ -126,6 +126,6 @@ These services provide access to general system information.
 | .. code-block:: javascript                                                                                                    |
 |                                                                                                                               |
 |   {                                                                                                                           |
-|       "version": "3.0.0",                                                                                                     |
+|       "version": "3.0.0"                                                                                                      |
 |   }                                                                                                                           |
 +-------------------------------------------------------------------------------------------------------------------------------+
