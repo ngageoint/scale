@@ -20,6 +20,10 @@ import sys
 PYTHON_EXECUTABLE = sys.executable
 MANAGE_FILE = os.path.join(BASE_DIR, 'manage.py')
 
+# Project version
+import scale
+VERSION = scale.__version__
+
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
