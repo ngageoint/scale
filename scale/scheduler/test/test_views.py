@@ -129,7 +129,7 @@ class TestVersionView(TestCase):
 
     def test_success(self):
         """Test getting overall version/build information successfully"""
-        url = '/status/'
+        url = '/version/'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
 
