@@ -2,11 +2,21 @@
     'use strict';
 
     angular.module('scaleApp').factory('JobDetails', function (scaleConfig, JobType, JobExecution, Product, JobDetailInputData, JobDetailOutputData, Recipe, JobDetailEvent, scaleService) {
-        var JobDetails = function (cpus_required, created, queued, started, ended, data, disk_in_required, disk_out_required, error, event, id, job_exes, job_type, last_modified, last_status_change, max_tries, mem_required, num_exes, priority, products, recipes, results, input_files, status, timeout ) {
-            // decorate inputs and outputs to support data binding in details view
-            data.input_data = decorateInputData(data.input_data, input_files);
-            data.output_data = decorateOutputData(data.output_data, results, products);
+        var JobDetails = function (id, job_type, job_type_rev, event, error, status, priority, num_exes, timeout, max_tries, cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started, ended, last_status_change, last_modified, data, results, recipes, job_exes, inputs, outputs) {
+            this.id = id;
+            this.job_type = JobType.transformer(job_type);
+            this.job_type_rev = job_type_rev;
+            this.event = JobDetailEvent.transformer(event);
+            this.error = error;
+            this.status = status;
+            this.priority = priority;
+            this.num_exes = num_exes;
+            this.timeout = timeout;
+            this.max_tries = max_tries;
             this.cpus_required = cpus_required;
+            this.mem_required = mem_required;
+            this.disk_in_required = disk_in_required;
+            this.disk_out_required = disk_out_required;
             this.created = created;
             this.created_formatted = moment.utc(created).toISOString();
             this.queued = queued;
@@ -15,97 +25,21 @@
             this.started_formatted = moment.utc(started).toISOString();
             this.ended = ended;
             this.ended_formatted = moment.utc(ended).toISOString();
+            this.last_status_change = last_status_change;
+            this.last_modified = last_modified;
             this.data = {
                 input_data: JobDetailInputData.transformer(data.input_data),
                 version: data.version,
                 output_data: JobDetailOutputData.transformer(data.output_data)
             };
-            this.disk_in_required = disk_in_required;
-            this.disk_out_required = disk_out_required;
-            this.error = error;
-            this.event = JobDetailEvent.transformer(event);
-            this.id = id;
-            this.job_exes = JobExecution.transformer(job_exes);
-            this.job_type = JobType.transformer(job_type);
-            this.last_modified = last_modified;
-            this.last_status_change = last_status_change;
-            this.max_tries = max_tries;
-            this.mem_required = mem_required;
-            this.num_exes = num_exes;
-            this.priority = priority;
-            this.products = Product.transformer(products);
-            this.recipes = Recipe.transformer(recipes);
             this.results = {
                 output_data: JobDetailOutputData.transformer(results.output_data),
                 version: results.version
             };
-            this.input_files = input_files;
-            this.status = status;
-            this.timeout = timeout;
-        };
-
-        // private methods
-        var decorateInputData = function(input_data, input_files){
-            _.forEach(input_data, function(val){
-                var file_ids = [];
-                if(!val.files){ val.files = []; }
-
-                if(val.file_id && val.file_id > 0){
-                    file_ids = [val.file_id];
-                }
-                else if(val.file_ids && val.file_ids.length > 0){
-                    // multiple files
-                    file_ids = val.file_ids;
-                }
-                _.forEach(file_ids, function(file_id){
-                    var infile = _.find(input_files, {id: file_id});
-                    if(infile){
-                        val.files.push(
-                            {
-                                file_name: infile.file_name,
-                                url: infile.url,
-                                created: infile.created,
-                                last_modified: infile.last_modified,
-                                file_size_formatted: scaleService.calculateFileSizeFromBytes(infile.file_size)
-                            }
-                        );
-                    }
-                });
-            });
-            return input_data;
-        };
-
-        var decorateOutputData = function(output_data, results, products){
-            _.forEach(output_data, function(val){
-                var file_ids = [];
-                var result = _.find(results.output_data, { name: val.name });
-                if(!val.files){ val.files = []; }
-
-                if( result && result.file_id && result.file_id > 0 ){
-                    // single file
-                    file_ids = [result.file_id];
-                }
-                else if(result && result.file_ids && result.file_ids.length > 0){
-                    // multiple files
-                    file_ids = result.file_ids;
-                }
-                _.forEach(file_ids, function(file_id){
-                    var outfile = _.find(products, {id: file_id});
-                    console.log(file_id + ': ' + outfile.id);
-                    if(outfile){
-                        val.files.push(
-                            {
-                                file_name: outfile.file_name,
-                                url: outfile.url,
-                                created: outfile.created,
-                                last_modified: outfile.last_modified,
-                                file_size_formatted: scaleService.calculateFileSizeFromBytes(outfile.file_size)
-                            }
-                        );
-                    }
-                });
-            });
-            return output_data;
+            this.recipes = Recipe.transformer(recipes);
+            this.job_exes = JobExecution.transformer(job_exes);
+            this.inputs = inputs;
+            this.outputs = outputs;
         };
 
         // public methods
@@ -137,31 +71,32 @@
         JobDetails.build = function (data) {
             if (data) {
                 return new JobDetails(
+                    data.id,
+                    data.job_type,
+                    data.job_type_rev,
+                    data.event,
+                    data.error,
+                    data.status,
+                    data.priority,
+                    data.num_exes,
+                    data.timeout,
+                    data.max_tries,
                     data.cpus_required,
+                    data.mem_required,
+                    data.disk_in_required,
+                    data.disk_out_required,
                     data.created,
                     data.queued,
                     data.started,
                     data.ended,
-                    data.data,
-                    data.disk_in_required,
-                    data.disk_out_required,
-                    data.error,
-                    data.event,
-                    data.id,
-                    data.job_exes,
-                    data.job_type,
-                    data.last_modified,
                     data.last_status_change,
-                    data.max_tries,
-                    data.mem_required,
-                    data.num_exes,
-                    data.priority,
-                    data.products,
-                    data.recipes,
+                    data.last_modified,
+                    data.data,
                     data.results,
-                    data.input_files,
-                    data.status,
-                    data.timeout
+                    data.recipes,
+                    data.job_exes,
+                    data.inputs,
+                    data.outputs
                 );
             }
             return new JobDetails();
