@@ -1,14 +1,14 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
+
 import json
 
 import django
-from django.db.utils import DatabaseError
 from django.test import TestCase
-from mock import patch
 from rest_framework import status
 
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
+import storage.test.utils as storage_test_utils
 
 
 class TestProductsView(TestCase):
@@ -16,19 +16,21 @@ class TestProductsView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.country = storage_test_utils.create_country()
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          file_name='test.txt')
+                                                          file_name='test.txt', countries=[self.country])
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True)
+        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                          countries=[self.country])
 
     def test_invalid_started(self):
-        '''Tests calling the product files view when the started parameter is invalid.'''
+        """Tests calling the product files view when the started parameter is invalid."""
 
         url = '/products/?started=hello'
         response = self.client.generic('GET', url)
@@ -36,7 +38,7 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_tz_started(self):
-        '''Tests calling the product files view when the started parameter is missing timezone.'''
+        """Tests calling the product files view when the started parameter is missing timezone."""
 
         url = '/products/?started=1970-01-01T00:00:00'
         response = self.client.generic('GET', url)
@@ -44,7 +46,7 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_ended(self):
-        '''Tests calling the product files view when the ended parameter is invalid.'''
+        """Tests calling the product files view when the ended parameter is invalid."""
 
         url = '/products/?started=1970-01-01T00:00:00Z&ended=hello'
         response = self.client.generic('GET', url)
@@ -52,7 +54,7 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_tz_ended(self):
-        '''Tests calling the product files view when the ended parameter is missing timezone.'''
+        """Tests calling the product files view when the ended parameter is missing timezone."""
 
         url = '/products/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00'
         response = self.client.generic('GET', url)
@@ -60,7 +62,7 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_negative_time_range(self):
-        '''Tests calling the product files view with a negative time range.'''
+        """Tests calling the product files view with a negative time range."""
 
         url = '/products/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00'
         response = self.client.generic('GET', url)
@@ -68,7 +70,7 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_job_type_id(self):
-        '''Tests successfully calling the product files view filtered by job type identifier.'''
+        """Tests successfully calling the product files view filtered by job type identifier."""
 
         url = '/products/?job_type_id=%s' % self.job_type1.id
         response = self.client.generic('GET', url)
@@ -79,7 +81,7 @@ class TestProductsView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
 
     def test_job_type_name(self):
-        '''Tests successfully calling the product files view filtered by job type name.'''
+        """Tests successfully calling the product files view filtered by job type name."""
 
         url = '/products/?job_type_name=%s' % self.job_type1.name
         response = self.client.generic('GET', url)
@@ -90,7 +92,7 @@ class TestProductsView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
     def test_job_type_category(self):
-        '''Tests successfully calling the product files view filtered by job type category.'''
+        """Tests successfully calling the product files view filtered by job type category."""
 
         url = '/products/?job_type_category=%s' % self.job_type1.category
         response = self.client.generic('GET', url)
@@ -101,7 +103,7 @@ class TestProductsView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['category'], self.job_type1.category)
 
     def test_is_operational(self):
-        '''Tests successfully calling the product files view filtered by is_operational flag.'''
+        """Tests successfully calling the product files view filtered by is_operational flag."""
 
         url = '/products/?is_operational=true'
         response = self.client.generic('GET', url)
@@ -112,7 +114,7 @@ class TestProductsView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['is_operational'], self.job_type1.is_operational)
 
     def test_file_name(self):
-        '''Tests successfully calling the product files view filtered by file name.'''
+        """Tests successfully calling the product files view filtered by file name."""
 
         url = '/products/?file_name=test.txt'
         response = self.client.generic('GET', url)
@@ -123,7 +125,7 @@ class TestProductsView(TestCase):
         self.assertEqual(result['results'][0]['file_name'], self.product1.file_name)
 
     def test_successful(self):
-        '''Tests successfully calling the product files view.'''
+        """Tests successfully calling the product files view."""
 
         url = '/products/'
         response = self.client.generic('GET', url)
@@ -132,25 +134,30 @@ class TestProductsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 2)
 
+        for entry in result['results']:
+            self.assertEqual(entry['countries'][0], self.country.iso3)
+
 
 class TestProductsUpdatesView(TestCase):
 
     def setUp(self):
         django.setup()
 
+        self.country = storage_test_utils.create_country()
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          file_name='test.txt')
+                                                          file_name='test.txt', countries=[self.country])
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True)
+        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                          countries=[self.country])
 
     def test_invalid_started(self):
-        '''Tests calling the product file updates view when the started parameter is invalid.'''
+        """Tests calling the product file updates view when the started parameter is invalid."""
 
         url = '/products/updates/?started=hello'
         response = self.client.generic('GET', url)
@@ -158,7 +165,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_tz_started(self):
-        '''Tests calling the product file updates view when the started parameter is missing timezone.'''
+        """Tests calling the product file updates view when the started parameter is missing timezone."""
 
         url = '/products/updates/?started=1970-01-01T00:00:00'
         response = self.client.generic('GET', url)
@@ -166,7 +173,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_ended(self):
-        '''Tests calling the product file updates view when the ended parameter is invalid.'''
+        """Tests calling the product file updates view when the ended parameter is invalid."""
 
         url = '/products/updates/?started=1970-01-01T00:00:00Z&ended=hello'
         response = self.client.generic('GET', url)
@@ -174,7 +181,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_tz_ended(self):
-        '''Tests calling the product file updates view when the ended parameter is missing timezone.'''
+        """Tests calling the product file updates view when the ended parameter is missing timezone."""
 
         url = '/products/updates/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00'
         response = self.client.generic('GET', url)
@@ -182,7 +189,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_negative_time_range(self):
-        '''Tests calling the product file updates view with a negative time range.'''
+        """Tests calling the product file updates view with a negative time range."""
 
         url = '/products/updates/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00'
         response = self.client.generic('GET', url)
@@ -190,7 +197,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_job_type_id(self):
-        '''Tests successfully calling the product file updates view filtered by job type identifier.'''
+        """Tests successfully calling the product file updates view filtered by job type identifier."""
 
         url = '/products/updates/?job_type_id=%s' % self.job_type1.id
         response = self.client.generic('GET', url)
@@ -201,7 +208,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
 
     def test_job_type_name(self):
-        '''Tests successfully calling the product file updates view filtered by job type name.'''
+        """Tests successfully calling the product file updates view filtered by job type name."""
 
         url = '/products/updates/?job_type_name=%s' % self.job_type1.name
         response = self.client.generic('GET', url)
@@ -212,7 +219,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
     def test_job_type_category(self):
-        '''Tests successfully calling the product file updates view filtered by job type category.'''
+        """Tests successfully calling the product file updates view filtered by job type category."""
 
         url = '/products/updates/?job_type_category=%s' % self.job_type1.category
         response = self.client.generic('GET', url)
@@ -223,7 +230,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['category'], self.job_type1.category)
 
     def test_is_operational(self):
-        '''Tests successfully calling the product file updates view filtered by is_operational flag.'''
+        """Tests successfully calling the product file updates view filtered by is_operational flag."""
 
         url = '/products/updates/?is_operational=true'
         response = self.client.generic('GET', url)
@@ -234,7 +241,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(result['results'][0]['job_type']['is_operational'], self.job_type1.is_operational)
 
     def test_file_name(self):
-        '''Tests successfully calling the product file updates view filtered by file name.'''
+        """Tests successfully calling the product file updates view filtered by file name."""
 
         url = '/products/updates/?file_name=test.txt'
         response = self.client.generic('GET', url)
@@ -245,7 +252,7 @@ class TestProductsUpdatesView(TestCase):
         self.assertEqual(result['results'][0]['file_name'], self.product1.file_name)
 
     def test_successful(self):
-        '''Tests successfully calling the product file updates view.'''
+        """Tests successfully calling the product file updates view."""
 
         url = '/products/updates/'
         response = self.client.generic('GET', url)
@@ -257,3 +264,4 @@ class TestProductsUpdatesView(TestCase):
         for entry in result['results']:
             self.assertIsNotNone(entry['update'])
             self.assertIsNotNone(entry['source_files'])
+            self.assertEqual(entry['countries'][0], self.country.iso3)

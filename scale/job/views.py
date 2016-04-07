@@ -140,6 +140,7 @@ class JobTypesView(ListAPIView):
 
 class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeDetailsSerializer
 
     def get(self, request, job_type_id):
@@ -260,6 +261,7 @@ class JobTypeDetailsView(GenericAPIView):
 
 class JobTypesValidationView(APIView):
     """This view is the endpoint for validating a new job type before attempting to actually create it"""
+    queryset = JobType.objects.all()
 
     def post(self, request):
         """Validates a new job type and returns any warnings discovered
@@ -438,6 +440,7 @@ class JobsView(ListAPIView):
 
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
+    queryset = Job.objects.all()
     serializer_class = JobDetailsSerializer
 
     def get(self, request, job_id):
@@ -594,6 +597,7 @@ class JobExecutionsView(ListAPIView):
 
 class JobExecutionDetailsView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution detail"""
+    queryset = JobExecution.objects.all()
     serializer_class = JobExecutionDetailsSerializer
 
     def retrieve(self, request, job_exe_id):
@@ -617,6 +621,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
 class JobExecutionLogView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution logs"""
+    queryset = JobExecution.objects.all()
     serializer_class = JobExecutionLogSerializer
 
     def retrieve(self, request, job_exe_id):
