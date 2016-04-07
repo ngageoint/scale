@@ -1,9 +1,31 @@
-'''Combines all of the URLs for the Scale RESTful services'''
+"""Combines all of the URLs for the Scale RESTful services"""
+
 from django.conf.urls import patterns, include, url
+
+import util.rest as rest_util
 
 # Enable the admin applications
 from django.contrib import admin
 admin.autodiscover()
+
+# Add all the applications that expose REST APIs
+REST_API_APPS = [
+    'error',
+    'ingest',
+    'job',
+    'metrics',
+    'node',
+    'port',
+    'product',
+    'queue',
+    'recipe',
+    'scheduler',
+    'source',
+    'storage',
+]
+
+# Generate URLs for all REST APIs with version prefix
+rest_urls = rest_util.get_versioned_urls(REST_API_APPS)
 
 urlpatterns = patterns(
     '',
@@ -11,17 +33,4 @@ urlpatterns = patterns(
     # Map all the paths required by the admin applications
     url(r'^admin/', include(admin.site.urls)),
 
-    # Include RESTful API URLs
-    url(r'', include('error.urls')),
-    url(r'', include('ingest.urls')),
-    url(r'', include('job.urls')),
-    url(r'', include('metrics.urls')),
-    url(r'', include('node.urls')),
-    url(r'', include('port.urls')),
-    url(r'', include('product.urls')),
-    url(r'', include('queue.urls')),
-    url(r'', include('recipe.urls')),
-    url(r'', include('scheduler.urls')),
-    url(r'', include('source.urls')),
-    url(r'', include('storage.urls')),
-)
+) + rest_urls

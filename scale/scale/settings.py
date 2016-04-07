@@ -97,13 +97,18 @@ MIDDLEWARE_CLASSES = (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.AdminRenderer',
     ),
+    'ALLOWED_VERSIONS': ('v3',),
+    'DEFAULT_VERSION': 'v3',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
 
 ROOT_URLCONF = 'scale.urls'
