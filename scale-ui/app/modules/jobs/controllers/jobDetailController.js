@@ -86,16 +86,6 @@
         $scope.calculateFileSize = function (size) {
             return scaleService.calculateFileSizeFromBytes(size);
         };
-        
-        $scope.getDataType = function (data) {
-            if (typeof data === 'string') {
-                return 'string';
-            }
-            if (Array.isArray(data)) {
-                return 'array';
-            }
-            return 'object';
-        };
 
         var getJobDetail = function (jobId) {
             $scope.loadingJobDetail = true;
@@ -109,8 +99,8 @@
                 $scope.jobErrorCreated = data.error ? moment.utc(data.error.created).toISOString() : '';
                 $scope.lastStatusChange = data.last_status_change ? moment.duration(moment.utc(data.last_status_change).diff(moment.utc())).humanize(true) : '';
                 $scope.triggerOccurred = data.event.occurred ? moment.duration(moment.utc(data.event.occurred).diff(moment.utc())).humanize(true) : '';
-                $scope.inputs = data.inputs.length === 0 ? data.job_type_rev.interface.input_data : data.inputs;
-                $scope.outputs = data.outputs.length === 0 ? data.job_type_rev.interface.output_data : data.outputs;
+                $scope.inputs = data.inputs;
+                $scope.outputs = data.outputs;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {

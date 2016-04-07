@@ -51,11 +51,11 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <table class="table">
+                    <table class="table" ng-if="inputs.length > 0">
                         <tbody>
                             <caption>Inputs</caption>
                             <tr ng-repeat="input in inputs track by $index" ng-if="!input.value">
-                                <td class="no-border-top">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
                                             <th>Type</th>
@@ -68,8 +68,8 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="getDataType(input.value) === 'string' && input.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'property' && input.value">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
                                             <th>Name</th>
@@ -82,15 +82,15 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="getDataType(input.value) === 'object' && input.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'file' && input.value">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
-                                            <th class="no-border-top">Name</th>
-                                            <th class="no-border-top">File Name</th>
-                                            <th class="no-border-top">File Size</th>
-                                            <th class="no-border-top">Created</th>
-                                            <th class="no-border-top">Last Modified</th>
+                                            <th>Name</th>
+                                            <th>File Name</th>
+                                            <th>File Size</th>
+                                            <th>Created</th>
+                                            <th>Last Modified</th>
                                         </tr>
                                         <tr>
                                             <td>{{ input.name }}</td>
@@ -102,12 +102,12 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="getDataType(input.value) === 'array' && input.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'files' && input.value">
+                                <td>
                                     <table class="table table-condensed">
                                         <tr>
-                                            <td class="no-border-top">{{ input.name }}</td>
-                                            <td class="no-border-top">
+                                            <td>{{ input.name }}</td>
+                                            <td>
                                                 <table class="table table-hover table-condensed table-striped">
                                                     <tr>
                                                         <th>File Name</th>
@@ -129,11 +129,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table">
+                    <table class="table" ng-if="outputs.length > 0">
                         <tbody>
                             <caption>Outputs</caption>
                             <tr ng-repeat="output in outputs track by $index" ng-if="!output.value">
-                                <td class="no-border-top">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
                                             <th>Type</th>
@@ -146,8 +146,8 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="getDataType(output.value) === 'string' && output.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'property' && output.value">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
                                             <th>Name</th>
@@ -160,15 +160,15 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="getDataType(output.value) === 'object' && output.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'file' && output.value">
+                                <td>
                                     <table class="table table-hover table-condensed table-striped">
                                         <tr ng-if="$index === 0">
-                                            <th class="no-border-top">Name</th>
-                                            <th class="no-border-top">File Name</th>
-                                            <th class="no-border-top">File Size</th>
-                                            <th class="no-border-top">Created</th>
-                                            <th class="no-border-top">Last Modified</th>
+                                            <th>Name</th>
+                                            <th>File Name</th>
+                                            <th>File Size</th>
+                                            <th>Created</th>
+                                            <th>Last Modified</th>
                                         </tr>
                                         <tr>
                                             <td>{{ output.name }}</td>
@@ -180,12 +180,12 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="getDataType(output.value) === 'array' && output.value">
-                                <td class="no-border-top">
+                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'files' && output.value">
+                                <td>
                                     <table class="table table-condensed">
                                         <tr>
-                                            <td class="no-border-top">{{ output.name }}</td>
-                                            <td class="no-border-top">
+                                            <td>{{ output.name }}</td>
+                                            <td>
                                                 <table class="table table-hover table-condensed table-striped">
                                                     <tr>
                                                         <th>File Name</th>
