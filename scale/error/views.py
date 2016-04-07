@@ -16,18 +16,18 @@ logger = logging.getLogger(__name__)
 
 
 class ErrorsView(GenericAPIView):
-    '''This view is the endpoint for retrieving the list of all errors and creating a new error.'''
+    """This view is the endpoint for retrieving the list of all errors and creating a new error."""
     queryset = Error.objects.all()
     serializer_class = ErrorSerializer
 
     def get(self, request):
-        '''Retrieves the list of all errors and returns it in JSON form
+        """Retrieves the list of all errors and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -42,13 +42,13 @@ class ErrorsView(GenericAPIView):
         return self.get_paginated_response(serializer.data)
 
     def post(self, request):
-        '''Creates a new error and returns a link to the info URL
+        """Creates a new error and returns a link to the info URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         name = rest_util.parse_string(request, 'name')
         title = rest_util.parse_string(request, 'title')
@@ -67,11 +67,12 @@ class ErrorsView(GenericAPIView):
 
 
 class ErrorDetailsView(GenericAPIView):
-    '''This view is the endpoint for retrieving details of an error.'''
+    """This view is the endpoint for retrieving details of an error."""
+    queryset = Error.objects.all()
     serializer_class = ErrorDetailsSerializer
 
     def get(self, request, error_id):
-        '''Retrieves the details for an error and return them in JSON form
+        """Retrieves the details for an error and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -79,7 +80,7 @@ class ErrorDetailsView(GenericAPIView):
         :type error_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             error = Error.objects.get(pk=error_id)
         except Error.DoesNotExist:
@@ -89,7 +90,7 @@ class ErrorDetailsView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request, error_id):
-        '''Edits an existing error and returns the updated model
+        """Edits an existing error and returns the updated model
 
         :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
@@ -97,7 +98,7 @@ class ErrorDetailsView(GenericAPIView):
         :type error_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         try:
             error = Error.objects.get(pk=error_id)
         except Error.DoesNotExist:

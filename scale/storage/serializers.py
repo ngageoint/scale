@@ -109,7 +109,7 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
     geometry = WktField()
     center_point = WktField()
     meta_data = serializers.JSONField()
-    countries = serializers.RelatedField(many=True, read_only=True)
+    countries = serializers.StringRelatedField(many=True, read_only=True)
     last_modified = serializers.DateTimeField()
 
 

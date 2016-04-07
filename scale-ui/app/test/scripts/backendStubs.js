@@ -64,6 +64,20 @@
             return [200, data, {}];
         });
 
+        // Job details
+        var jobDetailsOverrideUrl = 'test/data/jobDetails.json';
+        var jobDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/.*/', 'i');
+        $httpBackend.whenGET(jobDetailsRegex).respond(function () {
+            return getSync(jobDetailsOverrideUrl);
+        });
+
+        // Jobs
+        var jobsOverrideUrl = 'test/data/jobs.json';
+        var jobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/', 'i');
+        $httpBackend.whenGET(jobsRegex).respond(function () {
+            return getSync(jobsOverrideUrl);
+        });
+
         // For everything else, don't mock
         $httpBackend.whenGET(/^\w+.*/).passThrough();
         $httpBackend.whenPOST(/^\w+.*/).passThrough();

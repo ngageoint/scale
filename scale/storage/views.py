@@ -44,6 +44,7 @@ class WorkspacesView(ListAPIView):
 
 class WorkspaceDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of a workspace."""
+    queryset = Workspace.objects.all()
     serializer_class = WorkspaceDetailsSerializer
 
     def retrieve(self, request, workspace_id):

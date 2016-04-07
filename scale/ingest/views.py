@@ -49,6 +49,7 @@ class IngestsView(ListAPIView):
 
 class IngestDetailsView(RetrieveAPIView):
     '''This view is the endpoint for retrieving/updating details of an ingest.'''
+    queryset = Ingest.objects.all()
     serializer_class = IngestDetailsSerializer
 
     def retrieve(self, request, ingest_id):

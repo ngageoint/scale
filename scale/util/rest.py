@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 
 import datetime
-import json
 
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 import rest_framework.status as status
+from django.conf import settings
+from django.conf.urls import include, url
 from rest_framework.exceptions import APIException
 
 import util.parse as parse_util
@@ -34,6 +35,37 @@ class BadParameter(APIException):
 class ReadOnly(APIException):
     """Exception indicating a REST API call is attempting to update a field that does not support it."""
     status_code = status.HTTP_400_BAD_REQUEST
+
+
+def get_versioned_urls(apps):
+    """Generates a list of URL patterns for applications with REST APIs
+
+    :param apps: A list of application names to register.
+    :type apps: list[string]
+    :returns: A list of URL patterns for REST APIs with version prefixes.
+    :rtype: list[:class:`django.core.urlresolvers.RegexURLPattern`]
+    """
+    urls = []
+
+    # TODO Remove the default version once applications are migrated
+    for app in apps:
+        urls.append(url(r'', include(app + '.urls')))
+
+    # Check whether the application is configured to use versions
+    rest_settings = getattr(settings, 'REST_FRAMEWORK', None)
+    if not rest_settings:
+        return urls
+    allowed_versions = rest_settings.get('ALLOWED_VERSIONS', None)
+    if not allowed_versions:
+        return urls
+
+    # Generate a URL pattern for each endpoint with a version prefix
+    for version in allowed_versions:
+        version_urls = []
+        for app in apps:
+            version_urls.append(url(r'^' + version + '/', include(app + '.urls', namespace=version)))
+        urls.extend(version_urls)
+    return urls
 
 
 def check_update(request, fields):

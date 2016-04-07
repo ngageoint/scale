@@ -7,7 +7,7 @@ import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
-from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -31,7 +31,7 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
-class JobTypesView(ListAPIView):
+class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
     serializer_class = JobTypeSerializer
@@ -59,7 +59,7 @@ class JobTypesView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def post(self, request):
+    def create(self, request):
         """Creates a new job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -140,6 +140,7 @@ class JobTypesView(ListAPIView):
 
 class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
+    queryset = JobType.objects.all()
     serializer_class = JobTypeDetailsSerializer
 
     def get(self, request, job_type_id):
@@ -260,6 +261,7 @@ class JobTypeDetailsView(GenericAPIView):
 
 class JobTypesValidationView(APIView):
     """This view is the endpoint for validating a new job type before attempting to actually create it"""
+    queryset = JobType.objects.all()
 
     def post(self, request):
         """Validates a new job type and returns any warnings discovered
@@ -438,6 +440,7 @@ class JobsView(ListAPIView):
 
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
+    queryset = Job.objects.all()
     serializer_class = JobDetailsSerializer
 
     def get(self, request, job_id):
@@ -594,6 +597,7 @@ class JobExecutionsView(ListAPIView):
 
 class JobExecutionDetailsView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution detail"""
+    queryset = JobExecution.objects.all()
     serializer_class = JobExecutionDetailsSerializer
 
     def retrieve(self, request, job_exe_id):
@@ -617,6 +621,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
 class JobExecutionLogView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution logs"""
+    queryset = JobExecution.objects.all()
     serializer_class = JobExecutionLogSerializer
 
     def retrieve(self, request, job_exe_id):
