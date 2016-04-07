@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Scale</title>
+
+    <!-- Font -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="css/main.css" rel="stylesheet">
+    <link href="css/bootstrap-overrides.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,114 +24,100 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
-
 <body>
-
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#scale-navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img class="nav-logo" src="images/scale3-transparent-128.png">
-            <a class="navbar-brand" href="index.html">Scale</a>
+            <a class="navbar-brand" href="index.html"><img src="images/scale3-transparent-128.png"> Scale</a>
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="scale-navbar-collapse">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="index.html">Overview</a>
-                </li>
-                <li>
-                    <a href="docs.html">Documentation</a>
-                </li>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="docs/index.html">Documentation</a></li>
+                <li><a href="http://www.github.com/ngageoint/scale/">Source Code</a></li>
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container -->
 </nav>
 
-<!-- Full Width Image Header with Logo -->
-<!-- Image backgrounds are set within the full-width-pics.css file. -->
-<header class="image-bg-fluid-height">
-    <img class="img-responsive img-center" src="images/scale3-transparent-128.png" alt="">
+<header class="jumbotron text-center">
+    <div class="header-content">
+        <img class="img-responsive center" src="images/scale3-transparent-128.png" alt="Scale">
+        <h1>Process petabytes of data using an extensible bank of algorithms.</h1>
+        <!--<a href="#" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-download"></i> Download Scale v3.0.5</a>-->
+        <!--<ul class="list-inline">-->
+            <!--<li><a href="#" class="small">v3.0.5 Release Notes</a></li>-->
+        <!--</ul>-->
+    </div>
 </header>
 
 <!-- Intro Section -->
 <section id="overview">
     <div class="container">
-        <!--<div class="row">-->
-            <!--<div class="col-lg-12">-->
-                <!--<h1>Scale processes petabytes of data using a user-defined bank of algorithms.</h1>-->
-                <!--<h1>Scale processes petabytes of data using an extensible bank of algorithms.</h1>-->
-            <!--</div>-->
-        <!--</div>-->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="section-heading">Scale processes petabytes of data using an extensible bank of algorithms.</h1>
-                <!--<h1 class="section-heading">What does Scale do?</h1>-->
-                <p class="lead section-lead">Scale enables on-demand, automated
-                    processing of large satellite, medical, or audio/video datasets
-                    using a dynamic bank of algorithms. Algorithm execution is
-                    seamlessly distributed across thousands of CPU cores.
-                    <a href="https://www.docker.com/">Docker</a> provides algorithm containerization. <a href="http://mesos.apache.org/">Apache Mesos</a> enables optimum resource utilization.</p>
-                <h1 class="section-heading">With Scale you can:</h1>
-                <ul>
-                    <li>Rapidly integrate algorithms written in
-                        Java, Python, IDL, Matlab, C/C++, ...</li>
-                    <li>Compose complex algorithms using Recipes for
-                        advanced data processing</li>
-                    <li>Increase your agility as an organization by running
-                        containerized developmental algorithms on
-                        the same cluster as operational algorithms</li>
-                    <li>Adjust algorithm prioritization to ensure the most
-                        critical data is processed first</li>
-                </ul>
-            </div>
-        </div>
+        <!--<h1 class="section-heading">What does Scale do?</h1>-->
+        <p class="lead">Scale enables on-demand, near real-time, automated
+            processing of large datasets (satellite, medical, audio, video, ...)
+            using a dynamic bank of algorithms. Algorithm execution is
+            seamlessly distributed across thousands of CPU cores.
+            <a href="https://www.docker.com/">Docker</a> provides algorithm
+            containerization. <a href="http://mesos.apache.org/">Apache Mesos</a>
+            enables optimum resource utilization.</p>
+
+        <h2>With Scale you can:</h2>
+        <ul class="lead">
+            <li>Rapidly integrate algorithms written in
+                Java, Python, IDL, Matlab, C/C++, ...</li>
+            <li>Compose complex algorithms using Recipes for
+                advanced data processing</li>
+            <li>Increase your agility as an organization by running
+                containerized developmental algorithms on
+                the same cluster as operational algorithms</li>
+            <li>Adjust algorithm prioritization to ensure the most
+                critical data is processed first</li>
+        </ul>
     </div>
 </section>
 
 <section id="flow">
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
                 <h2>Implement Custom Data Flows</h2>
                 <p>Scale provides the flexibility you need in processing high
                     volume, file-based datasets. It can work with many
                     individual data feeds. Support for custom algorithms and
                     Recipes allows you to implement custom data flows and publish
                     outputs that are accessible via the Scale web UI or REST API.</p>
-                <p>The <a href="flow.html">Data Flow Overview</a> includes more
-                    detail on the data lifecycle.
-                </p>
+                <!--<p>The <a href="flow.html">Data Flow Overview</a> includes more-->
+                    <!--detail on the data lifecycle.-->
+                <!--</p>-->
             </div>
-            <div class="col-sm-6">
-                <img class="scale-flow" src="images/scale-flow.png">
+            <div class="col-sm-5">
+                <img class="img-responsive thumbnail" src="images/scale-flow.png">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
                 <h2>Monitor Your Cluster</h2>
                 <p>Scale includes a comprehensive web UI that allows you to
                     monitor critical aspects of cluster health and job executions.
                     The UI includes a dashboard that provides important
                     statistics at a glance. Users can access detailed information
-                    on Job & Recipe executions, restart failed Jobs, monitor
+                    on Job &amp; Recipe executions, restart failed Jobs, monitor
                     Data Feed status, view processing Metrics and access Products.</p>
-                <p>The <a href="ui-walkthrough.html">UI Walkthrough</a>
-                    highlights important features for monitoring your Scale cluster.</p>
+                <!--<p>The <a href="ui-walkthrough.html">UI Walkthrough</a>-->
+                    <!--highlights important features for monitoring your Scale cluster.</p>-->
             </div>
-            <div class="col-sm-6">
-                <img class="scale-flow" src="images/scale-dashboard.jpg">
+            <div class="col-sm-5">
+                <img class="img-responsive thumbnail" src="images/scale-dashboard.jpg">
             </div>
         </div>
     </div>
@@ -145,27 +132,41 @@
                 Check out these tutorials to learn how to process your data feeds with Scale.
             </div>
             <div class="col-sm-3">
-                <a href="#" class="tutorial">
-                    <img src="images/tutorial-thumb-quickstart.jpg">
-                    <h4>Quickstart</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="tutorial">
+                            <img class="img-responsive center" src="images/tutorial-thumb-quickstart.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Quickstart</a></h3>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="tutorial">
-                    <img src="images/tutorial-thumb-algorithm.jpg">
-                    <h4>Algorithm Integration</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="tutorial">
+                            <img class="img-responsive center" src="images/tutorial-thumb-algorithm.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Algorithm Integration</a></h3>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="tutorial">
-                    <img src="images/tutorial-thumb-recipe.jpg">
-                    <h4>Recipe Editor</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="tutorial">
+                            <img class="img-responsive center" src="images/tutorial-thumb-recipe.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Recipe Editor</a></h3>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-3">
-                &nbsp;
-            </div>
-
         </div>
     </div>
 </section>
@@ -175,25 +176,43 @@
         <div class="row">
             <div class="col-sm-3">
                 <h3>Examples</h3>
-                Check out these examples see how Scale processes real data sets.
+                <p>Check out these examples see how Scale processes real data sets.</p>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="example">
-                    <img src="images/example-thumb-hyperspectral.jpg">
-                    <h4>Remote Sensing</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="example">
+                            <img class="img-responsive center" src="images/example-thumb-hyperspectral.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Remote Sensing</a></h3>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="example">
-                    <img src="images/example-thumb-mri.jpg">
-                    <h4>Medical Imaging</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="example">
+                            <img class="img-responsive center" src="images/example-thumb-mri.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Medical Imaging</a></h3>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="example">
-                    <img src="images/example-thumb-audio.jpg">
-                    <h4>Audio Processing</h4>
-                </a>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <a href="#" class="example">
+                            <img class="img-responsive center" src="images/example-thumb-audio.jpg">
+                        </a>
+                    </div>
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title"><a href="#">Audio Processing</a></h3>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -201,15 +220,9 @@
 
 <!-- Footer -->
 <footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <p>Footer, copyright, licensing</p>
-            </div>
-        </div>
-        <!-- /.row -->
+    <div class="container text-center">
+        Footer, copyright, licensing
     </div>
-    <!-- /.container -->
 </footer>
 
 <!-- jQuery -->
@@ -217,7 +230,5 @@
 
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
-
 </body>
-
 </html>
