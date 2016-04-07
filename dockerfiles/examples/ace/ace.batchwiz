@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<batch xmlns="https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd">
+
+  <wizard filename="/tmp/ace.wiz">
+    <parameter item="Import Data Set" name="Input Filename" type="Filename">
+      <value></value>
+    </parameter>
+    <parameter item="Wavelength Metadata Importer" name="Wavelength File" type="Filename">
+      <value></value>
+    </parameter>
+    <parameter item="Import Data Set" name="Signature Filename" type="Filename">
+      <value></value>
+    </parameter>
+    <parameter item="Export Data Set" name="Output Filename" type="Filename">
+      <value></value>
+    </parameter>
+    <parameter item="Export Data Set" name="Exporter Name" type="string">
+      <value>GeoTIFF Exporter</value>
+    </parameter>
+  </wizard>
+
+</batch>
