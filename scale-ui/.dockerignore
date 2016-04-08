@@ -1,0 +1,11 @@
+app/
+node_modules/
+build/
+dist/
+reports/
+test/
+.idea/
+.tmp
+.sass-cache
+.DS_Store
+npm-debug.log

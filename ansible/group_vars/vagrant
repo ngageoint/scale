@@ -10,7 +10,7 @@ scheduler_zk: 'zk://10.4.4.10:2181/scale'
 docker_registry: '10.4.4.10:5000/'
 
 # The tag associated with the framework images. Leave this blank to use 'latest'
-scale_docker_version: '3'
+scale_docker_version: ''
 
 # The IP address of the mesos master. This must be an IP address.
 mesos_master_ip: '10.4.4.10' #'{{ ansible_all_ipv4_addresses[-1] }}'

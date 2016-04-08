@@ -1,15 +1,31 @@
 ---
 # init-examples/handlers/main.yml
 - name: push landsat-parse
-  command: sh -c 'docker tag -f landsat-parse_1.0:dev {{ docker_registry }}landsat-parse_1.0:dev; docker push {{ docker_registry }}landsat-parse_1.0:dev'
+  command: sh -c 'docker tag -f geoint/landsat-parse_1.0:dev {{ docker_registry }}geoint/landsat-parse_1.0:dev; docker push {{ docker_registry }}geoint/landsat-parse_1.0:dev'
   become: true
 
 - name: push landsat-ndwi
-  command: sh -c 'docker tag -f landsat-ndwi_1.0:dev {{ docker_registry }}landsat-ndwi_1.0:dev; docker push {{ docker_registry }}landsat-ndwi_1.0:dev'
+  command: sh -c 'docker tag -f geoint/landsat-ndwi_1.0:dev {{ docker_registry }}geoint/landsat-ndwi_1.0:dev; docker push {{ docker_registry }}geoint/landsat-ndwi_1.0:dev'
   become: true
 
 - name: push landsat-tiles
-  command: sh -c 'docker tag -f landsat-tiles_1.0:dev {{ docker_registry }}landsat-tiles_1.0:dev; docker push {{ docker_registry }}landsat-tiles_1.0:dev'
+  command: sh -c 'docker tag -f geoint/landsat-tiles_1.0:dev {{ docker_registry }}geoint/landsat-tiles_1.0:dev; docker push {{ docker_registry }}geoint/landsat-tiles_1.0:dev'
+  become: true
+
+- name: push pca
+  command: sh -c 'docker tag -f geoint/pca_1.0:dev {{ docker_registry }}geoint/pca_1.0:dev; docker push {{ docker_registry }}geoint/pca_1.0:dev'
+  become: true
+
+- name: push ace
+  command: sh -c 'docker tag -f geoint/ace_1.0:dev {{ docker_registry }}geoint/ace_1.0:dev; docker push {{ docker_registry }}geoint/ace_1.0:dev'
+  become: true
+
+- name: push vash
+  command: sh -c 'docker tag -f geoint/vash_1.0:dev {{ docker_registry }}geoint/vash_1.0:dev; docker push {{ docker_registry }}geoint/vash_1.0:dev'
+  become: true
+
+- name: push parse-binary
+  command: sh -c 'docker tag -f geoint/parse-binary_1.0:dev {{ docker_registry }}geoint/parse-binary_1.0:dev; docker push {{ docker_registry }}geoint/parse-binary_1.0:dev'
   become: true
 
 - name: push pca
