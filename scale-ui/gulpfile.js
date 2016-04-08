@@ -19,13 +19,14 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js', '!./app/modules/scaleConfig.local.js',],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
     testData: ['./app/test/data/**/*'],
     tests: ['./tests/*.js'],
-    stubs: './app/test/scripts/backendStubs.js'
+    stubs: './app/test/scripts/backendStubs.js',
+    config: './config/*.json'
 };
 
 var getVersionJson = function() {
@@ -152,8 +153,8 @@ gulp.task('app-js', ['clean'], appJs);
 gulp.task('app-js-watch', appJs);
 
 var appConfig = function () {
-    return gulp.src('./app/modules/scaleConfig.local.js')
-        .pipe(gulp.dest('./build/scripts'));
+    return gulp.src(paths.config)
+        .pipe(gulp.dest('./build/config'));
 };
 gulp.task('app-config', ['clean'], appConfig);
 

@@ -1,4 +1,6 @@
-'''Defines utility methods for testing source files'''
+"""Defines utility methods for testing source files"""
+from __future__ import unicode_literals
+
 import hashlib
 
 import django.utils.timezone as timezone
@@ -7,14 +9,14 @@ from source.models import SourceFile
 from storage.test import utils as storage_utils
 
 
-def create_source(file_name=u'my_test_file.txt', file_size=100, media_type=u'text/plain',
-                  file_path=u'/file/path/my_test_file.txt', data_started=None, data_ended=None, is_parsed=True,
-                  parsed=None, workspace=None):
-    '''Creates a source file model for unit testing
+def create_source(file_name='my_test_file.txt', file_size=100, media_type='text/plain',
+                  file_path='/file/path/my_test_file.txt', data_started=None, data_ended=None, is_parsed=True,
+                  parsed=None, workspace=None, countries=None):
+    """Creates a source file model for unit testing
 
     :returns: The source file model
     :rtype: :class:`source.models.SourceFile`
-    '''
+    """
 
     if not data_started:
         data_started = timezone.now()
@@ -25,7 +27,11 @@ def create_source(file_name=u'my_test_file.txt', file_size=100, media_type=u'tex
     if not workspace:
         workspace = storage_utils.create_workspace()
 
-    return SourceFile.objects.create(file_name=file_name, media_type=media_type, file_size=file_size,
-                                     file_path=file_path, data_started=data_started, data_ended=data_ended,
-                                     is_parsed=is_parsed, parsed=parsed, workspace=workspace,
-                                     uuid=hashlib.md5(file_name).hexdigest())
+    source_file = SourceFile.objects.create(file_name=file_name, media_type=media_type, file_size=file_size,
+                                            file_path=file_path, data_started=data_started, data_ended=data_ended,
+                                            is_parsed=is_parsed, parsed=parsed, workspace=workspace,
+                                            uuid=hashlib.md5(file_name).hexdigest())
+    if countries:
+        source_file.countries = countries
+        source_file.save()
+    return source_file

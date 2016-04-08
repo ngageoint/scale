@@ -12,12 +12,12 @@ PORT_REGEX = re.compile(r'.*?\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:(\d+)')
 
 
 class MesosError(Exception):
-    '''Error when there is a problem fetching results from the Mesos REST API'''
+    """Error when there is a problem fetching results from the Mesos REST API"""
     pass
 
 
 class HardwareResources(object):
-    '''Represents hardware resource metrics for a host.
+    """Represents hardware resource metrics for a host.
 
     :keyword cpus: The number of processing units.
     :type cpus: float
@@ -25,18 +25,18 @@ class HardwareResources(object):
     :type mem: float
     :keyword disk: The amount of disk space in MiB.
     :type disk: float
-    '''
+    """
     def __init__(self, cpus=0.0, mem=0.0, disk=0.0):
         self.cpus = cpus
         self.mem = mem
         self.disk = disk
 
     def to_dict(self):
-        '''Converts this object to a dictionary representation.
+        """Converts this object to a dictionary representation.
 
         :returns: All of the object attributes formatted as a dictionary.
         :rtype: dict
-        '''
+        """
         return {
             'cpus': round(self.cpus, 1),
             'mem': round(self.mem, 1),
@@ -45,7 +45,7 @@ class HardwareResources(object):
 
 
 class SchedulerInfo(object):
-    '''Represents summary information about a host system.
+    """Represents summary information about a host system.
 
     :keyword is_online: True if the system is online, False otherwise.
     :type is_online: bool
@@ -55,7 +55,7 @@ class SchedulerInfo(object):
     :type scheduled: :class:`mesos_api.api.HardwareResources`
     :keyword used: The hardware resources actively being used by the system.
     :type used: :class:`mesos_api.api.HardwareResources`
-    '''
+    """
     def __init__(self, hostname, is_online, total=None, scheduled=None, used=None):
         self.hostname = hostname
         self.is_online = is_online
@@ -64,11 +64,11 @@ class SchedulerInfo(object):
         self.used = used
 
     def to_dict(self):
-        '''Converts this object to a dictionary representation.
+        """Converts this object to a dictionary representation.
 
         :returns: All of the object attributes formatted as a dictionary.
         :rtype: dict
-        '''
+        """
         return {
             'hostname': self.hostname,
             'is_online': self.is_online,
@@ -81,12 +81,12 @@ class SchedulerInfo(object):
 
 
 class SlaveInfo(object):
-    '''Represents information about a host system.
+    """Represents information about a host system.
 
     :keyword hostname: The network name of the host.
-    :type hostname: float
+    :type hostname: string
     :keyword port: The network port of the host.
-    :type port: float
+    :type port: int
     :keyword total: The total hardware resources available to the host.
     :type total: :class:`mesos_api.api.HardwareResources`
     :keyword scheduled: The hardware resources allocated for potential use by the host.
@@ -94,8 +94,8 @@ class SlaveInfo(object):
     :keyword used: The hardware resources actively being used by the host.
     :type used: :class:`mesos_api.api.HardwareResources`
     :keyword slave_id: The ID of the slave.
-    :type slave_id: str
-    '''
+    :type slave_id: string
+    """
     def __init__(self, hostname=None, port=0, total=None, scheduled=None, used=None, slave_id=None):
         self.slave_id = slave_id
         self.hostname = hostname
@@ -105,11 +105,11 @@ class SlaveInfo(object):
         self.used = used
 
     def to_dict(self):
-        '''Converts this object to a dictionary representation.
+        """Converts this object to a dictionary representation.
 
         :returns: All of the object attributes formatted as a dictionary.
         :rtype: dict
-        '''
+        """
         result = {
             'hostname': self.hostname,
             'port': self.port,
@@ -127,7 +127,7 @@ class SlaveInfo(object):
 
 
 def get_scheduler(hostname, port):
-    '''Queries the Mesos master REST API to get hardware resource usage for the entire cluster
+    """Queries the Mesos master REST API to get hardware resource usage for the entire cluster
 
     :param hostname: The hostname of the master
     :type hostname: str
@@ -135,7 +135,7 @@ def get_scheduler(hostname, port):
     :type port: int
     :returns: A summary of resource utilization and allocation for the cluster scheduler
     :rtype: :class:`mesos_api.api.SchedulerInfo`
-    '''
+    """
 
     # Fetch raw status information from the Mesos API
     try:
@@ -180,7 +180,7 @@ def get_scheduler(hostname, port):
 
 
 def get_slaves(hostname, port):
-    '''Queries the Mesos master REST API to get information for all registered slaves.
+    """Queries the Mesos master REST API to get information for all registered slaves.
 
     :param hostname: The hostname of the master
     :type hostname: str
@@ -189,13 +189,13 @@ def get_slaves(hostname, port):
     :returns: A list of slave information.
     :rtype: list[:class:`mesos_api.api.SlaveInfo`]
     :raises MesosError: If the slave cannot be found
-    '''
+    """
     slaves_dict = _get_slaves_dict(hostname, port)
     return [_parse_slave_info(s) for s in slaves_dict]
 
 
 def get_slave(hostname, port, slave_id, resources=False):
-    '''Queries the Mesos master REST API to get information for the given slave
+    """Queries the Mesos master REST API to get information for the given slave
 
     :param hostname: The hostname of the master
     :type hostname: str
@@ -206,7 +206,7 @@ def get_slave(hostname, port, slave_id, resources=False):
     :returns: A summary of the slave information
     :rtype: :class:`mesos_api.api.SlaveInfo`
     :raises MesosError: If the slave cannot be found
-    '''
+    """
     slave_dict = _get_slave_dict(hostname, port, slave_id)
     if not slave_dict:
         raise MesosError('Slave not found: %s' % slave_id)
@@ -218,7 +218,7 @@ def get_slave(hostname, port, slave_id, resources=False):
 
 
 def get_slave_task_directory(hostname, port, task_id):
-    '''Queries the Mesos slave REST API to get the directory for the stdout and stderr files for the given task
+    """Queries the Mesos slave REST API to get the directory for the stdout and stderr files for the given task
 
     :param hostname: The hostname of the slave
     :type hostname: str
@@ -229,7 +229,7 @@ def get_slave_task_directory(hostname, port, task_id):
     :returns: The directory on the slave, possibly None
     :rtype: str
     :raises MesosError: If the task cannot be found
-    '''
+    """
     url = 'http://%s:%i/state.json' % (hostname, port)
     response = urllib2.urlopen(url)
     state_dict = json.load(response)
@@ -242,7 +242,7 @@ def get_slave_task_directory(hostname, port, task_id):
 
 
 def get_slave_task_run_id(hostname, port, task_id):
-    '''Queries the Mesos slave REST API to get the run ID for the given task
+    """Queries the Mesos slave REST API to get the run ID for the given task
 
     :param hostname: The hostname of the slave
     :type hostname: str
@@ -253,7 +253,7 @@ def get_slave_task_run_id(hostname, port, task_id):
     :returns: The directory on the slave, possibly None
     :rtype: str
     :raises MesosError: If the task cannot be found
-    '''
+    """
     url = 'http://%s:%i/state.json' % (hostname, port)
     response = urllib2.urlopen(url)
     state_dict = json.load(response)
@@ -269,7 +269,7 @@ def get_slave_task_run_id(hostname, port, task_id):
 
 
 def get_slave_task_file(hostname, port, task_dir, file_name):
-    '''Queries the Mesos slave REST API to get the specified file from the given task directory
+    """Queries the Mesos slave REST API to get the specified file from the given task directory
 
     :param hostname: The hostname of the slave
     :type hostname: str
@@ -281,14 +281,14 @@ def get_slave_task_file(hostname, port, task_dir, file_name):
     :type file_name: str
     :returns: The contents of the file
     :rtype: str
-    '''
+    """
     url = get_slave_task_url(hostname, port, task_dir, file_name)
     response = urllib2.urlopen(url)
     return response.read()
 
 
 def get_slave_task_url(hostname, port, task_dir, file_name):
-    '''Generate a query URL for Mesos slave REST API for access to a specified file from the given task directory
+    """Generate a query URL for Mesos slave REST API for access to a specified file from the given task directory
 
     :param hostname: The hostname of the slave
     :type hostname: str
@@ -300,14 +300,14 @@ def get_slave_task_url(hostname, port, task_dir, file_name):
     :type file_name: str
     :returns: The URL
     :rtype: str
-    '''
+    """
     base_url = 'http://%s:%i/files/download.json?' % (hostname, port)
     query_args = urllib.urlencode({'path':   '%s/%s' % (task_dir, file_name)})
     return base_url + query_args
 
 
 def _get_slave_dict(hostname, port, slave_id):
-    '''Queries the Mesos master REST API to get information for the given slave
+    """Queries the Mesos master REST API to get information for the given slave
 
     :param hostname: The hostname of the master
     :type hostname: str
@@ -317,7 +317,7 @@ def _get_slave_dict(hostname, port, slave_id):
     :type slave_id: str
     :returns: A dictionary structure representing the slave information.
     :rtype: dict
-    '''
+    """
     slaves_dict = _get_slaves_dict(hostname, port)
     for slave_dict in slaves_dict:
         if slave_dict['id'] == slave_id:
@@ -325,7 +325,7 @@ def _get_slave_dict(hostname, port, slave_id):
 
 
 def _get_slaves_dict(hostname, port):
-    '''Queries the Mesos master REST API to get information for the given slave
+    """Queries the Mesos master REST API to get information for the given slave
 
     :param hostname: The hostname of the master
     :type hostname: str
@@ -333,7 +333,7 @@ def _get_slaves_dict(hostname, port):
     :type port: int
     :returns: A dictionary structure representing the slave information.
     :rtype: dict
-    '''
+    """
     url = 'http://%s:%i/master/state.json' % (hostname, port)
     response = urllib2.urlopen(url)
     state_dict = json.load(response)
@@ -341,13 +341,13 @@ def _get_slaves_dict(hostname, port):
 
 
 def _parse_slave_info(slave_dict):
-    '''Parses the given Mesos API dictionary into a recognized object model.
+    """Parses the given Mesos API dictionary into a recognized object model.
 
     :param slave_dict: The raw slave information to parse.
     :type slave_dict: dict
     :returns: A summary of the slave information.
     :rtype: :class:`mesos_api.api.SlaveInfo`
-    '''
+    """
 
     # Extract the general host attributes
     slave_id = slave_dict['id']
@@ -388,13 +388,13 @@ def _parse_slave_resources(hostname, port):
 
 
 def _get_framework(state_dict):
-    '''Finds the default scheduler framework within the Mesos API response
+    """Finds the default scheduler framework within the Mesos API response
 
     :param state_dict: The API response dictionary to parse.
     :type state_dict: dict
     :returns: A tuple of the framework dictionary and whether it is currently online.
     :rtype: tuple(dict, bool)
-    '''
+    """
     for key_name in ['frameworks', 'completed_frameworks', 'unregistered_frameworks']:
         if key_name in state_dict:
             for fw_dict in state_dict[key_name]:

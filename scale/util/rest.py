@@ -2,48 +2,29 @@
 from __future__ import unicode_literals
 
 import datetime
-import json
 
-import django.core.validators as validators
 import django.utils.timezone as timezone
+import rest_framework.pagination as pagination
 import rest_framework.serializers as serializers
 import rest_framework.status as status
-from django.core.validators import ValidationError
-from django.core.paginator import Paginator, EmptyPage
+from django.conf import settings
+from django.conf.urls import include, url
 from rest_framework.exceptions import APIException
 
 import util.parse as parse_util
 from util.parse import ParseError
 
 
+class DefaultPagination(pagination.PageNumberPagination):
+    """Default configuration class for the paging system."""
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 class ModelIdSerializer(serializers.Serializer):
     """Converts a model to a lightweight place holder object with only an identifier to REST output"""
     id = serializers.IntegerField()
-
-
-class JSONField(serializers.CharField):
-    """Represents JSON content for use in REST serializers."""
-    type_name = 'JSONField'
-    type_label = 'json'
-    empty = {}
-
-    default_error_messages = {
-        'invalid': '"%s" value must be JSON.',
-    }
-
-    def from_native(self, value):
-        """Converts the given raw value to a Python object."""
-        if value in validators.EMPTY_VALUES:
-            return None
-
-        if not isinstance(value, basestring):
-            return value
-
-        try:
-            return json.loads(value)
-        except (TypeError, ValueError):
-            msg = self.error_messages['invalid'] % value
-            raise ValidationError(msg)
 
 
 class BadParameter(APIException):
@@ -54,6 +35,37 @@ class BadParameter(APIException):
 class ReadOnly(APIException):
     """Exception indicating a REST API call is attempting to update a field that does not support it."""
     status_code = status.HTTP_400_BAD_REQUEST
+
+
+def get_versioned_urls(apps):
+    """Generates a list of URL patterns for applications with REST APIs
+
+    :param apps: A list of application names to register.
+    :type apps: list[string]
+    :returns: A list of URL patterns for REST APIs with version prefixes.
+    :rtype: list[:class:`django.core.urlresolvers.RegexURLPattern`]
+    """
+    urls = []
+
+    # TODO Remove the default version once applications are migrated
+    for app in apps:
+        urls.append(url(r'', include(app + '.urls')))
+
+    # Check whether the application is configured to use versions
+    rest_settings = getattr(settings, 'REST_FRAMEWORK', None)
+    if not rest_settings:
+        return urls
+    allowed_versions = rest_settings.get('ALLOWED_VERSIONS', None)
+    if not allowed_versions:
+        return urls
+
+    # Generate a URL pattern for each endpoint with a version prefix
+    for version in allowed_versions:
+        version_urls = []
+        for app in apps:
+            version_urls.append(url(r'^' + version + '/', include(app + '.urls', namespace=version)))
+        urls.extend(version_urls)
+    return urls
 
 
 def check_update(request, fields):
@@ -71,7 +83,7 @@ def check_update(request, fields):
     """
     fields = fields or []
     assert(type(fields) == type([]))
-    extra = filter(lambda x, y=fields: x not in y, request.DATA.keys())
+    extra = filter(lambda x, y=fields: x not in y, request.data.keys())
     if extra:
         raise ReadOnly('Fields do not allow updates: %s' % ', '.join(extra))
     return True
@@ -144,7 +156,7 @@ def has_params(request, *names):
     if not names:
         return False
     for name in names:
-        if name not in request.QUERY_PARAMS and name not in request.DATA:
+        if name not in request.query_params and name not in request.data:
             return False
     return True
 
@@ -452,37 +464,6 @@ def parse_dict(request, name, default_value=None, required=True):
     return value or {}
 
 
-def perform_paging(request, objects):
-    """Performs paging on the given objects using the given request parameters
-
-    :param request: The context of an active HTTP request.
-    :type request: :class:`rest_framework.request.Request`
-    :param objects: List of objects, typically a queryset
-    :type objects: list
-    :returns: the created page
-    :rtype: :class:`django.core.paginator.Page`
-    """
-    # TODO: Replace this function with the paging features added to DRF 3.x
-
-    try:
-        page = int(request.QUERY_PARAMS.get('page', 1))
-    except (TypeError, ValueError):
-        raise BadParameter('"page" must be an integer')
-    try:
-        page_size = int(request.QUERY_PARAMS.get('page_size', 100))
-    except (TypeError, ValueError):
-        raise BadParameter('"page_size" must be an integer')
-
-    if page_size < 1 or page_size > 1000:
-        raise BadParameter('"page_size" must be between 1 and 1000 inclusive')
-
-    paginator = Paginator(objects, page_size)
-    try:
-        return paginator.page(page)
-    except EmptyPage:
-        raise BadParameter('Bad "page" number')
-
-
 def _get_param(request, name, default_value=None, required=True):
     """Gets a parameter from the given request that works for either read or write operations.
 
@@ -499,10 +480,10 @@ def _get_param(request, name, default_value=None, required=True):
     :rtype: object
     """
     value = None
-    if name in request.QUERY_PARAMS:
-        value = request.QUERY_PARAMS.get(name)
-    if value is None and name in request.DATA:
-        value = request.DATA.get(name)
+    if name in request.query_params:
+        value = request.query_params.get(name)
+    if value is None and name in request.data:
+        value = request.data.get(name)
 
     if value is None and default_value is not None:
         return default_value
@@ -525,10 +506,10 @@ def _get_param_list(request, name, default_value=None, required=True):
     :rtype: list[object]
     """
     value = None
-    if name in request.QUERY_PARAMS:
-        value = request.QUERY_PARAMS.getlist(name)
-    if value is None and name in request.DATA:
-        value = request.DATA.get(name)
+    if name in request.query_params:
+        value = request.query_params.getlist(name)
+    if value is None and name in request.data:
+        value = request.data.get(name)
 
     if value is None and default_value is not None:
         return default_value

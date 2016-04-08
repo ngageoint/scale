@@ -20,6 +20,10 @@ import sys
 PYTHON_EXECUTABLE = sys.executable
 MANAGE_FILE = os.path.join(BASE_DIR, 'manage.py')
 
+# Project version
+import scale
+VERSION = scale.__version__
+
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
@@ -93,10 +97,18 @@ MIDDLEWARE_CLASSES = (
 )
 
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 100,
-    'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 1000,
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'util.rest.DefaultPagination',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.AdminRenderer',
+    ),
+    'ALLOWED_VERSIONS': ('v3',),
+    'DEFAULT_VERSION': 'v3',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
 
 ROOT_URLCONF = 'scale.urls'
