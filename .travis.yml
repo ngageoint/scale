@@ -10,8 +10,8 @@ services:
 - postgresql
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv
-  -in publish-key.enc -out ~/.ssh/publish-key -d
+- if [ "${TRAVIS_BRANCH}" = "master" ]; then openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv
+  -in publish-key.enc -out ~/.ssh/publish-key -d; fi
 before_script:
 - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
 - psql -c 'create database scale;' -U postgres
