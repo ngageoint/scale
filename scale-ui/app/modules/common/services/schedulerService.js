@@ -14,7 +14,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'scheduler/',
+                    url: scaleConfig.urls.updateScheduler(),
                     method: 'PATCH',
                     data: data
                 }).success(function (result) {

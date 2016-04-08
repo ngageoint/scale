@@ -27,7 +27,7 @@
         return {
             getJobs: function (params) {
                 params = params || getJobsParams();
-                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'jobs/';
+                params.url = params.url ? params.url : scaleConfig.urls.getJobs();
 
                 var jobsResource = $resource(params.url, params),
                     jobsPoller = pollerFactory.newPoller(jobsResource, scaleConfig.pollIntervals.jobs);
@@ -46,7 +46,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'jobs/',
+                    url: params.url ? params.url : scaleConfig.urls.getJobs(),
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -71,7 +71,7 @@
             },
             getJobDetail: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'jobs/' + id + '/').success(function (data) {
+                $http.get(scaleConfig.urls.getJobDetail(id)).success(function (data) {
                     d.resolve(JobDetails.transformer(data));
                 }).error(function (error) {
                     d.reject(error);
@@ -83,7 +83,7 @@
                     pageNumber: pageNumber,
                     pageSize: pageSize
                 };
-                var runningJobsResource = $resource(scaleConfig.urls.apiPrefix + 'job-types/running/', params),
+                var runningJobsResource = $resource(scaleConfig.urls.getRunningJobs(), params),
                     runningJobsPoller = pollerFactory.newPoller(runningJobsResource, scaleConfig.pollIntervals.runningJobs);
 
                 return runningJobsPoller.promise.then(null, null, function (data) {
@@ -96,13 +96,9 @@
                 });
             },
             getRunningJobsOnce: function (pageNumber, pageSize) {
-                var params = {
-                    pageNumber: pageNumber,
-                    pageSize: pageSize
-                };
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.apiPrefix + 'job-types/running/', params).success(function (data) {
+                $http.get(scaleConfig.urls.getRunningJobs(pageNumber, pageSize)).success(function (data) {
                     data.results = RunningJob.transformer(data.results);
                     d.resolve(data);
                 }).error(function (error) {
@@ -115,7 +111,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'jobs/' + id + '/',
+                    url: scaleConfig.urls.updateJob(id),
                     method: 'PATCH',
                     data: data
                 }).success(function (result) {
