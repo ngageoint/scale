@@ -51,23 +51,20 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <table class="table" ng-if="inputs.length > 0">
+                    <table class="table table-stripednp" cols="5" ng-if="inputs.length > 0">
                         <tbody>
                             <caption>Inputs</caption>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="!input.value">
-                                <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Type</th>
-                                            <th>Name</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ input.type }}</td>
-                                            <td>{{ input.name }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Value</th>
                             </tr>
+                            <tr ng-repeat="input in inputs">
+                                <td>{{ input.name }}</td>
+                                <td>{{ input.type }}</td>
+                                <td>{{ input.value }}</td>
+                            </tr>
+
                             <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'property' && input.value">
                                 <td>
                                     <table class="table table-hover table-condensed table-striped">
