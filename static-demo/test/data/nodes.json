@@ -5,7 +5,7 @@
     "results": [
         {
             "id": 1,
-            "hostname": "node1.local",
+            "hostname": "node01.local",
             "port": 5051,
             "slave_id": "20150616-103050-1800454536-5050-6193-S2",
             "is_paused": false,
@@ -17,19 +17,223 @@
             "last_modified": "2015-06-15T17:18:52.414Z"
         },{
             "id": 2,
-            "hostname": "node2.local",
+            "hostname": "node02.local",
             "port": 5051,
             "slave_id": "20150616-103050-1800454536-5050-6193-S4",
             "is_paused": false,
             "is_paused_errors": false,
-            "is_active": true,
+            "is_active": false,
             "archived": null,
             "created": "2015-06-15T17:18:52.414Z",
             "last_offer": null,
             "last_modified": "2015-06-15T17:18:52.414Z"
         },{
             "id": 3,
-            "hostname": "node3.local",
+            "hostname": "node03.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 4,
+            "hostname": "node04.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 5,
+            "hostname": "node05.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 6,
+            "hostname": "node06.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 7,
+            "hostname": "node07.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 8,
+            "hostname": "node08.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 9,
+            "hostname": "node09.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 10,
+            "hostname": "node10.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 11,
+            "hostname": "node11.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 12,
+            "hostname": "node12.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 13,
+            "hostname": "node13.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 14,
+            "hostname": "node14.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 15,
+            "hostname": "node15.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 16,
+            "hostname": "node16.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 17,
+            "hostname": "node17.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 18,
+            "hostname": "node18.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 19,
+            "hostname": "node19.local",
+            "port": 5051,
+            "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+            "is_paused": false,
+            "is_paused_errors": false,
+            "is_active": true,
+            "archived": null,
+            "created": "2015-06-15T18:28:22.589Z",
+            "last_offer": null,
+            "last_modified": "2015-06-15T19:56:04.254Z"
+        },{
+            "id": 20,
+            "hostname": "node20.local",
             "port": 5051,
             "slave_id": "20150616-103050-1800454536-5050-6193-S6",
             "is_paused": false,
@@ -40,5 +244,6 @@
             "last_offer": null,
             "last_modified": "2015-06-15T19:56:04.254Z"
         }
+
     ]
 }

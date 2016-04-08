@@ -93,7 +93,7 @@
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S4",
                 "pause_reason": null,
-                "is_paused": false,
+                "is_paused": true,
                 "is_paused_errors": false,
                 "is_active": true,
                 "archived": null,
@@ -269,7 +269,7 @@
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
                 "is_paused": false,
-                "is_paused_errors": false,
+                "is_paused_errors": true,
                 "is_active": true,
                 "archived": null,
                 "created": "2015-06-15T18:28:22.589Z",
@@ -336,8 +336,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 4,
+                "hostname": "node04.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -409,8 +409,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 5,
+                "hostname": "node03.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -482,8 +482,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 6,
+                "hostname": "node06.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -555,80 +555,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
-                "port": 5051,
-                "slave_id": "20150616-103050-1800454536-5050-6193-S6",
-                "pause_reason": null,
-                "is_paused": false,
-                "is_paused_errors": false,
-                "is_active": true,
-                "archived": null,
-                "created": "2015-06-15T18:28:22.589Z",
-                "last_offer": null,
-                "last_modified": "2015-06-15T19:56:04.254Z"
-            },
-            "is_online": true,
-            "job_exes_running": [
-                {
-                    "id": 3,
-                    "status": "RUNNING",
-                    "command_arguments": "",
-                    "timeout": 0,
-                    "exit_code": null,
-                    "created": "2015-08-28T18:32:33.862Z",
-                    "queued": "2015-08-28T18:32:33.862Z",
-                    "scheduled": "2015-08-28T18:32:33.862Z",
-                    "pre_started": null,
-                    "pre_completed": null,
-                    "job_started": "2015-08-28T18:32:33.862Z",
-                    "job_completed": null,
-                    "post_started": null,
-                    "post_completed": null,
-                    "ended": null,
-                    "last_modified": "2015-08-28T18:32:33.862Z",
-                    "job": {
-                        "id": 20,
-                        "job_type": {
-                            "id": 13,
-                            "name": "mike",
-                            "version": "1.0",
-                            "title": "Mike",
-                            "description": "Mike v1.0",
-                            "category": "system",
-                            "is_system": true,
-                            "is_long_running": false,
-                            "is_active": true,
-                            "is_operational": true,
-                            "is_paused": false,
-                            "icon_code": "f06d"
-                        },
-                        "event": {
-                            "id": 3
-                        },
-                        "error": null,
-                        "status": "COMPLETED",
-                        "priority": 10,
-                        "num_exes": 1
-                    },
-                    "node": {
-                        "id": 3
-                    },
-                    "error": null
-                }
-            ],
-            "job_exe_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 1,
-                    "most_recent": "2015-08-31T22:09:12:674Z",
-                    "category": null
-                }
-            ]
-        },{
-            "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 7,
+                "hostname": "node07.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -700,8 +628,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 8,
+                "hostname": "node08.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -773,8 +701,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 9,
+                "hostname": "node09.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -846,8 +774,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 10,
+                "hostname": "node10.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -919,8 +847,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 11,
+                "hostname": "node11.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -992,8 +920,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 12,
+                "hostname": "node12.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1065,8 +993,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 13,
+                "hostname": "node13.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1138,8 +1066,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 14,
+                "hostname": "node14.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1211,8 +1139,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 15,
+                "hostname": "node15.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1284,8 +1212,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 16,
+                "hostname": "node16.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1357,8 +1285,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 17,
+                "hostname": "node17.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1430,8 +1358,8 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 18,
+                "hostname": "node18.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
@@ -1503,8 +1431,81 @@
         },
         {
             "node": {
-                "id": 3,
-                "hostname": "node3.local",
+                "id": 19,
+                "hostname": "node19.local",
+                "port": 5051,
+                "slave_id": "20150616-103050-1800454536-5050-6193-S6",
+                "pause_reason": null,
+                "is_paused": false,
+                "is_paused_errors": false,
+                "is_active": true,
+                "archived": null,
+                "created": "2015-06-15T18:28:22.589Z",
+                "last_offer": null,
+                "last_modified": "2015-06-15T19:56:04.254Z"
+            },
+            "is_online": true,
+            "job_exes_running": [
+                {
+                    "id": 3,
+                    "status": "RUNNING",
+                    "command_arguments": "",
+                    "timeout": 0,
+                    "exit_code": null,
+                    "created": "2015-08-28T18:32:33.862Z",
+                    "queued": "2015-08-28T18:32:33.862Z",
+                    "scheduled": "2015-08-28T18:32:33.862Z",
+                    "pre_started": null,
+                    "pre_completed": null,
+                    "job_started": "2015-08-28T18:32:33.862Z",
+                    "job_completed": null,
+                    "post_started": null,
+                    "post_completed": null,
+                    "ended": null,
+                    "last_modified": "2015-08-28T18:32:33.862Z",
+                    "job": {
+                        "id": 20,
+                        "job_type": {
+                            "id": 13,
+                            "name": "mike",
+                            "version": "1.0",
+                            "title": "Mike",
+                            "description": "Mike v1.0",
+                            "category": "system",
+                            "is_system": true,
+                            "is_long_running": false,
+                            "is_active": true,
+                            "is_operational": true,
+                            "is_paused": false,
+                            "icon_code": "f06d"
+                        },
+                        "event": {
+                            "id": 3
+                        },
+                        "error": null,
+                        "status": "COMPLETED",
+                        "priority": 10,
+                        "num_exes": 1
+                    },
+                    "node": {
+                        "id": 3
+                    },
+                    "error": null
+                }
+            ],
+            "job_exe_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 1,
+                    "most_recent": "2015-08-31T22:09:12:674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "node": {
+                "id": 20,
+                "hostname": "node20.local",
                 "port": 5051,
                 "slave_id": "20150616-103050-1800454536-5050-6193-S6",
                 "pause_reason": null,
