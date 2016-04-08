@@ -275,6 +275,48 @@
                     "id": 19
                 }
             }
+        },{
+            "name": "output_file",
+            "type": "property",
+            "value": "string-value"
+        },{
+            "name": "output_file",
+            "type": "file",
+            "value": {
+                "id": 8484,
+                "workspace": {
+                    "id": 2,
+                    "name": "Products"
+                },
+                "file_name": "file.kml",
+                "media_type": "application/vnd.google-earth.kml+xml",
+                "file_size": 1234,
+                "data_type": [],
+                "is_deleted": false,
+                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                "url": "http://host.com/file/path/my_file.kml",
+                "created": "2015-09-01T17:27:48.477Z",
+                "deleted": null,
+                "data_started": null,
+                "data_ended": null,
+                "geometry": null,
+                "center_point": null,
+                "meta_data": {},
+                "last_modified": "2015-09-01T17:27:49.639Z",
+                "is_operational": true,
+                "is_published": true,
+                "published": "2015-09-01T17:27:49.461Z",
+                "unpublished": null,
+                "job_type": {
+                    "id": 8
+                },
+                "job": {
+                    "id": 35
+                },
+                "job_exe": {
+                    "id": 19
+                }
+            }
         }
     ]
 }

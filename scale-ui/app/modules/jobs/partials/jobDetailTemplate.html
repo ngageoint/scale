@@ -51,157 +51,107 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <table class="table table-stripednp" cols="5" ng-if="inputs.length > 0">
+                    <table class="table table-striped table-bordered" cols="5" ng-if="inputs.length > 0">
                         <tbody>
                             <caption>Inputs</caption>
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Value</th>
+                                <th class="col-md-2">Name</th>
+                                <th class="col-md-1">Type</th>
+                                <th class="col-md-9">Value</th>
                             </tr>
                             <tr ng-repeat="input in inputs">
                                 <td>{{ input.name }}</td>
                                 <td>{{ input.type }}</td>
-                                <td>{{ input.value }}</td>
-                            </tr>
-
-                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'property' && input.value">
                                 <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Name</th>
-                                            <th>Value</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ input.name }}</td>
-                                            <td>{{ input.value }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'file' && input.value">
-                                <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Name</th>
-                                            <th>File Name</th>
-                                            <th>File Size</th>
-                                            <th>Created</th>
-                                            <th>Last Modified</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ input.name }}</td>
-                                            <td><a href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a></td>
-                                            <td>{{ calculateFileSize(input.value.file_size) }}</td>
-                                            <td>{{ input.value.created }}</td>
-                                            <td>{{ input.value.last_modified }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="input in inputs track by $index" ng-if="input.type === 'files' && input.value">
-                                <td>
-                                    <table class="table table-condensed">
-                                        <tr>
-                                            <td>{{ input.name }}</td>
-                                            <td>
-                                                <table class="table table-hover table-condensed table-striped">
-                                                    <tr>
-                                                        <th>File Name</th>
-                                                        <th>File Size</th>
-                                                        <th>Created</th>
-                                                        <th>Last Modified</th>
-                                                    </tr>
-                                                    <tr ng-repeat="v in input.value">
-                                                        <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
-                                                        <td>{{ calculateFileSize(v.file_size) }}</td>
-                                                        <td>{{ v.created }}</td>
-                                                        <td>{{ v.last_modified }}</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <span ng-if="input.type === 'file' && input.value">
+                                        <table class="table table-hover table-condensed">
+                                            <tr ng-if="$index === 0">
+                                                <td>File Name</td>
+                                                <td>File Size</td>
+                                                <td>Created</td>
+                                                <td>Last Modified</td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a></td>
+                                                <td>{{ calculateFileSize(input.value.file_size) }}</td>
+                                                <td>{{ input.value.created }}</td>
+                                                <td>{{ input.value.last_modified }}</td>
+                                            </tr>
+                                        </table>
+                                    </span>
+                                    <span ng-if="input.type === 'files' && input.value">
+                                        <table class="table table-hover table-condensed">
+                                            <tr>
+                                                <td>File Name</td>
+                                                <td>File Size</td>
+                                                <td>Created</td>
+                                                <td>Last Modified</td>
+                                            </tr>
+                                            <tr ng-repeat="v in input.value">
+                                                <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                                <td>{{ calculateFileSize(v.file_size) }}</td>
+                                                <td>{{ v.created }}</td>
+                                                <td>{{ v.last_modified }}</td>
+                                            </tr>
+                                        </table>
+                                    </span>
+                                    <span ng-if="input.type === 'property' && input.value">
+                                        {{input.value}}
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table" ng-if="outputs.length > 0">
+                    <table class="table table-striped table-bordered" ng-if="outputs.length > 0">
                         <tbody>
                             <caption>Outputs</caption>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="!output.value">
+                            <tr>
+                                <th class="col-md-2">Name</th>
+                                <th class="col-md-1">Type</th>
+                                <th class="col-md-9">Value</th>
+                            </tr>
+                            <tr ng-repeat="output in outputs">
+                                <td>{{ output.name }}</td>
+                                <td>{{ output.type }}</td>
                                 <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Type</th>
-                                            <th>Name</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ output.type }}</td>
-                                            <td>{{ output.name }}</td>
-                                        </tr>
-                                    </table>
+                                    <span ng-if="output.type === 'file' && output.value">
+                                        <table class="table table-hover table-condensed">
+                                            <tr>
+                                                <td>File Name</td>
+                                                <td>File Size</td>
+                                                <td>Created</td>
+                                                <td>Last Modified</td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a></td>
+                                                <td>{{ calculateFileSize(output.value.file_size) }}</td>
+                                                <td>{{ output.value.created }}</td>
+                                                <td>{{ output.value.last_modified }}</td>
+                                            </tr>
+                                        </table>
+                                    </span>
+                                    <span ng-if="output.type === 'files' && output.value">
+                                        <table class="table table-hover table-condensed">
+                                            <tr>
+                                                <td>File Name</td>
+                                                <td>File Size</td>
+                                                <td>Created</td>
+                                                <td>Last Modified</td>
+                                            </tr>
+                                            <tr ng-repeat="v in output.value">
+                                                <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                                <td>{{ calculateFileSize(v.file_size) }}</td>
+                                                <td>{{ v.created }}</td>
+                                                <td>{{ v.last_modified }}</td>
+                                            </tr>
+                                        </table>
+                                    </span>
+                                    <span ng-if="output.type === 'property' && output.value">
+                                        {{output.value}}
+                                    </span>
                                 </td>
                             </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'property' && output.value">
-                                <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Name</th>
-                                            <th>Value</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ output.name }}</td>
-                                            <td>{{ output.value }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'file' && output.value">
-                                <td>
-                                    <table class="table table-hover table-condensed table-striped">
-                                        <tr ng-if="$index === 0">
-                                            <th>Name</th>
-                                            <th>File Name</th>
-                                            <th>File Size</th>
-                                            <th>Created</th>
-                                            <th>Last Modified</th>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ output.name }}</td>
-                                            <td><a href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a></td>
-                                            <td>{{ calculateFileSize(output.value.file_size) }}</td>
-                                            <td>{{ output.value.created }}</td>
-                                            <td>{{ output.value.last_modified }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="output in outputs track by $index" ng-if="output.type === 'files' && output.value">
-                                <td>
-                                    <table class="table table-condensed">
-                                        <tr>
-                                            <td>{{ output.name }}</td>
-                                            <td>
-                                                <table class="table table-hover table-condensed table-striped">
-                                                    <tr>
-                                                        <th>File Name</th>
-                                                        <th>File Size</th>
-                                                        <th>Created</th>
-                                                        <th>Last Modified</th>
-                                                    </tr>
-                                                    <tr ng-repeat="v in output.value">
-                                                        <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
-                                                        <td>{{ calculateFileSize(v.file_size) }}</td>
-                                                        <td>{{ v.created }}</td>
-                                                        <td>{{ v.last_modified }}</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
