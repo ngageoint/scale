@@ -49,7 +49,7 @@ cat > $2/results_manifest.json << EOF
     }
   }],
   "parse_results": [{
-    "filename": "$1",
+    "filename": "$(basename $1)",
     "file-types": ["landsat","msi","pan","tir"],
     "geo_metadata": {
         "data_started": "${DATE_STARTED}",
