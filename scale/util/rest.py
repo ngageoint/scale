@@ -215,8 +215,8 @@ def parse_string_list(request, name, default_value=None, required=True, accepted
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
     :type accepted_values: list[string]
-    :returns: The value of the named parameter or the default value if provided.
-    :rtype: string
+    :returns: The values of the named parameter or the default values if provided.
+    :rtype: list[string]
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
     """
@@ -299,8 +299,8 @@ def parse_int_list(request, name, default_value=None, required=True, accepted_va
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
     :type accepted_values: list[int]
-    :returns: The value of the named parameter or the default value if provided.
-    :rtype: string
+    :returns: The values of the named parameter or the default values if provided.
+    :rtype: list[int]
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
     """

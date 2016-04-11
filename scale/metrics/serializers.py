@@ -63,8 +63,8 @@ class MetricsPlotMultiValueSerializer(MetricsPlotValueSerializer):
 class MetricsPlotSerializer(serializers.Serializer):
     """Converts metrics plot values to REST output"""
     column = MetricsTypeColumnSerializer()
-    min_x = serializers.IntegerField()
-    max_x = serializers.IntegerField()
+    min_x = serializers.DateField()
+    max_x = serializers.DateField()
     min_y = serializers.IntegerField()
     max_y = serializers.IntegerField()
     values = MetricsPlotValueSerializer(many=True)

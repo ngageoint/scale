@@ -16,7 +16,7 @@ class TestMetricsView(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests successfully calling the metrics view.'''
+        """Tests successfully calling the metrics view."""
 
         url = '/metrics/'
         response = self.client.generic('GET', url)
@@ -39,7 +39,7 @@ class TestMetricDetailsView(TestCase):
         job_test_utils.create_job_type()
 
     def test_successful(self):
-        '''Tests successfully calling the metric details view.'''
+        """Tests successfully calling the metric details view."""
 
         url = '/metrics/job-types/'
         response = self.client.generic('GET', url)
@@ -59,13 +59,14 @@ class TestMetricPlotView(TestCase):
         django.setup()
 
         self.job_type1 = job_test_utils.create_job_type()
-        metrics_test_utils.create_job_type(job_type=self.job_type1)
+        metrics_test_utils.create_job_type(job_type=self.job_type1, completed_count=8, failed_count=2, total_count=10)
 
         self.job_type2 = job_test_utils.create_job_type()
-        metrics_test_utils.create_job_type(job_type=self.job_type2)
+        metrics_test_utils.create_job_type(job_type=self.job_type2, job_time_sum=110, job_time_min=10, job_time_max=100,
+                                           job_time_avg=55)
 
     def test_successful(self):
-        '''Tests successfully calling the metric plot view.'''
+        """Tests successfully calling the metric plot view."""
 
         url = '/metrics/job-types/plot-data/'
         response = self.client.generic('GET', url)
@@ -82,10 +83,10 @@ class TestMetricPlotView(TestCase):
                 self.assertIsNotNone(entry['max_x'])
                 self.assertIsNotNone(entry['min_y'])
                 self.assertIsNotNone(entry['max_y'])
-                self.assertFalse('id' in entry['values'])
+                self.assertFalse('id' in entry['values'][0])
 
     def test_choices(self):
-        '''Tests successfully calling the metric plot view with choice filters.'''
+        """Tests successfully calling the metric plot view with choice filters."""
 
         url = '/metrics/job-types/plot-data/?choice_id=%s&choice_id=%s' % (self.job_type1.id, self.job_type2.id)
         response = self.client.generic('GET', url)
@@ -103,10 +104,10 @@ class TestMetricPlotView(TestCase):
                 self.assertIsNotNone(entry['max_x'])
                 self.assertIsNotNone(entry['min_y'])
                 self.assertIsNotNone(entry['max_y'])
-                self.assertIn(entry['values']['id'], job_type_ids)
+                self.assertIn(entry['values'][0]['id'], job_type_ids)
 
     def test_columns(self):
-        '''Tests successfully calling the metric plot view with column filters.'''
+        """Tests successfully calling the metric plot view with column filters."""
 
         url = '/metrics/job-types/plot-data/?column=completed_count&column=failed_count'
         response = self.client.generic('GET', url)
@@ -116,7 +117,7 @@ class TestMetricPlotView(TestCase):
         self.assertEqual(len(result['results']), 2)
 
     def test_groups(self):
-        '''Tests successfully calling the metric plot view with group filters.'''
+        """Tests successfully calling the metric plot view with group filters."""
 
         url = '/metrics/job-types/plot-data/?group=overview'
         response = self.client.generic('GET', url)
