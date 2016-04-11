@@ -27,10 +27,11 @@
                 return scaleService.calculateDuration(this.created, this.last_modified);
             },
             getCellText: function () {
+                // this is only used reveal = true on gridChart directive
                 return this.hostname;
             },
             getCellTitle: function () {
-                return this.hostname.split('.')[0];
+                return this.hostname;
             }
         };
 
