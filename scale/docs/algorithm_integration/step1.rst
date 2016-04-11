@@ -92,7 +92,8 @@ Example Python wrapper
     import sys
     import json
     import os
-    
+    from glob import glob
+
     #Setup Logger to capture print statements
     log=logging.getLogger()
     log.setLevel(10)

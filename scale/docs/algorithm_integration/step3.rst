@@ -92,7 +92,7 @@ Next, execute the following build statement from the command line:
 
     docker build -t hostname:port/algorithm_name:tag .
     
-The command "docker build" will build a new image from the source code at the path, which in this case is "." which
+The command "docker build" will build a new image from the source code at the path, which in this case is ".", which
 refers to the current working directory.  The argument flag "-t" allows the build to be tagged with a name.  The
 hostname and port specify a local docker index for distribution to scale. If you intend to store your image in the main
 docker hub on the internet, leave these off. The tag is useful for specifying a version of the algorithm.
@@ -101,7 +101,7 @@ docker hub on the internet, leave these off. The tag is useful for specifying a 
 Testing a built docker container
 --------------------------------
 
-If your docker build command is successfully, you can interact with your container inside its environment.  This is a
+If your docker build command is successful, you can interact with your container inside its environment.  This is a
 good way to test your container before pushing it to the docker registry.  To test your container, you use the
 "docker run" command:
 

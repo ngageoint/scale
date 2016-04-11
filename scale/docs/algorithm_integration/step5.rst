@@ -22,8 +22,8 @@ Selecting the "New Recipe" button will display an empty recipe template.
 
 .. image:: ../images/algorithm_integration/new_recipe_entry.png
 
-**Name** is a user-defined, unique name to refer to the recipe.  *It must be lower case.*  Words are should be separated
-by dashes.
+**Name** is a user-defined, unique name to refer to the recipe.  *It must be lower case.*  Words should be separated by
+dashes.
 
 **Title** is a user-defined, unique (from other recipe titles) short title to use as the common display name of the
 recipe.  This is typically a properly cased version of the *name* field with dashes replaced with spaces.
@@ -60,7 +60,7 @@ Recipe Inputs Dialog
 
 **Media Types** will appear if the appropriate type is selected.  This should be the media type of your input file.
 
-**Required** is a checkbox should be checked if the recipe input is necessary for the algorithm to run.  
+**Required** is a checkbox that should be checked if the recipe input is necessary for the algorithm to run.
 
 Select "OK" when finished.
 
