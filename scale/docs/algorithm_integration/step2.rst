@@ -1,24 +1,27 @@
 
 .. _algorithm_integration_step2:
 
-Capturing you algorithm outputs with a Scale Results Manifest
-===============================================================================
+Capturing your algorithm outputs with a Scale Results Manifest
+==============================================================
 
 Generating a results manifest should either be done within your algorithm or within the algorithm's wrapper script.
-Once an algorithm is complete a results manifest file is used to convey what products should be archived by Scale and passed onto other algorithms.  It is **HIGHLY** recommended that the algorithm
+Once an algorithm is complete a results manifest file is used to convey what products should be archived by Scale and
+passed onto other algorithms.  It is **HIGHLY** recommended that the algorithm
 write out the manifest JSON file as prescribed in the Scale documentation. 
 
 Click here for results manifest specification:  :ref:`algorithms_results_manifest`
 
-Below are examples of wrapper scripts if you cannot modify the algorithm.  These should only be used if you do not have access to the source code for your algorithm.
+Below are examples of wrapper scripts if you cannot modify the algorithm.  These should only be used if you do not have
+access to the source code for your algorithm.
 
 **ONLY FILES IN THE RESULTS MANIFEST WILL BE SAVED BY SCALE**
 
-File paths listed in the results manifest must be absolute paths to the file.  The results manifest must be called "results_manifest.json" and must be present in the root of the directory provided by Scale.
+File paths listed in the results manifest must be absolute paths to the file.  The results manifest must be called
+"results_manifest.json" and must be present in the root of the directory provided by Scale.
 The output names in the results manifest must match the **output_data** field in the Job JSON definition.
 
 Simple Results Manifest Example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: javascript
    :linenos:
@@ -49,10 +52,10 @@ Simple Results Manifest Example
     
 
 Example Code for generating results manifests
--------------------------------------------------------------------
+---------------------------------------------
 
 Shell Script
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++
 .. code-block:: bash
     :linenos:
     
@@ -85,9 +88,9 @@ Shell Script
 
     results_manifest_text={\"version\":\"1.0\",\"files\":[$manifest_files_text]}
     echo "$results_manifest_text" > $OUTDIR/results_manifest.json
-    
+
 Python
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++
 .. code-block:: python
     :linenos:
     

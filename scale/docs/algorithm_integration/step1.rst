@@ -1,24 +1,31 @@
 
 .. _algorithm_integration_step1:
 
-Making a Scale-compatable Algorithm
-===============================================================================
+Making a Scale-compatible Algorithm
+===================================
 
 
 **Algorithms must**:
 
 * **Run standalone without any user inputs**
-    Algorithms must be fully automated.  If your algorithm is prompting for input from a user, the job will continue to wait until it times out.
+    Algorithms must be fully automated.  If your algorithm is prompting for input from a user, the job will continue to
+    wait until it times out.
 * **Fail gracefully**
-    Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message to standard output.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are not captured
-    appropriately, Scale will likely report a timeout or unknown error, which will make debugging your algorithm more difficult.
+    Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message
+    to standard output.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are
+    not captured appropriately, Scale will likely report a timeout or unknown error, which will make debugging your
+    algorithm more difficult.
 * **Not display popups**
-    Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is able to make a selection or close these windows.  Popup displays will cause an algorithm to hang (since they won't be closed)
-    until the job times out.  This is a common issue with IDL and output will need to be displayed to the standard output instead.
+    Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is
+    able to make a selection or close these windows.  Popup displays will cause an algorithm to hang (since they won't
+    be closed) until the job times out.  This is a common issue with IDL and output will need to be displayed to the
+    standard output instead.
 * **Run on Linux**
     Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLL's.
 * **Not have hardcoded paths**
-    File paths must not be embedded in the source code such that changing the path requires re-compiling code.  Necessary file paths should be passable into the algorithm either via a configuration file or passed from the command line.
+    File paths must not be embedded in the source code such that changing the path requires re-compiling code.
+    Necessary file paths should be passable into the algorithm either via a configuration file or passed from the
+    command line.
     
 
 **Scale will**:
@@ -38,43 +45,43 @@ Making a Scale-compatable Algorithm
 
 
 *Creating Executables*
--------------------------------------------------------------------------------
+----------------------
 
 *C/C++*
-+++++++++++++++++++++++++++++
++++++++
 * Compiled on Linux
 * Should provide cmake/makefiles for algorithm
 
 *IDL*
-+++++++++++++++++++++++++++++
++++++
 * Code should be compiled into .sav files with IDL's save command
 * IDL .sav files are run using runtime license
 * Some IDL function calls, such as ENVI, require special licensing which is limited
 
 *Java*
-+++++++++++++++++++++++++++++
+++++++
 * Code should be compiled into .jar files
 * Needed .jar libraries should be within its own folder
 
 *MATLAB*
-+++++++++++++++++++++++++++++
+++++++++
 * Code should be compiled into executables using MATLAB's deploytool or mcc command
 * Compiling MATLAB code will require any toolboxes used to be specified and available at compile time
 * Compiled MATLAB code runs using MATLAB's compiled runtime mode, which does not require a license
 
 *Python*
-+++++++++++++++++++++++++++++
+++++++++
 * Code should be in its own folder
 * Needed Python modules will need to be installed in the docker container
 
     
 Wrapping algorithms
--------------------------------------------------------------------
+-------------------
 
 If a script wraps the algorithm execution, exit codes will need to be captured and returned by the wrapper script.
 
 Example Python wrapper
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++
 
 
 .. code-block:: python
@@ -165,7 +172,7 @@ Example Python wrapper
         
 
 Example shell wrapper
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++
 
 Wrapping an algorithm with a shell script is useful when you need to:
 
@@ -206,7 +213,7 @@ The bash script will capture the arguments passed to it that are specified in th
     umount -lf /dted
     echo 'Unmounting directory'
 
-    #If the algorithm didn't exit sucessfully, exit wrapper with same code
+    #If the algorithm didn't exit successfully, exit wrapper with same code
     if [ $rc != 0 ] ; then
       echo "Caught exit(${rc}) from $SCRIPT"
       exit $rc
@@ -217,5 +224,3 @@ The bash script will capture the arguments passed to it that are specified in th
     echo 'Wrapper finished'
 
     exit $rc
-
-    
