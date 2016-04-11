@@ -24,3 +24,4 @@ Example removed, we need a good, general example here
    :maxdepth: 1
 
    results_manifest
+   ../algorithm_integration/index
