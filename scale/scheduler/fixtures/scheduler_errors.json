@@ -1,11 +1,11 @@
 [
-	{
+    {
         "model": "error.Error",
         "pk": null,
         "fields": {
             "name": "scheduler-lost",
             "title": "Lost By Scheduler",
-            "description": "The Scale scheduler lost track of this job. This usually occurs when the scheduler fails or restarts.",
+            "description": "The Scale scheduler lost this job execution. This can occur when the scheduler fails or restarts.",
             "category": "SYSTEM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
@@ -17,7 +17,7 @@
         "fields": {
             "name": "mesos-lost",
             "title": "Lost By Mesos",
-            "description": "Apache Mesos lost track of this job and could not find it.",
+            "description": "Apache Mesos lost a task that was part of this job execution.",
             "category": "SYSTEM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"

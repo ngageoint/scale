@@ -61,6 +61,8 @@ class JobTask(Task):
         if not error:
             # Use job's error mapping here to determine error
             error = self._error_mapping.get_error(task_results.exit_code)
+        if not error:
+            error = self.consider_general_error(task_results)
 
         JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
@@ -80,4 +82,5 @@ class JobTask(Task):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
+        super(JobTask, self).running(when, stdout_url, stderr_url)
         JobExecution.objects.task_started(self._job_exe_id, 'job', when, stdout_url, stderr_url)
