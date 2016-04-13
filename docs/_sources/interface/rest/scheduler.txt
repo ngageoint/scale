@@ -1,11 +1,13 @@
 
-.. _scheduler_node:
+.. _rest_scheduler:
 
 Scheduler Services
-========================================================================================================================
+==================
 
 These services provide access to information about the scheduler.
 There should be one and only one scheduler entry in the database and it is used to store global data like paused status.
+
+.. _rest_scheduler_details:
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Get Scheduler**                                                                                                       |
@@ -40,6 +42,8 @@ There should be one and only one scheduler entry in the database and it is used 
 +--------------------+----------------------------------------------------------------------------------------------------+
 | An internal error occurred, often this will indicate a missing database entry.                                          |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
+.. _rest_scheduler_update:
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Update Scheduler**                                                                                                    |
@@ -85,98 +89,3 @@ There should be one and only one scheduler entry in the database and it is used 
 +--------------------+----------------------------------------------------------------------------------------------------+
 | An internal error occurred, often this will indicate a missing database entry.                                          |
 +--------------------+----------------------------------------------------------------------------------------------------+
-
-+-------------------------------------------------------------------------------------------------------------------------------+
-| **Get System Status**                                                                                                         |
-+===============================================================================================================================+
-| Returns overall master, scheduler, and cluster information, including hardware resources.                                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **GET** /status/                                                                                                              |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **Successful Response**                                                                                                       |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **Status**               | 200 OK                                                                                             |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **Content Type**         | *application/json*                                                                                 |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                               |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| master                   | JSON Object       | Overall status information for the master host                                 |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| master.hostname          | String            | The network name of the master host                                            |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| master.port              | Integer           | The network port of the master host                                            |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| master.is_online         | Boolean           | Indicates whether or not the master host is running and available              |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler                | JSON Object       | Overall status information for the scheduler framework                         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.hostname       | String            | The network name of the scheduler host                                         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.is_online      | Boolean           | Indicates whether or not the scheduler host is running and available           |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| scheduler.is_paused      | Boolean           | Indicates whether or not the scheduler framework is currently paused           |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| queue_depth              | Integer           | The number of tasks currently scheduled on the queue                           |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources                | JSON Object       | (Optional) Information about the overall hardware resources of the cluster     |
-|                          |                   | NOTE: Resource information may not always be available                         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.total          | JSON Object       | The total hardware resources for all nodes in the cluster                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.total.cpus     | Float             | The total number of CPUs for all nodes in the cluster                          |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.total.mem      | Float             | The total amount of RAM in MiB for all nodes in the cluster                    |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.total.disk     | Float             | The total amount of disk space in MiB for all nodes in the cluster             |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.scheduled      | JSON Object       | The scheduled hardware resources for all nodes in the cluster                  |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.scheduled.cpus | Float             | The scheduled number of CPUs for all nodes in the cluster                      |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.scheduled.mem  | Float             | The scheduled amount of RAM in MiB for all nodes in the cluster                |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.scheduled.disk | Float             | The scheduled amount of disk space in MiB for all nodes in the cluster         |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.used           | JSON Object       | The used hardware resources for all nodes in the cluster                       |
-|                          |                   | NOTE: Real-time resource usage is not currently available and will be all zero |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.used.cpus      | Float             | The used number of CPUs for all nodes in the cluster                           |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.used.mem       | Float             | The used amount of RAM in MiB for all nodes in the cluster                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| resources.used.disk      | Float             | The used amount of disk space in MiB for all nodes in the cluster              |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                                    |
-|                                                                                                                               |
-|   {                                                                                                                           |
-|       "master": {                                                                                                             | 
-|           "is_online": true,                                                                                                  | 
-|           "hostname": "localhost",                                                                                            | 
-|           "port": 5050                                                                                                        | 
-|       },                                                                                                                      |
-|       "scheduler": {                                                                                                          | 
-|           "is_online": true,                                                                                                  | 
-|           "is_paused": false,                                                                                                 | 
-|           "hostname": "localhost"                                                                                             | 
-|       },                                                                                                                      |
-|       "queue_depth": 1234,                                                                                                    | 
-|       "resources": {                                                                                                          | 
-|           "total": {                                                                                                          | 
-|               "cpus": 16.0,                                                                                                   |
-|               "mem": 63305.0,                                                                                                 | 
-|               "disk": 131485.0                                                                                                |
-|           },                                                                                                                  |
-|           "scheduled": {                                                                                                      | 
-|               "cpus": 12.0,                                                                                                   |
-|               "mem": 35392.0,                                                                                                 | 
-|               "disk": 131408.0                                                                                                |
-|           },                                                                                                                  |
-|           "used": {                                                                                                           | 
-|               "cpus": 16.0,                                                                                                   |
-|               "mem": 63305.0,                                                                                                 | 
-|               "disk": 131485.0                                                                                                |
-|           }                                                                                                                   |
-|       }                                                                                                                       |
-|   }                                                                                                                           |
-+-------------------------------------------------------------------------------------------------------------------------------+

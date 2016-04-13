@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest package &mdash; Scale 3.0 documentation</title>
+  <title>ingest package &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="ingest.fixtures package" href="ingest.fixtures.html"/>
         <link rel="prev" title="error.test package" href="error.test.html"/> 
@@ -519,7 +519,7 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.objects">
-<tt class="descclassname">Ingest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.IngestManager object at 0x10bbec310&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Ingest.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.IngestManager object at 0x2ba054d93890&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -766,7 +766,7 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.objects">
-<tt class="descclassname">Strike.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.StrikeManager object at 0x10bbecc90&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Strike.</tt><tt class="descname">objects</tt><em class="property"> = &lt;ingest.models.StrikeManager object at 0x2ba054d9d2d0&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -832,17 +832,17 @@ the database will occur in an atomic transaction.</p>
 <p>Defines the serializers for ingests</p>
 <dl class="class">
 <dt id="ingest.serializers.IngestBaseSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
 <p>Converts ingest model fields to REST output</p>
 <dl class="class">
 <dt id="ingest.serializers.IngestBaseSerializer.DataTypeField">
-<em class="property">class </em><tt class="descname">DataTypeField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">DataTypeField</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
 <p>Field for displaying the list of data type tags for a Scale file</p>
 <dl class="method">
-<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.to_native">
-<tt class="descname">to_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.to_native" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.to_representation">
+<tt class="descname">to_representation</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.to_representation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the model field to a list of data type tags</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -870,176 +870,75 @@ the database will occur in an atomic transaction.</p>
 
 </dd></dl>
 
-<dl class="attribute">
-<dt id="ingest.serializers.IngestBaseSerializer.base_fields">
-<tt class="descclassname">IngestBaseSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x10bda11d0&gt;, 'strike': &lt;util.rest.ModelIdSerializer object at 0x10bda1250&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x10bda1310&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x10bda13d0&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda1450&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda14d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x10bda1550&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x10bda15d0&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x10bda1650&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda16d0&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda1750&gt;, 'source_file': &lt;util.rest.ModelIdSerializer object at 0x10bda17d0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10bda1890&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bda1950&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></tt></a></p>
 <p>Converts ingest model fields to REST output</p>
 <dl class="class">
 <dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer">
-<em class="property">class </em><tt class="descname">SourceFileSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">SourceFileSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="source.html#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></tt></a></p>
 <p>Converts source file model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x10bdb7dd0&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x10bdb7ed0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x10bdc3050&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x10bdc30d0&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x10bdc3150&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x10bdc31d0&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x10bdc3250&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x10bdc32d0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3390&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3410&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3490&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3510&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x10bdc3590&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x10bdc3610&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x10bdc3690&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x10bdc3710&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bdc37d0&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x10bdd5c50&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x10bdd5d50&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestDetailsSerializer.base_fields">
-<tt class="descclassname">IngestDetailsSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x10bda11d0&gt;, 'strike': &lt;ingest.serializers.StrikeDetailsSerializer object at 0x10be46390&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x10bda1310&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x10bda13d0&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda1450&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda14d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x10bda1550&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x10bda15d0&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x10bda1650&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda16d0&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda1750&gt;, 'source_file': &lt;source.serializers.SourceFileSerializer object at 0x10be46450&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10bda1890&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bda1950&gt;, 'transfer_path': &lt;rest_framework.fields.CharField object at 0x10be46210&gt;, 'file_path': &lt;rest_framework.fields.CharField object at 0x10be46290&gt;, 'ingest_path': &lt;rest_framework.fields.CharField object at 0x10be46310&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.serializers.IngestListSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestListSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
-<p>Converts a list of ingest models to paginated REST output.</p>
-<dl class="class">
-<dt id="ingest.serializers.IngestListSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#ingest.serializers.IngestListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="ingest.serializers.IngestListSerializer.Meta.object_serializer_class">
-<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#ingest.serializers.IngestListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><tt class="xref py py-class docutils literal"><span class="pre">IngestSerializer</span></tt></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestListSerializer.base_fields">
-<tt class="descclassname">IngestListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x10bb76410&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x10bd45350&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x10bd45710&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></tt></a></p>
 <p>Converts ingest model fields to REST output</p>
 <dl class="class">
 <dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer">
-<em class="property">class </em><tt class="descname">SourceFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">SourceFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></tt></a></p>
 <p>Converts source file model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'workspace': &lt;storage.serializers.WorkspaceBaseSerializer object at 0x10bdb7dd0&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x10bdb7ed0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x10bdc3050&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x10bdc30d0&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x10bdc3150&gt;, 'is_deleted': &lt;rest_framework.fields.BooleanField object at 0x10bdc31d0&gt;, 'uuid': &lt;rest_framework.fields.CharField object at 0x10bdc3250&gt;, 'url': &lt;rest_framework.fields.URLField object at 0x10bdc32d0&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3390&gt;, 'deleted': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3410&gt;, 'data_started': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3490&gt;, 'data_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bdc3510&gt;, 'geometry': &lt;storage.serializers.WktField object at 0x10bdc3590&gt;, 'center_point': &lt;storage.serializers.WktField object at 0x10bdc3610&gt;, 'meta_data': &lt;rest_framework.fields.CharField object at 0x10bdc3690&gt;, 'countries': &lt;rest_framework.relations.RelatedField object at 0x10bdc3710&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bdc37d0&gt;, 'is_parsed': &lt;rest_framework.fields.BooleanField object at 0x10bdd5c50&gt;, 'parsed': &lt;rest_framework.fields.DateTimeField object at 0x10bdd5d50&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestSerializer.base_fields">
-<tt class="descclassname">IngestSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'file_name': &lt;rest_framework.fields.CharField object at 0x10bda11d0&gt;, 'strike': &lt;ingest.serializers.StrikeBaseSerializer object at 0x10bda19d0&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x10bda1310&gt;, 'bytes_transferred': &lt;rest_framework.fields.IntegerField object at 0x10bda13d0&gt;, 'transfer_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda1450&gt;, 'transfer_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda14d0&gt;, 'media_type': &lt;rest_framework.fields.CharField object at 0x10bda1550&gt;, 'file_size': &lt;rest_framework.fields.IntegerField object at 0x10bda15d0&gt;, 'data_type': &lt;storage.serializers.DataTypeField object at 0x10bda1650&gt;, 'ingest_started': &lt;rest_framework.fields.DateTimeField object at 0x10bda16d0&gt;, 'ingest_ended': &lt;rest_framework.fields.DateTimeField object at 0x10bda1750&gt;, 'source_file': &lt;source.serializers.SourceFileBaseSerializer object at 0x10bda1a90&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10bda1890&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bda1950&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.serializers.IngestStatusListSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusListSerializer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PaginationSerializer</span></tt></p>
-<p>Converts a list of ingest models to paginated REST output.</p>
-<dl class="class">
-<dt id="ingest.serializers.IngestStatusListSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.Meta" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
-<dt id="ingest.serializers.IngestStatusListSerializer.Meta.object_serializer_class">
-<tt class="descname">object_serializer_class</tt><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.Meta.object_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#ingest.serializers.IngestStatusSerializer" title="ingest.serializers.IngestStatusSerializer"><tt class="xref py py-class docutils literal"><span class="pre">IngestStatusSerializer</span></tt></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestStatusListSerializer.base_fields">
-<tt class="descclassname">IngestStatusListSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'count': &lt;rest_framework.fields.Field object at 0x10bb76410&gt;, 'next': &lt;rest_framework.pagination.NextPageField object at 0x10bd45350&gt;, 'previous': &lt;rest_framework.pagination.PreviousPageField object at 0x10bd45710&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusListSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestStatusSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
 <p>Converts ingest model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.IngestStatusSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'strike': &lt;ingest.serializers.StrikeSerializer object at 0x10be46d90&gt;, 'most_recent': &lt;rest_framework.fields.DateTimeField object at 0x10be46e50&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x10be510d0&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x10be51150&gt;, 'values': &lt;ingest.serializers.IngestStatusValuesSerializer object at 0x10be511d0&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestStatusValuesSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusValuesSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">IngestStatusValuesSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
 <p>Converts ingest model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.IngestStatusValuesSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'time': &lt;rest_framework.fields.DateTimeField object at 0x10be46710&gt;, 'files': &lt;rest_framework.fields.IntegerField object at 0x10be46c90&gt;, 'size': &lt;rest_framework.fields.IntegerField object at 0x10be46d10&gt;}</em><a class="headerlink" href="#ingest.serializers.IngestStatusValuesSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.StrikeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
 <p>Converts strike model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.StrikeBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x10bd60810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10bd60890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10bd6a290&gt;, 'job': &lt;util.rest.ModelIdSerializer object at 0x10bd6a890&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.StrikeDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeSerializer" title="ingest.serializers.StrikeSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeSerializer</span></tt></a></p>
 <p>Converts strike model fields to REST output</p>
-<dl class="attribute">
-<dt id="ingest.serializers.StrikeDetailsSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x10bd60810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10bd60890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10bd6a290&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x10bd6ac10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10be33e10&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bda10d0&gt;, 'configuration': &lt;rest_framework.fields.CharField object at 0x10bda1150&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.StrikeSerializer">
-<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ingest.serializers.</tt><tt class="descname">StrikeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeBaseSerializer" title="ingest.serializers.StrikeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeBaseSerializer</span></tt></a></p>
 <p>Converts strike model fields to REST output</p>
 <dl class="class">
 <dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer">
-<em class="property">class </em><tt class="descname">JobBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descname">JobBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
 <p>Converts job model fields to REST output.</p>
-<dl class="attribute">
-<dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'job_type': &lt;job.serializers.JobTypeBaseSerializer object at 0x10bd98e50&gt;, 'job_type_rev': &lt;util.rest.ModelIdSerializer object at 0x10bd98f50&gt;, 'event': &lt;util.rest.ModelIdSerializer object at 0x10bda5410&gt;, 'error': &lt;util.rest.ModelIdSerializer object at 0x10bda5510&gt;, 'status': &lt;rest_framework.fields.CharField object at 0x10bda5610&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x10bda56d0&gt;, 'num_exes': &lt;rest_framework.fields.IntegerField object at 0x10bda5750&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.StrikeSerializer.base_fields">
-<tt class="descclassname">StrikeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x10bd60810&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10bd60890&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10bd6a290&gt;, 'job': &lt;job.serializers.JobBaseSerializer object at 0x10bd6ac10&gt;, 'created': &lt;rest_framework.fields.DateTimeField object at 0x10be33e10&gt;, 'last_modified': &lt;rest_framework.fields.DateTimeField object at 0x10bda10d0&gt;}</em><a class="headerlink" href="#ingest.serializers.StrikeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1079,21 +978,21 @@ the database will occur in an atomic transaction.</p>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="ingest.views.CreateStrikeView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.CreateStrikeView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.views.IngestDetailsView">
 <em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></tt></p>
 <p>This view is the endpoint for retrieving/updating details of an ingest.</p>
+<dl class="attribute">
+<dt id="ingest.views.IngestDetailsView.queryset">
+<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="ingest.views.IngestDetailsView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em>, <em>ingest_id</em><big>)</big><a class="headerlink" href="#ingest.views.IngestDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.views.IngestDetailsView.retrieve">
+<tt class="descname">retrieve</tt><big>(</big><em>request</em>, <em>ingest_id</em><big>)</big><a class="headerlink" href="#ingest.views.IngestDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for an ingest and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1116,20 +1015,21 @@ the database will occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ingest.views.IngestDetailsView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestDetailsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="ingest.views.IngestDetailsView.serializer_class">
+<tt class="descname">serializer_class</tt><a class="headerlink" href="#ingest.views.IngestDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">IngestDetailsSerializer</span></tt></p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.views.IngestsStatusView">
 <em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestsStatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
 <p>This view is the endpoint for retrieving summarized ingest status.</p>
 <dl class="method">
-<dt id="ingest.views.IngestsStatusView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsStatusView.get" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.views.IngestsStatusView.list">
+<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsStatusView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the ingest status information and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1146,20 +1046,26 @@ the database will occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ingest.views.IngestsStatusView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestsStatusView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.views.IngestsStatusView.queryset">
+<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestsStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.IngestsStatusView.serializer_class">
+<tt class="descname">serializer_class</tt><a class="headerlink" href="#ingest.views.IngestsStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">IngestStatusSerializer</span></tt></p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.views.IngestsView">
 <em class="property">class </em><tt class="descclassname">ingest.views.</tt><tt class="descname">IngestsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
 <p>This view is the endpoint for retrieving the list of all ingests.</p>
 <dl class="method">
-<dt id="ingest.views.IngestsView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsView.get" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.views.IngestsView.list">
+<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#ingest.views.IngestsView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all ingests and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1176,9 +1082,15 @@ the database will occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ingest.views.IngestsView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#ingest.views.IngestsView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.views.IngestsView.queryset">
+<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.IngestsView.serializer_class">
+<tt class="descname">serializer_class</tt><a class="headerlink" href="#ingest.views.IngestsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">IngestSerializer</span></tt></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1230,7 +1142,7 @@ the database will occur in an atomic transaction.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

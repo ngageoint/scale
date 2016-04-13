@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler package &mdash; Scale 3.0 documentation</title>
+  <title>scheduler package &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="scheduler.fixtures package" href="scheduler.fixtures.html"/>
         <link rel="prev" title="scale package" href="scale.html"/> 
@@ -379,7 +379,7 @@ storing cluster-wide state related to scheduling in mesos.</p>
 
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.objects">
-<tt class="descclassname">Scheduler.</tt><tt class="descname">objects</tt><em class="property"> = &lt;scheduler.models.SchedulerManager object at 0x10bbff890&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Scheduler.</tt><tt class="descname">objects</tt><em class="property"> = &lt;scheduler.models.SchedulerManager object at 0x2ba054d9de10&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -495,7 +495,7 @@ storing cluster-wide state related to scheduling in mesos.</p>
 <tt class="descname">disconnected</tt><big>(</big><em>driver</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.disconnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when the scheduler becomes disconnected from the master, e.g.
 the master fails and another is taking over.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.disconnected" title="mesos_api.mesos.Scheduler.disconnected"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -504,7 +504,7 @@ the master fails and another is taking over.</p>
 <dd><p>Invoked when there is an unrecoverable error in the scheduler or
 scheduler driver.  The driver will be aborted BEFORE invoking this
 callback.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.error" title="mesos_api.mesos.Scheduler.error"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -512,7 +512,7 @@ callback.</p>
 <tt class="descname">executorLost</tt><big>(</big><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>status</em><big>)</big><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.executorLost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when an executor has exited/terminated. Note that any tasks
 running will have TASK_LOST status updates automatically generated.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.executorLost" title="mesos_api.mesos.Scheduler.executorLost"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -521,7 +521,7 @@ running will have TASK_LOST status updates automatically generated.</p>
 <dd><p>Invoked when an executor sends a message. These messages are best
 effort; do not expect a framework message to be retransmitted in any
 reliable fashion.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.frameworkMessage" title="mesos_api.mesos.Scheduler.frameworkMessage"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -532,7 +532,7 @@ another framework used resources in the offer.) If for whatever reason
 an offer is never rescinded (e.g., dropped message, failing over
 framework, etc.), a framwork that attempts to launch tasks using an
 invalid offer will receive TASK_LOST status updats for those tasks.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.offerRescinded" title="mesos_api.mesos.Scheduler.offerRescinded"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -542,7 +542,7 @@ invalid offer will receive TASK_LOST status updats for those tasks.</p>
 It is called with the frameworkId, a unique ID generated by the
 master, and the masterInfo which is information about the master
 itself.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.registered" title="mesos_api.mesos.Scheduler.registered"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -552,7 +552,7 @@ itself.</p>
 master.  This is only called when the scheduler has previously been
 registered.  masterInfo contains information about the newly elected
 master.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.reregistered" title="mesos_api.mesos.Scheduler.reregistered"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -570,7 +570,7 @@ launch tasks using those resources will be able to use them while the
 other frameworks will have those resources rescinded (or if a
 framework has already launched tasks with those resources then those
 tasks will fail with a TASK_LOST status and a message saying as much).</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.resourceOffers" title="mesos_api.mesos.Scheduler.resourceOffers"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -586,7 +586,7 @@ tasks will fail with a TASK_LOST status and a message saying as much).</p>
 <dd><p>Invoked when a slave has been determined unreachable (e.g., machine
 failure, network partition.) Most frameworks will need to reschedule
 any tasks launched on this slave on a new slave.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.slaveLost" title="mesos_api.mesos.Scheduler.slaveLost"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -600,7 +600,7 @@ the scheduler aborts during this callback (or the process exits)
 another status update will be delivered.  Note, however, that this is
 currently not true if the slave sending the status update is lost or
 fails during that time.</p>
-<p>See documentation for <tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></tt>.</p>
+<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.statusUpdate" title="mesos_api.mesos.Scheduler.statusUpdate"><tt class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></tt></a>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -611,7 +611,7 @@ fails during that time.</p>
 <p>Defines the serializers for schedulers</p>
 <dl class="class">
 <dt id="scheduler.serializers.SchedulerSerializer">
-<em class="property">class </em><tt class="descclassname">scheduler.serializers.</tt><tt class="descname">SchedulerSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">scheduler.serializers.</tt><tt class="descname">SchedulerSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x2ba054f13b48&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
 <p>Serializer for the scheduler</p>
 <dl class="class">
@@ -632,11 +632,6 @@ fails during that time.</p>
 
 </dd></dl>
 
-<dl class="attribute">
-<dt id="scheduler.serializers.SchedulerSerializer.base_fields">
-<tt class="descclassname">SchedulerSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {}</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -650,7 +645,7 @@ fails during that time.</p>
 <dl class="class">
 <dt id="scheduler.views.SchedulerView">
 <em class="property">class </em><tt class="descclassname">scheduler.views.</tt><tt class="descname">SchedulerView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.views.SchedulerView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
 <p>This view is the endpoint for viewing and modifying the scheduler</p>
 <dl class="method">
 <dt id="scheduler.views.SchedulerView.get">
@@ -689,9 +684,15 @@ fails during that time.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.views.SchedulerView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#scheduler.views.SchedulerView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.views.SchedulerView.queryset">
+<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#scheduler.views.SchedulerView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.views.SchedulerView.serializer_class">
+<tt class="descname">serializer_class</tt><a class="headerlink" href="#scheduler.views.SchedulerView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">SchedulerSerializer</span></tt></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.views.SchedulerView.update_fields">
@@ -703,7 +704,7 @@ fails during that time.</p>
 <dl class="class">
 <dt id="scheduler.views.StatusView">
 <em class="property">class </em><tt class="descclassname">scheduler.views.</tt><tt class="descname">StatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.views.StatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
 <p>This view is the endpoint for viewing overall system information</p>
 <dl class="method">
 <dt id="scheduler.views.StatusView.get">
@@ -723,10 +724,30 @@ fails during that time.</p>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="scheduler.views.StatusView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#scheduler.views.StatusView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.views.VersionView">
+<em class="property">class </em><tt class="descclassname">scheduler.views.</tt><tt class="descname">VersionView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#scheduler.views.VersionView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<p>This view is the endpoint for viewing version/build information</p>
+<dl class="method">
+<dt id="scheduler.views.VersionView.get">
+<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#scheduler.views.VersionView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets various version/build information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -777,7 +798,7 @@ fails during that time.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
