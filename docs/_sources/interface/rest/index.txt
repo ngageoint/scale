@@ -1,9 +1,9 @@
 
 .. _rest:
 
-===============================================================================
+======================
 RESTful HTTP Interface
-===============================================================================
+======================
 
 Scale provides a RESTful HTTP interface for its own web UI and for any external
 applications that would like to connect to Scale. The following sections
@@ -28,5 +28,6 @@ describe the services available for each component of Scale.
    scheduler
    source_file
    strike
+   system
    trigger
    workspace

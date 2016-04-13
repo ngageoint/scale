@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>port package &mdash; Scale 3.0 documentation</title>
+  <title>port package &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="port.test package" href="port.test.html"/>
         <link rel="prev" title="node.test package" href="node.test.html"/> 
@@ -365,7 +365,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<em>dict</em>) &#8211; The export configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The export configuration</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidDefinition:</th></tr>
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body">If the given configuration is invalid</td>
@@ -425,7 +425,7 @@
 <p>Defines the serializers for import/export configuration</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationErrorSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationErrorSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationErrorSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
 <p>Converts error model fields to REST output.</p>
 <dl class="class">
@@ -444,16 +444,11 @@
 
 </dd></dl>
 
-<dl class="attribute">
-<dt id="port.serializers.ConfigurationErrorSerializer.base_fields">
-<tt class="descclassname">ConfigurationErrorSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x10c84a210&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10c84a2d0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10c84aed0&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x10c84a550&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationJobTypeSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationJobTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationJobTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
 <p>Converts job type model fields to REST output.</p>
 <dl class="class">
@@ -472,16 +467,11 @@
 
 </dd></dl>
 
-<dl class="attribute">
-<dt id="port.serializers.ConfigurationJobTypeSerializer.base_fields">
-<tt class="descclassname">ConfigurationJobTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x10c84a810&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x10c84a8d0&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10c84ab50&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10c84aa90&gt;, 'category': &lt;rest_framework.fields.CharField object at 0x10c84aa10&gt;, 'author_name': &lt;rest_framework.fields.CharField object at 0x10c84ab10&gt;, 'author_url': &lt;rest_framework.fields.CharField object at 0x10c84abd0&gt;, 'is_operational': &lt;rest_framework.fields.BooleanField object at 0x10c84af10&gt;, 'icon_code': &lt;rest_framework.fields.CharField object at 0x10c84ad10&gt;, 'docker_privileged': &lt;rest_framework.fields.BooleanField object at 0x10c84ae90&gt;, 'docker_image': &lt;rest_framework.fields.CharField object at 0x10c84ad90&gt;, 'priority': &lt;rest_framework.fields.IntegerField object at 0x10c84add0&gt;, 'timeout': &lt;rest_framework.fields.IntegerField object at 0x10c637950&gt;, 'max_scheduled': &lt;rest_framework.fields.IntegerField object at 0x10c637810&gt;, 'max_tries': &lt;rest_framework.fields.IntegerField object at 0x10c637790&gt;, 'cpus_required': &lt;rest_framework.fields.FloatField object at 0x10c637710&gt;, 'mem_required': &lt;rest_framework.fields.FloatField object at 0x10c637fd0&gt;, 'disk_out_const_required': &lt;rest_framework.fields.FloatField object at 0x10c637b50&gt;, 'disk_out_mult_required': &lt;rest_framework.fields.FloatField object at 0x10c637c10&gt;, 'interface': &lt;util.rest.JSONField object at 0x10c637090&gt;, 'error_mapping': &lt;util.rest.JSONField object at 0x10c637d10&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0x10c6379d0&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationRecipeTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationRecipeTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
 <p>Converts recipe type model fields to REST output.</p>
 <dl class="class">
@@ -500,28 +490,18 @@
 
 </dd></dl>
 
-<dl class="attribute">
-<dt id="port.serializers.ConfigurationRecipeTypeSerializer.base_fields">
-<tt class="descclassname">ConfigurationRecipeTypeSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'name': &lt;rest_framework.fields.CharField object at 0x110348e90&gt;, 'version': &lt;rest_framework.fields.CharField object at 0x10c667050&gt;, 'title': &lt;rest_framework.fields.CharField object at 0x10c667cd0&gt;, 'description': &lt;rest_framework.fields.CharField object at 0x10c6670d0&gt;, 'definition': &lt;util.rest.JSONField object at 0x10c637d50&gt;, 'trigger_rule': &lt;port.serializers.ConfigurationTriggerRuleSerializer object at 0x10c725250&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
 <p>Converts export fields to REST output</p>
-<dl class="attribute">
-<dt id="port.serializers.ConfigurationSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'version': &lt;rest_framework.fields.CharField object at 0x110254f10&gt;, 'recipe_types': &lt;port.serializers.ConfigurationRecipeTypeSerializer object at 0x110254710&gt;, 'job_types': &lt;port.serializers.ConfigurationJobTypeSerializer object at 0x110254150&gt;, 'errors': &lt;port.serializers.ConfigurationErrorSerializer object at 0x11038f690&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationTriggerRuleSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationTriggerRuleSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
 <p>Converts trigger rule model fields to REST output.</p>
 <dl class="class">
@@ -539,11 +519,6 @@
 </dd></dl>
 
 </dd></dl>
-
-<dl class="attribute">
-<dt id="port.serializers.ConfigurationTriggerRuleSerializer.base_fields">
-<tt class="descclassname">ConfigurationTriggerRuleSerializer.</tt><tt class="descname">base_fields</tt><em class="property"> = {'type': &lt;rest_framework.fields.CharField object at 0x10c84a590&gt;, 'name': &lt;rest_framework.fields.CharField object at 0x10c84a190&gt;, 'is_active': &lt;rest_framework.fields.BooleanField object at 0x10c84a150&gt;, 'configuration': &lt;util.rest.JSONField object at 0x10c84a850&gt;}</em><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -577,11 +552,6 @@
 <tt class="descname">post</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationUploadView.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="port.views.ConfigurationUploadView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#port.views.ConfigurationUploadView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -606,11 +576,6 @@
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="port.views.ConfigurationValidationView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#port.views.ConfigurationValidationView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -654,11 +619,6 @@
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="port.views.ConfigurationView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'rest_framework.renderers.JSONRenderer'&gt;, &lt;class 'rest_framework.renderers.BrowsableAPIRenderer'&gt;)</em><a class="headerlink" href="#port.views.ConfigurationView.renderer_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -721,7 +681,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

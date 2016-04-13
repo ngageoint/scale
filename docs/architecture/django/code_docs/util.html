@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>util package &mdash; Scale 3.0 documentation</title>
+  <title>util package &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="util.test package" href="util.test.html"/>
         <link rel="prev" title="trigger.test package" href="trigger.test.html"/> 
@@ -349,48 +349,32 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 </dd></dl>
 
 <dl class="class">
-<dt id="util.rest.JSONField">
-<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">JSONField</tt><big>(</big><em>max_length=None</em>, <em>min_length=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.rest.JSONField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></tt></p>
-<p>Represents JSON content for use in REST serializers.</p>
+<dt id="util.rest.DefaultPagination">
+<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">DefaultPagination</tt><a class="headerlink" href="#util.rest.DefaultPagination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.pagination.PageNumberPagination</span></tt></p>
+<p>Default configuration class for the paging system.</p>
 <dl class="attribute">
-<dt id="util.rest.JSONField.default_error_messages">
-<tt class="descname">default_error_messages</tt><em class="property"> = {u'invalid': u'&quot;%s&quot; value must be JSON.'}</em><a class="headerlink" href="#util.rest.JSONField.default_error_messages" title="Permalink to this definition">¶</a></dt>
+<dt id="util.rest.DefaultPagination.max_page_size">
+<tt class="descname">max_page_size</tt><em class="property"> = 1000</em><a class="headerlink" href="#util.rest.DefaultPagination.max_page_size" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="util.rest.JSONField.empty">
-<tt class="descname">empty</tt><em class="property"> = {}</em><a class="headerlink" href="#util.rest.JSONField.empty" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="util.rest.JSONField.from_native">
-<tt class="descname">from_native</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#util.rest.JSONField.from_native" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the given raw value to a Python object.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="util.rest.JSONField.type_label">
-<tt class="descname">type_label</tt><em class="property"> = u'json'</em><a class="headerlink" href="#util.rest.JSONField.type_label" title="Permalink to this definition">¶</a></dt>
+<dt id="util.rest.DefaultPagination.page_size">
+<tt class="descname">page_size</tt><em class="property"> = 100</em><a class="headerlink" href="#util.rest.DefaultPagination.page_size" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="util.rest.JSONField.type_name">
-<tt class="descname">type_name</tt><em class="property"> = u'JSONField'</em><a class="headerlink" href="#util.rest.JSONField.type_name" title="Permalink to this definition">¶</a></dt>
+<dt id="util.rest.DefaultPagination.page_size_query_param">
+<tt class="descname">page_size_query_param</tt><em class="property"> = u'page_size'</em><a class="headerlink" href="#util.rest.DefaultPagination.page_size_query_param" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="util.rest.ModelIdSerializer">
-<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">ModelIdSerializer</tt><big>(</big><em>instance=None</em>, <em>data=None</em>, <em>files=None</em>, <em>context=None</em>, <em>partial=False</em>, <em>many=None</em>, <em>allow_add_remove=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.rest.ModelIdSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">util.rest.</tt><tt class="descname">ModelIdSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#util.rest.ModelIdSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
 <p>Converts a model to a lightweight place holder object with only an identifier to REST output</p>
-<dl class="attribute">
-<dt id="util.rest.ModelIdSerializer.base_fields">
-<tt class="descname">base_fields</tt><em class="property"> = {'id': &lt;rest_framework.fields.IntegerField object at 0x10bd6a510&gt;}</em><a class="headerlink" href="#util.rest.ModelIdSerializer.base_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="exception">
@@ -498,6 +482,24 @@ when computing an absolute time stamp.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An absolute time stamp that is the complete range of relative days back.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">datetime.datetime</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.rest.get_versioned_urls">
+<tt class="descclassname">util.rest.</tt><tt class="descname">get_versioned_urls</tt><big>(</big><em>apps</em><big>)</big><a class="headerlink" href="#util.rest.get_versioned_urls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a list of URL patterns for applications with REST APIs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>apps</strong> (<em>list[string]</em>) &#8211; A list of application names to register.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of URL patterns for REST APIs with version prefixes.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<tt class="xref py py-class docutils literal"><span class="pre">django.core.urlresolvers.RegexURLPattern</span></tt>]</td>
 </tr>
 </tbody>
 </table>
@@ -715,10 +717,10 @@ does not exist, there is no default value, and required is True.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the named parameter or the default values if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[int]</p>
 </td>
 </tr>
 </tbody>
@@ -773,10 +775,10 @@ does not exist, there is no default value, and required is True.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the named parameter or the default value if provided.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the named parameter or the default values if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[string]</p>
 </td>
 </tr>
 </tbody>
@@ -810,30 +812,6 @@ does not exist, there is no default value, and required is True.</li>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></tt></a>: If the value cannot be parsed.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="util.rest.perform_paging">
-<tt class="descclassname">util.rest.</tt><tt class="descname">perform_paging</tt><big>(</big><em>request</em>, <em>objects</em><big>)</big><a class="headerlink" href="#util.rest.perform_paging" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs paging on the given objects using the given request parameters</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; The context of an active HTTP request.</li>
-<li><strong>objects</strong> (<em>list</em>) &#8211; List of objects, typically a queryset</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the created page</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">django.core.paginator.Page</span></tt></p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>
@@ -933,7 +911,7 @@ exceed max_ms_delay milliseconds.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

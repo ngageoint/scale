@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.test package &mdash; Scale 3.0 documentation</title>
+  <title>storage.test package &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="storage package" href="storage.html"/>
         <link rel="next" title="storage.test.brokers package" href="storage.test.brokers.html"/>
         <link rel="prev" title="storage.migrations package" href="storage.migrations.html"/> 
@@ -637,8 +637,24 @@
 <span id="storage-test-utils-module"></span><h2>storage.test.utils module<a class="headerlink" href="#module-storage.test.utils" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility methods for testing files and workspaces</p>
 <dl class="function">
+<dt id="storage.test.utils.create_country">
+<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_country</tt><big>(</big><em>name=None</em>, <em>fips=u'TT'</em>, <em>gmi=u'TT'</em>, <em>iso2=u'TT'</em>, <em>iso3=u'TST'</em>, <em>iso_num=0</em>, <em>border=None</em>, <em>effective=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_country" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a country data model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.CountryData" title="storage.models.CountryData"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="storage.test.utils.create_file">
-<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_file</tt><big>(</big><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_file</tt><big>(</big><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -715,7 +731,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

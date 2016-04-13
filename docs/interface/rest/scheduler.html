@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scheduler Services &mdash; Scale 3.0 documentation</title>
+  <title>Scheduler Services &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="RESTful HTTP Interface" href="index.html"/>
         <link rel="next" title="Source File Services" href="source_file.html"/>
         <link rel="prev" title="Scale File Services" href="scale_file.html"/> 
@@ -108,6 +108,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="">Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
@@ -167,10 +168,10 @@
            <div itemprop="articleBody">
             
   <div class="section" id="scheduler-services">
-<span id="scheduler-node"></span><h1>Scheduler Services<a class="headerlink" href="#scheduler-services" title="Permalink to this headline">¶</a></h1>
+<span id="rest-scheduler"></span><h1>Scheduler Services<a class="headerlink" href="#scheduler-services" title="Permalink to this headline">¶</a></h1>
 <p>These services provide access to information about the scheduler.
 There should be one and only one scheduler entry in the database and it is used to store global data like paused status.</p>
-<table border="1" class="docutils">
+<table border="1" class="docutils" id="rest-scheduler-details">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -220,7 +221,7 @@ results in the previous individual node pause state.</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table border="1" class="docutils" id="rest-scheduler-update">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -289,157 +290,6 @@ results in the previous individual node pause state.</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
-<colgroup>
-<col width="21%" />
-<col width="15%" />
-<col width="64%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Get System Status</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns overall master, scheduler, and cluster information, including hardware resources.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>GET</strong> /status/</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">200 OK</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>master</td>
-<td>JSON Object</td>
-<td>Overall status information for the master host</td>
-</tr>
-<tr class="row-odd"><td>master.hostname</td>
-<td>String</td>
-<td>The network name of the master host</td>
-</tr>
-<tr class="row-even"><td>master.port</td>
-<td>Integer</td>
-<td>The network port of the master host</td>
-</tr>
-<tr class="row-odd"><td>master.is_online</td>
-<td>Boolean</td>
-<td>Indicates whether or not the master host is running and available</td>
-</tr>
-<tr class="row-even"><td>scheduler</td>
-<td>JSON Object</td>
-<td>Overall status information for the scheduler framework</td>
-</tr>
-<tr class="row-odd"><td>scheduler.hostname</td>
-<td>String</td>
-<td>The network name of the scheduler host</td>
-</tr>
-<tr class="row-even"><td>scheduler.is_online</td>
-<td>Boolean</td>
-<td>Indicates whether or not the scheduler host is running and available</td>
-</tr>
-<tr class="row-odd"><td>scheduler.is_paused</td>
-<td>Boolean</td>
-<td>Indicates whether or not the scheduler framework is currently paused</td>
-</tr>
-<tr class="row-even"><td>queue_depth</td>
-<td>Integer</td>
-<td>The number of tasks currently scheduled on the queue</td>
-</tr>
-<tr class="row-odd"><td>resources</td>
-<td>JSON Object</td>
-<td>(Optional) Information about the overall hardware resources of the cluster
-NOTE: Resource information may not always be available</td>
-</tr>
-<tr class="row-even"><td>resources.total</td>
-<td>JSON Object</td>
-<td>The total hardware resources for all nodes in the cluster</td>
-</tr>
-<tr class="row-odd"><td>resources.total.cpus</td>
-<td>Float</td>
-<td>The total number of CPUs for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td>resources.total.mem</td>
-<td>Float</td>
-<td>The total amount of RAM in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-odd"><td>resources.total.disk</td>
-<td>Float</td>
-<td>The total amount of disk space in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td>resources.scheduled</td>
-<td>JSON Object</td>
-<td>The scheduled hardware resources for all nodes in the cluster</td>
-</tr>
-<tr class="row-odd"><td>resources.scheduled.cpus</td>
-<td>Float</td>
-<td>The scheduled number of CPUs for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td>resources.scheduled.mem</td>
-<td>Float</td>
-<td>The scheduled amount of RAM in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-odd"><td>resources.scheduled.disk</td>
-<td>Float</td>
-<td>The scheduled amount of disk space in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td>resources.used</td>
-<td>JSON Object</td>
-<td>The used hardware resources for all nodes in the cluster
-NOTE: Real-time resource usage is not currently available and will be all zero</td>
-</tr>
-<tr class="row-odd"><td>resources.used.cpus</td>
-<td>Float</td>
-<td>The used number of CPUs for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td>resources.used.mem</td>
-<td>Float</td>
-<td>The used amount of RAM in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-odd"><td>resources.used.disk</td>
-<td>Float</td>
-<td>The used amount of disk space in MiB for all nodes in the cluster</td>
-</tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;master&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;is_online&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;is_online&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-        <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;queue_depth&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
-    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
-            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">63305.0</span><span class="p">,</span>
-            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131485.0</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;scheduled&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">12.0</span><span class="p">,</span>
-            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">35392.0</span><span class="p">,</span>
-            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131408.0</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;used&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
-            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">63305.0</span><span class="p">,</span>
-            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131485.0</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
 </div>
 
 
@@ -483,7 +333,7 @@ NOTE: Real-time resource usage is not currently available and will be all zero</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'3.0',
+            VERSION:'3.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
