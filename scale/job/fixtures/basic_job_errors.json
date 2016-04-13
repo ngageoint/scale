@@ -16,7 +16,7 @@
         "pk": null,
         "fields": {
             "name": "docker-task-launch",
-            "title": "Task Launch",
+            "title": "Docker Task Launch",
             "description": "A Docker task for this job execution failed to launch a Docker container.",
             "category": "SYSTEM",
             "created": "2016-04-13T00:00:00.0Z",
