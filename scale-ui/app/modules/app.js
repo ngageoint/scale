@@ -2,6 +2,7 @@
     'use strict';
 
     var app = angular.module('scaleApp', [
+        'scaleConfigModule',
         'ngResource',
         'ngSanitize',
         'ngRoute',

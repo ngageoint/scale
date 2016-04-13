@@ -17,7 +17,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.updateNode(id),
+                    url: scaleConfig.urls.apiPrefix + 'nodes/' + id + '/',
                     method: 'PATCH',
                     data: data
                 }).success(function (result) {

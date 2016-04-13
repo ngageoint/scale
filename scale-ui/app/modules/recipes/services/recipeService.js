@@ -21,7 +21,7 @@
         return {
             getRecipeTypes: function () {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.getRecipeTypes()).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/').success(function (data) {
                     d.resolve(RecipeType.transformer(data.results));
                 }).error(function (error) {
                     d.reject(error);
@@ -32,7 +32,7 @@
             getRecipeTypeDetail: function (id) {
               var d = $q.defer();
 
-              $http.get(scaleConfig.urls.getRecipeTypeDetail(id)).success(function (data) {
+              $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/' + id + '/').success(function (data) {
                 var returnData = RecipeTypeDetail.transformer(data);
                 d.resolve(returnData);
               });
@@ -44,7 +44,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.getRecipes(),
+                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'recipes/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -59,7 +59,7 @@
 
             getRecipeDetails: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.getRecipeDetails(id)).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'recipes/' + id + '/').success(function (data) {
                     var result = RecipeDetails.transformer(data);
                     d.resolve(result);
                 }).error(function (error) {
@@ -73,14 +73,14 @@
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
                 if(!cleanRecipeType.id){
-                    $http.post(scaleConfig.urls.saveRecipeType(),cleanRecipeType).success(function(result){
+                    $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {
                         recipeType.id = result;
                         d.resolve(recipeType);
                     }).error(function(error){
                         d.reject(error);
                     });
                 } else {
-                    $http.patch(scaleConfig.urls.saveRecipeType() + cleanRecipeType.id + '/',cleanRecipeType).success(function(result){
+                    $http.patch(scaleConfig.urls.apiPrefix + 'recipe-types/' + cleanRecipeType.id + '/', cleanRecipeType).success(function (result) {
                         recipeType = result;
                         d.resolve(recipeType);
                     }).error(function(error){
@@ -91,15 +91,15 @@
                 return d.promise;
             },
 
-            validateRecipeType: function(recipeType) {
+            validateRecipeType: function (recipeType) {
                 var d = $q.defer();
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
-                $http.post(scaleConfig.urls.validateRecipeType(),cleanRecipeType).success(function(result){
+                $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/validation/', cleanRecipeType).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
                     d.reject(error);
-                })
+                });
 
                 return d.promise;
             }
