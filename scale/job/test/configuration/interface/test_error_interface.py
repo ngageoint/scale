@@ -52,10 +52,10 @@ class TestErrorInterfaceValidate(TestCase):
         error = error_interface.get_error(1)
 
         self.assertIsNotNone(error)
-        self.assertEqual(error.name, Error.objects.get_unknown_error().name)
+        self.assertEqual(error.name, self.error_1.name)
 
     def test_get_error_missing(self):
-        ''' Tests that an unknown error is returned when a non-registered name is found in the mapping'''
+        ''' Tests that None is returned when a non-registered name is found in the mapping'''
 
         error_interface_dict = {
             'version': '1.0',
@@ -69,8 +69,7 @@ class TestErrorInterfaceValidate(TestCase):
         error_interface = ErrorInterface(error_interface_dict)
         error = error_interface.get_error(4)
 
-        self.assertIsNotNone(error)
-        self.assertEqual(error.name, Error.objects.get_unknown_error().name)
+        self.assertIsNone(error)
 
     def test_get_error_names(self):
         '''Tests getting error names from the mapping.'''
