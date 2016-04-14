@@ -1,26 +1,62 @@
 [
-	{
-		"model": "error.Error",
-		"pk": null,
-		"fields": {
-			"name": "node-lost",
-			"title": "Node Lost",
-			"description": "A node failed and was lost, causing all jobs running on it to fail.",
-			"category": "SYSTEM",
-			"created": "2015-03-11T00:00:00.0Z",
-			"last_modified": "2015-03-11T00:00:00.0Z"
-		}
-	},
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "task-launch",
+            "title": "Task Launch",
+            "description": "A task for this job execution failed to launch.",
+            "category": "SYSTEM",
+            "created": "2016-04-13T00:00:00.0Z",
+            "last_modified": "2016-04-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "docker-task-launch",
+            "title": "Docker Task Launch",
+            "description": "A Docker task for this job execution failed to launch a Docker container.",
+            "category": "SYSTEM",
+            "created": "2016-04-13T00:00:00.0Z",
+            "last_modified": "2016-04-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "node-lost",
+            "title": "Node Lost",
+            "description": "The node failed and was lost, causing this job execution to be lost.",
+            "category": "SYSTEM",
+            "created": "2015-03-11T00:00:00.0Z",
+            "last_modified": "2015-03-11T00:00:00.0Z"
+        }
+    },
     {
         "model": "error.Error",
         "pk": null,
         "fields": {
             "name": "timeout",
             "title": "Timeout",
-            "description": "The job exceeded its timeout threshold.",
-            "category": "SYSTEM",
+            "description": "The job execution exceeded its timeout threshold.",
+            "category": "ALGORITHM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "algorithm-unknown",
+            "title": "Algorithm Failure",
+            "description": "The algorithm failed by returning a non-zero exit code. To allow Scale to detect more specific problems with the algorithm, please define the appropriate errors for the non-zero exit codes that the algorithm may return.",
+            "category": "ALGORITHM",
+            "created": "2016-04-13T00:00:00.0Z",
+            "last_modified": "2016-04-13T00:00:00.0Z"
         }
     }
 ]

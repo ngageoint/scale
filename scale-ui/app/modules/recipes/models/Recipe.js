@@ -7,6 +7,7 @@
             this.created = created;
             this.completed = completed;
             this.last_modified = last_modified;
+            this.last_status_change = last_modified ? moment.duration(moment.utc(last_modified).diff(moment.utc())).humanize(true) : '';
             this.recipe_type = RecipeType.transformer(recipe_type);
         };
 

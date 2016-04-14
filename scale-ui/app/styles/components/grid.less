@@ -15,12 +15,21 @@
                 .ui-grid-cell-contents {
                     cursor: pointer;
                     background: @accent_blue;
-                    color: white;
+                    color: @light;
+                }
+
+            }
+            .ui-grid-cell-contents {
+                &.status{
+                    text-align: center;
+                    font-size: 1.0em;
                 }
             }
+
         }
     }
 }
+
 
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
     background-color: inherit;

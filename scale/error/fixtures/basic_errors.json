@@ -1,17 +1,17 @@
 [
-	{
-		"model": "error.Error",
-		"pk": null,
-		"fields": {
-			"name": "unknown",
-			"title": "Unknown",
-			"description": "The error that caused the failure is unknown.",
-			"category": "SYSTEM",
-			"created": "2015-03-11T00:00:00.0Z",
-			"last_modified": "2015-03-11T00:00:00.0Z"
-		}
-	},
-	{
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "unknown",
+            "title": "Unknown",
+            "description": "The cause of this failure is unknown. System administrators should investigate this failure to determine the true cause and make sure it is correctly tracked in the future.",
+            "category": "SYSTEM",
+            "created": "2015-03-11T00:00:00.0Z",
+            "last_modified": "2015-03-11T00:00:00.0Z"
+        }
+    },
+    {
         "model": "error.Error",
         "pk": null,
         "fields": {
@@ -29,7 +29,7 @@
         "fields": {
             "name": "filesystem-io",
             "title": "Filesystem IO",
-            "description": "An IO operation on the filesystem failed.",
+            "description": "An IO operation on the node's local filesystem failed.",
             "category": "SYSTEM",
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
