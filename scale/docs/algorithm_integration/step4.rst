@@ -1,14 +1,14 @@
 
 .. _algorithm_integration_step4:
 
-Adding your dockerized algorithm as a Scale Job
+Adding your dockerized algorithm as a Scale job
 ===============================================
 
 Refer to Scale documentation on the Job Interface Specification: :ref:`architecture_jobs_interface`
 
 
-Example of a simple, complete Job JSON Definition
--------------------------------------------------
+Example of a simple, complete Job Type JSON Definition
+------------------------------------------------------
 
 .. code-block:: javascript
     :linenos:
@@ -122,15 +122,15 @@ Setting the algorithm attributes and resources
 Lines 2-4:    These fields do not need to be filled out with additional information and the default values shown here
 are sufficient for most users.
 
-Line 7-8:     The "name" and "version" must be a unique combination from other Jobs in Scale3 and be entirely lower
-case.  For example, multiple Jobs could be called "my-algorithm" as long as their "version" number is different. Common
+Line 7-8:     The "name" and "version" must be a unique combination from other jobs in Scale and be entirely lower
+case.  For example, multiple jobs could be called "my-algorithm" as long as their "version" number is different. Common
 convention is to use dashes (-) instead of underscores for the name and versions should use semantic versioning.
 
-Line 9:       The "title" field is used for a pretty display of the Job name
+Line 9:       The "title" field is used for a pretty display of the job name
 
 Line 10:      The "description" field should provide a brief abstract of what the algorithm does
 
-Line 11:      The "category" field tags a Job with other similar Jobs
+Line 11:      The "category" field tags a job with other similar jobs
 
 Lines 12-13:  The "author_name" field should identify the organization/individual responsible for the algorithm.  The
 "author_url" is an optional link to a web page providing more information on the algorithm.
@@ -141,8 +141,8 @@ or are suitable for production use
 Line 15:      The "icon_code" field maps to Font-Awesome codes and defines the icon symbol used to represent the
 algorithm in Scale
 
-Line 16:      The "docker_privileged" field is a boolean for Jobs that must run with the docker run "--privileged" flag.
-*This must be set to true for Jobs that mount NFS directories*
+Line 16:      The "docker_privileged" field is a boolean for jobs that must run with the docker run "--privileged" flag.
+*This must be set to true for jobs that mount NFS directories*
 
 Line 17:      The "docker_image" field specifies the name and optional index of the built docker image
 
@@ -152,7 +152,7 @@ will execute **before** higher priority numbers
 Line 19:      The "timeout" field is measured in minutes and will send a *kill* signal to the job if it has not
 completed within this time
 
-Lines 20-21:  The "max_scheduled" and "max_tries" fields define how many times the Job can be scheduled and
+Lines 20-21:  The "max_scheduled" and "max_tries" fields define how many times the job can be scheduled and
 automatically requeued respectively.  Failed jobs are automatically retried until the "max_tries" limit is reached.
 
 Lines 22-25:  These lines define the necessary resources for the algorithm.  The "cpus_required" are the number of cores
@@ -164,8 +164,8 @@ a *multiple* of the total size of the input files.
 Setting the algorithm inputs and outputs
 ++++++++++++++++++++++++++++++++++++++++
 
-The "interface" section of the Job JSON definition defines the expected input and output file types and assigns them
-variable names.  It also defines the command arguments that will be passed to Scale
+The "interface" section of the job type JSON definition defines the expected input and output file types and assigns
+them variable names.  It also defines the command arguments that will be passed to Scale
 
 .. code-block:: javascript
     :linenos:
@@ -211,10 +211,10 @@ variable names.  It also defines the command arguments that will be passed to Sc
 Lines 27-36:  The "input_data" section defines the inputs of the job that will be managed by Scale.  The "media_type"
 defines the expected file_type of the input while the "type" keyword is a string defining whether in input is a file,
 list of files, or a property.  The "required" field is optional and indicates if the input is an optional command
-argument.  *If an input is optional, the Job will still execute except replace the input with an empty string.* The
+argument.  *If an input is optional, the job will still execute except replace the input with an empty string.* The
 "name" field is a user-defined unique string.  **These input names match the variables in the command_arguments**
                 
-Lines 37-56:  The "output_data" section defines the expected outputs of the Job.  The "media_type" defines the expected
+Lines 37-56:  The "output_data" section defines the expected outputs of the job.  The "media_type" defines the expected
 file type of output while the "type" keyword defines whether it expects a file or a list of files.  The "required"
 keyword is a boolean used if the output is guaranteed to be produced by the algorithm on a successful run.  By default,
 the "required" keyword is set to true.  The "name" keyword must be a unique string defining the output.

@@ -116,8 +116,8 @@ Parse Triggers
 ------------------------------------------------------------------------------------------------------------------------
 
 Parse triggers are triggers that can occur when a source file is parsed. This happens when a job completes with a
-*parse_results* section in its generated results manifest file, see :ref:`algorithms_results_manifest`. A trigger event
-is generated for every source file parse and checked against all parse trigger rules.
+*parse_results* section in its generated results manifest file, see :ref:`algorithm_integration_results_manifest`. A
+trigger event is generated for every source file parse and checked against all parse trigger rules.
 
 **Example parse trigger configuration:**
 

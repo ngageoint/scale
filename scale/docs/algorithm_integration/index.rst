@@ -6,8 +6,8 @@ Algorithm Integration into Scale
 ================================
 This document explains the steps necessary to integrate an algorithm into the Scale system. The Scale system utilizes
 Docker containers to run algorithms in an isolated environment. This guide will document the steps necessary for getting
-an application ready for Scale integration, creating a docker container and capturing outputs, and putting the Job into
-Scale and into a Recipe.
+an application ready for Scale integration, creating a Docker container and capturing outputs, and putting the job into
+Scale and into a recipe.
 
 
 Here are the steps for integrating an algorithm into Scale:

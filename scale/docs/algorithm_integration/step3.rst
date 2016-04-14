@@ -1,11 +1,11 @@
 
 .. _algorithm_integration_step3:
 
-Encapsulating your algorithm in a docker container
+Encapsulating your algorithm in a Docker container
 ==================================================
 
 Once you have a completely standalone algorithm that generates a results manifest, you can begin to create your
-Dockerfile which is a set of instructions on how to build your docker container.
+Dockerfile which is a set of instructions on how to build your Docker container.
 
 Docker containers can be built upon existing containers using the FROM command and comments can be added to the
 dockerfile with the # symbol
@@ -13,17 +13,17 @@ dockerfile with the # symbol
 Docker containers do not have access to files or NFS mounts on the host machine.
 
 Docker containers in Scale have no knowledge of other containers running and cannot share resources or data across
-containers.  However, the output of a container can be tied to the input of another container using Recipes and the
-outputs defined in the algorithm's Results Manifest file.
+containers.  However, the output of a container can be tied to the input of another container using recipes and the
+outputs defined in the algorithm's results manifest file.
 
 Once a container is destroyed, the files in the container no longer exist.
 
-Docker containers should be as small as possible.  The docker containers are pulled and cached on the host the first
-time it is used and will update when the cache no longer matches the docker registry.  Excessively large files will
+Docker containers should be as small as possible.  The Docker containers are pulled and cached on the host the first
+time it is used and will update when the cache no longer matches the Docker registry.  Excessively large files will
 unnecessarily fill up the host machine's disk space requiring the host machine's entire cache to be reset.
 
 To build the Docker image, Docker must be installed on the system and the Docker daemon running. Depending on the
-linux system, the following packages will need to be installed: 
+Linux system, the following packages will need to be installed:
 
 1. docker-io and lxc for Centos6 
 2. docker and lxc for Centos7
@@ -76,7 +76,7 @@ Example Dockerfile
     ENTRYPOINT [ "/app/my_wrapper.sh"]
     
 
-Building a docker container from the dockerfile
+Building a Docker container from the dockerfile
 -----------------------------------------------
 
 Within a single folder, you should have
@@ -85,7 +85,7 @@ Within a single folder, you should have
 2. Your code/application executables, optionally in folders
 3. Any configuration files
 
-To build a docker container, first change your current working directory to the directory containing your dockerfile.
+To build a Docker container, first change your current working directory to the directory containing your dockerfile.
 Next, execute the following build statement from the command line:
 
 .. code-block:: bash
@@ -101,8 +101,8 @@ docker hub on the internet, leave these off. The tag is useful for specifying a 
 Testing a built docker container
 --------------------------------
 
-If your docker build command is successful, you can interact with your container inside its environment.  This is a
-good way to test your container before pushing it to the docker registry.  To test your container, you use the
+If your Docker build command is successful, you can interact with your container inside its environment.  This is a
+good way to test your container before pushing it to the Docker registry.  To test your container, you use the
 "docker run" command:
 
 .. code-block:: bash
@@ -121,7 +121,7 @@ The "-v" flag will mount a volume from the host machine so that it will be avail
 useful to mount a directory containing data for testing your algorithm and output results to another mounted volume to
 be saved on the host machine.
 
-If using the "-v" flag, first list the folder on your host machine you want to mount, then the folder in the docker
+If using the "-v" flag, first list the folder on your host machine you want to mount, then the folder in the Docker
 container you want to mount to separated by a colon (:).  You can also optionally specify the mount as read-only (ro) or
 read-write (rw) with another colon separator at the end of the mount.  Each additional mount requires another "-v" flag.
 
@@ -133,28 +133,28 @@ The "--name" argument will give a user-defined custom name to the container, oth
 
 The last argument to the "docker run" command should be the name of your container you created with the "docker build" command
 
-Starting and stopping docker containers (and other useful commands)
+Starting and stopping Docker containers (and other useful commands)
 -------------------------------------------------------------------
 
-To see a list of currently cached docker containers on your host machine
+To see a list of currently cached Docker containers on your host machine
 
 .. code-block:: bash
 
     docker images
     
-To see a list of currently running/stopped docker containers on your host machine
+To see a list of currently running/stopped Docker containers on your host machine
 
 .. code-block:: bash
 
     docker ps -a
 
-To stop a running docker container
+To stop a running Docker container
 
 .. code-block:: bash
 
     docker stop <container_name>
     
-To start a stopped docker container
+To start a stopped Docker container
 
 .. code-block:: bash
 

@@ -12,8 +12,8 @@ Making a Scale-compatible Algorithm
     wait until it times out.
 * **Fail gracefully**
     Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message
-    to standard output.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are
-    not captured appropriately, Scale will likely report a timeout or unknown error, which will make debugging your
+    to standard error.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are
+    not captured appropriately, Scale will likely report a general algorithm error, which will make debugging your
     algorithm more difficult.
 * **Not display popups**
     Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is
@@ -21,7 +21,7 @@ Making a Scale-compatible Algorithm
     be closed) until the job times out.  This is a common issue with IDL and output will need to be displayed to the
     standard output instead.
 * **Run on Linux**
-    Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLL's.
+    Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLLs.
 * **Not have hardcoded paths**
     File paths must not be embedded in the source code such that changing the path requires re-compiling code.
     Necessary file paths should be passable into the algorithm either via a configuration file or passed from the
@@ -40,8 +40,9 @@ Making a Scale-compatible Algorithm
 
 * Resolve relative paths
 * Provide output file names
-* Automatically create NFS mounts in the docker container
-* Capture output products not listed in the results manifest and Job JSON definition
+* Automatically create NFS mounts in the Docker container
+* Capture output products not listed in the :ref:`results manifest <algorithm_integration_results_manifest>` and
+:ref:`job interface <architecture_jobs_interface_spec>`
 
 
 *Creating Executables*
@@ -72,7 +73,7 @@ Making a Scale-compatible Algorithm
 *Python*
 ++++++++
 * Code should be in its own folder
-* Needed Python modules will need to be installed in the docker container
+* Needed Python modules will need to be installed in the Docker container
 
     
 Wrapping algorithms
@@ -181,7 +182,8 @@ Wrapping an algorithm with a shell script is useful when you need to:
 * Setup additional environment variables or append to system paths
 * Determine additional command line input arguments for the algorithm
 
-The bash script will capture the arguments passed to it that are specified in the Job JSON definition
+The bash script will capture the arguments passed to it that are specified in the
+:ref:`job interface <architecture_jobs_interface_spec>`
 
 
 .. code-block:: bash

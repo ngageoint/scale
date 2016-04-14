@@ -1,11 +1,11 @@
 
 .. _algorithm_integration_step5:
 
-Adding your new Job into a Scale Recipe
+Adding your new job into a Scale recipe
 =======================================
 
-After you have successfully tested your docker container and inserted the Job into the database, you can add the Job to
-an existing recipe or create a brand new recipe. Recipes allow you to chain the inputs/outputs of one Job to another Job
+After you have successfully tested your Docker container and inserted the job into the database, you can add the job to
+an existing recipe or create a brand new recipe. Recipes allow you to chain the inputs/outputs of one job to another job
 to create a workflow for your algorithm processing.
 
 
@@ -39,7 +39,7 @@ Adding a trigger
 After adding a name, title, version, and description of your recipe, you can add the recipe trigger that will be used to
 run your recipe.
 
-**Note:  Once a trigger is activated, the recipe will begin to try to run its jobs.  You may want to add Jobs first,
+**Note:  Once a trigger is activated, the recipe will begin to try to run its jobs.  You may want to add jobs first,
 then add the trigger as a final step.**
 
 Selecting the "Start" box will display the Trigger and Recipe Inputs options on the right-side of the page.
@@ -91,15 +91,15 @@ a comma without spaces**.  The trigger is an intersection (both A AND B) between
 Adding a job to a recipe
 ------------------------
 
-To add a Job to your recipe, select the "Add Job" button on right-side and select your job name and version from the
-available dialog list that appears.  Your Job will then appear attached to the "Start" box of the recipe. Select your
-Job box to begin setting the Job's dependencies and inputs.  First, select the Add Dependencies button (+) on the
-right-side to select the box of other Jobs that your algorithm is dependent on.
-*You do not need to select the Start box as a dependency*.  Multiple Jobs can be selected as dependencies.
+To add a job to your recipe, select the "Add Job" button on right-side and select your job name and version from the
+available dialog list that appears.  Your job will then appear attached to the "Start" box of the recipe. Select your
+job box to begin setting the job's dependencies and inputs.  First, select the Add Dependencies button (+) on the
+right-side to select the box of other jobs that your algorithm is dependent on.
+*You do not need to select the Start box as a dependency*.  Multiple jobs can be selected as dependencies.
 
-Next, select the connection linking button on the right-side for each of your Job's Inputs on the right-side.  These
-Inputs are the names and media types entered in the **input_data** of the Job JSON.  Select the linking button for the
-respective input and then select the Job's box responsible for creating it.  This will display a list of output choices
+Next, select the connection linking button on the right-side for each of your job's Inputs on the right-side.  These
+Inputs are the names and media types entered in the **input_data** of the job JSON.  Select the linking button for the
+respective input and then select the job's box responsible for creating it.  This will display a list of output choices
 that you can link to your input.  The names of inputs/outputs do not need to necessarily match - they are for user
 convenience in identifying their inputs and outputs.  You must, however, match the input and output media types.  Repeat
 the process until all Inputs are connected to their respective files.
