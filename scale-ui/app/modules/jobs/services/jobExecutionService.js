@@ -24,7 +24,7 @@
 
                 var params = getJobExecutionsParams(pageNumber, pageSize, filter);
                 $http({
-                    url: scaleConfig.urls.getJobExecutions(),
+                    url: scaleConfig.urls.apiPrefix + 'job-executions/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -39,7 +39,7 @@
             getJobExecutionDetails: function (id) {
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.getJobExecutionDetails(id)).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'job-executions/' + id + '/').success(function (data) {
                     d.resolve(JobExecution.transformer(data));
                 }).error(function (error) {
                     d.reject(error);
@@ -49,7 +49,7 @@
             getLogOnce: function(execId){
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.getJobExecutionLog(execId)).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/').success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
@@ -57,7 +57,7 @@
                 return d.promise;
             },
             getLog: function(execId){
-                var url = url || scaleConfig.urls.getJobExecutionLog(execId);
+                var url = url || scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/';
 
                 // Update view. Since a promise can only be resolved or rejected once but we want
                 // to keep track of all requests, poller service uses the notifyCallback. By default

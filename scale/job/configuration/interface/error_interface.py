@@ -68,21 +68,21 @@ class ErrorInterface(object):
         return self.definition
 
     def get_error(self, exit_code=None):
-        ''' This method retrieves an error given an exit_code.
+        '''This method retrieves the error that maps to the given exit code. If the exit code is non-zero (success) None
+        is returned. For a failure exit code with no mapping, a general algorithm error is returned.
 
-        :param exit_code: The exit code from a previously ran job.
+        :param exit_code: The exit code from a task
         :type exit_code: int
-        :returns: The error model mapped to the given exit code.
+        :returns: The error model mapped to the given exit code, possibly None
         :rtype: :class:`error.models.Error`
         '''
 
         error = None
         if exit_code is not None:
-            # if the exit code is zero, None should be returned
+            # If the exit code is zero, None should be returned
             if exit_code == 0:
                 return None
 
-            # get the exit codes
             exit_codes = self.definition.get('exit_codes')
             if exit_codes:
                 # Retrieve the error item using the exit code from the dict
@@ -92,10 +92,10 @@ class ErrorInterface(object):
                     # get the name to search for in the 'Error' database table
                     error = self._lookup_error(error_name)
 
-        # Set the error to the 'Unknown' error as a fall back default
-        if not error:
-            if exit_code is None or exit_code != 0:
-                error = Error.objects.get_unknown_error()
+            if not error:
+                # No exit code match, so return general algorithm error
+                error = Error.objects.get_builtin_error('algorithm-unknown')
+
         return error
 
     def get_error_names(self):
@@ -135,10 +135,10 @@ class ErrorInterface(object):
         :rtype: :class:`error.models.Error`
         '''
         try:
-            return Error.objects.get(name=name)
+            return Error.objects.get_builtin_error(name)
         except Error.DoesNotExist:
             logger.exception('Unable to find error mapping: %s', name)
-            pass
+            return None
 
     def _populate_default_values(self):
         '''Goes through the definition and fills in any missing default values'''

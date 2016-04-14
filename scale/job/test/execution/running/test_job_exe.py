@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
-from error.models import Error
+from error.models import Error, CACHED_BUILTIN_ERRORS
 from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
@@ -237,3 +237,162 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual(job_task.id, canceled_task.id)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
+
+    def test_pre_task_launch_error(self):
+        """Tests running through a job execution where a pre-task fails to launch"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task fails to launch
+        pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.when = now()
+        running_job_exe.task_fail(pre_task_results)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'task-launch')
+
+    def test_job_task_launch_error(self):
+        """Tests running through a job execution where a Docker-based job-task fails to launch"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task running
+        pre_task_started = now()
+        running_job_exe.task_running(pre_task_id, pre_task_started, '', '')
+
+        # Complete pre-task
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.exit_code = 0
+        pre_task_results.when = pre_task_completed
+        running_job_exe.task_complete(pre_task_results)
+
+        # Start job-task
+        task = running_job_exe.start_next_task()
+        job_task_id = task.id
+
+        # Job-task fails to launch
+        job_task_results = TaskResults(job_task_id)
+        job_task_results.when = now()
+        running_job_exe.task_fail(job_task_results)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'docker-task-launch')
+
+    def test_post_task_launch_error(self):
+        """Tests running through a job execution where a post-task fails to launch"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task running
+        pre_task_started = now()
+        running_job_exe.task_running(pre_task_id, pre_task_started, '', '')
+
+        # Complete pre-task
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.exit_code = 0
+        pre_task_results.when = pre_task_completed
+        running_job_exe.task_complete(pre_task_results)
+
+        # Start job-task
+        task = running_job_exe.start_next_task()
+        job_task_id = task.id
+
+        # Job-task running
+        job_task_started = now()
+        running_job_exe.task_running(job_task_id, job_task_started, '', '')
+
+        # Complete job-task
+        job_task_completed = job_task_started + timedelta(seconds=1)
+        job_task_results = TaskResults(job_task_id)
+        job_task_results.exit_code = 0
+        job_task_results.when = job_task_completed
+        running_job_exe.task_complete(job_task_results)
+
+        # Start post-task
+        task = running_job_exe.start_next_task()
+        post_task_id = task.id
+
+        # Post-task fails to launch
+        post_task_results = TaskResults(post_task_id)
+        post_task_results.when = now()
+        running_job_exe.task_fail(post_task_results)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'task-launch')
+
+    def test_general_algorithm_error(self):
+        """Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)
+        """
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task running
+        pre_task_started = now()
+        running_job_exe.task_running(pre_task_id, pre_task_started, '', '')
+
+        # Complete pre-task
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.exit_code = 0
+        pre_task_results.when = pre_task_completed
+        running_job_exe.task_complete(pre_task_results)
+
+        # Start job-task
+        task = running_job_exe.start_next_task()
+        job_task_id = task.id
+
+        # Job-task running
+        job_task_started = now()
+        running_job_exe.task_running(job_task_id, job_task_started, '', '')
+
+        # Fail job-task
+        job_task_failed = job_task_started + timedelta(seconds=1)
+        job_task_results = TaskResults(job_task_id)
+        job_task_results.exit_code = 1
+        job_task_results.when = job_task_failed
+        running_job_exe.task_fail(job_task_results)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'algorithm-unknown')
