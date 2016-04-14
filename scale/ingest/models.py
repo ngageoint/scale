@@ -265,7 +265,7 @@ class Ingest(models.Model):
 
     :keyword file_name: The name of the file
     :type file_name: :class:`django.db.models.CharField`
-    :keyword strike: The Strike process that handled this file's transfer
+    :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
     :keyword job: The ingest job that is processing this ingest
     :type job: :class:`django.db.models.ForeignKey`
@@ -318,10 +318,9 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', blank=True, null=True)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True)
-    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING',
-                              max_length=50, db_index=True)
+    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     transfer_path = models.CharField(max_length=1000)
     bytes_transferred = models.BigIntegerField()
