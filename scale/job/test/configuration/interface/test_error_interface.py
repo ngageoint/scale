@@ -1,23 +1,24 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
 
 import error.test.utils as error_test_utils
-from error.models import Error
+from error.models import CACHED_BUILTIN_ERRORS
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 
 
 class TestErrorInterfaceValidate(TestCase):
 
+    fixtures = ['basic_job_errors.json']
+
     def setUp(self):
         django.setup()
 
-        self.error_1 = error_test_utils.create_error(name='unknown', category='SYSTEM')
-        self.error_2 = error_test_utils.create_error(name='database', category='SYSTEM')
-        self.error_3 = error_test_utils.create_error(name='timeout', category='ALGORITHM')
+        self.error_1 = error_test_utils.create_error(name='error_1', category='SYSTEM')
+        self.error_2 = error_test_utils.create_error(name='error_2', category='SYSTEM')
+        self.error_3 = error_test_utils.create_error(name='error_3', category='ALGORITHM')
 
     def test_get_error_zero(self):
         ''' Tests that no error is returned when the exit_code is 0'''
@@ -55,7 +56,10 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertEqual(error.name, self.error_1.name)
 
     def test_get_error_missing(self):
-        ''' Tests that None is returned when a non-registered name is found in the mapping'''
+        '''Tests that general algorithm error is returned when a non-registered name is found in the mapping'''
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
 
         error_interface_dict = {
             'version': '1.0',
@@ -69,7 +73,8 @@ class TestErrorInterfaceValidate(TestCase):
         error_interface = ErrorInterface(error_interface_dict)
         error = error_interface.get_error(4)
 
-        self.assertIsNone(error)
+        self.assertIsNotNone(error)
+        self.assertEqual(error.name, 'algorithm-unknown')
 
     def test_get_error_names(self):
         '''Tests getting error names from the mapping.'''
