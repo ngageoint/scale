@@ -36,6 +36,14 @@ class ErrorManager(models.Manager):
         """
         return self.get_builtin_error('database')
 
+    def get_database_operation_error(self):
+        """Returns the error for a database operation problem
+
+        :returns: The database operation error
+        :rtype: :class:`error.models.Error`
+        """
+        return self.get_builtin_error('database-operation')
+
     def get_filesystem_error(self):
         """Returns the error for a filesystem problem
 
