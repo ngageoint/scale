@@ -351,3 +351,48 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
         self.assertEqual(job_exe.status, 'FAILED')
         self.assertEqual(job_exe.error.name, 'task-launch')
+
+    def test_general_algorithm_error(self):
+        """Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)
+        """
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task running
+        pre_task_started = now()
+        running_job_exe.task_running(pre_task_id, pre_task_started, '', '')
+
+        # Complete pre-task
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.exit_code = 0
+        pre_task_results.when = pre_task_completed
+        running_job_exe.task_complete(pre_task_results)
+
+        # Start job-task
+        task = running_job_exe.start_next_task()
+        job_task_id = task.id
+
+        # Job-task running
+        job_task_started = now()
+        running_job_exe.task_running(job_task_id, job_task_started, '', '')
+
+        # Fail job-task
+        job_task_failed = job_task_started + timedelta(seconds=1)
+        job_task_results = TaskResults(job_task_id)
+        job_task_results.exit_code = 1
+        job_task_results.when = job_task_failed
+        running_job_exe.task_fail(job_task_results)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'algorithm-unknown')
