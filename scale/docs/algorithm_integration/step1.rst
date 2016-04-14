@@ -42,7 +42,7 @@ Making a Scale-compatible Algorithm
 * Provide output file names
 * Automatically create NFS mounts in the Docker container
 * Capture output products not listed in the :ref:`results manifest <algorithm_integration_results_manifest>` and
-:ref:`job interface <architecture_jobs_interface_spec>`
+  :ref:`job interface <architecture_jobs_interface_spec>`
 
 
 *Creating Executables*
