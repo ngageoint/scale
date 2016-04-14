@@ -246,8 +246,6 @@ class RunningJobExecution(object):
 
         with transaction.atomic():
             error = current_task.fail(task_results, error)
-            if not error:
-                error = Error.objects.get_unknown_error()
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, task_results.when, error)
 

@@ -55,8 +55,10 @@ class PreTask(Task):
 
         if not error:
             # Check scale_pre_steps command to see if exit code maps to a specific error
-            if task_results.exit_code in PRE_EXIT_CODE_DICT:
+            if task_results.exit_code and task_results.exit_code in PRE_EXIT_CODE_DICT:
                 error = PRE_EXIT_CODE_DICT[task_results.exit_code]()
+        if not error:
+            error = self.consider_general_error(task_results)
 
         JobExecution.objects.task_ended(self._job_exe_id, 'pre', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
@@ -67,4 +69,5 @@ class PreTask(Task):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
+        super(PreTask, self).running(when, stdout_url, stderr_url)
         JobExecution.objects.task_started(self._job_exe_id, 'pre', when, stdout_url, stderr_url)

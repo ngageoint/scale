@@ -92,10 +92,6 @@ class ErrorInterface(object):
                     # get the name to search for in the 'Error' database table
                     error = self._lookup_error(error_name)
 
-        # Set the error to the 'Unknown' error as a fall back default
-        if not error:
-            if exit_code is None or exit_code != 0:
-                error = Error.objects.get_unknown_error()
         return error
 
     def get_error_names(self):
