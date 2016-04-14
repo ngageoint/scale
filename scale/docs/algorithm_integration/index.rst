@@ -20,3 +20,4 @@ Here are the steps for integrating an algorithm into Scale:
    step3
    step4
    step5
+   results_manifest

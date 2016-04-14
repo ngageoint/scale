@@ -19,7 +19,7 @@ access to the source code for your algorithm.
 File paths listed in the results manifest must be absolute paths to the file.  The results manifest must be called
 "results_manifest.json" and must be present in the root of the output directory provided by Scale.
 The output names in the results manifest must match the **output_data** field in the
-:ref:`job interface <architecture_jobs_interface_spec>.
+:ref:`job interface <architecture_jobs_interface_spec>`.
 
 Simple Results Manifest Example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
