@@ -68,11 +68,12 @@ class ErrorInterface(object):
         return self.definition
 
     def get_error(self, exit_code=None):
-        '''This method retrieves an error given an exit code
+        '''This method retrieves the error that maps to the given exit code. If the exit code is non-zero (success) None
+        is returned. For a failure exit code with no mapping, a general algorithm error is returned.
 
         :param exit_code: The exit code from a task
         :type exit_code: int
-        :returns: The error model mapped to the given exit code
+        :returns: The error model mapped to the given exit code, possibly None
         :rtype: :class:`error.models.Error`
         '''
 
