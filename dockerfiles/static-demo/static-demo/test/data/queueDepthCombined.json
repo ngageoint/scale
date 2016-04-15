@@ -1,0 +1,75 @@
+{
+    "job_types": [
+        { "id": 1, "name": "Big Job", "version": "1.0" },
+        { "id": 2, "name": "Wee Little Job", "version": "1.1" }
+    ],
+    "priorities": [
+        { "priority": 1 },
+        { "priority": 2 },
+        { "priority": 4 },
+        { "priority": 8 }
+    ],
+    "queue_depths": [
+        {
+            "time": "2015-07-15T01:00:00.000Z",
+            "depth_per_job_type": [58,0],
+            "depth_per_priority": [2, 8, 16, 32],
+            "total_depth": 58
+        },{
+            "time": "2015-07-15T02:00:00.000Z",
+            "depth_per_job_type": [48,50],
+            "depth_per_priority": [2, 48, 16, 32],
+            "total_depth": 98
+        },{
+            "time": "2015-07-15T03:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T04:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T05:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T06:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T07:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T08:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T09:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T10:00:00.000Z",
+            "depth_per_job_type": [10,84],
+            "depth_per_priority": [84, 10, 0, 0],
+            "total_depth": 94
+        },{
+            "time": "2015-07-15T11:00:00.000Z",
+            "depth_per_job_type": [10,54],
+            "depth_per_priority": [54, 10, 0, 0],
+            "total_depth": 64
+        },{
+            "time": "2015-07-15T12:00:00.000Z",
+            "depth_per_job_type": [10,23],
+            "depth_per_priority": [23, 10, 0, 0],
+            "total_depth": 33
+        }
+    ]
+}

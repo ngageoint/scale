@@ -1,0 +1,15 @@
+<ais-header name="'Nodes'" loading="loading"></ais-header>
+<div class="row">
+    <div class="nodes col-xs-8">
+        <ais-grid-chart data="nodeData" scale="3" reveal="false"></ais-grid-chart>
+    </div>
+    <div class="node-health col-xs-4 text-center">
+        <h3>Node Health</h3>
+        <div class="ov-chart">
+            <div ng-show="nodesError" class="alert alert-danger"><strong>{{ nodesError }}</strong> {{ nodesErrorStatus }}</div>
+            <div ng-show="!nodesError">
+                <ais-node-health duration="'PT3H'" show-description="true"></ais-node-health>
+            </div>
+        </div>
+    </div>
+</div>
