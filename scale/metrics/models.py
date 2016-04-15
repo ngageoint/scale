@@ -331,7 +331,7 @@ class MetricsJobTypeManager(models.Manager):
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type').defer('data', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
 
         # Calculate the overall counts based on job status
         entry_map = {}
@@ -342,6 +342,9 @@ class MetricsJobTypeManager(models.Manager):
                 entry.failed_count = 0
                 entry.canceled_count = 0
                 entry.total_count = 0
+                entry.error_system_count = 0
+                entry.error_data_count = 0
+                entry.error_algorithm_count = 0
                 entry_map[job.job_type] = entry
             entry = entry_map[job.job_type]
             self._update_counts(date, job, entry)
@@ -413,6 +416,14 @@ class MetricsJobTypeManager(models.Manager):
         elif job.status == 'CANCELED':
             entry.canceled_count += 1
             entry.total_count += 1
+
+        if job.error:
+            if job.error.category == 'SYSTEM':
+                entry.error_system_count += 1
+            elif job.error.category == 'DATA':
+                entry.error_data_count += 1
+            elif job.error.category == 'ALGORITHM':
+                entry.error_algorithm_count += 1
 
     def _update_times(self, date, job_exe, entry):
         """Updates the metrics model attributes for a single job execution.
@@ -510,6 +521,13 @@ class MetricsJobType(models.Model):
     :keyword total_count: The total number of ended job executions (completed, failed, canceled).
     :type total_count: :class:`metrics.models.PlotIntegerField`
 
+    :keyword error_system_count: The number of failed job executions due to a system error.
+    :type error_system_count: :class:`metrics.models.PlotIntegerField`
+    :keyword error_data_count: The number of failed job executions due to a data error.
+    :type error_data_count: :class:`metrics.models.PlotIntegerField`
+    :keyword error_algorithm_count: The number of failed job executions due to an algorithm error.
+    :type error_algorithm_count: :class:`metrics.models.PlotIntegerField`
+
     :keyword queue_time_sum: The total time job executions were queued in seconds.
     :type queue_time_sum: :class:`metrics.models.PlotIntegerField`
     :keyword queue_time_min: The minimum time a job execution was queued in seconds.
@@ -569,6 +587,7 @@ class MetricsJobType(models.Model):
     """
     GROUPS = [
         MetricsTypeGroup('overview', 'Overview', 'Overall counts based on job status.'),
+        MetricsTypeGroup('errors', 'Errors', 'Overall error counts based on category.'),
         MetricsTypeGroup('queue_time', 'Queue Time', 'When jobs were in the queue.'),
         MetricsTypeGroup('pre_time', 'Pre-task Time', 'When jobs were being prepared.'),
         MetricsTypeGroup('job_time', 'Job Task Time', 'When jobs were executing their actual goal.'),
@@ -592,6 +611,16 @@ class MetricsJobType(models.Model):
     total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
                                    help_text='Number of completed, failed, and canceled jobs.', null=True,
                                    units='count', verbose_name='Total Count')
+
+    error_system_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                          help_text='Number of failed jobs due to a system error.', null=True,
+                                          units='count', verbose_name='System Error Count')
+    error_data_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                        help_text='Number of failed jobs due to a data error.', null=True,
+                                        units='count', verbose_name='Data Error Count')
+    error_algorithm_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                             help_text='Number of failed jobs due to an algorithm error.', null=True,
+                                             units='count', verbose_name='Algorithm Error Count')
 
     queue_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='queue_time',
                                       help_text='Total time the job waited in the queue.', null=True, units='seconds',
