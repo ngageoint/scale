@@ -366,6 +366,12 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 26,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "SYSTEM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",

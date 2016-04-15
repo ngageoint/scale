@@ -9,7 +9,13 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function(d) {
-                    return d.title + ' ' + d.version + '<br />' + getCellError(d) + '<br />' + getCellTotal(d);
+                    var failures = d.status.getFailures(),
+                        failStr = '';
+
+                    _.forEach(failures, function (f) {
+                        failStr = failStr + _.capitalize(f.status.toLowerCase()) + ' Errors: ' + f.count + '<br />';
+                    });
+                    return d.title + ' ' + d.version + '<br />' + failStr + getCellTotal(d);
                 });
 
         $scope.loading = true;
@@ -518,7 +524,7 @@
                 })
                 .attr('text-anchor', 'middle')
                 .attr('x', $scope.cellWidth / 2)
-                .attr('y', ($scope.cellHeight / 2) + 12)
+                .attr('y', ($scope.cellHeight / 2) + 8)
                 .style('display', $scope.enableReveal ? 'block' : 'none');
 
             cellGroup.append('text')
@@ -540,9 +546,9 @@
                 .html(function (d) {
                     return getCellActivity(d);
                 })
-                .attr('text-anchor', 'end')
-                .attr('x', $scope.cellWidth - 2)
-                .attr('y', 14);
+                .attr('text-anchor', 'start')
+                .attr('x', 2)
+                .attr('y', $scope.cellHeight - 4);
 
             var detail = cellGroup.append('text')
                 .attr('class', 'cell-text-detail')
