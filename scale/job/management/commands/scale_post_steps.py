@@ -8,7 +8,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.db.utils import DatabaseError
+from django.db.utils import DatabaseError, OperationalError
 
 import job.execution.file_system as file_system
 import job.settings as settings
@@ -22,11 +22,14 @@ from util.retry import retry_database_query
 logger = logging.getLogger(__name__)
 
 
-# Exit codes that map to specific job errors
-DB_EXIT_CODE = 1001
-IO_EXIT_CODE = 1002
-NFS_EXIT_CODE = 1003
+GENERAL_FAIL_EXIT_CODE = 1
+# Exit codes that map to specific errors
+DB_EXIT_CODE = 2
+DB_OP_EXIT_CODE = 3
+IO_EXIT_CODE = 4
+NFS_EXIT_CODE = 5
 EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
+                  DB_OP_EXIT_CODE, Error.objects.get_database_operation_error,
                   IO_EXIT_CODE, Error.objects.get_filesystem_error,
                   NFS_EXIT_CODE, Error.objects.get_nfs_error}
 
@@ -71,8 +74,10 @@ class Command(BaseCommand):
             if not settings.settings.SKIP_CLEANUP_JOB_DIR:
                 self._cleanup(exe_id)
 
-            exit_code = -1
-            if isinstance(ex, DatabaseError):
+            exit_code = GENERAL_FAIL_EXIT_CODE
+            if isinstance(ex, OperationalError):
+                exit_code = DB_OP_EXIT_CODE
+            elif isinstance(ex, DatabaseError):
                 exit_code = DB_EXIT_CODE
             elif isinstance(ex, NfsError):
                 exit_code = NFS_EXIT_CODE
