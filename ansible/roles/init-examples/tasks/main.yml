@@ -1,11 +1,12 @@
 ---
 # init-examples/tasks/main.yml
+# needed to run manage for database load
 - name: Install initialization script
   tags: [ init-examples, example-database ]
   template: src=example_data.py.j2 dest='/tmp/example_data.py'
 
 - name: Install the countries shapefile
-  tags: init-examples
+  tags: [ init-examples, example-database ]
   unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
 
 - name: Initialize example database
@@ -16,7 +17,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/landsat-base"
-    name: "landsat-base"
+    name: "geoint/landsat-base"
     state: build
   become: true
 
@@ -24,7 +25,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/landsat-parse"
-    name: "landsat-parse_1.0"
+    name: "geoint/landsat-parse_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -35,7 +36,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/landsat-ndwi"
-    name: "landsat-ndwi_1.0"
+    name: "geoint/landsat-ndwi_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -46,7 +47,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/landsat-tiles"
-    name: "landsat-tiles_1.0"
+    name: "geoint/landsat-tiles_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -57,7 +58,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/pca"
-    name: "pca_1.0"
+    name: "geoint/pca_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -68,7 +69,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/ace"
-    name: "ace_1.0"
+    name: "geoint/ace_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -79,7 +80,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/binary-parse"
-    name: "parse-binary_1.0"
+    name: "geoint/parse-binary_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
@@ -90,7 +91,7 @@
   tags: init-examples
   docker_image:
     path: "{{ scale_build_root }}/dockerfiles/examples/vash"
-    name: "vash_1.0"
+    name: "geoint/vash_1.0"
     tag: "{{ example_image_tag }}"
     state: build
   become: true
