@@ -136,8 +136,8 @@ A valid job interface is a JSON document with the following structure:
     *${FLAG:INPUT NAME}*. There is also a special substitution value
     *${job_output_dir}*, which will be replaced with the absolute file system path of the output directory where the
     algorithm may write its output files. The algorithm should produce a results manifest named "results_manifest.json".
-    The format for the results manifest can be found here: :ref:`algorithms_results_manifest`. Any output files must be
-    registered in the results manifest.
+    The format for the results manifest can be found here: :ref:`algorithm_integration_results_manifest`. Any output
+    files must be registered in the results manifest.
 
 **input_data**: JSON array
 
