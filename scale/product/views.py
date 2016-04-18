@@ -1,33 +1,30 @@
-'''Defines the views for the RESTful product services'''
+"""Defines the views for the RESTful product services"""
 from __future__ import unicode_literals
 
 import logging
 
-import rest_framework.status as status
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 import util.rest as rest_util
 from product.models import ProductFile
-from product.serializers import ProductFileListSerializer, ProductFileUpdateListSerializer
+from product.serializers import ProductFileSerializer, ProductFileUpdateSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class ProductsView(APIView):
-    '''This view is the endpoint for retrieving a product by filename
-    '''
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+class ProductsView(ListAPIView):
+    """This view is the endpoint for retrieving a product by filename"""
+    queryset = ProductFile.objects.all()
+    serializer_class = ProductFileSerializer
 
-    def get(self, request):
-        '''Retrieves the product for a given file name and returns it in JSON form
+    def list(self, request):
+        """Retrieves the product for a given file name and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, u'started', required=False)
         ended = rest_util.parse_timestamp(request, u'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -42,25 +39,25 @@ class ProductsView(APIView):
 
         products = ProductFile.objects.get_products(started, ended, job_type_ids, job_type_names, job_type_categories,
                                                     is_operational, file_name, order)
-        page = rest_util.perform_paging(request, products)
-        serializer = ProductFileListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        page = self.paginate_queryset(products)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-class ProductUpdatesView(APIView):
-    '''This view is the endpoint for retrieving product updates over a given time range.
-    '''
+class ProductUpdatesView(ListAPIView):
+    """This view is the endpoint for retrieving product updates over a given time range."""
+    queryset = ProductFile.objects.all()
+    serializer_class = ProductFileUpdateSerializer
 
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
-
-    def get(self, request):
-        '''Retrieves the product updates for a given time range and returns it in JSON form
+    def list(self, request):
+        """Retrieves the product updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
         started = rest_util.parse_timestamp(request, u'started', required=False)
         ended = rest_util.parse_timestamp(request, u'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -75,7 +72,8 @@ class ProductUpdatesView(APIView):
 
         products = ProductFile.objects.get_products(started, ended, job_type_ids, job_type_names, job_type_categories,
                                                     is_operational, file_name, order)
-        page = rest_util.perform_paging(request, products)
+
+        page = self.paginate_queryset(products)
         ProductFile.objects.populate_source_ancestors(page)
-        serializer = ProductFileUpdateListSerializer(page, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

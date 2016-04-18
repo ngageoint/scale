@@ -1,0 +1,60 @@
+body {
+    margin-top: 50px; /* Required margin for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+}
+
+
+
+.center {
+	margin: 0 auto;
+}
+
+#flow {
+    background: #337ab7;
+    color: #fff;
+    padding: 40px 0 20px 0;
+    margin: 10px 0;
+}
+
+#flow a:link, #flow a:active, #flow a:visited {
+    color: #C8F5FC;
+}
+
+#flow .row:first-of-type {
+    margin-bottom: 40px;
+}
+
+#flow h2 {
+    margin-top: 0;
+}
+
+#tutorials {
+    background: #fff;
+    padding: 20px 0 0 0;
+}
+
+#examples {
+    background: #fff;
+    padding: 20px 0 10px 0;
+}
+
+header .btn {
+    margin: 20px 0;
+}
+
+.header-content {
+    margin-top: 51px;
+    padding: 50px 0 0 0;
+}
+
+.header-content li a:link, .header-content li a:active, .header-content li a:visited {
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+}
+
+footer {
+    margin: 10px 0 0 0;
+    padding: 20px 0;
+    background: #ddd;
+}

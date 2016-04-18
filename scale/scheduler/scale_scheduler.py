@@ -258,15 +258,19 @@ class ScaleScheduler(MesosScheduler):
                 results = TaskResults(task_id)
                 results.exit_code = utils.parse_exit_code(status)
                 results.when = utils.get_status_timestamp(status)
-                if status.state != mesos_pb2.TASK_LOST:
-                    log_start_time = now()
-                    hostname = running_job_exe._node_hostname
-                    port = running_job_exe._node_port
-                    task_dir = get_slave_task_directory(hostname, port, task_id)
-                    results.stdout = get_slave_task_file(hostname, port, task_dir, 'stdout')
-                    results.stderr = get_slave_task_file(hostname, port, task_dir, 'stderr')
-                    log_end_time = now()
-                    logger.debug('Time to pull logs for task: %s', str(log_end_time - log_start_time))
+                if status.state in [mesos_pb2.TASK_FINISHED, mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED,
+                                    mesos_pb2.TASK_KILLED]:
+                    try:
+                        log_start_time = now()
+                        hostname = running_job_exe._node_hostname
+                        port = running_job_exe._node_port
+                        task_dir = get_slave_task_directory(hostname, port, task_id)
+                        results.stdout = get_slave_task_file(hostname, port, task_dir, 'stdout')
+                        results.stderr = get_slave_task_file(hostname, port, task_dir, 'stderr')
+                        log_end_time = now()
+                        logger.debug('Time to pull logs for task: %s', str(log_end_time - log_start_time))
+                    except Exception:
+                        logger.exception('Error pulling logs for task %s', task_id)
 
                 # Apply status update to running job execution
                 if status.state == mesos_pb2.TASK_RUNNING:

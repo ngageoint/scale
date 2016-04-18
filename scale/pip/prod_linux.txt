@@ -4,7 +4,7 @@
 # Main requirements
 Django>=1.7.3,<1.8.0
 django-filter>=0.7,<=0.8
-djangorestframework>=2.3.0,<2.4.0
+djangorestframework>=3.3.0,<3.4.0
 djorm-ext-pgjson>=0.2,<0.3
 gunicorn>=18.0.0,<19.0.0
 jsonschema>=2.3,<2.4

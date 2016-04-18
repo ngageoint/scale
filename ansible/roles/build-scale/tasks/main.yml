@@ -113,10 +113,22 @@
   notify:
     - push scale
 
+- name: Ensure {{ scale_build_root }}/dockerfiles/framework/scale-web/temp/ dir exists
+  tags: [ build-scale, build-scale-docker ]
+  file: path={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/ state=directory
+
+- name: Copy scale-web Dockerfile
+  tags: [ build-scale, build-scale-docker ]
+  copy: src=../../../../dockerfiles/framework/scale-web/Dockerfile dest={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/Dockerfile
+
+- name: Replace base image in scale-web Dockerfile
+  tags: [ build-scale, build-scale-docker ]
+  lineinfile: dest={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/Dockerfile line="FROM scale:{{ scale_docker_version }}" regexp="^FROM .*$"
+
 - name: Build scale-web docker image
   tags: [ build-scale, build-scale-docker ]
   docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web"
+    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web/temp/"
     name: "scale-web"
     tag: "{{ scale_docker_version }}"
     state: build

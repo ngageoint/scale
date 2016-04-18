@@ -5,9 +5,14 @@
   yum: name=nfs-utils
   become: true
 
-- name: Create ingest directory
+- name: Create landsat ingest directory
   tags: nfs-server
-  file: path=/exports/ingest state=directory mode=0777
+  file: path=/exports/ingest/landsat state=directory mode=0777
+  become: true
+
+- name: Create binary ingest directory
+  tags: nfs-server
+  file: path=/exports/ingest/binary state=directory mode=0777
   become: true
 
 - name: Create raw directory

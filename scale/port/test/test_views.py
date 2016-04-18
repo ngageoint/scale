@@ -1711,6 +1711,7 @@ class TestConfigurationValidationView(TestCase):
                 'errors': [{
                     'name': error.name,
                     'title': 'test-error-title',
+                    'category': 'ALGORITHM',
                 }],
                 'job_types': [{
                     'name': job_type.name,

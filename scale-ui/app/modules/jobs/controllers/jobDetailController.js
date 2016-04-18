@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService) {
+    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, scaleService, toastr) {
         $scope.job = {};
         $scope.jobId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -53,12 +53,12 @@
 
         $scope.requeueJob = function (jobId) {
             $scope.loading = true;
-            loadService.requeueJob(jobId).then(function (data) {
+            loadService.requeueJobs({ job_ids: [jobId] }).then(function (data) {
                 toastr['success']('Requeued Job');
-                $scope.job.status = data.status;
+                $scope.job.status = data.job_status;
                 getJobDetail(jobId);
             }).catch(function (error) {
-                toaster['error'](error);
+                toastr['error']('Requeue request failed');
                 console.log(error);
             }).finally(function () {
                 $scope.loading = false;
@@ -81,20 +81,26 @@
             }).finally(function () {
                 $scope.loading = false;
             });
-        }
+        };
+        
+        $scope.calculateFileSize = function (size) {
+            return scaleService.calculateFileSizeFromBytes(size);
+        };
 
         var getJobDetail = function (jobId) {
             $scope.loadingJobDetail = true;
             jobService.getJobDetail(jobId).then(function (data) {
                 $scope.job = data;
                 $scope.timeline = calculateTimeline(data);
-                $scope.publishedProducts = _.where(data.products, { 'is_published': true });
-                $scope.unpublishedProducts = _.where(data.products, { 'is_published': false });
-                $scope.publishedProductsGrouped = _.pairs(_.groupBy($scope.publishedProducts, 'job_exe.id'));
+                // $scope.publishedProducts = _.where(data.products, { 'is_published': true });
+                // $scope.unpublishedProducts = _.where(data.products, { 'is_published': false });
+                // $scope.publishedProductsGrouped = _.pairs(_.groupBy($scope.publishedProducts, 'job_exe.id'));
                 $scope.latestExecution = data.getLatestExecution();
                 $scope.jobErrorCreated = data.error ? moment.utc(data.error.created).toISOString() : '';
                 $scope.lastStatusChange = data.last_status_change ? moment.duration(moment.utc(data.last_status_change).diff(moment.utc())).humanize(true) : '';
                 $scope.triggerOccurred = data.event.occurred ? moment.duration(moment.utc(data.event.occurred).diff(moment.utc())).humanize(true) : '';
+                $scope.inputs = data.inputs;
+                $scope.outputs = data.outputs;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {

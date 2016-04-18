@@ -23,19 +23,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 1,
+                    "count": 78,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 2,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 57,
+                    "count": 400,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -61,19 +55,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 3,
+                    "count": 75,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 0,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 86,
+                    "count": 875,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -99,13 +87,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 2,
+                    "count": 43,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
                     "status": "COMPLETED",
-                    "count": 24,
+                    "count": 287,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -130,14 +118,14 @@
             },
             "job_counts": [
                 {
-                    "status": "FAILED",
-                    "count": 8,
+                    "status": "RUNNING",
+                    "count": 89,
                     "most_recent": "2015-08-31T19:28:12.674Z",
                     "category": "SYSTEM"
                 },
                 {
                     "status": "COMPLETED",
-                    "count": 47,
+                    "count": 657,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -163,19 +151,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 1,
+                    "count": 41,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 20,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 138,
+                    "count": 338,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -201,19 +183,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 6,
+                    "count": 66,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 3,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 32,
+                    "count": 322,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -239,19 +215,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 1,
+                    "count": 19,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 2,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 95,
+                    "count": 295,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -282,12 +252,6 @@
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 26,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
                     "count": 30,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -315,19 +279,13 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 6,
+                    "count": 64,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 1,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
-                {
                     "status": "COMPLETED",
-                    "count": 85,
+                    "count": 853,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }
@@ -353,19 +311,525 @@
             "job_counts": [
                 {
                     "status": "RUNNING",
-                    "count": 1,
+                    "count": 51,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 9,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
+                    "status": "COMPLETED",
+                    "count": 189,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 11,
+                "name": "kilo",
+                "version": "1.0",
+                "title": "Kilo",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f0f3"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 31,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
                 },
                 {
                     "status": "COMPLETED",
-                    "count": 18,
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 12,
+                "name": "lima",
+                "version": "1.0",
+                "title": "Lima",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f030"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 64,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 13,
+                "name": "mike",
+                "version": "1.0",
+                "title": "Mike",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f127"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 56,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 14,
+                "name": "november",
+                "version": "1.0",
+                "title": "November",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f192"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 25,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 15,
+                "name": "oscar",
+                "version": "1.0",
+                "title": "Oscar",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f071"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 78,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 16,
+                "name": "papa",
+                "version": "1.0",
+                "title": "Papa",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f21e"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 32,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 17,
+                "name": "quebec",
+                "version": "1.0",
+                "title": "Quebec",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f279"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 46,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 18,
+                "name": "romeo",
+                "version": "1.0",
+                "title": "Romeo",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f267"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 82,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 19,
+                "name": "sierra",
+                "version": "1.0",
+                "title": "Sierra",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f1d8"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 77,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 20,
+                "name": "tango",
+                "version": "1.0",
+                "title": "Tango",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f197"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 12,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 21,
+                "name": "uniform",
+                "version": "1.0",
+                "title": "Uniform",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f21d"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 36,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 22,
+                "name": "victor",
+                "version": "1.0",
+                "title": "Victor",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f007"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 25,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 23,
+                "name": "whiskey",
+                "version": "1.0",
+                "title": "Whiskey",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f08d"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 94,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 24,
+                "name": "xray",
+                "version": "1.0",
+                "title": "Xray",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f1d0"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 47,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 25,
+                "name": "yankee",
+                "version": "1.0",
+                "title": "Yankee",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f285"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 58,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 26,
+                "name": "zulu",
+                "version": "1.0",
+                "title": "Zulu",
+                "description": "Ingests a source file into a workspace",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f084"
+            },
+            "job_counts": [
+                {
+                    "status": "RUNNING",
+                    "count": 33,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": null
+                },
+                {
+                    "status": "COMPLETED",
+                    "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }

@@ -54,3 +54,4 @@ btrfs: true
 # These are for the example database
 nfs_server: "{{ mesos_master_ip }}"
 example_image_tag: "dev"
+example_server: "{{ mesos_master_ip }}"

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $uibModal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService, moment) {
+    angular.module('scaleApp').controller('jobsController', function($rootScope, $scope, $location, $uibModal, navService, jobService, jobTypeService, jobExecutionService, uiGridConstants, scaleConfig, subnavService, gridFactory, loadService, scaleService, userService, moment, toastr) {
         var self = this;
 
         self.jobsParams = {
@@ -32,7 +32,7 @@
         $scope.actionClicked = false;
         $scope.gridStyle = '';
         $scope.readonly = true;
-        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStart = self.jobsParams.started ? moment.utc(self.jobsParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -40,7 +40,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStop = self.jobsParams.ended ? moment.utc(self.jobsParams.ended).toDate() : moment.utc().endOf('d').toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
@@ -76,7 +76,7 @@
             { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
             {
                 field: 'status',
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.status }} <button ng-show="((!grid.appScope.readonly) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.requeueJob(row.entity)" class="btn btn-xs btn-default" title="Requeue Job"><i class="fa fa-repeat"></i></button> <button ng-show="!grid.appScope.readonly && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job"><i class="fa fa-ban"></i></button></div>',
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.status }} <button ng-show="((!grid.appScope.readonly) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.requeueJobs({ job_ids: [row.entity.id] })" class="btn btn-xs btn-default" title="Requeue Job"><i class="fa fa-repeat"></i></button> <button ng-show="!grid.appScope.readonly && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job"><i class="fa fa-ban"></i></button></div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobStatus"><option ng-selected="{{ grid.appScope.jobStatusValues[$index] == grid.appScope.selectedJobStatus }}" value="{{ grid.appScope.jobStatusValues[$index] }}" ng-repeat="status in grid.appScope.jobStatusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
             },
             {
@@ -230,18 +230,16 @@
             self.getJobs();
         };
 
-        $scope.requeueJob = function (job) {
+        $scope.requeueJobs = function (jobsParams) {
+            jobsParams = jobsParams || { started: $scope.lastModifiedStart.toISOString(), ended: $scope.lastModifiedStop.toISOString()};
             $scope.actionClicked = true;
             $scope.loading = true;
-            var originalStatus = job.status;
-            loadService.requeueJob(job.id).then(function (data) {
-                toastr['success']('Requeued Job');
-                job.status = data.status;
+            loadService.requeueJobs(jobsParams).then(function () {
+                toastr['success']('Requeue Successful');
+                self.getJobs();
             }).catch(function (error) {
-                toastr['error'](error);
+                toastr['error']('Requeue request failed');
                 console.log(error);
-                job.status = originalStatus;
-            }).finally(function () {
                 $scope.loading = false;
             });
         };
@@ -327,7 +325,7 @@
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset,
+                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
                 gridMaxHeight = viewport.height - offset;
 
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';

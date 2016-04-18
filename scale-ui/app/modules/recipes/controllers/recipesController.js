@@ -26,7 +26,7 @@
         $scope.selectedRecipeType = recipesParams.type_id || 0;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         $scope.gridStyle = '';
-        $scope.lastModifiedStart = moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStart = recipesParams.started ? moment.utc(recipesParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -34,7 +34,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStop = recipesParams.ended ? moment.utc(recipesParams.ended).toDate() : moment.utc().endOf('d').toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
@@ -62,7 +62,8 @@
                 enableFiltering: false,
                 //cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'',                
             },
-            { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' }
+            { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
+            { field: 'completed', enableFiltering: false, enableSorting: true, cellTemplate: '<div class="ui-grid-cell-contents status completed" ng-if="row.entity.completed">Completed {{ row.entity.last_status_change }}</div>' }
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();
@@ -223,7 +224,7 @@
         angular.element(document).ready(function(){
            // set container height equal to available page height
             var viewport = scaleService.getViewportSize();
-            var offset = scaleConfig.headerOffset;
+            var offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset;
             var gridMaxHeight = viewport.height - offset;
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px;';
         });

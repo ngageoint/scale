@@ -2,6 +2,7 @@
     'use strict';
 
     var app = angular.module('scaleApp', [
+        'scaleConfigModule',
         'ngResource',
         'ngSanitize',
         'ngRoute',
@@ -122,5 +123,7 @@
             });
     })
     .value('moment', window.moment)
-    .value('localStorage', window.localStorage);
+    .value('localStorage', window.localStorage)
+    .value('XMLHttpRequest', window.XMLHttpRequest)
+    .value('toastr', window.toastr);
 })();

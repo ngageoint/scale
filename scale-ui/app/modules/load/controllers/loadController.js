@@ -12,7 +12,7 @@
 
         $scope.getPage = function (pageNumber, pageSize) {
             $scope.loading = true;
-            loadService.getQueue(pageNumber - 1, pageSize).then(function (data) {
+            loadService.getQueueStatus(pageNumber - 1, pageSize).then(function (data) {
                 var newData = [];
                 for (var i = 0; i < $scope.gridOptions.paginationPageSize; i++) {
                     newData.push(data.jobs[i]);

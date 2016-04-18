@@ -23,6 +23,8 @@ class JobTask(Task):
 
         self._uses_docker = job_exe.uses_docker()
         self._docker_image = job_exe.get_docker_image()
+        if self._uses_docker:
+            self._docker_params = job_exe.get_docker_params()
         self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
         if job_exe.is_system:
@@ -59,6 +61,8 @@ class JobTask(Task):
         if not error:
             # Use job's error mapping here to determine error
             error = self._error_mapping.get_error(task_results.exit_code)
+        if not error:
+            error = self.consider_general_error(task_results)
 
         JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
@@ -78,4 +82,5 @@ class JobTask(Task):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
+        super(JobTask, self).running(when, stdout_url, stderr_url)
         JobExecution.objects.task_started(self._job_exe_id, 'job', when, stdout_url, stderr_url)

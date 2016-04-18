@@ -265,7 +265,7 @@ class Ingest(models.Model):
 
     :keyword file_name: The name of the file
     :type file_name: :class:`django.db.models.CharField`
-    :keyword strike: The Strike process that handled this file's transfer
+    :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
     :keyword job: The ingest job that is processing this ingest
     :type job: :class:`django.db.models.ForeignKey`
@@ -318,10 +318,9 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', blank=True, null=True)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True)
-    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING',
-                              max_length=50, db_index=True)
+    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     transfer_path = models.CharField(max_length=1000)
     bytes_transferred = models.BigIntegerField()
@@ -424,7 +423,7 @@ class StrikeManager(models.Manager):
         job_data = {'input_data': [{'name': 'Strike ID', 'value': unicode(strike.id)}]}
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        job_id, _job_exe_id = Queue.objects.queue_new_job(strike_type, job_data, event)
+        job_id = Queue.objects.queue_new_job(strike_type, job_data, event)
 
         strike.job_id = job_id
         strike.save()

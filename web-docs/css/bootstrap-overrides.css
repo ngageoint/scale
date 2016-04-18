@@ -1,0 +1,27 @@
+.navbar-brand img {
+    width: 20px;
+    float: left;
+    vertical-align: middle;
+    margin: 0 5px 0 0;
+}
+
+.jumbotron {
+    background: url('../images/horizon-3.jpg') no-repeat 50% top scroll;
+    background-size: 100%;
+    background-color: #000;
+    padding-top: 0;
+    padding-bottom: 15px;
+    min-height: 55vh;
+}
+
+.jumbotron h1 {
+    color: #fff;
+    text-shadow: 2px 2px 2px #000;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 80%;
+}
+
+.panel-body {
+    padding: 5px;
+}

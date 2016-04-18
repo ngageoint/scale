@@ -2,6 +2,14 @@
     'use strict';
 
     angular.module('scaleApp').service('scaleService', function (scaleConfig) {
+        function padWithZero (input, length) {
+            // Cast input to string
+            input = '' + input;
+
+            var paddingSize = Math.max(0, length - input.length);
+            return new Array(paddingSize > 0 ? paddingSize + 1 : 0).join('0') + input;
+        }
+
         return {
             calculateFileSizeFromMib: function(num){
                 if (num > 0) {
@@ -50,17 +58,17 @@
                     height: y
                 };
             },
-            calculateDuration: function (start, stop, formatStr) {
+            calculateDuration: function (start, stop) {
                 var to = moment.utc(stop),
                     from = moment.utc(start),
-                    diff = to.diff(from);
+                    diff = moment.utc(to).diff(moment.utc(from));
 
-                formatStr = formatStr || 'D[d], H[h], M[m], ss';
+                var duration = moment.duration(diff);
 
-                return moment.duration(diff, 'milliseconds').format();
+                return padWithZero(duration.days(), 2) + 'd, ' + padWithZero(duration.hours(), 2) + 'h, ' + padWithZero(duration.minutes(), 2) + 'm, ' + padWithZero(duration.seconds(), 2) + 's';
             },
             getDayString: function(dayNumber){
-                var dayArr = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+                var dayArr = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
                 return dayArr[dayNumber];
             },
             isIE: function () {

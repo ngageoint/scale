@@ -22,6 +22,7 @@ from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.models import RecipeType
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
+from trigger.models import TriggerRule
 from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerRule
 
 logger = logging.getLogger(__name__)
@@ -200,7 +201,7 @@ def _build_job_type_map(job_type_dicts):
         job_type_query = job_type_query.filter(job_type_filters)
     for job_type in job_type_query:
         # Editing system-level job types is not allowed
-        if job_type.category == 'system':
+        if not job_type.category or job_type.category == 'system':
             raise InvalidConfiguration('System job types cannot be edited: %s' % job_type.name)
         job_type_map[(job_type.name, job_type.version)] = job_type
     return job_type_map
@@ -259,22 +260,30 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     if not recipe_type_serializer.is_valid():
         raise InvalidConfiguration('Invalid recipe type schema: %s -> %s' % (recipe_type_dict['name'],
                                                                              recipe_type_serializer.errors))
-    result = recipe_type_serializer.object
+    result = recipe_type_serializer.validated_data
 
     # Validate the recipe definition
     try:
-        definition = RecipeDefinition(result.definition)
+        definition_dict = None
+        if 'definition' in result:
+            definition_dict = result.get('definition')
+        elif recipe_type:
+            definition_dict = recipe_type.definition
+        definition = RecipeDefinition(definition_dict)
         warnings.extend(definition.validate_job_interfaces())
     except (InvalidDefinition, InvalidRecipeConnection) as ex:
-        raise InvalidConfiguration('Recipe type definition invalid: %s -> %s' % (result.name, unicode(ex)))
+        raise InvalidConfiguration('Recipe type definition invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
     # Validate the trigger rule
-    trigger_rule = result.trigger_rule
+    trigger_rule = None
+    if 'trigger_rule' in result and result.get('trigger_rule'):
+        trigger_rule = TriggerRule(**result.get('trigger_rule'))
     if trigger_rule:
         trigger_config = trigger_rule.get_configuration()
         if not isinstance(trigger_config, RecipeTriggerRuleConfiguration):
             logger.exception('Recipe type trigger rule type invalid')
-            raise InvalidConfiguration('Recipe type trigger type invalid: %s -> %s' % (result.name, trigger_rule.type))
+            raise InvalidConfiguration('Recipe type trigger type invalid: %s -> %s' % (result.get('name'),
+                                                                                       trigger_rule.type))
         try:
             warnings.extend(trigger_config.validate_trigger_for_recipe(definition))
 
@@ -285,24 +294,24 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
                                                                 trigger_rule.is_active)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Recipe type trigger rule invalid')
-            raise InvalidConfiguration('Recipe type trigger rule invalid: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Recipe type trigger rule invalid: %s -> %s' % (result.get('name'), unicode(ex)))
     remove_trigger_rule = 'trigger_rule' in recipe_type_dict and not recipe_type_dict['trigger_rule']
 
     # Edit or create the associated recipe type model
     if recipe_type:
         try:
-            RecipeType.objects.edit_recipe_type(result.id, result.title, result.description, definition, trigger_rule,
-                                                remove_trigger_rule)
+            RecipeType.objects.edit_recipe_type(recipe_type.id, result.get('title'), result.get('description'),
+                                                definition, trigger_rule, remove_trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Recipe type edit failed')
-            raise InvalidConfiguration('Unable to edit existing recipe type: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Unable to edit recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
         try:
-            RecipeType.objects.create_recipe_type(result.name, result.version, result.title, result.description,
-                                                  definition, trigger_rule)
+            RecipeType.objects.create_recipe_type(result.get('name'), result.get('version'), result.get('title'),
+                                                  result.get('description'), definition, trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Recipe type create failed')
-            raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Unable to create new recipe type: %s -> %s' % (result.get('name'), unicode(ex)))
     return warnings
 
 
@@ -327,32 +336,45 @@ def _import_job_type(job_type_dict, job_type=None):
     if not job_type_serializer.is_valid():
         raise InvalidConfiguration('Invalid job type schema: %s -> %s' % (job_type_dict['name'],
                                                                           job_type_serializer.errors))
-    result = job_type_serializer.object
+    result = job_type_serializer.validated_data
 
     # Importing system-level job types is not allowed
-    if result.category == 'system':
-        raise InvalidConfiguration('System job types cannot be imported: %s' % result.name)
+    if result.get('category') == 'system' or (job_type and job_type.category == 'system'):
+        raise InvalidConfiguration('System job types cannot be imported: %s' % result.get('name'))
 
     # Validate the job interface
     try:
-        interface = JobInterface(result.interface)
+        interface_dict = None
+        if 'interface' in result:
+            interface_dict = result.get('interface')
+        elif job_type:
+            interface_dict = job_type.interface
+        interface = JobInterface(interface_dict)
     except InvalidInterfaceDefinition as ex:
-        raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.name, unicode(ex)))
+        raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
     # Validate the error mapping
     try:
-        error_mapping = ErrorInterface(result.error_mapping)
+        error_mapping_dict = None
+        if 'error_mapping' in result:
+            error_mapping_dict = result.get('error_mapping')
+        elif job_type:
+            error_mapping_dict = job_type.error_mapping
+        error_mapping = ErrorInterface(error_mapping_dict)
         warnings.extend(error_mapping.validate())
     except InvalidInterfaceDefinition as ex:
-        raise InvalidConfiguration('Job type error mapping invalid: %s -> %s' % (result.name, unicode(ex)))
+        raise InvalidConfiguration('Job type error mapping invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
     # Validate the trigger rule
-    trigger_rule = result.trigger_rule
+    trigger_rule = None
+    if 'trigger_rule' in result and result.get('trigger_rule'):
+        trigger_rule = TriggerRule(**result.get('trigger_rule'))
     if trigger_rule:
         trigger_config = trigger_rule.get_configuration()
         if not isinstance(trigger_config, JobTriggerRuleConfiguration):
             logger.exception('Job type trigger rule type invalid')
-            raise InvalidConfiguration('Job type trigger type invalid: %s -> %s' % (result.name, trigger_rule.type))
+            raise InvalidConfiguration('Job type trigger type invalid: %s -> %s' % (result.get('name'),
+                                                                                    trigger_rule.type))
 
         try:
             warnings.extend(trigger_config.validate_trigger_for_job(interface))
@@ -364,7 +386,7 @@ def _import_job_type(job_type_dict, job_type=None):
                                                                 trigger_rule.is_active)
         except (InvalidTriggerType, InvalidTriggerRule, InvalidConnection) as ex:
             logger.exception('Job type trigger rule invalid')
-            raise InvalidConfiguration('Job type trigger rule invalid: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Job type trigger rule invalid: %s -> %s' % (result.get('name'), unicode(ex)))
     remove_trigger_rule = 'trigger_rule' in job_type_dict and not job_type_dict['trigger_rule']
 
     # Extract the fields that should be updated as keyword arguments
@@ -374,7 +396,7 @@ def _import_job_type(job_type_dict, job_type=None):
         if key not in base_fields:
             if key in JobType.UNEDITABLE_FIELDS:
                 warnings.append(ValidationWarning(
-                    'read-only', 'Job type includes read-only field: %s -> %s' % (result.name, key)
+                    'read-only', 'Job type includes read-only field: %s -> %s' % (result.get('name'), key)
                 ))
             else:
                 extra_fields[key] = job_type_dict[key]
@@ -382,18 +404,18 @@ def _import_job_type(job_type_dict, job_type=None):
     # Edit or create the associated job type model
     if job_type:
         try:
-            JobType.objects.edit_job_type(result.id, interface, trigger_rule, remove_trigger_rule, error_mapping,
+            JobType.objects.edit_job_type(job_type.id, interface, trigger_rule, remove_trigger_rule, error_mapping,
                                           **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
             logger.exception('Job type edit failed')
-            raise InvalidConfiguration('Unable to edit existing job type: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Unable to edit existing job type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
         try:
-            JobType.objects.create_job_type(result.name, result.version, interface, trigger_rule, error_mapping,
-                                            **extra_fields)
+            JobType.objects.create_job_type(result.get('name'), result.get('version'), interface, trigger_rule,
+                                            error_mapping, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
             logger.exception('Job type create failed')
-            raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.name, unicode(ex)))
+            raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.get('name'), unicode(ex)))
     return warnings
 
 
@@ -416,12 +438,12 @@ def _import_error(error_dict, error=None):
     # Parse the JSON content and merge the fields into a model
     error_serializer = serializers.ConfigurationErrorSerializer(error, data=error_dict)
     if not error_serializer.is_valid():
-        raise InvalidConfiguration('Invalid error schema: %s -> %s' % (error_dict['name'], error_serializer.errors))
-    result = error_serializer.object
+        raise InvalidConfiguration('Invalid error schema: %s -> %s' % (error_dict.get('name'), error_serializer.errors))
+    result = error_serializer.validated_data
 
     # Importing system-level errors is not allowed
-    if result.category == 'SYSTEM':
-        raise InvalidConfiguration('System errors cannot be imported: %s' % result.name)
+    if result.get('category') == 'SYSTEM' or (error and error.category == 'SYSTEM'):
+        raise InvalidConfiguration('System errors cannot be imported: %s' % result.get('name'))
 
-    result.save()
+    error_serializer.save()
     return warnings

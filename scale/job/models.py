@@ -1,6 +1,7 @@
 """Defines the database models for jobs and job types"""
 from __future__ import unicode_literals
 
+import copy
 import datetime
 import logging
 import math
@@ -34,24 +35,47 @@ MIN_MEM = 128.0
 MIN_DISK = 0.0
 
 
-# Important note: when acquiring select_for_update() locks on related models,
-# be sure to acquire them in the following
-# order: JobExecution, Job, JobType, TriggerRule
+# IMPORTANT NOTE: Locking order
+# Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
+# deadlocks and ensure query efficiency
+# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job(self, job_type, event):
-        """Creates a new job for the given type and returns the job model. The given job_type model must have already
-        been saved in the database (it must have an ID). The given event model must have already been saved in the
-        database (it must have an ID). The returned job model will have not yet been saved in the database.
+    def complete_job(self, job, when, results):
+        """Updates the given job to COMPLETED status. The caller must have obtained a model lock on the job model.
+
+        :param job: The job to update
+        :type job: :class:`job.models.Job`
+        :param when: The time that the job was completed
+        :type when: :class:`datetime.datetime`
+        :param results: The error that caused the failure (required if status is FAILED, should be None otherwise)
+        :type results: :class:`job.configuration.results.job_results.JobResults`
+        """
+
+        job.status = 'COMPLETED'
+        job.results = results.get_dict()
+        job.ended = when
+        job.last_status_change = when
+        job.save()
+
+    def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
+        """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
+        job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
+        returned job model will have not yet been saved in the database.
 
         :param job_type: The type of the job to create
         :type job_type: :class:`job.models.JobType`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
+        :param superseded_job: The job that the created job is superseding, possibly None
+        :type superseded_job: :class:`job.models.Job`
+        :param delete_superseded: Whether the created job should delete products from the superseded job
+        :type delete_superseded: :class:`job.models.Job`
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
@@ -67,38 +91,22 @@ class JobManager(models.Manager):
         job.event = event
         job.priority = job_type.priority
         job.timeout = job_type.timeout
+        job.docker_params = job_type.docker_params
         job.max_tries = job_type.max_tries
         job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
         job.mem_required = max(job_type.mem_required, MIN_MEM)
 
+        if superseded_job:
+            root_id = superseded_job.root_superseded_job_id
+            if not root_id:
+                root_id = superseded_job.id
+            job.root_superseded_job_id = root_id
+            job.superseded_job = superseded_job
+            job.delete_superseded = delete_superseded
+
         return job
 
-    def get_job(self, job_id, related=False, lock=False):
-        """Gets the job model with the given ID, optionally with related fields and/or with a model lock obtained
-
-        :param job_id: The ID of the job
-        :type job_id: int
-        :param related: Whether to include the related models for the job (job_type, job_type_rev)
-        :type related: bool
-        :param lock: Whether to obtain a select_for_update() lock on the job model
-        :type lock: bool
-        :returns: The job model
-        :rtype: :class:`job.models.Job`
-        """
-
-        job_qry = Job.objects.all()
-
-        if lock and related:
-            # Don't mix select_for_update() and select_related(), grab lock and then requery for related
-            Job.objects.select_for_update().get(id=job_id)
-        if related:
-            job_qry = job_qry.select_related('job_type', 'job_type_rev')
-        if lock:
-            job_qry = job_qry.select_for_update()
-
-        return job_qry.get(id=job_id)
-
-    def get_jobs(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
+    def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -108,6 +116,8 @@ class JobManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param status: Query jobs with the a specific execution status.
         :type status: str
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: list[int]
         :param job_type_ids: Query jobs of the type associated with the identifier.
         :type job_type_ids: list[int]
         :param job_type_names: Query jobs of the type associated with the name.
@@ -132,6 +142,8 @@ class JobManager(models.Manager):
 
         if status:
             jobs = jobs.filter(status=status)
+        if job_ids:
+            jobs = jobs.filter(id__in=job_ids)
         if job_type_ids:
             jobs = jobs.filter(job_type_id__in=job_type_ids)
         if job_type_names:
@@ -158,9 +170,7 @@ class JobManager(models.Manager):
         """
 
         # Attempt to fetch the requested job
-        job = Job.objects.all()
-        job = job.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error')
-        job = Job.objects.get(pk=job_id)
+        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error').get(pk=job_id)
 
         # Attempt to get related job executions
         job.job_exes = JobExecution.objects.filter(job=job).order_by('-created')
@@ -175,20 +185,36 @@ class JobManager(models.Manager):
         except:
             job.recipes = []
 
+        # Fetch all the associated input files
+        input_file_ids = job.get_job_data().get_input_file_ids()
+        input_files = ScaleFile.objects.filter(id__in=input_file_ids)
+        input_files = input_files.select_related('workspace').defer('workspace__json_config')
+        input_files = input_files.order_by('id').distinct('id')
+
         # Attempt to get related products
         # Use a localized import to make higher level application dependencies optional
         try:
             from product.models import ProductFile
-            job.products = ProductFile.objects.filter(job=job).order_by('last_modified').select_related('file')
+            output_files = ProductFile.objects.filter(job=job)
+            output_files = output_files.select_related('file', 'file__workspace').defer('file__workspace__json_config')
+            output_files = output_files.order_by('id').distinct('id')
         except:
-            job.products = []
+            output_files = []
 
-        # Add related input files
-        self.populate_input_files([job])
+        # Merge job interface definitions with mapped values
+        job_interface_dict = job.get_job_interface().get_dict()
+        job.inputs = self._merge_job_data(job_interface_dict['input_data'],
+                                          job.get_job_data().get_dict()['input_data'], input_files)
+        job.outputs = self._merge_job_data(job_interface_dict['output_data'],
+                                           job.get_job_results().get_dict()['output_data'], output_files)
+
+        # TODO Remove these attributes once the UI migrates to "inputs" and "outputs"
+        job.input_files = input_files
+        job.products = output_files
         return job
 
-    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
-                        job_type_categories=None, order=None):
+    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None,
+                        job_type_names=None, job_type_categories=None, order=None):
         """Returns a list of jobs that changed status within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -210,57 +236,152 @@ class JobManager(models.Manager):
         """
         if not order:
             order = ['last_status_change']
-        return self.get_jobs(started, ended, status, job_type_ids, job_type_names, job_type_categories, order)
+        return self.get_jobs(started=started, ended=ended, status=status, job_type_ids=job_type_ids,
+                             job_type_names=job_type_names, job_type_categories=job_type_categories, order=order)
 
-    @transaction.atomic
-    def queue_job(self, job, data, when):
-        """Puts the given job into the QUEUED state with the given arguments. The data should be set to None if this is
-        not the first time the job has been queued. The given job model must have already been saved in the database (it
-        must have an ID), it must have its related job type and job type revision fields, and the caller must have
-        obtained a lock on the job model using select_for_update(). The changes to the job will be saved in the database
-        in an atomic transaction.
+    def get_locked_job(self, job_id):
+        """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
 
-        :param job: The job to put on the queue
-        :type job: :class:`job.models.Job`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
-        :param when: The time that the job was queued
-        :type when: :class:`datetime.datetime`
-        :raises InvalidData: If the job data is invalid
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The job model
+        :rtype: :class:`job.models.Job`
         """
 
-        if not job.is_ready_to_queue:
-            raise Exception('Job cannot be queued with current status %s' % job.status)
-        job.status = 'QUEUED'
-        job.error = None
-        job.queued = when
-        job.started = None
-        job.ended = None
-        job.last_status_change = when
+        return self.get_locked_jobs([job_id])[0]
 
-        if job.num_exes == 0:
-            if data is None:
-                raise Exception('Job data must be provided when a job is first queued')
+    def get_locked_jobs(self, job_ids):
+        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
 
-            # Validate job data
-            job_data = JobData(data)
-            interface = job.get_job_interface()
-            interface.validate_data(job_data)
-            job.data = data
+        :param job_ids: The job IDs
+        :type job_ids: [int]
+        :returns: The job models
+        :rtype: [:class:`job.models.Job`]
+        """
 
-            # Calculate disk space required for the job
-            input_file_ids = job_data.get_input_file_ids()
-            # Get total input file size in MiB rounded up to the nearest whole MiB
-            input_size_mb = long(math.ceil((ScaleFile.objects.get_total_file_size(input_file_ids) / (1024.0 * 1024.0))))
-            # Calculate output space required in MiB rounded up to the nearest whole MiB
-            multiplier = job.job_type.disk_out_mult_required
-            const = job.job_type.disk_out_const_required
-            output_size_mb = long(math.ceil(multiplier * input_size_mb + const))
-            job.disk_in_required = max(input_size_mb, MIN_DISK)
-            job.disk_out_required = max(output_size_mb, MIN_DISK)
+        self.lock_jobs(job_ids)
 
-        job.num_exes = job.num_exes + 1
-        job.save()
+        return list(self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
+
+    def increment_max_tries(self, jobs):
+        """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
+        caller must have obtained model locks on the job models.
+
+        :param jobs: The jobs to update
+        :type jobs: [:class:`job.models.Job`]
+        """
+
+        modified = timezone.now()
+
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        for job in jobs:
+            job_ids.add(job.id)
+            job.max_tries = job.num_exes + 1
+            job.last_modified = modified
+
+        # Update job models in database with single query
+        self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
+
+    def lock_jobs(self, job_ids):
+        """Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)
+
+        :param job_ids: The IDs of the jobs to lock
+        :type job_ids: [int]
+        """
+
+        # Dummy list is used here to force query execution
+        # Unfortunately this query can't usually be combined with other queries since using select_related() with
+        # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
+        # two queries in get_locked_jobs().
+        list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
+
+    def queue_jobs(self, jobs, when, priority=None):
+        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
+        the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
+        should have their related job_type and job_type_rev models populated.
+
+        :param jobs: The jobs to put on the queue
+        :type jobs: [:class:`job.models.Job`]
+        :param when: The time that the jobs are queued
+        :type when: :class:`datetime.datetime`
+        :param priority: An optional argument to reset the jobs' priority before they are queued
+        :type priority: int
+        :returns: The new queued job execution models
+        :rtype: [:class:`job.models.JobExecution`]
+        """
+
+        modified = timezone.now()
+
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        jobs_to_queue = []
+        for job in jobs:
+            if not job.is_ready_to_queue or not job.data:
+                continue
+
+            job_ids.add(job.id)
+            jobs_to_queue.append(job)
+            job.status = 'QUEUED'
+            job.error = None
+            job.queued = when
+            job.started = None
+            job.ended = None
+            job.last_status_change = when
+            job.num_exes += 1
+            if priority:
+                job.priority = priority
+            job.last_modified = modified
+
+        # Update job models in database with single query
+        if priority:
+            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
+                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
+                                               priority=priority, last_modified=modified)
+        else:
+            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
+                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
+                                               last_modified=modified)
+
+        return JobExecution.objects.queue_job_exes(jobs_to_queue, when)
+
+    def populate_job_data(self, job, data):
+        """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
+        on the job model. The job should have its related job_type and job_type_rev models populated.
+
+        :param job: The job
+        :type job: :class:`job.models.Job`
+        :param data: JSON description defining the job data to run on
+        :type data: :class:`job.configuration.data.job_data.JobData`
+        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
+        """
+
+        modified = timezone.now()
+
+        # Validate job data
+        interface = job.get_job_interface()
+        interface.validate_data(data)
+
+        # Calculate disk space required for the job
+        input_file_ids = data.get_input_file_ids()
+        # Get total input file size in MiB rounded up to the nearest whole MiB
+        input_size_mb = long(math.ceil((ScaleFile.objects.get_total_file_size(input_file_ids) / (1024.0 * 1024.0))))
+        # Calculate output space required in MiB rounded up to the nearest whole MiB
+        multiplier = job.job_type.disk_out_mult_required
+        const = job.job_type.disk_out_const_required
+        output_size_mb = long(math.ceil(multiplier * input_size_mb + const))
+        disk_in_required = max(input_size_mb, MIN_DISK)
+        disk_out_required = max(output_size_mb, MIN_DISK)
+
+        # Update job model in memory
+        job.data = data.get_dict()
+        job.disk_in_required = disk_in_required
+        job.disk_out_required = disk_out_required
+        job.last_modified = modified
+
+        # Update job model in database with single query
+        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
+                                      disk_out_required=disk_out_required, last_modified=modified)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -294,37 +415,33 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    @transaction.atomic
-    def update_jobs_to_running(self, job_ids, when):
-        """Updates the jobs with the given IDs to the RUNNING status and returns the job models with a lock from
-        select_for_update() and their related job_type and job_type_rev models populated.
+    def supersede_jobs(self, jobs, when):
+        """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
 
-        :param job_ids: The list of job IDs to update
-        :type job_ids: list[int]
-        :param when: The time that the jobs began running
+        :param jobs: The jobs to supersede
+        :type jobs: [:class:`job.models.Job`]
+        :param when: The time that the jobs were superseded
         :type when: :class:`datetime.datetime`
-        :returns: The updated job models with a lock and related job_type and job_type_rev models populated
-        :rtype: list[:class:`job.models.Job`]
         """
 
-        # Acquire model lock for jobs
-        list(Job.objects.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
-
-        # Update jobs
         modified = timezone.now()
-        Job.objects.filter(id__in=job_ids).update(status='RUNNING', started=when, ended=None, last_status_change=when,
-                                                  last_modified=modified)
 
-        return list(Job.objects.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        for job in jobs:
+            job_ids.add(job.id)
+            job.is_superseded = True
+            job.superseded = when
+            job.last_modified = modified
 
-    @transaction.atomic
-    def update_status(self, job, status, when, error=None):
-        """Updates the given job with the new status. The given job model must have already been saved in the database
-        (it must have an ID) and the caller must have obtained a lock on the job model using select_for_update(). All of
-        the job model changes will be saved in the database in an atomic transaction.
+        # Update job models in database with single query
+        self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=modified)
 
-        :param job: The job to update
-        :type job: :class:`job.models.Job`
+    def update_status(self, jobs, status, when, error=None):
+        """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
+
+        :param jobs: The jobs to update
+        :type jobs: [:class:`job.models.Job`]
         :param status: The new status
         :type status: str
         :param when: The time that the status change occurred
@@ -334,24 +451,62 @@ class JobManager(models.Manager):
         """
 
         if status == 'QUEUED':
-            raise Exception('Changing status to queued must use the queue_job() method.')
-        if status == 'RUNNING':
-            raise Exception('Changing status to running must use the update_jobs_to_running() method.')
+            raise Exception('Changing status to QUEUED must use the queue_jobs() method')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
             raise Exception('Status %s is invalid with an error' % status)
 
-        job.status = status
-        job.error = error
-        job.last_status_change = when
-        job.ended = when
-        job.save()
+        change_started = (status == 'RUNNING')
+        ended = when if status in Job.FINAL_STATUSES else None
+        modified = timezone.now()
+
+        # Update job models in memory and collect job IDs
+        job_ids = set()
+        for job in jobs:
+            job_ids.add(job.id)
+            job.status = status
+            job.last_status_change = when
+            if change_started:
+                job.started = when
+            job.ended = ended
+            job.error = error
+            job.last_modified = modified
+
+        # Update job models in database with single query
+        if change_started:
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, started=when, ended=ended,
+                                               error=error, last_modified=modified)
+        else:
+            self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
+                                               last_modified=modified)
+
+    def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
+
+        # Setup the basic structure for merged results
+        merged_dicts = copy.deepcopy(job_interface_dict)
+        name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
+        file_map = {job_file.id: job_file for job_file in job_files}
+
+        # Merge the job data with the result data
+        for data_dict in job_data_dict:
+            value = None
+            if 'value' in data_dict:
+                value = data_dict['value']
+            elif 'file_id' in data_dict:
+                value = file_map[data_dict['file_id']]
+            elif 'file_ids' in data_dict:
+                value = [file_map[file_id] for file_id in data_dict['file_ids']]
+
+            merged_dict = name_map[data_dict['name']]
+            merged_dict['value'] = value
+        return merged_dicts
 
 
 class Job(models.Model):
-    """Represents a job to be run on the cluster. Any updates to a job model requires obtaining a lock on the model
-    using select_for_update().
+    """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
+    model using select_for_update(). If a related job execution model is changing status as well, its model lock must be
+    obtained BEFORE obtaining the lock for the job model.
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -370,6 +525,9 @@ class Job(models.Model):
     :keyword results: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type results: :class:`djorm_pgjson.fields.JSONField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+        See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -389,6 +547,19 @@ class Job(models.Model):
         job
     :type disk_out_required: :class:`django.db.models.FloatField`
 
+    :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
+        superseded_by_job (the reverse relationship of superded_job) is null, indicating that this job is obsolete (its
+        recipe has been superseded), but there is no new job that has directly taken its place.
+    :type is_superseded: :class:`django.db.models.BooleanField`
+    :keyword root_superseded_job: The first job in the chain of superseded jobs. This field will be null for the first
+        job in the chain (i.e. jobs that have a null superseded_job field).
+    :type root_superseded_job: :class:`django.db.models.ForeignKey`
+    :keyword superseded_job: The job that was directly superseded by this job. The reverse relationship can be accessed
+        using 'superseded_by_job'.
+    :type superseded_job: :class:`django.db.models.ForeignKey`
+    :keyword delete_superseded: Whether this job should delete the products of the job that it has directly superseded
+    :type delete_superseded: :class:`django.db.models.BooleanField`
+
     :keyword created: When the job was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job was added to the queue to be run when resources are available
@@ -399,6 +570,8 @@ class Job(models.Model):
     :type ended: :class:`django.db.models.DateTimeField`
     :keyword last_status_change: When the job's last status change occurred
     :type last_status_change: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this job was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -411,6 +584,7 @@ class Job(models.Model):
         ('COMPLETED', 'COMPLETED'),
         ('CANCELED', 'CANCELED'),
     )
+    FINAL_STATUSES = ['FAILED', 'COMPLETED', 'CANCELED']
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
@@ -420,6 +594,7 @@ class Job(models.Model):
 
     data = djorm_pgjson.fields.JSONField()
     results = djorm_pgjson.fields.JSONField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
@@ -430,11 +605,17 @@ class Job(models.Model):
     disk_in_required = models.FloatField(blank=True, null=True)
     disk_out_required = models.FloatField(blank=True, null=True)
 
+    is_superseded = models.BooleanField(default=False)
+    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True, on_delete=models.PROTECT)
+    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True, on_delete=models.PROTECT)
+    delete_superseded = models.BooleanField(default=True)
+
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
     last_status_change = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = JobManager()
@@ -506,16 +687,14 @@ class Job(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'job'
+        index_together = ['last_modified', 'job_type', 'status']
 
 
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
-    @transaction.atomic
     def cleanup_completed(self, job_exe_id, when):
-        """Updates the given job execution to reflect that its cleanup has completed successfully.
-
-        All database changes occur in an atomic transaction.
+        """Updates the given job execution to reflect that its cleanup has completed successfully
 
         :param job_exe_id: The job execution that was cleaned up
         :type job_exe_id: int
@@ -523,11 +702,25 @@ class JobExecutionManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-        job_exe.requires_cleanup = False
-        job_exe.cleaned_up = when
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(requires_cleanup=False, cleaned_up=when, last_modified=modified)
+
+    def complete_job_exe(self, job_exe, when):
+        """Updates the given job execution and its job to COMPLETED. The caller must have obtained model locks on the
+        job execution and job models (in that order).
+
+        :param job_exe: The job execution (with related job model) to complete
+        :type job_exe: :class:`job.models.JobExecution`
+        :param when: The time that the job execution was completed
+        :type when: :class:`datetime.datetime`
+        """
+
+        job_exe.status = 'COMPLETED'
+        job_exe.ended = when
         job_exe.save()
+
+        # Update job model
+        Job.objects.complete_job(job_exe.job, when, JobResults(job_exe.results))
 
     def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
@@ -595,6 +788,17 @@ class JobExecutionManager(models.Manager):
         job_exe = job_exe.defer('stdout', 'stderr')
         job_exe = job_exe.get(pk=job_exe_id)
         return job_exe
+
+    def get_locked_job_exe(self, job_exe_id):
+        """Returns the job execution with the given ID with a model lock obtained
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :returns: The job execution model with a model lock
+        :rtype: :class:`job.models.JobExecution`
+        """
+
+        return self.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
 
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
@@ -673,11 +877,8 @@ class JobExecutionManager(models.Manager):
         job_exe_qry = JobExecution.objects.defer('stdout', 'stderr')
         return job_exe_qry.filter(status='RUNNING')
 
-    @transaction.atomic
     def post_steps_results(self, job_exe_id, results, results_manifest):
-        """Updates the given job execution to reflect that the post-job steps have finished calculating the results.
-
-        All database changes occur in an atomic transaction.
+        """Updates the given job execution to reflect that the post-job steps have finished calculating the results
 
         :param job_exe_id: The job execution whose results have been processed
         :type job_exe_id: int
@@ -690,18 +891,14 @@ class JobExecutionManager(models.Manager):
         if not results or not results_manifest:
             raise Exception('Job execution results and results manifest are required')
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-        job_exe.results = results.get_dict()
-        job_exe.results_manifest = results_manifest.get_json_dict()
-        job_exe.save()
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(results=results.get_dict(), results_manifest=results_manifest.get_json_dict(),
+                                          last_modified=modified)
 
-    @transaction.atomic
     def pre_steps_command_arguments(self, job_exe_id, command_arguments):
         """Updates the given job execution after the job command argument string has been filled out.
 
-        This typically includes pre-job step information (e.g. location of file paths). All database changes occur in an
-        atomic transaction.
+        This typically includes pre-job step information (e.g. location of file paths).
 
         :param job_exe_id: The job execution whose pre-job steps have filled out the job command
         :type job_exe_id: int
@@ -709,43 +906,51 @@ class JobExecutionManager(models.Manager):
         :type command_arguments: str
         """
 
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.command_arguments = command_arguments
-        job_exe.save()
+        modified = timezone.now()
+        self.filter(id=job_exe_id).update(command_arguments=command_arguments, last_modified=modified)
 
-    def queue_job_exe(self, job, when):
-        """Creates a new job execution for a queued job and returns the job_exe model. The given job model must have
-        already been saved in the database (it must have an ID), it must have its related job_type and job_type_rev
-        models, and the caller must have obtained a lock on the job model using select_for_update(). The returned
-        job_exe model will have not yet been saved in the database.
+    def queue_job_exes(self, jobs, when):
+        """Creates, saves, and returns new job executions for the given queued jobs. The caller must have obtained model
+        locks on the job models. Any jobs that are not queued will be ignored. All jobs should have their related
+        job_type and job_type_rev models populated.
 
-        :param job: The job that is being queued
-        :type job: :class:`job.models.Job`
-        :param when: The time that the job was queued
+        :param jobs: The queued jobs
+        :type jobs: [:class:`job.models.Job`]
+        :param when: The time that the jobs are queued
         :type when: :class:`datetime.datetime`
-        :returns: The new job execution
-        :rtype: :class:`job.models.JobExecution`
+        :returns: The new queued job execution models
+        :rtype: [:class:`job.models.JobExecution`]
         """
 
-        job_exe = JobExecution()
-        job_exe.job = job
-        job_exe.timeout = job.timeout
-        job_exe.queued = when
-        job_exe.created = when
+        job_ids = set()
+        job_exes = []
+        for job in jobs:
+            if job.status != 'QUEUED':
+                continue
 
-        # Fill in job execution command argument string with data that doesn't require pre-job steps
-        interface = job.get_job_interface()
-        data = job.get_job_data()
-        job_exe.command_arguments = interface.populate_command_argument_properties(data)
+            job_ids.add(job.id)
+            job_exe = JobExecution()
+            job_exe.job = job
+            job_exe.timeout = job.timeout
+            job_exe.docker_params = job.docker_params
+            job_exe.queued = when
+            job_exe.created = when
+            # Fill in job execution command argument string with data that doesn't require pre-task
+            interface = job.get_job_interface()
+            data = job.get_job_data()
+            job_exe.command_arguments = interface.populate_command_argument_properties(data)
+            job_exes.append(job_exe)
 
-        return job_exe
+        # Create job executions and re-query to get ID fields
+        self.bulk_create(job_exes)
+        return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
 
     @transaction.atomic
     def schedule_job_executions(self, job_executions):
-        """Schedules the given job executions. The given job_exe models must have a lock from select_for_update(). All
-        of the job_exe and job model changes will be saved in the database in an atomic transaction. The updated job_exe
-        models are returned with their related job, job_type, job_type_rev and node models populated.
+        """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
+        Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
+        will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
+        related job, job_type, job_type_rev and node models populated.
 
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
             schedule it on, and the resources it will be given
@@ -759,11 +964,14 @@ class JobExecutionManager(models.Manager):
         job_ids = []
         for job_execution in job_executions:
             job_exe = job_execution[0]
-            job_ids.append(job_exe.job_id)
+            if job_exe.status == 'QUEUED':
+                job_ids.append(job_exe.job_id)
 
-        # Lock corresponding jobs, update them to RUNNING, and query for related job_type and job_type_rev models
+        # Lock corresponding jobs and update them to RUNNING
         jobs = {}
-        for job in Job.objects.update_jobs_to_running(job_ids, started):
+        locked_jobs = Job.objects.get_locked_jobs(job_ids)
+        Job.objects.update_status(locked_jobs, 'RUNNING', started)
+        for job in locked_jobs:
             jobs[job.id] = job
 
         # Update each job execution
@@ -773,6 +981,8 @@ class JobExecutionManager(models.Manager):
             node = job_execution[1]
             resources = job_execution[2]
 
+            if job_exe.status != 'QUEUED':
+                continue
             if node is None:
                 raise Exception('Cannot schedule job execution %i without node' % job_exe.id)
             if resources is None:
@@ -884,50 +1094,52 @@ class JobExecutionManager(models.Manager):
         elif task == 'post':
             job_exe_qry.update(post_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
 
-    @transaction.atomic
-    def update_status(self, job_exe, status, when, error=None):
-        """Updates the given job execution (and its job) with the new status. The given job_exe model must have already
-        been saved in the database (it must have an ID) and the caller must have obtained a lock on the job_exe model
-        using select_for_update(). All of the job_exe and job model changes will be saved in the database. The updated
-        job model is returned with a lock from select_for_update() and its related job_type and job_type_rev models. All
-        database changes occur in an atomic transaction.
+    def update_status(self, job_exes, status, when, error=None):
+        """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
+        the job execution and job models (in that order).
 
-        :param job_exe: The job execution to update
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job_exes: The job executions (with related job models) to update
+        :type job_exes: [:class:`job.models.JobExecution`]
         :param status: The new status
         :type status: str
         :param when: The time that the status change occurred
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
         :type error: :class:`error.models.Error`
-        :returns: The job model with lock and related job_type and job_type_rev models
-        :rtype: :class:`job.models.Job`
         """
 
-        if status in ['QUEUED', 'RUNNING']:
-            raise Exception('Invalid status transition for a job execution')
-        if when is None:
-            raise Exception('Cannot update status without when')
+        if status == 'QUEUED':
+            raise Exception('QUEUED is an invalid status transition for job executions, use queue_job_exes()')
+        if status == 'RUNNING':
+            raise Exception('update_status() cannot set a job execution to RUNNING, use schedule_job_executions()')
         if status == 'FAILED' and not error:
             raise Exception('An error is required when status is FAILED')
         if not status == 'FAILED' and error:
             raise Exception('Status %s is invalid with an error' % status)
 
-        job_exe.status = status
-        job_exe.error = error
-        job_exe.ended = when
-        job_exe.save()
+        modified = timezone.now()
 
-        # Acquire model lock first, then query for related
-        Job.objects.select_for_update().get(pk=job_exe.job_id)
-        job = Job.objects.select_related('job_type', 'job_type_rev').get(pk=job_exe.job_id)
-        Job.objects.update_status(job, status, when, error)
-        return job
+        # Update job execution models in memory and collect job execution IDs
+        job_exe_ids = set()
+        jobs = []
+        for job_exe in job_exes:
+            job_exe_ids.add(job_exe.id)
+            jobs.append(job_exe.job)
+            job_exe.status = status
+            job_exe.ended = when
+            job_exe.error = error
+            job_exe.last_modified = modified
+
+        # Update job execution models in database with single query
+        self.filter(id__in=job_exe_ids).update(status=status, ended=when, error=error, last_modified=modified)
+
+        # Update job models
+        Job.objects.update_status(jobs, status, when, error)
 
 
 class JobExecution(models.Model):
-    """Represents an instance of a job being queued and executed on a cluster node. Any updates to a job execution model
-    requires obtaining a lock on the model using select_for_update().
+    """Represents an instance of a job being queued and executed on a cluster node. Any status updates to a job
+    execution model requires obtaining a lock on the model using select_for_update().
 
     :keyword job: The job that is being executed
     :type job: :class:`django.db.models.ForeignKey`
@@ -942,6 +1154,9 @@ class JobExecution(models.Model):
     :type command_arguments: :class:`django.db.models.CharField`
     :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+        See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
@@ -1035,6 +1250,7 @@ class JobExecution(models.Model):
 
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     environment = djorm_pgjson.fields.JSONField()
@@ -1075,7 +1291,7 @@ class JobExecution(models.Model):
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
     cleaned_up = models.DateTimeField(blank=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()
 
@@ -1087,6 +1303,21 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.docker_image
+
+    def get_docker_params(self):
+        """Get the Docker params as a list of lists. Performs some basic validation.
+
+        :returns: The Docker params as a list of lists
+        :rtype: list
+        """
+
+        if self.docker_params is None or len(self.docker_params) == 0:
+            return []
+        if type(self.docker_params) is not type([]):
+            return []
+        if False in map(lambda x: type(x) is type([]) and len(x) == 2, self.docker_params):
+            return []
+        return self.docker_params
 
     def get_error_interface(self):
         """Returns the error interface for this job execution
@@ -1330,7 +1561,7 @@ class JobTypeManager(models.Manager):
                 raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
             trigger_config.validate_trigger_for_job(interface)
 
-        # Create the new recipe type
+        # Create the new job type
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
@@ -1739,9 +1970,8 @@ class JobTypeManager(models.Manager):
 
 
 class JobType(models.Model):
-    """Represents a type of job that can be run on the cluster. Any updates to
-    a job type model requires obtaining a lock on the model using
-    select_for_update().
+    """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
+    lock on the model using select_for_update().
 
     :keyword name: The stable name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`
@@ -1782,6 +2012,9 @@ class JobType(models.Model):
     :type docker_image: :class:`django.db.models.CharField`
     :keyword interface: JSON description defining the interface for running a job of this type
     :type interface: :class:`djorm_pgjson.fields.JSONField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
+        See the mesos prototype file for further information.
+    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
     :keyword revision_num: The current revision number of the interface, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
     :keyword error_mapping: Mapping for translating an exit code to an error type
@@ -1843,6 +2076,7 @@ class JobType(models.Model):
     docker_privileged = models.BooleanField(default=False)
     docker_image = models.CharField(blank=True, null=True, max_length=500)
     interface = djorm_pgjson.fields.JSONField()
+    docker_params = djorm_pgjson.fields.JSONField(null=True)
     revision_num = models.IntegerField(default=1)
     error_mapping = djorm_pgjson.fields.JSONField()
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)

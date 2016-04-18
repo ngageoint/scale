@@ -16,7 +16,7 @@ if not sys.platform.startswith("win"):
 @skipIf(sys.platform.startswith("win"), u'The scheduler uses the mesos native api.'
         '  Our development environment does not have this available on windows')
 class TestScheduler(TransactionTestCase):
-    '''An integration test of the queue depth view'''
+    '''Tests core functionality of the scheduler.'''
 
     def setUp(self):
         django.setup()

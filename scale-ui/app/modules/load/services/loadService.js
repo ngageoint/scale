@@ -14,20 +14,28 @@
             };
         };
 
+        var getRequeueJobsParams = function (started, ended, job_status, job_type_ids, job_type_names, job_type_categories, priority, url) {
+            return {
+                started: started,
+                ended: ended,
+                job_status: job_status,
+                job_ids: job_ids,
+                job_type_ids: job_type_ids,
+                job_type_names: job_type_names,
+                job_type_categories: job_type_categories,
+                priority: priority,
+                url: url
+            };
+        };
+
         return {
-            getQueue: function (pageNumber, pageSize) {
-                var d = $q.defer();
+            getQueueStatus: function (pageNumber, pageSize) {
+                var params = {
+                    page_number: pageNumber,
+                    page_size: pageSize
+                };
 
-                $http.get(scaleConfig.urls.getQueue(pageNumber, pageSize)).success(function (data) {
-                    d.resolve(data);
-                }).error(function (error) {
-                    d.reject(error);
-                });
-
-                return d.promise;
-            },
-            getQueueStatus: function () {
-                var queueStatusResource = $resource(scaleConfig.urls.getQueueStatus()),
+                var queueStatusResource = $resource(scaleConfig.urls.apiPrefix + 'queue/status/', params),
                     queueStatusPoller = pollerFactory.newPoller(queueStatusResource, scaleConfig.pollIntervals.queueStatus);
 
                 return queueStatusPoller.promise.then(null, null, function (result) {
@@ -42,7 +50,7 @@
             getQueueStatusOnce: function () {
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.getQueueStatus()).success(function (data) {
+                $http.get(scaleConfig.urls.apiPrefix + 'queue/status/').success(function (data) {
                     var returnData = QueueStatus.transformer(data.queue_status);
                     d.resolve(returnData);
                 }).error(function (error) {
@@ -51,21 +59,23 @@
 
                 return d.promise;
             },
-            requeueJob: function(jobId){
+            requeueJobs: function (params) {
+                params = params || getRequeueJobsParams();
+                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'queue/requeue-jobs/';
+
                 var d = $q.defer();
-                var payload = { job_id: jobId };
-                var url = scaleConfig.urls.requeueJob();
-                $http.post(url,payload).success(function(result){
+
+                $http.post(params.url, params).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
                     d.reject(error);
-                })
+                });
 
                 return d.promise;
             },
             getJobLoad: function (params) {
                 params = params || getJobLoadParams();
-                params.url = params.url ? params.url : scaleConfig.urls.getJobLoad();
+                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'load/';
 
                 var jobLoadResource = $resource(params.url, params),
                     jobLoadPoller = pollerFactory.newPoller(jobLoadResource, scaleConfig.pollIntervals.jobLoad);
@@ -82,7 +92,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.getJobLoad(),
+                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'load/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {

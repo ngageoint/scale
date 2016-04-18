@@ -1,4 +1,4 @@
-'''Defines the class for managing a configuration export.'''
+"""Defines the class for managing a configuration export."""
 from __future__ import unicode_literals
 
 from jsonschema import validate
@@ -6,21 +6,21 @@ from jsonschema.exceptions import ValidationError
 
 
 class InvalidConfiguration(Exception):
-    '''Exception indicating that the provided configuration was invalid.'''
+    """Exception indicating that the provided configuration was invalid."""
     pass
 
 
 class ValidationWarning(object):
-    '''Tracks configuration warnings during validation that may not prevent it from working.'''
+    """Tracks configuration warnings during validation that may not prevent it from working."""
 
     def __init__(self, key, details):
-        '''Constructor sets basic attributes.
+        """Constructor sets basic attributes.
 
         :param key: A unique identifier clients can use to recognize the warning.
-        :type key: str
+        :type key: string
         :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: str
-        '''
+        :type details: string
+        """
         self.key = key
         self.details = details
 
@@ -72,13 +72,13 @@ CONFIGURATION_SCHEMA = {
 
 
 class Configuration(object):
-    '''Represents the recipe, job, and error records in a serialized format that can be imported later.
+    """Represents the recipe, job, and error records in a serialized format that can be imported later.
 
-    :param definition: The export configuration
-    :type definition: dict
+    :param configuration: The export configuration
+    :type configuration: dict
 
     :raises InvalidDefinition: If the given configuration is invalid
-    '''
+    """
     def __init__(self, configuration):
         self._configuration = configuration
 
@@ -88,11 +88,11 @@ class Configuration(object):
             raise InvalidConfiguration('Invalid export configuration: %s' % unicode(ex))
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this export configuration
+        """Returns the internal dictionary that represents this export configuration
 
         :returns: The internal dictionary
         :rtype: dict
-        '''
+        """
 
         return self._configuration
 

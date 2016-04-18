@@ -1,5 +1,4 @@
-'''Defines the serializers for nodes that require extra fields from other applications'''
-import rest_framework.pagination as pagination
+"""Defines the serializers for nodes that require extra fields from other applications"""
 import rest_framework.serializers as serializers
 
 from node.serializers import NodeSerializer
@@ -7,12 +6,12 @@ from util.rest import ModelIdSerializer
 
 
 class NodeDetailsSerializer(NodeSerializer):
-    '''Converts node model fields to REST output.'''
+    """Converts node model fields to REST output."""
     try:
         from job.serializers import JobExecutionSerializer
 
         class NodeStatusJobExecutionSerializer(JobExecutionSerializer):
-            '''Converts job execution model fields to REST output'''
+            """Converts job execution model fields to REST output"""
             node = ModelIdSerializer()
 
             cpus_scheduled = serializers.FloatField()
@@ -21,13 +20,13 @@ class NodeDetailsSerializer(NodeSerializer):
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 
-        job_exes_running = NodeStatusJobExecutionSerializer()
+        job_exes_running = NodeStatusJobExecutionSerializer(many=True)
     except:
         pass
 
 
 class NodeStatusCountsSerializer(serializers.Serializer):
-    '''Converts node status count object fields to REST output.'''
+    """Converts node status count object fields to REST output."""
     status = serializers.CharField()
     count = serializers.IntegerField()
     most_recent = serializers.DateTimeField()
@@ -35,10 +34,10 @@ class NodeStatusCountsSerializer(serializers.Serializer):
 
 
 class NodeStatusSerializer(serializers.Serializer):
-    '''Converts node model fields with job execution counts to REST output.'''
+    """Converts node model fields with job execution counts to REST output."""
     node = NodeSerializer()
     is_online = serializers.BooleanField()
-    job_exe_counts = NodeStatusCountsSerializer()
+    job_exe_counts = NodeStatusCountsSerializer(many=True)
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
@@ -46,7 +45,7 @@ class NodeStatusSerializer(serializers.Serializer):
         from job.serializers import JobExecutionSerializer
 
         class NodeStatusJobExecutionSerializer(JobExecutionSerializer):
-            '''Converts job execution model fields to REST output'''
+            """Converts job execution model fields to REST output"""
             node = ModelIdSerializer()
 
             cpus_scheduled = serializers.FloatField()
@@ -55,12 +54,6 @@ class NodeStatusSerializer(serializers.Serializer):
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 
-        job_exes_running = NodeStatusJobExecutionSerializer()
+        job_exes_running = NodeStatusJobExecutionSerializer(many=True)
     except:
         pass
-
-
-class NodeStatusListSerializer(pagination.PaginationSerializer):
-    '''Converts a list of node models with job execution counts to paginated REST output.'''
-    class Meta:
-        object_serializer_class = NodeStatusSerializer
