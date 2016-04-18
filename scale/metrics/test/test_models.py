@@ -1,10 +1,10 @@
-#@PydevCodeAnalysisIgnore
 import datetime
 
 import django
 import django.utils.timezone as timezone
 from django.test import TestCase
 
+import error.test.utils as error_test_utils
 import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
@@ -14,20 +14,20 @@ from metrics.registry import MetricsTypeColumn
 
 
 class TestMetricsIngest(TestCase):
-    '''Tests the MetricsIngest model logic.'''
+    """Tests the MetricsIngest model logic."""
 
     def setUp(self):
         django.setup()
 
     def test_calculate_none(self):
-        '''Tests generating metrics when there are no matching executions.'''
+        """Tests generating metrics when there are no matching executions."""
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
     def test_calculate_filtered(self):
-        '''Tests generating metrics with only certain ingests.'''
+        """Tests generating metrics with only certain ingests."""
         ingest_test_utils.create_ingest(status='TRANSFERRING')
         ingest_test_utils.create_ingest(status='TRANSFERRED')
         ingest_test_utils.create_ingest(status='DEFERRED')
@@ -48,7 +48,7 @@ class TestMetricsIngest(TestCase):
         self.assertEqual(len(entries), 4)
 
     def test_calculate_repeated(self):
-        '''Tests regenerating metrics for a date that already has metrics.'''
+        """Tests regenerating metrics for a date that already has metrics."""
         strike = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1))
 
@@ -59,7 +59,7 @@ class TestMetricsIngest(TestCase):
         self.assertEqual(len(entries), 1)
 
     def test_calculate_stats(self):
-        '''Tests calculating individual statistics for a metrics entry.'''
+        """Tests calculating individual statistics for a metrics entry."""
         strike = ingest_test_utils.create_strike()
         source_file = source_test_utils.create_source(file_size=200)
         ingest_test_utils.create_ingest(strike=strike, source_file=source_file, status='INGESTED',
@@ -117,7 +117,7 @@ class TestMetricsIngest(TestCase):
         self.assertEqual(entry.ingest_time_avg, 5400)
 
     def test_calculate_stats_partial(self):
-        '''Tests individual statistics are null when information is unavailable.'''
+        """Tests individual statistics are null when information is unavailable."""
         strike = ingest_test_utils.create_strike()
         ingest1 = ingest_test_utils.create_ingest(strike=strike, status='ERRORED',
                                                   ingest_ended=datetime.datetime(2015, 1, 1))
@@ -158,7 +158,7 @@ class TestMetricsIngest(TestCase):
         self.assertIsNone(entry.ingest_time_avg)
 
     def test_get_metrics_type(self):
-        '''Tests getting the metrics type.'''
+        """Tests getting the metrics type."""
         metrics_type = MetricsIngest.objects.get_metrics_type()
 
         self.assertEqual(metrics_type.name, 'ingests')
@@ -166,7 +166,7 @@ class TestMetricsIngest(TestCase):
         self.assertListEqual(metrics_type.choices, [])
 
     def test_get_metrics_type_choices(self):
-        '''Tests getting the metrics type with choices.'''
+        """Tests getting the metrics type with choices."""
         ingest_test_utils.create_strike()
         metrics_type = MetricsIngest.objects.get_metrics_type(include_choices=True)
 
@@ -175,14 +175,14 @@ class TestMetricsIngest(TestCase):
         self.assertEqual(len(metrics_type.choices), 1)
 
     def test_get_plot_data(self):
-        '''Tests getting the metrics plot data.'''
+        """Tests getting the metrics plot data."""
         metrics_test_utils.create_ingest(ingested_count=1)
         plot_data = MetricsIngest.objects.get_plot_data()
 
         self.assertGreater(len(plot_data), 1)
 
     def test_get_plot_data_filtered(self):
-        '''Tests getting the metrics plot data with filters.'''
+        """Tests getting the metrics plot data with filters."""
         strike = ingest_test_utils.create_strike()
         metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 1), ingested_count=1)
         metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 20), ingested_count=1)
@@ -198,20 +198,20 @@ class TestMetricsIngest(TestCase):
 
 
 class TestMetricsJobType(TestCase):
-    '''Tests the MetricsJobType model logic.'''
+    """Tests the MetricsJobType model logic."""
 
     def setUp(self):
         django.setup()
 
     def test_calculate_none(self):
-        '''Tests generating metrics when there are no matching executions.'''
+        """Tests generating metrics when there are no matching executions."""
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsJobType.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 0)
 
     def test_calculate_filtered(self):
-        '''Tests generating metrics with only certain job executions.'''
+        """Tests generating metrics with only certain job executions."""
         job_test_utils.create_job(status='QUEUED')
         job_test_utils.create_job(status='RUNNING')
         job_test_utils.create_job(status='FAILED')
@@ -236,7 +236,7 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(len(entries), 3)
 
     def test_calculate_repeated(self):
-        '''Tests regenerating metrics for a date that already has metrics.'''
+        """Tests regenerating metrics for a date that already has metrics."""
         job = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
         job_test_utils.create_job_exe(job=job, status=job.status, ended=job.ended)
 
@@ -247,7 +247,7 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(len(entries), 1)
 
     def test_calculate_stats(self):
-        '''Tests calculating individual statistics for a metrics entry.'''
+        """Tests calculating individual statistics for a metrics entry."""
         job_type = job_test_utils.create_job_type()
         job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
         job_test_utils.create_job_exe(
@@ -275,8 +275,22 @@ class TestMetricsJobType(TestCase):
             post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=timezone.utc),
             ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=timezone.utc),
         )
-        job3 = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1))
-        job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
+
+        sys_error = error_test_utils.create_error(category='SYSTEM')
+        job3a = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+                                          error=sys_error)
+        job_test_utils.create_job_exe(job=job3a, status=job3a.status, ended=job3a.ended, error=sys_error)
+
+        data_error = error_test_utils.create_error(category='DATA')
+        job3b = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+                                          error=data_error)
+        job_test_utils.create_job_exe(job=job3b, status=job3b.status, ended=job3b.ended, error=data_error)
+
+        algo_error = error_test_utils.create_error(category='ALGORITHM')
+        job3c = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+                                          error=algo_error)
+        job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
+
         job4 = job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1))
         job_test_utils.create_job_exe(job=job4, status=job4.status, ended=job4.ended)
 
@@ -288,9 +302,13 @@ class TestMetricsJobType(TestCase):
         entry = entries.first()
         self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
         self.assertEqual(entry.completed_count, 2)
-        self.assertEqual(entry.failed_count, 1)
+        self.assertEqual(entry.failed_count, 3)
         self.assertEqual(entry.canceled_count, 1)
-        self.assertEqual(entry.total_count, 4)
+        self.assertEqual(entry.total_count, 6)
+
+        self.assertEqual(entry.error_system_count, 1)
+        self.assertEqual(entry.error_data_count, 1)
+        self.assertEqual(entry.error_algorithm_count, 1)
 
         self.assertEqual(entry.queue_time_sum, 8404)
         self.assertEqual(entry.queue_time_min, 602)
@@ -323,7 +341,7 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(entry.stage_time_avg, 20843)
 
     def test_calculate_stats_partial(self):
-        '''Tests individual statistics are null when information is unavailable.'''
+        """Tests individual statistics are null when information is unavailable."""
         job_type = job_test_utils.create_job_type()
         job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1))
         job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1))
@@ -339,6 +357,10 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(entry.failed_count, 1)
         self.assertEqual(entry.canceled_count, 1)
         self.assertEqual(entry.total_count, 2)
+
+        self.assertEqual(entry.error_system_count, 0)
+        self.assertEqual(entry.error_data_count, 0)
+        self.assertEqual(entry.error_algorithm_count, 0)
 
         self.assertIsNone(entry.queue_time_sum)
         self.assertIsNone(entry.queue_time_min)
@@ -371,7 +393,7 @@ class TestMetricsJobType(TestCase):
         self.assertIsNone(entry.stage_time_avg)
 
     def test_calculate_negative_times(self):
-        '''Tests calculating times when machine clocks are out of sync.'''
+        """Tests calculating times when machine clocks are out of sync."""
         job_type = job_test_utils.create_job_type()
         job = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
         job_test_utils.create_job_exe(
@@ -391,7 +413,7 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(entry.queue_time_max, 0)
 
     def test_get_metrics_type(self):
-        '''Tests getting the metrics type.'''
+        """Tests getting the metrics type."""
         metrics_type = MetricsJobType.objects.get_metrics_type()
 
         self.assertEqual(metrics_type.name, 'job-types')
@@ -399,7 +421,7 @@ class TestMetricsJobType(TestCase):
         self.assertListEqual(metrics_type.choices, [])
 
     def test_get_metrics_type_choices(self):
-        '''Tests getting the metrics type with choices.'''
+        """Tests getting the metrics type with choices."""
         job_test_utils.create_job_type()
         metrics_type = MetricsJobType.objects.get_metrics_type(include_choices=True)
 
@@ -408,14 +430,14 @@ class TestMetricsJobType(TestCase):
         self.assertEqual(len(metrics_type.choices), 1)
 
     def test_get_plot_data(self):
-        '''Tests getting the metrics plot data.'''
+        """Tests getting the metrics plot data."""
         metrics_test_utils.create_job_type(completed_count=1)
         plot_data = MetricsJobType.objects.get_plot_data()
 
         self.assertGreater(len(plot_data), 1)
 
     def test_get_plot_data_filtered(self):
-        '''Tests getting the metrics plot data with filters.'''
+        """Tests getting the metrics plot data with filters."""
         job_type = job_test_utils.create_job_type()
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 1), completed_count=1)
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20), completed_count=1)

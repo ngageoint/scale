@@ -1,4 +1,4 @@
-'''Defines the database models for various system metrics.'''
+"""Defines the database models for various system metrics."""
 from __future__ import unicode_literals
 
 import datetime
@@ -17,20 +17,20 @@ logger = logging.getLogger(__name__)
 
 
 class PlotBigIntegerField(models.BigIntegerField):
-    '''Custom field used to indicate a model attribute can be used as a plot value.
+    """Custom field used to indicate a model attribute can be used as a plot value.
 
     :keyword verbose_name: The display name of the field.
-    :type verbose_name: str
+    :type verbose_name: string
     :keyword name: The internal database name of the field.
-    :type name: str
+    :type name: string
     :keyword aggregate: The math operation used to compute the value. Examples: avg, max, min, sum
-    :type aggregate: str
+    :type aggregate: string
     :keyword group: The base field name used to group together related values. For example, a field may have several
         aggregate variations that all reference the same base attribute.
-    :type group: str
+    :type group: string
     :keyword units: The mathematical units applied to the value. Examples: seconds, minutes, hours
-    :type units: str
-    '''
+    :type units: string
+    """
 
     def __init__(self, verbose_name=None, name=None, aggregate=None, group=None, units=None, **kwargs):
         self.aggregate = aggregate
@@ -41,20 +41,20 @@ class PlotBigIntegerField(models.BigIntegerField):
 
 
 class PlotIntegerField(models.IntegerField):
-    '''Custom field used to indicate a model attribute can be used as a plot value.
+    """Custom field used to indicate a model attribute can be used as a plot value.
 
     :keyword verbose_name: The display name of the field.
-    :type verbose_name: str
+    :type verbose_name: string
     :keyword name: The internal database name of the field.
-    :type name: str
+    :type name: string
     :keyword aggregate: The math operation used to compute the value. Examples: avg, max, min, sum
-    :type aggregate: str
+    :type aggregate: string
     :keyword group: The base field name used to group together related values. For example, a field may have several
         aggregate variations that all reference the same base attribute.
-    :type group: str
+    :type group: string
     :keyword units: The mathematical units applied to the value. Examples: seconds, minutes, hours
-    :type units: str
-    '''
+    :type units: string
+    """
 
     def __init__(self, verbose_name=None, name=None, aggregate=None, group=None, units=None, **kwargs):
         self.aggregate = aggregate
@@ -67,10 +67,10 @@ PLOT_FIELD_TYPES = [PlotBigIntegerField, PlotIntegerField]
 
 
 class MetricsIngestManager(models.Manager):
-    '''Provides additional methods for computing daily ingest metrics.'''
+    """Provides additional methods for computing daily ingest metrics."""
 
     def calculate(self, date):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.calculate`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.calculate`."""
 
         started = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=timezone.utc)
         ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
@@ -98,7 +98,7 @@ class MetricsIngestManager(models.Manager):
         self._replace_entries(date, entry_map.values())
 
     def get_metrics_type(self, include_choices=False):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
 
         # Create the metrics type definition
         metrics_type = MetricsType('ingests', 'Ingests', 'Metrics for ingests grouped by strike process.')
@@ -113,7 +113,7 @@ class MetricsIngestManager(models.Manager):
         return metrics_type
 
     def get_plot_data(self, started=None, ended=None, choice_ids=None, columns=None):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`."""
 
         # Fetch all the matching ingest metrics based on query filters
         entries = MetricsIngest.objects.all().order_by('occurred')
@@ -132,7 +132,7 @@ class MetricsIngestManager(models.Manager):
         return MetricsPlotData.create(entries, 'occurred', 'strike_id', choice_ids, columns)
 
     def _update_metrics(self, date, ingest, entry):
-        '''Updates the metrics model attributes for a single ingest.
+        """Updates the metrics model attributes for a single ingest.
 
         :param date: The date when ingests associated with the metrics ended.
         :type date: datetime.date
@@ -140,7 +140,7 @@ class MetricsIngestManager(models.Manager):
         :type ingest: :class:`ingest.models.Ingest`
         :param entry: The metrics model to update.
         :type entry: :class:`metrics.models.MetricsIngest`
-        '''
+        """
         if ingest.status == 'DEFERRED':
             entry.deferred_count += 1
             entry.total_count += 1
@@ -184,13 +184,13 @@ class MetricsIngestManager(models.Manager):
 
     @transaction.atomic
     def _replace_entries(self, date, entries):
-        '''Replaces all the existing metric entries for the given date with new ones.
+        """Replaces all the existing metric entries for the given date with new ones.
 
         :param date: The date when ingests associated with the metrics ended.
         :type date: datetime.date
         :param entries: The new metrics model to save.
         :type entries: list[:class:`metrics.models.MetricsIngest`]
-        '''
+        """
 
         # Delete all the previous metrics entries
         MetricsIngest.objects.filter(occurred=date).delete()
@@ -200,7 +200,7 @@ class MetricsIngestManager(models.Manager):
 
 
 class MetricsIngest(models.Model):
-    '''Tracks all the ingest metrics grouped by strike process.
+    """Tracks all the ingest metrics grouped by strike process.
 
     :keyword strike: The strike process associated with these metrics.
     :type strike: :class:`django.db.models.ForeignKey`
@@ -245,7 +245,7 @@ class MetricsIngest(models.Model):
 
     :keyword created: When the model was first created.
     :type created: :class:`django.db.models.DateTimeField`
-    '''
+    """
     GROUPS = [
         MetricsTypeGroup('overview', 'Overview', 'Overall counts based on ingest status.'),
         MetricsTypeGroup('file_size', 'File Size', 'Size information about ingested files.'),
@@ -316,22 +316,22 @@ class MetricsIngest(models.Model):
     objects = MetricsIngestManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'metrics_ingest'
 
 
 class MetricsJobTypeManager(models.Manager):
-    '''Provides additional methods for computing daily job type metrics.'''
+    """Provides additional methods for computing daily job type metrics."""
 
     def calculate(self, date):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.calculate`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.calculate`."""
 
         started = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=timezone.utc)
         ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type').defer('data', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
 
         # Calculate the overall counts based on job status
         entry_map = {}
@@ -342,6 +342,9 @@ class MetricsJobTypeManager(models.Manager):
                 entry.failed_count = 0
                 entry.canceled_count = 0
                 entry.total_count = 0
+                entry.error_system_count = 0
+                entry.error_data_count = 0
+                entry.error_algorithm_count = 0
                 entry_map[job.job_type] = entry
             entry = entry_map[job.job_type]
             self._update_counts(date, job, entry)
@@ -361,7 +364,7 @@ class MetricsJobTypeManager(models.Manager):
         self._replace_entries(date, entry_map.values())
 
     def get_metrics_type(self, include_choices=False):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
 
         # Create the metrics type definition
         metrics_type = MetricsType('job-types', 'Job Types', 'Metrics for jobs and executions grouped by job type.')
@@ -376,7 +379,7 @@ class MetricsJobTypeManager(models.Manager):
         return metrics_type
 
     def get_plot_data(self, started=None, ended=None, choice_ids=None, columns=None):
-        '''See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`.'''
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`."""
 
         # Fetch all the matching job type metrics based on query filters
         entries = MetricsJobType.objects.all().order_by('occurred')
@@ -395,7 +398,7 @@ class MetricsJobTypeManager(models.Manager):
         return MetricsPlotData.create(entries, 'occurred', 'job_type_id', choice_ids, columns)
 
     def _update_counts(self, date, job, entry):
-        '''Updates the metrics model attributes for a single job.
+        """Updates the metrics model attributes for a single job.
 
         :param date: The date when jobs associated with the metrics ended.
         :type date: datetime.date
@@ -403,7 +406,7 @@ class MetricsJobTypeManager(models.Manager):
         :type job: :class:`job.models.Job`
         :param entry: The metrics model to update.
         :type entry: :class:`metrics.models.MetricsJobType`
-        '''
+        """
         if job.status == 'COMPLETED':
             entry.completed_count += 1
             entry.total_count += 1
@@ -414,8 +417,16 @@ class MetricsJobTypeManager(models.Manager):
             entry.canceled_count += 1
             entry.total_count += 1
 
+        if job.error:
+            if job.error.category == 'SYSTEM':
+                entry.error_system_count += 1
+            elif job.error.category == 'DATA':
+                entry.error_data_count += 1
+            elif job.error.category == 'ALGORITHM':
+                entry.error_algorithm_count += 1
+
     def _update_times(self, date, job_exe, entry):
-        '''Updates the metrics model attributes for a single job execution.
+        """Updates the metrics model attributes for a single job execution.
 
         :param date: The date when job executions associated with the metrics ended.
         :type date: datetime.date
@@ -423,7 +434,7 @@ class MetricsJobTypeManager(models.Manager):
         :type job_exe: :class:`job.models.JobExecution`
         :param entry: The metrics model to update.
         :type entry: :class:`metrics.models.MetricsJobType`
-        '''
+        """
 
         # Update elapsed queue time metrics
         queue_secs = None
@@ -478,13 +489,13 @@ class MetricsJobTypeManager(models.Manager):
 
     @transaction.atomic
     def _replace_entries(self, date, entries):
-        '''Replaces all the existing metric entries for the given date with new ones.
+        """Replaces all the existing metric entries for the given date with new ones.
 
         :param date: The date when job executions associated with the metrics ended.
         :type date: datetime.date
         :param entries: The new metrics model to save.
         :type entries: list[:class:`metrics.models.MetricsJobType`]
-        '''
+        """
 
         # Delete all the previous metrics entries
         MetricsJobType.objects.filter(occurred=date).delete()
@@ -494,7 +505,7 @@ class MetricsJobTypeManager(models.Manager):
 
 
 class MetricsJobType(models.Model):
-    '''Tracks all the job execution metrics grouped by job type.
+    """Tracks all the job execution metrics grouped by job type.
 
     :keyword job_type: The type of job associated with these metrics.
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -509,6 +520,13 @@ class MetricsJobType(models.Model):
     :type canceled_count: :class:`metrics.models.PlotIntegerField`
     :keyword total_count: The total number of ended job executions (completed, failed, canceled).
     :type total_count: :class:`metrics.models.PlotIntegerField`
+
+    :keyword error_system_count: The number of failed job executions due to a system error.
+    :type error_system_count: :class:`metrics.models.PlotIntegerField`
+    :keyword error_data_count: The number of failed job executions due to a data error.
+    :type error_data_count: :class:`metrics.models.PlotIntegerField`
+    :keyword error_algorithm_count: The number of failed job executions due to an algorithm error.
+    :type error_algorithm_count: :class:`metrics.models.PlotIntegerField`
 
     :keyword queue_time_sum: The total time job executions were queued in seconds.
     :type queue_time_sum: :class:`metrics.models.PlotIntegerField`
@@ -566,9 +584,10 @@ class MetricsJobType(models.Model):
 
     :keyword created: When the model was first created.
     :type created: :class:`django.db.models.DateTimeField`
-    '''
+    """
     GROUPS = [
         MetricsTypeGroup('overview', 'Overview', 'Overall counts based on job status.'),
+        MetricsTypeGroup('errors', 'Errors', 'Overall error counts based on category.'),
         MetricsTypeGroup('queue_time', 'Queue Time', 'When jobs were in the queue.'),
         MetricsTypeGroup('pre_time', 'Pre-task Time', 'When jobs were being prepared.'),
         MetricsTypeGroup('job_time', 'Job Task Time', 'When jobs were executing their actual goal.'),
@@ -592,6 +611,16 @@ class MetricsJobType(models.Model):
     total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
                                    help_text='Number of completed, failed, and canceled jobs.', null=True,
                                    units='count', verbose_name='Total Count')
+
+    error_system_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                          help_text='Number of failed jobs due to a system error.', null=True,
+                                          units='count', verbose_name='System Error Count')
+    error_data_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                        help_text='Number of failed jobs due to a data error.', null=True,
+                                        units='count', verbose_name='Data Error Count')
+    error_algorithm_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
+                                             help_text='Number of failed jobs due to an algorithm error.', null=True,
+                                             units='count', verbose_name='Algorithm Error Count')
 
     queue_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='queue_time',
                                       help_text='Total time the job waited in the queue.', null=True, units='seconds',
@@ -676,5 +705,5 @@ class MetricsJobType(models.Model):
     objects = MetricsJobTypeManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'metrics_job_type'
