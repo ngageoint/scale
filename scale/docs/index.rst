@@ -11,6 +11,7 @@ Scale Documentation
    :maxdepth: 2
 
    overview/index
+   cli/index
    interface/index
    algorithms/index
    architecture/index
