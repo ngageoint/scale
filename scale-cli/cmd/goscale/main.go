@@ -2,9 +2,7 @@ package main
 
 import (
     "github.com/codegangsta/cli"
-    "github.com/ngageoint/scale/scale-cli"
     "github.com/op/go-logging"
-    "github.com/fatih/color"
     "os"
 )
 
@@ -33,42 +31,16 @@ func main() {
     }
     app.Commands = []cli.Command{
         {
+            Name:    "jobs",
+            Aliases: []string{"job"},
+            Usage:   "Job and job type commands",
+            Subcommands: Jobs_commands,
+        },
+        {
             Name:    "workspaces",
             Aliases: []string{"workspace", "ws"},
             Usage:   "Workspace information and modification",
-            Subcommands: []cli.Command{
-                {
-                    Name: "list",
-                    Aliases: []string{"ls"},
-                    Usage: "List all workspaces",
-                    Flags: []cli.Flag{
-                        cli.IntFlag{
-                            Name: "max",
-                            Value: 100,
-                            Usage: "Maximum number of items to list",
-                        },
-                    },
-                    Action: func(c *cli.Context) {
-                        max := c.Int("max")
-                        url := c.GlobalString("url")
-                        if url == "" {
-                            log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
-                            return
-                        }
-                        workspaces, err := scalecli.GetWorkspaceList(url, max)
-                        if err != nil {
-                            log.Fatal(err)
-                        }
-                        for _, workspace := range(workspaces) {
-                            if workspace.Is_active {
-                                color.Green(workspace.String())
-                            } else {
-                                color.White(workspace.String())
-                            }
-                        }
-                    },
-                },
-            },
+            Subcommands: Workspaces_commands,
         },
     }
 
