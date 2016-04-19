@@ -1,4 +1,4 @@
-package goscale
+package scalecli
 
 import(
    "gopkg.in/resty.v0"

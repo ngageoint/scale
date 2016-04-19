@@ -2,7 +2,7 @@ package main
 
 import (
     "github.com/codegangsta/cli"
-    "github.com/ngageoint/scale/goscale"
+    "github.com/ngageoint/scale/scale-cli"
     "github.com/op/go-logging"
     "github.com/fatih/color"
     "os"
@@ -51,7 +51,7 @@ func main() {
                     Action: func(c *cli.Context) {
                         max := c.Int("max")
                         url := c.GlobalString("url")
-                        workspaces, err := goscale.GetWorkspaceList(url, max)
+                        workspaces, err := scalecli.GetWorkspaceList(url, max)
                         if err != nil {
                             log.Fatal(err)
                         }
