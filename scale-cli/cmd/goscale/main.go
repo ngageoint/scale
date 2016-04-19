@@ -51,6 +51,10 @@ func main() {
                     Action: func(c *cli.Context) {
                         max := c.Int("max")
                         url := c.GlobalString("url")
+                        if url == "" {
+                            log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
+                            return
+                        }
                         workspaces, err := scalecli.GetWorkspaceList(url, max)
                         if err != nil {
                             log.Fatal(err)
