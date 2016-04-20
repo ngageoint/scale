@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import json
@@ -17,12 +16,12 @@ class TestErrorsView(TestCase):
         django.setup()
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
-        error_test_utils.create_error(category='SYSTEM')
+        error_test_utils.create_error(category='SYSTEM', is_builtin=True)
         error_test_utils.create_error(category='ALGORITHM')
         error_test_utils.create_error(category='DATA')
 
     def test_list_errors(self):
-        '''Tests successfully calling the get Errors method.'''
+        """Tests successfully calling the get Errors method."""
 
         url = '/errors/'
         response = self.client.get(url)
@@ -32,7 +31,7 @@ class TestErrorsView(TestCase):
         self.assertEqual(len(result['results']), 3)
 
     def test_create_error_success(self):
-        '''Test successfully calling the create Error method.'''
+        """Test successfully calling the create Error method."""
 
         url = '/errors/'
         json_data = {
@@ -50,9 +49,10 @@ class TestErrorsView(TestCase):
         self.assertEqual(result['title'], 'Error 4')
         self.assertEqual(result['description'], 'new error #4')
         self.assertEqual(result['category'], 'ALGORITHM')
+        self.assertFalse(result['is_builtin'])
 
     def test_create_error_missing(self):
-        '''Test calling the create Error method with missing data.'''
+        """Test calling the create Error method with missing data."""
 
         url = '/errors/'
         json_data = {
@@ -64,7 +64,7 @@ class TestErrorsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_error_bad_category(self):
-        '''Test calling the create Error method with a bad category value.'''
+        """Test calling the create Error method with a bad category value."""
 
         url = '/errors/'
         json_data = {
@@ -78,7 +78,7 @@ class TestErrorsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_error_system(self):
-        '''Test that system errors cannot be created.'''
+        """Test that system errors cannot be created."""
 
         url = '/errors/'
         json_data = {
@@ -98,12 +98,12 @@ class TestErrorDetailsView(TestCase):
         django.setup()
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
-        self.error1 = error_test_utils.create_error(category='SYSTEM')
+        self.error1 = error_test_utils.create_error(category='SYSTEM', is_builtin=True)
         self.error2 = error_test_utils.create_error(category='ALGORITHM')
         self.error3 = error_test_utils.create_error(category='DATA')
 
     def test_get_error_success(self):
-        '''Test successfully calling the Get Error method.'''
+        """Test successfully calling the Get Error method."""
 
         url = '/errors/%d/' % self.error1.id
         response = self.client.get(url)
@@ -115,9 +115,10 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(result['title'], self.error1.title)
         self.assertEqual(result['description'], self.error1.description)
         self.assertEqual(result['category'], self.error1.category)
+        self.assertTrue(result['is_builtin'])
 
     def test_get_error_not_found(self):
-        '''Test calling the Get Error method with a bad error id.'''
+        """Test calling the Get Error method with a bad error id."""
 
         url = '/errors/9999/'
         response = self.client.get(url)
@@ -125,7 +126,7 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_edit_error_success(self):
-        '''Test successfully calling the edit Error method.'''
+        """Test successfully calling the edit Error method."""
 
         url = '/errors/%d/' % self.error2.id
         json_data = {
@@ -140,9 +141,10 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(result['title'], 'error EDIT')
         self.assertEqual(result['description'], self.error2.description)
         self.assertEqual(result['category'], self.error2.category)
+        self.assertFalse(result['is_builtin'])
 
     def test_edit_error_not_found(self):
-        '''Test calling the edit Error method with a bad error id.'''
+        """Test calling the edit Error method with a bad error id."""
 
         url = '/errors/9999/'
         json_data = {
@@ -153,7 +155,7 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_edit_error_bad_catgory(self):
-        '''Test calling the edit Error method with a bad category.'''
+        """Test calling the edit Error method with a bad category."""
 
         url = '/errors/%d/' % self.error2.id
         json_data = {
@@ -164,7 +166,7 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_edit_error_system(self):
-        '''Test that an existing system error cannot be edited.'''
+        """Test that an existing system error cannot be edited."""
 
         url = '/errors/%d/' % self.error1.id
         json_data = {
@@ -175,7 +177,7 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_edit_error_change_system(self):
-        '''Test that an existing error cannot be changed to a system level error.'''
+        """Test that an existing error cannot be changed to a system level error."""
 
         url = '/errors/%d/' % self.error2.id
         json_data = {

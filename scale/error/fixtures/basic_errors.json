@@ -7,6 +7,7 @@
             "title": "Unknown",
             "description": "The cause of this failure is unknown. System administrators should investigate this failure to determine the root cause and make sure it is correctly tracked in the future.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -19,6 +20,7 @@
             "title": "Database",
             "description": "An error occurred with the Scale database. System administrators should investigate this failure to determine the root cause and correct it.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -31,6 +33,7 @@
             "title": "Database Operation",
             "description": "A Scale database operation failure occurred. This can be caused by issues such as the database reaching its connection limit, being unreachable, query deadlocks, and other operation issues.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2016-04-14T00:00:00.0Z",
             "last_modified": "2016-04-14T00:00:00.0Z"
         }
@@ -43,6 +46,7 @@
             "title": "Filesystem IO",
             "description": "An IO operation on the node's local filesystem failed.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -55,6 +59,7 @@
             "title": "NFS",
             "description": "An NFS (Network File System) operation failed.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }

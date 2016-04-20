@@ -1140,6 +1140,7 @@ These services provide access to information about job types.
 |                    "name": "Unknown",                                                                                   |
 |                    "description": "The error that caused the failure is unknown.",                                      |
 |                    "category": "SYSTEM",                                                                                |
+|                    "is_builtin": true,                                                                                  |
 |                    "created": "2015-03-11T00:00:00Z",                                                                   |
 |                    "last_modified": "2015-03-11T00:00:00Z"                                                              |
 |                },                                                                                                       |
