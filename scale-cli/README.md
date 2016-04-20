@@ -30,3 +30,4 @@ Directory layout
 ----------------
 The top-level directory contains API interface routines for the RESTful API.
 The `cmd/goscale` directory contains the main command and sub-commands for the tool.
+The `templates` directory contains some useful job type/docker templates which can be installed in `/usr/share/scale/templates`

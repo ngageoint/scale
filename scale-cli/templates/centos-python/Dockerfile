@@ -2,6 +2,10 @@
 FROM centos:centos7
 MAINTAINER {{ .maintainer }}
 
+# The job type definition. Don't edit this, use job_type.json or job_type.yml as this will be replaced
+LABEL com.ngageoint.scale.job-type=""
+###
+
 ADD epel-release-7-5.noarch.rpm /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum groupinstall -y  'Development Tools' \

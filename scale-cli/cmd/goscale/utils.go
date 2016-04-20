@@ -5,6 +5,9 @@ import (
     "os"
     "strconv"
     "errors"
+    "syscall"
+    "github.com/ghodss/yaml"
+    "encoding/json"
 )
 
 var ErrNotFound = errors.New("template not found in $SCALE_TEMPLATE_PATH")
@@ -45,4 +48,57 @@ func find_template_in_path(template_name string, template_path string) (string, 
         }
     }
     return "", &Error{template_name, ErrNotFound}
+}
+
+func Parse_json_or_yaml(basename string, parsed_data interface{}) error {
+    json_file := basename + ".json"
+    yaml_file := basename + ".yml"
+    json_stat, err := os.Stat(json_file)
+    if err != nil {
+        if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOENT {
+            json_stat = nil
+        } else {
+            // error stating the file
+            return err
+        }
+    }
+    yaml_stat, err := os.Stat(yaml_file)
+    if err != nil {
+        if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOENT {
+            yaml_stat = nil // not present
+        } else {
+            // error stating the file
+            return err
+        }
+    }
+    if json_stat == nil && yaml_stat == nil {
+        return errors.New("Neither JSON nor YAML files exist. " + basename)
+    }
+    if json_stat != nil && yaml_stat != nil {
+        return errors.New("Both JSON and YAML files exists. " + basename)
+    }
+    var json_data []byte
+    if json_stat != nil {
+        tmp, err := os.Open(json_file)
+        if err != nil {
+            return err
+        }
+        json_data = make([]byte, json_stat.Size())
+        tmp.Read(json_data)
+        tmp.Close()
+    }
+    if yaml_stat != nil {
+        tmp, err := os.Open(yaml_file)
+        if err != nil {
+            return err
+        }
+        data := make([]byte, yaml_stat.Size())
+        tmp.Read(data)
+        tmp.Close()
+        json_data, err = yaml.YAMLToJSON(data)
+        if err != nil {
+            return err
+        }
+    }
+    return json.Unmarshal(json_data, &parsed_data)
 }

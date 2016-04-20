@@ -14,9 +14,16 @@ import (
 var defaults = map[string]string{
     "Dockerfile": `FROM {{ .baseimage }}
 MAINTAINER {{ .maintainer }}
+
+# The job type definition. Don't edit this, use job_type.json or job_type.yml as this will be replaced
+LABEL com.ngageoint.scale.job-type=""
+###
+
+RUN useradd --uid 1001 scale
 COPY entryPoint.sh ./
 ENTRYPOINT ["./entryPoint.sh"]
 `,
+
     "entryPoint.sh": `#!/bin/sh -x
 
 # generate result manifest
@@ -26,6 +33,10 @@ cat > $2/results_manifest.json << EOF
 }
 EOF
 cat $2/results_manifest.json
+`,
+
+    ".dockerignore": `job_type.json
+job_type.yml
 `,
 }
 
