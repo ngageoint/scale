@@ -79,7 +79,7 @@
 
 - name: Install ui files
   tags: [ build-scale, build-scale-minimal ]
-  unarchive: src='{{ scale_build_root }}/scale-ui/deploy/scale-ui.tar.gz' dest='{{ scale_build_root }}/scale/ui'
+  unarchive: copy=no src='{{ scale_build_root }}/scale-ui/deploy/scale-ui.tar.gz' dest='{{ scale_build_root }}/scale/ui'
 
 - name: Install local_settings.py
   tags: [ build-scale, build-scale-minimal ]
