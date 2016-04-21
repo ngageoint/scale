@@ -13,6 +13,7 @@ from django.db import models, transaction
 from django.db.models import Q
 
 from error.models import Error
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
@@ -20,7 +21,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
-from storage.models import ScaleFile
+from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction
@@ -91,7 +92,6 @@ class JobManager(models.Manager):
         job.event = event
         job.priority = job_type.priority
         job.timeout = job_type.timeout
-        job.docker_params = job_type.docker_params
         job.max_tries = job_type.max_tries
         job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
         job.mem_required = max(job_type.mem_required, MIN_MEM)
@@ -362,10 +362,17 @@ class JobManager(models.Manager):
         interface = job.get_job_interface()
         interface.validate_data(data)
 
-        # Calculate disk space required for the job
+        # Analyze input files
         input_file_ids = data.get_input_file_ids()
-        # Get total input file size in MiB rounded up to the nearest whole MiB
-        input_size_mb = long(math.ceil((ScaleFile.objects.get_total_file_size(input_file_ids) / (1024.0 * 1024.0))))
+        input_files = ScaleFile.objects.get_files(input_file_ids)
+        input_size_bytes = 0
+        input_workspaces = set()
+        for input_file in input_files:
+            input_size_bytes += input_file.file_size
+            input_workspaces.add(input_file.workspace.name)
+
+        # Calculate total input file size in MiB rounded up to the nearest whole MiB
+        input_size_mb = long(math.ceil((input_size_bytes / (1024.0 * 1024.0))))
         # Calculate output space required in MiB rounded up to the nearest whole MiB
         multiplier = job.job_type.disk_out_mult_required
         const = job.job_type.disk_out_const_required
@@ -373,15 +380,35 @@ class JobManager(models.Manager):
         disk_in_required = max(input_size_mb, MIN_DISK)
         disk_out_required = max(output_size_mb, MIN_DISK)
 
+        # Configure workspaces needed for the job
+        configuration = JobConfiguration()
+        for name in input_workspaces:
+            configuration.add_job_task_workspace(name, MODE_RO)
+        if not job.job_type.is_system:
+            for name in input_workspaces:
+                configuration.add_pre_task_workspace(name, MODE_RO)
+            # TODO: Using workspace names in job data instead of IDs would save a query here
+            for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
+                configuration.add_post_task_workspace(workspace.name, MODE_RW)
+        elif job.job_type.name == 'scale-ingest':
+            # TODO: This is an ugly hack. Figure out a better way for an ingest job type to pass along that it requires
+            # a certain workspace. Not sure I like using job data for this.
+            ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
+            from ingest.models import Ingest
+            ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
+            configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+
         # Update job model in memory
         job.data = data.get_dict()
+        job.configuration = configuration.get_dict()
         job.disk_in_required = disk_in_required
         job.disk_out_required = disk_out_required
         job.last_modified = modified
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
-                                      disk_out_required=disk_out_required, last_modified=modified)
+        self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),
+                                      disk_in_required=disk_in_required, disk_out_required=disk_out_required,
+                                      last_modified=modified)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -522,12 +549,11 @@ class Job(models.Model):
     :keyword data: JSON description defining the data for this job. This field must be populated when the job is first
         queued.
     :type data: :class:`djorm_pgjson.fields.JSONField`
+    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
     :keyword results: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type results: :class:`djorm_pgjson.fields.JSONField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-        See the mesos prototype file for further information.
-    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -548,8 +574,8 @@ class Job(models.Model):
     :type disk_out_required: :class:`django.db.models.FloatField`
 
     :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
-        superseded_by_job (the reverse relationship of superded_job) is null, indicating that this job is obsolete (its
-        recipe has been superseded), but there is no new job that has directly taken its place.
+        superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
+        (its recipe has been superseded), but there is no new job that has directly taken its place.
     :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword root_superseded_job: The first job in the chain of superseded jobs. This field will be null for the first
         job in the chain (i.e. jobs that have a null superseded_job field).
@@ -575,6 +601,7 @@ class Job(models.Model):
     :keyword last_modified: When the job was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
     JOB_STATUSES = (
         ('PENDING', 'PENDING'),
         ('BLOCKED', 'BLOCKED'),
@@ -593,8 +620,8 @@ class Job(models.Model):
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = djorm_pgjson.fields.JSONField()
+    configuration = djorm_pgjson.fields.JSONField()
     results = djorm_pgjson.fields.JSONField()
-    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
@@ -606,8 +633,10 @@ class Job(models.Model):
     disk_out_required = models.FloatField(blank=True, null=True)
 
     is_superseded = models.BooleanField(default=False)
-    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True, on_delete=models.PROTECT)
-    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True, on_delete=models.PROTECT)
+    root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
+                                            on_delete=models.PROTECT)
+    superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True,
+                                          on_delete=models.PROTECT)
     delete_superseded = models.BooleanField(default=True)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -628,6 +657,15 @@ class Job(models.Model):
         """
 
         return JobData(self.data)
+
+    def get_job_configuration(self):
+        """Returns the configuration for this job
+
+        :returns: The configuration for this job
+        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -932,7 +970,6 @@ class JobExecutionManager(models.Manager):
             job_exe = JobExecution()
             job_exe.job = job
             job_exe.timeout = job.timeout
-            job_exe.docker_params = job.docker_params
             job_exe.queued = when
             job_exe.created = when
             # Fill in job execution command argument string with data that doesn't require pre-task

@@ -12,7 +12,9 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import Error
+from job.configuration.configuration.job_configuration import MODE_RO, MODE_RW
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobExecution, JobType, JobTypeRevision
@@ -24,6 +26,76 @@ class TestJobManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+    def test_populate_job_data(self):
+        """Tests calling JobManager.populate_job_data()"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_2 = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }, {
+                'name': 'Input 2',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_interface = JobInterface(interface)
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_1.id
+            }, {
+                'name': 'Input 2',
+                'file_id': file_2.id
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'workspace_id': workspace_2.id
+            }]}
+        job_data = JobData(data)
+
+        Job.objects.populate_job_data(job, job_data)
+
+        job = Job.objects.get(id=job.id)
+
+        # Check that the correct workspaces are configured for the job
+        # Make sure both workspaces will be used for the pre-task in read-only mode
+        pre_task_workspaces = job.get_job_configuration().get_pre_task_workspaces()
+        self.assertEqual(len(pre_task_workspaces), 2)
+        name_set = set()
+        for workspace in pre_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RO)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
+        # Make sure both workspaces will be used for the job-task in read-only mode
+        job_task_workspaces = job.get_job_configuration().get_job_task_workspaces()
+        self.assertEqual(len(job_task_workspaces), 2)
+        name_set = set()
+        for workspace in job_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RO)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
+        # Make sure only the output workspace will be used for the post-task and it is in read-write mode
+        post_task_workspaces = job.get_job_configuration().get_post_task_workspaces()
+        self.assertEqual(len(post_task_workspaces), 1)
+        self.assertEqual(post_task_workspaces[0].name, workspace_2.name)
+        self.assertEqual(post_task_workspaces[0].mode, MODE_RW)
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""

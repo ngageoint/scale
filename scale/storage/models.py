@@ -283,23 +283,16 @@ class ScaleFileManager(models.Manager):
             workspace.setup_download_dir(download_dir, workspace_work_dir)
             workspace.download_files(download_dir, workspace_work_dir, download_file_list)
 
-    def get_total_file_size(self, file_ids):
-        """Returns the total file size of the given file IDs in bytes
+    def get_files(self, file_ids):
+        """Returns the files with the given IDs. The files will have their related workspace field populated.
 
-        :param files: List of file IDs
-        :type files: list[int]
-        :returns: Total file size in bytes
-        :rtype: long
+        :param file_ids: The file IDs
+        :type file_ids: list[int]
+        :returns: The files that match the given IDs
+        :rtype: [:class:`storage.models.ScaleFile`]
         """
 
-        results = ScaleFile.objects.filter(id__in=file_ids).aggregate(Sum('file_size'))
-
-        file_size = 0
-        if 'file_size__sum' in results:
-            file_size_sum = results['file_size__sum']
-            if file_size_sum is not None:
-                file_size = long(file_size_sum)
-        return file_size
+        return self.filter(id__in=file_ids).select_related('workspace').iterator()
 
     @transaction.atomic
     def move_files(self, work_dir, files_to_move):

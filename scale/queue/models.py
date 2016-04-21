@@ -415,8 +415,8 @@ class QueueManager(models.Manager):
         :type data: dict
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :returns: The ID of the new job and the ID of the job execution
-        :rtype: int
+        :returns: The new queued job
+        :rtype: :class:`job.models.Job`
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
@@ -427,7 +427,7 @@ class QueueManager(models.Manager):
         Job.objects.populate_job_data(job, JobData(data))
         self._queue_jobs([job])
 
-        return job.id
+        return job
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -448,7 +448,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job(job_type, data, event)
+        job_id = self.queue_new_job(job_type, data, event).id
         job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
         return job_id, job_exe.id
 
@@ -700,7 +700,7 @@ class QueueManager(models.Manager):
             }
             desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
-            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event)
+            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event).id
             job_exe.cleanup_job_id = cleanup_job_id
             job_exe.save()
 
