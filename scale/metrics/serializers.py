@@ -75,6 +75,13 @@ class MetricsPlotMultiSerializer(MetricsPlotSerializer):
     values = MetricsPlotMultiValueSerializer(many=True)
 
 
+class MetricsErrorDetailsSerializer(MetricsTypeDetailsSerializer):
+    """Converts ingest metrics details model fields to REST output"""
+    from error.serializers import ErrorBaseSerializer
+
+    choices = ErrorBaseSerializer(many=True)
+
+
 class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):
     """Converts ingest metrics details model fields to REST output"""
     from ingest.serializers import StrikeBaseSerializer

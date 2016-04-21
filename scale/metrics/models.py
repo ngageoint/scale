@@ -9,6 +9,7 @@ import django.contrib.gis.db.models as models
 import django.utils.timezone as timezone
 from django.db import transaction
 
+from error.models import Error
 from job.models import Job, JobExecution, JobType
 from ingest.models import Ingest, Strike
 from metrics.registry import MetricsPlotData, MetricsType, MetricsTypeGroup, MetricsTypeFilter
@@ -64,6 +65,118 @@ class PlotIntegerField(models.IntegerField):
         super(PlotIntegerField, self).__init__(verbose_name, name, **kwargs)
 
 PLOT_FIELD_TYPES = [PlotBigIntegerField, PlotIntegerField]
+
+
+class MetricsErrorManager(models.Manager):
+    """Provides additional methods for computing daily error metrics."""
+
+    def calculate(self, date):
+        """See :meth:`metrics.registry.MetricsTypeProvider.calculate`."""
+
+        started = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=timezone.utc)
+        ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
+
+        # Fetch all the job executions with an error for the requested day
+        job_exes = JobExecution.objects.filter(error__is_builtin=True, ended__gte=started, ended__lte=ended)
+        job_exes = job_exes.select_related('error')
+        job_exes = job_exes.defer('environment', 'results', 'results_manifest', 'stdout', 'stderr')
+
+        # Calculate the overall counts based on job status
+        entry_map = {}
+        for job_exe in job_exes.iterator():
+            if job_exe.error not in entry_map:
+                entry = MetricsError(error=job_exe.error, occurred=date, created=timezone.now())
+                entry.total_count = 0
+                entry_map[job_exe.error] = entry
+            entry = entry_map[job_exe.error]
+            entry.total_count += 1
+
+        # Save the new metrics to the database
+        self._replace_entries(date, entry_map.values())
+
+    def get_metrics_type(self, include_choices=False):
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
+
+        # Create the metrics type definition
+        metrics_type = MetricsType('errors', 'Errors', 'Metrics for jobs grouped by errors.')
+        metrics_type.filters = [MetricsTypeFilter('name', 'string'), MetricsTypeFilter('category', 'string')]
+        metrics_type.groups = MetricsError.GROUPS
+        metrics_type.set_columns(MetricsError, PLOT_FIELD_TYPES)
+
+        # Optionally include all the possible error choices
+        if include_choices:
+            metrics_type.choices = Error.objects.filter(is_builtin=True)
+
+        return metrics_type
+
+    def get_plot_data(self, started=None, ended=None, choice_ids=None, columns=None):
+        """See :meth:`metrics.registry.MetricsTypeProvider.get_plot_data`."""
+
+        # Fetch all the matching job type metrics based on query filters
+        entries = MetricsError.objects.all().order_by('occurred')
+        if started:
+            entries = entries.filter(occurred__gte=started)
+        if ended:
+            entries = entries.filter(occurred__lte=ended)
+        if choice_ids:
+            entries = entries.filter(error_id__in=choice_ids)
+        if not columns:
+            columns = self.get_metrics_type().columns
+        column_names = [c.name for c in columns]
+        entries = entries.values('error_id', 'occurred', *column_names)
+
+        # Convert the database models to plot models
+        return MetricsPlotData.create(entries, 'occurred', 'error_id', choice_ids, columns)
+
+    @transaction.atomic
+    def _replace_entries(self, date, entries):
+        """Replaces all the existing metric entries for the given date with new ones.
+
+        :param date: The date when job executions associated with the metrics ended.
+        :type date: datetime.date
+        :param entries: The new metrics model to save.
+        :type entries: list[:class:`metrics.models.MetricsError`]
+        """
+
+        # Delete all the previous metrics entries
+        MetricsError.objects.filter(occurred=date).delete()
+
+        # Save all the new metrics models
+        MetricsError.objects.bulk_create(entries)
+
+
+class MetricsError(models.Model):
+    """Tracks all the error metrics grouped by error type.
+
+    :keyword error: The error type associated with these metrics.
+    :type error: :class:`django.db.models.ForeignKey`
+    :keyword occurred: The date when the errors included in this model were created.
+    :type occurred: :class:`django.db.models.DateField`
+
+    :keyword total_count: The total number of errors of this type that occurred for the day.
+    :type total_count: :class:`metrics.models.PlotIntegerField`
+
+    :keyword created: When the model was first created.
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+    GROUPS = [
+        MetricsTypeGroup('overview', 'Overview', 'Overall counts based on error type.'),
+    ]
+
+    error = models.ForeignKey('error.Error', on_delete=models.PROTECT)
+    occurred = models.DateField(db_index=True)
+
+    total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
+                                   help_text='Number of jobs that failed with a particular error type.', null=True,
+                                   units='count', verbose_name='Total Count')
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = MetricsErrorManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'metrics_error'
 
 
 class MetricsIngestManager(models.Manager):
@@ -331,7 +444,7 @@ class MetricsJobTypeManager(models.Manager):
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('data', 'docker_params', 'results')
 
         # Calculate the overall counts based on job status
         entry_map = {}
