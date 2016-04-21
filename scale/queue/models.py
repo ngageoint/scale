@@ -5,6 +5,7 @@ import abc
 import logging
 
 import django.utils.timezone as timezone
+import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
@@ -732,6 +733,7 @@ class QueueManager(models.Manager):
         for job_exe in job_exes:
             queue = Queue()
             queue.job_exe = job_exe
+            queue.job = job_exe.job
             queue.job_type = job_exe.job.job_type
             queue.priority = job_exe.job.priority
             if job_exe.job.job_type.name == 'scale-cleanup':
@@ -741,6 +743,7 @@ class QueueManager(models.Manager):
             queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
             queue.disk_out_required = job_exe.job.disk_out_required if job_exe.job.disk_out_required else 0
             queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
+            queue.configuration = job_exe.job.configuration
             queue.queued = when_queued
             queues.append(queue)
 
@@ -753,6 +756,8 @@ class Queue(models.Model):
 
     :keyword job_exe: The job execution that has been queued
     :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that has been queued
+    :type job: :class:`django.db.models.ForeignKey`
     :keyword job_type: The type of this job execution
     :type job_type: :class:`django.db.models.ForeignKey`
 
@@ -772,6 +777,9 @@ class Queue(models.Model):
     :keyword disk_total_required: The total amount of disk space in MiB required for this job
     :type disk_total_required: :class:`django.db.models.FloatField`
 
+    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job execution was placed onto the queue
@@ -781,6 +789,7 @@ class Queue(models.Model):
     """
 
     job_exe = models.ForeignKey('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
 
     priority = models.IntegerField(db_index=True)
@@ -790,6 +799,8 @@ class Queue(models.Model):
     disk_in_required = models.FloatField()
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
+
+    configuration = djorm_pgjson.fields.JSONField()
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
