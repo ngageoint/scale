@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -121,7 +122,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -206,22 +206,22 @@
 <p>Defines the application configuration for the scale import/export application</p>
 <dl class="class">
 <dt id="port.apps.PortConfig">
-<em class="property">class </em><tt class="descclassname">port.apps.</tt><tt class="descname">PortConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#port.apps.PortConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.apps.</code><code class="descname">PortConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#port.apps.PortConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the import/export app</p>
 <dl class="attribute">
 <dt id="port.apps.PortConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'port'</em><a class="headerlink" href="#port.apps.PortConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'port'</em><a class="headerlink" href="#port.apps.PortConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.apps.PortConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'port'</em><a class="headerlink" href="#port.apps.PortConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'port'</em><a class="headerlink" href="#port.apps.PortConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.apps.PortConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Import/Export'</em><a class="headerlink" href="#port.apps.PortConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Import/Export'</em><a class="headerlink" href="#port.apps.PortConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -232,19 +232,19 @@
 <p>Defines the functions used to export configuration</p>
 <dl class="function">
 <dt id="port.exporter.export_config">
-<tt class="descclassname">port.exporter.</tt><tt class="descname">export_config</tt><big>(</big><em>recipe_types=None</em>, <em>job_types=None</em>, <em>errors=None</em><big>)</big><a class="headerlink" href="#port.exporter.export_config" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.exporter.</code><code class="descname">export_config</code><span class="sig-paren">(</span><em>recipe_types=None</em>, <em>job_types=None</em>, <em>errors=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.exporter.export_config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="port.exporter.get_errors">
-<tt class="descclassname">port.exporter.</tt><tt class="descname">get_errors</tt><big>(</big><em>job_types=None</em>, <em>error_ids=None</em>, <em>error_names=None</em><big>)</big><a class="headerlink" href="#port.exporter.get_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.exporter.</code><code class="descname">get_errors</code><span class="sig-paren">(</span><em>job_types=None</em>, <em>error_ids=None</em>, <em>error_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.exporter.get_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports all the errors in the system based on the given filters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_types</strong> (list[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>]) &#8211; Only include errors that are referenced by the given job types.</li>
+<li><strong>job_types</strong> (list[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]) &#8211; Only include errors that are referenced by the given job types.</li>
 <li><strong>error_ids</strong> (<em>list[str]</em>) &#8211; A list of unique error identifiers to include.</li>
 <li><strong>error_names</strong> (<em>list[str]</em>) &#8211; A list of error system names to include.</li>
 </ul>
@@ -253,7 +253,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of matching errors.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -262,14 +262,14 @@
 
 <dl class="function">
 <dt id="port.exporter.get_job_types">
-<tt class="descclassname">port.exporter.</tt><tt class="descname">get_job_types</tt><big>(</big><em>recipe_types=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em><big>)</big><a class="headerlink" href="#port.exporter.get_job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.exporter.</code><code class="descname">get_job_types</code><span class="sig-paren">(</span><em>recipe_types=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.exporter.get_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports all the job types in the system based on the given filters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_types</strong> (list[<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>]) &#8211; Only include job types that are referenced by the given recipe types.</li>
+<li><strong>recipe_types</strong> (list[<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>]) &#8211; Only include job types that are referenced by the given recipe types.</li>
 <li><strong>job_type_ids</strong> (<em>list[str]</em>) &#8211; A list of unique job type identifiers to include.</li>
 <li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; A list of job type system names to include.</li>
 <li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; A list of job type category names to include.</li>
@@ -279,7 +279,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of matching job types.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -288,7 +288,7 @@
 
 <dl class="function">
 <dt id="port.exporter.get_recipe_types">
-<tt class="descclassname">port.exporter.</tt><tt class="descname">get_recipe_types</tt><big>(</big><em>recipe_type_ids=None</em>, <em>recipe_type_names=None</em><big>)</big><a class="headerlink" href="#port.exporter.get_recipe_types" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.exporter.</code><code class="descname">get_recipe_types</code><span class="sig-paren">(</span><em>recipe_type_ids=None</em>, <em>recipe_type_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.exporter.get_recipe_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports all the recipe types in the system based on the given filters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -303,7 +303,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of matching recipe types.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -316,7 +316,7 @@
 <p>Defines the functions used to import configuration</p>
 <dl class="function">
 <dt id="port.importer.import_config">
-<tt class="descclassname">port.importer.</tt><tt class="descname">import_config</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.importer.import_config" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.importer.</code><code class="descname">import_config</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.importer.import_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a previously exported configuration to the current system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -326,16 +326,16 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during the import.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#port.schema.ValidationWarning" title="port.schema.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">port.schema.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#port.schema.ValidationWarning" title="port.schema.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">port.schema.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#port.schema.InvalidConfiguration" title="port.schema.InvalidConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">port.schema.InvalidConfiguration</span></tt></a>: If any part of the configuration violates the specification.</p>
+<p>:raises <a class="reference internal" href="#port.schema.InvalidConfiguration" title="port.schema.InvalidConfiguration"><code class="xref py py-class docutils literal"><span class="pre">port.schema.InvalidConfiguration</span></code></a>: If any part of the configuration violates the specification.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="port.importer.validate_config">
-<tt class="descclassname">port.importer.</tt><tt class="descname">validate_config</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#port.importer.validate_config" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">port.importer.</code><code class="descname">validate_config</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#port.importer.validate_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a configuration export for any potential errors or warnings.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -345,11 +345,11 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#port.schema.ValidationWarning" title="port.schema.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">port.schema.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#port.schema.ValidationWarning" title="port.schema.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">port.schema.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#port.schema.InvalidConfiguration" title="port.schema.InvalidConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">port.schema.InvalidConfiguration</span></tt></a>: If any part of the configuration violates the specification.</p>
+<p>:raises <a class="reference internal" href="#port.schema.InvalidConfiguration" title="port.schema.InvalidConfiguration"><code class="xref py py-class docutils literal"><span class="pre">port.schema.InvalidConfiguration</span></code></a>: If any part of the configuration violates the specification.</p>
 </dd></dl>
 
 </div>
@@ -358,8 +358,8 @@
 <p>Defines the class for managing a configuration export.</p>
 <dl class="class">
 <dt id="port.schema.Configuration">
-<em class="property">class </em><tt class="descclassname">port.schema.</tt><tt class="descname">Configuration</tt><big>(</big><em>configuration</em><big>)</big><a class="headerlink" href="#port.schema.Configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.schema.</code><code class="descname">Configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#port.schema.Configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the recipe, job, and error records in a serialized format that can be imported later.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -367,19 +367,18 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The export configuration</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidDefinition:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">If the given configuration is invalid</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>InvalidDefinition</strong> &#8211; If the given configuration is invalid</td>
 </tr>
 </tbody>
 </table>
 <dl class="attribute">
 <dt id="port.schema.Configuration.errors">
-<tt class="descname">errors</tt><a class="headerlink" href="#port.schema.Configuration.errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">errors</code><a class="headerlink" href="#port.schema.Configuration.errors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="port.schema.Configuration.get_dict">
-<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#port.schema.Configuration.get_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#port.schema.Configuration.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this export configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -395,27 +394,27 @@
 
 <dl class="attribute">
 <dt id="port.schema.Configuration.job_types">
-<tt class="descname">job_types</tt><a class="headerlink" href="#port.schema.Configuration.job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">job_types</code><a class="headerlink" href="#port.schema.Configuration.job_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.schema.Configuration.recipe_types">
-<tt class="descname">recipe_types</tt><a class="headerlink" href="#port.schema.Configuration.recipe_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">recipe_types</code><a class="headerlink" href="#port.schema.Configuration.recipe_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="exception">
 <dt id="port.schema.InvalidConfiguration">
-<em class="property">exception </em><tt class="descclassname">port.schema.</tt><tt class="descname">InvalidConfiguration</tt><a class="headerlink" href="#port.schema.InvalidConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">port.schema.</code><code class="descname">InvalidConfiguration</code><a class="headerlink" href="#port.schema.InvalidConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided configuration was invalid.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="port.schema.ValidationWarning">
-<em class="property">class </em><tt class="descclassname">port.schema.</tt><tt class="descname">ValidationWarning</tt><big>(</big><em>key</em>, <em>details</em><big>)</big><a class="headerlink" href="#port.schema.ValidationWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.schema.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#port.schema.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Tracks configuration warnings during validation that may not prevent it from working.</p>
 </dd></dl>
 
@@ -425,21 +424,21 @@
 <p>Defines the serializers for import/export configuration</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationErrorSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationErrorSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.serializers.</code><code class="descname">ConfigurationErrorSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
 <p>Converts error model fields to REST output.</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationErrorSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="port.serializers.ConfigurationErrorSerializer.Meta.fields">
-<tt class="descname">fields</tt><em class="property"> = ('name', 'title', 'description', 'category')</em><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ('name', 'title', 'description', 'category')</em><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationErrorSerializer.Meta.model">
-<tt class="descname">model</tt><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">Error</span></tt></p>
+<code class="descname">model</code><a class="headerlink" href="#port.serializers.ConfigurationErrorSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Error</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -448,21 +447,21 @@
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationJobTypeSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationJobTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.serializers.</code><code class="descname">ConfigurationJobTypeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
 <p>Converts job type model fields to REST output.</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationJobTypeSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="port.serializers.ConfigurationJobTypeSerializer.Meta.fields">
-<tt class="descname">fields</tt><em class="property"> = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational', 'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_scheduled', 'max_tries', 'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface', 'error_mapping', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational', 'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_scheduled', 'max_tries', 'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface', 'error_mapping', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationJobTypeSerializer.Meta.model">
-<tt class="descname">model</tt><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">JobType</span></tt></p>
+<code class="descname">model</code><a class="headerlink" href="#port.serializers.ConfigurationJobTypeSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobType</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -471,21 +470,21 @@
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationRecipeTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.serializers.</code><code class="descname">ConfigurationRecipeTypeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
 <p>Converts recipe type model fields to REST output.</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer.Meta.fields">
-<tt class="descname">fields</tt><em class="property"> = ('name', 'version', 'title', 'description', 'definition', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ('name', 'version', 'title', 'description', 'definition', 'trigger_rule')</em><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationRecipeTypeSerializer.Meta.model">
-<tt class="descname">model</tt><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeType</span></tt></p>
+<code class="descname">model</code><a class="headerlink" href="#port.serializers.ConfigurationRecipeTypeSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeType</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -494,28 +493,28 @@
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.serializers.</code><code class="descname">ConfigurationSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.serializers.ConfigurationSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts export fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer">
-<em class="property">class </em><tt class="descclassname">port.serializers.</tt><tt class="descname">ConfigurationTriggerRuleSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.serializers.</code><code class="descname">ConfigurationTriggerRuleSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
 <p>Converts trigger rule model fields to REST output.</p>
 <dl class="class">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer.Meta">
-<em class="property">class </em><tt class="descname">Meta</tt><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer.Meta.fields">
-<tt class="descname">fields</tt><em class="property"> = ('type', 'name', 'is_active', 'configuration')</em><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = ('type', 'name', 'is_active', 'configuration')</em><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="port.serializers.ConfigurationTriggerRuleSerializer.Meta.model">
-<tt class="descname">model</tt><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">TriggerRule</span></tt></p>
+<code class="descname">model</code><a class="headerlink" href="#port.serializers.ConfigurationTriggerRuleSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">TriggerRule</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -532,44 +531,44 @@
 <p>Defines the views for the RESTful import/export services</p>
 <dl class="class">
 <dt id="port.views.ConfigurationDownloadView">
-<em class="property">class </em><tt class="descclassname">port.views.</tt><tt class="descname">ConfigurationDownloadView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationDownloadView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#port.views.ConfigurationView" title="port.views.ConfigurationView"><tt class="xref py py-class docutils literal"><span class="pre">port.views.ConfigurationView</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">ConfigurationDownloadView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationDownloadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#port.views.ConfigurationView" title="port.views.ConfigurationView"><code class="xref py py-class docutils literal"><span class="pre">port.views.ConfigurationView</span></code></a></p>
 <p>This view is the endpoint for downloading an export of job and recipe configuration.</p>
 <dl class="attribute">
 <dt id="port.views.ConfigurationDownloadView.renderer_classes">
-<tt class="descname">renderer_classes</tt><em class="property"> = (&lt;class 'port.views.DownloadRenderer'&gt;,)</em><a class="headerlink" href="#port.views.ConfigurationDownloadView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">renderer_classes</code><em class="property"> = (&lt;class 'port.views.DownloadRenderer'&gt;,)</em><a class="headerlink" href="#port.views.ConfigurationDownloadView.renderer_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="port.views.ConfigurationUploadView">
-<em class="property">class </em><tt class="descclassname">port.views.</tt><tt class="descname">ConfigurationUploadView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationUploadView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">ConfigurationUploadView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationUploadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
 <p>This view is the endpoint for uploading an import file of job and recipe configuration.</p>
 <dl class="method">
 <dt id="port.views.ConfigurationUploadView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationUploadView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationUploadView.post" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="port.views.ConfigurationValidationView">
-<em class="property">class </em><tt class="descclassname">port.views.</tt><tt class="descname">ConfigurationValidationView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationValidationView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">ConfigurationValidationView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
 <p>This view is the endpoint for validation an exported job and recipe configuration.</p>
 <dl class="method">
 <dt id="port.views.ConfigurationValidationView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationValidationView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationValidationView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates job and recipe configuration to make sure it can be imported.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -581,20 +580,20 @@
 
 <dl class="class">
 <dt id="port.views.ConfigurationView">
-<em class="property">class </em><tt class="descclassname">port.views.</tt><tt class="descname">ConfigurationView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">ConfigurationView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
 <p>This view is the endpoint for importing/exporting job and recipe configuration.</p>
 <dl class="method">
 <dt id="port.views.ConfigurationView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationView.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports the job and recipe configuration and returns it in JSON form.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -604,15 +603,15 @@
 
 <dl class="method">
 <dt id="port.views.ConfigurationView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#port.views.ConfigurationView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports job and recipe configuration and updates the corresponding models.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -624,12 +623,12 @@
 
 <dl class="class">
 <dt id="port.views.DownloadRenderer">
-<em class="property">class </em><tt class="descclassname">port.views.</tt><tt class="descname">DownloadRenderer</tt><a class="headerlink" href="#port.views.DownloadRenderer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.renderers.JSONRenderer</span></tt></p>
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">DownloadRenderer</code><a class="headerlink" href="#port.views.DownloadRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.renderers.JSONRenderer</span></code></p>
 <p>Renders a JSON response as a file download attachment instead of embedded content.</p>
 <dl class="method">
 <dt id="port.views.DownloadRenderer.render">
-<tt class="descname">render</tt><big>(</big><em>data</em>, <em>accepted_media_type=None</em>, <em>renderer_context=None</em><big>)</big><a class="headerlink" href="#port.views.DownloadRenderer.render" title="Permalink to this definition">¶</a></dt>
+<code class="descname">render</code><span class="sig-paren">(</span><em>data</em>, <em>accepted_media_type=None</em>, <em>renderer_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.DownloadRenderer.render" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

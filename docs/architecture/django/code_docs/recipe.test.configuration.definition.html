@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -197,50 +197,50 @@
 <span id="recipe-test-configuration-definition-test-recipe-definition-module"></span><h2>recipe.test.configuration.definition.test_recipe_definition module<a class="headerlink" href="#module-recipe.test.configuration.definition.test_recipe_definition" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">DummyDataFileStore</tt><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">DummyDataFileStore</code><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></code></a></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.get_workspaces">
-<tt class="descname">get_workspaces</tt><big>(</big><em>workspace_ids</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_workspaces</code><span class="sig-paren">(</span><em>workspace_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.store_files">
-<tt class="descname">store_files</tt><big>(</big><em>files</em>, <em>input_file_ids</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">store_files</code><span class="sig-paren">(</span><em>files</em>, <em>input_file_ids</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.DummyDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionGetJobTypeKeys</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetJobTypeKeys</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_empty">
-<tt class="descname">test_get_job_type_keys_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_type_keys_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job type keys when there are no jobs defined.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_multi">
-<tt class="descname">test_get_job_type_keys_multi</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_multi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_type_keys_multi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_multi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job type keys from the definition.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_one">
-<tt class="descname">test_get_job_type_keys_one</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_one" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_type_keys_one</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_one" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting a job type key from the definition.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_unique">
-<tt class="descname">test_get_job_type_keys_unique</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_unique" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_type_keys_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_unique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job type keys without duplicates.</p>
 </dd></dl>
 
@@ -248,16 +248,16 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionGetJobTypeMap</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetJobTypeMap</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.test_successful_new_recipe">
-<tt class="descname">test_successful_new_recipe</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.test_successful_new_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_new_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.test_successful_new_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.get_job_type_map() successfully.</p>
 </dd></dl>
 
@@ -265,34 +265,34 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionGetJobTypes</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetJobTypes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_empty">
-<tt class="descname">test_get_job_types_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_types_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job types when there are no jobs defined.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_multi">
-<tt class="descname">test_get_job_types_multi</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_multi" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_types_multi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_multi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job types from the definition.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_one">
-<tt class="descname">test_get_job_types_one</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_one" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_types_one</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_one" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting a job type from the definition.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_unique">
-<tt class="descname">test_get_job_types_unique</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_unique" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_types_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_unique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job types without duplicates.</p>
 </dd></dl>
 
@@ -300,22 +300,22 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionGetNextJobsToQueue</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetNextJobsToQueue</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_job_1_completed">
-<tt class="descname">test_successful_job_1_completed</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_job_1_completed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_job_1_completed</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_job_1_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.get_next_jobs_to_queue() successfully when job 1 has been completed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_new_recipe">
-<tt class="descname">test_successful_new_recipe</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_new_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_new_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_new_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.get_next_jobs_to_queue() successfully when a new recipe is being created.</p>
 </dd></dl>
 
@@ -323,16 +323,16 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionGetUnqueuedJobStatuses</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetUnqueuedJobStatuses</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.get_unqueued_job_statuses() successfully.</p>
 </dd></dl>
 
@@ -340,64 +340,64 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionInit</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bad_version">
-<tt class="descname">test_init_bad_version</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bad_version" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bad_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with bad version number.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bare_min">
-<tt class="descname">test_init_bare_min</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bare_min" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_bare_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_bare_min" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with bare minimum JSON.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_cyclic_dependency">
-<tt class="descname">test_init_cyclic_dependency</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_cyclic_dependency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_cyclic_dependency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_cyclic_dependency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with a cyclic dependency.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_dulicate_job_input">
-<tt class="descname">test_init_dulicate_job_input</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_dulicate_job_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_dulicate_job_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_dulicate_job_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with duplicate job inputs.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_input_data_name">
-<tt class="descname">test_init_input_data_name</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_input_data_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_input_data_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_input_data_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with good and bad input_data names.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_job_name">
-<tt class="descname">test_init_job_name</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_job_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_job_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_job_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with good and bad job names.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_successful">
-<tt class="descname">test_init_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor successfully.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_dependency">
-<tt class="descname">test_init_undefined_dependency</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_dependency" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_undefined_dependency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_dependency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with an undefined job dependency.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_recipe_input">
-<tt class="descname">test_init_undefined_recipe_input</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_recipe_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_undefined_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_recipe_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition constructor with an undefined recipe input.</p>
 </dd></dl>
 
@@ -405,28 +405,28 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionValidateData</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionValidateData</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_missing_workspace">
-<tt class="descname">test_missing_workspace</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_missing_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_workspace</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_missing_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.validate_data() with a missing required workspace.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.validate_data() successfully.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful_no_workspace">
-<tt class="descname">test_successful_no_workspace</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful_no_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_no_workspace</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_successful_no_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.validate_data() successfully with no workspace.</p>
 </dd></dl>
 
@@ -434,22 +434,22 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</tt><tt class="descname">TestRecipeDefinitionValidateJobInterfaces</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionValidateJobInterfaces</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_invalid_job_type">
-<tt class="descname">test_invalid_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_invalid_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_invalid_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.validate_job_interfaces() with an invalid job type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeDefinition.validate_job_interfaces() successfully.</p>
 </dd></dl>
 

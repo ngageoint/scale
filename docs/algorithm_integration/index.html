@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Algorithms &mdash; Scale 3.0.0 documentation</title>
+  <title>Algorithm Integration into Scale &mdash; Scale 3.0.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
 
   
     <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
-        <link rel="next" title="Results Manifest" href="results_manifest.html"/>
+        <link rel="next" title="Making a Scale-compatible Algorithm" href="step1.html"/>
         <link rel="prev" title="Workspace Services" href="../interface/rest/workspace.html"/> 
 
   
@@ -89,7 +89,12 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Algorithms</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Algorithm Integration into Scale</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
 <li class="toctree-l2"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
 </ul>
 </li>
@@ -118,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -126,11 +131,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>Algorithms</li>
+    <li>Algorithm Integration into Scale</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/algorithms/index.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/algorithm_integration/index.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -140,21 +145,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="algorithms">
-<span id="id1"></span><h1>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="algorithm-integration-into-scale">
+<span id="algorithm-integration"></span><h1>Algorithm Integration into Scale<a class="headerlink" href="#algorithm-integration-into-scale" title="Permalink to this headline">¶</a></h1>
 <p>This document explains the steps necessary to integrate an algorithm into the Scale system. The Scale system utilizes
-Docker containers to run algorithms in an isolated environment. The first step will be to build a Docker image that
-encapsulates an algorithm.</p>
-<p>To build the Docker image, Docker must be installed on the system and the Docker daemon running. Depending on the
-linux system, the following packages will need to be installed: docker-io and lxc for Centos6 and docker and lxc for Centos7.
-Next the Docker daemon service needs to be started by either the service command for Centos6 or the systemctl command for Centos7.
-(systemctl enable docker; systemctl start docker)</p>
-<p>Then create a Dockerfile file to execute the necessary Docker commands to build the image. The following is an example of the format
-of a Dockerfile:</p>
-<p><strong>Dockerfile example</strong></p>
-<p>Example removed, we need a good, general example here</p>
+Docker containers to run algorithms in an isolated environment. This guide will document the steps necessary for getting
+an application ready for Scale integration, creating a Docker container and capturing outputs, and putting the job into
+Scale and into a recipe.</p>
+<p>Here are the steps for integrating an algorithm into Scale:</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
 </ul>
 </div>
@@ -167,7 +171,7 @@ of a Dockerfile:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="results_manifest.html" class="btn btn-neutral float-right" title="Results Manifest" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="step1.html" class="btn btn-neutral float-right" title="Making a Scale-compatible Algorithm" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../interface/rest/workspace.html" class="btn btn-neutral" title="Workspace Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

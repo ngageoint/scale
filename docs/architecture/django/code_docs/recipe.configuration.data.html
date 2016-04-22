@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -196,15 +196,15 @@
 <p>Defines exceptions that can occur when interacting with recipe data</p>
 <dl class="exception">
 <dt id="recipe.configuration.data.exceptions.InvalidRecipeConnection">
-<em class="property">exception </em><tt class="descclassname">recipe.configuration.data.exceptions.</tt><tt class="descname">InvalidRecipeConnection</tt><a class="headerlink" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">recipe.configuration.data.exceptions.</code><code class="descname">InvalidRecipeConnection</code><a class="headerlink" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided recipe connection was invalid</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="recipe.configuration.data.exceptions.InvalidRecipeData">
-<em class="property">exception </em><tt class="descclassname">recipe.configuration.data.exceptions.</tt><tt class="descname">InvalidRecipeData</tt><a class="headerlink" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">recipe.configuration.data.exceptions.</code><code class="descname">InvalidRecipeData</code><a class="headerlink" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided recipe data was invalid</p>
 </dd></dl>
 
@@ -214,13 +214,13 @@
 <p>Defines connections that will provide data to execute recipes</p>
 <dl class="class">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection">
-<em class="property">class </em><tt class="descclassname">recipe.configuration.data.recipe_connection.</tt><tt class="descname">RecipeConnection</tt><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_connection.</code><code class="descname">RecipeConnection</code><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a connection that will provide data to execute recipes. This class contains the necessary description
 needed to ensure the data provided by the connection will be sufficient to execute the given recipe.</p>
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_input_file">
-<tt class="descname">add_input_file</tt><big>(</big><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new file parameter to this connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -240,7 +240,7 @@ needed to ensure the data provided by the connection will be sufficient to execu
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_property">
-<tt class="descname">add_property</tt><big>(</big><em>property_name</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new property parameter to this connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -254,13 +254,13 @@ needed to ensure the data provided by the connection will be sufficient to execu
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_workspace">
-<tt class="descname">add_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates that this connection provides a workspace for storing output files</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.has_workspace">
-<tt class="descname">has_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this connection provides a workspace for storing output files</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -276,31 +276,31 @@ needed to ensure the data provided by the connection will be sufficient to execu
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.validate_input_files">
-<tt class="descname">validate_input_files</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the recipe definition.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
-tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></tt></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></code></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
 (True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If there is a configuration</dt>
+<dt>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
 <dd>problem</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_connection.RecipeConnection.validate_properties">
-<tt class="descname">validate_properties</tt><big>(</big><em>property_names</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -310,12 +310,12 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If there is a configuration</dt>
+<dt>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
 <dd>problem</dd>
 </dl>
 </dd></dl>
@@ -328,13 +328,13 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
 <p>Defines the data needed for executing a recipe</p>
 <dl class="class">
 <dt id="recipe.configuration.data.recipe_data.RecipeData">
-<em class="property">class </em><tt class="descclassname">recipe.configuration.data.recipe_data.</tt><tt class="descname">RecipeData</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_data.</code><code class="descname">RecipeData</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
 connect shared resources to resource instances in Scale, and details needed to store all resulting output.</p>
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.add_file_input">
-<tt class="descname">add_file_input</tt><big>(</big><em>input_name</em>, <em>file_id</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_file_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_file_input</code><span class="sig-paren">(</span><em>input_name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_file_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new file parameter to this recipe data.
 This method does not perform validation on the recipe data.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -353,7 +353,7 @@ This method does not perform validation on the recipe data.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.add_input_to_data">
-<tt class="descname">add_input_to_data</tt><big>(</big><em>recipe_input_name</em>, <em>job_data</em>, <em>job_input_name</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_input_to_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_input_to_data</code><span class="sig-paren">(</span><em>recipe_input_name</em>, <em>job_data</em>, <em>job_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_input_to_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given input from the recipe data as a new input to the given job data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -361,7 +361,7 @@ This method does not perform validation on the recipe data.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>recipe_input_name</strong> (<em>str</em>) &#8211; The name of the recipe data input to add to the job data</li>
-<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
 <li><strong>job_input_name</strong> (<em>str</em>) &#8211; The name of the job data input to add</li>
 </ul>
 </td>
@@ -372,7 +372,7 @@ This method does not perform validation on the recipe data.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.get_dict">
-<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this recipe data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -388,7 +388,7 @@ This method does not perform validation on the recipe data.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids">
-<tt class="descname">get_input_file_ids</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_input_file_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of scale file identifiers for each file in the recipe input data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -404,7 +404,7 @@ This method does not perform validation on the recipe data.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.get_workspace_id">
-<tt class="descname">get_workspace_id</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_workspace_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_workspace_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_workspace_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the workspace ID in the recipe data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -420,7 +420,7 @@ This method does not perform validation on the recipe data.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.set_workspace_id">
-<tt class="descname">set_workspace_id</tt><big>(</big><em>workspace_id</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_workspace_id</code><span class="sig-paren">(</span><em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the workspace ID in the recipe data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -430,33 +430,33 @@ This method does not perform validation on the recipe data.</p>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If the workspace ID is an invalid type</p>
+<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the workspace ID is an invalid type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.validate_input_files">
-<tt class="descname">validate_input_files</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
-tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></tt></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></code></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
 (True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If there is a configuration problem</p>
+<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If there is a configuration problem</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.validate_properties">
-<tt class="descname">validate_properties</tt><big>(</big><em>property_names</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_properties" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given property names to make sure all properties are populated correctly and exist if they are
 required</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -467,16 +467,16 @@ required</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If there is a configuration problem</p>
+<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If there is a configuration problem</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.data.recipe_data.RecipeData.validate_workspace">
-<tt class="descname">validate_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -484,19 +484,19 @@ required</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If the workspace is missing or invalid</p>
+<p>:raises <a class="reference internal" href="#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the workspace is missing or invalid</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.configuration.data.recipe_data.ValidationWarning">
-<em class="property">class </em><tt class="descclassname">recipe.configuration.data.recipe_data.</tt><tt class="descname">ValidationWarning</tt><big>(</big><em>key</em>, <em>details</em><big>)</big><a class="headerlink" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_data.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Tracks recipe data configuration warnings during validation that may not prevent the recipe from working.</p>
 </dd></dl>
 

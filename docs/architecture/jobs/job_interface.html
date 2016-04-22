@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -285,8 +285,8 @@ input. If you need the command line argument to be passed with a flag, you can u
 <em>${FLAG:INPUT NAME}</em>. There is also a special substitution value
 <em>${job_output_dir}</em>, which will be replaced with the absolute file system path of the output directory where the
 algorithm may write its output files. The algorithm should produce a results manifest named &#8220;results_manifest.json&#8221;.
-The format for the results manifest can be found here: <a class="reference internal" href="../../algorithms/results_manifest.html#algorithms-results-manifest"><em>Results Manifest</em></a>. Any output files must be
-registered in the results manifest.</div></blockquote>
+The format for the results manifest can be found here: <a class="reference internal" href="../../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a>. Any output
+files must be registered in the results manifest.</div></blockquote>
 <p><strong>input_data</strong>: JSON array</p>
 <blockquote>
 <div><p>The <em>input_data</em> is an optional list of JSON objects that define the inputs the algorithm receives to perform its

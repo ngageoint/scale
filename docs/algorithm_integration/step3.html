@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Encapsulating your algorithm in a Docker container &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
+        <link rel="next" title="Adding your dockerized algorithm as a Scale job" href="step4.html"/>
+        <link rel="prev" title="Capturing your algorithm outputs with a Scale Results Manifest" href="step2.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Encapsulating your algorithm in a Docker container</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-dockerfile">Example Dockerfile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#building-a-docker-container-from-the-dockerfile">Building a Docker container from the dockerfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-a-built-docker-container">Testing a built docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#starting-and-stopping-docker-containers-and-other-useful-commands">Starting and stopping Docker containers (and other useful commands)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Algorithm Integration into Scale</a> &raquo;</li>
+      
+    <li>Encapsulating your algorithm in a Docker container</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/algorithm_integration/step3.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="encapsulating-your-algorithm-in-a-docker-container">
+<span id="algorithm-integration-step3"></span><h1>Encapsulating your algorithm in a Docker container<a class="headerlink" href="#encapsulating-your-algorithm-in-a-docker-container" title="Permalink to this headline">¶</a></h1>
+<p>Once you have a completely standalone algorithm that generates a results manifest, you can begin to create your
+Dockerfile which is a set of instructions on how to build your Docker container.</p>
+<p>Docker containers can be built upon existing containers using the FROM command and comments can be added to the
+dockerfile with the # symbol</p>
+<p>Docker containers do not have access to files or NFS mounts on the host machine.</p>
+<p>Docker containers in Scale have no knowledge of other containers running and cannot share resources or data across
+containers.  However, the output of a container can be tied to the input of another container using recipes and the
+outputs defined in the algorithm&#8217;s results manifest file.</p>
+<p>Once a container is destroyed, the files in the container no longer exist.</p>
+<p>Docker containers should be as small as possible.  The Docker containers are pulled and cached on the host the first
+time it is used and will update when the cache no longer matches the Docker registry.  Excessively large files will
+unnecessarily fill up the host machine&#8217;s disk space requiring the host machine&#8217;s entire cache to be reset.</p>
+<p>To build the Docker image, Docker must be installed on the system and the Docker daemon running. Depending on the
+Linux system, the following packages will need to be installed:</p>
+<ol class="arabic simple">
+<li>docker-io and lxc for Centos6</li>
+<li>docker and lxc for Centos7</li>
+</ol>
+<p>Next the Docker daemon service needs to be started</p>
+<ol class="arabic simple">
+<li>&#8220;systemctl enable docker&#8221; for Centos6</li>
+<li>&#8220;systemctl start docker&#8221; command for Centos7</li>
+</ol>
+<div class="section" id="example-dockerfile">
+<h2>Example Dockerfile<a class="headerlink" href="#example-dockerfile" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">#Inherit from the centos 7 base image</span>
+FROM centos:6
+
+<span class="c1">#It is a good practice to set the version number and creator in the dockerfile</span>
+ENV VERSION 1.0.0
+MAINTAINER John_Doe
+
+<span class="c1">#The RUN command will execute commands in the container</span>
+RUN mkdir -p /app
+
+<span class="c1">#The ADD command will copy both entire directories and single files. COPY only copies files and for this</span>
+<span class="c1">#use case is preferred. (see the Dockerfile best practices at https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices)</span>
+ADD Code/ /app/Code
+COPY my_wrapper.sh /app/my_wrapper.sh
+
+<span class="c1">#Multiple RUN commands can be chained together using back slashes and &amp;&amp;</span>
+<span class="c1">#It&#39;s a good idea to finish with a &quot;yum clean all&quot; on centos images as this will</span>
+<span class="c1">#remove repository cache files making your image smaller</span>
+RUN yum install -y zip <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> chmod <span class="m">755</span> /app/my_algorithm.sav <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> chmod <span class="m">755</span> /app/my_wrapper.sh <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> <span class="nb">cd</span> /app <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> yum clean all
+
+<span class="c1">#Environment variables can be set using the ENV command</span>
+ENV DISPLAY <span class="nv">$HOSTNAME</span>:0.0
+
+<span class="c1">#Create a virtual frame buffer for algorithms that need a display</span>
+RUN Xvfb :0 -screen <span class="m">0</span> 1280x1024x24 -ac -terminate &gt; /dev/null <span class="p">&amp;</span>
+
+<span class="c1">#The WORKDIR command will set the working directory when starting a container</span>
+WORKDIR /app
+
+<span class="c1">#The ENTRYPOINT is the default command that is run when the container is started</span>
+ENTRYPOINT <span class="o">[</span> <span class="s2">&quot;/app/my_wrapper.sh&quot;</span><span class="o">]</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="building-a-docker-container-from-the-dockerfile">
+<h3>Building a Docker container from the dockerfile<a class="headerlink" href="#building-a-docker-container-from-the-dockerfile" title="Permalink to this headline">¶</a></h3>
+<p>Within a single folder, you should have</p>
+<ol class="arabic simple">
+<li>Your Dockerfile</li>
+<li>Your code/application executables, optionally in folders</li>
+<li>Any configuration files</li>
+</ol>
+<p>To build a Docker container, first change your current working directory to the directory containing your dockerfile.
+Next, execute the following build statement from the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker build -t hostname:port/algorithm_name:tag .
+</pre></div>
+</div>
+<p>The command &#8220;docker build&#8221; will build a new image from the source code at the path, which in this case is &#8221;.&#8221;, which
+refers to the current working directory.  The argument flag &#8220;-t&#8221; allows the build to be tagged with a name.  The
+hostname and port specify a local docker index for distribution to scale. If you intend to store your image in the main
+docker hub on the internet, leave these off. The tag is useful for specifying a version of the algorithm.</p>
+</div>
+<div class="section" id="testing-a-built-docker-container">
+<h3>Testing a built docker container<a class="headerlink" href="#testing-a-built-docker-container" title="Permalink to this headline">¶</a></h3>
+<p>If your Docker build command is successful, you can interact with your container inside its environment.  This is a
+good way to test your container before pushing it to the Docker registry.  To test your container, you use the
+&#8220;docker run&#8221; command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run -it --rm --privileged -v /host_folder:/docker_folder:rw --entrypoint<span class="o">=</span><span class="s2">&quot;/bin/bash&quot;</span> --name myFirstDocker hostname:port/algorithm_name:tag
+</pre></div>
+</div>
+<p>The &#8220;-it&#8221; flags specify interactive mode where the standard input will be kept open on the container even if it is not
+attached to anything.</p>
+<p>The &#8220;&#8211;rm&#8221; flag will remove the container after it exists. Otherwise the container and its filesystem changes will
+persist.</p>
+<p>The &#8220;&#8211;privileged&#8221; flag is optional and is only necessary if you are mounting an NFS container inside your wrapper.</p>
+<p>The &#8220;-v&#8221; flag will mount a volume from the host machine so that it will be available within the container.  This is
+useful to mount a directory containing data for testing your algorithm and output results to another mounted volume to
+be saved on the host machine.</p>
+<p>If using the &#8220;-v&#8221; flag, first list the folder on your host machine you want to mount, then the folder in the Docker
+container you want to mount to separated by a colon (:).  You can also optionally specify the mount as read-only (ro) or
+read-write (rw) with another colon separator at the end of the mount.  Each additional mount requires another &#8220;-v&#8221; flag.</p>
+<p>The &#8220;&#8211;entrypoint&#8221; argument specifies what to use as your ENTRYPOINT when starting the container, i.e. what command is
+first run. This overrides the entrypoint specified in the Dockerfile. Using &#8220;/bin/bash&#8221; will put you at the command
+prompt within the container when using docker run.</p>
+<p>The &#8220;&#8211;name&#8221; argument will give a user-defined custom name to the container, otherwise it will be assigned an arbitrary name</p>
+<p>The last argument to the &#8220;docker run&#8221; command should be the name of your container you created with the &#8220;docker build&#8221; command</p>
+</div>
+<div class="section" id="starting-and-stopping-docker-containers-and-other-useful-commands">
+<h3>Starting and stopping Docker containers (and other useful commands)<a class="headerlink" href="#starting-and-stopping-docker-containers-and-other-useful-commands" title="Permalink to this headline">¶</a></h3>
+<p>To see a list of currently cached Docker containers on your host machine</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker images
+</pre></div>
+</div>
+<p>To see a list of currently running/stopped Docker containers on your host machine</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker ps -a
+</pre></div>
+</div>
+<p>To stop a running Docker container</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker stop &lt;container_name&gt;
+</pre></div>
+</div>
+<p>To start a stopped Docker container</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker start &lt;container_name&gt;
+</pre></div>
+</div>
+<p>To remove a stopped container</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker rm &lt;container_name&gt;
+</pre></div>
+</div>
+<p>To enter a currently running container and get a bash shell</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> -it &lt;container_name&gt; bash
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="step4.html" class="btn btn-neutral float-right" title="Adding your dockerized algorithm as a Scale job" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="step2.html" class="btn btn-neutral" title="Capturing your algorithm outputs with a Scale Results Manifest" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

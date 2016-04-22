@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -200,46 +200,70 @@
 <span id="job-test-execution-running-test-job-exe-module"></span><h2>job.test.execution.running.test_job_exe module<a class="headerlink" href="#module-job.test.execution.running.test_job_exe" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution">
-<em class="property">class </em><tt class="descclassname">job.test.execution.running.test_job_exe.</tt><tt class="descname">TestRunningJobExecution</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.execution.running.test_job_exe.</code><code class="descname">TestRunningJobExecution</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests the RunningJobExecution class</p>
 <dl class="attribute">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'basic_job_errors.json', u'scheduler.json']</em><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'basic_job_errors.json', u'scheduler.json']</em><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_canceled_job_execution">
-<tt class="descname">test_canceled_job_execution</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_canceled_job_execution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_canceled_job_execution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_canceled_job_execution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running through a job execution that gets canceled</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_failed_normal_job_execution">
-<tt class="descname">test_failed_normal_job_execution</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_failed_normal_job_execution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_failed_normal_job_execution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_failed_normal_job_execution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running through a normal job execution that fails</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_general_algorithm_error">
+<code class="descname">test_general_algorithm_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_general_algorithm_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_job_task_launch_error">
+<code class="descname">test_job_task_launch_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_job_task_launch_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running through a job execution where a Docker-based job-task fails to launch</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_job_execution">
-<tt class="descname">test_lost_job_execution</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_job_execution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_lost_job_execution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_job_execution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running through a job execution that gets lost</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_post_task_launch_error">
+<code class="descname">test_post_task_launch_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_post_task_launch_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running through a job execution where a post-task fails to launch</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_pre_task_launch_error">
+<code class="descname">test_pre_task_launch_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_pre_task_launch_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running through a job execution where a pre-task fails to launch</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_successful_normal_job_execution">
-<tt class="descname">test_successful_normal_job_execution</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_successful_normal_job_execution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_normal_job_execution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_successful_normal_job_execution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running through a normal job execution successfully</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.execution.running.test_job_exe.TestRunningJobExecution.test_timed_out_job_execution">
-<tt class="descname">test_timed_out_job_execution</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_timed_out_job_execution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_timed_out_job_execution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_timed_out_job_execution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running through a job execution that times out</p>
 </dd></dl>
 

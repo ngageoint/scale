@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -121,7 +122,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -214,16 +214,16 @@
 <span id="node-admin-module"></span><h2>node.admin module<a class="headerlink" href="#module-node.admin" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.admin.NodeAdmin">
-<em class="property">class </em><tt class="descclassname">node.admin.</tt><tt class="descname">NodeAdmin</tt><big>(</big><em>model</em>, <em>admin_site</em><big>)</big><a class="headerlink" href="#node.admin.NodeAdmin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.contrib.admin.options.ModelAdmin</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.admin.</code><code class="descname">NodeAdmin</code><span class="sig-paren">(</span><em>model</em>, <em>admin_site</em><span class="sig-paren">)</span><a class="headerlink" href="#node.admin.NodeAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
 <dl class="attribute">
 <dt id="node.admin.NodeAdmin.list_display">
-<tt class="descname">list_display</tt><em class="property"> = (u'hostname', u'is_paused', u'is_paused_errors', u'pause_reason', u'last_offer', u'slave_id', u'is_active', u'archived')</em><a class="headerlink" href="#node.admin.NodeAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_display</code><em class="property"> = (u'hostname', u'is_paused', u'is_paused_errors', u'pause_reason', u'last_offer', u'slave_id', u'is_active', u'archived')</em><a class="headerlink" href="#node.admin.NodeAdmin.list_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.admin.NodeAdmin.media">
-<tt class="descname">media</tt><a class="headerlink" href="#node.admin.NodeAdmin.media" title="Permalink to this definition">¶</a></dt>
+<code class="descname">media</code><a class="headerlink" href="#node.admin.NodeAdmin.media" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -233,22 +233,22 @@
 <span id="node-apps-module"></span><h2>node.apps module<a class="headerlink" href="#module-node.apps" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.apps.NodeConfig">
-<em class="property">class </em><tt class="descclassname">node.apps.</tt><tt class="descname">NodeConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#node.apps.NodeConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.apps.</code><code class="descname">NodeConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#node.apps.NodeConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the node app</p>
 <dl class="attribute">
 <dt id="node.apps.NodeConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'node'</em><a class="headerlink" href="#node.apps.NodeConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'node'</em><a class="headerlink" href="#node.apps.NodeConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.apps.NodeConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'node'</em><a class="headerlink" href="#node.apps.NodeConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'node'</em><a class="headerlink" href="#node.apps.NodeConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.apps.NodeConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Node'</em><a class="headerlink" href="#node.apps.NodeConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Node'</em><a class="headerlink" href="#node.apps.NodeConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -259,25 +259,25 @@
 <p>Defines the database model for a node</p>
 <dl class="class">
 <dt id="node.models.Node">
-<em class="property">class </em><tt class="descclassname">node.models.</tt><tt class="descname">Node</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.models.Node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.models.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a cluster node on which jobs can be run</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>hostname</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The full domain-qualified hostname of the node</li>
-<li><strong>port</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The port being used by the executor on this node</li>
-<li><strong>slave_id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The slave ID used by Mesos for the node</li>
-<li><strong>pause_reason</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; User or system specified reason why this node is paused. Should be used for display only.</li>
-<li><strong>is_paused</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></tt>) &#8211; True if the node is currently paused and should not accept new jobs</li>
-<li><strong>is_paused_errors</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></tt>) &#8211; If the node is paused, was it do to a high error rate?</li>
-<li><strong>is_active</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></tt>) &#8211; True if the node is currently active or is archived for historical purposes</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the node model was created</li>
-<li><strong>archived</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the node was archived/deactivated</li>
-<li><strong>last_offer</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the node last received an offer from mesos (regardless of if the offer was used)</li>
-<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the node model was last modified</li>
+<li><strong>hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the node</li>
+<li><strong>port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the executor on this node</li>
+<li><strong>slave_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The slave ID used by Mesos for the node</li>
+<li><strong>pause_reason</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; User or system specified reason why this node is paused. Should be used for display only.</li>
+<li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently paused and should not accept new jobs</li>
+<li><strong>is_paused_errors</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; If the node is paused, was it do to a high error rate?</li>
+<li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently active or is archived for historical purposes</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was created</li>
+<li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node was archived/deactivated</li>
+<li><strong>last_offer</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node last received an offer from mesos (regardless of if the offer was used)</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was last modified</li>
 </ul>
 </td>
 </tr>
@@ -285,66 +285,66 @@
 </table>
 <dl class="exception">
 <dt id="node.models.Node.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#node.models.Node.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#node.models.Node.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="node.models.Node.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">Node.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#node.models.Node.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">Node.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#node.models.Node.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_next_by_created">
-<tt class="descclassname">Node.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#node.models.Node.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_next_by_last_modified">
-<tt class="descclassname">Node.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#node.models.Node.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_previous_by_created">
-<tt class="descclassname">Node.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#node.models.Node.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_previous_by_last_modified">
-<tt class="descclassname">Node.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#node.models.Node.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.jobexecution_set">
-<tt class="descclassname">Node.</tt><tt class="descname">jobexecution_set</tt><a class="headerlink" href="#node.models.Node.jobexecution_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">jobexecution_set</code><a class="headerlink" href="#node.models.Node.jobexecution_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.objects">
-<tt class="descclassname">Node.</tt><tt class="descname">objects</tt><em class="property"> = &lt;node.models.NodeManager object at 0x10e250f10&gt;</em><a class="headerlink" href="#node.models.Node.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">objects</code><em class="property"> = &lt;node.models.NodeManager object&gt;</em><a class="headerlink" href="#node.models.Node.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.queue_set">
-<tt class="descclassname">Node.</tt><tt class="descname">queue_set</tt><a class="headerlink" href="#node.models.Node.queue_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">queue_set</code><a class="headerlink" href="#node.models.Node.queue_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.sharedresource_set">
-<tt class="descclassname">Node.</tt><tt class="descname">sharedresource_set</tt><a class="headerlink" href="#node.models.Node.sharedresource_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">sharedresource_set</code><a class="headerlink" href="#node.models.Node.sharedresource_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="node.models.NodeManager">
-<em class="property">class </em><tt class="descclassname">node.models.</tt><tt class="descname">NodeManager</tt><a class="headerlink" href="#node.models.NodeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.models.</code><code class="descname">NodeManager</code><a class="headerlink" href="#node.models.NodeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling nodes</p>
 <dl class="method">
 <dt id="node.models.NodeManager.get_details">
-<tt class="descname">get_details</tt><big>(</big><em>node_id</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.get_details" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given node model based on related model attributes.</p>
 <p>The additional fields include: job executions.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -355,7 +355,7 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The node with extra related attributes.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -363,15 +363,15 @@
 
 <dl class="method">
 <dt id="node.models.NodeManager.get_nodes">
-<tt class="descname">get_nodes</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>order=None</em>, <em>include_inactive=True</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.get_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_nodes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em>, <em>include_inactive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of nodes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query nodes updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query nodes updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated before this amount of time.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
 <li><strong>include_inactive</strong> (<em>boolean</em>) &#8211; Should nodes marked as inactive be included?</li>
 </ul>
@@ -380,7 +380,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of nodes that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -389,7 +389,7 @@
 
 <dl class="method">
 <dt id="node.models.NodeManager.get_status">
-<tt class="descname">get_status</tt><big>(</big><em>started</em>, <em>ended=None</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.get_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of nodes with job execution counts broken down by status.</p>
 <p>This will only return active nodes. For historical node data use get_nodes()</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -397,15 +397,15 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query nodes updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query nodes updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated before this amount of time.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of nodes with supplemented statistics.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#node.models.NodeStatus" title="node.models.NodeStatus"><tt class="xref py py-class docutils literal"><span class="pre">node.models.NodeStatus</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#node.models.NodeStatus" title="node.models.NodeStatus"><code class="xref py py-class docutils literal"><span class="pre">node.models.NodeStatus</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -414,7 +414,7 @@
 
 <dl class="method">
 <dt id="node.models.NodeManager.register_node">
-<tt class="descname">register_node</tt><big>(</big><em>hostname</em>, <em>port</em>, <em>slave_id</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.register_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_node</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>slave_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.register_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a node with the given properties and saves the properties
 in the database. If a node with the given hostname does not exist it is
 created, else the existing node is updated.</p>
@@ -432,7 +432,7 @@ created, else the existing node is updated.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The node model</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -441,9 +441,9 @@ created, else the existing node is updated.</p>
 
 <dl class="method">
 <dt id="node.models.NodeManager.update_last_offer">
-<tt class="descname">update_last_offer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.update_last_offer" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_last_offer</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.update_last_offer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the last offer for a node with the given slave id.
-Throws a <tt class="xref py py-class docutils literal"><span class="pre">django.core.excpetions.ObjectDoesNotExist</span></tt> if there is no node for the given slave id</p>
+Throws a <code class="xref py py-class docutils literal"><span class="pre">django.core.excpetions.ObjectDoesNotExist</span></code> if there is no node for the given slave id</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -456,7 +456,7 @@ Throws a <tt class="xref py py-class docutils literal"><span class="pre">django.
 
 <dl class="method">
 <dt id="node.models.NodeManager.update_node">
-<tt class="descname">update_node</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.models.NodeManager.update_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.update_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the data for a node.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -476,17 +476,17 @@ Throws a <tt class="xref py py-class docutils literal"><span class="pre">django.
 
 <dl class="class">
 <dt id="node.models.NodeStatus">
-<em class="property">class </em><tt class="descclassname">node.models.</tt><tt class="descname">NodeStatus</tt><big>(</big><em>node</em>, <em>job_exe_counts=None</em>, <em>job_exes_running=None</em>, <em>is_online=False</em><big>)</big><a class="headerlink" href="#node.models.NodeStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.models.</code><code class="descname">NodeStatus</code><span class="sig-paren">(</span><em>node</em>, <em>job_exe_counts=None</em>, <em>job_exes_running=None</em>, <em>is_online=False</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents node statistics.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>node</strong> (<a class="reference internal" href="#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a>) &#8211; The actual node being counted.</li>
-<li><strong>job_exe_counts</strong> (list[<a class="reference internal" href="#node.models.NodeStatusCounts" title="node.models.NodeStatusCounts"><tt class="xref py py-class docutils literal"><span class="pre">node.models.NodeStatusCounts</span></tt></a>]) &#8211; A list of counts for the job executions handled by the node organized by status.</li>
-<li><strong>job_exes_running</strong> (list[<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>]) &#8211; A list of the job executions currently running on the node.</li>
+<li><strong>node</strong> (<a class="reference internal" href="#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>) &#8211; The actual node being counted.</li>
+<li><strong>job_exe_counts</strong> (list[<a class="reference internal" href="#node.models.NodeStatusCounts" title="node.models.NodeStatusCounts"><code class="xref py py-class docutils literal"><span class="pre">node.models.NodeStatusCounts</span></code></a>]) &#8211; A list of counts for the job executions handled by the node organized by status.</li>
+<li><strong>job_exes_running</strong> (list[<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]) &#8211; A list of the job executions currently running on the node.</li>
 <li><strong>is_online</strong> (<em>bool</em>) &#8211; Indicates whether or not the node is currently online.</li>
 </ul>
 </td>
@@ -497,8 +497,8 @@ Throws a <tt class="xref py py-class docutils literal"><span class="pre">django.
 
 <dl class="class">
 <dt id="node.models.NodeStatusCounts">
-<em class="property">class </em><tt class="descclassname">node.models.</tt><tt class="descname">NodeStatusCounts</tt><big>(</big><em>status</em>, <em>count=0</em>, <em>most_recent=None</em>, <em>category=None</em><big>)</big><a class="headerlink" href="#node.models.NodeStatusCounts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.models.</code><code class="descname">NodeStatusCounts</code><span class="sig-paren">(</span><em>status</em>, <em>count=0</em>, <em>most_recent=None</em>, <em>category=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeStatusCounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents job execution counts for a node.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -523,15 +523,15 @@ populated for types of ERROR status values.</li>
 <p>Defines the serializers for nodes</p>
 <dl class="class">
 <dt id="node.serializers.NodeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">node.serializers.</tt><tt class="descname">NodeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="node.serializers.NodeSerializer">
-<em class="property">class </em><tt class="descclassname">node.serializers.</tt><tt class="descname">NodeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers.NodeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
 
@@ -541,25 +541,25 @@ populated for types of ERROR status values.</li>
 <p>Defines the serializers for nodes that require extra fields from other applications</p>
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">node.serializers_extra.</tt><tt class="descname">NodeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeSerializer" title="node.serializers.NodeSerializer"><tt class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">node.serializers_extra.</code><code class="descname">NodeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeSerializer" title="node.serializers.NodeSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer">
-<em class="property">class </em><tt class="descname">JobExecutionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionBaseSerializer" title="job.serializers.JobExecutionBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">JobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionBaseSerializer" title="job.serializers.JobExecutionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.ErrorBaseSerializer">
-<em class="property">class </em><tt class="descname">ErrorBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">NodeDetailsSerializer.JobExecutionSerializer.</tt><tt class="descname">NodeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">NodeDetailsSerializer.JobExecutionSerializer.</code><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
 
@@ -567,8 +567,8 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer">
-<em class="property">class </em><tt class="descclassname">NodeDetailsSerializer.</tt><tt class="descname">NodeStatusJobExecutionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">NodeDetailsSerializer.</code><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 </dd></dl>
 
@@ -576,32 +576,32 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusCountsSerializer">
-<em class="property">class </em><tt class="descclassname">node.serializers_extra.</tt><tt class="descname">NodeStatusCountsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusCountsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.serializers_extra.</code><code class="descname">NodeStatusCountsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusCountsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts node status count object fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer">
-<em class="property">class </em><tt class="descclassname">node.serializers_extra.</tt><tt class="descname">NodeStatusSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.serializers_extra.</code><code class="descname">NodeStatusSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts node model fields with job execution counts to REST output.</p>
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer">
-<em class="property">class </em><tt class="descname">JobExecutionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionBaseSerializer" title="job.serializers.JobExecutionBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">JobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionBaseSerializer" title="job.serializers.JobExecutionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.ErrorBaseSerializer">
-<em class="property">class </em><tt class="descname">ErrorBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">NodeStatusSerializer.JobExecutionSerializer.</tt><tt class="descname">NodeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">NodeStatusSerializer.JobExecutionSerializer.</code><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
 
@@ -609,8 +609,8 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer">
-<em class="property">class </em><tt class="descclassname">NodeStatusSerializer.</tt><tt class="descname">NodeStatusJobExecutionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">NodeStatusSerializer.</code><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 </dd></dl>
 
@@ -626,24 +626,24 @@ populated for types of ERROR status values.</li>
 <p>Node Views</p>
 <dl class="class">
 <dt id="node.views.NodeDetailsView">
-<em class="property">class </em><tt class="descclassname">node.views.</tt><tt class="descname">NodeDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#node.views.NodeDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.views.</code><code class="descname">NodeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for viewing and modifying a node</p>
 <dl class="method">
 <dt id="node.views.NodeDetailsView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em>, <em>node_id</em><big>)</big><a class="headerlink" href="#node.views.NodeDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets node info</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -655,19 +655,19 @@ populated for types of ERROR status values.</li>
 
 <dl class="method">
 <dt id="node.views.NodeDetailsView.patch">
-<tt class="descname">patch</tt><big>(</big><em>request</em>, <em>node_id</em><big>)</big><a class="headerlink" href="#node.views.NodeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify node info with a subset of fields</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -679,19 +679,19 @@ populated for types of ERROR status values.</li>
 
 <dl class="method">
 <dt id="node.views.NodeDetailsView.put">
-<tt class="descname">put</tt><big>(</big><em>request</em>, <em>node_id</em><big>)</big><a class="headerlink" href="#node.views.NodeDetailsView.put" title="Permalink to this definition">¶</a></dt>
+<code class="descname">put</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify node info by replacing an object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -703,43 +703,43 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;Node: Node object&gt;, &lt;Node: Node object&gt;]</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.required_fields">
-<tt class="descname">required_fields</tt><em class="property"> = (u'hostname', u'port', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.required_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_fields</code><em class="property"> = (u'hostname', u'port', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.required_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#node.views.NodeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">NodeDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#node.views.NodeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">NodeDetailsSerializer</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.update_fields">
-<tt class="descname">update_fields</tt><em class="property"> = (u'hostname', u'port', u'pause_reason', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'hostname', u'port', u'pause_reason', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="node.views.NodesStatusView">
-<em class="property">class </em><tt class="descclassname">node.views.</tt><tt class="descname">NodesStatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#node.views.NodesStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.views.</code><code class="descname">NodesStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving overall node status information.</p>
 <dl class="method">
 <dt id="node.views.NodesStatusView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#node.views.NodesStatusView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesStatusView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all nodes with execution status and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -749,33 +749,33 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodesStatusView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#node.views.NodesStatusView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodesStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodesStatusView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#node.views.NodesStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">NodeStatusSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#node.views.NodesStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">NodeStatusSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="node.views.NodesView">
-<em class="property">class </em><tt class="descclassname">node.views.</tt><tt class="descname">NodesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#node.views.NodesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.views.</code><code class="descname">NodesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for viewing a list of nodes with metadata</p>
 <dl class="method">
 <dt id="node.views.NodesView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#node.views.NodesView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all nodes and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -785,13 +785,13 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodesView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;Node: Node object&gt;, &lt;Node: Node object&gt;]</em><a class="headerlink" href="#node.views.NodesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodesView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#node.views.NodesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">NodeSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#node.views.NodesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">NodeSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

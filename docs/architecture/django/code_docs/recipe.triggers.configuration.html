@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
         <link rel="up" title="recipe.triggers package" href="recipe.triggers.html"/>
-        <link rel="next" title="scale package" href="scale.html"/>
+        <link rel="next" title="scheduler package" href="scheduler.html"/>
         <link rel="prev" title="recipe.triggers package" href="recipe.triggers.html"/> 
 
   
@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -196,28 +196,28 @@
 <p>Defines the base configuration class for a trigger rule that triggers recipe creation</p>
 <dl class="class">
 <dt id="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration">
-<em class="property">class </em><tt class="descclassname">recipe.triggers.configuration.trigger_rule.</tt><tt class="descname">RecipeTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>config_dict</em><big>)</big><a class="headerlink" href="#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.triggers.configuration.trigger_rule.</code><code class="descname">RecipeTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></code></a></p>
 <p>The base class that represents trigger rule configurations that can create jobs and/or recipes when triggered</p>
 <dl class="method">
 <dt id="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe">
-<tt class="descname">validate_trigger_for_recipe</tt><big>(</big><em>recipe_definition</em><big>)</big><a class="headerlink" href="#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the trigger rule configuration to ensure it correctly connects with the given recipe type
 definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a>) &#8211; The recipe type definition</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a>) &#8211; The recipe type definition</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If the trigger rule connection to</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is not valid</dd>
 </dl>
 </dd></dl>
@@ -237,7 +237,7 @@ definition</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scale.html" class="btn btn-neutral float-right" title="scale package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.html" class="btn btn-neutral float-right" title="scheduler package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="recipe.triggers.html" class="btn btn-neutral" title="recipe.triggers package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ingest.html">ingest package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
@@ -122,7 +123,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -158,7 +158,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -198,24 +198,24 @@
 <p>Defines the command line method for running an ingest task</p>
 <dl class="class">
 <dt id="ingest.management.commands.scale_ingest.Command">
-<em class="property">class </em><tt class="descclassname">ingest.management.commands.scale_ingest.</tt><tt class="descname">Command</tt><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.management.commands.scale_ingest.</code><code class="descname">Command</code><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that executes the ingest process for a given ingest model</p>
 <dl class="method">
 <dt id="ingest.management.commands.scale_ingest.Command.handle">
-<tt class="descname">handle</tt><big>(</big><em>**options</em><big>)</big><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></tt>.</p>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the ingest process.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_ingest.Command.help">
-<tt class="descname">help</tt><em class="property"> = u'Perform the ingest process on an ingest model'</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.help" title="Permalink to this definition">¶</a></dt>
+<code class="descname">help</code><em class="property"> = u'Perform the ingest process on an ingest model'</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_ingest.Command.option_list">
-<tt class="descname">option_list</tt><em class="property"> = (&lt;Option at 0x10cd75b00: -v/--verbosity&gt;, &lt;Option at 0x10cd75c20: --settings&gt;, &lt;Option at 0x10cd75c68: --pythonpath&gt;, &lt;Option at 0x10cd75cb0: --traceback&gt;, &lt;Option at 0x10cd75d40: --no-color&gt;, &lt;Option at 0x10f4a62d8: -i/--ingest-id&gt;, &lt;Option at 0x10f4a64d0: -m/--mount&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2adf0d19de18: -v/--verbosity&gt;, &lt;Option at 0x2adf0d19df38: --settings&gt;, &lt;Option at 0x2adf0d19df80: --pythonpath&gt;, &lt;Option at 0x2adf0d19dfc8: --traceback&gt;, &lt;Option at 0x2adf0d1af098: --no-color&gt;, &lt;Option at 0x2adf1e7248c0: -i/--ingest-id&gt;, &lt;Option at 0x2adf1e724b90: -m/--mount&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -226,24 +226,24 @@
 <p>Defines the command line method for running a Strike process</p>
 <dl class="class">
 <dt id="ingest.management.commands.scale_strike.Command">
-<em class="property">class </em><tt class="descclassname">ingest.management.commands.scale_strike.</tt><tt class="descname">Command</tt><a class="headerlink" href="#ingest.management.commands.scale_strike.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.management.commands.scale_strike.</code><code class="descname">Command</code><a class="headerlink" href="#ingest.management.commands.scale_strike.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that executes the Strike processor</p>
 <dl class="method">
 <dt id="ingest.management.commands.scale_strike.Command.handle">
-<tt class="descname">handle</tt><big>(</big><em>**options</em><big>)</big><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></tt>.</p>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the Strike processor.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_strike.Command.help">
-<tt class="descname">help</tt><em class="property"> = u'Executes the Strike processor to monitor and process incoming files for ingest'</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.help" title="Permalink to this definition">¶</a></dt>
+<code class="descname">help</code><em class="property"> = u'Executes the Strike processor to monitor and process incoming files for ingest'</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_strike.Command.option_list">
-<tt class="descname">option_list</tt><em class="property"> = (&lt;Option at 0x10cd75b00: -v/--verbosity&gt;, &lt;Option at 0x10cd75c20: --settings&gt;, &lt;Option at 0x10cd75c68: --pythonpath&gt;, &lt;Option at 0x10cd75cb0: --traceback&gt;, &lt;Option at 0x10cd75d40: --no-color&gt;, &lt;Option at 0x10ededa70: -i/--strike-id&gt;, &lt;Option at 0x10ead4c20: -t/--throttle&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2adf0d19de18: -v/--verbosity&gt;, &lt;Option at 0x2adf0d19df38: --settings&gt;, &lt;Option at 0x2adf0d19df80: --pythonpath&gt;, &lt;Option at 0x2adf0d19dfc8: --traceback&gt;, &lt;Option at 0x2adf0d1af098: --no-color&gt;, &lt;Option at 0x2adf1e75d3f8: -i/--strike-id&gt;, &lt;Option at 0x2adf1e75d5a8: -t/--throttle&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

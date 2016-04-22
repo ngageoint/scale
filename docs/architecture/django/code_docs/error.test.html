@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="error.html">error package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="error.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="error.html#submodules">Submodules</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -193,16 +193,16 @@
 <span id="error-test-test-models-module"></span><h2>error.test.test_models module<a class="headerlink" href="#module-error.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="error.test.test_models.TestGetDatabaseModel">
-<em class="property">class </em><tt class="descclassname">error.test.test_models.</tt><tt class="descname">TestGetDatabaseModel</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">error.test.test_models.</code><code class="descname">TestGetDatabaseModel</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="error.test.test_models.TestGetDatabaseModel.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_models.TestGetDatabaseModel.test_get_model">
-<tt class="descname">test_get_model</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.test_get_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_models.TestGetDatabaseModel.test_get_model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -212,52 +212,52 @@
 <span id="error-test-test-views-module"></span><h2>error.test.test_views module<a class="headerlink" href="#module-error.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="error.test.test_views.TestErrorDetailsView">
-<em class="property">class </em><tt class="descclassname">error.test.test_views.</tt><tt class="descname">TestErrorDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_bad_catgory">
-<tt class="descname">test_edit_error_bad_catgory</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_bad_catgory" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_bad_catgory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_bad_catgory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the edit Error method with a bad category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_change_system">
-<tt class="descname">test_edit_error_change_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_change_system" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_change_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_change_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that an existing error cannot be changed to a system level error.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_not_found">
-<tt class="descname">test_edit_error_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the edit Error method with a bad error id.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_success">
-<tt class="descname">test_edit_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the edit Error method.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_system">
-<tt class="descname">test_edit_error_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_system" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that an existing system error cannot be edited.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_get_error_not_found">
-<tt class="descname">test_get_error_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Get Error method with a bad error id.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorDetailsView.test_get_error_success">
-<tt class="descname">test_get_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Get Error method.</p>
 </dd></dl>
 
@@ -265,40 +265,40 @@
 
 <dl class="class">
 <dt id="error.test.test_views.TestErrorsView">
-<em class="property">class </em><tt class="descclassname">error.test.test_views.</tt><tt class="descname">TestErrorsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.test_create_error_bad_category">
-<tt class="descname">test_create_error_bad_category</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_bad_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_error_bad_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_bad_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the create Error method with a bad category value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.test_create_error_missing">
-<tt class="descname">test_create_error_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_missing" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_error_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the create Error method with missing data.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.test_create_error_success">
-<tt class="descname">test_create_error_success</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the create Error method.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.test_create_error_system">
-<tt class="descname">test_create_error_system</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_system" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that system errors cannot be created.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="error.test.test_views.TestErrorsView.test_list_errors">
-<tt class="descname">test_list_errors</tt><big>(</big><big>)</big><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_list_errors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_list_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_list_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get Errors method.</p>
 </dd></dl>
 
@@ -310,7 +310,7 @@
 <p>Defines utility methods for testing errors</p>
 <dl class="function">
 <dt id="error.test.utils.create_error">
-<tt class="descclassname">error.test.utils.</tt><tt class="descname">create_error</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>description=u'Test error description'</em>, <em>category=u'SYSTEM'</em><big>)</big><a class="headerlink" href="#error.test.utils.create_error" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">error.test.utils.</code><code class="descname">create_error</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=u'Test error description'</em>, <em>category=u'SYSTEM'</em>, <em>is_builtin=False</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.utils.create_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a error model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -318,7 +318,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>
 </tbody>
 </table>

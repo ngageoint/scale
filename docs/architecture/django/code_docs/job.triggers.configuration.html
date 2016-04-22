@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -199,27 +199,27 @@
 <p>Defines the base configuration class for a trigger rule that triggers job creation</p>
 <dl class="class">
 <dt id="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration">
-<em class="property">class </em><tt class="descclassname">job.triggers.configuration.trigger_rule.</tt><tt class="descname">JobTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>config_dict</em><big>)</big><a class="headerlink" href="#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">job.triggers.configuration.trigger_rule.</code><code class="descname">JobTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a></p>
 <p>The base class that represents trigger rule configurations that can create jobs when triggered</p>
 <dl class="method">
 <dt id="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job">
-<tt class="descname">validate_trigger_for_job</tt><big>(</big><em>job_interface</em><big>)</big><a class="headerlink" href="#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the trigger rule configuration to ensure it correctly connects with the given job type interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></tt></a>) &#8211; The job type interface</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The job type interface</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></tt></a>: If the trigger rule connection to the job</dt>
+<dt>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job</dt>
 <dd>type interface is not valid</dd>
 </dl>
 </dd></dl>

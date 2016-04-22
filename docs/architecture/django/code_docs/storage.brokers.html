@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -197,8 +197,8 @@
 <p>Defines the base broker class</p>
 <dl class="class">
 <dt id="storage.brokers.broker.Broker">
-<em class="property">class </em><tt class="descclassname">storage.brokers.broker.</tt><tt class="descname">Broker</tt><a class="headerlink" href="#storage.brokers.broker.Broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.brokers.broker.</code><code class="descname">Broker</code><a class="headerlink" href="#storage.brokers.broker.Broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Abstract class for a broker that can download and upload files for a given storage backend</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -210,12 +210,12 @@
 </table>
 <dl class="attribute">
 <dt id="storage.brokers.broker.Broker.broker_type">
-<tt class="descname">broker_type</tt><em class="property"> = None</em><a class="headerlink" href="#storage.brokers.broker.Broker.broker_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">broker_type</code><em class="property"> = None</em><a class="headerlink" href="#storage.brokers.broker.Broker.broker_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.cleanup_download_dir">
-<tt class="descname">cleanup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cleanup_download_dir</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs any cleanup necessary for a previous setup_download_dir() call</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -233,7 +233,7 @@
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.cleanup_upload_dir">
-<tt class="descname">cleanup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cleanup_upload_dir</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs any cleanup necessary for a previous setup_upload_dir() call</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -251,7 +251,7 @@
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.delete_files">
-<tt class="descname">delete_files</tt><big>(</big><em>work_dir</em>, <em>workspace_paths</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>work_dir</em>, <em>workspace_paths</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the workspace files with the given workspace paths. The work directory already exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -269,7 +269,7 @@
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.download_files">
-<tt class="descname">download_files</tt><big>(</big><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.download_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">download_files</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.download_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads the given workspace files into the given download directory. This method assumes that
 setup_download_dir() has already been called with the same download and work directories.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -290,7 +290,7 @@ download directory)</li>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.is_config_valid">
-<tt class="descname">is_config_valid</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.is_config_valid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_config_valid</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.is_config_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given configuration. There is no return value; an invalid configuration should just raise an
 exception.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -305,7 +305,7 @@ exception.</p>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.load_config">
-<tt class="descname">load_config</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.load_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.load_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the given configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -319,7 +319,7 @@ exception.</p>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.move_files">
-<tt class="descname">move_files</tt><big>(</big><em>work_dir</em>, <em>files_to_move</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.move_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">move_files</code><span class="sig-paren">(</span><em>work_dir</em>, <em>files_to_move</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the workspace files to the new workspace paths. The work directory already exists.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -337,7 +337,7 @@ exception.</p>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.setup_download_dir">
-<tt class="descname">setup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.setup_download_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setup_download_dir</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.setup_download_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up the given download directory to download files from the workspace. The download directory and the
 work directory already exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -356,7 +356,7 @@ work directory already exist.</p>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.setup_upload_dir">
-<tt class="descname">setup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setup_upload_dir</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up the given upload directory to upload or delete files in the workspace. The upload directory and the
 work directory already exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -375,7 +375,7 @@ work directory already exist.</p>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.upload_files">
-<tt class="descname">upload_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>files_to_upload</em><big>)</big><a class="headerlink" href="#storage.brokers.broker.Broker.upload_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em>, <em>files_to_upload</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.upload_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the given files in the given upload directory into the workspace. This method assumes that
 setup_upload_dir() has already been called with the same upload and work directories.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -402,7 +402,7 @@ file)</li>
 <p>Defines the factory for creating brokers</p>
 <dl class="function">
 <dt id="storage.brokers.factory.get_broker">
-<tt class="descclassname">storage.brokers.factory.</tt><tt class="descname">get_broker</tt><big>(</big><em>broker_type</em><big>)</big><a class="headerlink" href="#storage.brokers.factory.get_broker" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.brokers.factory.</code><code class="descname">get_broker</code><span class="sig-paren">(</span><em>broker_type</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.factory.get_broker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a broker of the given type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -412,7 +412,7 @@ file)</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a broker for storing and retrieving files</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><tt class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -424,41 +424,41 @@ file)</li>
 <p>Defines an NFS broker that utilizes a network file system as its backend storage</p>
 <dl class="class">
 <dt id="storage.brokers.nfs_broker.NfsBroker">
-<em class="property">class </em><tt class="descclassname">storage.brokers.nfs_broker.</tt><tt class="descname">NfsBroker</tt><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><tt class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">storage.brokers.nfs_broker.</code><code class="descname">NfsBroker</code><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></p>
 <p>Broker that utilizes the NFS (Network File System) protocol</p>
 <dl class="attribute">
 <dt id="storage.brokers.nfs_broker.NfsBroker.broker_type">
-<tt class="descname">broker_type</tt><em class="property"> = u'nfs'</em><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.broker_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">broker_type</code><em class="property"> = u'nfs'</em><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.broker_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.cleanup_download_dir">
-<tt class="descname">cleanup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.cleanup_download_dir" title="storage.brokers.broker.Broker.cleanup_download_dir"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.cleanup_download_dir()</span></tt></a></p>
+<code class="descname">cleanup_download_dir</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.cleanup_download_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.cleanup_download_dir" title="storage.brokers.broker.Broker.cleanup_download_dir"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.cleanup_download_dir()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.cleanup_upload_dir">
-<tt class="descname">cleanup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.cleanup_upload_dir" title="storage.brokers.broker.Broker.cleanup_upload_dir"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.cleanup_upload_dir()</span></tt></a></p>
+<code class="descname">cleanup_upload_dir</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.cleanup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.cleanup_upload_dir" title="storage.brokers.broker.Broker.cleanup_upload_dir"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.cleanup_upload_dir()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.delete_files">
-<tt class="descname">delete_files</tt><big>(</big><em>work_dir</em>, <em>workspace_paths</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.delete_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></tt></a></p>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>work_dir</em>, <em>workspace_paths</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.download_files">
-<tt class="descname">download_files</tt><big>(</big><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.download_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.download_files" title="storage.brokers.broker.Broker.download_files"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.download_files()</span></tt></a></p>
+<code class="descname">download_files</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em>, <em>files_to_download</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.download_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.download_files" title="storage.brokers.broker.Broker.download_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.download_files()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.is_config_valid">
-<tt class="descname">is_config_valid</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.is_config_valid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_config_valid</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.is_config_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given configuration. There is no return value; an invalid configuration should just raise an
 exception.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -473,7 +473,7 @@ exception.</p>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.load_config">
-<tt class="descname">load_config</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.load_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.load_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the given configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -487,26 +487,26 @@ exception.</p>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.move_files">
-<tt class="descname">move_files</tt><big>(</big><em>work_dir</em>, <em>files_to_move</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.move_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.move_files" title="storage.brokers.broker.Broker.move_files"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.move_files()</span></tt></a></p>
+<code class="descname">move_files</code><span class="sig-paren">(</span><em>work_dir</em>, <em>files_to_move</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.move_files" title="storage.brokers.broker.Broker.move_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.move_files()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.setup_download_dir">
-<tt class="descname">setup_download_dir</tt><big>(</big><em>download_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.setup_download_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_download_dir" title="storage.brokers.broker.Broker.setup_download_dir"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_download_dir()</span></tt></a></p>
+<code class="descname">setup_download_dir</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.setup_download_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_download_dir" title="storage.brokers.broker.Broker.setup_download_dir"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_download_dir()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.setup_upload_dir">
-<tt class="descname">setup_upload_dir</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_upload_dir" title="storage.brokers.broker.Broker.setup_upload_dir"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_upload_dir()</span></tt></a></p>
+<code class="descname">setup_upload_dir</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.setup_upload_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_upload_dir" title="storage.brokers.broker.Broker.setup_upload_dir"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_upload_dir()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.upload_files">
-<tt class="descname">upload_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>files_to_upload</em><big>)</big><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.upload_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_upload_dir" title="storage.brokers.broker.Broker.setup_upload_dir"><tt class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_upload_dir()</span></tt></a></p>
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em>, <em>files_to_upload</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.setup_upload_dir" title="storage.brokers.broker.Broker.setup_upload_dir"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.setup_upload_dir()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

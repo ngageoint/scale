@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -224,21 +224,21 @@
 <span id="scheduler-test-test-initialize-module"></span><h2>scheduler.test.test_initialize module<a class="headerlink" href="#module-scheduler.test.test_initialize" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.test_initialize.TestInitializeSystem">
-<em class="property">class </em><tt class="descclassname">scheduler.test.test_initialize.</tt><tt class="descname">TestInitializeSystem</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.test_initialize.</code><code class="descname">TestInitializeSystem</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="scheduler.test.test_initialize.TestInitializeSystem.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'basic_system_job_types.json']</em><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'basic_system_job_types.json']</em><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_initialize.TestInitializeSystem.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job">
-<tt class="descname">test_create_clock_job</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_clock_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating the Scale clock job</p>
 </dd></dl>
 
@@ -249,22 +249,22 @@
 <span id="scheduler-test-test-scheduler-module"></span><h2>scheduler.test.test_scheduler module<a class="headerlink" href="#module-scheduler.test.test_scheduler" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.test_scheduler.TestScheduler">
-<em class="property">class </em><tt class="descclassname">scheduler.test.test_scheduler.</tt><tt class="descname">TestScheduler</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.test_scheduler.</code><code class="descname">TestScheduler</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests core functionality of the scheduler.</p>
 <dl class="method">
 <dt id="scheduler.test.test_scheduler.TestScheduler.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_scheduler.TestScheduler.testRegistration">
-<tt class="descname">testRegistration</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.testRegistration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testRegistration</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.testRegistration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_scheduler.TestScheduler.test_reregistration_triggers_reconciliation">
-<tt class="descname">test_reregistration_triggers_reconciliation</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.test_reregistration_triggers_reconciliation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_reregistration_triggers_reconciliation</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_scheduler.TestScheduler.test_reregistration_triggers_reconciliation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -274,40 +274,40 @@
 <span id="scheduler-test-test-views-module"></span><h2>scheduler.test.test_views module<a class="headerlink" href="#module-scheduler.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.test_views.TestSchedulerView">
-<em class="property">class </em><tt class="descclassname">scheduler.test.test_views.</tt><tt class="descname">TestSchedulerView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.test_views.</code><code class="descname">TestSchedulerView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.test_get_scheduler_not_found">
-<tt class="descname">test_get_scheduler_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_scheduler_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Get Scheduler method when the database entry is missing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.test_get_scheduler_success">
-<tt class="descname">test_get_scheduler_success</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_scheduler_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Get Scheduler method.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.test_update_scheduler_extra_fields">
-<tt class="descname">test_update_scheduler_extra_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_extra_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_scheduler_extra_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_extra_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Update Scheduler method with extra fields.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.test_update_scheduler_no_fields">
-<tt class="descname">test_update_scheduler_no_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_no_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_scheduler_no_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_no_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Update Scheduler method with no fields.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestSchedulerView.test_update_scheduler_success">
-<tt class="descname">test_update_scheduler_success</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_scheduler_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Update Scheduler method.</p>
 </dd></dl>
 
@@ -315,28 +315,28 @@
 
 <dl class="class">
 <dt id="scheduler.test.test_views.TestStatusView">
-<em class="property">class </em><tt class="descclassname">scheduler.test.test_views.</tt><tt class="descname">TestStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.test_views.</code><code class="descname">TestStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.test_views.TestStatusView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestStatusView.test_status_no_master">
-<tt class="descname">test_status_no_master</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_no_master" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status_no_master</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_no_master" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test getting overall scheduler status information</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestStatusView.test_status_no_scheduler">
-<tt class="descname">test_status_no_scheduler</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_no_scheduler" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status_no_scheduler</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_no_scheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test getting overall scheduler status information</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestStatusView.test_status_success">
-<tt class="descname">test_status_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestStatusView.test_status_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test getting overall scheduler status information successfully</p>
 </dd></dl>
 
@@ -344,16 +344,16 @@
 
 <dl class="class">
 <dt id="scheduler.test.test_views.TestVersionView">
-<em class="property">class </em><tt class="descclassname">scheduler.test.test_views.</tt><tt class="descname">TestVersionView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestVersionView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.test_views.</code><code class="descname">TestVersionView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestVersionView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.test_views.TestVersionView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestVersionView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestVersionView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.test_views.TestVersionView.test_success">
-<tt class="descname">test_success</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.test_views.TestVersionView.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.test_views.TestVersionView.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test getting overall version/build information successfully</p>
 </dd></dl>
 

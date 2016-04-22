@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="source.html">source package</a><ul class="current">
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -193,13 +193,13 @@
 <p>Defines the source data file input type contained within job data</p>
 <dl class="class">
 <dt id="source.configuration.source_data_file.SourceDataFileParseSaver">
-<em class="property">class </em><tt class="descclassname">source.configuration.source_data_file.</tt><tt class="descname">SourceDataFileParseSaver</tt><a class="headerlink" href="#source.configuration.source_data_file.SourceDataFileParseSaver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileParseSaver" title="job.configuration.data.data_file.AbstractDataFileParseSaver"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileParseSaver</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">source.configuration.source_data_file.</code><code class="descname">SourceDataFileParseSaver</code><a class="headerlink" href="#source.configuration.source_data_file.SourceDataFileParseSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileParseSaver" title="job.configuration.data.data_file.AbstractDataFileParseSaver"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileParseSaver</span></code></a></p>
 <p>Implements the data file parse saver to provide a way to save parse results for source files.</p>
 <dl class="method">
 <dt id="source.configuration.source_data_file.SourceDataFileParseSaver.save_parse_results">
-<tt class="descname">save_parse_results</tt><big>(</big><em>parse_results</em>, <em>input_file_ids</em><big>)</big><a class="headerlink" href="#source.configuration.source_data_file.SourceDataFileParseSaver.save_parse_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results" title="job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results"><tt class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results()</span></tt></a></p>
+<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>parse_results</em>, <em>input_file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#source.configuration.source_data_file.SourceDataFileParseSaver.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results" title="job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results"><code class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

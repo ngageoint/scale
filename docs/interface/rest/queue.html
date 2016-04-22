@@ -92,30 +92,34 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">RESTful HTTP Interface</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">Queue Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
@@ -141,7 +145,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -389,7 +393,7 @@ Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>job_data</td>
 <td>JSON Object</td>
-<td>JSON defining the data to run the job on, see <a class="reference internal" href="../../architecture/jobs/job_data.html#architecture-jobs-job-data"><em>Job Data</em></a></td>
+<td>JSON defining the data to run the job on, see <a class="reference internal" href="../../architecture/jobs/job_data.html#architecture-jobs-job-data"><span>Job Data</span></a></td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
@@ -434,7 +438,7 @@ Duplicate it to filter by multiple values.</td>
 <td>JSON Object</td>
 <td>All fields are the same as the job details model.
 The status will always be QUEUED and a new job_exe will be included.
-(See <a class="reference internal" href="job.html#rest-job-details"><em>Job Details</em></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
@@ -689,7 +693,7 @@ The status will always be QUEUED and a new job_exe will be included.
 </tr>
 <tr class="row-odd"><td>recipe_data</td>
 <td>JSON Object</td>
-<td>Defines the data to run the recipe, see <a class="reference internal" href="../../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><em>Recipe Data</em></a></td>
+<td>Defines the data to run the recipe, see <a class="reference internal" href="../../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><span>Recipe Data</span></a></td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
@@ -728,7 +732,7 @@ The status will always be QUEUED and a new job_exe will be included.
 <tr class="row-even"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td>All fields are the same as the recipe details model.
-(See <a class="reference internal" href="recipe.html#rest-recipe-details"><em>Recipe Details</em></a>)</td>
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
@@ -956,30 +960,35 @@ Choices: [CANCELED, FAILED].</td>
 <td>Optional</td>
 <td>Queue only jobs with a given job type category.</td>
 </tr>
-<tr class="row-odd"><td>priority</td>
+<tr class="row-odd"><td>error_categories</td>
+<td>Array[String]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given error category.</td>
+</tr>
+<tr class="row-even"><td>priority</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Change the priority of matching jobs when adding them to the queue.
 Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-odd"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the jobs model.
 The status will be PENDING or BLOCKED if the job has never been queued.
 The status will be QUEUED if the job has been previously queued.
-(See <a class="reference internal" href="job.html#rest-job-list"><em>Job List</em></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-list"><span>Job List</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>

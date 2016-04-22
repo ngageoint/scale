@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -168,7 +168,7 @@
 <p>The job data is a JSON document that defines the actual data and configuration on which a specific job will run. It will
 describe all of the data being passed to the job&#8217;s inputs, as well as configuration for how to handle the job&#8217;s output.
 The job data is required when placing a specific job on the queue for the first time.</p>
-<p>Consider our previous example algorithm, make_geotiff.py, from <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><em>Job Interface</em></a>. The job data for
+<p>Consider our previous example algorithm, make_geotiff.py, from <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><span>Job Interface</span></a>. The job data for
 queuing and running a make_geotiff.py job could be defined as follows:</p>
 <p><strong>Example job data:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -249,7 +249,7 @@ represents each input data has the following fields:</p>
 match the name of an input in the job&#8217;s interface. The name of every input and output in the job data must be
 unique.</div></blockquote>
 <p>The other fields that describe the data being passed to the input are based upon the <em>type</em> of the input as it is
-defined in the job interface, see <a class="reference internal" href="job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>. The valid types from the job interface
+defined in the job interface, see <a class="reference internal" href="job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>. The valid types from the job interface
 specification are:</p>
 <p><strong>property</strong></p>
 <blockquote>
@@ -289,7 +289,7 @@ object that represents each output data has the following fields:</p>
 match the name of an input in the job&#8217;s interface. The name of every input and output in the job data must be
 unique.</div></blockquote>
 <p>The other fields that describe the output configuration are based upon the <em>type</em> of the output as it is defined in
-the job interface, see <a class="reference internal" href="job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>. The valid types from the job interface specification
+the job interface, see <a class="reference internal" href="job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>. The valid types from the job interface specification
 are:</p>
 <p><strong>file</strong></p>
 <blockquote>

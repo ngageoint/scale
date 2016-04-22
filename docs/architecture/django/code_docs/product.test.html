@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -206,28 +206,28 @@
 <span id="product-test-test-models-module"></span><h2>product.test.test_models module<a class="headerlink" href="#module-product.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks">
-<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestFileAncestryLinkManagerCreateFileAncestryLinks</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestFileAncestryLinkManagerCreateFileAncestryLinks</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs">
-<tt class="descname">test_inputs</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating links for only input files before any products are generated.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs_and_products">
-<tt class="descname">test_inputs_and_products</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs_and_products" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_inputs_and_products</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_inputs_and_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating links for inputs and then later replacing with generated products.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products">
-<tt class="descname">test_products</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_products</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating links for inputs with generated products at the same time.</p>
 </dd></dl>
 
@@ -235,16 +235,16 @@
 
 <dl class="class">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors">
-<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestFileAncestryLinkManagerGetSourceAncestors</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestFileAncestryLinkManagerGetSourceAncestors</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestFileAncestryLinkManagerGetSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling FileAncestryLinkManager.get_source_ancestors() successfully.</p>
 </dd></dl>
 
@@ -252,23 +252,23 @@
 
 <dl class="class">
 <dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery">
-<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerGetProductUpdatesQuery</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestProductFileManagerGetProductUpdatesQuery</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests on the ProductFileManager.get_product_updates_query() method</p>
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_job_types">
-<tt class="descname">test_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.get_updates() with a &#8220;job_type_ids&#8221; argument value</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types">
-<tt class="descname">test_no_job_types</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_job_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.get_updates() without a &#8220;job_type_ids&#8221; argument value</p>
 </dd></dl>
 
@@ -276,17 +276,17 @@
 
 <dl class="class">
 <dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors">
-<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerPopulateSourceAncestors</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestProductFileManagerPopulateSourceAncestors</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests on the ProductFileManager.populate_source_ancestors() method</p>
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerPopulateSourceAncestors.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerPopulateSourceAncestors.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.populate_source_ancestors() successfully</p>
 </dd></dl>
 
@@ -294,52 +294,52 @@
 
 <dl class="class">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles">
-<em class="property">class </em><tt class="descclassname">product.test.test_models.</tt><tt class="descname">TestProductFileManagerUploadFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestProductFileManagerUploadFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_geo_metadata">
-<tt class="descname">test_geo_metadata</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_geo_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_geo_metadata</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_geo_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.upload_files() successfully with extra geometry meta data</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product">
-<tt class="descname">test_non_operational_product</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_non_operational_product</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.upload_files() with a non-operational input file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductFileManager.upload_files() successfully</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid">
-<tt class="descname">test_uuid</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uuid</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests setting UUIDs on products from a single job execution.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_input_files">
-<tt class="descname">test_uuid_use_input_files</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_input_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uuid_use_input_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests setting UUIDs on products with different source input files.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_exe">
-<tt class="descname">test_uuid_use_job_exe</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_exe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uuid_use_job_exe</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests setting UUIDs on products from multiple job executions of the same type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_type">
-<tt class="descname">test_uuid_use_job_type</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uuid_use_job_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests setting UUIDs on products with different job types.</p>
 </dd></dl>
 
@@ -350,29 +350,29 @@
 <span id="product-test-test-queue-processor-module"></span><h2>product.test.test_queue_processor module<a class="headerlink" href="#module-product.test.test_queue_processor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="product.test.test_queue_processor.TestProductProcessor">
-<em class="property">class </em><tt class="descclassname">product.test.test_queue_processor.</tt><tt class="descname">TestProductProcessor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_queue_processor.</code><code class="descname">TestProductProcessor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests handling queue events when job executions change state.</p>
 <dl class="method">
 <dt id="product.test.test_queue_processor.TestProductProcessor.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_queue_processor.TestProductProcessor.test_completed">
-<tt class="descname">test_completed</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_completed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_completed</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests products are published when a job is completed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_initial">
-<tt class="descname">test_queued_initial</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_initial" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_queued_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_initial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests file ancestry links are created for input files when a job is first queued.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_repeat">
-<tt class="descname">test_queued_repeat</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_repeat" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_queued_repeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_repeat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests nothing is done when a job is queued more than once.</p>
 </dd></dl>
 
@@ -383,76 +383,76 @@
 <span id="product-test-test-views-module"></span><h2>product.test.test_views module<a class="headerlink" href="#module-product.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="product.test.test_views.TestProductsUpdatesView">
-<em class="property">class </em><tt class="descclassname">product.test.test_views.</tt><tt class="descname">TestProductsUpdatesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_views.</code><code class="descname">TestProductsUpdatesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_file_name">
-<tt class="descname">test_file_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view filtered by file name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_invalid_ended">
-<tt class="descname">test_invalid_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product file updates view when the ended parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_invalid_started">
-<tt class="descname">test_invalid_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product file updates view when the started parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_is_operational">
-<tt class="descname">test_is_operational</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_is_operational</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_is_operational" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view filtered by is_operational flag.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_category">
-<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_id">
-<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_job_type_name">
-<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended">
-<tt class="descname">test_missing_tz_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product file updates view when the ended parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_missing_tz_started">
-<tt class="descname">test_missing_tz_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product file updates view when the started parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_negative_time_range">
-<tt class="descname">test_negative_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product file updates view with a negative time range.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsUpdatesView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product file updates view.</p>
 </dd></dl>
 
@@ -460,76 +460,76 @@
 
 <dl class="class">
 <dt id="product.test.test_views.TestProductsView">
-<em class="property">class </em><tt class="descclassname">product.test.test_views.</tt><tt class="descname">TestProductsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.test_views.</code><code class="descname">TestProductsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_file_name">
-<tt class="descname">test_file_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by file name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_invalid_ended">
-<tt class="descname">test_invalid_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product files view when the ended parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_invalid_started">
-<tt class="descname">test_invalid_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product files view when the started parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_is_operational">
-<tt class="descname">test_is_operational</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_is_operational</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_is_operational" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by is_operational flag.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_job_type_category">
-<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_job_type_id">
-<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_job_type_name">
-<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_missing_tz_ended">
-<tt class="descname">test_missing_tz_ended</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product files view when the ended parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_missing_tz_started">
-<tt class="descname">test_missing_tz_started</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product files view when the started parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_negative_time_range">
-<tt class="descname">test_negative_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the product files view with a negative time range.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.test_views.TestProductsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view.</p>
 </dd></dl>
 
@@ -541,7 +541,7 @@
 <p>Defines utility methods for testing products</p>
 <dl class="function">
 <dt id="product.test.utils.create_product">
-<tt class="descclassname">product.test.utils.</tt><tt class="descname">create_product</tt><big>(</big><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><big>)</big><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a product file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -549,7 +549,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The product model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="product.html#product.models.ProductFile" title="product.models.ProductFile"><tt class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="product.html#product.models.ProductFile" title="product.models.ProductFile"><code class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></code></a></td>
 </tr>
 </tbody>
 </table>

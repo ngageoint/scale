@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -121,7 +122,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -194,16 +194,16 @@
 <span id="node-migrations-0001-initial-module"></span><h2>node.migrations.0001_initial module<a class="headerlink" href="#module-node.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.migrations.0001_initial.Migration">
-<em class="property">class </em><tt class="descclassname">node.migrations.0001_initial.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#node.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.migrations.0001_initial.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#node.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="node.migrations.0001_initial.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = []</em><a class="headerlink" href="#node.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = []</em><a class="headerlink" href="#node.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.migrations.0001_initial.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'hostname', &lt;django.db.models.fields.CharField&gt;), (u'port', &lt;django.db.models.fields.IntegerField&gt;), (u'slave_id', &lt;django.db.models.fields.CharField&gt;), (u'is_paused', &lt;django.db.models.fields.BooleanField&gt;), (u'is_active', &lt;django.db.models.fields.BooleanField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'archived', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_offer', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'node'}, name=u'Node'&gt;]</em><a class="headerlink" href="#node.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'hostname', &lt;django.db.models.fields.CharField&gt;), (u'port', &lt;django.db.models.fields.IntegerField&gt;), (u'slave_id', &lt;django.db.models.fields.CharField&gt;), (u'is_paused', &lt;django.db.models.fields.BooleanField&gt;), (u'is_active', &lt;django.db.models.fields.BooleanField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'archived', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_offer', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'node'}, name=u'Node'&gt;]</em><a class="headerlink" href="#node.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -213,16 +213,16 @@
 <span id="node-migrations-0002-node-pause-reason-module"></span><h2>node.migrations.0002_node_pause_reason module<a class="headerlink" href="#module-node.migrations.0002_node_pause_reason" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.migrations.0002_node_pause_reason.Migration">
-<em class="property">class </em><tt class="descclassname">node.migrations.0002_node_pause_reason.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.migrations.0002_node_pause_reason.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="node.migrations.0002_node_pause_reason.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'node', u'0001_initial')]</em><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'node', u'0001_initial')]</em><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.migrations.0002_node_pause_reason.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'pause_reason', model_name=u'node'&gt;]</em><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'pause_reason', model_name=u'node'&gt;]</em><a class="headerlink" href="#node.migrations.0002_node_pause_reason.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -232,16 +232,16 @@
 <span id="node-migrations-0003-node-is-paused-errors-module"></span><h2>node.migrations.0003_node_is_paused_errors module<a class="headerlink" href="#module-node.migrations.0003_node_is_paused_errors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.migrations.0003_node_is_paused_errors.Migration">
-<em class="property">class </em><tt class="descclassname">node.migrations.0003_node_is_paused_errors.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">node.migrations.0003_node_is_paused_errors.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="node.migrations.0003_node_is_paused_errors.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'node', u'0002_node_pause_reason')]</em><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'node', u'0002_node_pause_reason')]</em><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="node.migrations.0003_node_is_paused_errors.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_paused_errors', model_name=u'node'&gt;]</em><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_paused_errors', model_name=u'node'&gt;]</em><a class="headerlink" href="#node.migrations.0003_node_is_paused_errors.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

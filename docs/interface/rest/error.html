@@ -92,30 +92,34 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">RESTful HTTP Interface</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="">Error Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
@@ -141,7 +145,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -249,7 +253,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
@@ -267,15 +271,19 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <td>String</td>
 <td colspan="2">The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].</td>
 </tr>
-<tr class="row-odd"><td>.created</td>
+<tr class="row-odd"><td>.is_builtin</td>
+<td>Boolean</td>
+<td colspan="2">Whether the error was loaded during the installation process.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -286,6 +294,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
             <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
             <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
         <span class="p">},</span>
@@ -360,7 +369,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <tr class="row-even"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td>All fields are the same as the error details model.
-(See <a class="reference internal" href="#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
@@ -368,6 +377,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Error 1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is an algorithm error&quot;</span><span class="p">,</span>
     <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;ALGORITHM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
 <span class="p">}</span>
@@ -426,20 +436,25 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <td>String</td>
 <td>The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-odd"><td>is_builtin</td>
+<td>Boolean</td>
+<td>Whether the error was loaded during the installation process.</td>
+</tr>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
     <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
 <span class="p">}</span>
@@ -511,7 +526,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <tr class="row-even"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the error details model.
-(See <a class="reference internal" href="#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
@@ -519,6 +534,7 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Error&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;An edited error description.&quot;</span><span class="p">,</span>
     <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;ALGORITHM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
 <span class="p">}</span>

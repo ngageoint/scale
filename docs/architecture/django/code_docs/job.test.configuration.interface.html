@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -200,70 +200,75 @@
 <span id="job-test-configuration-interface-test-error-interface-module"></span><h2>job.test.configuration.interface.test_error_interface module<a class="headerlink" href="#module-job.test.configuration.interface.test_error_interface" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_error_interface.</tt><tt class="descname">TestErrorInterfaceValidate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_error_interface.</code><code class="descname">TestErrorInterfaceValidate</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_job_errors.json']</em><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_found">
-<tt class="descname">test_get_error_found</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that an error model is returned given an exit_code other than 0</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing">
-<tt class="descname">test_get_error_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that an unknown error is returned when a non-registered name is found in the mapping</p>
+<code class="descname">test_get_error_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that general algorithm error is returned when a non-registered name is found in the mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names">
-<tt class="descname">test_get_error_names</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting error names from the mapping.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_empty">
-<tt class="descname">test_get_error_names_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_names_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting error names when there are no exit codes defined.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_none">
-<tt class="descname">test_get_error_names_none</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_none" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_names_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_none" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting error names when there is no error interface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_unique">
-<tt class="descname">test_get_error_names_unique</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_unique" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_names_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_unique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting error names without duplicates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_zero">
-<tt class="descname">test_get_error_zero</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_zero" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_error_zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_zero" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that no error is returned when the exit_code is 0</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty">
-<tt class="descname">test_validate_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_validate_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating no error names.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing">
-<tt class="descname">test_validate_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_validate_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating when some error names are missing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success">
-<tt class="descname">test_validate_success</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_validate_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating all error names.</p>
 </dd></dl>
 
@@ -274,16 +279,16 @@
 <span id="job-test-configuration-interface-test-job-interface-module"></span><h2>job.test.configuration.interface.test_job_interface module<a class="headerlink" href="#module-job.test.configuration.interface.test_job_interface" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_job_interface.</tt><tt class="descname">TestJobInterfaceAddOutputToConnection</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_job_interface.</code><code class="descname">TestJobInterfaceAddOutputToConnection</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceAddOutputToConnection.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobInterface.add_output_to_connection() successfully.</p>
 </dd></dl>
 
@@ -291,130 +296,130 @@
 
 <dl class="class">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_job_interface.</tt><tt class="descname">TestJobInterfacePostSteps</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_job_interface.</code><code class="descname">TestJobInterfacePostSteps</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_extra_products_are_fine">
-<tt class="descname">test_extra_products_are_fine</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_extra_products_are_fine" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_extra_products_are_fine</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_extra_products_are_fine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_manifest_overrides_stdout">
-<tt class="descname">test_manifest_overrides_stdout</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_manifest_overrides_stdout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_manifest_overrides_stdout</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_manifest_overrides_stdout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_data_media_types">
-<tt class="descname">test_output_data_media_types</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_data_media_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_data_media_types</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_data_media_types" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file">
-<tt class="descname">test_output_file</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_file</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file_with_geo_metadata">
-<tt class="descname">test_output_file_with_geo_metadata</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file_with_geo_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_file_with_geo_metadata</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_file_with_geo_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files">
-<tt class="descname">test_output_files</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files_with_geo_metadata">
-<tt class="descname">test_output_files_with_geo_metadata</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files_with_geo_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_files_with_geo_metadata</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_output_files_with_geo_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_data">
-<tt class="descname">test_parse_data</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_parse_data</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout">
-<tt class="descname">test_parse_stdout</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_parse_stdout</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required">
-<tt class="descname">test_parse_stdout_required</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_parse_stdout_required</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_job_interface.</tt><tt class="descname">TestJobInterfacePreSteps</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_job_interface.</code><code class="descname">TestJobInterfacePreSteps</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_complex_command">
-<tt class="descname">test_complex_command</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_complex_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_complex_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_complex_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_file_in_command">
-<tt class="descname">test_file_in_command</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_file_in_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_file_in_command</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_file_in_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_files_in_command">
-<tt class="descname">test_files_in_command</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_files_in_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_files_in_command</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_files_in_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_output_dir_in_command">
-<tt class="descname">test_output_dir_in_command</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_output_dir_in_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_dir_in_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_output_dir_in_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_property_in_command">
-<tt class="descname">test_property_in_command</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_property_in_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_property_in_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_property_in_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_simple_case">
-<tt class="descname">test_simple_case</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_simple_case" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_simple_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_simple_case" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_job_interface.</tt><tt class="descname">TestJobInterfaceValidateConnection</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_job_interface.</code><code class="descname">TestJobInterfaceValidateConnection</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_no_workspace_needed">
-<tt class="descname">test_no_workspace_needed</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_no_workspace_needed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_workspace_needed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_no_workspace_needed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobInterface.validate_connection() without a workspace, but none is needed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_required_workspace_missing">
-<tt class="descname">test_required_workspace_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_required_workspace_missing" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_required_workspace_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_required_workspace_missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobInterface.validate_connection() when a required workspace is missing</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobInterface.validate_connection() successfully.</p>
 </dd></dl>
 
@@ -422,97 +427,97 @@
 
 <dl class="class">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_job_interface.</tt><tt class="descname">TestJobInterfaceValidation</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_job_interface.</code><code class="descname">TestJobInterfaceValidation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_bad_version">
-<tt class="descname">test_bad_version</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_bad_version" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_bad_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobInterface constructor with good and bad versions.  Versions longer than 50 should fail.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_fail_without_input">
-<tt class="descname">test_command_param_will_fail_without_input</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_fail_without_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_command_param_will_fail_without_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_fail_without_input" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_pass_with_input">
-<tt class="descname">test_command_param_will_pass_with_input</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_pass_with_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_command_param_will_pass_with_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_param_will_pass_with_input" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_allows_special_formats">
-<tt class="descname">test_command_string_allows_special_formats</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_allows_special_formats" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_command_string_allows_special_formats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_allows_special_formats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_special_formats_should_have_dollar_sign">
-<tt class="descname">test_command_string_special_formats_should_have_dollar_sign</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_special_formats_should_have_dollar_sign" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_command_string_special_formats_should_have_dollar_sign</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_command_string_special_formats_should_have_dollar_sign" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_definition_with_unkown_field_fails">
-<tt class="descname">test_definition_with_unkown_field_fails</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_definition_with_unkown_field_fails" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_definition_with_unkown_field_fails</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_definition_with_unkown_field_fails" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_be_an_approved_type">
-<tt class="descname">test_input_data_must_be_an_approved_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_be_an_approved_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_data_must_be_an_approved_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_be_an_approved_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_name">
-<tt class="descname">test_input_data_must_have_a_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_data_must_have_a_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_type">
-<tt class="descname">test_input_data_must_have_a_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_data_must_have_a_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_must_have_a_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_names_must_be_unique">
-<tt class="descname">test_input_data_names_must_be_unique</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_names_must_be_unique" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_data_names_must_be_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_names_must_be_unique" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_required_must_be_true_or_false">
-<tt class="descname">test_input_data_required_must_be_true_or_false</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_required_must_be_true_or_false" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_data_required_must_be_true_or_false</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_data_required_must_be_true_or_false" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_name_appropriate">
-<tt class="descname">test_input_name_appropriate</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_name_appropriate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_input_name_appropriate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_input_name_appropriate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_must_have_command">
-<tt class="descname">test_interface_must_have_command</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_must_have_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_interface_must_have_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_must_have_command" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_with_share_resource_works">
-<tt class="descname">test_interface_with_share_resource_works</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_with_share_resource_works" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_interface_with_share_resource_works</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_interface_with_share_resource_works" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_minimal_input_validation">
-<tt class="descname">test_minimal_input_validation</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_minimal_input_validation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_minimal_input_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_minimal_input_validation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_output_name_appropriate">
-<tt class="descname">test_output_name_appropriate</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_output_name_appropriate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_name_appropriate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_output_name_appropriate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_share_resources_must_have_unque_names">
-<tt class="descname">test_share_resources_must_have_unque_names</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_share_resources_must_have_unque_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_share_resources_must_have_unque_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_share_resources_must_have_unque_names" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -522,22 +527,22 @@
 <span id="job-test-configuration-interface-test-scale-file-module"></span><h2>job.test.configuration.interface.test_scale_file module<a class="headerlink" href="#module-job.test.configuration.interface.test_scale_file" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.interface.test_scale_file.</tt><tt class="descname">TestScaleFileDescriptionMediaTypeAllowed</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_scale_file.</code><code class="descname">TestScaleFileDescriptionMediaTypeAllowed</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_all">
-<tt class="descname">test_accept_all</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_all" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_accept_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileDescription.is_media_type_allowed() when accepting all media types.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific">
-<tt class="descname">test_accept_specific</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_accept_specific</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileDescription.is_media_type_allowed() when accepting specific media types.</p>
 </dd></dl>
 

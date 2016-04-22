@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -213,15 +213,15 @@
 <p>Defines exceptions that can occur when interacting with a job results</p>
 <dl class="exception">
 <dt id="job.configuration.results.exceptions.InvalidResultsManifest">
-<em class="property">exception </em><tt class="descclassname">job.configuration.results.exceptions.</tt><tt class="descname">InvalidResultsManifest</tt><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">InvalidResultsManifest</code><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided definition of a results_manifest</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch">
-<em class="property">exception </em><tt class="descclassname">job.configuration.results.exceptions.</tt><tt class="descname">ResultsManifestAndInterfaceDontMatch</tt><a class="headerlink" href="#job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">ResultsManifestAndInterfaceDontMatch</code><a class="headerlink" href="#job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>The result manifests outputs do not match the required outputs or given inputs of the job</p>
 </dd></dl>
 
@@ -231,12 +231,12 @@
 <p>Defines the results obtained after executing a job</p>
 <dl class="class">
 <dt id="job.configuration.results.job_results.JobResults">
-<em class="property">class </em><tt class="descclassname">job.configuration.results.job_results.</tt><tt class="descname">JobResults</tt><big>(</big><em>results_dict=None</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.configuration.results.job_results.</code><code class="descname">JobResults</code><span class="sig-paren">(</span><em>results_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.job_results.JobResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the results obtained after executing a job</p>
 <dl class="method">
 <dt id="job.configuration.results.job_results.JobResults.add_file_list_parameter">
-<tt class="descname">add_file_list_parameter</tt><big>(</big><em>name</em>, <em>file_ids</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_list_parameter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_file_list_parameter</code><span class="sig-paren">(</span><em>name</em>, <em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_list_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a list of files to the job results</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -254,7 +254,7 @@
 
 <dl class="method">
 <dt id="job.configuration.results.job_results.JobResults.add_file_parameter">
-<tt class="descname">add_file_parameter</tt><big>(</big><em>name</em>, <em>file_id</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_parameter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_file_parameter</code><span class="sig-paren">(</span><em>name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_file_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a file to the job results</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -272,7 +272,7 @@
 
 <dl class="method">
 <dt id="job.configuration.results.job_results.JobResults.add_output_to_data">
-<tt class="descname">add_output_to_data</tt><big>(</big><em>output_name</em>, <em>job_data</em>, <em>input_name</em><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_output_to_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_output_to_data</code><span class="sig-paren">(</span><em>output_name</em>, <em>job_data</em>, <em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.job_results.JobResults.add_output_to_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given output from the results as a new input in the given job data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -280,7 +280,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>output_name</strong> (<em>str</em>) &#8211; The name of the results output to add to the data</li>
-<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>) &#8211; The job data</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
 <li><strong>input_name</strong> (<em>str</em>) &#8211; The name of the data input</li>
 </ul>
 </td>
@@ -291,7 +291,7 @@
 
 <dl class="method">
 <dt id="job.configuration.results.job_results.JobResults.get_dict">
-<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.job_results.JobResults.get_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.job_results.JobResults.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents these job results</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

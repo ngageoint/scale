@@ -92,30 +92,34 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">RESTful HTTP Interface</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">Job Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
@@ -141,7 +145,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -250,120 +254,127 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td>error_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs that failed due to an error with a given category.
+Choices: [SYSTEM, DATA, ALGORITHM].
+Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><em>Job Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_type</td>
+<tr class="row-odd"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job_type_rev</td>
+<tr class="row-even"><td>.job_type_rev</td>
 <td>JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><em>Job Type Revision Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.event</td>
+<tr class="row-odd"><td>.event</td>
 <td>JSON Object</td>
 <td colspan="2">The trigger event that is associated with the job.
-(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><em>Trigger Event Details</em></a>)</td>
+(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><span>Trigger Event Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.error</td>
+<tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.status</td>
+<tr class="row-odd"><td>.status</td>
 <td>String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-odd"><td>.priority</td>
+<tr class="row-even"><td>.priority</td>
 <td>Integer</td>
 <td colspan="2">The priority of the job.</td>
 </tr>
-<tr class="row-even"><td>.num_exes</td>
+<tr class="row-odd"><td>.num_exes</td>
 <td>Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-odd"><td>.timeout</td>
+<tr class="row-even"><td>.timeout</td>
 <td>Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-even"><td>.max_tries</td>
+<tr class="row-odd"><td>.max_tries</td>
 <td>Integer</td>
 <td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
 </tr>
-<tr class="row-odd"><td>.cpus_required</td>
+<tr class="row-even"><td>.cpus_required</td>
 <td>Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td>.mem_required</td>
+<tr class="row-odd"><td>.mem_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td>.disk_in_required</td>
+<tr class="row-even"><td>.disk_in_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-even"><td>.disk_out_required</td>
+<tr class="row-odd"><td>.disk_out_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-odd"><td>.created</td>
+<tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>.queued</td>
+<tr class="row-odd"><td>.queued</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-odd"><td>.started</td>
+<tr class="row-even"><td>.started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-even"><td>.ended</td>
+<tr class="row-odd"><td>.ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-odd"><td>.last_status_change</td>
+<tr class="row-even"><td>.last_status_change</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -458,23 +469,23 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_type_rev</td>
 <td>JSON Object</td>
 <td>The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><em>Job Type Revision Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>event</td>
 <td>JSON Object</td>
 <td>The trigger event that is associated with the count.
-(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><em>Trigger Event Details</em></a>)</td>
+(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><span>Trigger Event Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>error</td>
 <td>JSON Object</td>
 <td>The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>status</td>
 <td>String</td>
@@ -539,22 +550,22 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>data</td>
 <td>JSON Object</td>
 <td>An interface description for all the job input and output files.
-(See <a class="reference internal" href="../../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><em>Job Data Specification Version 1.0</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span>Job Data Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>results</td>
 <td>JSON Object</td>
 <td>An interface description for all the job results meta-data.
-(See <a class="reference internal" href="../../architecture/jobs/job_results.html#architecture-jobs-job-results-spec"><em>Job Results Specification Version 1.1</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_results.html#architecture-jobs-job-results-spec"><span>Job Results Specification Version 1.1</span></a>)</td>
 </tr>
 <tr class="row-even"><td>recipes</td>
 <td>Array</td>
 <td>A list of all recipes associated with the job.
-(See <a class="reference internal" href="recipe.html#rest-recipe-details"><em>Recipe Details</em></a>)</td>
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>job_exes</td>
 <td>Array</td>
 <td>A list of all job executions associated with the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><em>Job Execution Details</em></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>inputs</td>
 <td>Array</td>
@@ -563,19 +574,19 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the input as defined by the job type interface.
-(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the input as defined by teh job type interface.
-(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the input, which can vary depending on the type. Simple
 property inputs will include primitive values, whereas the file or files type
 will include a full JSON representation of a Scale file object.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><em>Scale File Details</em></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>outputs</td>
 <td>Array</td>
@@ -584,18 +595,18 @@ will include a full JSON representation of a Scale file object.
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the output as defined by the job type interface.
-(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the output as defined by teh job type interface.
-(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><em>Job Interface Specification Version 1.0</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the output, which can vary depending on the type. A file or
 files type will include a full JSON representation of a Product file object.
-(See <a class="reference internal" href="product.html#rest-product-details"><em>Product Details</em></a>)</td>
+(See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
@@ -1007,28 +1018,28 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><em>Job Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_type_rev</td>
 <td>JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><em>Job Type Revision Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.event</td>
 <td>JSON Object</td>
 <td colspan="2">The trigger event that is associated with the job.
-(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><em>Trigger Event Details</em></a>)</td>
+(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><span>Trigger Event Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.status</td>
 <td>String</td>
@@ -1094,7 +1105,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td>.input_files</td>
 <td>JSON Object</td>
 <td colspan="2">A list of files that the job used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><em>Scale File Details</em></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
@@ -1253,119 +1264,126 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td>error_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs that failed due to an error with a given category.
+Choices: [SYSTEM, DATA, ALGORITHM].
+Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>count</td>
+<tr class="row-odd"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>next</td>
+<tr class="row-even"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-even"><td>previous</td>
+<tr class="row-odd"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-odd"><td>results</td>
+<tr class="row-even"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>.id</td>
+<tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><em>Job Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job_type</td>
+<tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><em>Job Type Details</em></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.event</td>
+<tr class="row-odd"><td>.event</td>
 <td>JSON Object</td>
 <td colspan="2">The trigger event that is associated with the count.
-(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><em>Trigger Event Details</em></a>)</td>
+(See <a class="reference internal" href="trigger.html#rest-trigger-event-details"><span>Trigger Event Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.error</td>
+<tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td colspan="2">The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><em>Error Details</em></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.status</td>
+<tr class="row-odd"><td>.status</td>
 <td>String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-odd"><td>.priority</td>
+<tr class="row-even"><td>.priority</td>
 <td>Integer</td>
 <td colspan="2">The priority of the job.</td>
 </tr>
-<tr class="row-even"><td>.num_exes</td>
+<tr class="row-odd"><td>.num_exes</td>
 <td>Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-odd"><td>.timeout</td>
+<tr class="row-even"><td>.timeout</td>
 <td>Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-even"><td>.max_tries</td>
+<tr class="row-odd"><td>.max_tries</td>
 <td>Integer</td>
 <td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
 </tr>
-<tr class="row-odd"><td>.cpus_required</td>
+<tr class="row-even"><td>.cpus_required</td>
 <td>Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td>.mem_required</td>
+<tr class="row-odd"><td>.mem_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td>.disk_in_required</td>
+<tr class="row-even"><td>.disk_in_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-even"><td>.disk_out_required</td>
+<tr class="row-odd"><td>.disk_out_required</td>
 <td>Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-odd"><td>.created</td>
+<tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>.queued</td>
+<tr class="row-odd"><td>.queued</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-odd"><td>.started</td>
+<tr class="row-even"><td>.started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-even"><td>.ended</td>
+<tr class="row-odd"><td>.ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-odd"><td>.last_status_change</td>
+<tr class="row-even"><td>.last_status_change</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>.latest_job_exe</td>
+<tr class="row-even"><td>.latest_job_exe</td>
 <td>JSON Object</td>
 <td colspan="2">The most recent execution of the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><em>Job Execution Details</em></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>

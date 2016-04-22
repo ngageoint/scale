@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="source.html">source package</a><ul class="current">
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -196,22 +196,22 @@
 <span id="source-test-triggers-configuration-test-parse-trigger-rule-module"></span><h2>source.test.triggers.configuration.test_parse_trigger_rule module<a class="headerlink" href="#module-source.test.triggers.configuration.test_parse_trigger_rule" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</tt><tt class="descname">TestParseTriggerRuleConfigurationInit</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</code><code class="descname">TestParseTriggerRuleConfigurationInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_invalid">
-<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_invalid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a ParseTriggerRuleConfiguration with an invalid configuration</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a ParseTriggerRuleConfiguration with valid configuration</p>
 </dd></dl>
 
@@ -219,22 +219,22 @@
 
 <dl class="class">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</tt><tt class="descname">TestParseTriggerRuleConfigurationValidate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</code><code class="descname">TestParseTriggerRuleConfigurationValidate</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_bad_workspace">
-<tt class="descname">test_bad_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_bad_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_bad_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate() with a bad workspace</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidate.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate() successfully</p>
 </dd></dl>
 
@@ -242,28 +242,28 @@
 
 <dl class="class">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</tt><tt class="descname">TestParseTriggerRuleConfigurationValidateTriggerForJob</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</code><code class="descname">TestParseTriggerRuleConfigurationValidateTriggerForJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name">
-<tt class="descname">test_bad_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning">
-<tt class="descname">test_media_type_warning</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_warning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForJob.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings</p>
 </dd></dl>
 
@@ -271,28 +271,28 @@
 
 <dl class="class">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</tt><tt class="descname">TestParseTriggerRuleConfigurationValidateTriggerForRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.configuration.test_parse_trigger_rule.</code><code class="descname">TestParseTriggerRuleConfigurationValidateTriggerForRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name">
-<tt class="descname">test_bad_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning">
-<tt class="descname">test_media_type_warning</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_warning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings</p>
 </dd></dl>
 

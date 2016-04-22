@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -197,44 +197,44 @@
 <span id="recipe-test-configuration-data-test-recipe-data-module"></span><h2>recipe.test.configuration.data.test_recipe_data module<a class="headerlink" href="#module-recipe.test.configuration.data.test_recipe_data" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.DummyDataFileStore">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">DummyDataFileStore</tt><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">DummyDataFileStore</code><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></code></a></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.get_workspaces">
-<tt class="descname">get_workspaces</tt><big>(</big><em>workspace_ids</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_workspaces</code><span class="sig-paren">(</span><em>workspace_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.store_files">
-<tt class="descname">store_files</tt><big>(</big><em>files</em>, <em>input_file_ids</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">store_files</code><span class="sig-paren">(</span><em>files</em>, <em>input_file_ids</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.DummyDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">TestRecipeDataAddInputToData</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">TestRecipeDataAddInputToData</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file">
-<tt class="descname">test_successful_file</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.add_input_to_data() successfully with a file parameter</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file_list">
-<tt class="descname">test_successful_file_list</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_file_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.add_input_to_data() successfully with a file list parameter</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_property">
-<tt class="descname">test_successful_property</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_property" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.add_input_to_data() successfully with a property parameter</p>
 </dd></dl>
 
@@ -242,46 +242,46 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">TestRecipeDataInit</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">TestRecipeDataInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_bad_version">
-<tt class="descname">test_init_bad_version</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_bad_version" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_bad_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor with bad version number.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_blank">
-<tt class="descname">test_init_blank</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_blank" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_blank</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_blank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor with blank JSON.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_duplicate_input_name">
-<tt class="descname">test_init_duplicate_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_duplicate_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_duplicate_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_duplicate_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor with duplicate data input name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_no_input_name">
-<tt class="descname">test_init_no_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_no_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_no_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_no_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor with missing data input name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_successful_one_property">
-<tt class="descname">test_init_successful_one_property</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_successful_one_property" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_successful_one_property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_successful_one_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor successfully with a single property input.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_workspace_id_not_integer">
-<tt class="descname">test_init_workspace_id_not_integer</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_workspace_id_not_integer" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_init_workspace_id_not_integer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataInit.test_init_workspace_id_not_integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData constructor with a non-integral value for workspace_id</p>
 </dd></dl>
 
@@ -289,76 +289,76 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">TestRecipeDataValidateInputFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">TestRecipeDataValidateInputFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_file_id">
-<tt class="descname">test_bad_file_id</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_file_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_file_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_file_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a file that has an invalid ID</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_media_type">
-<tt class="descname">test_bad_media_type</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_media_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_media_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_media_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a file that has an invalid media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_missing_required">
-<tt class="descname">test_missing_required</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_missing_required" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_missing_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() when a file is required, but missing</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_given_single">
-<tt class="descname">test_multiple_given_single</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_given_single" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_given_single</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_given_single" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a multiple file param that is provided with a single file ID</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_missing_file_ids">
-<tt class="descname">test_multiple_missing_file_ids</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_missing_file_ids" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_missing_file_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_missing_file_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a multiple file param missing the file_ids field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_integrals">
-<tt class="descname">test_multiple_non_integrals</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_integrals" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_non_integrals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_integrals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a multiple file param with a list of non-integrals for file_ids field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_list">
-<tt class="descname">test_multiple_non_list</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_non_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_multiple_non_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a multiple file param with a non-list for file_ids field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_not_required">
-<tt class="descname">test_not_required</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_not_required" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_not_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() when a file is missing, but required</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_missing_file_id">
-<tt class="descname">test_single_missing_file_id</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_missing_file_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_single_missing_file_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_missing_file_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a single file param missing the file_id field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_non_integral">
-<tt class="descname">test_single_non_integral</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_non_integral" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_single_non_integral</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_single_non_integral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a single file param with a non-integral for file_id field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_input_files() with a valid set of job data</p>
 </dd></dl>
 
@@ -366,40 +366,40 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">TestRecipeDataValidateProperties</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">TestRecipeDataValidateProperties</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_required">
-<tt class="descname">test_missing_required</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_required" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_properties() when a property is required, but missing</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_value">
-<tt class="descname">test_missing_value</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_missing_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_properties() when a property is missing a value</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_not_required">
-<tt class="descname">test_not_required</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_not_required" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_not_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_properties() when a property is missing, but is not required</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_required_successful">
-<tt class="descname">test_required_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_required_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_required_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_required_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_properties() successfully with a required property</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_value_not_string">
-<tt class="descname">test_value_not_string</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_value_not_string" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_value_not_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateProperties.test_value_not_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_properties() when a property has a non-string value</p>
 </dd></dl>
 
@@ -407,34 +407,34 @@
 
 <dl class="class">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace">
-<em class="property">class </em><tt class="descclassname">recipe.test.configuration.data.test_recipe_data.</tt><tt class="descname">TestRecipeDataValidateWorkspace</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.data.test_recipe_data.</code><code class="descname">TestRecipeDataValidateWorkspace</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_missing_workspace_id">
-<tt class="descname">test_missing_workspace_id</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_missing_workspace_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_workspace_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_missing_workspace_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_workspace() when missing the workspace_id field</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_workspace() with successful data</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_active">
-<tt class="descname">test_workspace_not_active</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_active" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_workspace_not_active</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_workspace() with a workspace that is not active</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_exist">
-<tt class="descname">test_workspace_not_exist</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_exist" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_workspace_not_exist</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace.test_workspace_not_exist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeData.validate_workspace() with a workspace that does not exist</p>
 </dd></dl>
 

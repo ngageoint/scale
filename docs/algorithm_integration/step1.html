@@ -1,0 +1,598 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Making a Scale-compatible Algorithm &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
+        <link rel="next" title="Capturing your algorithm outputs with a Scale Results Manifest" href="step2.html"/>
+        <link rel="prev" title="Algorithm Integration into Scale" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Making a Scale-compatible Algorithm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-executables"><em>Creating Executables</em></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#c-c"><em>C/C++</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#idl"><em>IDL</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#java"><em>Java</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#matlab"><em>MATLAB</em></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python"><em>Python</em></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#wrapping-algorithms">Wrapping algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-python-wrapper">Example Python wrapper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-shell-wrapper">Example shell wrapper</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Algorithm Integration into Scale</a> &raquo;</li>
+      
+    <li>Making a Scale-compatible Algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/algorithm_integration/step1.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="making-a-scale-compatible-algorithm">
+<span id="algorithm-integration-step1"></span><h1>Making a Scale-compatible Algorithm<a class="headerlink" href="#making-a-scale-compatible-algorithm" title="Permalink to this headline">¶</a></h1>
+<p><strong>Algorithms must</strong>:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>Run standalone without any user inputs</strong></dt>
+<dd><p class="first last">Algorithms must be fully automated.  If your algorithm is prompting for input from a user, the job will continue to
+wait until it times out.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Fail gracefully</strong></dt>
+<dd><p class="first last">Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message
+to standard error.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are
+not captured appropriately, Scale will likely report a general algorithm error, which will make debugging your
+algorithm more difficult.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Not display popups</strong></dt>
+<dd><p class="first last">Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is
+able to make a selection or close these windows.  Popup displays will cause an algorithm to hang (since they won&#8217;t
+be closed) until the job times out.  This is a common issue with IDL and output will need to be displayed to the
+standard output instead.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Run on Linux</strong></dt>
+<dd><p class="first last">Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLLs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Not have hardcoded paths</strong></dt>
+<dd><p class="first last">File paths must not be embedded in the source code such that changing the path requires re-compiling code.
+Necessary file paths should be passable into the algorithm either via a configuration file or passed from the
+command line.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Scale will</strong>:</p>
+<ul class="simple">
+<li>Give the input file(s) absolute path</li>
+<li>Provide an empty output directory</li>
+<li>Provide dedicated resources that you request</li>
+<li>Capture standard output and standard error</li>
+<li>Capture exit codes</li>
+</ul>
+<p><strong>Scale will not</strong>:</p>
+<ul class="simple">
+<li>Resolve relative paths</li>
+<li>Provide output file names</li>
+<li>Automatically create NFS mounts in the Docker container</li>
+<li>Capture output products not listed in the <a class="reference internal" href="results_manifest.html#algorithm-integration-results-manifest"><span>results manifest</span></a> and
+<a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>job interface</span></a></li>
+</ul>
+<div class="section" id="creating-executables">
+<h2><em>Creating Executables</em><a class="headerlink" href="#creating-executables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="c-c">
+<h3><em>C/C++</em><a class="headerlink" href="#c-c" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Compiled on Linux</li>
+<li>Should provide cmake/makefiles for algorithm</li>
+</ul>
+</div>
+<div class="section" id="idl">
+<h3><em>IDL</em><a class="headerlink" href="#idl" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Code should be compiled into .sav files with IDL&#8217;s save command</li>
+<li>IDL .sav files are run using runtime license</li>
+<li>Some IDL function calls, such as ENVI, require special licensing which is limited</li>
+</ul>
+</div>
+<div class="section" id="java">
+<h3><em>Java</em><a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Code should be compiled into .jar files</li>
+<li>Needed .jar libraries should be within its own folder</li>
+</ul>
+</div>
+<div class="section" id="matlab">
+<h3><em>MATLAB</em><a class="headerlink" href="#matlab" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Code should be compiled into executables using MATLAB&#8217;s deploytool or mcc command</li>
+<li>Compiling MATLAB code will require any toolboxes used to be specified and available at compile time</li>
+<li>Compiled MATLAB code runs using MATLAB&#8217;s compiled runtime mode, which does not require a license</li>
+</ul>
+</div>
+<div class="section" id="python">
+<h3><em>Python</em><a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Code should be in its own folder</li>
+<li>Needed Python modules will need to be installed in the Docker container</li>
+</ul>
+</div>
+</div>
+<div class="section" id="wrapping-algorithms">
+<h2>Wrapping algorithms<a class="headerlink" href="#wrapping-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>If a script wraps the algorithm execution, exit codes will need to be captured and returned by the wrapper script.</p>
+<div class="section" id="example-python-wrapper">
+<h3>Example Python wrapper<a class="headerlink" href="#example-python-wrapper" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+<span class="c1">#Setup Logger to capture print statements</span>
+<span class="n">log</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">consoleFormatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">consoleHandler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">consoleHandler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">consoleFormatter</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">consoleHandler</span><span class="p">)</span>
+
+<span class="c1">#Use subprocess to execute algorithms</span>
+<span class="k">def</span> <span class="nf">runAlgorithm</span><span class="p">(</span><span class="n">tiffpath</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+    <span class="n">tiffBasename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tiffpath</span><span class="p">)</span>
+    <span class="n">outFilePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">tiffBasename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;_tiffinfo_log.txt&#39;</span><span class="p">))</span>
+
+    <span class="n">arglist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">r&#39;/usr/bin/tiffinfo&#39;</span><span class="p">,</span> <span class="n">tiffpath</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">outFilePath</span><span class="p">]</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Command:&#39;</span><span class="p">)</span>
+    <span class="n">myCommand</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">myCommand</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Executing command...&#39;</span><span class="p">)</span>
+
+    <span class="n">exitCode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Returning from algorithm...&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">exitCode</span>
+
+<span class="c1">#Capture results in manifest</span>
+<span class="k">def</span> <span class="nf">generateResultsManifest</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">outputLog</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;*tiffinfo_log.txt&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Error in locating output files&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">outputLog</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;No outputs found in directory for manifest&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="n">jsonDict</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">jsonDict</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1.1&#39;</span>
+    <span class="n">jsonDict</span><span class="p">[</span><span class="s1">&#39;output_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">tempDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">tempDict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;tiffinfo_log&#39;</span>
+    <span class="n">tempDict</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">outputLog</span><span class="p">}</span>
+    <span class="n">jsonDict</span><span class="p">[</span><span class="s1">&#39;output_data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tempDict</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;results_manifest.json&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+        <span class="n">jsonString</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jsonDict</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsonString</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed manifest creation&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+    <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;No inputs passed to algorithm&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">argc</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">tiffpath</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Tiff path: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tiffpath</span><span class="p">))</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Output directory: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+    <span class="n">exitCode</span> <span class="o">=</span> <span class="n">runAlgorithm</span><span class="p">(</span><span class="n">tiffpath</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">exitCode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;algorithm exited with code: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exitCode</span><span class="p">))</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed Python Wrapper&#39;</span><span class="p">)</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exitCode</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="example-shell-wrapper">
+<h3>Example shell wrapper<a class="headerlink" href="#example-shell-wrapper" title="Permalink to this headline">¶</a></h3>
+<p>Wrapping an algorithm with a shell script is useful when you need to:</p>
+<ul class="simple">
+<li>Mount NFS directories for the algorithm to reference</li>
+<li>Setup additional environment variables or append to system paths</li>
+<li>Determine additional command line input arguments for the algorithm</li>
+</ul>
+<p>The bash script will capture the arguments passed to it that are specified in the
+<a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>job interface</span></a></p>
+<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1">#Capture command line arguments</span>
+<span class="nv">INPUT_H5</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">OUTDIR</span><span class="o">=</span><span class="nv">$2</span>
+
+<span class="c1">#Set known arguments if needed</span>
+<span class="nv">NUMWORKERS</span><span class="o">=</span>10
+
+<span class="nv">PYTHON</span><span class="o">=</span>/usr/local/miniconda/bin/python
+
+<span class="nb">echo</span> <span class="s1">&#39;Mounting directory&#39;</span>
+mkdir -p /dted
+mount -o soft,rw,lookupcache<span class="o">=</span>positive dted:/dted /dted
+
+<span class="nv">SCRIPT</span><span class="o">=</span>/app/my_algorithm.py
+
+<span class="c1">#Call your algorithm and pass in the arguments needed</span>
+<span class="nv">$PYTHON</span> <span class="nv">$SCRIPT</span> <span class="nv">$INPUT_H5</span> <span class="nv">$NUMWORKERS</span> <span class="nv">$OUTDIR</span> /dted
+
+<span class="c1">#Capture exit code from algorithm</span>
+<span class="nv">rc</span><span class="o">=</span><span class="nv">$?</span>
+
+<span class="c1">#It is good practice to unmount your directory when finished</span>
+umount -lf /dted
+<span class="nb">echo</span> <span class="s1">&#39;Unmounting directory&#39;</span>
+
+<span class="c1">#If the algorithm didn&#39;t exit successfully, exit wrapper with same code</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$rc</span> !<span class="o">=</span> <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;Caught exit(</span><span class="si">${</span><span class="nv">rc</span><span class="si">}</span><span class="s2">) from </span><span class="nv">$SCRIPT</span><span class="s2">&quot;</span>
+  <span class="nb">exit</span> <span class="nv">$rc</span>
+<span class="k">else</span>
+  <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$SCRIPT</span><span class="s2"> Success.&quot;</span>
+<span class="k">fi</span>
+
+<span class="nb">echo</span> <span class="s1">&#39;Wrapper finished&#39;</span>
+
+<span class="nb">exit</span> <span class="nv">$rc</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="step2.html" class="btn btn-neutral float-right" title="Capturing your algorithm outputs with a Scale Results Manifest" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Algorithm Integration into Scale" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

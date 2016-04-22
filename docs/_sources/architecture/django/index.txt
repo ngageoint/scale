@@ -11,6 +11,7 @@ system. Source code documentation for every app is provided below:
 .. toctree::
    :maxdepth: 1
 
+   code_docs/cli
    code_docs/error
    code_docs/ingest
    code_docs/job
@@ -21,7 +22,6 @@ system. Source code documentation for every app is provided below:
    code_docs/product
    code_docs/queue
    code_docs/recipe
-   code_docs/scale
    code_docs/scheduler
    code_docs/shared_resource
    code_docs/source

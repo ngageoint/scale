@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -121,7 +122,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -224,28 +224,28 @@
 <p>Defines the application configuration for the queue application</p>
 <dl class="class">
 <dt id="queue.apps.QueueConfig">
-<em class="property">class </em><tt class="descclassname">queue.apps.</tt><tt class="descname">QueueConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#queue.apps.QueueConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.apps.</code><code class="descname">QueueConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.apps.QueueConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the queue app</p>
 <dl class="attribute">
 <dt id="queue.apps.QueueConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.apps.QueueConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.apps.QueueConfig.ready">
-<tt class="descname">ready</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.apps.QueueConfig.ready" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.apps.QueueConfig.ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers the job load metrics processor with the clock system.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="queue.apps.QueueConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Queue'</em><a class="headerlink" href="#queue.apps.QueueConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -256,12 +256,12 @@
 <p>Defines the class that represents queued job executions being considered to be scheduled</p>
 <dl class="class">
 <dt id="queue.job_exe.QueuedJobExecution">
-<em class="property">class </em><tt class="descclassname">queue.job_exe.</tt><tt class="descname">QueuedJobExecution</tt><big>(</big><em>queue</em><big>)</big><a class="headerlink" href="#queue.job_exe.QueuedJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.job_exe.</code><code class="descname">QueuedJobExecution</code><span class="sig-paren">(</span><em>queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a queued job execution that is being considered to be scheduled.</p>
 <dl class="method">
 <dt id="queue.job_exe.QueuedJobExecution.accepted">
-<tt class="descname">accepted</tt><big>(</big><em>node</em>, <em>resources</em><big>)</big><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.accepted" title="Permalink to this definition">¶</a></dt>
+<code class="descname">accepted</code><span class="sig-paren">(</span><em>node</em>, <em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.accepted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
 provided</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -269,8 +269,8 @@ provided</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>node</strong> (<a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a>) &#8211; The node model</li>
-<li><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></tt></a>) &#8211; The provided resources</li>
+<li><strong>node</strong> (<a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>) &#8211; The node model</li>
+<li><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a>) &#8211; The provided resources</li>
 </ul>
 </td>
 </tr>
@@ -280,7 +280,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.job_exe.QueuedJobExecution.id">
-<tt class="descname">id</tt><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">id</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ID of this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -296,7 +296,7 @@ provided</p>
 
 <dl class="method">
 <dt id="queue.job_exe.QueuedJobExecution.is_node_acceptable">
-<tt class="descname">is_node_acceptable</tt><big>(</big><em>node_id</em><big>)</big><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.is_node_acceptable" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_node_acceptable</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.is_node_acceptable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether the node with the given ID is acceptable to this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -314,7 +314,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.job_exe.QueuedJobExecution.provided_node">
-<tt class="descname">provided_node</tt><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.provided_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">provided_node</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.provided_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the node that has been provided to run this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -322,7 +322,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node that has been provided to run this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><tt class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -330,7 +330,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.job_exe.QueuedJobExecution.provided_resources">
-<tt class="descname">provided_resources</tt><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.provided_resources" title="Permalink to this definition">¶</a></dt>
+<code class="descname">provided_resources</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.provided_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the resources that have been provided to run this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -338,7 +338,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources that have been provided to run this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -346,7 +346,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.job_exe.QueuedJobExecution.queue">
-<tt class="descname">queue</tt><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.queue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the queue model for this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -354,7 +354,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The queue model for this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><code class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -362,7 +362,7 @@ provided</p>
 
 <dl class="attribute">
 <dt id="queue.job_exe.QueuedJobExecution.required_resources">
-<tt class="descname">required_resources</tt><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.required_resources" title="Permalink to this definition">¶</a></dt>
+<code class="descname">required_resources</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.required_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the resources required by this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -370,7 +370,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources required by this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><tt class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -384,13 +384,13 @@ provided</p>
 <p>Defines the clock event processor for tracking historical job load.</p>
 <dl class="class">
 <dt id="queue.job_load.JobLoadProcessor">
-<em class="property">class </em><tt class="descclassname">queue.job_load.</tt><tt class="descname">JobLoadProcessor</tt><a class="headerlink" href="#queue.job_load.JobLoadProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.clock.ClockEventProcessor" title="job.clock.ClockEventProcessor"><tt class="xref py py-class docutils literal"><span class="pre">job.clock.ClockEventProcessor</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">queue.job_load.</code><code class="descname">JobLoadProcessor</code><a class="headerlink" href="#queue.job_load.JobLoadProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.clock.ClockEventProcessor" title="job.clock.ClockEventProcessor"><code class="xref py py-class docutils literal"><span class="pre">job.clock.ClockEventProcessor</span></code></a></p>
 <p>This class queries and stores job load statistics for tracking and trending.</p>
 <dl class="method">
 <dt id="queue.job_load.JobLoadProcessor.process_event">
-<tt class="descname">process_event</tt><big>(</big><em>event</em>, <em>last_event=None</em><big>)</big><a class="headerlink" href="#queue.job_load.JobLoadProcessor.process_event" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.html#job.clock.ClockEventProcessor.process_event" title="job.clock.ClockEventProcessor.process_event"><tt class="xref py py-meth docutils literal"><span class="pre">job.clock.ClockEventProcessor.process_event()</span></tt></a>.</p>
+<code class="descname">process_event</code><span class="sig-paren">(</span><em>event</em>, <em>last_event=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_load.JobLoadProcessor.process_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.html#job.clock.ClockEventProcessor.process_event" title="job.clock.ClockEventProcessor.process_event"><code class="xref py py-meth docutils literal"><span class="pre">job.clock.ClockEventProcessor.process_event()</span></code></a>.</p>
 <p>Calculates metrics for the job load over time.</p>
 </dd></dl>
 
@@ -402,20 +402,20 @@ provided</p>
 <p>Defines the database model for a queue entry</p>
 <dl class="class">
 <dt id="queue.models.JobLoad">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">JobLoad</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.JobLoad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">JobLoad</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents the load counts for each job type at various points in time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The type of job being measured.</li>
-<li><strong>measured</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the counts were actually measured.</li>
-<li><strong>pending_count</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number of jobs in pending status for the type.</li>
-<li><strong>queued_count</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number of jobs in queued status for the type.</li>
-<li><strong>running_count</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number of jobs in running status for the type.</li>
-<li><strong>total_count</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number of jobs in pending, queued, or running status for the type.</li>
+<li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of job being measured.</li>
+<li><strong>measured</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the counts were actually measured.</li>
+<li><strong>pending_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of jobs in pending status for the type.</li>
+<li><strong>queued_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of jobs in queued status for the type.</li>
+<li><strong>running_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of jobs in running status for the type.</li>
+<li><strong>total_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of jobs in pending, queued, or running status for the type.</li>
 </ul>
 </td>
 </tr>
@@ -423,42 +423,42 @@ provided</p>
 </table>
 <dl class="exception">
 <dt id="queue.models.JobLoad.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#queue.models.JobLoad.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#queue.models.JobLoad.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="queue.models.JobLoad.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">JobLoad.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#queue.models.JobLoad.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">JobLoad.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.JobLoad.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.models.JobLoad.get_next_by_measured">
-<tt class="descclassname">JobLoad.</tt><tt class="descname">get_next_by_measured</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.JobLoad.get_next_by_measured" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">JobLoad.</code><code class="descname">get_next_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_next_by_measured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.JobLoad.get_previous_by_measured">
-<tt class="descclassname">JobLoad.</tt><tt class="descname">get_previous_by_measured</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.JobLoad.get_previous_by_measured" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">JobLoad.</code><code class="descname">get_previous_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_previous_by_measured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.JobLoad.job_type">
-<tt class="descclassname">JobLoad.</tt><tt class="descname">job_type</tt><a class="headerlink" href="#queue.models.JobLoad.job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">JobLoad.</code><code class="descname">job_type</code><a class="headerlink" href="#queue.models.JobLoad.job_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.JobLoad.objects">
-<tt class="descclassname">JobLoad.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.JobLoadManager object at 0x10e4483d0&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">JobLoad.</code><code class="descname">objects</code><em class="property"> = &lt;queue.models.JobLoadManager object&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.models.JobLoadGroup">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">JobLoadGroup</tt><big>(</big><em>time</em>, <em>pending_count=0</em>, <em>queued_count=0</em>, <em>running_count=0</em><big>)</big><a class="headerlink" href="#queue.models.JobLoadGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">JobLoadGroup</code><span class="sig-paren">(</span><em>time</em>, <em>pending_count=0</em>, <em>queued_count=0</em>, <em>running_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a group of job load models.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -478,26 +478,26 @@ provided</p>
 
 <dl class="class">
 <dt id="queue.models.JobLoadManager">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">JobLoadManager</tt><a class="headerlink" href="#queue.models.JobLoadManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">JobLoadManager</code><a class="headerlink" href="#queue.models.JobLoadManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>This class manages the JobLoad model.</p>
 <dl class="method">
 <dt id="queue.models.JobLoadManager.calculate">
-<tt class="descname">calculate</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.JobLoadManager.calculate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadManager.calculate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates and saves new job load models grouped by job type based on a current jobs snapshot.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.models.JobLoadManager.get_job_loads">
-<tt class="descname">get_job_loads</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>job_type_priorities=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#queue.models.JobLoadManager.get_job_loads" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_loads</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>job_type_priorities=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadManager.get_job_loads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job loads within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query jobs updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query jobs updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
 <li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the name.</li>
 <li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the category.</li>
@@ -509,7 +509,7 @@ provided</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job loads that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#queue.models.JobLoad" title="queue.models.JobLoad"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoad</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#queue.models.JobLoad" title="queue.models.JobLoad"><code class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoad</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -518,17 +518,17 @@ provided</p>
 
 <dl class="method">
 <dt id="queue.models.JobLoadManager.group_by_time">
-<tt class="descname">group_by_time</tt><big>(</big><em>job_loads</em><big>)</big><a class="headerlink" href="#queue.models.JobLoadManager.group_by_time" title="Permalink to this definition">¶</a></dt>
+<code class="descname">group_by_time</code><span class="sig-paren">(</span><em>job_loads</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoadManager.group_by_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Groups the given job loads by job type.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_loads</strong> (list[<a class="reference internal" href="#queue.models.JobLoad" title="queue.models.JobLoad"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoad</span></tt></a>]) &#8211; Query jobs updated after this amount of time.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_loads</strong> (list[<a class="reference internal" href="#queue.models.JobLoad" title="queue.models.JobLoad"><code class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoad</span></code></a>]) &#8211; Query jobs updated after this amount of time.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of job loads grouped by job type.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.JobLoadGroup" title="queue.models.JobLoadGroup"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoadGroup</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.JobLoadGroup" title="queue.models.JobLoadGroup"><code class="xref py py-class docutils literal"><span class="pre">queue.models.JobLoadGroup</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -538,27 +538,27 @@ provided</p>
 
 <dl class="class">
 <dt id="queue.models.Queue">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">Queue</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">Queue</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a job that is queued to be run on a node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The job execution that has been queued</li>
-<li><strong>job_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The type of this job execution</li>
-<li><strong>priority</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The priority of the job (lower number is higher priority)</li>
-<li><strong>node_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The specific node on which this job is required to run</li>
-<li><strong>cpus_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The number of CPUs required for this job</li>
-<li><strong>mem_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The amount of RAM in MiB required for this job</li>
-<li><strong>disk_in_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The amount of disk space in MiB required for input files for this job</li>
-<li><strong>disk_out_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
+<li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that has been queued</li>
+<li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this job execution</li>
+<li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job (lower number is higher priority)</li>
+<li><strong>node_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The specific node on which this job is required to run</li>
+<li><strong>cpus_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The number of CPUs required for this job</li>
+<li><strong>mem_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of RAM in MiB required for this job</li>
+<li><strong>disk_in_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for input files for this job</li>
+<li><strong>disk_out_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
 job</li>
-<li><strong>disk_total_required</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></tt>) &#8211; The total amount of disk space in MiB required for this job</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the queue model was created</li>
-<li><strong>queued</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the job execution was placed onto the queue</li>
-<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the queue model was last modified</li>
+<li><strong>disk_total_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of disk space in MiB required for this job</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was created</li>
+<li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was placed onto the queue</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was last modified</li>
 </ul>
 </td>
 </tr>
@@ -566,82 +566,82 @@ job</li>
 </table>
 <dl class="exception">
 <dt id="queue.models.Queue.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#queue.models.Queue.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#queue.models.Queue.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="queue.models.Queue.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">Queue.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#queue.models.Queue.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">Queue.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.Queue.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_created">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_last_modified">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_queued">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_next_by_queued</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_next_by_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_next_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_created">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_last_modified">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_queued">
-<tt class="descclassname">Queue.</tt><tt class="descname">get_previous_by_queued</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job_exe">
-<tt class="descclassname">Queue.</tt><tt class="descname">job_exe</tt><a class="headerlink" href="#queue.models.Queue.job_exe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">job_exe</code><a class="headerlink" href="#queue.models.Queue.job_exe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job_type">
-<tt class="descclassname">Queue.</tt><tt class="descname">job_type</tt><a class="headerlink" href="#queue.models.Queue.job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">job_type</code><a class="headerlink" href="#queue.models.Queue.job_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.node_required">
-<tt class="descclassname">Queue.</tt><tt class="descname">node_required</tt><a class="headerlink" href="#queue.models.Queue.node_required" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">node_required</code><a class="headerlink" href="#queue.models.Queue.node_required" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.objects">
-<tt class="descclassname">Queue.</tt><tt class="descname">objects</tt><em class="property"> = &lt;queue.models.QueueManager object at 0x10e448e90&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Queue.</code><code class="descname">objects</code><em class="property"> = &lt;queue.models.QueueManager object&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.models.QueueEventProcessor">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueEventProcessor</tt><a class="headerlink" href="#queue.models.QueueEventProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">QueueEventProcessor</code><a class="headerlink" href="#queue.models.QueueEventProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Base class used to process queue events.</p>
 <dl class="method">
 <dt id="queue.models.QueueEventProcessor.process_completed">
-<tt class="descname">process_completed</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#queue.models.QueueEventProcessor.process_completed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_completed</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueEventProcessor.process_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback when an existing job execution completed successfully that sub-classes have registered to process.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The new job execution that requires processing.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The new job execution that requires processing.</td>
 </tr>
 </tbody>
 </table>
@@ -649,13 +649,13 @@ job</li>
 
 <dl class="method">
 <dt id="queue.models.QueueEventProcessor.process_failed">
-<tt class="descname">process_failed</tt><big>(</big><em>job_exe</em><big>)</big><a class="headerlink" href="#queue.models.QueueEventProcessor.process_failed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_failed</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueEventProcessor.process_failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback when an existing job execution failed that sub-classes have registered to process.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The new job execution that requires processing.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The new job execution that requires processing.</td>
 </tr>
 </tbody>
 </table>
@@ -663,14 +663,14 @@ job</li>
 
 <dl class="method">
 <dt id="queue.models.QueueEventProcessor.process_queued">
-<tt class="descname">process_queued</tt><big>(</big><em>job_exe</em>, <em>is_initial</em><big>)</big><a class="headerlink" href="#queue.models.QueueEventProcessor.process_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process_queued</code><span class="sig-paren">(</span><em>job_exe</em>, <em>is_initial</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueEventProcessor.process_queued" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callback when a new job execution is queued that sub-classes have registered to process.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a>) &#8211; The new job execution that requires processing.</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The new job execution that requires processing.</li>
 <li><strong>is_initial</strong> (<em>bool</em>) &#8211; Whether or not this is the first time the associated job has been queued.</li>
 </ul>
 </td>
@@ -683,12 +683,12 @@ job</li>
 
 <dl class="class">
 <dt id="queue.models.QueueManager">
-<em class="property">class </em><tt class="descclassname">queue.models.</tt><tt class="descname">QueueManager</tt><a class="headerlink" href="#queue.models.QueueManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">QueueManager</code><a class="headerlink" href="#queue.models.QueueManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for managing the queue</p>
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue">
-<tt class="descname">get_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of queue models sorted according to their scheduling priority</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -696,7 +696,7 @@ job</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of queue models</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><tt class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></tt></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><code class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -704,7 +704,7 @@ job</li>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue_status">
-<tt class="descname">get_queue_status</tt><big>(</big><big>)</big><a class="headerlink" href="#queue.models.QueueManager.get_queue_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_queue_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
 version with overall stats for that type</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -721,7 +721,7 @@ version with overall stats for that type</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.handle_job_cancellation">
-<tt class="descname">handle_job_cancellation</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.handle_job_cancellation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_job_cancellation</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.handle_job_cancellation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles the cancellation of a job. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -729,7 +729,7 @@ version with overall stats for that type</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_id</strong> (<em>int</em>) &#8211; The ID of the job to be canceled</li>
-<li><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; When the job was canceled</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the job was canceled</li>
 </ul>
 </td>
 </tr>
@@ -739,7 +739,7 @@ version with overall stats for that type</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.handle_job_completion">
-<tt class="descname">handle_job_completion</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.handle_job_completion" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_job_completion</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.handle_job_completion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles the successful completion of a job. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -747,7 +747,7 @@ version with overall stats for that type</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution that successfully completed</li>
-<li><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; When the job execution was completed</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the job execution was completed</li>
 </ul>
 </td>
 </tr>
@@ -757,7 +757,7 @@ version with overall stats for that type</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.handle_job_failure">
-<tt class="descname">handle_job_failure</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.handle_job_failure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle_job_failure</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.handle_job_failure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
 Otherwise it is marked failed. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -766,8 +766,8 @@ Otherwise it is marked failed. All database changes occur in an atomic transacti
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution that failed</li>
-<li><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; When the failure occurred</li>
-<li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a>) &#8211; The error that caused the failure</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the failure occurred</li>
+<li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure</li>
 </ul>
 </td>
 </tr>
@@ -777,20 +777,20 @@ Otherwise it is marked failed. All database changes occur in an atomic transacti
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job">
-<tt class="descname">queue_new_job</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
 job_type model must have already been saved in the database (it must have an ID). The given event model must
 have already been saved in the database (it must have an ID). The new job, job_exe, and queue models are saved
 in the database in an atomic transaction. If the data is invalid, a
-<a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a> will be thrown.</p>
+<a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a> will be thrown.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>) &#8211; The type of the new job to create and queue</li>
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
 <li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the job data to run on</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></tt></a>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
 </ul>
 </td>
 </tr>
@@ -800,8 +800,7 @@ in the database in an atomic transaction. If the data is invalid, a
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData">job.configuration.data.exceptions.InvalidData</a>:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the job data is invalid</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><strong>job.configuration.data.exceptions.InvalidData</strong></a> &#8211; If the job data is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -810,17 +809,17 @@ in the database in an atomic transaction. If the data is invalid, a
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job_for_user">
-<tt class="descname">queue_new_job_for_user</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_job_for_user</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job_for_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
 the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
 job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
-invalid, a <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></tt></a> will be thrown.</p>
+invalid, a <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a> will be thrown.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>) &#8211; The type of the new job to create and queue</li>
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
 <li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the job data to run on</li>
 </ul>
 </td>
@@ -837,7 +836,7 @@ invalid, a <a class="reference internal" href="job.configuration.data.html#job.c
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_recipe">
-<tt class="descname">queue_new_recipe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and data. The new jobs in the recipe with no dependencies on other
 jobs are immediately placed on the queue. The given recipe_type model must have already been saved in the
 database (it must have an ID). The given event model must have already been saved in the database (it must have
@@ -847,9 +846,9 @@ an ID). All database changes occur in an atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>) &#8211; The type of the new recipe to create</li>
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
 <li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the recipe data to run on</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></tt></a>) &#8211; The event that triggered the creation of this recipe</li>
+<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this recipe</li>
 </ul>
 </td>
 </tr>
@@ -859,8 +858,7 @@ an ID). All database changes occur in an atomic transaction.</p>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidData:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the recipe data is invalid</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>InvalidData</strong> &#8211; If the recipe data is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -869,7 +867,7 @@ an ID). All database changes occur in an atomic transaction.</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_recipe_for_user">
-<tt class="descname">queue_new_recipe_for_user</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_new_recipe_for_user</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_recipe_for_user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and data at the request of a user.</p>
 <p>The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
 event model must have already been saved in the database (it must have an ID). All database changes occur in an
@@ -879,7 +877,7 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>) &#8211; The type of the new recipe to create</li>
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the new recipe to create</li>
 <li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the recipe data to run on</li>
 </ul>
 </td>
@@ -890,8 +888,7 @@ atomic transaction.</p>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidData:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the recipe data is invalid</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>InvalidData</strong> &#8211; If the recipe data is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -900,14 +897,14 @@ atomic transaction.</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.register_processor">
-<tt class="descname">register_processor</tt><big>(</big><em>processor_class</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.register_processor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_processor</code><span class="sig-paren">(</span><em>processor_class</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.register_processor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers the given processor class to be called when job executions change status.</p>
 <p>Processors from other applications can be registered during their ready() method.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>processor_class</strong> (<tt class="xref py py-class docutils literal"><span class="pre">job.clock.ClockProcessor</span></tt>) &#8211; The processor class to invoke when the associated status change occurs.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>processor_class</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.clock.ClockProcessor</span></code>) &#8211; The processor class to invoke when the associated status change occurs.</td>
 </tr>
 </tbody>
 </table>
@@ -915,7 +912,7 @@ atomic transaction.</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.requeue_existing_job">
-<tt class="descname">requeue_existing_job</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.requeue_existing_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">requeue_existing_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.requeue_existing_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
 correspond to an existing model previously saved in the database and the job must have its related job_type
 model. The new job_exe and queue models are saved in the database in an atomic transaction.</p>
@@ -944,7 +941,7 @@ model. The new job_exe and queue models are saved in the database in an atomic t
 
 <dl class="method">
 <dt id="queue.models.QueueManager.requeue_jobs">
-<tt class="descname">requeue_jobs</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.requeue_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">requeue_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.requeue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
 ignored. All database changes will occur within an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -963,19 +960,19 @@ ignored. All database changes will occur within an atomic transaction.</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.schedule_job_executions">
-<tt class="descname">schedule_job_executions</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.models.QueueManager.schedule_job_executions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schedule_job_executions</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.schedule_job_executions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
 be deleted from the database. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><tt class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></tt></a>]) &#8211; A list of queued job executions that have been provided nodes and resources on which to
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>]) &#8211; A list of queued job executions that have been provided nodes and resources on which to
 run</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scheduled job executions</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -989,8 +986,8 @@ run</td>
 <p>Defines the serializers for queue models</p>
 <dl class="class">
 <dt id="queue.serializers.JobLoadGroupSerializer">
-<em class="property">class </em><tt class="descclassname">queue.serializers.</tt><tt class="descname">JobLoadGroupSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.serializers.JobLoadGroupSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">JobLoadGroupSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.JobLoadGroupSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts job load model fields to REST output</p>
 </dd></dl>
 
@@ -1004,20 +1001,20 @@ run</td>
 <p>Defines the views for the RESTful queue services</p>
 <dl class="class">
 <dt id="queue.views.JobLoadView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">JobLoadView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.JobLoadView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">JobLoadView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.JobLoadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the job load for a given time range.</p>
 <dl class="method">
 <dt id="queue.views.JobLoadView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.JobLoadView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.JobLoadView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the job load for a given time range and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1027,38 +1024,38 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.views.JobLoadView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, &lt;JobLoad: JobLoad object&gt;, '...(remaining elements truncated)...']</em><a class="headerlink" href="#queue.views.JobLoadView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.JobLoadView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.views.JobLoadView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#queue.views.JobLoadView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">JobLoadGroupSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.JobLoadView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobLoadGroupSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.views.QueueNewJobView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">QueueNewJobView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.QueueNewJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueNewJobView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewJobView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for creating new jobs and putting them on the queue.</p>
 <dl class="attribute">
 <dt id="queue.views.QueueNewJobView.parser_classes">
-<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.views.QueueNewJobView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.QueueNewJobView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewJobView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job, places it on the queue, and returns the new job information in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1068,33 +1065,33 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.views.QueueNewJobView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#queue.views.QueueNewJobView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.QueueNewJobView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.views.QueueNewRecipeView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">QueueNewRecipeView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.QueueNewRecipeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueNewRecipeView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewRecipeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for queuing recipes and returns the detail information for the recipe that was queued.</p>
 <dl class="attribute">
 <dt id="queue.views.QueueNewRecipeView.parser_classes">
-<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewRecipeView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.QueueNewRecipeView.parser_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.views.QueueNewRecipeView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.QueueNewRecipeView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueNewRecipeView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queue a recipe and returns the new job information in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1104,28 +1101,28 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.views.QueueNewRecipeView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#queue.views.QueueNewRecipeView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.QueueNewRecipeView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.views.QueueStatusView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">QueueStatusView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.QueueStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the queue status.</p>
 <dl class="method">
 <dt id="queue.views.QueueStatusView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.QueueStatusView.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the current status of the queue and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1137,24 +1134,24 @@ run</td>
 
 <dl class="class">
 <dt id="queue.views.RequeueExistingJobView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">RequeueExistingJobView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.RequeueExistingJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">RequeueExistingJobView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueExistingJobView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for requeuing jobs which have already been executed for the maximum number of tries</p>
 <dl class="attribute">
 <dt id="queue.views.RequeueExistingJobView.parser_classes">
-<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueExistingJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueExistingJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.views.RequeueExistingJobView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.RequeueExistingJobView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueExistingJobView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase max_tries, place it on the queue, and returns the new job information in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>job_id</strong> &#8211; The ID of the job to requeue. This job must exist and must be in a FAILED or CANCELED state.</li>
 </ul>
 </td>
@@ -1171,31 +1168,31 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.views.RequeueExistingJobView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#queue.views.RequeueExistingJobView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueExistingJobView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="queue.views.RequeueJobsView">
-<em class="property">class </em><tt class="descclassname">queue.views.</tt><tt class="descname">RequeueJobsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#queue.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">RequeueJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for requeuing jobs which have already been executed.</p>
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.parser_classes">
-<tt class="descname">parser_classes</tt><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.views.RequeueJobsView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#queue.views.RequeueJobsView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueJobsView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase max_tries, place it on the queue, and returns the new job information in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1205,8 +1202,8 @@ run</td>
 
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

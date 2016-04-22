@@ -32,7 +32,10 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/> 
+    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="cli.management package" href="cli.management.html"/>
+        <link rel="next" title="error package" href="error.html"/>
+        <link rel="prev" title="cli.management package" href="cli.management.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -84,11 +87,44 @@
           
             
             
-                <ul>
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cli.html">cli package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="cli.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.html#module-cli">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
 </ul>
@@ -113,13 +149,21 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="cli.html">cli package</a> &raquo;</li>
+      
+          <li><a href="cli.management.html">cli.management package</a> &raquo;</li>
       
     <li>cli.management.commands package</li>
       <li class="wy-breadcrumbs-aside">
@@ -144,29 +188,29 @@
 <span id="cli-management-commands-migratedata-module"></span><h2>cli.management.commands.migratedata module<a class="headerlink" href="#module-cli.management.commands.migratedata" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="cli.management.commands.migratedata.Command">
-<em class="property">class </em><tt class="descclassname">cli.management.commands.migratedata.</tt><tt class="descname">Command</tt><a class="headerlink" href="#cli.management.commands.migratedata.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></tt></p>
+<em class="property">class </em><code class="descclassname">cli.management.commands.migratedata.</code><code class="descname">Command</code><a class="headerlink" href="#cli.management.commands.migratedata.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that migrates existing data files into scale</p>
 <dl class="staticmethod">
 <dt id="cli.management.commands.migratedata.Command.generate_file_list">
-<em class="property">static </em><tt class="descname">generate_file_list</tt><big>(</big><em>path</em>, <em>include</em>, <em>exclude</em><big>)</big><a class="headerlink" href="#cli.management.commands.migratedata.Command.generate_file_list" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">generate_file_list</code><span class="sig-paren">(</span><em>path</em>, <em>include</em>, <em>exclude</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.generate_file_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="cli.management.commands.migratedata.Command.handle">
-<tt class="descname">handle</tt><big>(</big><em>*args</em>, <em>**options</em><big>)</big><a class="headerlink" href="#cli.management.commands.migratedata.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <tt class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></tt>.</p>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method migrates existing data files into scale.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="cli.management.commands.migratedata.Command.help">
-<tt class="descname">help</tt><em class="property"> = 'Migrate existing data into scale'</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.help" title="Permalink to this definition">¶</a></dt>
+<code class="descname">help</code><em class="property"> = 'Migrate existing data into scale'</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="cli.management.commands.migratedata.Command.option_list">
-<tt class="descname">option_list</tt><em class="property"> = (&lt;Option at 0x10cd75b00: -v/--verbosity&gt;, &lt;Option at 0x10cd75c20: --settings&gt;, &lt;Option at 0x10cd75c68: --pythonpath&gt;, &lt;Option at 0x10cd75cb0: --traceback&gt;, &lt;Option at 0x10cd75d40: --no-color&gt;, &lt;Option at 0x10ec69050: -n&gt;, &lt;Option at 0x10ec69098: -w/--workspace&gt;, &lt;Option at 0x10ec69d88: -p/--workspace-path&gt;, &lt;Option at 0x10ec69dd0: -l/--local-path&gt;, &lt;Option at 0x10ec69e18: -d/--data-type&gt;, &lt;Option at 0x10ec69e60: -i/--include&gt;, &lt;Option at 0x10ec69ea8: -e/--exclude&gt;)</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2adf0d19de18: -v/--verbosity&gt;, &lt;Option at 0x2adf0d19df38: --settings&gt;, &lt;Option at 0x2adf0d19df80: --pythonpath&gt;, &lt;Option at 0x2adf0d19dfc8: --traceback&gt;, &lt;Option at 0x2adf0d1af098: --no-color&gt;, &lt;Option at 0x2adf1de7e758: -n&gt;, &lt;Option at 0x2adf1de7e7a0: -w/--workspace&gt;, &lt;Option at 0x2adf1de7e7e8: -p/--workspace-path&gt;, &lt;Option at 0x2adf1de7e830: -l/--local-path&gt;, &lt;Option at 0x2adf1de7e878: -d/--data-type&gt;, &lt;Option at 0x2adf1de7e8c0: -i/--include&gt;, &lt;Option at 0x2adf1de7e908: -e/--exclude&gt;)</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -181,6 +225,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="error.html" class="btn btn-neutral float-right" title="error package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cli.management.html" class="btn btn-neutral" title="cli.management package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">source package</a><ul>
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -259,28 +259,28 @@
 <p>Defines the application configuration for the source application</p>
 <dl class="class">
 <dt id="source.apps.SourceConfig">
-<em class="property">class </em><tt class="descclassname">source.apps.</tt><tt class="descname">SourceConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#source.apps.SourceConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.apps.</code><code class="descname">SourceConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#source.apps.SourceConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the source app</p>
 <dl class="attribute">
 <dt id="source.apps.SourceConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'source'</em><a class="headerlink" href="#source.apps.SourceConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'source'</em><a class="headerlink" href="#source.apps.SourceConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.apps.SourceConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'source'</em><a class="headerlink" href="#source.apps.SourceConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'source'</em><a class="headerlink" href="#source.apps.SourceConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.apps.SourceConfig.ready">
-<tt class="descname">ready</tt><big>(</big><big>)</big><a class="headerlink" href="#source.apps.SourceConfig.ready" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.apps.SourceConfig.ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this method in subclasses to run code when Django starts.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="source.apps.SourceConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Source'</em><a class="headerlink" href="#source.apps.SourceConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Source'</em><a class="headerlink" href="#source.apps.SourceConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -291,18 +291,18 @@
 <p>Defines the database model for source files</p>
 <dl class="class">
 <dt id="source.models.SourceFile">
-<em class="property">class </em><tt class="descclassname">source.models.</tt><tt class="descname">SourceFile</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#source.models.SourceFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">source.models.</code><code class="descname">SourceFile</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></p>
 <p>Represents a source data file that is available for processing. This is an extension of the
-<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a> model.</p>
+<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a> model.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>file</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.OneToOneField</span></tt>) &#8211; The corresponding ScaleFile model</li>
-<li><strong>is_parsed</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the source file has been parsed or not</li>
-<li><strong>parsed</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the source file was parsed</li>
+<li><strong>file</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.OneToOneField</span></code>) &#8211; The corresponding ScaleFile model</li>
+<li><strong>is_parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the source file has been parsed or not</li>
+<li><strong>parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the source file was parsed</li>
 </ul>
 </td>
 </tr>
@@ -310,49 +310,49 @@
 </table>
 <dl class="exception">
 <dt id="source.models.SourceFile.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#source.models.SourceFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">storage.models.DoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#source.models.SourceFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.DoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="source.models.SourceFile.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">SourceFile.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#source.models.SourceFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">SourceFile.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#source.models.SourceFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="source.models.SourceFile.file">
-<tt class="descclassname">SourceFile.</tt><tt class="descname">file</tt><a class="headerlink" href="#source.models.SourceFile.file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">SourceFile.</code><code class="descname">file</code><a class="headerlink" href="#source.models.SourceFile.file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.models.SourceFile.ingest_set">
-<tt class="descclassname">SourceFile.</tt><tt class="descname">ingest_set</tt><a class="headerlink" href="#source.models.SourceFile.ingest_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">SourceFile.</code><code class="descname">ingest_set</code><a class="headerlink" href="#source.models.SourceFile.ingest_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.models.SourceFile.objects">
-<tt class="descclassname">SourceFile.</tt><tt class="descname">objects</tt><em class="property"> = &lt;source.models.SourceFileManager object at 0x10e464250&gt;</em><a class="headerlink" href="#source.models.SourceFile.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">SourceFile.</code><code class="descname">objects</code><em class="property"> = &lt;source.models.SourceFileManager object&gt;</em><a class="headerlink" href="#source.models.SourceFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="source.models.SourceFileManager">
-<em class="property">class </em><tt class="descclassname">source.models.</tt><tt class="descname">SourceFileManager</tt><a class="headerlink" href="#source.models.SourceFileManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.models.</code><code class="descname">SourceFileManager</code><a class="headerlink" href="#source.models.SourceFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling source files</p>
 <dl class="method">
 <dt id="source.models.SourceFileManager.get_sources">
-<tt class="descname">get_sources</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#source.models.SourceFileManager.get_sources" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_sources</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_sources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of source files within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query source files updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query source files updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated before this amount of time.</li>
 <li><strong>is_parsed</strong> (<em>bool</em>) &#8211; Query source files flagged as successfully parsed.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query source files with the given file name.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
@@ -362,7 +362,7 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of source files that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><tt class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -371,7 +371,7 @@
 
 <dl class="method">
 <dt id="source.models.SourceFileManager.save_parse_results">
-<tt class="descname">save_parse_results</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#source.models.SourceFileManager.save_parse_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save_parse_results</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.save_parse_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
 transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -381,9 +381,9 @@ transaction.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>src_file_id</strong> (<em>int</em>) &#8211; The ID of the source file</li>
 <li><strong>geo_json</strong> (<em>dict</em>) &#8211; The associated geojson data, possibly None</li>
-<li><strong>data_started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt> or None) &#8211; The start time of the data contained in the source file, possibly None</li>
-<li><strong>data_ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt> or None) &#8211; The end time of the data contained in the source file, possibly None</li>
-<li><strong>data_types</strong> (<em>list</em>) &#8211; List of strings containing the data types tags for this source file.</li>
+<li><strong>data_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code> or None) &#8211; The start time of the data contained in the source file, possibly None</li>
+<li><strong>data_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code> or None) &#8211; The end time of the data contained in the source file, possibly None</li>
+<li><strong>data_types</strong> (<em>[string]</em>) &#8211; List of strings containing the data types tags for this source file.</li>
 <li><strong>new_workspace_path</strong> (<em>str</em>) &#8211; New workspace path to move the source file to now that parse data is available. If
 None, the source file should not be moved.</li>
 <li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in moving the source file. Only
@@ -397,7 +397,7 @@ needed if new_workspace_path is not None.</li>
 
 <dl class="method">
 <dt id="source.models.SourceFileManager.store_file">
-<tt class="descname">store_file</tt><big>(</big><em>work_dir</em>, <em>local_path</em>, <em>data_types</em>, <em>workspace</em>, <em>remote_path</em><big>)</big><a class="headerlink" href="#source.models.SourceFileManager.store_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">store_file</code><span class="sig-paren">(</span><em>work_dir</em>, <em>local_path</em>, <em>data_types</em>, <em>workspace</em>, <em>remote_path</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.store_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the given local source file in the workspace</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -407,7 +407,7 @@ needed if new_workspace_path is not None.</li>
 <li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in storing the source file</li>
 <li><strong>local_path</strong> (<em>str</em>) &#8211; The absolute local path of the source file to store</li>
 <li><strong>data_types</strong> (<em>list of str</em>) &#8211; The data type tags of the source file</li>
-<li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>) &#8211; The workspace to use for storing the source file</li>
+<li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>) &#8211; The workspace to use for storing the source file</li>
 <li><strong>remote_path</strong> (<em>str</em>) &#8211; The relative path for storing the source file</li>
 </ul>
 </td>
@@ -415,7 +415,7 @@ needed if new_workspace_path is not None.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The model of the saved source file</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><tt class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -430,32 +430,32 @@ needed if new_workspace_path is not None.</li>
 <p>Defines the serializers for source files</p>
 <dl class="class">
 <dt id="source.serializers.SourceFileBaseSerializer">
-<em class="property">class </em><tt class="descclassname">source.serializers.</tt><tt class="descname">SourceFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#source.serializers.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">source.serializers.</code><code class="descname">SourceFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
 <p>Converts source file model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="source.serializers.SourceFileSerializer">
-<em class="property">class </em><tt class="descclassname">source.serializers.</tt><tt class="descname">SourceFileSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#source.serializers.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">source.serializers.</code><code class="descname">SourceFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></code></a></p>
 <p>Converts source file model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="source.serializers.SourceFileUpdateField">
-<em class="property">class </em><tt class="descclassname">source.serializers.</tt><tt class="descname">SourceFileUpdateField</tt><big>(</big><em>read_only=False</em>, <em>write_only=False</em>, <em>required=None</em>, <em>default=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>initial=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>source=None</em>, <em>label=None</em>, <em>help_text=None</em>, <em>style=None</em>, <em>error_messages=None</em>, <em>validators=None</em>, <em>allow_null=False</em><big>)</big><a class="headerlink" href="#source.serializers.SourceFileUpdateField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.Field</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.serializers.</code><code class="descname">SourceFileUpdateField</code><span class="sig-paren">(</span><em>read_only=False</em>, <em>write_only=False</em>, <em>required=None</em>, <em>default=&lt;class rest_framework.fields.empty&gt;</em>, <em>initial=&lt;class rest_framework.fields.empty&gt;</em>, <em>source=None</em>, <em>label=None</em>, <em>help_text=None</em>, <em>style=None</em>, <em>error_messages=None</em>, <em>validators=None</em>, <em>allow_null=False</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers.SourceFileUpdateField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.Field</span></code></p>
 <p>Field for displaying the update information for a source file</p>
 <dl class="method">
 <dt id="source.serializers.SourceFileUpdateField.to_representation">
-<tt class="descname">to_representation</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#source.serializers.SourceFileUpdateField.to_representation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_representation</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers.SourceFileUpdateField.to_representation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the model to its update information</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><tt class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></tt></a>) &#8211; the source file model</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>) &#8211; the source file model</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -467,20 +467,20 @@ needed if new_workspace_path is not None.</li>
 
 <dl class="attribute">
 <dt id="source.serializers.SourceFileUpdateField.type_label">
-<tt class="descname">type_label</tt><em class="property"> = 'update'</em><a class="headerlink" href="#source.serializers.SourceFileUpdateField.type_label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type_label</code><em class="property"> = 'update'</em><a class="headerlink" href="#source.serializers.SourceFileUpdateField.type_label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.serializers.SourceFileUpdateField.type_name">
-<tt class="descname">type_name</tt><em class="property"> = 'UpdateField'</em><a class="headerlink" href="#source.serializers.SourceFileUpdateField.type_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type_name</code><em class="property"> = 'UpdateField'</em><a class="headerlink" href="#source.serializers.SourceFileUpdateField.type_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="source.serializers.SourceFileUpdateSerializer">
-<em class="property">class </em><tt class="descclassname">source.serializers.</tt><tt class="descname">SourceFileUpdateSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#source.serializers.SourceFileUpdateSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#source.serializers.SourceFileSerializer" title="source.serializers.SourceFileSerializer"><tt class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">source.serializers.</code><code class="descname">SourceFileUpdateSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers.SourceFileUpdateSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#source.serializers.SourceFileSerializer" title="source.serializers.SourceFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileSerializer</span></code></a></p>
 <p>Converts source file updates to REST output</p>
 </dd></dl>
 
@@ -494,20 +494,20 @@ needed if new_workspace_path is not None.</li>
 <p>Defines the views for the RESTful source services</p>
 <dl class="class">
 <dt id="source.views.SourceUpdatesView">
-<em class="property">class </em><tt class="descclassname">source.views.</tt><tt class="descname">SourceUpdatesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#source.views.SourceUpdatesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.views.</code><code class="descname">SourceUpdatesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceUpdatesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving source file updates over a given time range.</p>
 <dl class="method">
 <dt id="source.views.SourceUpdatesView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#source.views.SourceUpdatesView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceUpdatesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the source file updates for a given time range and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -517,33 +517,33 @@ needed if new_workspace_path is not None.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceUpdatesView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.views.SourceUpdatesView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#source.views.SourceUpdatesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">SourceFileUpdateSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceUpdatesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">SourceFileUpdateSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="source.views.SourcesView">
-<em class="property">class </em><tt class="descclassname">source.views.</tt><tt class="descname">SourcesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#source.views.SourcesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.views.</code><code class="descname">SourcesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourcesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving source files.</p>
 <dl class="method">
 <dt id="source.views.SourcesView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#source.views.SourcesView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourcesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the source files for a given time range and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -553,13 +553,13 @@ needed if new_workspace_path is not None.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourcesView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#source.views.SourcesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourcesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="source.views.SourcesView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#source.views.SourcesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">SourceFileSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourcesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">SourceFileSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

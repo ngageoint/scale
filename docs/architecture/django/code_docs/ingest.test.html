@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ingest.html">ingest package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
@@ -122,7 +123,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -158,7 +158,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -233,21 +233,21 @@
 <span id="ingest-test-test-ingest-job-module"></span><h2>ingest.test.test_ingest_job module<a class="headerlink" href="#module-ingest.test.test_ingest_job" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ingest.test.test_ingest_job.TestPerformIngest">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_ingest_job.</tt><tt class="descname">TestPerformIngest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_ingest_job.</code><code class="descname">TestPerformIngest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_ingest_job.TestPerformIngest.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = ['ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = ['ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_ingest_job.TestPerformIngest.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_ingest_job.TestPerformIngest.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests processing a new ingest successfully.</p>
 </dd></dl>
 
@@ -258,22 +258,22 @@
 <span id="ingest-test-test-models-module"></span><h2>ingest.test.test_models module<a class="headerlink" href="#module-ingest.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ingest.test.test_models.TestIngestAddDataTypeTag">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestIngestAddDataTypeTag</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_models.</code><code class="descname">TestIngestAddDataTypeTag</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestAddDataTypeTag.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid">
-<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling add_data_type_tag() with invalid tags</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestAddDataTypeTag.test_valid">
-<tt class="descname">test_valid</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_valid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestAddDataTypeTag.test_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling add_data_type_tag() with valid tags</p>
 </dd></dl>
 
@@ -281,22 +281,22 @@
 
 <dl class="class">
 <dt id="ingest.test.test_models.TestIngestGetDataTypeTags">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestIngestGetDataTypeTags</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_models.</code><code class="descname">TestIngestGetDataTypeTags</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestGetDataTypeTags.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags">
-<tt class="descname">test_no_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_data_type_tags() with no tags</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestIngestGetDataTypeTags.test_tags">
-<tt class="descname">test_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestIngestGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_data_type_tags() with tags</p>
 </dd></dl>
 
@@ -304,21 +304,21 @@
 
 <dl class="class">
 <dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_models.</tt><tt class="descname">TestStrikeManagerCreateStrikeProcess</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_models.</code><code class="descname">TestStrikeManagerCreateStrikeProcess</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling StrikeManager.create_strike_process() successfully</p>
 </dd></dl>
 
@@ -329,39 +329,39 @@
 <span id="ingest-test-test-views-module"></span><h2>ingest.test.test_views module<a class="headerlink" href="#module-ingest.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ingest.test.test_views.TestCreateStrikeView">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestCreateStrikeView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestCreateStrikeView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_views.TestCreateStrikeView.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestCreateStrikeView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type">
-<tt class="descname">test_configuration_bad_type</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the create Strike view with configuration that is not a dict.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration">
-<tt class="descname">test_invalid_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the create Strike view with invalid configuration.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestCreateStrikeView.test_missing_configuration">
-<tt class="descname">test_missing_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the create Strike view with missing configuration.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestCreateStrikeView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the create Strike view successfully.</p>
 </dd></dl>
 
@@ -369,27 +369,27 @@
 
 <dl class="class">
 <dt id="ingest.test.test_views.TestIngestDetailsView">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestIngestDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_views.TestIngestDetailsView.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestDetailsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestDetailsView.test_not_found">
-<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the ingest details view with an id that does not exist.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestDetailsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest details view.</p>
 </dd></dl>
 
@@ -397,45 +397,45 @@
 
 <dl class="class">
 <dt id="ingest.test.test_views.TestIngestStatusView">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestIngestStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_views.TestIngestStatusView.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots">
-<tt class="descname">test_fill_empty_slots</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_fill_empty_slots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest status view with place holder zero values when no data exists.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.test_multiple_strikes">
-<tt class="descname">test_multiple_strikes</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_multiple_strikes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_strikes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_multiple_strikes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest status view with multiple strike process groupings.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest status view.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.test_time_range">
-<tt class="descname">test_time_range</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_time_range" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest status view with a time range filter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestStatusView.test_use_ingest_time">
-<tt class="descname">test_use_ingest_time</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_use_ingest_time" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_use_ingest_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestStatusView.test_use_ingest_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingest status view grouped by ingest time instead of data time.</p>
 </dd></dl>
 
@@ -443,27 +443,27 @@
 
 <dl class="class">
 <dt id="ingest.test.test_views.TestIngestsView">
-<em class="property">class </em><tt class="descclassname">ingest.test.test_views.</tt><tt class="descname">TestIngestsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestIngestsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_views.TestIngestsView.fixtures">
-<tt class="descname">fixtures</tt><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestsView.test_status">
-<tt class="descname">test_status</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingests view.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.test_views.TestIngestsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the ingests view.</p>
 </dd></dl>
 
@@ -475,12 +475,12 @@
 <p>Defines utility methods for testing ingests</p>
 <dl class="function">
 <dt id="ingest.test.utils.create_ingest">
-<tt class="descclassname">ingest.test.utils.</tt><tt class="descname">create_ingest</tt><big>(</big><em>file_name='test.txt'</em>, <em>status='TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>strike=None</em>, <em>source_file=None</em><big>)</big><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name='test.txt'</em>, <em>status='TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>strike=None</em>, <em>source_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="ingest.test.utils.create_strike">
-<tt class="descclassname">ingest.test.utils.</tt><tt class="descname">create_strike</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em><big>)</big><a class="headerlink" href="#ingest.test.utils.create_strike" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_strike</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_strike" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

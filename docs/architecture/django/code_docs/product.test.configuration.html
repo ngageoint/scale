@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -195,16 +195,16 @@
 <span id="product-test-configuration-test-product-data-file-module"></span><h2>product.test.configuration.test_product_data_file module<a class="headerlink" href="#module-product.test.configuration.test_product_data_file" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces">
-<em class="property">class </em><tt class="descclassname">product.test.configuration.test_product_data_file.</tt><tt class="descname">TestProductDataFileStoreGetWorkspaces</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.configuration.test_product_data_file.</code><code class="descname">TestProductDataFileStoreGetWorkspaces</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreGetWorkspaces.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductDataFileStore.get_workspaces() successfully</p>
 </dd></dl>
 
@@ -212,28 +212,28 @@
 
 <dl class="class">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles">
-<em class="property">class </em><tt class="descclassname">product.test.configuration.test_product_data_file.</tt><tt class="descname">TestProductDataFileStoreStoreFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">product.test.configuration.test_product_data_file.</code><code class="descname">TestProductDataFileStoreStoreFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_geo_metadata">
-<tt class="descname">test_geo_metadata</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_geo_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_geo_metadata</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_geo_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductDataFileType.store_files() successfully</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductDataFileType.store_files() successfully</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful_recipe_path">
-<tt class="descname">test_successful_recipe_path</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful_recipe_path" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_recipe_path</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful_recipe_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ProductDataFileType.store_files() successfully with a job that is in a recipe</p>
 </dd></dl>
 

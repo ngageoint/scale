@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
@@ -137,7 +137,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -173,7 +173,7 @@ script that takes a PNG image file and a CSV containing georeference information
 information from the two files to create a GeoTIFF file, which is an image format that contains georeference
 information. detect_points.py is a Python script that takes a GeoTIFF image file and creates a GeoJSON file that
 contains the coordinates of various points of interest found in the GeoTIFF. The job interfaces of the two algorithms
-could be defined as follows (see <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><em>Job Interface</em></a> for how to define job interfaces):</p>
+could be defined as follows (see <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><span>Job Interface</span></a> for how to define job interfaces):</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;python make_geotiff.py&quot;</span><span class="p">,</span>

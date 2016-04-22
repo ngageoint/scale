@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -278,22 +278,22 @@
 <p>Defines the application configuration for the recipe application</p>
 <dl class="class">
 <dt id="recipe.apps.RecipeConfig">
-<em class="property">class </em><tt class="descclassname">recipe.apps.</tt><tt class="descname">RecipeConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#recipe.apps.RecipeConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.apps.</code><code class="descname">RecipeConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.apps.RecipeConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the recipe app</p>
 <dl class="attribute">
 <dt id="recipe.apps.RecipeConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.apps.RecipeConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.apps.RecipeConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -304,17 +304,17 @@
 <p>Defines the class that handles recipe logic</p>
 <dl class="class">
 <dt id="recipe.handler.RecipeHandler">
-<em class="property">class </em><tt class="descclassname">recipe.handler.</tt><tt class="descname">RecipeHandler</tt><big>(</big><em>recipe</em>, <em>recipe_jobs</em><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.handler.</code><code class="descname">RecipeHandler</code><span class="sig-paren">(</span><em>recipe</em>, <em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class handles the logic for a recipe</p>
 <dl class="attribute">
 <dt id="recipe.handler.RecipeHandler.BLOCKING_STATUSES">
-<tt class="descname">BLOCKING_STATUSES</tt><em class="property"> = [u'BLOCKED', u'FAILED', u'CANCELED']</em><a class="headerlink" href="#recipe.handler.RecipeHandler.BLOCKING_STATUSES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">BLOCKING_STATUSES</code><em class="property"> = [u'BLOCKED', u'FAILED', u'CANCELED']</em><a class="headerlink" href="#recipe.handler.RecipeHandler.BLOCKING_STATUSES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.handler.RecipeHandler.get_blocked_jobs">
-<tt class="descname">get_blocked_jobs</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the jobs within this recipe that should be updated to BLOCKED status</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -322,7 +322,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to BLOCKED</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -330,7 +330,7 @@
 
 <dl class="method">
 <dt id="recipe.handler.RecipeHandler.get_dependent_job_ids">
-<tt class="descname">get_dependent_job_ids</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_dependent_job_ids</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler.get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the IDs of the jobs that depend upon the job with the given ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -348,7 +348,7 @@
 
 <dl class="method">
 <dt id="recipe.handler.RecipeHandler.get_existing_jobs_to_queue">
-<tt class="descname">get_existing_jobs_to_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler.get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all of the existing recipe jobs that are ready to be queued</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -356,7 +356,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of existing jobs that are ready to be queued along with their data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>, <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a>)]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>, <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>)]</td>
 </tr>
 </tbody>
 </table>
@@ -364,7 +364,7 @@
 
 <dl class="method">
 <dt id="recipe.handler.RecipeHandler.get_pending_jobs">
-<tt class="descname">get_pending_jobs</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the jobs within this recipe that should be updated to PENDING status</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -372,7 +372,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to PENDING</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -380,7 +380,7 @@
 
 <dl class="method">
 <dt id="recipe.handler.RecipeHandler.is_completed">
-<tt class="descname">is_completed</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.handler.RecipeHandler.is_completed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handler.RecipeHandler.is_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this recipe has been completed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -396,7 +396,7 @@
 
 <dl class="attribute">
 <dt id="recipe.handler.RecipeHandler.recipe_id">
-<tt class="descname">recipe_id</tt><a class="headerlink" href="#recipe.handler.RecipeHandler.recipe_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.handler.RecipeHandler.recipe_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ID of the recipe for this handler</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -414,8 +414,8 @@
 
 <dl class="class">
 <dt id="recipe.handler.RecipeNode">
-<em class="property">class </em><tt class="descclassname">recipe.handler.</tt><tt class="descname">RecipeNode</tt><a class="headerlink" href="#recipe.handler.RecipeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.handler.</code><code class="descname">RecipeNode</code><a class="headerlink" href="#recipe.handler.RecipeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a node within a recipe. A node contains a job along with links to its parent jobs and
 dependent jobs.</p>
 </dd></dl>
@@ -426,21 +426,21 @@ dependent jobs.</p>
 <p>Defines the database models for recipes and recipe types</p>
 <dl class="class">
 <dt id="recipe.models.Recipe">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">Recipe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">Recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a recipe to be run on the cluster</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The type of this recipe</li>
-<li><strong>recipe_type_rev</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The revision of the recipe type when this recipe was created</li>
-<li><strong>event</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The event that triggered the creation of this recipe</li>
-<li><strong>data</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON description defining the data for this recipe</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the recipe was created</li>
-<li><strong>completed</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When every job in the recipe was completed successfully</li>
-<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the recipe was last modified</li>
+<li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this recipe</li>
+<li><strong>recipe_type_rev</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The revision of the recipe type when this recipe was created</li>
+<li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this recipe</li>
+<li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description defining the data for this recipe</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe was created</li>
+<li><strong>completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When every job in the recipe was completed successfully</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe was last modified</li>
 </ul>
 </td>
 </tr>
@@ -448,55 +448,55 @@ dependent jobs.</p>
 </table>
 <dl class="exception">
 <dt id="recipe.models.Recipe.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#recipe.models.Recipe.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.Recipe.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="recipe.models.Recipe.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">Recipe.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#recipe.models.Recipe.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">Recipe.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.Recipe.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.data">
-<tt class="descclassname">Recipe.</tt><tt class="descname">data</tt><a class="headerlink" href="#recipe.models.Recipe.data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">data</code><a class="headerlink" href="#recipe.models.Recipe.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.event">
-<tt class="descclassname">Recipe.</tt><tt class="descname">event</tt><a class="headerlink" href="#recipe.models.Recipe.event" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">event</code><a class="headerlink" href="#recipe.models.Recipe.event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.file_links">
-<tt class="descclassname">Recipe.</tt><tt class="descname">file_links</tt><a class="headerlink" href="#recipe.models.Recipe.file_links" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">file_links</code><a class="headerlink" href="#recipe.models.Recipe.file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_next_by_created">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_next_by_last_modified">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_previous_by_created">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_previous_by_last_modified">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_recipe_data">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_recipe_data</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_recipe_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_recipe_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_recipe_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the data for this recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -504,7 +504,7 @@ dependent jobs.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The data for this recipe</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -512,7 +512,7 @@ dependent jobs.</p>
 
 <dl class="method">
 <dt id="recipe.models.Recipe.get_recipe_definition">
-<tt class="descclassname">Recipe.</tt><tt class="descname">get_recipe_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.models.Recipe.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">get_recipe_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the definition for this recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -520,7 +520,7 @@ dependent jobs.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The definition for this recipe</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -528,39 +528,39 @@ dependent jobs.</p>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.objects">
-<tt class="descclassname">Recipe.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeManager object at 0x10e42a610&gt;</em><a class="headerlink" href="#recipe.models.Recipe.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeManager object&gt;</em><a class="headerlink" href="#recipe.models.Recipe.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.recipe_type">
-<tt class="descclassname">Recipe.</tt><tt class="descname">recipe_type</tt><a class="headerlink" href="#recipe.models.Recipe.recipe_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">recipe_type</code><a class="headerlink" href="#recipe.models.Recipe.recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.recipe_type_rev">
-<tt class="descclassname">Recipe.</tt><tt class="descname">recipe_type_rev</tt><a class="headerlink" href="#recipe.models.Recipe.recipe_type_rev" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">recipe_type_rev</code><a class="headerlink" href="#recipe.models.Recipe.recipe_type_rev" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.Recipe.recipejob_set">
-<tt class="descclassname">Recipe.</tt><tt class="descname">recipejob_set</tt><a class="headerlink" href="#recipe.models.Recipe.recipejob_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Recipe.</code><code class="descname">recipejob_set</code><a class="headerlink" href="#recipe.models.Recipe.recipejob_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.models.RecipeJob">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeJob</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeJob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeJob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Links a job to its recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.OneToOneField</span></tt>) &#8211; A job in a recipe</li>
-<li><strong>job_name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The name of the job within the recipe</li>
-<li><strong>recipe</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The recipe that the job belongs to</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.OneToOneField</span></code>) &#8211; A job in a recipe</li>
+<li><strong>job_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the job within the recipe</li>
+<li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe that the job belongs to</li>
 </ul>
 </td>
 </tr>
@@ -568,41 +568,41 @@ dependent jobs.</p>
 </table>
 <dl class="exception">
 <dt id="recipe.models.RecipeJob.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#recipe.models.RecipeJob.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeJob.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="recipe.models.RecipeJob.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">RecipeJob.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#recipe.models.RecipeJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">RecipeJob.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeJob.job">
-<tt class="descclassname">RecipeJob.</tt><tt class="descname">job</tt><a class="headerlink" href="#recipe.models.RecipeJob.job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeJob.</code><code class="descname">job</code><a class="headerlink" href="#recipe.models.RecipeJob.job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeJob.objects">
-<tt class="descclassname">RecipeJob.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeJobManager object at 0x10e42ad10&gt;</em><a class="headerlink" href="#recipe.models.RecipeJob.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeJob.</code><code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeJobManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeJob.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeJob.recipe">
-<tt class="descclassname">RecipeJob.</tt><tt class="descname">recipe</tt><a class="headerlink" href="#recipe.models.RecipeJob.recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeJob.</code><code class="descname">recipe</code><a class="headerlink" href="#recipe.models.RecipeJob.recipe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.models.RecipeJobManager">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeJobManager</tt><a class="headerlink" href="#recipe.models.RecipeJobManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeJobManager</code><a class="headerlink" href="#recipe.models.RecipeJobManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling jobs linked to a recipe</p>
 <dl class="method">
 <dt id="recipe.models.RecipeJobManager.get_recipe_data">
-<tt class="descname">get_recipe_data</tt><big>(</big><em>recipe_ids</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeJobManager.get_recipe_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipe_data</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeJobManager.get_recipe_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe, recipe_job, and job models for the given recipe IDs with the recipe/job type and revision
 models included</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -613,7 +613,7 @@ models included</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict where each recipe ID maps to a tuple of its recipe model and a list of its recipe_job models</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a>, [<a class="reference internal" href="#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></tt></a>])}</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>, [<a class="reference internal" href="#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></code></a>])}</td>
 </tr>
 </tbody>
 </table>
@@ -623,12 +623,12 @@ models included</p>
 
 <dl class="class">
 <dt id="recipe.models.RecipeManager">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeManager</tt><a class="headerlink" href="#recipe.models.RecipeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeManager</code><a class="headerlink" href="#recipe.models.RecipeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipes</p>
 <dl class="method">
 <dt id="recipe.models.RecipeManager.complete">
-<tt class="descname">complete</tt><big>(</big><em>recipe_id</em>, <em>when</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.complete" title="Permalink to this definition">¶</a></dt>
+<code class="descname">complete</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.complete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the recipe with the given ID as being completed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -636,7 +636,7 @@ models included</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>recipe_id</strong> (<em>:int</em>) &#8211; The recipe ID</li>
-<li><strong>when</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; The time that the recipe was completed</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipe was completed</li>
 </ul>
 </td>
 </tr>
@@ -646,7 +646,7 @@ models included</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.create_recipe">
-<tt class="descname">create_recipe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
 also be created. The given recipe type model must have already been saved in the database (it must have an ID).
 The given event model must have already been saved in the database (it must have an ID). All database changes
@@ -656,8 +656,8 @@ occur in an atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>) &#8211; The type of the recipe to create</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></tt></a>) &#8211; The event that triggered the creation of this recipe</li>
+<li><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the recipe to create</li>
+<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this recipe</li>
 <li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the recipe data to run on</li>
 </ul>
 </td>
@@ -665,17 +665,17 @@ occur in an atomic transaction.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></code></a></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If the recipe data is invalid</p>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_details">
-<tt class="descname">get_details</tt><big>(</big><em>recipe_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_details" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the details for a given recipe including its associated jobs and input files.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -685,7 +685,7 @@ occur in an atomic transaction.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A recipe with additional information.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -693,7 +693,7 @@ occur in an atomic transaction.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipe_for_job">
-<tt class="descname">get_recipe_for_job</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_for_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipe_for_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_for_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe, possibly None, for the job with the given ID. The returned model will have its related
 recipe_type and recipe_type_rev models populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -704,7 +704,7 @@ recipe_type and recipe_type_rev models populated.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe model with related recipe_type and recipe_type-rev, possibly None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -712,7 +712,7 @@ recipe_type and recipe_type_rev models populated.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipe_handler_for_job">
-<tt class="descname">get_recipe_handler_for_job</tt><big>(</big><em>job_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handler_for_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipe_handler_for_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handler_for_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
 must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
 all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs.</p>
@@ -724,7 +724,7 @@ all jobs models that depend upon the given job, allowing update queries to be ma
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe handler, possibly None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -732,7 +732,7 @@ all jobs models that depend upon the given job, allowing update queries to be ma
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipe_handlers_for_jobs">
-<tt class="descname">get_recipe_handlers_for_jobs</tt><big>(</big><em>job_ids</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handlers_for_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipe_handlers_for_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_handlers_for_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
 have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
 all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
@@ -745,7 +745,7 @@ that a given job ID will not appear in the results if it does not exist within a
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe handlers by job ID</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: <a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><tt class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></tt></a>}</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int: <a class="reference internal" href="#recipe.handler.RecipeHandler" title="recipe.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handler.RecipeHandler</span></code></a>}</td>
 </tr>
 </tbody>
 </table>
@@ -753,15 +753,15 @@ that a given job ID will not appear in the results if it does not exist within a
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes">
-<tt class="descname">get_recipes</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query recipes updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query recipes updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated before this amount of time.</li>
 <li><strong>type_ids</strong> (<em>list[int]</em>) &#8211; Query recipes of the type associated with the identifier.</li>
 <li><strong>type_names</strong> (<em>list[str]</em>) &#8211; Query recipes of the type associated with the name.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
@@ -771,7 +771,7 @@ that a given job ID will not appear in the results if it does not exist within a
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipes that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -782,8 +782,8 @@ that a given job ID will not appear in the results if it does not exist within a
 
 <dl class="class">
 <dt id="recipe.models.RecipeType">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeType</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a type of recipe that can be run on the cluster. Any updates to a recipe type model requires obtaining
 a lock on the model using select_for_update().</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -791,17 +791,17 @@ a lock on the model using select_for_update().</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The stable name of the recipe type used by clients for queries</li>
-<li><strong>version</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The version of the recipe type</li>
-<li><strong>title</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The human-readable name of the recipe type</li>
-<li><strong>description</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; An optional description of the recipe type</li>
-<li><strong>is_active</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the recipe type is active (false once recipe type is archived)</li>
-<li><strong>definition</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON definition for running a recipe of this type</li>
-<li><strong>revision_num</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The current revision number of the definition, starts at one</li>
-<li><strong>trigger_rule</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The rule to trigger new recipes of this type</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the recipe type was created</li>
-<li><strong>archived</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the recipe type was archived (no longer active)</li>
-<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the recipe type was last modified</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The stable name of the recipe type used by clients for queries</li>
+<li><strong>version</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The version of the recipe type</li>
+<li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the recipe type</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of the recipe type</li>
+<li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the recipe type is active (false once recipe type is archived)</li>
+<li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON definition for running a recipe of this type</li>
+<li><strong>revision_num</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The current revision number of the definition, starts at one</li>
+<li><strong>trigger_rule</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The rule to trigger new recipes of this type</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe type was created</li>
+<li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe type was archived (no longer active)</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe type was last modified</li>
 </ul>
 </td>
 </tr>
@@ -809,45 +809,45 @@ a lock on the model using select_for_update().</p>
 </table>
 <dl class="exception">
 <dt id="recipe.models.RecipeType.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#recipe.models.RecipeType.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeType.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="recipe.models.RecipeType.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">RecipeType.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#recipe.models.RecipeType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">RecipeType.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.definition">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">definition</tt><a class="headerlink" href="#recipe.models.RecipeType.definition" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">definition</code><a class="headerlink" href="#recipe.models.RecipeType.definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeType.get_next_by_created">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeType.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeType.get_next_by_last_modified">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeType.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeType.get_previous_by_created">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeType.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeType.get_previous_by_last_modified">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeType.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeType.get_recipe_definition">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">get_recipe_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.models.RecipeType.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">get_recipe_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeType.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the definition for running recipes of this type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -855,7 +855,7 @@ a lock on the model using select_for_update().</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe definition for this type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -863,34 +863,34 @@ a lock on the model using select_for_update().</p>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.objects">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeManager object at 0x10e43c710&gt;</em><a class="headerlink" href="#recipe.models.RecipeType.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeTypeManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeType.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.recipe_set">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">recipe_set</tt><a class="headerlink" href="#recipe.models.RecipeType.recipe_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">recipe_set</code><a class="headerlink" href="#recipe.models.RecipeType.recipe_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.recipetyperevision_set">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">recipetyperevision_set</tt><a class="headerlink" href="#recipe.models.RecipeType.recipetyperevision_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">recipetyperevision_set</code><a class="headerlink" href="#recipe.models.RecipeType.recipetyperevision_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.trigger_rule">
-<tt class="descclassname">RecipeType.</tt><tt class="descname">trigger_rule</tt><a class="headerlink" href="#recipe.models.RecipeType.trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeType.</code><code class="descname">trigger_rule</code><a class="headerlink" href="#recipe.models.RecipeType.trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.models.RecipeTypeManager">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeTypeManager</tt><a class="headerlink" href="#recipe.models.RecipeTypeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeManager</code><a class="headerlink" href="#recipe.models.RecipeTypeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe types</p>
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.create_recipe_type">
-<tt class="descname">create_recipe_type</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.create_recipe_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_recipe_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.create_recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe type and saves it in the database. All database changes occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -901,34 +901,34 @@ a lock on the model using select_for_update().</p>
 <li><strong>version</strong> (<em>str</em>) &#8211; The version of the recipe type</li>
 <li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of the recipe type</li>
 <li><strong>description</strong> (<em>str</em>) &#8211; An optional description of the recipe type</li>
-<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a>) &#8211; The definition for running a recipe of this type</li>
-<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a>) &#8211; The trigger rule that creates recipes of this type</li>
+<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a>) &#8211; The definition for running a recipe of this type</li>
+<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates recipes of this type</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe type</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></p>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></tt></a>: If any part of the recipe</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></tt></a>: If the given trigger rule is an invalid</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
 <dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></tt></a>: If the given trigger rule configuration is</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
 <dd>invalid</dd>
-<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If the trigger rule connection to</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.edit_recipe_type">
-<tt class="descname">edit_recipe_type</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">edit_recipe_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.edit_recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits the given recipe type and saves the changes in the database. The caller must provide the related
 trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
 indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -941,8 +941,8 @@ no change to the trigger rule (False) and removing the trigger rule (True) when 
 <li><strong>recipe_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the recipe type to edit</li>
 <li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of the recipe type, possibly None</li>
 <li><strong>description</strong> (<em>str</em>) &#8211; A description of the recipe type, possibly None</li>
-<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a>) &#8211; The definition for running a recipe of this type, possibly None</li>
-<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a>) &#8211; The trigger rule that creates recipes of this type, possibly None</li>
+<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a>) &#8211; The definition for running a recipe of this type, possibly None</li>
+<li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates recipes of this type, possibly None</li>
 <li><strong>remove_trigger_rule</strong> (<em>bool</em>) &#8211; Indicates whether the trigger rule should be unchanged (False) or removed (True)
 when trigger_rule is None</li>
 </ul>
@@ -951,20 +951,20 @@ when trigger_rule is None</li>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></tt></a>: If any part of the recipe</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></tt></a>: If the given trigger rule is an invalid</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
 <dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></tt></a>: If the given trigger rule configuration is</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
 <dd>invalid</dd>
-<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If the trigger rule connection to</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.get_active_trigger_rules">
-<tt class="descname">get_active_trigger_rules</tt><big>(</big><em>trigger_type</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_active_trigger_rules" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_active_trigger_rules</code><span class="sig-paren">(</span><em>trigger_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_active_trigger_rules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the active trigger rules with the given trigger type that create jobs and recipes</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -974,8 +974,8 @@ when trigger_rule is None</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The active trigger rules for the given type and their associated job/recipe types</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[(<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a>, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>
-or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>)]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[(<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>
+or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>)]</td>
 </tr>
 </tbody>
 </table>
@@ -983,7 +983,7 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.get_details">
-<tt class="descname">get_details</tt><big>(</big><em>recipe_type_id</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_details" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given recipe type model based on related model attributes.</p>
 <p>The additional fields include: job_types.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -994,7 +994,7 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe type with extra related attributes.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1002,15 +1002,15 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.get_recipe_types">
-<tt class="descname">get_recipe_types</tt><big>(</big><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_recipe_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipe_types</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.get_recipe_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipe types within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query recipe types updated after this amount of time.</li>
-<li><strong>ended</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; Query recipe types updated before this amount of time.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipe types updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipe types updated before this amount of time.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
@@ -1018,7 +1018,7 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe types that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1027,7 +1027,7 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeManager.validate_recipe_type">
-<tt class="descname">validate_recipe_type</tt><big>(</big><em>name</em>, <em>title</em>, <em>version</em>, <em>description</em>, <em>definition</em>, <em>trigger_config</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_recipe_type</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>version</em>, <em>description</em>, <em>definition</em>, <em>trigger_config</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeManager.validate_recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new recipe type prior to attempting a save</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1038,27 +1038,27 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 <li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of the recipe type</li>
 <li><strong>version</strong> (<em>str</em>) &#8211; The version of the recipe type</li>
 <li><strong>description</strong> (<em>str</em>) &#8211; An optional description of the recipe type</li>
-<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a>) &#8211; The definition for running a recipe of this type</li>
-<li><strong>trigger_config</strong> (<a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></tt></a>) &#8211; The trigger rule configuration</li>
+<li><strong>definition</strong> (<a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a>) &#8211; The definition for running a recipe of this type</li>
+<li><strong>trigger_config</strong> (<a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a>) &#8211; The trigger rule configuration</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></tt></a>: If any part of the recipe</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If any part of the recipe</dt>
 <dd>definition violates the specification</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></tt></a>: If the given trigger rule is an invalid</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
 <dd>type for creating recipes</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></tt></a>: If the given trigger rule configuration is</dt>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
 <dd>invalid</dd>
-<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If the trigger rule connection to</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If the trigger rule connection to</dt>
 <dd>the recipe type definition is invalid</dd>
 </dl>
 </dd></dl>
@@ -1067,8 +1067,8 @@ or <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.
 
 <dl class="class">
 <dt id="recipe.models.RecipeTypeRevision">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeTypeRevision</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevision" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeRevision</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a revision of a recipe type. New revisions are created when the definition of a recipe type changes.
 Any inserts of a recipe type revision model requires obtaining a lock using select_for_update() on the corresponding
 recipe type model.</p>
@@ -1077,10 +1077,10 @@ recipe type model.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The recipe type for this revision</li>
-<li><strong>revision_num</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></tt>) &#8211; The number for this revision, starting at one</li>
-<li><strong>definition</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; The JSON definition for this revision of the recipe type</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When this revision was created</li>
+<li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe type for this revision</li>
+<li><strong>revision_num</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number for this revision, starting at one</li>
+<li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; The JSON definition for this revision of the recipe type</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this revision was created</li>
 </ul>
 </td>
 </tr>
@@ -1088,35 +1088,35 @@ recipe type model.</p>
 </table>
 <dl class="exception">
 <dt id="recipe.models.RecipeTypeRevision.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevision.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="recipe.models.RecipeTypeRevision.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevision.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">RecipeTypeRevision.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.definition">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">definition</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevision.definition" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">definition</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevision.get_next_by_created">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevision.get_previous_by_created">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevision.get_recipe_definition">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">get_recipe_definition</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">get_recipe_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_recipe_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe type definition for this revision</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1124,7 +1124,7 @@ recipe type model.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe type definition for this revision</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="recipe.configuration.definition.recipe_definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.recipe_definition.RecipeDefinition</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1132,29 +1132,29 @@ recipe type model.</p>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.objects">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">objects</tt><em class="property"> = &lt;recipe.models.RecipeTypeRevisionManager object at 0x10e43cd50&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeRevision.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeTypeRevisionManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeTypeRevision.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.recipe_set">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">recipe_set</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevision.recipe_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">recipe_set</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.recipe_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.recipe_type">
-<tt class="descclassname">RecipeTypeRevision.</tt><tt class="descname">recipe_type</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevision.recipe_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">RecipeTypeRevision.</code><code class="descname">recipe_type</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.models.RecipeTypeRevisionManager">
-<em class="property">class </em><tt class="descclassname">recipe.models.</tt><tt class="descname">RecipeTypeRevisionManager</tt><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeTypeRevisionManager</code><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipe type revisions</p>
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevisionManager.create_recipe_type_revision">
-<tt class="descname">create_recipe_type_revision</tt><big>(</big><em>recipe_type</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.create_recipe_type_revision" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_recipe_type_revision</code><span class="sig-paren">(</span><em>recipe_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.create_recipe_type_revision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new revision for the given recipe type. The recipe type&#8217;s definition and revision number must
 already be updated. The caller must have obtained a lock using select_for_update() on the given recipe type
 model.</p>
@@ -1162,7 +1162,7 @@ model.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></tt></a>) &#8211; The recipe type</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The recipe type</td>
 </tr>
 </tbody>
 </table>
@@ -1170,7 +1170,7 @@ model.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevisionManager.get_revision">
-<tt class="descname">get_revision</tt><big>(</big><em>recipe_type_id</em>, <em>revision_num</em><big>)</big><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_revision</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the revision for the given recipe type and revision number</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1185,7 +1185,7 @@ model.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revision</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><tt class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -1199,27 +1199,27 @@ model.</p>
 <span id="recipe-serializers-module"></span><h2>recipe.serializers module<a class="headerlink" href="#module-recipe.serializers" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.serializers.RecipeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts recipe model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeSerializer" title="recipe.serializers.RecipeSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeSerializer" title="recipe.serializers.RecipeSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeSerializer</span></code></a></p>
 <p>Converts related recipe model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer">
-<em class="property">class </em><tt class="descname">ScaleFileBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">RecipeDetailsSerializer.</tt><tt class="descname">TriggerEventDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">RecipeDetailsSerializer.</code><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
@@ -1227,13 +1227,13 @@ model.</p>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeJobsDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeJobsSerializer" title="recipe.serializers.RecipeJobsSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeJobsSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeJobsDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeJobsSerializer" title="recipe.serializers.RecipeJobsSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeJobsSerializer</span></code></a></p>
 <p>Converts related recipe model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">
-<em class="property">class </em><tt class="descname">JobRevisionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobSerializer" title="job.serializers.JobSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">JobRevisionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobSerializer" title="job.serializers.JobSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializer</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
 </dd></dl>
 
@@ -1241,25 +1241,25 @@ model.</p>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeJobsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeJobsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts recipe model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer">
-<em class="property">class </em><tt class="descname">JobSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobBaseSerializer" title="job.serializers.JobBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">JobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobBaseSerializer" title="job.serializers.JobBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializer</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer">
-<em class="property">class </em><tt class="descname">ErrorBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer">
-<em class="property">class </em><tt class="descclassname">RecipeJobsSerializer.JobSerializer.</tt><tt class="descname">TriggerEventBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">RecipeJobsSerializer.JobSerializer.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeJobsSerializer.JobSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
@@ -1269,13 +1269,13 @@ model.</p>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeBaseSerializer" title="recipe.serializers.RecipeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeBaseSerializer" title="recipe.serializers.RecipeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeBaseSerializer</span></code></a></p>
 <p>Converts recipe model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer">
-<em class="property">class </em><tt class="descname">TriggerEventBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
@@ -1283,33 +1283,33 @@ model.</p>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeBaseSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeTypeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts recipe type model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeTypeDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeSerializer" title="recipe.serializers.RecipeTypeSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeSerializer" title="recipe.serializers.RecipeTypeSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeSerializer</span></code></a></p>
 <p>Converts recipe type model fields to REST output.</p>
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer">
-<em class="property">class </em><tt class="descname">JobTypeBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descname">JobTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer">
-<em class="property">class </em><tt class="descclassname">RecipeTypeDetailsSerializer.</tt><tt class="descname">RecipeTypeDetailsJobSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobTypeBaseSerializer" title="job.serializers.JobTypeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">RecipeTypeDetailsSerializer.</code><code class="descname">RecipeTypeDetailsJobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobTypeBaseSerializer" title="job.serializers.JobTypeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeBaseSerializer</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">RecipeTypeDetailsSerializer.</tt><tt class="descname">TriggerRuleDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">RecipeTypeDetailsSerializer.</code><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
 <p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
@@ -1317,22 +1317,22 @@ model.</p>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeRevisionBaseSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeTypeRevisionBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeRevisionBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts recipe type revision model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeRevisionSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeTypeRevisionSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer" title="recipe.serializers.RecipeTypeRevisionBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeRevisionBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeRevisionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer" title="recipe.serializers.RecipeTypeRevisionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeRevisionBaseSerializer</span></code></a></p>
 <p>Converts recipe type revision model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.serializers.RecipeTypeSerializer">
-<em class="property">class </em><tt class="descclassname">recipe.serializers.</tt><tt class="descname">RecipeTypeSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.serializers.RecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeBaseSerializer" title="recipe.serializers.RecipeTypeBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeBaseSerializer" title="recipe.serializers.RecipeTypeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeBaseSerializer</span></code></a></p>
 <p>Converts recipe type model fields to REST output.</p>
 </dd></dl>
 
@@ -1345,29 +1345,29 @@ model.</p>
 <span id="recipe-views-module"></span><h2>recipe.views module<a class="headerlink" href="#module-recipe.views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="recipe.views.RecipeDetailsView">
-<em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipeDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for retrieving details of a recipe</p>
 <dl class="attribute">
 <dt id="recipe.views.RecipeDetailsView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="recipe.views.RecipeDetailsView.retrieve">
-<tt class="descname">retrieve</tt><big>(</big><em>request</em>, <em>recipe_id</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for a recipe type and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe type</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -1379,32 +1379,32 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeDetailsView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#recipe.views.RecipeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.views.RecipeTypeDetailsView">
-<em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipeTypeDetailsView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeTypeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for retrieving details of a recipe type</p>
 <dl class="method">
 <dt id="recipe.views.RecipeTypeDetailsView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em>, <em>recipe_type_id</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for a recipe type and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>recipe_type_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe type</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -1416,19 +1416,19 @@ model.</p>
 
 <dl class="method">
 <dt id="recipe.views.RecipeTypeDetailsView.patch">
-<tt class="descname">patch</tt><big>(</big><em>request</em>, <em>recipe_type_id</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing recipe type and returns the updated details</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP PATCH request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
 <li><strong>recipe_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the recipe type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
@@ -1440,33 +1440,33 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeTypeDetailsView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;RecipeType: RecipeType object&gt;]</em><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeTypeDetailsView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeTypeDetailsSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeTypeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeTypeDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.views.RecipeTypesValidationView">
-<em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipeTypesValidationView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypesValidationView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeTypesValidationView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
 <p>This view is the endpoint for validating a new recipe type before attempting to actually create it</p>
 <dl class="method">
 <dt id="recipe.views.RecipeTypesValidationView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypesValidationView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypesValidationView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new recipe type and returns any warnings discovered</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1476,27 +1476,27 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeTypesValidationView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;RecipeType: RecipeType object&gt;]</em><a class="headerlink" href="#recipe.views.RecipeTypesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeTypesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.views.RecipeTypesView">
-<em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipeTypesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeTypesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the list of all recipe types</p>
 <dl class="method">
 <dt id="recipe.views.RecipeTypesView.get">
-<tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypesView.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypesView.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all recipe types returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1506,15 +1506,15 @@ model.</p>
 
 <dl class="method">
 <dt id="recipe.views.RecipeTypesView.post">
-<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#recipe.views.RecipeTypesView.post" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeTypesView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new recipe type and returns a link to the detail URL</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP POST request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1524,33 +1524,33 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeTypesView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = [&lt;RecipeType: RecipeType object&gt;]</em><a class="headerlink" href="#recipe.views.RecipeTypesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeTypesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipeTypesView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#recipe.views.RecipeTypesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeTypeSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeTypesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeTypeSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.views.RecipesView">
-<em class="property">class </em><tt class="descclassname">recipe.views.</tt><tt class="descname">RecipesView</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#recipe.views.RecipesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the list of all recipes</p>
 <dl class="method">
 <dt id="recipe.views.RecipesView.list">
-<tt class="descname">list</tt><big>(</big><em>request</em><big>)</big><a class="headerlink" href="#recipe.views.RecipesView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all recipes and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<tt class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></tt>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></tt></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
 </tr>
@@ -1560,13 +1560,13 @@ model.</p>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipesView.queryset">
-<tt class="descname">queryset</tt><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.views.RecipesView.serializer_class">
-<tt class="descname">serializer_class</tt><a class="headerlink" href="#recipe.views.RecipesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">RecipeSerializer</span></tt></p>
+<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

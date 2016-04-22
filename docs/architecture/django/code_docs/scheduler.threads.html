@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -197,17 +197,17 @@
 <p>Defines the class that manages the database sync background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread">
-<em class="property">class </em><tt class="descclassname">scheduler.threads.db_sync.</tt><tt class="descname">DatabaseSyncThread</tt><big>(</big><em>driver</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>node_manager</em>, <em>scheduler_manager</em><big>)</big><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.threads.db_sync.</code><code class="descname">DatabaseSyncThread</code><span class="sig-paren">(</span><em>driver</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>node_manager</em>, <em>scheduler_manager</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the database sync background thread for the scheduler</p>
 <dl class="attribute">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread.THROTTLE">
-<tt class="descname">THROTTLE</tt><em class="property"> = 10</em><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">THROTTLE</code><em class="property"> = 10</em><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread.driver">
-<tt class="descname">driver</tt><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.driver" title="Permalink to this definition">¶</a></dt>
+<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the driver</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -215,7 +215,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><tt class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -223,13 +223,13 @@
 
 <dl class="method">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread.run">
-<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main run loop of the thread</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread.shutdown">
-<tt class="descname">shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.shutdown" title="Permalink to this definition">¶</a></dt>
+<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.shutdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the thread from running and performs any needed clean up</p>
 </dd></dl>
 
@@ -241,17 +241,17 @@
 <p>Defines the class that manages the reconciliation background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.recon.ReconciliationThread">
-<em class="property">class </em><tt class="descclassname">scheduler.threads.recon.</tt><tt class="descname">ReconciliationThread</tt><big>(</big><em>driver</em><big>)</big><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.threads.recon.</code><code class="descname">ReconciliationThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the reconciliation background thread for the scheduler</p>
 <dl class="attribute">
 <dt id="scheduler.threads.recon.ReconciliationThread.THROTTLE">
-<tt class="descname">THROTTLE</tt><em class="property"> = 60</em><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">THROTTLE</code><em class="property"> = 60</em><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.threads.recon.ReconciliationThread.add_task_ids">
-<tt class="descname">add_task_ids</tt><big>(</big><em>task_ids</em><big>)</big><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.add_task_ids" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_task_ids</code><span class="sig-paren">(</span><em>task_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.add_task_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a list of task IDs that need to be reconciled</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -265,7 +265,7 @@
 
 <dl class="attribute">
 <dt id="scheduler.threads.recon.ReconciliationThread.driver">
-<tt class="descname">driver</tt><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.driver" title="Permalink to this definition">¶</a></dt>
+<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the driver</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -273,7 +273,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><tt class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -281,7 +281,7 @@
 
 <dl class="method">
 <dt id="scheduler.threads.recon.ReconciliationThread.remove_task_id">
-<tt class="descname">remove_task_id</tt><big>(</big><em>task_id</em><big>)</big><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.remove_task_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">remove_task_id</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.remove_task_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes the task ID from the reconciliation set</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -295,13 +295,13 @@
 
 <dl class="method">
 <dt id="scheduler.threads.recon.ReconciliationThread.run">
-<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main run loop of the thread</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.threads.recon.ReconciliationThread.shutdown">
-<tt class="descname">shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.shutdown" title="Permalink to this definition">¶</a></dt>
+<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.shutdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the thread from running and performs any needed clean up</p>
 </dd></dl>
 
@@ -313,32 +313,32 @@
 <p>Defines the class that manages the scheduling background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.schedule.SchedulingThread">
-<em class="property">class </em><tt class="descclassname">scheduler.threads.schedule.</tt><tt class="descname">SchedulingThread</tt><big>(</big><em>driver</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>node_manager</em>, <em>offer_manager</em>, <em>scheduler_manager</em><big>)</big><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.threads.schedule.</code><code class="descname">SchedulingThread</code><span class="sig-paren">(</span><em>driver</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>node_manager</em>, <em>offer_manager</em>, <em>scheduler_manager</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the scheduling background thread for the scheduler</p>
 <dl class="attribute">
 <dt id="scheduler.threads.schedule.SchedulingThread.DELAY">
-<tt class="descname">DELAY</tt><em class="property"> = 5</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.DELAY" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DELAY</code><em class="property"> = 5</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.DELAY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.threads.schedule.SchedulingThread.MAX_NEW_JOB_EXES">
-<tt class="descname">MAX_NEW_JOB_EXES</tt><em class="property"> = 500</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.MAX_NEW_JOB_EXES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">MAX_NEW_JOB_EXES</code><em class="property"> = 500</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.MAX_NEW_JOB_EXES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.threads.schedule.SchedulingThread.SCHEDULE_LOOP_WARN_THRESHOLD">
-<tt class="descname">SCHEDULE_LOOP_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 1)</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.SCHEDULE_LOOP_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SCHEDULE_LOOP_WARN_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 1)</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.SCHEDULE_LOOP_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.threads.schedule.SchedulingThread.SCHEDULE_QUERY_WARN_THRESHOLD">
-<tt class="descname">SCHEDULE_QUERY_WARN_THRESHOLD</tt><em class="property"> = datetime.timedelta(0, 0, 100000)</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.SCHEDULE_QUERY_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SCHEDULE_QUERY_WARN_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 0, 100000)</em><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.SCHEDULE_QUERY_WARN_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.threads.schedule.SchedulingThread.driver">
-<tt class="descname">driver</tt><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.driver" title="Permalink to this definition">¶</a></dt>
+<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.driver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the driver</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -346,7 +346,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><tt class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="mesos_api.html#mesos_api.mesos.SchedulerDriver" title="mesos_api.mesos.SchedulerDriver"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -354,13 +354,13 @@
 
 <dl class="method">
 <dt id="scheduler.threads.schedule.SchedulingThread.run">
-<tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main run loop of the thread</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.threads.schedule.SchedulingThread.shutdown">
-<tt class="descname">shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.shutdown" title="Permalink to this definition">¶</a></dt>
+<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread.shutdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the thread from running and performs any needed clean up</p>
 </dd></dl>
 

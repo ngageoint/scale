@@ -1,5 +1,5 @@
 
-.. _algorithms_results_manifest:
+.. _algorithm_integration_results_manifest:
 
 Results Manifest
 ===============================================================================

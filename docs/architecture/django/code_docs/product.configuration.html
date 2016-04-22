@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -194,20 +194,20 @@
 <p>Defines the product data file input type contained within job data</p>
 <dl class="class">
 <dt id="product.configuration.product_data_file.ProductDataFileStore">
-<em class="property">class </em><tt class="descclassname">product.configuration.product_data_file.</tt><tt class="descname">ProductDataFileStore</tt><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">product.configuration.product_data_file.</code><code class="descname">ProductDataFileStore</code><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore" title="job.configuration.data.data_file.AbstractDataFileStore"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore</span></code></a></p>
 <p>Implements the data file store class to provide a way to validate product file output configuration and store
 product data files.</p>
 <dl class="method">
 <dt id="product.configuration.product_data_file.ProductDataFileStore.get_workspaces">
-<tt class="descname">get_workspaces</tt><big>(</big><em>workspace_ids</em><big>)</big><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore.get_workspaces" title="job.configuration.data.data_file.AbstractDataFileStore.get_workspaces"><tt class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore.get_workspaces()</span></tt></a></p>
+<code class="descname">get_workspaces</code><span class="sig-paren">(</span><em>workspace_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore.get_workspaces" title="job.configuration.data.data_file.AbstractDataFileStore.get_workspaces"><code class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore.get_workspaces()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="product.configuration.product_data_file.ProductDataFileStore.store_files">
-<tt class="descname">store_files</tt><big>(</big><em>upload_dir</em>, <em>work_dir</em>, <em>data_files</em>, <em>input_file_ids</em>, <em>job_exe</em><big>)</big><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore.store_files" title="job.configuration.data.data_file.AbstractDataFileStore.store_files"><tt class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore.store_files()</span></tt></a></p>
+<code class="descname">store_files</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em>, <em>data_files</em>, <em>input_file_ids</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#product.configuration.product_data_file.ProductDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore.store_files" title="job.configuration.data.data_file.AbstractDataFileStore.store_files"><code class="xref py py-meth docutils literal"><span class="pre">job.configuration.data.data_file.AbstractDataFileStore.store_files()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

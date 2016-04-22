@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="source.html">source package</a><ul class="current">
@@ -155,7 +155,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -207,58 +207,58 @@
 <span id="source-test-triggers-test-parse-trigger-condition-module"></span><h2>source.test.triggers.test_parse_trigger_condition module<a class="headerlink" href="#module-source.test.triggers.test_parse_trigger_condition" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.test_parse_trigger_condition.</tt><tt class="descname">TestParseTriggerConditionIsConditionMet</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.test_parse_trigger_condition.</code><code class="descname">TestParseTriggerConditionIsConditionMet</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_both_correct">
-<tt class="descname">test_both_correct</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_both_correct" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_both_correct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_both_correct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a source file that meets both criteria</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_data_types_incorrect">
-<tt class="descname">test_data_types_incorrect</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_data_types_incorrect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_data_types_incorrect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_data_types_incorrect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a source file that only has the correct media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_does_not_have_data_types">
-<tt class="descname">test_does_not_have_data_types</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_does_not_have_data_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_does_not_have_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_does_not_have_data_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a source file that does not have all required data types</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_has_data_types">
-<tt class="descname">test_has_data_types</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_has_data_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_has_data_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_has_data_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a source file that has all required data types</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_incorrect">
-<tt class="descname">test_media_type_incorrect</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_incorrect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_incorrect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_incorrect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a source file that only has the correct data types</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_match">
-<tt class="descname">test_media_type_match</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_match" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a matching media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_mismatch">
-<tt class="descname">test_media_type_mismatch</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_mismatch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_mismatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_media_type_mismatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with a mismatched media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_no_conditions">
-<tt class="descname">test_no_conditions</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_no_conditions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_no_conditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ParseTriggerCondition.is_condition_met() with no conditions</p>
 </dd></dl>
 
@@ -269,22 +269,22 @@
 <span id="source-test-triggers-test-parse-trigger-handler-module"></span><h2>source.test.triggers.test_parse_trigger_handler module<a class="headerlink" href="#module-source.test.triggers.test_parse_trigger_handler" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile">
-<em class="property">class </em><tt class="descclassname">source.test.triggers.test_parse_trigger_handler.</tt><tt class="descname">TestParseTriggerHandlerProcessParsedSourceFile</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">source.test.triggers.test_parse_trigger_handler.</code><code class="descname">TestParseTriggerHandlerProcessParsedSourceFile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_job_creation">
-<tt class="descname">test_successful_job_creation</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_job_creation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_job_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_job_creation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully processing a parse that triggers job creation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_recipe_creation">
-<tt class="descname">test_successful_recipe_creation</tt><big>(</big><big>)</big><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_recipe_creation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_recipe_creation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.triggers.test_parse_trigger_handler.TestParseTriggerHandlerProcessParsedSourceFile.test_successful_recipe_creation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully processing a parse that triggers recipe creation.</p>
 </dd></dl>
 

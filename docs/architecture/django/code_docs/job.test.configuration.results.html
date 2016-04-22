@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -200,22 +200,22 @@
 <span id="job-test-configuration-results-test-job-results-module"></span><h2>job.test.configuration.results.test_job_results module<a class="headerlink" href="#module-job.test.configuration.results.test_job_results" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.results.test_job_results.</tt><tt class="descname">TestJobResultsAddOutputToData</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.results.test_job_results.</code><code class="descname">TestJobResultsAddOutputToData</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file">
-<tt class="descname">test_successful_file</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobResults.add_output_to_data() successfully with a file parameter</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file_list">
-<tt class="descname">test_successful_file_list</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_file_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobResults.add_output_to_data() successfully with a file list parameter</p>
 </dd></dl>
 
@@ -226,78 +226,78 @@
 <span id="job-test-configuration-results-test-results-manifest-module"></span><h2>job.test.configuration.results.test_results_manifest module<a class="headerlink" href="#module-job.test.configuration.results.test_results_manifest" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.results.test_results_manifest.</tt><tt class="descname">TestResultsManifestConstructor</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.results.test_results_manifest.</code><code class="descname">TestResultsManifestConstructor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_empty_results_manifest">
-<tt class="descname">test_empty_results_manifest</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_empty_results_manifest" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_empty_results_manifest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_empty_results_manifest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_invalid_results_manifest">
-<tt class="descname">test_invalid_results_manifest</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_invalid_results_manifest" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_results_manifest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_invalid_results_manifest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_support_simple_file">
-<tt class="descname">test_manifest_support_simple_file</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_support_simple_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_manifest_support_simple_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_support_simple_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_supports_file_with_paths">
-<tt class="descname">test_manifest_supports_file_with_paths</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_supports_file_with_paths" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_manifest_supports_file_with_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_supports_file_with_paths" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_version_1_1">
-<tt class="descname">test_manifest_version_1_1</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_version_1_1" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_manifest_version_1_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_manifest_version_1_1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConversion">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.results.test_results_manifest.</tt><tt class="descname">TestResultsManifestConversion</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConversion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.results.test_results_manifest.</code><code class="descname">TestResultsManifestConversion</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestConversion.test_convert_1_0_to_1_1">
-<tt class="descname">test_convert_1_0_to_1_1</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConversion.test_convert_1_0_to_1_1" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_convert_1_0_to_1_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestConversion.test_convert_1_0_to_1_1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation">
-<em class="property">class </em><tt class="descclassname">job.test.configuration.results.test_results_manifest.</tt><tt class="descname">TestResultsManifestValidation</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.configuration.results.test_results_manifest.</code><code class="descname">TestResultsManifestValidation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_optional_is_ok">
-<tt class="descname">test_missing_optional_is_ok</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_optional_is_ok" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_optional_is_ok</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_optional_is_ok" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_required_is_bad">
-<tt class="descname">test_missing_required_is_bad</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_required_is_bad" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_missing_required_is_bad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_required_is_bad" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_output_does_not_match">
-<tt class="descname">test_output_does_not_match</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_output_does_not_match" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_output_does_not_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_output_does_not_match" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation">
-<tt class="descname">test_simple_validation</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_simple_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation_1_1">
-<tt class="descname">test_simple_validation_1_1</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation_1_1" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_simple_validation_1_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_simple_validation_1_1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

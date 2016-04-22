@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="shared_resource.html">shared_resource package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="shared_resource.html#subpackages">Subpackages</a></li>
@@ -152,7 +152,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -189,46 +189,46 @@
 <span id="shared-resource-test-test-models-module"></span><h2>shared_resource.test.test_models module<a class="headerlink" href="#module-shared_resource.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest">
-<em class="property">class </em><tt class="descclassname">shared_resource.test.test_models.</tt><tt class="descname">SharedResourceManagerTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">shared_resource.test.test_models.</code><code class="descname">SharedResourceManagerTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForAcessWithJustEnoughUsage">
-<tt class="descname">testJobTypesForAcessWithJustEnoughUsage</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForAcessWithJustEnoughUsage" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testJobTypesForAcessWithJustEnoughUsage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForAcessWithJustEnoughUsage" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForGlobalOnlyNode">
-<tt class="descname">testJobTypesForGlobalOnlyNode</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForGlobalOnlyNode" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testJobTypesForGlobalOnlyNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForGlobalOnlyNode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode">
-<tt class="descname">testJobTypesForSpecialAccessNode</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testJobTypesForSpecialAccessNode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingNone">
-<tt class="descname">testResourceRemainingNone</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingNone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testResourceRemainingNone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingNone" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingReduceByJob">
-<tt class="descname">testResourceRemainingReduceByJob</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingReduceByJob" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testResourceRemainingReduceByJob</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingReduceByJob" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingUnrelatedJob">
-<tt class="descname">testResourceRemainingUnrelatedJob</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingUnrelatedJob" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testResourceRemainingUnrelatedJob</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourceRemainingUnrelatedJob" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="shared_resource.test.test_models.SharedResourceManagerTest.testResourcesRemainingNoJobs">
-<tt class="descname">testResourcesRemainingNoJobs</tt><big>(</big><big>)</big><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourcesRemainingNoJobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testResourcesRemainingNoJobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.test_models.SharedResourceManagerTest.testResourcesRemainingNoJobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>A resource with no jobs using it should have the limit remaining</p>
 </dd></dl>
 
@@ -240,7 +240,7 @@
 <p>Defines utility methods for testing nodes</p>
 <dl class="function">
 <dt id="shared_resource.test.utils.create_requirement">
-<tt class="descclassname">shared_resource.test.utils.</tt><tt class="descname">create_requirement</tt><big>(</big><em>job_type=None</em>, <em>shared_resource=None</em>, <em>usage=None</em><big>)</big><a class="headerlink" href="#shared_resource.test.utils.create_requirement" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">shared_resource.test.utils.</code><code class="descname">create_requirement</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>shared_resource=None</em>, <em>usage=None</em><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.utils.create_requirement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a shared resource requirement model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -248,7 +248,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The shared resource requirement model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResourceRequirement" title="shared_resource.models.SharedResourceRequirement"><tt class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResourceRequirement</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResourceRequirement" title="shared_resource.models.SharedResourceRequirement"><code class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResourceRequirement</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -256,7 +256,7 @@
 
 <dl class="function">
 <dt id="shared_resource.test.utils.create_resource">
-<tt class="descclassname">shared_resource.test.utils.</tt><tt class="descname">create_resource</tt><big>(</big><em>name=None</em>, <em>limit=None</em>, <em>is_global=True</em><big>)</big><a class="headerlink" href="#shared_resource.test.utils.create_resource" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">shared_resource.test.utils.</code><code class="descname">create_resource</code><span class="sig-paren">(</span><em>name=None</em>, <em>limit=None</em>, <em>is_global=True</em><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.test.utils.create_resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a shared resource model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -264,7 +264,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The shared resource model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResource" title="shared_resource.models.SharedResource"><tt class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResource</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="shared_resource.html#shared_resource.models.SharedResource" title="shared_resource.models.SharedResource"><code class="xref py py-class docutils literal"><span class="pre">shared_resource.models.SharedResource</span></code></a></td>
 </tr>
 </tbody>
 </table>

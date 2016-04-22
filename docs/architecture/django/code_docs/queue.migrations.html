@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -121,7 +122,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -157,7 +157,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -194,16 +194,16 @@
 <span id="queue-migrations-0001-initial-module"></span><h2>queue.migrations.0001_initial module<a class="headerlink" href="#module-queue.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0001_initial.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0001_initial.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0001_initial.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0001_initial.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0001_initial')]</em><a class="headerlink" href="#queue.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0001_initial')]</em><a class="headerlink" href="#queue.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0001_initial.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;CreateModel  fields=[(u'job_exe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'is_job_type_paused', &lt;django.db.models.fields.BooleanField&gt;), (u'priority', &lt;django.db.models.fields.IntegerField&gt;), (u'cpus_required', &lt;django.db.models.fields.FloatField&gt;), (u'mem_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_in_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_out_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_total_required', &lt;django.db.models.fields.FloatField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'queued', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue'}, name=u'Queue'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'depth_time', &lt;django.db.models.fields.DateTimeField&gt;), (u'depth', &lt;django.db.models.fields.IntegerField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue_depth_job_type'}, name=u'QueueDepthByJobType'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'priority', &lt;django.db.models.fields.IntegerField&gt;), (u'depth_time', &lt;django.db.models.fields.DateTimeField&gt;), (u'depth', &lt;django.db.models.fields.IntegerField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue_depth_priority'}, name=u'QueueDepthByPriority'&gt;]</em><a class="headerlink" href="#queue.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'job_exe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'is_job_type_paused', &lt;django.db.models.fields.BooleanField&gt;), (u'priority', &lt;django.db.models.fields.IntegerField&gt;), (u'cpus_required', &lt;django.db.models.fields.FloatField&gt;), (u'mem_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_in_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_out_required', &lt;django.db.models.fields.FloatField&gt;), (u'disk_total_required', &lt;django.db.models.fields.FloatField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'queued', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue'}, name=u'Queue'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'depth_time', &lt;django.db.models.fields.DateTimeField&gt;), (u'depth', &lt;django.db.models.fields.IntegerField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue_depth_job_type'}, name=u'QueueDepthByJobType'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'priority', &lt;django.db.models.fields.IntegerField&gt;), (u'depth_time', &lt;django.db.models.fields.DateTimeField&gt;), (u'depth', &lt;django.db.models.fields.IntegerField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'queue_depth_priority'}, name=u'QueueDepthByPriority'&gt;]</em><a class="headerlink" href="#queue.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -213,16 +213,16 @@
 <span id="queue-migrations-0002-jobload-module"></span><h2>queue.migrations.0002_jobload module<a class="headerlink" href="#module-queue.migrations.0002_jobload" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0002_jobload.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0002_jobload.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0002_jobload.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0002_jobload.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0002_jobload.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0002_jobload.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'job', u'0003_auto_20151016_0849'), (u'queue', u'0001_initial')]</em><a class="headerlink" href="#queue.migrations.0002_jobload.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0003_auto_20151016_0849'), (u'queue', u'0001_initial')]</em><a class="headerlink" href="#queue.migrations.0002_jobload.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0002_jobload.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'measured', &lt;django.db.models.fields.DateTimeField&gt;), (u'pending_count', &lt;django.db.models.fields.IntegerField&gt;), (u'queued_count', &lt;django.db.models.fields.IntegerField&gt;), (u'running_count', &lt;django.db.models.fields.IntegerField&gt;), (u'total_count', &lt;django.db.models.fields.IntegerField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'job_load'}, name=u'JobLoad'&gt;]</em><a class="headerlink" href="#queue.migrations.0002_jobload.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'measured', &lt;django.db.models.fields.DateTimeField&gt;), (u'pending_count', &lt;django.db.models.fields.IntegerField&gt;), (u'queued_count', &lt;django.db.models.fields.IntegerField&gt;), (u'running_count', &lt;django.db.models.fields.IntegerField&gt;), (u'total_count', &lt;django.db.models.fields.IntegerField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'job_load'}, name=u'JobLoad'&gt;]</em><a class="headerlink" href="#queue.migrations.0002_jobload.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -232,16 +232,16 @@
 <span id="queue-migrations-0003-auto-20151023-1104-module"></span><h2>queue.migrations.0003_auto_20151023_1104 module<a class="headerlink" href="#module-queue.migrations.0003_auto_20151023_1104" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0003_auto_20151023_1104.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0003_auto_20151023_1104.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0003_auto_20151023_1104.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0003_auto_20151023_1104.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'queue', u'0002_jobload')]</em><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0002_jobload')]</em><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0003_auto_20151023_1104.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_type', model_name=u'jobload'&gt;]</em><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_type', model_name=u'jobload'&gt;]</em><a class="headerlink" href="#queue.migrations.0003_auto_20151023_1104.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -251,16 +251,16 @@
 <span id="queue-migrations-0004-remove-queue-is-job-type-paused-module"></span><h2>queue.migrations.0004_remove_queue_is_job_type_paused module<a class="headerlink" href="#module-queue.migrations.0004_remove_queue_is_job_type_paused" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0004_remove_queue_is_job_type_paused.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0004_remove_queue_is_job_type_paused.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0004_remove_queue_is_job_type_paused.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0004_remove_queue_is_job_type_paused.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'queue', u'0003_auto_20151023_1104')]</em><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0003_auto_20151023_1104')]</em><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0004_remove_queue_is_job_type_paused.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;RemoveField  name=u'is_job_type_paused', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'is_job_type_paused', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0004_remove_queue_is_job_type_paused.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -270,16 +270,16 @@
 <span id="queue-migrations-0005-queue-node-required-module"></span><h2>queue.migrations.0005_queue_node_required module<a class="headerlink" href="#module-queue.migrations.0005_queue_node_required" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0005_queue_node_required.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0005_queue_node_required.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0005_queue_node_required.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0005_queue_node_required.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'node', u'0003_node_is_paused_errors'), (u'queue', u'0004_remove_queue_is_job_type_paused')]</em><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'node', u'0003_node_is_paused_errors'), (u'queue', u'0004_remove_queue_is_job_type_paused')]</em><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0005_queue_node_required.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'node_required', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'node_required', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0005_queue_node_required.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -289,16 +289,16 @@
 <span id="queue-migrations-0006-auto-20160316-1625-module"></span><h2>queue.migrations.0006_auto_20160316_1625 module<a class="headerlink" href="#module-queue.migrations.0006_auto_20160316_1625" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="queue.migrations.0006_auto_20160316_1625.Migration">
-<em class="property">class </em><tt class="descclassname">queue.migrations.0006_auto_20160316_1625.</tt><tt class="descname">Migration</tt><big>(</big><em>name</em>, <em>app_label</em><big>)</big><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></tt></p>
+<em class="property">class </em><code class="descclassname">queue.migrations.0006_auto_20160316_1625.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
 <dl class="attribute">
 <dt id="queue.migrations.0006_auto_20160316_1625.Migration.dependencies">
-<tt class="descname">dependencies</tt><em class="property"> = [(u'queue', u'0005_queue_node_required')]</em><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0005_queue_node_required')]</em><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.migrations.0006_auto_20160316_1625.Migration.operations">
-<tt class="descname">operations</tt><em class="property"> = [&lt;RemoveField  name=u'job_type', model_name=u'queuedepthbyjobtype'&gt;, &lt;DeleteModel  name=u'QueueDepthByJobType'&gt;, &lt;DeleteModel  name=u'QueueDepthByPriority'&gt;]</em><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'job_type', model_name=u'queuedepthbyjobtype'&gt;, &lt;DeleteModel  name=u'QueueDepthByJobType'&gt;, &lt;DeleteModel  name=u'QueueDepthByPriority'&gt;]</em><a class="headerlink" href="#queue.migrations.0006_auto_20160316_1625.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

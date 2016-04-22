@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -209,46 +209,46 @@
 <span id="storage-test-test-geospatial-utils-module"></span><h2>storage.test.test_geospatial_utils module<a class="headerlink" href="#module-storage.test.test_geospatial_utils" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils">
-<em class="property">class </em><tt class="descclassname">storage.test.test_geospatial_utils.</tt><tt class="descname">TestGeospatialUtils</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_geospatial_utils.</code><code class="descname">TestGeospatialUtils</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_get_center_point">
-<tt class="descname">test_get_center_point</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_get_center_point" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_center_point</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_get_center_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calculating center point</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_parse_geo_json">
-<tt class="descname">test_parse_geo_json</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_parse_geo_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_parse_geo_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_parse_geo_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests parsing geojson</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature">
-<tt class="descname">test_valid_feature</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid_feature</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests parsing geojson</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_collection">
-<tt class="descname">test_valid_feature_collection</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_collection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid_feature_collection</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests parsing geojson</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_no_props">
-<tt class="descname">test_valid_feature_no_props</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_no_props" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid_feature_no_props</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_feature_no_props" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests parsing geojson</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_polygon">
-<tt class="descname">test_valid_polygon</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_polygon" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid_polygon</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_geospatial_utils.TestGeospatialUtils.test_valid_polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests parsing geojson</p>
 </dd></dl>
 
@@ -259,71 +259,71 @@
 <span id="storage-test-test-models-module"></span><h2>storage.test.test_models module<a class="headerlink" href="#module-storage.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="storage.test.test_models.TestCountryData">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestCountryData</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestCountryData</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestCountryData.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestCountryData.test_access">
-<tt class="descname">test_access</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_access" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_access</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_access" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestCountryData.test_border_update">
-<tt class="descname">test_border_update</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_border_update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_border_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_border_update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestCountryData.test_border_update_not_found">
-<tt class="descname">test_border_update_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_border_update_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_border_update_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_border_update_not_found" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestCountryData.test_not_found">
-<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestCountryData.test_not_found" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFile">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFile</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_country_data">
-<tt class="descname">test_country_data</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_country_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_country_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_country_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests adding a border and country intersection calculation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_url">
-<tt class="descname">test_url</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests building a URL for a file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_url_base_slash">
-<tt class="descname">test_url_base_slash</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_base_slash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_url_base_slash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_base_slash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests building a URL for a file where the workspace base URL has a trailing slash.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_url_base_url_missing">
-<tt class="descname">test_url_base_url_missing</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_base_url_missing" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_url_base_url_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_base_url_missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests building a URL for a file in a workspace with no configured base URL.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_url_file_slash">
-<tt class="descname">test_url_file_slash</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_file_slash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_url_file_slash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url_file_slash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests building a URL for a file where the file path URL has a leading slash.</p>
 </dd></dl>
 
@@ -331,22 +331,22 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileAddDataTypeTag">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileAddDataTypeTag</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileAddDataTypeTag</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileAddDataTypeTag.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid">
-<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling add_data_type_tag() with invalid tags</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileAddDataTypeTag.test_valid">
-<tt class="descname">test_valid</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_valid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileAddDataTypeTag.test_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling add_data_type_tag() with valid tags</p>
 </dd></dl>
 
@@ -354,22 +354,22 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileGetDataTypeTags">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileGetDataTypeTags</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileGetDataTypeTags</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileGetDataTypeTags.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileGetDataTypeTags.test_no_tags">
-<tt class="descname">test_no_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.test_no_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.test_no_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_data_type_tags() with no tags</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileGetDataTypeTags.test_tags">
-<tt class="descname">test_tags</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_data_type_tags() with tags</p>
 </dd></dl>
 
@@ -377,16 +377,16 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupDownloadDir">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerCleanupDownloadDir</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerCleanupDownloadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupDownloadDir.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.cleanup_download_dir() successfully</p>
 </dd></dl>
 
@@ -394,16 +394,16 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupUploadDir">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerCleanupUploadDir</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerCleanupUploadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupUploadDir.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerCleanupUploadDir.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerCleanupUploadDir.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.cleanup_upload_dir() successfully</p>
 </dd></dl>
 
@@ -411,28 +411,28 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerDownloadFiles">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerDownloadFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerDownloadFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerDownloadFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerDownloadFiles.test_deleted_file">
-<tt class="descname">test_deleted_file</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_deleted_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_deleted_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_deleted_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.download_files() with a deleted file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerDownloadFiles.test_inactive_workspace">
-<tt class="descname">test_inactive_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_inactive_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_inactive_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_inactive_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.download_files() with an inactive workspace</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerDownloadFiles.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.download_files() successfully</p>
 </dd></dl>
 
@@ -440,22 +440,22 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerGetTotalFileSize">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerGetTotalFileSize</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerGetTotalFileSize</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerGetTotalFileSize.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_no_files">
-<tt class="descname">test_no_files</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_no_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_no_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.get_total_file_size() where no files match the file IDs</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_success">
-<tt class="descname">test_success</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerGetTotalFileSize.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.get_total_file_size() successfully</p>
 </dd></dl>
 
@@ -463,28 +463,28 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerMoveFiles">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerMoveFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerMoveFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerMoveFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerMoveFiles.test_deleted_file">
-<tt class="descname">test_deleted_file</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_deleted_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_deleted_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_deleted_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.move_files() with a deleted file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerMoveFiles.test_inactive_workspace">
-<tt class="descname">test_inactive_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_inactive_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_inactive_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_inactive_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.move_files() with an inactive workspace</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerMoveFiles.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerMoveFiles.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.move_files() successfully</p>
 </dd></dl>
 
@@ -492,16 +492,16 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerSetupUploadDir">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerSetupUploadDir</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerSetupUploadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerSetupUploadDir.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerSetupUploadDir.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerSetupUploadDir.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.setup_upload_dir() successfully</p>
 </dd></dl>
 
@@ -509,22 +509,22 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileManagerUploadFiles">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileManagerUploadFiles</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerUploadFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerUploadFiles.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerUploadFiles.test_fails">
-<tt class="descname">test_fails</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.test_fails" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_fails</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.test_fails" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.upload_files() when Workspace.upload_files() fails</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileManagerUploadFiles.test_success">
-<tt class="descname">test_success</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerUploadFiles.test_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling ScaleFileManager.upload_files() successfully</p>
 </dd></dl>
 
@@ -532,40 +532,40 @@
 
 <dl class="class">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID">
-<em class="property">class </em><tt class="descclassname">storage.test.test_models.</tt><tt class="descname">TestScaleFileUpdateUUID</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileUpdateUUID</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.test_multi_strings">
-<tt class="descname">test_multi_strings</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_multi_strings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multi_strings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_multi_strings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling update_uuid with multiple strings.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.test_none">
-<tt class="descname">test_none</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_none" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_none" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling update_uuid with no arguments.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.test_objects">
-<tt class="descname">test_objects</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_objects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling update_uuid with multiple object types.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.test_one_string">
-<tt class="descname">test_one_string</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_one_string" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_one_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_one_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling update_uuid with a single string.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_models.TestScaleFileUpdateUUID.test_partial">
-<tt class="descname">test_partial</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_partial" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_partial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileUpdateUUID.test_partial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling update_uuid with some ignored None types.</p>
 </dd></dl>
 
@@ -576,22 +576,22 @@
 <span id="storage-test-test-views-module"></span><h2>storage.test.test_views module<a class="headerlink" href="#module-storage.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="storage.test.test_views.TestWorkspaceDetailsView">
-<em class="property">class </em><tt class="descclassname">storage.test.test_views.</tt><tt class="descname">TestWorkspaceDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspaceDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspaceDetailsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspaceDetailsView.test_not_found">
-<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get workspace details view with a workspace id that does not exist.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspaceDetailsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get workspace details view.</p>
 </dd></dl>
 
@@ -599,34 +599,34 @@
 
 <dl class="class">
 <dt id="storage.test.test_views.TestWorkspacesView">
-<em class="property">class </em><tt class="descclassname">storage.test.test_views.</tt><tt class="descname">TestWorkspacesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspacesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspacesView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspacesView.test_name">
-<tt class="descname">test_name</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the workspaces view filtered by workspace name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspacesView.test_reverse_sorting">
-<tt class="descname">test_reverse_sorting</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_reverse_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests custom sorting in reverse.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspacesView.test_sorting">
-<tt class="descname">test_sorting</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_sorting" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_sorting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests custom sorting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.test.test_views.TestWorkspacesView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspacesView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get all workspaces view.</p>
 </dd></dl>
 
@@ -638,7 +638,7 @@
 <p>Defines utility methods for testing files and workspaces</p>
 <dl class="function">
 <dt id="storage.test.utils.create_country">
-<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_country</tt><big>(</big><em>name=None</em>, <em>fips=u'TT'</em>, <em>gmi=u'TT'</em>, <em>iso2=u'TT'</em>, <em>iso3=u'TST'</em>, <em>iso_num=0</em>, <em>border=None</em>, <em>effective=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_country" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_country</code><span class="sig-paren">(</span><em>name=None</em>, <em>fips=u'TT'</em>, <em>gmi=u'TT'</em>, <em>iso2=u'TT'</em>, <em>iso3=u'TST'</em>, <em>iso_num=0</em>, <em>border=None</em>, <em>effective=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_country" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a country data model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -646,7 +646,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.CountryData" title="storage.models.CountryData"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.CountryData" title="storage.models.CountryData"><code class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -654,7 +654,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_file</tt><big>(</big><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -662,7 +662,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -670,7 +670,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_workspace">
-<tt class="descclassname">storage.test.utils.</tt><tt class="descname">create_workspace</tt><big>(</big><em>name=None</em>, <em>title=None</em>, <em>base_url=None</em>, <em>is_active=True</em>, <em>archived=None</em><big>)</big><a class="headerlink" href="#storage.test.utils.create_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_workspace</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>base_url=None</em>, <em>is_active=True</em>, <em>archived=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a workspace model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -678,7 +678,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a></td>
 </tr>
 </tbody>
 </table>

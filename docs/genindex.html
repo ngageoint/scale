@@ -88,7 +88,7 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development/index.html">Development</a></li>
@@ -781,10 +781,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngestManager.calculate">calculate() (metrics.models.MetricsIngestManager method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsErrorManager.calculate">calculate() (metrics.models.MetricsErrorManager method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngestManager.calculate">(metrics.models.MetricsIngestManager method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobTypeManager.calculate">(metrics.models.MetricsJobTypeManager method)</a>
   </dt>
@@ -1543,6 +1547,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.consider_general_error">consider_general_error() (job.execution.running.tasks.base_task.Task method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_new_job_exe">consider_new_job_exe() (scheduler.offer.manager.OfferManager method)</a>
   </dt>
 
@@ -1606,12 +1614,12 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ContainerInfo.DockerInfo.PortMapping.CONTAINER_PORT_FIELD_NUMBER">CONTAINER_PORT_FIELD_NUMBER (mesos_api.mesos_pb2.ContainerInfo.DockerInfo.PortMapping attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ContainerID">ContainerID (class in mesos_api.mesos_pb2)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ContainerInfo">ContainerInfo (class in mesos_api.mesos_pb2)</a>
   </dt>
@@ -1775,6 +1783,10 @@
       <dd><dl>
         
   <dt><a href="architecture/django/code_docs/error.test.html#error.test.utils.create_error">(in module error.test.utils)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.utils.create_error">(in module metrics.test.utils)</a>
   </dt>
 
       </dl></dd>
@@ -2096,7 +2108,15 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0003_error_is_builtin.Migration.dependencies">(error.migrations.0003_error_is_builtin.Migration attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0001_initial.Migration.dependencies">(ingest.migrations.0001_initial.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0002_auto_20160414_0937.Migration.dependencies">(ingest.migrations.0002_auto_20160414_0937.Migration attribute)</a>
   </dt>
 
         
@@ -2169,6 +2189,14 @@
 
         
   <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0004_auto_20151104_1640.Migration.dependencies">(metrics.migrations.0004_auto_20151104_1640.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0005_auto_20160415_1636.Migration.dependencies">(metrics.migrations.0005_auto_20160415_1636.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0006_metricserror.Migration.dependencies">(metrics.migrations.0006_metricserror.Migration attribute)</a>
   </dt>
 
         
@@ -2728,6 +2756,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.error">(metrics.models.MetricsError attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/error.html#module-error">(module)</a>
   </dt>
 
@@ -2772,6 +2804,10 @@
 
       
   <dt><a href="architecture/django/code_docs/error.migrations.html#module-error.migrations.0002_auto_20151217_1319">error.migrations.0002_auto_20151217_1319 (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/error.migrations.html#module-error.migrations.0003_error_is_builtin">error.migrations.0003_error_is_builtin (module)</a>
   </dt>
 
       
@@ -3324,6 +3360,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.fixtures">(job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.fixtures">(job.test.execution.running.test_job_exe.TestRunningJobExecution attribute)</a>
   </dt>
 
@@ -3783,6 +3823,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/error.html#error.models.ErrorManager.get_database_operation_error">get_database_operation_error() (error.models.ErrorManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.handler.RecipeHandler.get_dependent_job_ids">get_dependent_job_ids() (recipe.handler.RecipeHandler method)</a>
   </dt>
 
@@ -4128,12 +4172,12 @@
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.get_logs">get_logs() (job.models.JobExecutionManager method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.models.SchedulerManager.get_master">get_master() (scheduler.models.SchedulerManager method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.media_type.get_media_type">get_media_type() (in module storage.media_type)</a>
   </dt>
@@ -4153,6 +4197,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsErrorManager.get_metrics_type">(metrics.models.MetricsErrorManager method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngestManager.get_metrics_type">(metrics.models.MetricsIngestManager method)</a>
   </dt>
@@ -4209,6 +4257,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_next_by_created">(job.models.JobTypeRevision method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_next_by_created">(metrics.models.MetricsError method)</a>
   </dt>
 
         
@@ -4327,10 +4379,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_next_by_occurred">get_next_by_occurred() (metrics.models.MetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_next_by_occurred">get_next_by_occurred() (metrics.models.MetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_next_by_occurred">(metrics.models.MetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.get_next_by_occurred">(metrics.models.MetricsJobType method)</a>
   </dt>
@@ -4399,10 +4455,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngestManager.get_plot_data">get_plot_data() (metrics.models.MetricsIngestManager method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsErrorManager.get_plot_data">get_plot_data() (metrics.models.MetricsErrorManager method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngestManager.get_plot_data">(metrics.models.MetricsIngestManager method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobTypeManager.get_plot_data">(metrics.models.MetricsJobTypeManager method)</a>
   </dt>
@@ -4443,6 +4503,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_previous_by_created">(job.models.JobTypeRevision method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_previous_by_created">(metrics.models.MetricsError method)</a>
   </dt>
 
         
@@ -4561,10 +4625,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_previous_by_occurred">get_previous_by_occurred() (metrics.models.MetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.get_previous_by_occurred">get_previous_by_occurred() (metrics.models.MetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.get_previous_by_occurred">(metrics.models.MetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.get_previous_by_occurred">(metrics.models.MetricsJobType method)</a>
   </dt>
@@ -4887,10 +4955,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.GROUPS">GROUPS (metrics.models.MetricsIngest attribute)</a>
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.GROUPS">GROUPS (metrics.models.MetricsError attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.GROUPS">(metrics.models.MetricsIngest attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.GROUPS">(metrics.models.MetricsJobType attribute)</a>
   </dt>
@@ -5467,6 +5539,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0002_auto_20160414_0937">ingest.migrations.0002_auto_20160414_0937 (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.models">ingest.models (module)</a>
   </dt>
 
@@ -5846,6 +5922,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.is_ready_to_requeue">is_ready_to_requeue (job.models.Job attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.is_running">is_running (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
       
@@ -8157,6 +8237,14 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#module-metrics.migrations.0005_auto_20160415_1636">metrics.migrations.0005_auto_20160415_1636 (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#module-metrics.migrations.0006_metricserror">metrics.migrations.0006_metricserror (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/metrics.html#module-metrics.models">metrics.models (module)</a>
   </dt>
 
@@ -8184,8 +8272,6 @@
   <dt><a href="architecture/django/code_docs/metrics.test.html#module-metrics.test.test_models">metrics.test.test_models (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.test.html#module-metrics.test.test_views">metrics.test.test_views (module)</a>
   </dt>
@@ -8194,6 +8280,8 @@
   <dt><a href="architecture/django/code_docs/metrics.test.html#module-metrics.test.utils">metrics.test.utils (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#module-metrics.urls">metrics.urls (module)</a>
   </dt>
@@ -8204,6 +8292,34 @@
 
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.apps.MetricsConfig">MetricsConfig (class in metrics.apps)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError">MetricsError (class in metrics.models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.DoesNotExist">MetricsError.DoesNotExist</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.MultipleObjectsReturned">MetricsError.MultipleObjectsReturned</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/error.html#error.models.Error.metricserror_set">metricserror_set (error.models.Error attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer">MetricsErrorDetailsSerializer (class in metrics.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer.ErrorBaseSerializer">MetricsErrorDetailsSerializer.ErrorBaseSerializer (class in metrics.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsErrorManager">MetricsErrorManager (class in metrics.models)</a>
   </dt>
 
       
@@ -8352,7 +8468,15 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0003_error_is_builtin.Migration">(class in error.migrations.0003_error_is_builtin)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0001_initial.Migration">(class in ingest.migrations.0001_initial)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0002_auto_20160414_0937.Migration">(class in ingest.migrations.0002_auto_20160414_0937)</a>
   </dt>
 
         
@@ -8425,6 +8549,14 @@
 
         
   <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0004_auto_20151104_1640.Migration">(class in metrics.migrations.0004_auto_20151104_1640)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0005_auto_20160415_1636.Migration">(class in metrics.migrations.0005_auto_20160415_1636)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0006_metricserror.Migration">(class in metrics.migrations.0006_metricserror)</a>
   </dt>
 
         
@@ -9308,6 +9440,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.objects">(metrics.models.MetricsError attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.objects">(metrics.models.MetricsIngest attribute)</a>
   </dt>
 
@@ -9426,7 +9562,15 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0003_error_is_builtin.Migration.operations">(error.migrations.0003_error_is_builtin.Migration attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0001_initial.Migration.operations">(ingest.migrations.0001_initial.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0002_auto_20160414_0937.Migration.operations">(ingest.migrations.0002_auto_20160414_0937.Migration attribute)</a>
   </dt>
 
         
@@ -9499,6 +9643,14 @@
 
         
   <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0004_auto_20151104_1640.Migration.operations">(metrics.migrations.0004_auto_20151104_1640.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0005_auto_20160415_1636.Migration.operations">(metrics.migrations.0005_auto_20160415_1636.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0006_metricserror.Migration.operations">(metrics.migrations.0006_metricserror.Migration attribute)</a>
   </dt>
 
         
@@ -10719,13 +10871,13 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Resource.ranges">(mesos_api.mesos_pb2.Resource attribute)</a>
   </dt>
 
-        
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.ranges">(mesos_api.mesos_pb2.Value attribute)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.RANGES">RANGES (mesos_api.mesos_pb2.Value attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.ranges">ranges (mesos_api.mesos_pb2.Value attribute)</a>
   </dt>
 
       
@@ -11138,12 +11290,12 @@
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">RecipeJobsDetailsSerializer.JobRevisionSerializer (class in recipe.serializers)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer">RecipeJobsSerializer (class in recipe.serializers)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializer">RecipeJobsSerializer.JobSerializer (class in recipe.serializers)</a>
   </dt>
@@ -11928,38 +12080,6 @@
   </dt>
 
       </dl></dd>
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale">scale (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.local_settings">scale.local_settings (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.local_settings_DOCS">scale.local_settings_DOCS (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.local_settings_SAMPLE_DEV">scale.local_settings_SAMPLE_DEV (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.local_settings_SAMPLE_PROD">scale.local_settings_SAMPLE_PROD (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.settings">scale.settings (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.urls">scale.urls (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/scale.html#module-scale.wsgi">scale.wsgi (module)</a>
-  </dt>
-
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile">ScaleFile (class in storage.models)</a>
   </dt>
@@ -13360,6 +13480,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.setUp">(metrics.test.test_models.TestMetricsError method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.setUp">(metrics.test.test_models.TestMetricsIngest method)</a>
   </dt>
 
@@ -13962,8 +14086,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ACLs.shutdown_frameworks">shutdown_frameworks (mesos_api.mesos_pb2.ACLs attribute)</a>
   </dt>
@@ -14016,6 +14138,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.SlaveID">SlaveID (class in mesos_api.mesos_pb2)</a>
   </dt>
@@ -14048,20 +14172,20 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ExecutorInfo.source">source (mesos_api.mesos_pb2.ExecutorInfo attribute)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.TaskStatus.source">(mesos_api.mesos_pb2.TaskStatus attribute)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.TaskStatus.Source">Source (mesos_api.mesos_pb2.TaskStatus attribute)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/source.html#module-source">source (module)</a>
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.TaskStatus.source">source (mesos_api.mesos_pb2.TaskStatus attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/source.html#module-source">(module)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/source.html#module-source.apps">source.apps (module)</a>
   </dt>
@@ -14961,10 +15085,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_filtered">test_calculate_filtered() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_calculate_filtered">test_calculate_filtered() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_filtered">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_calculate_filtered">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
@@ -14979,30 +15107,42 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_none">test_calculate_none() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_calculate_none">test_calculate_none() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_none">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_calculate_none">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_repeated">test_calculate_repeated() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_calculate_repeated">test_calculate_repeated() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_repeated">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_calculate_repeated">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_stats">test_calculate_stats() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_calculate_stats">test_calculate_stats() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_stats">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_calculate_stats">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
@@ -15531,6 +15671,20 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_error_categories">test_error_categories() (queue.test.test_views.TestRequeueJobsView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_error_category">test_error_category() (job.test.test_views.TestJobsView method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionView.test_error_category">(job.test.test_views.TestJobsWithExecutionView method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationValidationView.test_errors">test_errors() (port.test.test_views.TestConfigurationValidationView method)</a>
   </dt>
 
@@ -15620,6 +15774,10 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestStatusView.test_fill_empty_slots">test_fill_empty_slots() (ingest.test.test_views.TestIngestStatusView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_general_algorithm_error">test_general_algorithm_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -15761,20 +15919,28 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type">test_get_metrics_type() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_metrics_type">test_get_metrics_type() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_get_metrics_type">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type_choices">test_get_metrics_type_choices() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_metrics_type_choices">test_get_metrics_type_choices() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_metrics_type_choices">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_get_metrics_type_choices">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
@@ -15801,20 +15967,28 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_plot_data">test_get_plot_data() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_plot_data">test_get_plot_data() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_plot_data">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_get_plot_data">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_plot_data_filtered">test_get_plot_data_filtered() (metrics.test.test_models.TestMetricsIngest method)</a>
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_plot_data_filtered">test_get_plot_data_filtered() (metrics.test.test_models.TestMetricsError method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_get_plot_data_filtered">(metrics.test.test_models.TestMetricsIngest method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_get_plot_data_filtered">(metrics.test.test_models.TestMetricsJobType method)</a>
   </dt>
@@ -16192,6 +16366,10 @@
 
       
   <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_ids">test_job_ids() (queue.test.test_views.TestRequeueJobsView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_job_task_launch_error">test_job_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -17014,12 +17192,12 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -17154,6 +17332,14 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_perform_tick_skip">test_perform_tick_skip() (job.test.test_clock.TestClock method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_post_task_launch_error">test_post_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_pre_task_launch_error">test_pre_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -17353,6 +17539,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_post_steps.TestPostJobSteps.test_scale_post_steps_database_operation_error">test_scale_post_steps_database_operation_error() (job.test.management.commands.test_scale_post_steps.TestPostJobSteps method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_post_steps.TestPostJobSteps.test_scale_post_steps_io_error">test_scale_post_steps_io_error() (job.test.management.commands.test_scale_post_steps.TestPostJobSteps method)</a>
   </dt>
 
@@ -17370,6 +17560,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.test_scale_pre_steps_database_error">test_scale_pre_steps_database_error() (job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.test_scale_pre_steps_database_operation_error">test_scale_pre_steps_database_operation_error() (job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
   </dt>
 
       
@@ -18663,6 +18857,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError">TestMetricsError (class in metrics.test.test_models)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest">TestMetricsIngest (class in metrics.test.test_models)</a>
   </dt>
 
@@ -19381,17 +19579,19 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ACL.Entity.type">type (mesos_api.mesos_pb2.ACL.Entity attribute)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ACL.Entity.Type">Type (mesos_api.mesos_pb2.ACL.Entity attribute)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Attribute.type">type (mesos_api.mesos_pb2.Attribute attribute)</a>
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ACL.Entity.type">type (mesos_api.mesos_pb2.ACL.Entity attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Attribute.type">(mesos_api.mesos_pb2.Attribute attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.ContainerInfo.Type">Type (mesos_api.mesos_pb2.ContainerInfo attribute)</a>
   </dt>
@@ -19405,13 +19605,13 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Resource.type">(mesos_api.mesos_pb2.Resource attribute)</a>
   </dt>
 
-        
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.type">(mesos_api.mesos_pb2.Value attribute)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.Type">Type (mesos_api.mesos_pb2.Value attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.mesos_pb2.Value.type">type (mesos_api.mesos_pb2.Value attribute)</a>
   </dt>
 
       

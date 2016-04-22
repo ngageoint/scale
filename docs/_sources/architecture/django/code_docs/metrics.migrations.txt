@@ -36,6 +36,22 @@ metrics.migrations.0004_auto_20151104_1640 module
     :undoc-members:
     :show-inheritance:
 
+metrics.migrations.0005_auto_20160415_1636 module
+-------------------------------------------------
+
+.. automodule:: metrics.migrations.0005_auto_20160415_1636
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+metrics.migrations.0006_metricserror module
+-------------------------------------------
+
+.. automodule:: metrics.migrations.0006_metricserror
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Install</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="">System Dependencies</a></li>
@@ -122,7 +122,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -163,26 +163,26 @@
 <p><em>Apache Mesos</em></p>
 <ol class="arabic simple">
 <li>Download the mesos rpm from mesosphere</li>
-<li><tt class="docutils literal"><span class="pre">rpm</span> <span class="pre">-i</span> <span class="pre">mesos-0.21.1-1.1.centos701406.x86_64.rpm</span></tt></li>
+<li><code class="docutils literal"><span class="pre">rpm</span> <span class="pre">-i</span> <span class="pre">mesos-0.21.1-1.1.centos701406.x86_64.rpm</span></code></li>
 </ol>
 <p><em>Docker</em></p>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">docker</span></tt></li>
+<li><code class="docutils literal"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">docker</span></code></li>
 <li>edit /etc/sysconfig/docker and add any private registries</li>
-<li><tt class="docutils literal"><span class="pre">systemctl</span> <span class="pre">enable</span> <span class="pre">docker</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">docker</span></tt></li>
+<li><code class="docutils literal"><span class="pre">systemctl</span> <span class="pre">enable</span> <span class="pre">docker</span></code></li>
+<li><code class="docutils literal"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">docker</span></code></li>
 </ol>
 <p>When docker is installed a new docker group is added.  Whichever user runs the scale3 nodes will need to be aded to the docker group.</p>
 <p><em>Python and virtualenv</em></p>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">gcc</span> <span class="pre">httpd</span> <span class="pre">openssl-devel</span> <span class="pre">zlib-devel</span> <span class="pre">sqlite-devel</span> <span class="pre">bzip2-devel</span> <span class="pre">-y</span></tt></li>
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">gcc</span> <span class="pre">httpd</span> <span class="pre">openssl-devel</span> <span class="pre">zlib-devel</span> <span class="pre">sqlite-devel</span> <span class="pre">bzip2-devel</span> <span class="pre">-y</span></code></li>
 <li>unzip a Python distribution</li>
 <li>from the unzipped directory run:</li>
 </ol>
 <blockquote>
 <div><ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">./configure</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">altinstall</span></tt></li>
+<li><code class="docutils literal"><span class="pre">./configure</span></code></li>
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">altinstall</span></code></li>
 </ol>
 </div></blockquote>
 <ol class="arabic simple">
@@ -191,7 +191,7 @@
 </ol>
 <p><em>Geos and Postgis</em></p>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">geos</span> <span class="pre">geos-devel</span> <span class="pre">libpqxx</span> <span class="pre">gdal-libs</span> <span class="pre">proj</span></tt></li>
+<li><code class="docutils literal"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">-y</span> <span class="pre">geos</span> <span class="pre">geos-devel</span> <span class="pre">libpqxx</span> <span class="pre">gdal-libs</span> <span class="pre">proj</span></code></li>
 </ol>
 </div>
 

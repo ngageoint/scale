@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Install</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="system_dependencies.html">System Dependencies</a></li>
@@ -122,7 +122,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -149,17 +149,17 @@
   <div class="section" id="scale-configuration">
 <span id="id1"></span><h1>Scale Configuration<a class="headerlink" href="#scale-configuration" title="Permalink to this headline">¶</a></h1>
 <p>Local settings for scale are contained in /etc/scale/local_settings.py.  A sample of this file can be found in the distribution under /scale/local_settings_SAMPLE_PROD.py</p>
-<p>The script <tt class="docutils literal"><span class="pre">/scripts/deployServicesFromTemplates.sh</span></tt> will install and enable all the scale services on a CentOS7.  To install/deploy less, modify the script, or manually perform similar steps.</p>
+<p>The script <code class="docutils literal"><span class="pre">/scripts/deployServicesFromTemplates.sh</span></code> will install and enable all the scale services on a CentOS7.  To install/deploy less, modify the script, or manually perform similar steps.</p>
 </div>
 <div class="section" id="mesos-configuration">
 <h1>Mesos Configuration<a class="headerlink" href="#mesos-configuration" title="Permalink to this headline">¶</a></h1>
 <p>Scale uses mesos to assign processing to nodes.  You must configure the mesos slave nodes to point to the correct mesos master (or zookeeper).
 Additionally, you must add docker to the available mesos containerizers.  For a mesosphere installation, this can be done with the following commands:</p>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">echo</span> <span class="pre">&lt;mesos-master&gt;:5050</span> <span class="pre">&gt;</span> <span class="pre">/tmp/master</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">mv</span> <span class="pre">/tmp/master</span> <span class="pre">/etc/mesos-slave</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">echo</span> <span class="pre">mesos,docker</span> <span class="pre">&gt;</span> <span class="pre">/tmp/containerizers</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">mv</span> <span class="pre">/tmp/containerizers</span> <span class="pre">/etc/mesos-slave</span></tt></li>
+<li><code class="docutils literal"><span class="pre">echo</span> <span class="pre">&lt;mesos-master&gt;:5050</span> <span class="pre">&gt;</span> <span class="pre">/tmp/master</span></code></li>
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">mv</span> <span class="pre">/tmp/master</span> <span class="pre">/etc/mesos-slave</span></code></li>
+<li><code class="docutils literal"><span class="pre">echo</span> <span class="pre">mesos,docker</span> <span class="pre">&gt;</span> <span class="pre">/tmp/containerizers</span></code></li>
+<li><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">mv</span> <span class="pre">/tmp/containerizers</span> <span class="pre">/etc/mesos-slave</span></code></li>
 </ol>
 <p>Also disable zookeeper for the master and slave:</p>
 <ol class="arabic simple">

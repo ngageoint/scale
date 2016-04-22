@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adding your new job into a Scale recipe &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
+        <link rel="next" title="Results Manifest" href="results_manifest.html"/>
+        <link rel="prev" title="Adding your dockerized algorithm as a Scale job" href="step4.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Adding your new job into a Scale recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-new-recipe">Creating a new recipe</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#adding-a-trigger">Adding a trigger</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-job-to-a-recipe">Adding a job to a recipe</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Algorithm Integration into Scale</a> &raquo;</li>
+      
+    <li>Adding your new job into a Scale recipe</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/algorithm_integration/step5.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adding-your-new-job-into-a-scale-recipe">
+<span id="algorithm-integration-step5"></span><h1>Adding your new job into a Scale recipe<a class="headerlink" href="#adding-your-new-job-into-a-scale-recipe" title="Permalink to this headline">¶</a></h1>
+<p>After you have successfully tested your Docker container and inserted the job into the database, you can add the job to
+an existing recipe or create a brand new recipe. Recipes allow you to chain the inputs/outputs of one job to another job
+to create a workflow for your algorithm processing.</p>
+<div class="section" id="creating-a-new-recipe">
+<h2>Creating a new recipe<a class="headerlink" href="#creating-a-new-recipe" title="Permalink to this headline">¶</a></h2>
+<p>New recipes are added from the Scale web interface in the Recipes-&gt;Recipe Types section.  <em>You will need to be logged in
+as an administrator in order to add new recipes.</em></p>
+<a class="reference internal image-reference" href="../_images/new_recipe.png"><img alt="../_images/new_recipe.png" src="../_images/new_recipe.png" style="height: 500px;" /></a>
+<p>Selecting the &#8220;New Recipe&#8221; button will display an empty recipe template.</p>
+<img alt="../_images/new_recipe_entry.png" src="../_images/new_recipe_entry.png" />
+<p><strong>Name</strong> is a user-defined, unique name to refer to the recipe.  <em>It must be lower case.</em>  Words should be separated by
+dashes.</p>
+<p><strong>Title</strong> is a user-defined, unique (from other recipe titles) short title to use as the common display name of the
+recipe.  This is typically a properly cased version of the <em>name</em> field with dashes replaced with spaces.</p>
+<p><strong>Version</strong> is the recipe version number.  You should use semantic versioning, e.g. 1.2.3.</p>
+<p><strong>Description</strong> is a brief summary of the recipe and what it should create.</p>
+<div class="section" id="adding-a-trigger">
+<h3>Adding a trigger<a class="headerlink" href="#adding-a-trigger" title="Permalink to this headline">¶</a></h3>
+<p>After adding a name, title, version, and description of your recipe, you can add the recipe trigger that will be used to
+run your recipe.</p>
+<p><strong>Note:  Once a trigger is activated, the recipe will begin to try to run its jobs.  You may want to add jobs first,
+then add the trigger as a final step.</strong></p>
+<p>Selecting the &#8220;Start&#8221; box will display the Trigger and Recipe Inputs options on the right-side of the page.</p>
+<img alt="../_images/setting_up_trigger.png" src="../_images/setting_up_trigger.png" />
+<p>First, select the add recipe inputs (&#8220;+&#8221; button) next to &#8220;Recipe Inputs&#8221; to add the expected input file type. This will
+display the &#8220;Add input&#8221; dialog.</p>
+<img alt="../_images/recipe_input.png" src="../_images/recipe_input.png" />
+<div class="section" id="recipe-inputs-dialog">
+<h4>Recipe Inputs Dialog<a class="headerlink" href="#recipe-inputs-dialog" title="Permalink to this headline">¶</a></h4>
+<p><strong>Name</strong> is a user-defined, symbolic name of your input type</p>
+<p><strong>Type</strong> is a dropdown menu of available input types.  <em>For the majority of users, this will be &#8220;File&#8221;</em>.</p>
+<p><strong>Media Types</strong> will appear if the appropriate type is selected.  This should be the media type of your input file.</p>
+<p><strong>Required</strong> is a checkbox that should be checked if the recipe input is necessary for the algorithm to run.</p>
+<p>Select &#8220;OK&#8221; when finished.</p>
+<p>After setting up your recipe inputs, you can edit the Trigger by selecting the edit button next to the word &#8220;Trigger&#8221; on
+the right-side.  This will display the &#8220;Edit Trigger&#8221; button.</p>
+<img alt="../_images/trigger_input.png" src="../_images/trigger_input.png" />
+</div>
+<div class="section" id="trigger-dialog">
+<h4>Trigger Dialog<a class="headerlink" href="#trigger-dialog" title="Permalink to this headline">¶</a></h4>
+<p><strong>Type</strong> is a dropdown menu to specify if your recipe is triggered from a <em>PARSE</em> job or from an <em>INGEST</em> job.</p>
+<p><strong>Name</strong> is a user-defined, unique name of your recipe.  This should be lower case with spaces replaced by dashes
+between words.</p>
+<p><strong>Active</strong> is a checkbox whether a recipe is currently active in Scale and processing files.</p>
+<p><strong>Media Type</strong> is the expected input media type of the trigger.  This should match your &#8220;Recipe Inputs&#8221; media type in
+the previous step.</p>
+<p><strong>Data Types</strong> are the data type tags used for identifying the input files.  Multiple data types <strong>MUST be separated by
+a comma without spaces</strong>.  The trigger is an intersection (both A AND B) between all of the data types.</p>
+<p><strong>Workspace</strong> is a dropdown menu of available locations defined in your Workspace for storing products from the recipe.</p>
+<p><strong>Recipe Input Name</strong> is a dropdown menu of the input names you defined in the &#8220;Recipe Inputs&#8221; step.</p>
+</div>
+</div>
+</div>
+<div class="section" id="adding-a-job-to-a-recipe">
+<h2>Adding a job to a recipe<a class="headerlink" href="#adding-a-job-to-a-recipe" title="Permalink to this headline">¶</a></h2>
+<p>To add a job to your recipe, select the &#8220;Add Job&#8221; button on right-side and select your job name and version from the
+available dialog list that appears.  Your job will then appear attached to the &#8220;Start&#8221; box of the recipe. Select your
+job box to begin setting the job&#8217;s dependencies and inputs.  First, select the Add Dependencies button (+) on the
+right-side to select the box of other jobs that your algorithm is dependent on.
+<em>You do not need to select the Start box as a dependency</em>.  Multiple jobs can be selected as dependencies.</p>
+<p>Next, select the connection linking button on the right-side for each of your job&#8217;s Inputs on the right-side.  These
+Inputs are the names and media types entered in the <strong>input_data</strong> of the job JSON.  Select the linking button for the
+respective input and then select the job&#8217;s box responsible for creating it.  This will display a list of output choices
+that you can link to your input.  The names of inputs/outputs do not need to necessarily match - they are for user
+convenience in identifying their inputs and outputs.  You must, however, match the input and output media types.  Repeat
+the process until all Inputs are connected to their respective files.</p>
+<p>At any time during the Recipe creation you want to check the validity of the setup, select the &#8220;Validate&#8221; box in the
+upper-right side of the Recipe creation web page.  This will provide feedback if your Recipe is missing connections and
+other issues.</p>
+<p>Once the &#8220;Validate&#8221; button displays a green &#8220;Recipe is Valid&#8221; message, you can select &#8220;Save Recipe&#8221; to save your recipe
+to the database.  If a trigger is in place, the recipe will begin processing once its trigger condition is met.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="results_manifest.html" class="btn btn-neutral float-right" title="Results Manifest" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="step4.html" class="btn btn-neutral" title="Adding your dockerized algorithm as a Scale job" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

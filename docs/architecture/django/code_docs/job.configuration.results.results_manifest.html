@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -203,12 +203,12 @@ Scale needs to parse this manifest to bring the information into the system. The
 the job interface</p>
 <dl class="class">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest">
-<em class="property">class </em><tt class="descclassname">job.configuration.results.results_manifest.results_manifest.</tt><tt class="descname">ResultsManifest</tt><big>(</big><em>json_manifest=None</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.configuration.results.results_manifest.results_manifest.</code><code class="descname">ResultsManifest</code><span class="sig-paren">(</span><em>json_manifest=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the interface for executing a job</p>
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.add_files">
-<tt class="descname">add_files</tt><big>(</big><em>files_array</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.add_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_files</code><span class="sig-paren">(</span><em>files_array</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.add_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds the files to the manifest if they are not already in the manifest.  If there is already an entry
 for that file name it will be ignored
 :param files_array: an array of files that should be added to the manifest
@@ -217,7 +217,7 @@ for that file name it will be ignored
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_files">
-<tt class="descname">get_files</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>gets the output files associated with this manifest
 :return: an array of dictionaries.  Each dictionary describes a file in the manifest.
 The format of the dict is described
@@ -227,7 +227,7 @@ by results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;fi
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_json_dict">
-<tt class="descname">get_json_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_json_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_json_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_json_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the json dictionary associated with this manifest</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -243,7 +243,7 @@ by results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;fi
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_parse_results">
-<tt class="descname">get_parse_results</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_parse_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_parse_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_parse_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>gets the parsed input files associated with this manifest
 :return: an array of dictionaries.  Each dictionary describes the location of a
 geojson associated with an input filein the manifest. The format of the dict is descibed by
@@ -253,7 +253,7 @@ results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;parse
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate">
-<tt class="descname">validate</tt><big>(</big><em>output_file_definitions</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>output_file_definitions</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the results manifest against given output file definitions.  Throws a
 :class <cite>job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch</cite>: if the
 manifest doesn&#8217;t match the outputs.  This does not validate that the parse_data matches the job
@@ -273,12 +273,12 @@ Scale needs to parse this manifest to bring the information into the system. The
 the job interface</p>
 <dl class="class">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest">
-<em class="property">class </em><tt class="descclassname">job.configuration.results.results_manifest.results_manifest_1_0.</tt><tt class="descname">ResultsManifest</tt><big>(</big><em>json_manifest</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.configuration.results.results_manifest.results_manifest_1_0.</code><code class="descname">ResultsManifest</code><span class="sig-paren">(</span><em>json_manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the interface for executing a job</p>
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.add_files">
-<tt class="descname">add_files</tt><big>(</big><em>files_array</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.add_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_files</code><span class="sig-paren">(</span><em>files_array</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.add_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds the files to the manifest if they are not already in the manifest.  If there is already an entry
 for that file name it will be ignored
 :param files_array: an array of files that should be added to the manifest
@@ -287,7 +287,7 @@ for that file name it will be ignored
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_files">
-<tt class="descname">get_files</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>gets the output files associated with this manifest
 :return: an array of dictionaries.  Each dictionary describes a file in the manifest.
 The format of the dict is described
@@ -297,7 +297,7 @@ by results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;fi
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_json_dict">
-<tt class="descname">get_json_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_json_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_json_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_json_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the json dictionary associated with this manifest</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -313,7 +313,7 @@ by results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;fi
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_parse_results">
-<tt class="descname">get_parse_results</tt><big>(</big><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_parse_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_parse_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.get_parse_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>gets the parsed input files associated with this manifest
 :return: an array of dictionaries.  Each dictionary describes the location of a
 geojson associated with an input filein the manifest. The format of the dict is descibed by
@@ -323,7 +323,7 @@ results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;parse
 
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.validate">
-<tt class="descname">validate</tt><big>(</big><em>output_file_definitions</em><big>)</big><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>output_file_definitions</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the results manifest against given output file definitions.  Throws a
 :class <cite>job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch</cite>: if the
 manifest doesn&#8217;t match the outputs.  This does not validate that the parse_data matches the job

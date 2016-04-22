@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ingest.html">ingest package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
@@ -122,7 +123,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -158,7 +158,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -199,22 +199,22 @@
 <span id="ingest-test-triggers-configuration-test-ingest-trigger-rule-module"></span><h2>ingest.test.triggers.configuration.test_ingest_trigger_rule module<a class="headerlink" href="#module-ingest.test.triggers.configuration.test_ingest_trigger_rule" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit">
-<em class="property">class </em><tt class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</tt><tt class="descname">TestIngestTriggerRuleConfigurationInit</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</code><code class="descname">TestIngestTriggerRuleConfigurationInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_invalid">
-<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_invalid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a IngestTriggerRuleConfiguration with an invalid configuration</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a IngestTriggerRuleConfiguration with valid configuration</p>
 </dd></dl>
 
@@ -222,22 +222,22 @@
 
 <dl class="class">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate">
-<em class="property">class </em><tt class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</tt><tt class="descname">TestIngestTriggerRuleConfigurationValidate</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</code><code class="descname">TestIngestTriggerRuleConfigurationValidate</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_bad_workspace">
-<tt class="descname">test_bad_workspace</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_bad_workspace" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_bad_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate() with a bad workspace</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidate.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate() successfully</p>
 </dd></dl>
 
@@ -245,28 +245,28 @@
 
 <dl class="class">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob">
-<em class="property">class </em><tt class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</tt><tt class="descname">TestIngestTriggerRuleConfigurationValidateTriggerForJob</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</code><code class="descname">TestIngestTriggerRuleConfigurationValidateTriggerForJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name">
-<tt class="descname">test_bad_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning">
-<tt class="descname">test_media_type_warning</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_warning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForJob.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings</p>
 </dd></dl>
 
@@ -274,28 +274,28 @@
 
 <dl class="class">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe">
-<em class="property">class </em><tt class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</tt><tt class="descname">TestIngestTriggerRuleConfigurationValidateTriggerForRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.test.triggers.configuration.test_ingest_trigger_rule.</code><code class="descname">TestIngestTriggerRuleConfigurationValidateTriggerForRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name">
-<tt class="descname">test_bad_input_name</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_input_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning">
-<tt class="descname">test_media_type_warning</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_media_type_warning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_media_type_warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationValidateTriggerForRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings</p>
 </dd></dl>
 

@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ingest.html">ingest package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
@@ -122,7 +123,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -158,7 +158,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -198,8 +198,8 @@
 <p>Defines exceptions that can occur when interacting with Strike configuration</p>
 <dl class="exception">
 <dt id="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration">
-<em class="property">exception </em><tt class="descclassname">ingest.strike.configuration.exceptions.</tt><tt class="descname">InvalidStrikeConfiguration</tt><a class="headerlink" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">ingest.strike.configuration.exceptions.</code><code class="descname">InvalidStrikeConfiguration</code><a class="headerlink" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided Strike configuration was invalid</p>
 </dd></dl>
 
@@ -209,14 +209,14 @@
 <p>Defines the configuration for running an instance of Strike</p>
 <dl class="class">
 <dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration">
-<em class="property">class </em><tt class="descclassname">ingest.strike.configuration.strike_configuration.</tt><tt class="descname">StrikeConfiguration</tt><big>(</big><em>configuration</em><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration.</code><code class="descname">StrikeConfiguration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the configuration for a running Strike instance. The configuration includes details about mounting the
 transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
 identify files to ingest and how to store them.</p>
 <dl class="method">
 <dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount">
-<tt class="descname">get_mount</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the &#8220;mount&#8221; value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -232,7 +232,7 @@ identify files to ingest and how to store them.</p>
 
 <dl class="method">
 <dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix">
-<tt class="descname">get_transfer_suffix</tt><big>(</big><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the &#8220;transfer_suffix&#8221; value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -248,7 +248,7 @@ identify files to ingest and how to store them.</p>
 
 <dl class="method">
 <dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name">
-<tt class="descname">match_file_name</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">match_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to match the given file name against this configuration and if a match is made, returns the details
 about how to ingest the file. If no match is found, None is returned</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -260,7 +260,7 @@ about how to ingest the file. If no match is found, None is returned</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the list of data types to add to the file, the remote path for storing the file within the
 workspace, and the workspace, or None if no file name match is found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple(list of str, str, <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><tt class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></tt></a>)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple(list of str, str, <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>)</td>
 </tr>
 </tbody>
 </table>

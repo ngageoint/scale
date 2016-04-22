@@ -61,6 +61,8 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .category          | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
+| .is_builtin        | Boolean           | Whether the error was loaded during the installation process.                       |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                                  |
@@ -78,6 +80,7 @@ These services provide access to information about registered errors and error m
 |                "title": "Unknown",                                                                                           |
 |                "description": "The error that caused the failure is unknown.",                                               |
 |                "category": "SYSTEM",                                                                                         |
+|                "is_builtin": true,                                                                                           |
 |                "created": "2015-03-11T00:00:00Z",                                                                            |
 |                "last_modified": "2015-03-11T00:00:00Z"                                                                       |
 |            },                                                                                                                |
@@ -137,6 +140,7 @@ These services provide access to information about registered errors and error m
 |        "title": "Error 1",                                                                                                   |
 |        "description": "This is an algorithm error",                                                                          |
 |        "category": "ALGORITHM",                                                                                              |
+|        "is_builtin": false,                                                                                                  |
 |        "created": "2015-03-11T00:00:00Z",                                                                                    |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
 |    }                                                                                                                         |
@@ -170,6 +174,8 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
+| is_builtin         | Boolean           | Whether the error was loaded during the installation process.                       |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                           |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                                  |
@@ -182,6 +188,7 @@ These services provide access to information about registered errors and error m
 |        "title": "Unknown",                                                                                                   |
 |        "description": "The error that caused the failure is unknown.",                                                       |
 |        "category": "SYSTEM",                                                                                                 |
+|        "is_builtin": true,                                                                                                   |
 |        "created": "2015-03-11T00:00:00Z",                                                                                    |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
 |    }                                                                                                                         |
@@ -234,6 +241,7 @@ These services provide access to information about registered errors and error m
 |        "title": "My Error",                                                                                                  |
 |        "description": "An edited error description.",                                                                        |
 |        "category": "ALGORITHM",                                                                                              |
+|        "is_builtin": false,                                                                                                  |
 |        "created": "2015-03-11T00:00:00Z",                                                                                    |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                               |
 |    }                                                                                                                         |

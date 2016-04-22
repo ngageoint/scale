@@ -20,6 +20,14 @@ error.migrations.0002_auto_20151217_1319 module
     :undoc-members:
     :show-inheritance:
 
+error.migrations.0003_error_is_builtin module
+---------------------------------------------
+
+.. automodule:: error.migrations.0003_error_is_builtin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

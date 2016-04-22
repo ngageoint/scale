@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -120,7 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -156,7 +156,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -196,8 +196,8 @@
 <p>Defines exceptions that can occur when interacting with recipe definitions</p>
 <dl class="exception">
 <dt id="recipe.configuration.definition.exceptions.InvalidDefinition">
-<em class="property">exception </em><tt class="descclassname">recipe.configuration.definition.exceptions.</tt><tt class="descname">InvalidDefinition</tt><a class="headerlink" href="#recipe.configuration.definition.exceptions.InvalidDefinition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">recipe.configuration.definition.exceptions.</code><code class="descname">InvalidDefinition</code><a class="headerlink" href="#recipe.configuration.definition.exceptions.InvalidDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided recipe definition was invalid</p>
 </dd></dl>
 
@@ -207,13 +207,13 @@
 <p>Defines the class for managing a recipe definition</p>
 <dl class="class">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition">
-<em class="property">class </em><tt class="descclassname">recipe.configuration.definition.recipe_definition.</tt><tt class="descname">RecipeDefinition</tt><big>(</big><em>definition</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.configuration.definition.recipe_definition.</code><code class="descname">RecipeDefinition</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
 recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict">
-<tt class="descname">get_dict</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this recipe definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -229,7 +229,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys">
-<tt class="descname">get_job_type_keys</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of tuples that represent keys for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -245,7 +245,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map">
-<tt class="descname">get_job_type_map</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_type_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a mapping of job name to job type for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -253,7 +253,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary with the recipe job name of each job mapping to its job type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -261,7 +261,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_types">
-<tt class="descname">get_job_types</tt><big>(</big><em>lock=False</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>lock=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of job types for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -271,7 +271,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Set of referenced job types</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">set[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">set[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -279,7 +279,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create">
-<tt class="descname">get_jobs_to_create</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of job names and types to create for the recipe, in the order that they be created</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -287,7 +287,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of tuples with each job&#8217;s name and type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(str, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a>)]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(str, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>)]</td>
 </tr>
 </tbody>
 </table>
@@ -295,17 +295,17 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_next_jobs_to_queue">
-<tt class="descname">get_next_jobs_to_queue</tt><big>(</big><em>data</em>, <em>unqueued_jobs</em>, <em>completed_jobs</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_next_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_jobs_to_queue</code><span class="sig-paren">(</span><em>data</em>, <em>unqueued_jobs</em>, <em>completed_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_next_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the IDs and data for the next recipe jobs that should be placed on the queue</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></tt></a>) &#8211; The recipe data</li>
-<li><strong>unqueued_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>) &#8211; The job models (with related job type and job type revision models) that have not yet been
+<li><strong>data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</li>
+<li><strong>unqueued_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job models (with related job type and job type revision models) that have not yet been
 queued, mapped by recipe job name</li>
-<li><strong>completed_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>) &#8211; The job models (with related job type and job type revision models) that have been
+<li><strong>completed_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job models (with related job type and job type revision models) that have been
 successfully completed, mapped by recipe job name</li>
 </ul>
 </td>
@@ -313,7 +313,7 @@ successfully completed, mapped by recipe job name</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dictionary with the ID of each job to queue mapping to its job data</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -322,18 +322,18 @@ successfully completed, mapped by recipe job name</li>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_unqueued_job_statuses">
-<tt class="descname">get_unqueued_job_statuses</tt><big>(</big><em>recipe_jobs</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_unqueued_job_statuses" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_unqueued_job_statuses</code><span class="sig-paren">(</span><em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_unqueued_job_statuses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the status (PENDING or BLOCKED) that each recipe job that has never been queued should be set to
 based upon whether any of its dependencies are FAILED or CANCELED</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a>) &#8211; All of the recipe job models, mapped by recipe job name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; All of the recipe job models, mapped by recipe job name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dictionary with the ID of each never-queued job mapping to its appropriate status (PENDING or BLOCKED)</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -341,49 +341,49 @@ based upon whether any of its dependencies are FAILED or CANCELED</p>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_connection">
-<tt class="descname">validate_connection</tt><big>(</big><em>recipe_conn</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_connection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>recipe_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
 recipe with this definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_conn</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_connection.RecipeConnection" title="recipe.configuration.data.recipe_connection.RecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_connection.RecipeConnection</span></tt></a>) &#8211; The recipe definition</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_conn</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_connection.RecipeConnection" title="recipe.configuration.data.recipe_connection.RecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_connection.RecipeConnection</span></code></a>) &#8211; The recipe definition</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></tt></a>: If there is a configuration</dt>
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
 <dd>problem</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_data">
-<tt class="descname">validate_data</tt><big>(</big><em>recipe_data</em><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_data</code><span class="sig-paren">(</span><em>recipe_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given data against the recipe definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></tt></a>) &#8211; The recipe data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></tt></a>: If there is a configuration problem</p>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If there is a configuration problem</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_job_interfaces">
-<tt class="descname">validate_job_interfaces</tt><big>(</big><big>)</big><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_job_interfaces" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_job_interfaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_job_interfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
 connections are valid</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -392,12 +392,12 @@ connections are valid</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><tt class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></tt></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><tt class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></tt></a>:</dt>
+<dt>:raises <a class="reference internal" href="#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>:</dt>
 <dd>If there are any invalid job connections in the definition</dd>
 </dl>
 </dd></dl>
@@ -406,8 +406,8 @@ connections are valid</p>
 
 <dl class="class">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeNode">
-<em class="property">class </em><tt class="descclassname">recipe.configuration.definition.recipe_definition.</tt><tt class="descname">RecipeNode</tt><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">recipe.configuration.definition.recipe_definition.</code><code class="descname">RecipeNode</code><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a node within a recipe. A node contains a job name along with links to its parent jobs and
 dependent jobs.</p>
 </dd></dl>

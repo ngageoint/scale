@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
@@ -123,7 +124,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -261,161 +261,161 @@
 <span id="job-test-test-clock-module"></span><h2>job.test.test_clock module<a class="headerlink" href="#module-job.test.test_clock" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.test_clock.TestClock">
-<em class="property">class </em><tt class="descclassname">job.test.test_clock.</tt><tt class="descname">TestClock</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_clock.</code><code class="descname">TestClock</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests functions in the clock module.</p>
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule">
-<tt class="descname">test_check_rule</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests a valid rule triggers a new event.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule_event_type_error">
-<tt class="descname">test_check_rule_event_type_error</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_event_type_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule_event_type_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_event_type_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a rule with an event type configuration problem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule_last_event">
-<tt class="descname">test_check_rule_last_event</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_last_event" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule_last_event</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_last_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests a valid rule checks the most recent matching event type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule_name_error">
-<tt class="descname">test_check_rule_name_error</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_name_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule_name_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_name_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a rule with a name configuration problem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule_schedule_error">
-<tt class="descname">test_check_rule_schedule_error</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_schedule_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule_schedule_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_schedule_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a rule with a schedule configuration problem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_rule_skip">
-<tt class="descname">test_check_rule_skip</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_skip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_rule_skip</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_rule_skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests a valid rule does not trigger a new event when the schedule threshold has not been met.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_drift">
-<tt class="descname">test_check_schedule_day_drift</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_drift" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_drift</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_drift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule for once a day without slowly drifting away from the target time.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_exact">
-<tt class="descname">test_check_schedule_day_exact</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_exact" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_exact</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_exact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule for once a day.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_first">
-<tt class="descname">test_check_schedule_day_first</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_first" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_first</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a daily schedule that was never triggered before and is due now.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_last">
-<tt class="descname">test_check_schedule_day_last</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_last" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_last</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_last" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a daily schedule that was triggered before and is due now.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_last_skip">
-<tt class="descname">test_check_schedule_day_last_skip</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_last_skip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_last_skip</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_last_skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a daily schedule that was triggered before and is not due.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_day_recover">
-<tt class="descname">test_check_schedule_day_recover</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_recover" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_day_recover</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_day_recover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule to recover after being down for several days.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_drift_min">
-<tt class="descname">test_check_schedule_hour_drift_min</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_drift_min" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_drift_min</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_drift_min" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule for once an hour without slowly drifting away from the target time.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_exact">
-<tt class="descname">test_check_schedule_hour_exact</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_exact" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_exact</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_exact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule for once an hour.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_first">
-<tt class="descname">test_check_schedule_hour_first</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_first" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_first</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking an hourly schedule that was never triggered before and is due now.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_first_skip">
-<tt class="descname">test_check_schedule_hour_first_skip</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_first_skip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_first_skip</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_first_skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking an hourly schedule that was never triggered before and is not due.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_last">
-<tt class="descname">test_check_schedule_hour_last</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_last" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_last</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_last" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking an hourly schedule that was triggered before and is due now.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_last_skip">
-<tt class="descname">test_check_schedule_hour_last_skip</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_last_skip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_last_skip</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_last_skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking an hourly schedule that was triggered before and is not due.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_check_schedule_hour_recover">
-<tt class="descname">test_check_schedule_hour_recover</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_recover" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_check_schedule_hour_recover</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_check_schedule_hour_recover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking a schedule to recover after being down for several hours.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_multiple_processors">
-<tt class="descname">test_multiple_processors</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_multiple_processors" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_multiple_processors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_multiple_processors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests running multiple processors for the same trigger rule.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_perform_tick">
-<tt class="descname">test_perform_tick</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_perform_tick</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests performing a single clock tick.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_perform_tick_error">
-<tt class="descname">test_perform_tick_error</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_perform_tick_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests performing a clock tick will continue even when rules fail.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_perform_tick_skip">
-<tt class="descname">test_perform_tick_skip</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick_skip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_perform_tick_skip</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_perform_tick_skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests performing a single clock tick with rules that should be skipped.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_trigger_event_first">
-<tt class="descname">test_trigger_event_first</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_trigger_event_first" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_trigger_event_first</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_trigger_event_first" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests triggering a new event the first time for a rule.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_clock.TestClock.test_trigger_event_last">
-<tt class="descname">test_trigger_event_last</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_clock.TestClock.test_trigger_event_last" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_trigger_event_last</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_clock.TestClock.test_trigger_event_last" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests triggering a new event after the rule has processed an event previously.</p>
 </dd></dl>
 
@@ -426,34 +426,34 @@
 <span id="job-test-test-models-module"></span><h2>job.test.test_models module<a class="headerlink" href="#module-job.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.test_models.TestJob">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJob</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJob.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJob.test_increase_max_tries_canceled">
-<tt class="descname">test_increase_max_tries_canceled</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_canceled" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_increase_max_tries_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_canceled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests increasing the maximum number of tries for a job instance that was canceled prematurely.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJob.test_increase_max_tries_failed">
-<tt class="descname">test_increase_max_tries_failed</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_failed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_increase_max_tries_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests increasing the maximum number of tries for a job instance that ran out of tries due to failures.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJob.test_is_ready_to_queue">
-<tt class="descname">test_is_ready_to_queue</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_is_ready_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking the job status for queue eligibility.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJob.test_is_ready_to_requeue">
-<tt class="descname">test_is_ready_to_requeue</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_requeue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_is_ready_to_requeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_requeue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking the job status for requeue eligibility.</p>
 </dd></dl>
 
@@ -461,47 +461,47 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobExecution">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobExecution</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobExecution</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests for the job execution model</p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stderr_initial">
-<tt class="descname">test_append_stderr_initial</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_initial" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stderr_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_initial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests appending error for the first time.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stderr_join">
-<tt class="descname">test_append_stderr_join</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_join" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stderr_join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests appending error to existing error.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stderr_none">
-<tt class="descname">test_append_stderr_none</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_none" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stderr_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stderr_none" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests skipping append when no error is provided.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stdout_initial">
-<tt class="descname">test_append_stdout_initial</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_initial" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stdout_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_initial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests appending output for the first time.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stdout_join">
-<tt class="descname">test_append_stdout_join</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_join" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stdout_join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests appending output to existing output.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecution.test_append_stdout_none">
-<tt class="descname">test_append_stdout_none</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_none" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_append_stdout_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_append_stdout_none" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests skipping append when no output is provided.</p>
 </dd></dl>
 
@@ -509,91 +509,91 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobExecutionManager">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobExecutionManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobExecutionManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests for the job execution model manager</p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecutionManager.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecutionManager.test_get_latest">
-<tt class="descname">test_get_latest</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_get_latest" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_latest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_get_latest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecutionManager.test_get_latest_job_exes_with_a_filter">
-<tt class="descname">test_get_latest_job_exes_with_a_filter</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_get_latest_job_exes_with_a_filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_latest_job_exes_with_a_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_get_latest_job_exes_with_a_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions">
-<tt class="descname">test_schedule_job_executions</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobManager">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_queue_job_timestamps">
-<tt class="descname">test_queue_job_timestamps</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_queue_job_timestamps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_queue_job_timestamps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_queue_job_timestamps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is queued.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_superseded_job">
-<tt class="descname">test_superseded_job</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_superseded_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_superseded_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_superseded_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a job that supersedes another job</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_blocked">
-<tt class="descname">test_update_status_blocked</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_blocked" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_blocked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_blocked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is blocked.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_canceled">
-<tt class="descname">test_update_status_canceled</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_canceled" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_canceled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is canceled.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_completed">
-<tt class="descname">test_update_status_completed</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_completed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is completed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_failed">
-<tt class="descname">test_update_status_failed</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_failed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_failed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is failed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_pending">
-<tt class="descname">test_update_status_pending</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_pending" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_pending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_pending" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is pending.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_queued">
-<tt class="descname">test_update_status_queued</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_queued</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_queued" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that queued status updates are rejected.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_update_status_running">
-<tt class="descname">test_update_status_running</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_update_status_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_update_status_running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests that job attributes are updated when a job is running.</p>
 </dd></dl>
 
@@ -601,16 +601,16 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobTypeFailedStatus">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobTypeFailedStatus</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeFailedStatus</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeFailedStatus.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeFailedStatus.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the get_failed_jobs_with_system_errors method on JobManager.</p>
 </dd></dl>
 
@@ -618,52 +618,52 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobTypeManagerCreateJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeManagerCreateJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping">
-<tt class="descname">test_invalid_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() with an invalid error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_trigger_rule">
-<tt class="descname">test_invalid_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() with an invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule">
-<tt class="descname">test_successful_no_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_no_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() successfully with no trigger rule or error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields">
-<tt class="descname">test_successful_other_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_other_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() successfully with additional fields</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused">
-<tt class="descname">test_successful_paused</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() and pausing it</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_with_trigger_rule">
-<tt class="descname">test_successful_with_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_with_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_with_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_with_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() successfully with a trigger rule and error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field">
-<tt class="descname">test_uneditable_field</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uneditable_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.create_job_type() with an uneditable field</p>
 </dd></dl>
 
@@ -671,64 +671,64 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobTypeManagerEditJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeManagerEditJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_general_fields">
-<tt class="descname">test_change_general_fields</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_general_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_general_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_general_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with a change to some general fields</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_both">
-<tt class="descname">test_change_to_both</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_both" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_to_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_both" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with a change to both the definition and the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_interface">
-<tt class="descname">test_change_to_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_interface" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_to_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with a change to the interface</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_trigger_rule">
-<tt class="descname">test_change_to_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_to_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with a change to the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_error_mapping">
-<tt class="descname">test_invalid_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with an invalid error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_trigger_rule">
-<tt class="descname">test_invalid_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() with a new invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule">
-<tt class="descname">test_remove_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_remove_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() that removes the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_system_job_type">
-<tt class="descname">test_system_job_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_system_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_system_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_system_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() for a system job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_uneditable_field">
-<tt class="descname">test_uneditable_field</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_uneditable_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.edit_job_type() to change an uneditable field</p>
 </dd></dl>
 
@@ -736,22 +736,22 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobTypeManagerValidateJobType</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeManagerValidateJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType.test_invalid">
-<tt class="descname">test_invalid</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_invalid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.validate_job_type() with an invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling JobTypeManager.validate_job_type() successfully</p>
 </dd></dl>
 
@@ -759,16 +759,16 @@
 
 <dl class="class">
 <dt id="job.test.test_models.TestJobTypeRunningStatus">
-<em class="property">class </em><tt class="descclassname">job.test.test_models.</tt><tt class="descname">TestJobTypeRunningStatus</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeRunningStatus</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeRunningStatus.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeRunningStatus.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeRunningStatus.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the get_running_job_status method on JobExecutionManager.</p>
 </dd></dl>
 
@@ -779,52 +779,52 @@
 <span id="job-test-test-views-module"></span><h2>job.test.test_views module<a class="headerlink" href="#module-job.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="job.test.test_views.TestJobDetailsView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_cancel_bad_param">
-<tt class="descname">test_cancel_bad_param</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_bad_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_cancel_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests cancelling a job with invalid arguments.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_cancel_bad_value">
-<tt class="descname">test_cancel_bad_value</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_bad_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_cancel_bad_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_bad_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests cancelling a job with an incorrect status.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_cancel_successful">
-<tt class="descname">test_cancel_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_cancel_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_cancel_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully cancelling a job.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_successful_empty">
-<tt class="descname">test_successful_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job details view with no data or results.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_successful_file">
-<tt class="descname">test_successful_file</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job details view for one input/output file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_successful_files">
-<tt class="descname">test_successful_files</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job details view for multiple input/output files.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobDetailsView.test_successful_property">
-<tt class="descname">test_successful_property</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_property" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobDetailsView.test_successful_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job details view for one input property.</p>
 </dd></dl>
 
@@ -832,145 +832,145 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobExecutionsView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobExecutionsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_bad_id">
-<tt class="descname">test_get_job_execution_bad_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_bad_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_execution_bad_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_bad_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_for_job_exe_id">
-<tt class="descname">test_get_job_execution_for_job_exe_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_for_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_execution_for_job_exe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_for_job_exe_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_bad_id">
-<tt class="descname">test_get_job_execution_logs_bad_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_bad_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_execution_logs_bad_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_bad_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_success">
-<tt class="descname">test_get_job_execution_logs_success</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_success" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_execution_logs_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_logs_success" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions">
-<tt class="descname">test_get_job_executions</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions" title="Permalink to this definition">¶</a></dt>
 <dd><p>This test checks to make sure there are 10 job executions.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_category">
-<tt class="descname">test_get_job_executions_for_job_category</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_executions_for_job_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_category" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_id">
-<tt class="descname">test_get_job_executions_for_job_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_executions_for_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_name">
-<tt class="descname">test_get_job_executions_for_job_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_executions_for_job_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_running_status">
-<tt class="descname">test_get_job_executions_running_status</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_running_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_job_executions_running_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_running_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>This test checks to make sure there are 2 job executions running.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_no_tz">
-<tt class="descname">test_no_tz</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_no_tz" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_no_tz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_no_tz" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypeDetailsView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypeDetailsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping">
-<tt class="descname">test_edit_bad_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_bad_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests attempting to edit a job type using an invalid error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_interface">
-<tt class="descname">test_edit_bad_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_interface" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_bad_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests attempting to edit a job type using an invalid job interface</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_trigger">
-<tt class="descname">test_edit_bad_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_bad_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests attempting to edit a job type using an invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_error_mapping">
-<tt class="descname">test_edit_error_mapping</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_error_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the error mapping of a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_interface">
-<tt class="descname">test_edit_interface</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_interface" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the interface of a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_interface_and_trigger_rule">
-<tt class="descname">test_edit_interface_and_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_interface_and_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_interface_and_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_interface_and_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the job type interface and trigger rule together</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_simple">
-<tt class="descname">test_edit_simple</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_simple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing only the basic attributes of a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule">
-<tt class="descname">test_edit_trigger_rule</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the trigger rule of a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_pause">
-<tt class="descname">test_edit_trigger_rule_pause</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_pause" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_trigger_rule_pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_pause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests pausing the trigger rule of a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_remove">
-<tt class="descname">test_edit_trigger_rule_remove</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_remove" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_edit_trigger_rule_remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_trigger_rule_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests removing the trigger rule from a job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_not_found">
-<tt class="descname">test_not_found</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get job type details view with a job id that does not exist.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get job type details view.</p>
 </dd></dl>
 
@@ -978,16 +978,16 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesRunningView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypesRunningView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesRunningView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesRunningView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesRunningView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesRunningView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the running status view.</p>
 </dd></dl>
 
@@ -995,22 +995,22 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesStatusView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypesStatusView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesStatusView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesStatusView.test_running">
-<tt class="descname">test_running</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.test_running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.test_running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting running jobs regardless of time filters.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesStatusView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the status view.</p>
 </dd></dl>
 
@@ -1018,16 +1018,16 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesSystemFailuresView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypesSystemFailuresView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesSystemFailuresView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesSystemFailuresView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesSystemFailuresView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesSystemFailuresView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the system failures view.</p>
 </dd></dl>
 
@@ -1035,53 +1035,53 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesValidationView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypesValidationView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests related to the job-types validation endpoint</p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_bad_error">
-<tt class="descname">test_bad_error</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid error relationship.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_bad_param">
-<tt class="descname">test_bad_param</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with missing fields.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_bad_trigger_config">
-<tt class="descname">test_bad_trigger_config</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid trigger rule configuration.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_bad_trigger_type">
-<tt class="descname">test_bad_trigger_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid trigger type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_successful_trigger">
-<tt class="descname">test_successful_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a trigger.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_warnings">
-<tt class="descname">test_warnings</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with mismatched media type warnings.</p>
 </dd></dl>
 
@@ -1089,88 +1089,88 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobTypesView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobTypesView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_category">
-<tt class="descname">test_category</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create">
-<tt class="descname">test_create</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_bad_error">
-<tt class="descname">test_create_bad_error</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type with an invalid error relationship.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_bad_param">
-<tt class="descname">test_create_bad_param</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a job type with invalid type fields.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_bad_trigger_config">
-<tt class="descname">test_create_bad_trigger_config</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type with an invalid trigger rule configuration.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_bad_trigger_type">
-<tt class="descname">test_create_bad_trigger_type</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type with an invalid trigger type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_max_scheduled">
-<tt class="descname">test_create_max_scheduled</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_max_scheduled" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_max_scheduled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_max_scheduled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_missing_param">
-<tt class="descname">test_create_missing_param</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a job type with missing fields.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_trigger">
-<tt class="descname">test_create_trigger</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_trigger" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_create_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_trigger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type with a trigger rule.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_name">
-<tt class="descname">test_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_reverse_sorting">
-<tt class="descname">test_reverse_sorting</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_reverse_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests custom sorting in reverse.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_sorting">
-<tt class="descname">test_sorting</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_sorting" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_sorting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests custom sorting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get all job types view.</p>
 </dd></dl>
 
@@ -1178,40 +1178,40 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobsUpdateView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobsUpdateView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsUpdateView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_job_type_category">
-<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_job_type_id">
-<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_job_type_name">
-<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_status">
-<tt class="descname">test_status</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by status.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view.</p>
 </dd></dl>
 
@@ -1219,52 +1219,58 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobsView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobsView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobsView.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by error category.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_job_id">
-<tt class="descname">test_job_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job identifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_job_type_category">
-<tt class="descname">test_job_type_category</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_job_type_id">
-<tt class="descname">test_job_type_id</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_job_type_name">
-<tt class="descname">test_job_type_name</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_order_by">
-<tt class="descname">test_order_by</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_order_by" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_order_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view with sorting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_status">
-<tt class="descname">test_status</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_status" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by status.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_successful">
-<tt class="descname">test_successful</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view.</p>
 </dd></dl>
 
@@ -1272,38 +1278,44 @@
 
 <dl class="class">
 <dt id="job.test.test_views.TestJobsWithExecutionView">
-<em class="property">class </em><tt class="descclassname">job.test.test_views.</tt><tt class="descname">TestJobsWithExecutionView</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsWithExecutionView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>An integration test of the Jobs with latest execution view</p>
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobsWithExecutionView.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by error category.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_get_latest_job_exes">
-<tt class="descname">test_get_latest_job_exes</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_get_latest_job_exes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_latest_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_get_latest_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the jobs information service without a filter</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_with_job_type_category_filter">
-<tt class="descname">test_with_job_type_category_filter</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_category_filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_with_job_type_category_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_category_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_with_job_type_id_filter">
-<tt class="descname">test_with_job_type_id_filter</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_id_filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_with_job_type_id_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_id_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_with_job_type_name_filter">
-<tt class="descname">test_with_job_type_name_filter</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_name_filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_with_job_type_name_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_name_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_with_status_filter">
-<tt class="descname">test_with_status_filter</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_status_filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_with_status_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_status_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1314,65 +1326,65 @@
 <p>Defines utility methods for testing jobs and job types</p>
 <dl class="class">
 <dt id="job.test.utils.MockErrorTriggerRuleConfiguration">
-<em class="property">class </em><tt class="descclassname">job.test.utils.</tt><tt class="descname">MockErrorTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>configuration</em><big>)</big><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">job.test.utils.</code><code class="descname">MockErrorTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></code></a></p>
 <p>Mock error trigger rule configuration for testing</p>
 <dl class="method">
 <dt id="job.test.utils.MockErrorTriggerRuleConfiguration.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job">
-<tt class="descname">validate_trigger_for_job</tt><big>(</big><em>job_interface</em><big>)</big><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.utils.MockErrorTriggerRuleHandler">
-<em class="property">class </em><tt class="descclassname">job.test.utils.</tt><tt class="descname">MockErrorTriggerRuleHandler</tt><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">job.test.utils.</code><code class="descname">MockErrorTriggerRuleHandler</code><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a></p>
 <p>Mock error trigger rule handler for testing</p>
 <dl class="method">
 <dt id="job.test.utils.MockErrorTriggerRuleHandler.create_configuration">
-<tt class="descname">create_configuration</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockErrorTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.utils.MockTriggerRuleConfiguration">
-<em class="property">class </em><tt class="descclassname">job.test.utils.</tt><tt class="descname">MockTriggerRuleConfiguration</tt><big>(</big><em>trigger_rule_type</em>, <em>configuration</em><big>)</big><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">job.test.utils.</code><code class="descname">MockTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration</span></code></a></p>
 <p>Mock trigger rule configuration for testing</p>
 <dl class="method">
 <dt id="job.test.utils.MockTriggerRuleConfiguration.validate">
-<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job">
-<tt class="descname">validate_trigger_for_job</tt><big>(</big><em>job_interface</em><big>)</big><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="job.test.utils.MockTriggerRuleHandler">
-<em class="property">class </em><tt class="descclassname">job.test.utils.</tt><tt class="descname">MockTriggerRuleHandler</tt><a class="headerlink" href="#job.test.utils.MockTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">job.test.utils.</code><code class="descname">MockTriggerRuleHandler</code><a class="headerlink" href="#job.test.utils.MockTriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a></p>
 <p>Mock trigger rule handler for testing</p>
 <dl class="method">
 <dt id="job.test.utils.MockTriggerRuleHandler.create_configuration">
-<tt class="descname">create_configuration</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#job.test.utils.MockTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.MockTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="job.test.utils.create_clock_event">
-<tt class="descclassname">job.test.utils.</tt><tt class="descname">create_clock_event</tt><big>(</big><em>rule=None</em>, <em>occurred=None</em><big>)</big><a class="headerlink" href="#job.test.utils.create_clock_event" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_clock_event</code><span class="sig-paren">(</span><em>rule=None</em>, <em>occurred=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_clock_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a scale clock trigger event model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1380,7 +1392,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The trigger event model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1388,7 +1400,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_clock_rule">
-<tt class="descclassname">job.test.utils.</tt><tt class="descname">create_clock_rule</tt><big>(</big><em>name=None</em>, <em>rule_type=u'CLOCK'</em>, <em>event_type=None</em>, <em>schedule=u'PT1H0M0S'</em>, <em>is_active=True</em><big>)</big><a class="headerlink" href="#job.test.utils.create_clock_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_clock_rule</code><span class="sig-paren">(</span><em>name=None</em>, <em>rule_type=u'CLOCK'</em>, <em>event_type=None</em>, <em>schedule=u'PT1H0M0S'</em>, <em>is_active=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_clock_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a scale clock trigger rule model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1396,7 +1408,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The trigger rule model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1404,7 +1416,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_job">
-<tt class="descclassname">job.test.utils.</tt><tt class="descname">create_job</tt><big>(</big><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em><big>)</big><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1412,7 +1424,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><tt class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1420,7 +1432,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_job_exe">
-<tt class="descclassname">job.test.utils.</tt><tt class="descname">create_job_exe</tt><big>(</big><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em><big>)</big><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job execution model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1428,7 +1440,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job execution model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1436,7 +1448,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_job_type">
-<tt class="descclassname">job.test.utils.</tt><tt class="descname">create_job_type</tt><big>(</big><em>name=None</em>, <em>version=None</em>, <em>category=None</em>, <em>interface=None</em>, <em>priority=50</em>, <em>timeout=3600</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>cpus=1.0</em>, <em>mem=1.0</em>, <em>disk=1.0</em>, <em>error_mapping=None</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em><big>)</big><a class="headerlink" href="#job.test.utils.create_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_type</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>category=None</em>, <em>interface=None</em>, <em>priority=50</em>, <em>timeout=3600</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>cpus=1.0</em>, <em>mem=1.0</em>, <em>disk=1.0</em>, <em>error_mapping=None</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job type model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1444,7 +1456,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job type model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><tt class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
 </tr>
 </tbody>
 </table>

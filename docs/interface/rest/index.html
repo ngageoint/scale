@@ -92,30 +92,34 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">RESTful HTTP Interface</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-versions">API Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#services">Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
@@ -141,7 +145,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -170,6 +174,35 @@
 <p>Scale provides a RESTful HTTP interface for its own web UI and for any external
 applications that would like to connect to Scale. The following sections
 describe the services available for each component of Scale.</p>
+<div class="section" id="api-versions">
+<span id="rest-versions"></span><h2>API Versions<a class="headerlink" href="#api-versions" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Latest Version:</th><td class="field-body"><code class="docutils literal"><span class="pre">v3</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Other Versions:</th><td class="field-body">No prefix</td>
+</tr>
+</tbody>
+</table>
+<p>The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
+a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
+will support both the old and new API versions within the same release. Eventually, old API versions will be deprecated
+and subsequently removed in later releases.</p>
+<p>Since the API did not initially include a version scheme, the legacy URLs do not contain a prefix and the first release
+to include a version prefix is 3.0. Therefore, any URL listed in the documentation below will work as-is in the current
+release, but users should start including the version prefix in all requests going forward.</p>
+<p>All endpoints should include a prefix of the form <code class="docutils literal"><span class="pre">vX</span></code>, where <code class="docutils literal"><span class="pre">X</span></code> is the desired version number. Making a request
+with an invalid version prefix will result in a 404 error.</p>
+<div class="line-block">
+<div class="line">Documentation Example: <code class="docutils literal"><span class="pre">/job-types/</span></code></div>
+<div class="line">Actual Request Example: <code class="docutils literal"><span class="pre">/v3/job-types/</span></code></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="services">
+<span id="rest-services"></span><h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="error.html">Error Services</a></li>
@@ -192,6 +225,7 @@ describe the services available for each component of Scale.</p>
 <li class="toctree-l1"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
+</div>
 </div>
 </div>
 

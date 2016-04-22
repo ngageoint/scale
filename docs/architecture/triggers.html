@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jobs/index.html">Jobs and Recipes</a></li>
@@ -133,7 +133,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -251,8 +251,8 @@ store the products created by the triggered job/recipe.</div></blockquote>
 <div class="section" id="parse-triggers">
 <span id="architecture-triggers-parse"></span><h2>Parse Triggers<a class="headerlink" href="#parse-triggers" title="Permalink to this headline">¶</a></h2>
 <p>Parse triggers are triggers that can occur when a source file is parsed. This happens when a job completes with a
-<em>parse_results</em> section in its generated results manifest file, see <a class="reference internal" href="../algorithms/results_manifest.html#algorithms-results-manifest"><em>Results Manifest</em></a>. A trigger event
-is generated for every source file parse and checked against all parse trigger rules.</p>
+<em>parse_results</em> section in its generated results manifest file, see <a class="reference internal" href="../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a>. A
+trigger event is generated for every source file parse and checked against all parse trigger rules.</p>
 <p><strong>Example parse trigger configuration:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>

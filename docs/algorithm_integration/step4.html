@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adding your dockerized algorithm as a Scale job &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
+        <link rel="next" title="Adding your new job into a Scale recipe" href="step5.html"/>
+        <link rel="prev" title="Encapsulating your algorithm in a Docker container" href="step3.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Adding your dockerized algorithm as a Scale job</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-of-a-simple-complete-job-type-json-definition">Example of a simple, complete Job Type JSON Definition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#job-json-broken-down">Job JSON broken down:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="results_manifest.html">Results Manifest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Algorithm Integration into Scale</a> &raquo;</li>
+      
+    <li>Adding your dockerized algorithm as a Scale job</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/algorithm_integration/step4.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adding-your-dockerized-algorithm-as-a-scale-job">
+<span id="algorithm-integration-step4"></span><h1>Adding your dockerized algorithm as a Scale job<a class="headerlink" href="#adding-your-dockerized-algorithm-as-a-scale-job" title="Permalink to this headline">¶</a></h1>
+<p>Refer to Scale documentation on the Job Interface Specification: <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface"><span>Job Interface</span></a></p>
+<div class="section" id="example-of-a-simple-complete-job-type-json-definition">
+<h2>Example of a simple, complete Job Type JSON Definition<a class="headerlink" href="#example-of-a-simple-complete-job-type-json-definition" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_types&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-algorithm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first algorithm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads an HDF5 file and outputs two TIFF images and a CSV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;image-processing&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="s2">&quot;John_Doe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.example.com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f27d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;10.4.4.10:5000/my_algorithm_1.0.0:dev&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">230</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">3600</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">10240.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/tiff&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_tif&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/tiff&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_tif2&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_csv&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                            <span class="s2">&quot;image/x-hdf5-image&quot;</span>
+                        <span class="p">],</span>
+                        <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;/app/my_wrapper.sh&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="job-json-broken-down">
+<h3>Job JSON broken down:<a class="headerlink" href="#job-json-broken-down" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="setting-the-algorithm-attributes-and-resources">
+<h4>Setting the algorithm attributes and resources<a class="headerlink" href="#setting-the-algorithm-attributes-and-resources" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_types&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-algorithm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first algorithm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads an HDF5 file and outputs two TIFF images and a CSV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;image-processing&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="s2">&quot;John_Doe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.example.com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f27d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;10.4.4.10:5000/my_algorithm_1.0.0:dev&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">230</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">3600</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">10.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">10240.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</pre></div>
+</td></tr></table></div>
+<p>Lines 2-4:    These fields do not need to be filled out with additional information and the default values shown here
+are sufficient for most users.</p>
+<p>Line 7-8:     The &#8220;name&#8221; and &#8220;version&#8221; must be a unique combination from other jobs in Scale and be entirely lower
+case.  For example, multiple jobs could be called &#8220;my-algorithm&#8221; as long as their &#8220;version&#8221; number is different. Common
+convention is to use dashes (-) instead of underscores for the name and versions should use semantic versioning.</p>
+<p>Line 9:       The &#8220;title&#8221; field is used for a pretty display of the job name</p>
+<p>Line 10:      The &#8220;description&#8221; field should provide a brief abstract of what the algorithm does</p>
+<p>Line 11:      The &#8220;category&#8221; field tags a job with other similar jobs</p>
+<p>Lines 12-13:  The &#8220;author_name&#8221; field should identify the organization/individual responsible for the algorithm.  The
+&#8220;author_url&#8221; is an optional link to a web page providing more information on the algorithm.</p>
+<p>Line 14:      The &#8220;is_operational&#8221; field is a boolean defining if the results of the algorithm are for R&amp;D purposes only
+or are suitable for production use</p>
+<p>Line 15:      The &#8220;icon_code&#8221; field maps to Font-Awesome codes and defines the icon symbol used to represent the
+algorithm in Scale</p>
+<p>Line 16:      The &#8220;docker_privileged&#8221; field is a boolean for jobs that must run with the docker run &#8220;&#8211;privileged&#8221; flag.
+<em>This must be set to true for jobs that mount NFS directories</em></p>
+<p>Line 17:      The &#8220;docker_image&#8221; field specifies the name and optional index of the built docker image</p>
+<p>Line 18:      The &#8220;priority&#8221; field specifies the importance of the Job in the queue.  Jobs with lower priority numbers
+will execute <strong>before</strong> higher priority numbers</p>
+<p>Line 19:      The &#8220;timeout&#8221; field is measured in minutes and will send a <em>kill</em> signal to the job if it has not
+completed within this time</p>
+<p>Lines 20-21:  The &#8220;max_scheduled&#8221; and &#8220;max_tries&#8221; fields define how many times the job can be scheduled and
+automatically requeued respectively.  Failed jobs are automatically retried until the &#8220;max_tries&#8221; limit is reached.</p>
+<p>Lines 22-25:  These lines define the necessary resources for the algorithm.  The &#8220;cpus_required&#8221; are the number of cores
+required for the algorithm to run.  The &#8220;mem_required&#8221; is the amount of RAM in megabytes required.  The
+&#8220;disk_out_const_required&#8221; is the amount of required disk space in megabytes in the docker container needed for the
+algorithm.  Optionally, you can instead define the amount of disk space with the &#8220;disk_out_mult_required&#8221; field which is
+a <em>multiple</em> of the total size of the input files.</p>
+</div>
+<div class="section" id="setting-the-algorithm-inputs-and-outputs">
+<h4>Setting the algorithm inputs and outputs<a class="headerlink" href="#setting-the-algorithm-inputs-and-outputs" title="Permalink to this headline">¶</a></h4>
+<p>The &#8220;interface&#8221; section of the job type JSON definition defines the expected input and output file types and assigns
+them variable names.  It also defines the command arguments that will be passed to Scale</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;image/x-hdf5-image&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/tiff&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_tif&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/tiff&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_tif2&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file_csv&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;/app/my_wrapper.sh&quot;</span>
+<span class="p">},</span>
+</pre></div>
+</td></tr></table></div>
+<p>Lines 27-36:  The &#8220;input_data&#8221; section defines the inputs of the job that will be managed by Scale.  The &#8220;media_type&#8221;
+defines the expected file_type of the input while the &#8220;type&#8221; keyword is a string defining whether in input is a file,
+list of files, or a property.  The &#8220;required&#8221; field is optional and indicates if the input is an optional command
+argument.  <em>If an input is optional, the job will still execute except replace the input with an empty string.</em> The
+&#8220;name&#8221; field is a user-defined unique string.  <strong>These input names match the variables in the command_arguments</strong></p>
+<p>Lines 37-56:  The &#8220;output_data&#8221; section defines the expected outputs of the job.  The &#8220;media_type&#8221; defines the expected
+file type of output while the &#8220;type&#8221; keyword defines whether it expects a file or a list of files.  The &#8220;required&#8221;
+keyword is a boolean used if the output is guaranteed to be produced by the algorithm on a successful run.  By default,
+the &#8220;required&#8221; keyword is set to true.  The &#8220;name&#8221; keyword must be a unique string defining the output.
+<strong>These names are matched with the names in the results manifest to capture results</strong></p>
+<p>Line 57:      The &#8220;shared_resources&#8221; keyword is currently unused and reserved for future usage.  It should be set to [].</p>
+<p>Line 58:      The &#8220;command_arguments&#8221; keyword defines what inputs are passed into the docker container.  You can think
+of the arguments as appended to the end of the contents of your dockerfile&#8217;s ENTRYPOINT for what command is executed.
+The variables here <strong>MUST</strong> match the &#8220;name&#8221;(s) in your &#8220;input_data&#8221; section.  The special variable &#8220;${job_output_dir}&#8221;
+is supplied by Scale and will be your empty output directory Scale will use to search for your results_manifest.json.</p>
+<p>Line 59:      The &#8220;version&#8221; is an optional string defining the version of the definition specification used.  This
+defaults to the latest version.</p>
+<p>Line 60:      The &#8220;command&#8221; field defines the main command to execute on the command line.
+<em>This should match your ENTRYPOINT in your dockerfile</em>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="step5.html" class="btn btn-neutral float-right" title="Adding your new job into a Scale recipe" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="step3.html" class="btn btn-neutral" title="Encapsulating your algorithm in a Docker container" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

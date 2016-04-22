@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
-        <link rel="up" title="Algorithms" href="index.html"/>
+        <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
         <link rel="next" title="Architecture" href="../architecture/index.html"/>
-        <link rel="prev" title="Algorithms" href="index.html"/> 
+        <link rel="prev" title="Adding your new job into a Scale recipe" href="step5.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -90,7 +90,12 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithms</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step3.html">Encapsulating your algorithm in a Docker container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step4.html">Adding your dockerized algorithm as a Scale job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step5.html">Adding your new job into a Scale recipe</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Results Manifest</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#results-manifest-specification-version-1-1">Results Manifest Specification Version 1.1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#results-manifest-specification-version-1-0">Results Manifest Specification Version 1.0</a></li>
@@ -123,7 +128,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -131,13 +136,13 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="index.html">Algorithms</a> &raquo;</li>
+          <li><a href="index.html">Algorithm Integration into Scale</a> &raquo;</li>
       
     <li>Results Manifest</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/algorithms/results_manifest.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/algorithm_integration/results_manifest.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -148,7 +153,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="results-manifest">
-<span id="algorithms-results-manifest"></span><h1>Results Manifest<a class="headerlink" href="#results-manifest" title="Permalink to this headline">¶</a></h1>
+<span id="algorithm-integration-results-manifest"></span><h1>Results Manifest<a class="headerlink" href="#results-manifest" title="Permalink to this headline">¶</a></h1>
 <p>The results manifest is a JSON document that defines the output of an algorithm&#8217;s run. Using the results manifest, you
 can specify your outputs, parse information, run_information and errors. In addition, you can register artifacts by
 printing a line to stdout with the following format &#8220;ARTIFACT:&lt;output_name&gt;:&lt;path_to_file&gt;&#8221;. The artifact string must be
@@ -442,7 +447,7 @@ extents of the data, a center point is auto calculated.</div></blockquote>
         <a href="../architecture/index.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Algorithms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="step5.html" class="btn btn-neutral" title="Adding your new job into a Scale recipe" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.0.0 documentation" href="../../index.html"/>
         <link rel="up" title="RESTful HTTP Interface" href="index.html"/>
-        <link rel="next" title="Algorithms" href="../../algorithms/index.html"/>
+        <link rel="next" title="Algorithm Integration into Scale" href="../../algorithm_integration/index.html"/>
         <link rel="prev" title="Trigger Services" href="trigger.html"/> 
 
   
@@ -92,30 +92,34 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../ui/index.html">Web UI</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">RESTful HTTP Interface</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trigger.html">Trigger Services</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="">Workspace Services</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../algorithms/index.html">Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
@@ -141,7 +145,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -257,7 +261,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-workspace-details"><em>Workspace Details</em></a>)</td>
+(See <a class="reference internal" href="#rest-workspace-details"><span>Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.name</td>
 <td colspan="2">String</td>
@@ -421,7 +425,7 @@ This field can be null if the disk space is unknown.</td>
 <tr class="row-odd"><td>json_config</td>
 <td>JSON Object</td>
 <td>JSON configuration with attributes specific to the type of workspace.
-(See <a class="reference internal" href="../../architecture/workspaces.html#architecture-workspaces"><em>Workspaces</em></a>)</td>
+(See <a class="reference internal" href="../../architecture/workspaces.html#architecture-workspaces"><span>Workspaces</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -452,7 +456,7 @@ This field can be null if the disk space is unknown.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../algorithms/index.html" class="btn btn-neutral float-right" title="Algorithms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../../algorithm_integration/index.html" class="btn btn-neutral float-right" title="Algorithm Integration into Scale" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="trigger.html" class="btn btn-neutral" title="Trigger Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

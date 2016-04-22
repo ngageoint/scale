@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
@@ -159,7 +159,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -198,16 +198,16 @@
 <span id="scheduler-test-sync-test-job-type-manager-module"></span><h2>scheduler.test.sync.test_job_type_manager module<a class="headerlink" href="#module-scheduler.test.sync.test_job_type_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.sync.test_job_type_manager.TestJobTypeManager">
-<em class="property">class </em><tt class="descclassname">scheduler.test.sync.test_job_type_manager.</tt><tt class="descname">TestJobTypeManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.sync.test_job_type_manager.</code><code class="descname">TestJobTypeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.sync.test_job_type_manager.TestJobTypeManager.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.sync.test_job_type_manager.TestJobTypeManager.test_successful_update">
-<tt class="descname">test_successful_update</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update</p>
 </dd></dl>
 
@@ -218,16 +218,16 @@
 <span id="scheduler-test-sync-test-node-manager-module"></span><h2>scheduler.test.sync.test_node_manager module<a class="headerlink" href="#module-scheduler.test.sync.test_node_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.sync.test_node_manager.TestNodeManager">
-<em class="property">class </em><tt class="descclassname">scheduler.test.sync.test_node_manager.</tt><tt class="descname">TestNodeManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.sync.test_node_manager.</code><code class="descname">TestNodeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.sync.test_node_manager.TestNodeManager.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.sync.test_node_manager.TestNodeManager.test_successful_update">
-<tt class="descname">test_successful_update</tt><big>(</big><em>*args</em>, <em>**keywargs</em><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_node_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update</p>
 </dd></dl>
 
@@ -238,16 +238,16 @@
 <span id="scheduler-test-sync-test-scheduler-manager-module"></span><h2>scheduler.test.sync.test_scheduler_manager module<a class="headerlink" href="#module-scheduler.test.sync.test_scheduler_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="scheduler.test.sync.test_scheduler_manager.TestSchedulerManager">
-<em class="property">class </em><tt class="descclassname">scheduler.test.sync.test_scheduler_manager.</tt><tt class="descname">TestSchedulerManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<em class="property">class </em><code class="descclassname">scheduler.test.sync.test_scheduler_manager.</code><code class="descname">TestSchedulerManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.setUp">
-<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.setUp" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.test_successful_update">
-<tt class="descname">test_successful_update</tt><big>(</big><big>)</big><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update</p>
 </dd></dl>
 

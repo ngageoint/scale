@@ -90,7 +90,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../algorithms/index.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
@@ -99,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -109,7 +110,6 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale.html">scale package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -154,7 +154,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -219,22 +219,22 @@
 <span id="trigger-apps-module"></span><h2>trigger.apps module<a class="headerlink" href="#module-trigger.apps" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="trigger.apps.TriggerConfig">
-<em class="property">class </em><tt class="descclassname">trigger.apps.</tt><tt class="descname">TriggerConfig</tt><big>(</big><em>app_name</em>, <em>app_module</em><big>)</big><a class="headerlink" href="#trigger.apps.TriggerConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.apps.</code><code class="descname">TriggerConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.apps.TriggerConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
 <p>Configuration for the trigger app</p>
 <dl class="attribute">
 <dt id="trigger.apps.TriggerConfig.label">
-<tt class="descname">label</tt><em class="property"> = u'trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.label" title="Permalink to this definition">¶</a></dt>
+<code class="descname">label</code><em class="property"> = u'trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.label" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.apps.TriggerConfig.name">
-<tt class="descname">name</tt><em class="property"> = u'trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = u'trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.apps.TriggerConfig.verbose_name">
-<tt class="descname">verbose_name</tt><em class="property"> = u'Trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verbose_name</code><em class="property"> = u'Trigger'</em><a class="headerlink" href="#trigger.apps.TriggerConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -245,12 +245,12 @@
 <p>Defines the base class for handling trigger rules and provides apps a way to register handler sub-classes</p>
 <dl class="class">
 <dt id="trigger.handler.TriggerRuleHandler">
-<em class="property">class </em><tt class="descclassname">trigger.handler.</tt><tt class="descname">TriggerRuleHandler</tt><big>(</big><em>trigger_rule_type</em><big>)</big><a class="headerlink" href="#trigger.handler.TriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.handler.</code><code class="descname">TriggerRuleHandler</code><span class="sig-paren">(</span><em>trigger_rule_type</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.handler.TriggerRuleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Base class for handling trigger rules</p>
 <dl class="method">
 <dt id="trigger.handler.TriggerRuleHandler.create_configuration">
-<tt class="descname">create_configuration</tt><big>(</big><em>config_dict</em><big>)</big><a class="headerlink" href="#trigger.handler.TriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.handler.TriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns a trigger rule configuration from the given dict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -260,16 +260,16 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The trigger rule configuration</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></tt></a>: If the configuration is invalid</p>
+<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the configuration is invalid</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.handler.TriggerRuleHandler.create_trigger_rule">
-<tt class="descname">create_trigger_rule</tt><big>(</big><em>config_dict</em>, <em>name=None</em>, <em>is_active=True</em><big>)</big><a class="headerlink" href="#trigger.handler.TriggerRuleHandler.create_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_trigger_rule</code><span class="sig-paren">(</span><em>config_dict</em>, <em>name=None</em>, <em>is_active=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.handler.TriggerRuleHandler.create_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns a trigger rule model with the given configuration. The returned trigger rule model will
 be saved in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -286,11 +286,10 @@ be saved in the database.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger rule</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule">trigger.configuration.exceptions.InvalidTriggerRule</a>:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the configuration is invalid</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><strong>trigger.configuration.exceptions.InvalidTriggerRule</strong></a> &#8211; If the configuration is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -301,7 +300,7 @@ be saved in the database.</p>
 
 <dl class="function">
 <dt id="trigger.handler.get_trigger_rule_handler">
-<tt class="descclassname">trigger.handler.</tt><tt class="descname">get_trigger_rule_handler</tt><big>(</big><em>trigger_rule_type</em><big>)</big><a class="headerlink" href="#trigger.handler.get_trigger_rule_handler" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">trigger.handler.</code><code class="descname">get_trigger_rule_handler</code><span class="sig-paren">(</span><em>trigger_rule_type</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.handler.get_trigger_rule_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trigger rule handler that is registered with the given type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -311,22 +310,22 @@ be saved in the database.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The trigger rule handler, possibly None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></tt></a>: If the trigger type is invalid</p>
+<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the trigger type is invalid</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trigger.handler.register_trigger_rule_handler">
-<tt class="descclassname">trigger.handler.</tt><tt class="descname">register_trigger_rule_handler</tt><big>(</big><em>trigger_rule_handler</em><big>)</big><a class="headerlink" href="#trigger.handler.register_trigger_rule_handler" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">trigger.handler.</code><code class="descname">register_trigger_rule_handler</code><span class="sig-paren">(</span><em>trigger_rule_handler</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.handler.register_trigger_rule_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers the given trigger rule handler with the given type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trigger_rule_handler</strong> (<a class="reference internal" href="#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><tt class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></tt></a>) &#8211; The trigger rule handler</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trigger_rule_handler</strong> (<a class="reference internal" href="#trigger.handler.TriggerRuleHandler" title="trigger.handler.TriggerRuleHandler"><code class="xref py py-class docutils literal"><span class="pre">trigger.handler.TriggerRuleHandler</span></code></a>) &#8211; The trigger rule handler</td>
 </tr>
 </tbody>
 </table>
@@ -338,19 +337,19 @@ be saved in the database.</p>
 <p>Defines the models for trigger rules and events</p>
 <dl class="class">
 <dt id="trigger.models.TriggerEvent">
-<em class="property">class </em><tt class="descclassname">trigger.models.</tt><tt class="descname">TriggerEvent</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.models.</code><code class="descname">TriggerEvent</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents an event where a trigger occurred</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The type of the trigger that occurred</li>
-<li><strong>rule</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></tt>) &#8211; The rule that triggered this event, possibly None (some events are not triggered by rules)</li>
-<li><strong>description</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON description of the event. This will contain fields specific to the type of the trigger
+<li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of the trigger that occurred</li>
+<li><strong>rule</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The rule that triggered this event, possibly None (some events are not triggered by rules)</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description of the event. This will contain fields specific to the type of the trigger
 that occurred.</li>
-<li><strong>occurred</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the event occurred</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the event occurred</li>
 </ul>
 </td>
 </tr>
@@ -358,62 +357,62 @@ that occurred.</li>
 </table>
 <dl class="exception">
 <dt id="trigger.models.TriggerEvent.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#trigger.models.TriggerEvent.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#trigger.models.TriggerEvent.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="trigger.models.TriggerEvent.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">TriggerEvent.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#trigger.models.TriggerEvent.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">TriggerEvent.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerEvent.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.description">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">description</tt><a class="headerlink" href="#trigger.models.TriggerEvent.description" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">description</code><a class="headerlink" href="#trigger.models.TriggerEvent.description" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerEvent.get_next_by_occurred">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">get_next_by_occurred</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerEvent.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerEvent.get_previous_by_occurred">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">get_previous_by_occurred</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerEvent.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.job_set">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">job_set</tt><a class="headerlink" href="#trigger.models.TriggerEvent.job_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">job_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.job_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.objects">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">objects</tt><em class="property"> = &lt;trigger.models.TriggerEventManager object at 0x10e245d10&gt;</em><a class="headerlink" href="#trigger.models.TriggerEvent.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerEventManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerEvent.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.recipe_set">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">recipe_set</tt><a class="headerlink" href="#trigger.models.TriggerEvent.recipe_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">recipe_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.recipe_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.rule">
-<tt class="descclassname">TriggerEvent.</tt><tt class="descname">rule</tt><a class="headerlink" href="#trigger.models.TriggerEvent.rule" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerEvent.</code><code class="descname">rule</code><a class="headerlink" href="#trigger.models.TriggerEvent.rule" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.models.TriggerEventManager">
-<em class="property">class </em><tt class="descclassname">trigger.models.</tt><tt class="descname">TriggerEventManager</tt><a class="headerlink" href="#trigger.models.TriggerEventManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.models.</code><code class="descname">TriggerEventManager</code><a class="headerlink" href="#trigger.models.TriggerEventManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling trigger events</p>
 <dl class="method">
 <dt id="trigger.models.TriggerEventManager.create_trigger_event">
-<tt class="descname">create_trigger_event</tt><big>(</big><em>trigger_type</em>, <em>rule</em>, <em>description</em>, <em>occurred</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerEventManager.create_trigger_event" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_trigger_event</code><span class="sig-paren">(</span><em>trigger_type</em>, <em>rule</em>, <em>description</em>, <em>occurred</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEventManager.create_trigger_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new trigger event and returns the event model. The given rule model, if not None, must have already
 been saved in the database (it must have an ID). The returned trigger event model will be saved in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -422,16 +421,16 @@ been saved in the database (it must have an ID). The returned trigger event mode
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>trigger_type</strong> (<em>str</em>) &#8211; The type of the trigger that occurred</li>
-<li><strong>rule</strong> (<a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a>) &#8211; The rule that triggered the event, possibly None</li>
+<li><strong>rule</strong> (<a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The rule that triggered the event, possibly None</li>
 <li><strong>description</strong> (<em>dict</em>) &#8211; The JSON description of the event as a dict</li>
-<li><strong>occurred</strong> (<tt class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></tt>) &#8211; When the event occurred</li>
+<li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the event occurred</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger event</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -442,22 +441,22 @@ been saved in the database (it must have an ID). The returned trigger event mode
 
 <dl class="class">
 <dt id="trigger.models.TriggerRule">
-<em class="property">class </em><tt class="descclassname">trigger.models.</tt><tt class="descname">TriggerRule</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.models.</code><code class="descname">TriggerRule</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a rule that, when triggered, creates a trigger event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>type</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The type of the trigger for the rule</li>
-<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></tt>) &#8211; The stable name of the trigger rule used by clients for queries</li>
-<li><strong>configuration</strong> (<tt class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></tt>) &#8211; JSON configuration for the rule. This will contain fields specific to the type of the
+<li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of the trigger for the rule</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The stable name of the trigger rule used by clients for queries</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for the rule. This will contain fields specific to the type of the
 trigger.</li>
-<li><strong>is_active</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></tt>) &#8211; Whether the rule is still active (false once rule is archived)</li>
-<li><strong>created</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the rule was created</li>
-<li><strong>archived</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the rule was archived (no longer active)</li>
-<li><strong>last_modified</strong> (<tt class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></tt>) &#8211; When the rule was last modified</li>
+<li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the rule is still active (false once rule is archived)</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the rule was created</li>
+<li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the rule was archived (no longer active)</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the rule was last modified</li>
 </ul>
 </td>
 </tr>
@@ -465,25 +464,25 @@ trigger.</li>
 </table>
 <dl class="exception">
 <dt id="trigger.models.TriggerRule.DoesNotExist">
-<em class="property">exception </em><tt class="descname">DoesNotExist</tt><a class="headerlink" href="#trigger.models.TriggerRule.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></tt></p>
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#trigger.models.TriggerRule.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="trigger.models.TriggerRule.MultipleObjectsReturned">
-<em class="property">exception </em><tt class="descclassname">TriggerRule.</tt><tt class="descname">MultipleObjectsReturned</tt><a class="headerlink" href="#trigger.models.TriggerRule.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></tt></p>
+<em class="property">exception </em><code class="descclassname">TriggerRule.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerRule.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.configuration">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">configuration</tt><a class="headerlink" href="#trigger.models.TriggerRule.configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">configuration</code><a class="headerlink" href="#trigger.models.TriggerRule.configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_configuration">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">get_configuration</tt><big>(</big><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.get_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this trigger rule</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -491,41 +490,41 @@ trigger.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this trigger rule</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a></td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></tt></a>: If the trigger type is invalid</p>
+<p>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the trigger type is invalid</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_next_by_created">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">get_next_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_next_by_last_modified">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">get_next_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_previous_by_created">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">get_previous_by_created</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_previous_by_last_modified">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">get_previous_by_last_modified</tt><big>(</big><em>*moreargs</em>, <em>**morekwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.jobtype_set">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">jobtype_set</tt><a class="headerlink" href="#trigger.models.TriggerRule.jobtype_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">jobtype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.jobtype_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.natural_key">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">natural_key</tt><big>(</big><big>)</big><a class="headerlink" href="#trigger.models.TriggerRule.natural_key" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">natural_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to define the natural key for a trigger rule as the name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -541,29 +540,29 @@ trigger.</li>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.objects">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">objects</tt><em class="property"> = &lt;trigger.models.TriggerRuleManager object at 0x10e2503d0&gt;</em><a class="headerlink" href="#trigger.models.TriggerRule.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerRuleManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerRule.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.recipetype_set">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">recipetype_set</tt><a class="headerlink" href="#trigger.models.TriggerRule.recipetype_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">recipetype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.recipetype_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.triggerevent_set">
-<tt class="descclassname">TriggerRule.</tt><tt class="descname">triggerevent_set</tt><a class="headerlink" href="#trigger.models.TriggerRule.triggerevent_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">TriggerRule.</code><code class="descname">triggerevent_set</code><a class="headerlink" href="#trigger.models.TriggerRule.triggerevent_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.models.TriggerRuleManager">
-<em class="property">class </em><tt class="descclassname">trigger.models.</tt><tt class="descname">TriggerRuleManager</tt><a class="headerlink" href="#trigger.models.TriggerRuleManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></tt></p>
+<em class="property">class </em><code class="descclassname">trigger.models.</code><code class="descname">TriggerRuleManager</code><a class="headerlink" href="#trigger.models.TriggerRuleManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling trigger rules</p>
 <dl class="method">
 <dt id="trigger.models.TriggerRuleManager.archive_trigger_rule">
-<tt class="descname">archive_trigger_rule</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRuleManager.archive_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">archive_trigger_rule</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRuleManager.archive_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Archives the trigger rule (will no longer be active) with the given ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -577,7 +576,7 @@ trigger.</li>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRuleManager.create_trigger_rule">
-<tt class="descname">create_trigger_rule</tt><big>(</big><em>trigger_type</em>, <em>configuration</em>, <em>name=u''</em>, <em>is_active=True</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRuleManager.create_trigger_rule" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_trigger_rule</code><span class="sig-paren">(</span><em>trigger_type</em>, <em>configuration</em>, <em>name=u''</em>, <em>is_active=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRuleManager.create_trigger_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new trigger rule and returns the rule model. The returned trigger rule model will be saved in the
 database.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -586,7 +585,7 @@ database.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>trigger_type</strong> (<em>str</em>) &#8211; The type of this trigger rule</li>
-<li><strong>configuration</strong> (<tt class="xref py py-class docutils literal"><span class="pre">trigger.configuration.TriggerRuleConfiguration</span></tt>) &#8211; The rule configuration</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.TriggerRuleConfiguration</span></code>) &#8211; The rule configuration</li>
 <li><strong>name</strong> (<em>str</em>) &#8211; An optional name for the trigger</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Whether or not the trigger should be active</li>
 </ul>
@@ -595,11 +594,10 @@ database.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new trigger rule</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><tt class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule">trigger.configuration.exceptions.InvalidTriggerRule</a>:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">If the configuration is invalid</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><strong>trigger.configuration.exceptions.InvalidTriggerRule</strong></a> &#8211; If the configuration is invalid</p>
 </td>
 </tr>
 </tbody>
@@ -608,7 +606,7 @@ database.</p>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRuleManager.get_by_natural_key">
-<tt class="descname">get_by_natural_key</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#trigger.models.TriggerRuleManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_by_natural_key</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRuleManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to retrieve a trigger rule for the given natural key. NOTE: All trigger rule names are NOT
 unique. This is implemented to allow the loading of defined system trigger rules which do have unique names.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -619,7 +617,7 @@ unique. This is implemented to allow the loading of defined system trigger rules
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The trigger rule defined by the natural key</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><tt class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -633,43 +631,43 @@ unique. This is implemented to allow the loading of defined system trigger rules
 <p>Defines the serializers for trigger events and rules</p>
 <dl class="class">
 <dt id="trigger.serializers.TriggerEventBaseSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerEventBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.serializers.TriggerEventDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerEventDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.serializers.TriggerEventSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerEventSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerEventSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.serializers.TriggerRuleBaseSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerRuleBaseSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerRuleBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><tt class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerRuleBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerRuleBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.serializers.TriggerRuleDetailsSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerRuleDetailsSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
 <p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="trigger.serializers.TriggerRuleSerializer">
-<em class="property">class </em><tt class="descclassname">trigger.serializers.</tt><tt class="descname">TriggerRuleSerializer</tt><big>(</big><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty at 0x10e611598&gt;</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#trigger.serializers.TriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><tt class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerRuleSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerRuleSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
 <p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
 
