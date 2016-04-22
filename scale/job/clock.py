@@ -1,4 +1,4 @@
-'''Contains the functionality of the Scale clock process'''
+"""Contains the functionality of the Scale clock process"""
 from __future__ import unicode_literals
 import abc
 import datetime
@@ -19,16 +19,16 @@ _PROCESSORS = {}
 
 
 class ClockEventError(Exception):
-    '''Error class used when a clock event processor encounters a problem.'''
+    """Error class used when a clock event processor encounters a problem."""
     pass
 
 
 class ClockEventProcessor(object):
-    '''Base class used to process triggered clock events.'''
+    """Base class used to process triggered clock events."""
     __metaclass__ = abc.ABCMeta
 
     def process_event(self, event, last_event=None):
-        '''Callback when a new event is triggered that sub-classes have registered to process.
+        """Callback when a new event is triggered that sub-classes have registered to process.
 
         :param event: The new event that requires processing.
         :type event: :class:`trigger.models.TriggerEvent`
@@ -36,17 +36,17 @@ class ClockEventProcessor(object):
         :type last_event: :class:`trigger.models.TriggerEvent`
 
         :raises :class:`job.clock.ClockEventError`: If the event should be cancelled for any reason.
-        '''
+        """
         raise NotImplemented()
 
 
 def perform_tick():
-    '''Performs an iteration of the Scale clock.
+    """Performs an iteration of the Scale clock.
 
     A clock iteration consists of inspecting any trigger rules and corresponding events to see if there are any that
     have exceeded their scheduled time threshold. For rules that are due to run, a new event is created of the
     configured type and the registered clock function is executed.
-    '''
+    """
 
     # Check all the clock trigger rules
     rules = TriggerRule.objects.filter(type='CLOCK', is_active=True)
@@ -60,15 +60,15 @@ def perform_tick():
 
 
 def register_processor(name, processor_class):
-    '''Registers the given processor class definition to be called by the Scale clock at the given interval.
+    """Registers the given processor class definition to be called by the Scale clock at the given interval.
 
     Processors from other applications can be registered during their ready() method.
 
     :param name: The system name of the processor, which is used in trigger rule configurations.
-    :type name: str
+    :type name: string
     :param processor_class: The processor class to invoke when the associated event is triggered.
     :type processor_class: :class:`job.clock.ClockProcessor`
-    '''
+    """
     if name not in _PROCESSORS:
         _PROCESSORS[name] = []
     logger.debug('Registering clock processor: %s -> %s', name, processor_class)
@@ -76,13 +76,13 @@ def register_processor(name, processor_class):
 
 
 def _check_rule(rule):
-    '''Checks the given rule for validation errors and then triggers an event for processing if the schedule requires.
+    """Checks the given rule for validation errors and then triggers an event for processing if the schedule requires.
 
     :param rule: The system name of the processor, which is used in trigger rule configurations.
     :type rule: :class:`trigger.models.TriggerRule`
 
     :raises :class:`job.clock.ClockEventError`: If there is a configuration problem with the rule.
-    '''
+    """
 
     # Validate the processor name attribute
     if rule.name not in _PROCESSORS:
@@ -108,7 +108,7 @@ def _check_rule(rule):
 
 
 def _check_schedule(duration, last_event=None):
-    '''Checks the given rule schedule and previously triggered event to determine whether a new event should trigger.
+    """Checks the given rule schedule and previously triggered event to determine whether a new event should trigger.
 
     :param duration: The scheduled duration used to determine when to fire the next trigger event.
     :type duration: datetime.timedelta
@@ -117,7 +117,7 @@ def _check_schedule(duration, last_event=None):
     :type last_event: :class:`trigger.models.TriggerEvent`
     :returns: True if a new event should be triggered, false otherwise.
     :rtype: bool
-    '''
+    """
     # The master clock smallest unit is 1 minute so clear anything smaller to avoid schedule drift
     current = timezone.now().replace(second=0, microsecond=0)
     base = datetime.datetime(year=current.year, month=current.month, day=current.day, tzinfo=timezone.utc)
@@ -133,8 +133,8 @@ def _check_schedule(duration, last_event=None):
     # This recovers infrequent jobs after the system has been down for longer than the schedule
     elapsed = current - last_event.occurred
     if ((duration >= datetime.timedelta(days=1) and elapsed >= datetime.timedelta(days=1) or
-         duration >= datetime.timedelta(hours=1) and elapsed >= datetime.timedelta(hours=1)) and
-        elapsed >= duration):
+            duration >= datetime.timedelta(hours=1) and elapsed >= datetime.timedelta(hours=1)) and
+            elapsed >= duration):
         return True
 
     # Trigger based on absolute time within the current day
@@ -146,7 +146,7 @@ def _check_schedule(duration, last_event=None):
 
 @transaction.atomic
 def _trigger_event(rule, last_event=None):
-    '''Creates a new event based on the given rule and invokes the registered processor to handle it.
+    """Creates a new event based on the given rule and invokes the registered processor to handle it.
 
     :param rule: The rule form which to derive the new event.
     :type rule: :class:`trigger.models.TriggerRule`
@@ -155,7 +155,7 @@ def _trigger_event(rule, last_event=None):
     :type last_event: :class:`trigger.models.TriggerEvent`
 
     :raises :class:`job.clock.ClockEventError`: If the registered processor rejects the event.
-    '''
+    """
 
     # Create a new trigger event for the rule
     event_type = rule.configuration['event_type']

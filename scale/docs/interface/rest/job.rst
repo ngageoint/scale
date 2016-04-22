@@ -2,7 +2,7 @@
 .. _rest_job:
 
 Job Services
-===============================================================================
+============
 
 These services provide access to information about "all", "currently running" and "previously finished" jobs.
 
@@ -47,6 +47,10 @@ These services provide access to information about "all", "currently running" an
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_category     | String            | Optional | Return only jobs that failed due to an error with a given category. |
+|                    |                   |          | Choices: [SYSTEM, DATA, ALGORITHM].                                 |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -775,6 +779,10 @@ These services provide access to information about "all", "currently running" an
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_category     | String            | Optional | Return only jobs that failed due to an error with a given category. |
+|                    |                   |          | Choices: [SYSTEM, DATA, ALGORITHM].                                 |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |

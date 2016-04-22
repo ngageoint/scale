@@ -7,6 +7,7 @@
             "title": "Lost By Scheduler",
             "description": "The Scale scheduler lost this job execution. This can occur when the scheduler fails or restarts.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -19,6 +20,7 @@
             "title": "Lost By Mesos",
             "description": "Apache Mesos lost a task that was part of this job execution.",
             "category": "SYSTEM",
+            "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }

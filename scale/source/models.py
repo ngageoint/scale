@@ -76,7 +76,7 @@ class SourceFileManager(models.GeoManager):
         :param data_ended: The end time of the data contained in the source file, possibly None
         :type data_ended: :class:`datetime.datetime` or None
         :param data_types: List of strings containing the data types tags for this source file.
-        :type data_types: list
+        :type data_types: [string]
         :param new_workspace_path: New workspace path to move the source file to now that parse data is available. If
             None, the source file should not be moved.
         :type new_workspace_path: str

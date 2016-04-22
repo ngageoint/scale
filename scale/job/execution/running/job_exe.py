@@ -253,6 +253,8 @@ class RunningJobExecution(object):
             from scheduler.models import Scheduler
             job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._id)
             node = job_exe.node
+            if not error:
+                error = Error.objects.get_unknown_error()
             # Check for a high number of system errors and decide if we should pause the node
             if error.category == 'SYSTEM' and job_exe.job.num_exes >= job_exe.job.max_tries and node is not None and not node.is_paused:
                 # search Job.objects. for the number of system failures in the past (configurable) 1 minute

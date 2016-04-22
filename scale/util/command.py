@@ -16,7 +16,7 @@ def execute_command_line(cmd_list):
     '''Executes the given command list on the command line
 
     :param cmd_list: The list of commands
-    :type cmd_list: list
+    :type cmd_list: []
     '''
 
     logger.debug('Executing: %s', ' '.join(cmd_list))
