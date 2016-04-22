@@ -103,6 +103,21 @@ class TestJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job1.job_type.category)
 
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/jobs/?error_category=%s' % error.category
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
 
@@ -1403,6 +1418,21 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
         for job_entry in results['results']:
             self.assertTrue(job_entry['id'] in (self.job_2a.id, self.job_2b.id))
+
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/jobs/executions/?error_category=%s' % error.category
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
 
 
 class TestJobExecutionsView(TransactionTestCase):

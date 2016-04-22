@@ -2,7 +2,7 @@
 .. _rest_job_execution:
 
 Job Execution Services
-===============================================================================
+======================
 
 These services provide access to information about "all", "currently running" and "previously finished" job executions.
 

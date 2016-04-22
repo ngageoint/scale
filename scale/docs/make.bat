@@ -60,7 +60,7 @@ if "%1" == "html" (
 )
 
 if "%1" == "code_docs" (
-    %SPHINXAPIDOC% -f -T -o %CODE_DOCS% ..
+    %SPHINXAPIDOC% -f -T -o %CODE_DOCS% .. ..\scale
     if errorlevel 1 exit /b 1
     goto end
 )

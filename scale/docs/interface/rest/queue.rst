@@ -646,6 +646,8 @@ place jobs and recipes on the queue for processing.
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_categories| Array[String]     | Optional | Queue only jobs with a given job type category.                     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_categories   | Array[String]     | Optional | Queue only jobs with a given error category.                        |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | priority           | Integer           | Optional | Change the priority of matching jobs when adding them to the queue. |
 |                    |                   |          | Defaults to jobs current priority, lower number is higher priority. |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
