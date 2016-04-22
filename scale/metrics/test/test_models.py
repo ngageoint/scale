@@ -9,8 +9,148 @@ import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
 import metrics.test.utils as metrics_test_utils
-from metrics.models import MetricsIngest, MetricsJobType
+from metrics.models import MetricsError, MetricsIngest, MetricsJobType
 from metrics.registry import MetricsTypeColumn
+
+
+class TestMetricsError(TestCase):
+    """Tests the MetricsError model logic."""
+
+    def setUp(self):
+        django.setup()
+
+    def test_calculate_none(self):
+        """Tests generating metrics when there are no matching errors."""
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
+
+        self.assertEqual(len(entries), 0)
+
+    def test_calculate_filtered(self):
+        """Tests generating metrics with only certain errors."""
+        job_test_utils.create_job(status='FAILED')
+        job_test_utils.create_job(status='COMPLETED')
+
+        error1 = error_test_utils.create_error(is_builtin=True)
+        job1 = job_test_utils.create_job(error=error1, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job1, error=error1, status=job1.status, ended=job1.ended)
+
+        error2 = error_test_utils.create_error()
+        job2 = job_test_utils.create_job(error=error2, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(error=error2, status=job2.status, ended=job2.ended)
+
+        job3 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
+
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
+
+        self.assertEqual(len(entries), 1)
+
+    def test_calculate_repeated(self):
+        """Tests regenerating metrics for a date that already has metrics."""
+        error = error_test_utils.create_error(is_builtin=True)
+        job = job_test_utils.create_job(status='FAILED', error=error, ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job, error=error, status=job.status, ended=job.ended)
+
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
+
+        self.assertEqual(len(entries), 1)
+
+    def test_calculate_stats(self):
+        """Tests calculating individual statistics for a metrics entry."""
+        error = error_test_utils.create_error(is_builtin=True)
+        job1 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(
+            job=job1, error=error, status=job1.status,
+            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
+            started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=timezone.utc),
+            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=timezone.utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=timezone.utc),
+            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=timezone.utc),
+            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=timezone.utc),
+            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=timezone.utc),
+            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=timezone.utc),
+            ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=timezone.utc),
+        )
+        job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(
+            job=job2, error=error, status=job2.status,
+            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
+            started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=timezone.utc),
+            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=timezone.utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=timezone.utc),
+            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=timezone.utc),
+            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=timezone.utc),
+            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=timezone.utc),
+            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=timezone.utc),
+            ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=timezone.utc),
+        )
+
+        sys_error = error_test_utils.create_error(category='SYSTEM', is_builtin=True)
+        job3a = job_test_utils.create_job(error=sys_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job3a, status=job3a.status, ended=job3a.ended, error=sys_error)
+
+        data_error = error_test_utils.create_error(category='DATA', is_builtin=True)
+        job3b = job_test_utils.create_job(error=data_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job3b, status=job3b.status, ended=job3b.ended, error=data_error)
+
+        algo_error = error_test_utils.create_error(category='ALGORITHM', is_builtin=True)
+        job3c = job_test_utils.create_job(error=algo_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
+
+        MetricsError.objects.calculate(datetime.date(2015, 1, 1))
+
+        entries = MetricsError.objects.filter(occurred=datetime.date(2015, 1, 1))
+        self.assertEqual(len(entries), 4)
+
+        for entry in entries:
+            self.assertEqual(entry.occurred, datetime.date(2015, 1, 1))
+            if entry.error == error:
+                self.assertEqual(entry.total_count, 2)
+            else:
+                self.assertEqual(entry.total_count, 1)
+
+    def test_get_metrics_type(self):
+        """Tests getting the metrics type."""
+        metrics_type = MetricsError.objects.get_metrics_type()
+
+        self.assertEqual(metrics_type.name, 'errors')
+        self.assertEqual(len(metrics_type.filters), 2)
+        self.assertListEqual(metrics_type.choices, [])
+
+    def test_get_metrics_type_choices(self):
+        """Tests getting the metrics type with choices."""
+        error_test_utils.create_error(is_builtin=True)
+        metrics_type = MetricsError.objects.get_metrics_type(include_choices=True)
+
+        self.assertEqual(metrics_type.name, 'errors')
+        self.assertEqual(len(metrics_type.filters), 2)
+        self.assertEqual(len(metrics_type.choices), 1)
+
+    def test_get_plot_data(self):
+        """Tests getting the metrics plot data."""
+        metrics_test_utils.create_error(total_count=1)
+        plot_data = MetricsError.objects.get_plot_data()
+
+        self.assertEqual(len(plot_data), 1)
+
+    def test_get_plot_data_filtered(self):
+        """Tests getting the metrics plot data with filters."""
+        error = error_test_utils.create_error(is_builtin=True)
+        metrics_test_utils.create_error(error=error, occurred=datetime.date(2015, 1, 1), total_count=1)
+        metrics_test_utils.create_error(error=error, occurred=datetime.date(2015, 1, 20), total_count=1)
+        metrics_test_utils.create_error(occurred=datetime.date(2015, 1, 1), total_count=1)
+
+        plot_data = MetricsError.objects.get_plot_data(started=datetime.date(2015, 1, 1),
+                                                       ended=datetime.date(2015, 1, 10),
+                                                       choice_ids=[error.id],
+                                                       columns=[MetricsTypeColumn('total_count')])
+
+        self.assertEqual(len(plot_data), 1)
+        self.assertEqual(len(plot_data[0].values), 1)
 
 
 class TestMetricsIngest(TestCase):
