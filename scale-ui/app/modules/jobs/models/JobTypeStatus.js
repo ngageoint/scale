@@ -90,6 +90,9 @@
             },
             getCellPauseResume: function () {
                 return;
+            },
+            getCellFailures: function () {
+                return _.map(this.getFailures(), 'status');
             }
         };
 

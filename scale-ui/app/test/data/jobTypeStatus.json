@@ -28,6 +28,18 @@
                     "category": null
                 },
                 {
+                     "status": "FAILED",
+                     "count": 154,
+                     "most_recent": "2015-08-31T19:28:30.799Z",
+                     "category": "SYSTEM"
+                },
+                {
+                     "status": "FAILED",
+                     "count": 66,
+                     "most_recent": "2015-08-31T19:28:30.799Z",
+                     "category": "DATA"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 400,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -117,12 +129,6 @@
                 "icon_code": "f017"
             },
             "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 89,
-                    "most_recent": "2015-08-31T19:28:12.674Z",
-                    "category": "SYSTEM"
-                },
                 {
                     "status": "COMPLETED",
                     "count": 657,
@@ -252,6 +258,24 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 46,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "ALGORITHM"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 98,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "SYSTEM"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 32,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "DATA"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 30,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -310,12 +334,6 @@
             },
             "job_counts": [
                 {
-                    "status": "RUNNING",
-                    "count": 51,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
                     "status": "COMPLETED",
                     "count": 189,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -348,6 +366,12 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 26,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "SYSTEM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -373,12 +397,6 @@
                 "icon_code": "f030"
             },
             "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 64,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
                 {
                     "status": "COMPLETED",
                     "count": 50,
@@ -406,16 +424,16 @@
             },
             "job_counts": [
                 {
-                    "status": "RUNNING",
-                    "count": 56,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
+                    "status": "FAILED",
+                    "count": 46,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "ALGORITHM"
                 },
                 {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
+                    "status": "FAILED",
+                    "count": 32,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "DATA"
                 }
             ]
         },
@@ -604,6 +622,18 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 435,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "SYSTEM"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 18,
+                    "most_recent": "2015-08-31T19:28:30.799Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -662,12 +692,6 @@
             },
             "job_counts": [
                 {
-                    "status": "RUNNING",
-                    "count": 36,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
                     "status": "COMPLETED",
                     "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -694,12 +718,6 @@
             },
             "job_counts": [
                 {
-                    "status": "RUNNING",
-                    "count": 25,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
                     "status": "COMPLETED",
                     "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -725,12 +743,6 @@
                 "icon_code": "f08d"
             },
             "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 94,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
                 {
                     "status": "COMPLETED",
                     "count": 50,

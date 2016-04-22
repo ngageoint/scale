@@ -9,7 +9,13 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function(d) {
-                    return d.title + ' ' + d.version + '<br />' + getCellError(d) + '<br />' + getCellTotal(d);
+                    var failures = d.status.getFailures(),
+                        failStr = '';
+
+                    _.forEach(failures, function (f) {
+                        failStr = failStr + _.capitalize(f.status.toLowerCase()) + ' Errors: ' + f.count + '<br />';
+                    });
+                    return d.title + ' ' + d.version + '<br />' + failStr + getCellTotal(d);
                 });
 
         $scope.loading = true;
@@ -251,6 +257,14 @@
             }
         };
 
+        var getCellFailures = function (d) {
+            if (d && d.status) {
+                if (d.toString() === 'JobType') {
+                    return d.status.getCellFailures();
+                }
+            }
+        };
+
         var cellClickHandler = function (target) {
             // track offsetX and offsetY to distinguish between drag and click
             clickOffsetX = d3.event.offsetX;
@@ -292,6 +306,110 @@
                 })
                 .style('fill', function (d) {
                     return getCellFill(d);
+                });
+
+            containerGroup.selectAll('.cell-failure-system')
+                .data($scope.gridData, function (d) { return d.coords; })
+                .transition()
+                .duration(750)
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return $scope.cellWidth / failures.length;
+                    }
+                    return $scope.cellWidth;
+                })
+                .style('fill', function (d) {
+                    var failures = getCellFailures(d);
+                    if (_.findWhere(failures, 'SYSTEM')) {
+                        return '#1F77B4';
+                    }
+                    return 'none';
+                })
+                .style('display', function (d) {
+                    var display = _.findWhere(getCellFailures(d), 'SYSTEM');
+                    return display ? 'block' : 'none';
+                })
+                .style('stroke', function (d) {
+                    return d.toString() === 'JobType' ? '#fff' : 'none';
+                });
+
+            containerGroup.selectAll('.cell-failure-data')
+                .data($scope.gridData, function (d) { return d.coords; })
+                .transition()
+                .duration(750)
+                .attr('x', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (_.findWhere(failures, 'SYSTEM')) {
+                            return $scope.cellWidth / failures.length;
+                        }
+                    }
+                    return 0;
+                })
+                .attr('y', 0)
+                .attr('width', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return $scope.cellWidth / failures.length;
+                    }
+                    return $scope.cellWidth;
+                })
+                .style('fill', function (d) {
+                    var failures = getCellFailures(d);
+                    if (_.findWhere(failures, 'DATA')) {
+                        return '#FF7F0E';
+                    }
+                    return 'none';
+                })
+                .style('display', function (d) {
+                    var display = _.findWhere(getCellFailures(d), 'DATA');
+                    return display ? 'block' : 'none';
+                })
+                .style('stroke', function (d) {
+                    return d.toString() === 'JobType' ? '#fff' : 'none';
+                });
+
+            containerGroup.selectAll('.cell-failure-algorithm')
+                .data($scope.gridData, function (d) { return d.coords; })
+                .transition()
+                .duration(750)
+                .attr('x', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (_.findWhere(failures, 'DATA') && _.findWhere(failures, 'SYSTEM')) {
+                            return ($scope.cellWidth / failures.length) + ($scope.cellWidth / failures.length);
+                        } else if (_.findWhere(failures, 'DATA') && !_.findWhere(failures, 'SYSTEM')) {
+                            return $scope.cellWidth / failures.length;
+                        } else if (_.findWhere(failures, 'SYSTEM') && !_.findWhere(failures, 'DATA')) {
+                            return $scope.cellWidth / failures.length;
+                        }
+                    }
+                    return 0;
+                })
+                .attr('y', 0)
+                .attr('width', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return Math.floor($scope.cellWidth / failures.length);
+                    }
+                    return $scope.cellWidth;
+                })
+                .style('fill', function (d) {
+                    var failures = getCellFailures(d);
+                    if (_.findWhere(failures, 'ALGORITHM')) {
+                        return '#2CA02C';
+                    }
+                    return 'none';
+                })
+                .style('display', function (d) {
+                    var display = _.findWhere(getCellFailures(d), 'ALGORITHM');
+                    return display ? 'block' : 'none';
+                })
+                .style('stroke', function (d) {
+                    return d.toString() === 'JobType' ? '#fff' : 'none';
                 });
 
             containerGroup.selectAll('.cell-text')
@@ -375,6 +493,30 @@
                 .transition()
                 .duration(750);
 
+            cellGroup.append('rect')
+                .attr('class', 'cell-failure-system')
+                .attr('width', $scope.cellWidth - 2)
+                .attr('height', $scope.cellHeight / 7)
+                .attr('x', 0)
+                .attr('y', 0)
+                .style('fill', 'none');
+
+            cellGroup.append('rect')
+                .attr('class', 'cell-failure-data')
+                .attr('width', $scope.cellWidth - 2)
+                .attr('height', $scope.cellHeight / 7)
+                .attr('x', 0)
+                .attr('y', 0)
+                .style('fill', 'none');
+
+            cellGroup.append('rect')
+                .attr('class', 'cell-failure-algorithm')
+                .attr('width', $scope.cellWidth - 2)
+                .attr('height', $scope.cellHeight / 7)
+                .attr('x', 0)
+                .attr('y', 0)
+                .style('fill', 'none');
+
             cellGroup.append('text')
                 .attr('class', 'cell-text')
                 .html(function (d) {
@@ -382,7 +524,7 @@
                 })
                 .attr('text-anchor', 'middle')
                 .attr('x', $scope.cellWidth / 2)
-                .attr('y', ($scope.cellHeight / 2) + 12)
+                .attr('y', ($scope.cellHeight / 2) + 8)
                 .style('display', $scope.enableReveal ? 'block' : 'none');
 
             cellGroup.append('text')
@@ -404,9 +546,9 @@
                 .html(function (d) {
                     return getCellActivity(d);
                 })
-                .attr('text-anchor', 'end')
-                .attr('x', $scope.cellWidth - 2)
-                .attr('y', 14);
+                .attr('text-anchor', 'start')
+                .attr('x', 2)
+                .attr('y', $scope.cellHeight - 4);
 
             var detail = cellGroup.append('text')
                 .attr('class', 'cell-text-detail')
