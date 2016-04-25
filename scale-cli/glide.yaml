@@ -5,3 +5,6 @@ import:
 - package: github.com/op/go-logging
 - package: github.com/fatih/color
 - package: github.com/ghodss/yaml
+- package: github.com/docker/docker
+  subpackages:
+  - builder/dockerfile/parser

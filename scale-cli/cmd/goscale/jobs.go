@@ -1,13 +1,20 @@
 package main
 
 import (
+    "github.com/ngageoint/scale/scale-cli"
     "github.com/codegangsta/cli"
     "os"
+    "errors"
     "strconv"
     "syscall"
     "path/filepath"
     "text/template"
     "strings"
+    "github.com/docker/docker/builder/dockerfile/parser"
+    "bufio"
+    "io"
+    "encoding/json"
+    "os/exec"
 )
 
 // hardcoded defaults
@@ -38,6 +45,120 @@ cat $2/results_manifest.json
     ".dockerignore": `job_type.json
 job_type.yml
 `,
+}
+
+func get_label_value(dockerfile_name string, label_name string) (label_value string, err error) {
+    f, err := os.Open(dockerfile_name)
+    if err != nil {
+        return
+    }
+    defer f.Close()
+    ast, err := parser.Parse(f)
+    if err != nil {
+        return
+    }
+    // root node only has children and represents the entire file
+    for _, n := range ast.Children {
+        if n.Value == "label" {
+            // found a label statement, see if it has our label
+            for nn := n.Next; nn != nil; nn = nn.Next.Next {
+                if nn.Value == label_name {
+                    nn = nn.Next
+                    label_value, err = strconv.Unquote(nn.Value)
+                    return
+                }
+            }
+        }
+    }
+    return "", nil
+}
+
+func get_docker_image_name() (docker_image string, err error) {
+    json_data, err := get_label_value("Dockerfile", "com.ngageoint.scale.job-type")
+    if err != nil {
+        log.Error(err)
+        return
+    } else if json_data == "" {
+        log.Error("Unable to find image name")
+        return
+    }
+
+    var job_type scalecli.JobType
+    err = json.Unmarshal([]byte(json_data), &job_type)
+    if err != nil {
+        log.Error(err)
+        return
+    }
+    docker_image = job_type.DockerImage
+    return
+}
+
+func set_label_value(dockerfile_name string, label_name string, label_value string) error {
+    f, err := os.Open(dockerfile_name)
+    if err != nil {
+        return err
+    }
+    defer f.Close()
+    ast, err := parser.Parse(f)
+    if err != nil {
+        return err
+    }
+    // root node only has children and represents the entire file
+    for _, n := range ast.Children {
+        if n.Value == "label" { // found a label statement, see if it has our label
+            newval := "LABEL " // build the new output as we go
+            first := true
+            found := false
+            for nn := n.Next; nn != nil; nn = nn.Next {
+                if first {
+                    first = false
+                } else {
+                    newval += " \\\n "
+                }
+                newval += nn.Value + "="
+                if nn.Value == label_name {
+                    found = true
+                    nn = nn.Next
+                    newval += strconv.Quote(label_value)
+                } else {
+                    nn = nn.Next
+                    newval += nn.Value
+                }
+            }
+            if found {
+                // replace the value in the file and end
+                outf, err := os.Create(dockerfile_name + ".tmp")
+                if err != nil {
+                    return err
+                }
+                defer outf.Close()
+                f.Seek(0, os.SEEK_SET)
+                rdr := bufio.NewReader(f)
+                for line := 1; ; line++ {
+                    if line == n.StartLine {
+                        outf.WriteString(newval + "\n")
+                    } else {
+                        buf, isPrefix, err := rdr.ReadLine()
+                        if err == io.EOF {
+                            break
+                        } else if err != nil {
+                            return err
+                        } else if isPrefix {
+                            return errors.New("Line "+string(line+1)+" is too long")
+                        }
+                        if line < n.StartLine || line > 1+n.EndLine {
+                            outf.Write(buf)
+                            outf.WriteString("\n")
+                        }
+                    }
+                }
+                os.Remove(dockerfile_name)
+                os.Rename(dockerfile_name + ".tmp", dockerfile_name)
+                break
+            }
+        }
+    }
+    return nil
 }
 
 func jobs_template(c *cli.Context) {
@@ -148,6 +269,67 @@ func jobs_template(c *cli.Context) {
     })
 }
 
+func jobs_commit(c *cli.Context) {
+    // push json into Dockerfile
+    var job_type scalecli.JobType
+    err := Parse_json_or_yaml("job_type", &job_type)
+    if err != nil {
+        log.Error(err)
+    }
+    json_data, err := json.Marshal(job_type)
+    if err != nil {
+        log.Error(err)
+    }
+    err = set_label_value("Dockerfile", "com.ngageoint.scale.job-type", string(json_data))
+    if err != nil {
+        log.Error(err)
+    }
+
+    // build the docker image
+    docker_image, err := get_docker_image_name()
+    if err != nil {
+        log.Error(err)
+        return
+    }
+    log.Info("Building", docker_image)
+    cmd := exec.Command("docker", "build", "-t", docker_image, ".")
+    output, err := cmd.CombinedOutput()
+    if err != nil {
+        log.Error(err, string(output))
+        return
+    }
+    log.Info(string(output))
+
+    if c.Bool("push") {
+        jobs_push(c)
+    }
+}
+
+func jobs_push(c *cli.Context) {
+    // push the image
+    docker_image, err := get_docker_image_name()
+    if err != nil {
+        log.Error(err)
+        return
+    }
+    log.Info("Pushing", docker_image)
+    cmd := exec.Command("docker", "push", docker_image)
+    output, err := cmd.CombinedOutput()
+    if err != nil {
+        log.Error(err, string(output))
+        return
+    }
+    log.Info(string(output))
+}
+
+func jobs_deploy(c *cli.Context) {
+    // pull the image
+    // extract the JSON
+    // check for existing job type
+    // fill in missing data (new version if necessary)
+    // submit the job type
+}
+
 var Jobs_commands = []cli.Command{
     {
         Name: "init",
@@ -174,5 +356,33 @@ var Jobs_commands = []cli.Command{
             },
         },
         Action: jobs_template,
+    },
+    {
+        Name: "commit",
+        Aliases: []string{"build"},
+        Usage: "Updates the job type config, and build the docker image for the current directory.",
+        Flags: []cli.Flag{
+            cli.BoolFlag{
+                Name: "push, p",
+                Usage: "Also perform a push to the docker index after building.",
+            },
+        },
+        Action: jobs_commit,
+    },
+    {
+        Name: "push",
+        Usage: "Push the docker image to the docker index.",
+        Action: jobs_push,
+    },
+    {
+        Name: "deploy",
+        Usage: "Deploy an algorithm to scale, either from the current directory or specify an image name.",
+        Flags: []cli.Flag{
+            cli.StringFlag{
+                Name: "image, i",
+                Usage: "Specify the image to deploy. If not specify, obtain this from the current directory.",
+            },
+        },
+        Action: jobs_deploy,
     },
 }

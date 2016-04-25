@@ -30,7 +30,7 @@ type test_data_type struct {
     Version     string `json:"version"`
     Name        string `json:"name"`
     Interface   `json:"interface"`
-    List        []int `json:list`
+    List        []int `json:"list"`
 }
 type Interface   struct {
     Version    string `json:"version"`
@@ -43,6 +43,8 @@ func TestParse_json_or_yaml(t *testing.T) {
     if err != nil {
         t.Error(err)
     }
+    defer os.RemoveAll(tmpdir)
+
     base_name := filepath.Join(tmpdir, "test")
 
     var pdata test_data_type
@@ -97,6 +99,4 @@ func TestParse_json_or_yaml(t *testing.T) {
     if !reflect.DeepEqual(pdata2, test_data) {
         t.Error("Structs not equal:", pdata2, "!=", test_data)
     }
-
-    os.RemoveAll(tmpdir)
 }
