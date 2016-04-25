@@ -349,6 +349,10 @@ func jobs_deploy(c *cli.Context) {
         log.Error(err, string(output))
         return
     }
+    if strings.TrimSpace(string(output)) == "" {
+        log.Error("Scale job type information not found in", docker_image)
+        return
+    }
     var job_type scalecli.JobType
     err = json.Unmarshal([]byte(output), &job_type)
     if err != nil {
