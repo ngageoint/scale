@@ -1,16 +1,21 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aboutController', function($scope, $location, $window, navService, scaleService) {
+    angular.module('scaleApp').controller('aboutController', function($scope, $location, $window, navService, stateService) {
+        $scope.stateService = stateService;
         $scope.version = '';
 
         var initialize = function() {
             navService.updateLocation('about');
-            scaleService.getVersion().then(function (data) {
-                $scope.version = data.version;
-            });
         };
 
         initialize();
+
+        $scope.$watch('stateService.getVersion()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            $scope.version = newValue;
+        });
     });
 })();
