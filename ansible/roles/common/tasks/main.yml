@@ -39,19 +39,33 @@
   become: true
 
 - name: Install docker
-  yum: name=docker
+  get_url: dest=/usr/bin/docker url='https://get.docker.com/builds/Linux/x86_64/docker-1.10.3'
   become: true
-  when: btrfs
 
-- name: Setup docker
+- name: Set docker permissions
+  file: path=/usr/bin/docker mode=0755
+  become: true
+
+- name: Setup docker config
   template: src=docker.j2 dest='/etc/sysconfig/docker'
   become: true
-  when: btrfs
+
+- name: Setup docker network config
+  copy: src=docker-network dest='/etc/sysconfig/docker-network'
+  become: true
+
+- name: Setup docker storage config
+  copy: src=docker-storage dest='/etc/sysconfig/docker-storage'
+  become: true
 
 - name: Setup docker filestore
   lineinfile: dest=/etc/sysconfig/docker-storage regexp="^DOCKER_STORAGE_OPTIONS=$" line="DOCKER_STORAGE_OPTIONS=-s btrfs"
   become: true
   when: btrfs
+
+- name: Setup docker service file
+  copy: src=docker.service dest='/usr/lib/systemd/system/docker.service'
+  become: true
 
 - name: docker service
   service: name=docker state=started enabled=true

@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 import os
 
 import django
-from django.db.utils import DatabaseError
+from django.db.utils import DatabaseError, OperationalError
 from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
 
 from job.models import Job, JobExecution, JobType
 from job.management.commands.scale_post_steps import Command as PostCommand, DB_EXIT_CODE as POST_DB_EXIT_CODE, \
-    NFS_EXIT_CODE as POST_NFS_EXIT_CODE, IO_EXIT_CODE as POST_IO_EXIT_CODE
+    DB_OP_EXIT_CODE as POST_DB_OP_EXIT_CODE, NFS_EXIT_CODE as POST_NFS_EXIT_CODE, IO_EXIT_CODE as POST_IO_EXIT_CODE
 from job.test import utils as job_utils
 from storage.exceptions import NfsError
 from trigger.models import TriggerEvent
@@ -69,6 +69,22 @@ class TestPostJobSteps(TestCase):
 
         # Check results
         mock_sys_exit.assert_called_with(POST_DB_EXIT_CODE)
+
+    @patch('job.management.commands.scale_post_steps.subprocess.call')
+    @patch('job.management.commands.scale_post_steps.sys.exit')
+    @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
+    def test_scale_post_steps_database_operation_error(self, mock_db, mock_sys_exit, mock_call):
+        '''Tests executing scale_post_steps when a database operation error occurs.'''
+
+        # Set up mocks
+        mock_db.side_effect = OperationalError()
+
+        # Call method to test
+        cmd = PostCommand()
+        cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
+
+        # Check results
+        mock_sys_exit.assert_called_with(POST_DB_OP_EXIT_CODE)
 
     @patch('job.management.commands.scale_post_steps.subprocess.call')
     @patch('job.management.commands.scale_post_steps.sys.exit')

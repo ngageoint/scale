@@ -11,14 +11,13 @@ CACHED_BUILTIN_ERRORS = {}  # {Name: Error model}
 
 
 class ErrorManager(models.Manager):
-    """Provides additional methods for handling errors
-    """
+    """Provides additional methods for handling errors"""
 
     def get_builtin_error(self, name):
         """Returns the builtin error with the given name
 
         :param name: The name of the error
-        :type name: str
+        :type name: string
         :returns: The error with the given name
         :rtype: :class:`error.models.Error`
         """
@@ -35,6 +34,14 @@ class ErrorManager(models.Manager):
         :rtype: :class:`error.models.Error`
         """
         return self.get_builtin_error('database')
+
+    def get_database_operation_error(self):
+        """Returns the error for a database operation problem
+
+        :returns: The database operation error
+        :rtype: :class:`error.models.Error`
+        """
+        return self.get_builtin_error('database-operation')
 
     def get_filesystem_error(self):
         """Returns the error for a filesystem problem
@@ -134,6 +141,8 @@ class Error(models.Model):
     :type description: :class:`django.db.models.CharField`
     :keyword category: The category of the error
     :type category: :class:`django.db.models.CharField`
+    :keyword is_builtin: Where the error was loaded during system installation.
+    :type is_builtin: :class:`django.db.models.BooleanField`
 
     :keyword created: When the error model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -150,6 +159,7 @@ class Error(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.CharField(max_length=250, null=True)
     category = models.CharField(db_index=True, choices=CATEGORIES, default='SYSTEM', max_length=50)
+    is_builtin = models.BooleanField(db_index=True, default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -157,8 +167,7 @@ class Error(models.Model):
     objects = ErrorManager()
 
     def natural_key(self):
-        """Django method to define the natural key for an error as the error
-        name
+        """Django method to define the natural key for an error as the name
 
         :returns: A tuple representing the natural key
         :rtype: tuple(str,)

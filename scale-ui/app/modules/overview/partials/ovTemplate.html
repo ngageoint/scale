@@ -82,7 +82,14 @@
                     <div ng-if="!loadingJobs">
                         <div ng-show="jobError" class="alert alert-danger text-center"><strong>{{ jobError }}</strong> {{ jobErrorStatus }}</div>
                         <div ng-show="!jobError">
-                            <div class="widget-label-left">Performance and activity status for all current job types</div>
+                            <div class="row margin-bottom-md">
+                                <div class="col-xs-6">
+                                    Performance and activity status for all current job types.
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <strong>Error Labels:</strong> <span class="label label-system">System</span> <span class="label label-data">Data</span> <span class="label label-algorithm">Algorithm</span>
+                                </div>
+                            </div>
                             <ais-grid-chart data="jobData" icons="true" scale="1" mode="tooltip"></ais-grid-chart>
                         </div>
                     </div>

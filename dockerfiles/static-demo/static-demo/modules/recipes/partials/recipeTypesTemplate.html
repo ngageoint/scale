@@ -1,0 +1,30 @@
+<ais-header name="'Recipe Types'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+
+<div class="row">
+    <div ng-class="masterClass">
+        <div class="row master-controls">
+            <div ng-class="newBtnContainerClass" ng-show="!minimizeMaster">
+                <button class="btn-sm" ng-class="addBtnClass" ng-click="newRecipeType()"><i class="fa" ng-class="addBtnIcon"></i> {{ addBtnText }}</button>
+            </div>
+            <div ng-class="minimizeBtnContainerClass">
+                <button class="btn btn-default btn-sm" ng-click="toggleMaster()"><i ng-class="minimizeBtnClass"></i></button>
+            </div>
+        </div>
+        <div class="master-container" ng-show="!minimizeMaster" style="{{ masterContainerStyle }}">
+            <ul class="list-unstyled">
+                <li ng-repeat="recipeType in recipeTypes" ng-class="{ active: activeRecipeType.id === recipeType.id }" ng-click="loadRecipeType(recipeType.id)">{{ recipeType.title + ' ' + recipeType.version }}</li>
+            </ul>
+        </div>
+    </div>
+    <div ng-class="detailClass">
+        <div class="text-center" ng-if="!activeRecipeType">
+            <h2>Select a recipe type to view its details.</h2>
+        </div>
+        <div ng-if="activeRecipeType">
+            <div class="detail-container no-tabs" style="{{ detailContainerStyle }}">
+                <ais-scale-recipe-graph-viewer recipe-type="activeRecipeType" allow-edit="true" has-container="true"></ais-scale-recipe-graph-viewer>
+            </div>
+        </div>
+    </div>
+</div>
+

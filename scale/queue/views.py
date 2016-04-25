@@ -161,12 +161,14 @@ class RequeueJobsView(GenericAPIView):
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_categories', required=False)
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
 
         priority = rest_util.parse_int(request, 'priority', required=False)
 
         # Fetch all the jobs matching the filters
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
-                                    job_type_categories)
+        jobs = Job.objects.get_jobs(started=started, ended=ended, status=job_status, job_ids=job_ids,
+                                    job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                    job_type_categories=job_type_categories, error_categories=error_categories)
         if not jobs:
             raise Http404
 

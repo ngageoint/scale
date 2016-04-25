@@ -4,22 +4,24 @@ from __future__ import unicode_literals
 import os
 
 import django
-from django.db.utils import DatabaseError
+from django.db.utils import DatabaseError, OperationalError
 from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
 
 from job.models import Job, JobExecution, JobType
 from job.management.commands.scale_pre_steps import Command as PreCommand, DB_EXIT_CODE as PRE_DB_EXIT_CODE, \
-    NFS_EXIT_CODE as PRE_NFS_EXIT_CODE, IO_EXIT_CODE as PRE_IO_EXIT_CODE
+    DB_OP_EXIT_CODE as PRE_DB_OP_EXIT_CODE, NFS_EXIT_CODE as PRE_NFS_EXIT_CODE, IO_EXIT_CODE as PRE_IO_EXIT_CODE
 from job.test import utils as job_utils
 from storage.exceptions import NfsError
 from trigger.models import TriggerEvent
 
 FILLED_IN_CMD = 'run test filled in'
 
+
 def new_fill_in_command_dirs(job_exe):
     return FILLED_IN_CMD
+
 
 def new_populate_output_args(config, args):
     for arg_name in args:
@@ -84,6 +86,22 @@ class TestPreJobSteps(TestCase):
 
         # Check results
         mock_sys_exit.assert_called_with(PRE_DB_EXIT_CODE)
+
+    @patch('job.management.commands.scale_pre_steps.sys.exit')
+    @patch('job.management.commands.scale_pre_steps.JobExecution.objects.select_related')
+    @patch('job.management.commands.scale_pre_steps.os.makedirs')
+    def test_scale_pre_steps_database_operation_error(self, mock_makedirs, mock_db, mock_sys_exit):
+        '''Tests executing scale_pre_steps when a database operation error occurs.'''
+
+        # Set up mocks
+        mock_db.side_effect = OperationalError()
+
+        # Call method to test
+        cmd = PreCommand()
+        cmd.run_from_argv(['manage.py', 'scale_pre_steps', '-i', str(self.job_exe.id)])
+
+        # Check results
+        mock_sys_exit.assert_called_with(PRE_DB_OP_EXIT_CODE)
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')

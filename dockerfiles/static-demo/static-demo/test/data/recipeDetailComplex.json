@@ -1,0 +1,314 @@
+{
+    "id": 2,
+    "name": "Complex Recipe",
+    "version": "1.0",
+    "description": "Data mockup of a complex Scale recipe",
+    "is_active": true,
+    "recipe_type": {
+        "id": 2
+    },
+    "definition": {
+        "input_data": [
+            {
+                "media_types": [
+                    "image/x-hdf5-image"
+                ],
+                "type": "file",
+                "name": "input_file"
+            }
+        ],
+        "version": "1.0",
+        "jobs": [
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "alfa",
+                "job_type": {
+                    "id": 1,
+                    "name": "alfa",
+                    "version": "1.1"
+                }
+            },
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "bravo",
+                "job_type": {
+                    "id": 2,
+                    "name": "bravo",
+                    "version": "1.1"
+                }
+            },
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "charlie",
+                "job_type": {
+                    "id": 3,
+                    "name": "charlie",
+                    "version": "1.1"
+                }
+            },
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "delta",
+                "job_type": {
+                    "id": 4,
+                    "name": "delta",
+                    "version": "1.1"
+                },
+                "dependencies": []
+            },
+            {
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ],
+                "name": "echo",
+                "job_type": {
+                    "id": 5,
+                    "name": "echo",
+                    "version": "1.1"
+                },
+                "dependencies": [
+                    {
+                        "name": "bravo",
+                        "connections": [
+                            {
+                                "output": "kmloutputfile",
+                                "input": "thminputfile"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "created": "2015-06-15T19:03:26.346Z",
+    "last_modified": "2015-06-15T19:03:26.346Z",
+    "archived": null,
+    "trigger_rule": {
+        "id": 1,
+        "type": "PARSE",
+        "name": "my-job-type-recipe",
+        "is_active": true,
+        "configuration": {
+            "version": "1.0",
+            "data": {
+                "workspace_name": "products",
+                "input_data_name": "input_file"
+            },
+            "condition": {
+                "media_type": "image/png",
+                "data_types": [
+                    "My-Type"
+                ]
+            }
+        }
+    },
+    "job_types": [
+        {
+            "id": 1,
+            "name": "alfa",
+            "version": "1.1",
+            "title": "Alfa",
+            "description": "Description of alfa",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f13d",
+            "job_type_interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "lowofinputfile"
+                    },
+                    {
+                        "media_types": [
+                            "image/png"
+                        ],
+                        "type": "file",
+                        "name": "lowoftweaker"
+                    }
+                ],
+                "version": "1.0",
+                "command": "Foo",
+                "output_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "lowofoutputfile"
+                    }
+                ],
+                "command_arguments": ""
+            }
+        },
+        {
+            "id": 2,
+            "name": "bravo",
+            "version": "1.1",
+            "title": "Bravo",
+            "description": "Description of bravo",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0e7",
+            "job_type_interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "kmlinputfile"
+                    }
+                ],
+                "version": "1.0",
+                "command": "Foo",
+                "output_data": [
+                    {
+                        "media_type": "image/x-hdf5-image",
+                        "type": "file",
+                        "name": "kmloutputfile"
+                    }
+                ],
+                "command_arguments": ""
+            }
+        },
+        {
+            "id": 3,
+            "name": "charlie",
+            "version": "1.1",
+            "title": "Charlie",
+            "description": "Description of charlie",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f140",
+            "job_type_interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "combinerinputfile"
+                    }
+                ],
+                "version": "1.0",
+                "command": "Foo",
+                "output_data": [
+                    {
+                        "media_type": "image/x-hdf5-image",
+                        "type": "file",
+                        "name": "combineroutputfile"
+                    }
+                ],
+                "command_arguments": ""
+            }
+        },
+        {
+            "id": 4,
+            "name": "delta",
+            "version": "1.1",
+            "title": "Delta",
+            "description": "Description of delta",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f017",
+            "job_type_interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "thminputfile"
+                    }
+                ],
+                "version": "1.0",
+                "command": "Foo",
+                "output_data": [
+                    {
+                        "media_type": "image/x-hdf5-image",
+                        "type": "file",
+                        "name": "thmoutputfile"
+                    }
+                ],
+                "command_arguments": ""
+            }
+        },
+        {
+            "id": 5,
+            "name": "echo",
+            "version": "1.1",
+            "title": "Echo",
+            "description": "Description of echo",
+            "category": "system",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0c2",
+            "job_type_interface": {
+                "input_data": [
+                    {
+                        "media_types": [
+                            "image/x-hdf5-image"
+                        ],
+                        "type": "file",
+                        "name": "thminputfile"
+                    }
+                ],
+                "version": "1.0",
+                "command": "Foo",
+                "output_data": [
+                    {
+                        "media_type": "image/x-hdf5-image",
+                        "type": "file",
+                        "name": "thmoutputfile"
+                    }
+                ],
+                "command_arguments": ""
+            }
+        }
+    ]
+}

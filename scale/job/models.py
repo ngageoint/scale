@@ -107,7 +107,7 @@ class JobManager(models.Manager):
         return job
 
     def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, order=None):
+                 job_type_categories=None, error_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -124,6 +124,8 @@ class JobManager(models.Manager):
         :type job_type_names: list[str]
         :param job_type_categories: Query jobs of the type associated with the category.
         :type job_type_categories: list[str]
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: list[str]
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of jobs that match the time range.
@@ -150,6 +152,8 @@ class JobManager(models.Manager):
             jobs = jobs.filter(job_type__name__in=job_type_names)
         if job_type_categories:
             jobs = jobs.filter(job_type__category__in=job_type_categories)
+        if error_categories:
+            jobs = jobs.filter(error__category__in=error_categories)
 
         # Apply sorting
         if order:
@@ -1308,7 +1312,7 @@ class JobExecution(models.Model):
         """Get the Docker params as a list of lists. Performs some basic validation.
 
         :returns: The Docker params as a list of lists
-        :rtype: list
+        :rtype: []
         """
 
         if self.docker_params is None or len(self.docker_params) == 0:

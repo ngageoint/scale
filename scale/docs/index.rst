@@ -13,7 +13,7 @@ Scale Documentation
    overview/index
    cli/index
    interface/index
-   algorithms/index
+   algorithm_integration/index
    architecture/index
    install/index
    development/index

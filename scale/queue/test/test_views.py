@@ -472,6 +472,25 @@ class TestRequeueJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job_3.job_type.category)
 
+    def test_error_categories(self):
+        """Tests successfully calling the requeue view filtered by job error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        json_data = {
+            'error_categories': [error.category],
+        }
+
+        url = '/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+
     def test_priority(self):
         """Tests successfully calling the requeue view changing the job priority."""
 

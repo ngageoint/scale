@@ -1,0 +1,30 @@
+{
+    "queue_depth": 1234,
+    "master": {
+        "hostname": "localhost",
+        "port": 5050,
+        "is_online": true
+    },
+    "resources": {
+        "scheduled": {
+            "mem": 307200.0,
+            "disk": 209715200.0,
+            "cpus": 64.0
+        },
+        "total": {
+            "mem": 1048576.0,
+            "disk": 1073741824.0,
+            "cpus": 128.0
+        },
+        "used": {
+            "mem": 307200.0,
+            "disk": 209715200.0,
+            "cpus": 64.0
+        }
+    },
+    "scheduler": {
+        "is_paused": false,
+        "hostname": "localhost",
+        "is_online": true
+    }
+}

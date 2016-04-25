@@ -1,0 +1,33 @@
+{
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 2,
+      "name": "products",
+      "title": "Products",
+      "description": "Products Workspace",
+      "base_url": "http://host.com/products",
+      "is_active": true,
+      "used_size": 0,
+      "total_size": 0,
+      "created": "2015-10-05T21:26:04.876Z",
+      "archived": null,
+      "last_modified": "2015-10-05T21:26:04.876Z"
+    },
+    {
+      "id": 1,
+      "name": "rs",
+      "title": "Raw Source",
+      "description": "Raw Source Workspace",
+      "base_url": "http://host.com/rs",
+      "is_active": true,
+      "used_size": 0,
+      "total_size": 0,
+      "created": "2015-10-05T21:26:04.855Z",
+      "archived": null,
+      "last_modified": "2015-10-05T21:26:04.855Z"
+    }
+  ]
+}
