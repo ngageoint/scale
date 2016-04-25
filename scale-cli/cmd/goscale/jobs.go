@@ -324,7 +324,40 @@ func jobs_push(c *cli.Context) {
 
 func jobs_deploy(c *cli.Context) {
     // pull the image
+    err := error(nil) // some weird scoping issues if we don't declare here
+    docker_image := c.String("image")
+    if docker_image == "" {
+        docker_image, err = get_docker_image_name()
+        if err != nil {
+            log.Error(err)
+            return
+        }
+    }
+    if c.Bool("pull") {
+        log.Info("Pulling", docker_image)
+        cmd := exec.Command("docker", "pull", docker_image)
+        _, err = cmd.CombinedOutput()
+        if err != nil {
+            log.Warning("Unable to pull the image. Checking if it is locally available.")
+        }
+    }
+
     // extract the JSON
+    cmd := exec.Command("docker", "inspect", "-f", "{{(index .Config.Labels \"com.ngageoint.scale.job-type\")}}", docker_image)
+    output, err := cmd.CombinedOutput()
+    if err != nil {
+        log.Error(err, string(output))
+        return
+    }
+    var job_type scalecli.JobType
+    err = json.Unmarshal([]byte(output), &job_type)
+    if err != nil {
+        log.Error(err)
+        return
+    }
+
+    log.Info(job_type) // debug outout
+
     // check for existing job type
     // fill in missing data (new version if necessary)
     // submit the job type
@@ -381,6 +414,10 @@ var Jobs_commands = []cli.Command{
             cli.StringFlag{
                 Name: "image, i",
                 Usage: "Specify the image to deploy. If not specify, obtain this from the current directory.",
+            },
+            cli.BoolFlag{
+                Name: "pull, p",
+                Usage: "Should the image be pulled first?",
             },
         },
         Action: jobs_deploy,
