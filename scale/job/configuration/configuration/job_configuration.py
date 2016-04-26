@@ -127,7 +127,7 @@ class JobConfiguration(object):
         :raises :class:`job.configuration.configuration.exceptions.InvalidJobConfiguration`: If the JSON is invalid
         """
 
-        if configuration is None:
+        if not configuration:
             configuration = {'job_task': {'docker_params': []}}
         self._configuration = configuration
         self._pre_task_workspace_names = set()
@@ -144,6 +144,33 @@ class JobConfiguration(object):
         if self._configuration['version'] != CURRENT_VERSION:
             raise InvalidJobConfiguration('%s is an unsupported version number' % self._configuration['version'])
         self._validate_workspace_names()
+
+    def add_job_task_docker_param(self, param):
+        """Adds a Docker parameter to this job's job task
+
+        :param param: The Docker parameter to add
+        :type param: :class:`job.configuration.configuration.job_configuration.DockerParam`
+        """
+
+        self._configuration['job_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
+
+    def add_post_task_docker_param(self, param):
+        """Adds a Docker parameter to this job's post task
+
+        :param param: The Docker parameter to add
+        :type param: :class:`job.configuration.configuration.job_configuration.DockerParam`
+        """
+
+        self._configuration['post_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
+
+    def add_pre_task_docker_param(self, param):
+        """Adds a Docker parameter to this job's pre task
+
+        :param param: The Docker parameter to add
+        :type param: :class:`job.configuration.configuration.job_configuration.DockerParam`
+        """
+
+        self._configuration['pre_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
 
     def add_job_task_workspace(self, name, mode):
         """Adds a needed workspace to this job's job task
@@ -192,6 +219,45 @@ class JobConfiguration(object):
         if name in self._pre_task_workspace_names:
             raise InvalidJobConfiguration('Duplicate workspace %s in pre task' % name)
         self._configuration['pre_task']['workspaces'].append({'name': name, 'mode': mode})
+
+    def get_job_task_docker_params(self):
+        """Returns the Docker parameters needed for the job task
+
+        :returns: The job task Docker parameters
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
+        """
+
+        params = []
+        for param_dict in self._configuration['job_task']['docker_params']:
+            param = DockerParam(param_dict['flag'], param_dict['value'])
+            params.append(param)
+        return params
+
+    def get_post_task_docker_params(self):
+        """Returns the Docker parameters needed for the post task
+
+        :returns: The post task Docker parameters
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
+        """
+
+        params = []
+        for param_dict in self._configuration['post_task']['docker_params']:
+            param = DockerParam(param_dict['flag'], param_dict['value'])
+            params.append(param)
+        return params
+
+    def get_pre_task_docker_params(self):
+        """Returns the Docker parameters needed for the pre task
+
+        :returns: The pre task Docker parameters
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
+        """
+
+        params = []
+        for param_dict in self._configuration['pre_task']['docker_params']:
+            param = DockerParam(param_dict['flag'], param_dict['value'])
+            params.append(param)
+        return params
 
     def get_job_task_workspaces(self):
         """Returns the workspaces needed for the job task

@@ -24,6 +24,7 @@ class PreTask(Task):
 
         self._uses_docker = False
         self._docker_image = None
+        self._docker_params = job_exe.get_job_configuration().get_post_task_docker_params()
         self._is_docker_privileged = False
         self._command = '%s %s scale_pre_steps' % (settings.settings.PYTHON_EXECUTABLE, settings.settings.MANAGE_FILE)
         self._command_arguments = '-i %i' % job_exe.id

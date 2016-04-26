@@ -88,10 +88,10 @@ class Task(object):
 
     @property
     def docker_params(self):
-        """Returns the Docker parameters used to run this task.
+        """Returns the Docker parameters used to run this task
 
         :returns: The Docker parameters
-        :rtype: [[str, str]]
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
         return self._docker_params

@@ -980,6 +980,7 @@ class JobExecutionManager(models.Manager):
             interface = job.get_job_interface()
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
+            job_exe.configuration = job.configuration
             job_exes.append(job_exe)
 
         # Create job executions and re-query to get ID fields
@@ -1047,30 +1048,6 @@ class JobExecutionManager(models.Manager):
             job_exes.append(job_exe)
 
         return job_exes
-
-    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed. Do so the next
-    # time we make other job_exe model changes. At the same time, also rename pre_completed, job_completed, etc to
-    # pre_ended, job_ended, etc. This will force changes through the REST API though, so coordinate with UI
-    @transaction.atomic
-    def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
-        """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param pre_task_id: The pre-task ID, possibly None
-        :type pre_task_id: str
-        :param job_task_id: The job-task ID, possibly None
-        :type job_task_id: str
-        :param post_task_id: The post-task ID, possibly None
-        :type post_task_id: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.pre_task_id = pre_task_id
-        job_exe.job_task_id = job_task_id
-        job_exe.post_task_id = post_task_id
-        job_exe.save()
 
     def task_ended(self, job_exe_id, task, when, exit_code, stdout, stderr):
         """Updates the given job execution to reflect that the given task has ended
@@ -1195,9 +1172,8 @@ class JobExecution(models.Model):
     :type command_arguments: :class:`django.db.models.CharField`
     :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-        See the mesos prototype file for further information.
-    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
+    :keyword configuration: JSON description describing the configuration for how the job execution should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
@@ -1218,8 +1194,6 @@ class JobExecution(models.Model):
     :keyword requires_cleanup: Whether this job execution still requires cleanup on the node
     :type requires_cleanup: :class:`django.db.models.BooleanField`
 
-    :keyword pre_task_id: The unique ID of the pre-task
-    :type pre_task_id: :class:`django.db.models.CharField`
     :keyword pre_started: When the pre-task was started
     :type pre_started: :class:`django.db.models.DateTimeField`
     :keyword pre_completed: When the pre-task was completed
@@ -1227,8 +1201,6 @@ class JobExecution(models.Model):
     :keyword pre_exit_code: The exit code of the pre-task
     :type pre_exit_code: :class:`django.db.models.IntegerField`
 
-    :keyword job_task_id: The unique ID of the task running the job
-    :type job_task_id: :class:`django.db.models.CharField`
     :keyword job_started: When the main job task started running
     :type job_started: :class:`django.db.models.DateTimeField`
     :keyword job_completed: When the main job task was completed
@@ -1236,8 +1208,6 @@ class JobExecution(models.Model):
     :keyword job_exit_code: The exit code of the main job task
     :type job_exit_code: :class:`django.db.models.IntegerField`
 
-    :keyword post_task_id: The unique ID of the post-task
-    :type post_task_id: :class:`django.db.models.CharField`
     :keyword post_started: When the post-task was started
     :type post_started: :class:`django.db.models.DateTimeField`
     :keyword post_completed: When the post-task was completed
@@ -1291,7 +1261,7 @@ class JobExecution(models.Model):
 
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
-    docker_params = djorm_pgjson.fields.JSONField(null=True)
+    configuration = djorm_pgjson.fields.JSONField()
 
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     environment = djorm_pgjson.fields.JSONField()
@@ -1303,18 +1273,17 @@ class JobExecution(models.Model):
     requires_cleanup = models.BooleanField(default=False, db_index=True)
     cleanup_job = models.ForeignKey('job.Job', related_name='cleans', blank=True, null=True, on_delete=models.PROTECT)
 
-    pre_task_id = models.CharField(blank=True, max_length=50, null=True)
+    # TODO: Rename pre_completed, job_completed, etc to pre_ended, job_ended, etc. This will force changes through the
+    # REST API though, so coordinate with UI
     pre_started = models.DateTimeField(blank=True, null=True)
     pre_completed = models.DateTimeField(blank=True, null=True)
     pre_exit_code = models.IntegerField(blank=True, null=True)
 
-    job_task_id = models.CharField(blank=True, max_length=50, null=True)
     job_started = models.DateTimeField(blank=True, null=True)
     job_completed = models.DateTimeField(blank=True, null=True)
     job_exit_code = models.IntegerField(blank=True, null=True)
     job_metrics = djorm_pgjson.fields.JSONField(null=True)
 
-    post_task_id = models.CharField(blank=True, max_length=50, null=True)
     post_started = models.DateTimeField(blank=True, null=True)
     post_completed = models.DateTimeField(blank=True, null=True)
     post_exit_code = models.IntegerField(blank=True, null=True)
@@ -1345,21 +1314,6 @@ class JobExecution(models.Model):
 
         return self.job.job_type.docker_image
 
-    def get_docker_params(self):
-        """Get the Docker params as a list of lists. Performs some basic validation.
-
-        :returns: The Docker params as a list of lists
-        :rtype: []
-        """
-
-        if self.docker_params is None or len(self.docker_params) == 0:
-            return []
-        if type(self.docker_params) is not type([]):
-            return []
-        if False in map(lambda x: type(x) is type([]) and len(x) == 2, self.docker_params):
-            return []
-        return self.docker_params
-
     def get_error_interface(self):
         """Returns the error interface for this job execution
 
@@ -1368,6 +1322,15 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.get_error_interface()
+
+    def get_job_configuration(self):
+        """Returns the configuration for this job
+
+        :returns: The configuration for this job
+        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def get_job_environment(self):
         """Returns the environment data for this job
