@@ -142,6 +142,13 @@
             return getSync(statusOverrideUrl);
         });
 
+        // Version
+        var versionOverrideUrl = 'test/data/version.json';
+        var versionRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'v3/version/', 'i');
+        $httpBackend.whenGET(versionRegex).respond(function () {
+            return getSync(versionOverrideUrl);
+        });
+
         // Workspaces
         var workspacesOverrideUrl = 'test/data/workspaces.json';
         var workspacesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');

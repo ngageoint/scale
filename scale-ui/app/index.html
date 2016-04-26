@@ -19,12 +19,18 @@
 <body ng-app="scaleApp" ng-strict-di>
 
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12 col-sm-1 nav-ctr tall">
+        <div class="row view">
+            <div class="col-xs-12 col-sm-1 nav-ctr">
                 <scale-navigation></scale-navigation>
             </div>
-            <div class="col-xs-12 col-sm-11 view tall">
+            <div class="col-xs-12 col-sm-11 content-ctr">
                 <ng-view></ng-view>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1 hidden-xs footer-ctr">&nbsp;</div>
+            <div class="col-xs-12 col-sm-11 footer-ctr">
+                <scale-footer></scale-footer>
             </div>
         </div>
     </div>

@@ -38,9 +38,8 @@
 }
 
 body, html {
-    background: @nav_bg;
     font-family: 'Roboto', sans-serif;
-    height: 100%;
+    background: @view_bg;
 }
 
 a {
@@ -78,7 +77,29 @@ hr {
 }
 
 .view {
-    background: @view_bg;
+    overflow: hidden;
+    min-height: 96vh;
+
+    .nav-ctr, .content-ctr {
+        margin-bottom: -99999px;
+        padding-bottom: 99999px;
+    }
+
+    .nav-ctr {
+        background: @nav_bg;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .content-ctr {
+        background: @view_bg;
+    }
+}
+
+.footer-ctr {
+    padding: 10px 0;
+    color: #aaa;
+    background: @nav_bg;
 }
 
 // STATUS STYLES

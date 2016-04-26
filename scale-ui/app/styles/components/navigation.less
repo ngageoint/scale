@@ -1,8 +1,7 @@
 @import 'colors';
 
-.nav {
+nav {
     color: @nav_txt;
-    min-height: 100%;
 
     .nav-section {
         border-bottom: 1px solid lighten(@nav_bg, 15%);
@@ -10,6 +9,10 @@
 
         ~ .nav-section {
             border-top: 1px solid darken(@nav_bg, 15%);
+        }
+
+        &:last-of-type {
+            border-bottom: none;
         }
     }
 
@@ -21,11 +24,6 @@
         margin: 1.0em auto;
         width: 90%;
     }
-}
-
-.nav-ctr {
-    padding-right: 0;
-    padding-left: 0;
 }
 
 .nav-logo {
