@@ -1,0 +1,7 @@
+{
+    "scaleConfigLocal": {
+        "urls": {
+            "apiPrefix": "http://10.4.4.10/api/"
+        }
+    }
+}
