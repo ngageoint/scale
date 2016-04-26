@@ -4,13 +4,9 @@ This is the start of a Scale command line client written in go.
 
 Building
 --------
-If you already checked out the source to (for example) ~/scale then:
- 1. mkdir -p ~/scale/src/github.com/ngageoint
- 1. ln -s ~/scale ~/scale/src/github.com/ngageoint/scale
- 1. export GOPATH=~/scale
- 1. export PATH=$GOPATH/bin:$PATH
- 1. cd $GOPATH/src/github.com/ngageoint/scale/scale-cli
- 1. glide install
+Assuming you already checked out the source and have a functional install of glide and go:
+ 1. cd scale/scale-cli
+ 1. source init-env.sh
  1. cd cmd/goscale
  1. go install
 
