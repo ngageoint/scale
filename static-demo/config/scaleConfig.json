@@ -1,5 +1,6 @@
 {
     "scaleConfig": {
+        "majorVersion": 3,
         "colors": {
             "emo_1": "#556270",
             "emo_2": "#4ecdc4",
@@ -189,6 +190,7 @@
             ]
         },
         "headerOffset": 160,
+        "footerOffset": 40,
         "dateFilterOffset": 65
     }
 }

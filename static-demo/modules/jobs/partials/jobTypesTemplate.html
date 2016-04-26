@@ -1,8 +1,8 @@
 <ais-header name="'Job Types (' + jobTypeCount + ')'" show-subnav="true" subnav-links="subnavLinks" loading="loading"></ais-header>
 
 <div class="row">
-    <div class="col-xs-3">
-        <div class="master-container" style="{{ masterContainerStyle }}">
+    <div class="master vh_height72 vmin_margin-bottom2 col-xs-3">
+        <div class="master-container">
             <ul class="list-unstyled">
                 <li ng-repeat="jobType in jobTypes" ng-class="{ active: activeJobType.id === jobType.id }" ng-click="viewDetails(jobType.id)">
                     <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
@@ -11,15 +11,13 @@
         </div>
     </div>
     <div class="col-xs-9">
-        <div class="text-center" ng-show="selectJobClass === 'visible'">
-            <h2>Select a job type to view its performance and other details.</h2>
-        </div>
-        <div ng-class="jobDetailsClass">
+        <h2 ng-if="!activeJobType" class="text-center">Select a job type to view its performance and other details.</h2>
+        <div class="detail vh_height72 vmin_margin-bottom2" ng-class="jobDetailsClass">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a data-target="#details" data-toggle="tab">Details</a></li>
                 <li><a data-target="#errors" data-toggle="tab" ng-show="showJobTypeErrors">Errors</a></li>
             </ul>
-            <div class="detail-container" style="{{ detailContainerStyle }}">
+            <div class="detail-container">
                 <h3>
                     <span ng-bind-html="activeJobType.getIcon()"></span>
                     {{ activeJobType.title + ' ' + activeJobType.version }}
