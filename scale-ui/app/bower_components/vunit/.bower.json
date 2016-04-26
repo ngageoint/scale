@@ -1,0 +1,38 @@
+{
+  "name": "vunit",
+  "description": "A vanilla JS alternative to vh/vw and vmin/vmax CSS units.",
+  "license": "MIT",
+  "main": "src/vunit.js",
+  "author": "João Cunha <joao@joaocunha.net> (http://twitter.com/joaocunha)",
+  "homepage": "http://joaocunha.github.io/vunit/",
+  "moduleType": "globals",
+  "keywords": [
+    "js",
+    "javascript",
+    "viewport",
+    "css",
+    "vh",
+    "vw",
+    "vmin",
+    "vmax"
+  ],
+  "ignore": [
+    "*.md",
+    "example"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:joaocunha/vunit.git"
+  },
+  "version": "0.2.0",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "3096e62e9a3720aae8440f7ec972c467519e63b7"
+  },
+  "_source": "https://github.com/joaocunha/vunit.git",
+  "_target": "^0.2.0",
+  "_originalSource": "vunit",
+  "_direct": true
+}
