@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-xs-3">
-        <div class="master-container" style="{{ masterContainerStyle }}">
+        <div class="master-container">
             <ul class="list-unstyled">
                 <li ng-repeat="jobType in jobTypes" ng-class="{ active: activeJobType.id === jobType.id }" ng-click="viewDetails(jobType.id)">
                     <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
@@ -19,7 +19,7 @@
                 <li class="active"><a data-target="#details" data-toggle="tab">Details</a></li>
                 <li><a data-target="#errors" data-toggle="tab" ng-show="showJobTypeErrors">Errors</a></li>
             </ul>
-            <div class="detail-container" style="{{ detailContainerStyle }}">
+            <div class="detail-container">
                 <h3>
                     <span ng-bind-html="activeJobType.getIcon()"></span>
                     {{ activeJobType.title + ' ' + activeJobType.version }}

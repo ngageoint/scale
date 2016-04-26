@@ -106,7 +106,7 @@
 
         var enableSaveRecipe = function () {
             $scope.recipeType.modified = true;
-            $scope.saveBtnClass = 'btn-success';
+            // $scope.saveBtnClass = 'btn-success';
         };
 
         var disableSaveRecipe = function () {
@@ -911,11 +911,11 @@
                 hasContainer: '='
             },
             link: function (scope) {
-                angular.element(document).ready(function () {
-                    var elHeight = document.getElementsByClassName('recipe-viewer-title')[0].scrollHeight;
-                    scope.detailMaxHeight = scope.$parent.detailMaxHeight ? scope.$parent.detailMaxHeight - elHeight : 700;
-                    scope.detailContainerStyle = 'height: ' + scope.detailMaxHeight + 'px; max-height: ' + scope.detailMaxHeight + 'px; overflow-y: auto;';
-                });
+                // angular.element(document).ready(function () {
+                //     var elHeight = document.getElementsByClassName('recipe-viewer-title')[0].scrollHeight;
+                //     scope.detailMaxHeight = scope.$parent.detailMaxHeight ? scope.$parent.detailMaxHeight - elHeight : 700;
+                //     scope.detailContainerStyle = 'height: 62vh; max-height: 62vh; overflow-y: auto;';
+                // });
             }
         };
 

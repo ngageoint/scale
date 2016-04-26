@@ -3,10 +3,6 @@
 
     angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService) {
         $scope.loading = true;
-        $scope.masterContainerStyle = '';
-        $scope.detailContainerStyle = '';
-        $scope.masterMaxHeight = 0;
-        $scope.detailMaxHeight = 0;
         $scope.recipeTypes = [];
         $scope.recipeTypeIds = [];
         $scope.requestedRecipeTypeId = parseInt($routeParams.id);
@@ -30,7 +26,7 @@
         $scope.newBtnContainerClass = 'hidden';
         $scope.minimizeBtnContainerClass = 'hidden';
         $scope.minimizeBtnClass = 'fa fa-chevron-left';
-        $scope.user = $rootScope.user;
+        $scope.user = userService.getUserCreds();
 
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         subnavService.setCurrentPath('recipes/types');
@@ -146,16 +142,6 @@
         angular.element(document).ready(function () {
             $scope.newBtnContainerClass = $rootScope.user ? 'col-xs-6' : 'hidden';
             $scope.minimizeBtnContainerClass = $rootScope.user ? 'col-xs-6 text-right' : 'col-xs-12 text-right';
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                masterOffset = scaleConfig.headerOffset + document.getElementsByClassName('master-controls')[0].scrollHeight,
-                detailOffset = scaleConfig.headerOffset;
-
-            $scope.masterMaxHeight = viewport.height - masterOffset;
-            $scope.detailMaxHeight = viewport.height - detailOffset;
-
-            $scope.masterContainerStyle = 'height: ' + $scope.masterMaxHeight + 'px; max-height: ' + $scope.masterMaxHeight + 'px; overflow-y: auto;';
-            $scope.detailContainerStyle = 'height: ' + $scope.detailMaxHeight + 'px; max-height: ' + $scope.detailMaxHeight + 'px';
         });
     });
 })();
