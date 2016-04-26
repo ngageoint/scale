@@ -3,6 +3,8 @@ package main
 import (
     "github.com/ngageoint/scale/scale-cli"
     "github.com/codegangsta/cli"
+    "github.com/fatih/color"
+    "github.com/docker/docker/builder/dockerfile/parser"
     "os"
     "errors"
     "strconv"
@@ -10,7 +12,6 @@ import (
     "path/filepath"
     "text/template"
     "strings"
-    "github.com/docker/docker/builder/dockerfile/parser"
     "bufio"
     "io"
     "encoding/json"
@@ -360,11 +361,53 @@ func jobs_deploy(c *cli.Context) {
         return
     }
 
-    log.Info(job_type) // debug outout
+    url := c.GlobalString("url")
+    if url == "" {
+        log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
+        return
+    }
+
+    if c.Bool("n") {
+        // validate only
+        warnings, err := scalecli.ValidateJobType(url, job_type)
+        if err != nil {
+            log.Fatal(err)
+            return
+        }
+        if warnings == "" {
+            color.White("Job type specification is valid.")
+        } else {
+            color.Yellow(warnings)
+        }
+        return
+    }
 
     // check for existing job type
-    // fill in missing data (new version if necessary)
-    // submit the job type
+    job_types, err := scalecli.GetJobTypes(url, job_type.Name)
+    if err != nil {
+        log.Error(err)
+        return
+    }
+    if len(job_types) == 0 {
+        // create a new job type
+        log.Info("Creating new job type entry")
+        err = scalecli.CreateJobType(url, job_type)
+        if err != nil {
+            log.Error(err)
+            return
+        }
+    } else {
+        id := -1
+        for _, jt := range job_types {
+            id = jt.Id
+            if jt.Version == job_type.Version {
+                log.Warning("Job type", job_type.Name, "version", job_type.Version, "already exists. Doing nothing.")
+                return
+            }
+        }
+        log.Info("Updating job type", id)
+        scalecli.UpdateJobType(url, id, job_type)
+    }
 }
 
 var Jobs_commands = []cli.Command{
@@ -422,6 +465,10 @@ var Jobs_commands = []cli.Command{
             cli.BoolFlag{
                 Name: "pull, p",
                 Usage: "Should the image be pulled first?",
+            },
+            cli.BoolFlag{
+                Name: "n",
+                Usage: "Pull the image and validate only, don't submit to Scale.",
             },
         },
         Action: jobs_deploy,
