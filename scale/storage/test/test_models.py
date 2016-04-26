@@ -295,30 +295,6 @@ class TestScaleFileManagerDownloadFiles(TestCase):
         self.assertRaises(DeletedFile, ScaleFile.objects.download_files, download_dir, work_dir, files)
 
 
-class TestScaleFileManagerGetTotalFileSize(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-    def test_success(self):
-        '''Tests calling ScaleFileManager.get_total_file_size() successfully'''
-
-        file_1 = storage_test_utils.create_file(file_size=100)
-        file_2 = storage_test_utils.create_file(file_size=300)
-        storage_test_utils.create_file(file_size=700)
-
-        file_size = ScaleFile.objects.get_total_file_size([file_1.id, file_2.id])
-        self.assertEqual(file_size, 400)
-
-    def test_no_files(self):
-        '''Tests calling ScaleFileManager.get_total_file_size() where no files match the file IDs'''
-
-        storage_test_utils.create_file(file_size=100)
-
-        file_size = ScaleFile.objects.get_total_file_size([4444444444, 555555555555, 666666666666])
-        self.assertEqual(file_size, 0)
-
-
 class TestScaleFileManagerMoveFiles(TestCase):
 
     def setUp(self):
