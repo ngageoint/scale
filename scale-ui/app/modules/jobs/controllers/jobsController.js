@@ -325,7 +325,7 @@
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
+                offset = scaleConfig.headerOffset + scaleConfig.footerOffset + scaleConfig.dateFilterOffset,
                 gridMaxHeight = viewport.height - offset;
 
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';

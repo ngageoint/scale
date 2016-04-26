@@ -7,6 +7,10 @@ new vUnit({
             // What to base the value on (vh, vw, vmin or vmax)
             reference: 'vh'
         },
+        '.vh_max-height': {
+            property: 'max-height',
+            reference: 'vh'
+        },
         // Wanted to have a font-size based on the viewport width? You got it.
         '.vw_font-size': {
             property: 'font-size',
@@ -23,6 +27,6 @@ new vUnit({
         }
     },
     onResize: function() {
-        console.log('A screen resize just happened, yo.');
+        // adjust on resize here
     }
 }).init(); // call the public init() method

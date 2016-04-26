@@ -217,7 +217,7 @@
             angular.element(document).ready(function () {
                 // set container heights equal to available page height
                 var viewport = scaleService.getViewportSize(),
-                    offset = scaleConfig.headerOffset,
+                    offset = scaleConfig.headerOffset + scaleConfig.footerOffset,
                     headerOffset = $('.job-load-header').height(),
                     legendOffset = $('.job-load-legend-label').height(),
                     filterOffset = $('.job-load-filter').outerHeight(true),

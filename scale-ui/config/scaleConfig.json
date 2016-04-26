@@ -190,6 +190,7 @@
             ]
         },
         "headerOffset": 160,
+        "footerOffset": 40,
         "dateFilterOffset": 65
     }
 }

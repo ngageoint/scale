@@ -17,8 +17,7 @@
         $scope.healthData12 = {};
         $scope.healthData24 = {};
         $scope.activityIcon = '<i class="fa fa-pulse">&#x' + scaleConfig.activityIconCode + '</i>';
-        $scope.selectJobClass = 'visible';
-        $scope.jobDetailsClass = 'invisible';
+        $scope.jobDetailsClass = 'hidden';
         $scope.pauseBtnClass = 'fa-pause';
         $scope.user = userService.getUserCreds();
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -38,7 +37,6 @@
             //formatJobTypeStats();
 
             $scope.jobDetailsClass = 'visible';
-            $scope.selectJobClass = 'invisible';
         };
 
         $scope.togglePause = function () {

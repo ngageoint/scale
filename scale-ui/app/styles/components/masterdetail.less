@@ -1,78 +1,77 @@
 @import 'colors';
 
-.master-controls {
-    padding-bottom: 10px;
-}
-
-.master-container {
-    height: 78vh;
-    max-height: 78vh;
+.master {
     overflow-y: auto;
-    margin-bottom: 15px;
-    background-color: #fff;
-    border: 1px solid #ddd;
 
-    &.with-master-controls {
-        height: 72.7vh;
-        max-height: 72.7vh;
+    .master-controls {
+        margin-bottom: 10px;
     }
 
-    ul {
-        li {
-            display: block;
-            background: #fff;
-            padding: 10px 5px;
-            font-size: 15px;
-            border-bottom: 1px solid #e7e7e7;
+    .master-container {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        min-height: 50%;
 
-            &:hover {
-                background: #efefef;
-                cursor: pointer;
-            }
+        ul {
+            li {
+                display: block;
+                background: #fff;
+                padding: 10px 5px;
+                font-size: 15px;
+                border-bottom: 1px solid #e7e7e7;
 
-            &.active {
-                background: #efefef;
-                cursor: default;
+                &:hover {
+                    background: #efefef;
+                    cursor: pointer;
+                }
+
+                &.active {
+                    background: #efefef;
+                    cursor: default;
+                }
             }
         }
     }
 }
 
-.detail-container {
+.detail {
     overflow-y: auto;
-    background: #fff;
-    border-left: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
 
-    &.no-tabs {
-        border-top: 1px solid #ddd;
-        padding: 10px;
+    .detail-container {
+        background: #fff;
+        border-left: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+
+        &.no-tabs {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+
+            h3 {
+                padding: 0;
+            }
+
+            #details, #performance, #errors {
+                padding: 0;
+            }
+        }
 
         h3 {
-            padding: 0;
+            margin: 0;
+            padding: 20px 10px 0 10px;
+        }
+
+        h5 {
+            margin: 0;
+            font-weight: 600;
         }
 
         #details, #performance, #errors {
-            padding: 0;
+            padding: 0 10px;
         }
-    }
 
-    h3 {
-        margin: 0;
-        padding: 20px 10px 0 10px;
-    }
-
-    h5 {
-        margin: 0;
-        font-weight: 600;
-    }
-
-    #details, #performance, #errors {
-        padding: 0 10px;
-    }
-
-    .tab-content {
-        border: none;
+        .tab-content {
+            border: none;
+        }
     }
 }
