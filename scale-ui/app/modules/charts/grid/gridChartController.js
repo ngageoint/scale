@@ -33,7 +33,7 @@
         };
 
         var width = $('.grid-chart').width(),
-            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : $scope.mode === 'zoom' ? scaleService.getViewportSize().height : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
+            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : $scope.mode === 'zoom' ? scaleService.getViewportSize().height * 2 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
             cols = 0,
             rows = 0,
             cellFontLg = .4,
@@ -52,12 +52,13 @@
                     });
                     $scope.dataValues = _.sortByOrder(_.values(data.data), ['status.has_running', 'status.description', 'name'], ['asc', 'asc', 'asc']);
                 } else if (dataType === 'Node') {
-                    $scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
+                    $scope.dataValues = _.values(data.data);
+                    //$scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
                     // associate Node with NodeStatus
                     _.forEach($scope.dataValues, function (val) {
                         val.status = _.find(data.status, 'node.id', val.id);
                     });
-                    $scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
+                    //$scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
                 } else {
                     $scope.dataValues = data.data;
                 }
@@ -532,7 +533,7 @@
                 })
                 .style('font-size', function (d) {
                     if (d.toString() === 'Node') {
-                        return $scope.scale * 7 + 'px';
+                        return $scope.scale * 8 + 'px';
                     }
                     return '';
                 })
@@ -653,7 +654,7 @@
                     })
                     .attr('text-anchor', 'start')
                     .attr('x', $scope.enableReveal ? 2 : 5)
-                    .attr('y', $scope.enableReveal ? 8 : 20)
+                    .attr('y', $scope.enableReveal ? $scope.scale * 8 : 20)
                     .style('display', $scope.enableReveal ? 'none' : 'block')
                     .style('font-size', $scope.enableReveal ? $scope.scale * 7 + 'px' : '1.3em')
                     .on('mouseover', function () {

@@ -100,6 +100,13 @@
             return getSync(nodeStatusOverrideUrl);
         });
 
+        // Node details
+        var nodeOverrideUrl = 'test/data/node.json';
+        var nodeRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/.*/', 'i');
+        $httpBackend.whenGET(nodeRegex).respond(function () {
+            return getSync(nodeOverrideUrl);
+        });
+
         // Nodes
         var nodesOverrideUrl = 'test/data/nodes.json';
         var nodesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/', 'i');
