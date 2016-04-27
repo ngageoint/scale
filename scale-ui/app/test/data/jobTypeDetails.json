@@ -16,6 +16,7 @@
     "uses_docker": false,
     "docker_privileged": false,
     "docker_image": null,
+    "revision_num": 1,
     "priority": 10,
     "timeout": 1800,
     "max_scheduled": null,
