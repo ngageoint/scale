@@ -28,6 +28,12 @@ func main() {
             Usage: "Scale API URL",
             EnvVar: "SCALE_URL",
         },
+        cli.StringFlag{
+            Name: "docker-registry, registry, r",
+            Usage: `Optional docker registry to prepend to docker image names. \
+               This should not be used if you've already included the registry in the image name.`,
+            EnvVar: "DOCKER_REGISTRY",
+        },
     }
     app.Commands = []cli.Command{
         {

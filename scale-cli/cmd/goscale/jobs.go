@@ -74,7 +74,7 @@ func get_label_value(dockerfile_name string, label_name string) (label_value str
     return "", nil
 }
 
-func get_docker_image_name() (docker_image string, err error) {
+func get_docker_image_name(c *cli.Context) (docker_image string, err error) {
     json_data, err := get_label_value("Dockerfile", "com.ngageoint.scale.job-type")
     if err != nil {
         log.Error(err)
@@ -90,7 +90,12 @@ func get_docker_image_name() (docker_image string, err error) {
         log.Error(err)
         return
     }
-    docker_image = job_type.DockerImage
+    docker_registry := c.GlobalString("docker-registry")
+    if docker_registry == "" {
+        docker_image = job_type.DockerImage
+    } else {
+        docker_image = docker_registry + "/" + job_type.DockerImage
+    }
     return
 }
 
@@ -287,7 +292,7 @@ func jobs_commit(c *cli.Context) {
     }
 
     // build the docker image
-    docker_image, err := get_docker_image_name()
+    docker_image, err := get_docker_image_name(c)
     if err != nil {
         log.Error(err)
         return
@@ -308,7 +313,7 @@ func jobs_commit(c *cli.Context) {
 
 func jobs_push(c *cli.Context) {
     // push the image
-    docker_image, err := get_docker_image_name()
+    docker_image, err := get_docker_image_name(c)
     if err != nil {
         log.Error(err)
         return
@@ -328,11 +333,13 @@ func jobs_deploy(c *cli.Context) {
     err := error(nil) // some weird scoping issues if we don't declare here
     docker_image := c.String("image")
     if docker_image == "" {
-        docker_image, err = get_docker_image_name()
+        docker_image, err = get_docker_image_name(c)
         if err != nil {
             log.Error(err)
             return
         }
+    } else if c.GlobalString("docker-registry") != "" {
+        docker_image = c.GlobalString("docker-registry") + "/" + docker_image
     }
     if c.Bool("pull") {
         log.Info("Pulling", docker_image)
