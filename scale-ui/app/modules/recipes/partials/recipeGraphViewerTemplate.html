@@ -46,10 +46,10 @@
             </div>
             <div class="col-xs-3 text-right">
                 <div class="btn-group btn-group-sm" ng-show="allowEdit && !readonly">
-                    <button class="btn" ng-class="saveBtnClass" ng-click="openAddJob()" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe"><i class="fa fa-save"></i></button>
-                    <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-show="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}"><i class="fa" ng-class="editBtnIcon"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="openAddJob()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe"><i class="fa fa-save"></i></button>
+                    <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}"><i class="fa" ng-class="editBtnIcon"></i></button>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 <div class="live map">
                     <div class="row">
                         <div class="col-xs-9">
-                            <div class="col-graph panel panel-default" ng-class="{ 'new-recipe': !recipeType.id }">
+                            <div class="col-graph panel panel-default" ng-class="{ 'edit-recipe': !recipeType.id || mode === 'edit' }">
                                 <svg style="{{ detailContainerStyle }}"><g/></svg>
                             </div>
                             <div id="output-selector" ng-show="selectedInputProvider">
