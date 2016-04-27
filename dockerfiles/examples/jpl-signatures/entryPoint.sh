@@ -1,7 +1,7 @@
 #!/bin/sh -x
 
 export outfile=$2/$(basename $1)
-cp /var/JPG_ASTER/data/$1 ${outfile}
+cp /var/JPL_ASTER/data/$1 ${outfile}
 
 # generate result manifest
 cat > $2/results_manifest.json << EOF

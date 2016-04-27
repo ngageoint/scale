@@ -91,7 +91,7 @@ func get_label_value(dockerfile_name string, label_name string) (label_value str
             for nn := n.Next; nn != nil; nn = nn.Next.Next {
                 if nn.Value == label_name {
                     nn = nn.Next
-                    label_value, err = strconv.Unquote(nn.Value)
+                    label_value, err = strconv.Unquote(strings.Replace(nn.Value, "$ {", "${", -1))
                     return
                 }
             }
@@ -117,7 +117,7 @@ func get_docker_image_name(c *cli.Context) (docker_image string, err error) {
         return
     }
     docker_registry := c.GlobalString("registry")
-    if docker_registry == "" {
+    if docker_registry == "" || strings.HasPrefix(job_type.DockerImage, docker_registry) {
         docker_image = job_type.DockerImage
     } else {
         docker_image = docker_registry + "/" + job_type.DockerImage
@@ -151,7 +151,7 @@ func set_label_value(dockerfile_name string, label_name string, label_value stri
                 if nn.Value == label_name {
                     found = true
                     nn = nn.Next
-                    newval += strconv.Quote(label_value)
+                    newval += strings.Replace(strconv.Quote(label_value), "${", "$ {", -1)
                 } else {
                     nn = nn.Next
                     newval += nn.Value
@@ -308,6 +308,12 @@ func jobs_commit(c *cli.Context) {
     if err != nil {
         log.Error(err)
     }
+    registry := c.GlobalString("registry")
+    if registry != "" {
+        if !strings.HasPrefix(job_type.DockerImage, registry) {
+            job_type.DockerImage = registry + "/" + job_type.DockerImage
+        }
+    }
     json_data, err := json.Marshal(job_type)
     if err != nil {
         log.Error(err)
@@ -407,12 +413,13 @@ func jobs_deploy(c *cli.Context) {
         log.Error(err, string(output))
         return
     }
-    if strings.TrimSpace(string(output)) == "" {
+    json_value := strings.Replace(string(output), "$ {", "${", -1)
+    if strings.TrimSpace(json_value) == "" {
         log.Error("Scale job type information not found in", docker_image)
         return
     }
     var job_type scalecli.JobType
-    err = json.Unmarshal([]byte(output), &job_type)
+    err = json.Unmarshal([]byte(json_value), &job_type)
     if err != nil {
         log.Error(err)
         return
@@ -454,16 +461,25 @@ func jobs_deploy(c *cli.Context) {
             return
         }
     } else {
-        id := -1
         for _, jt := range job_types {
-            id = jt.Id
             if jt.Version == job_type.Version {
-                log.Warning("Job type", job_type.Name, "version", job_type.Version, "already exists. Doing nothing.")
+                // found an exising entry, either update or create a new one
+                log.Info("Updating job type metadata", jt.Id)
+                err = scalecli.UpdateJobType(url, jt.Id, job_type)
+                if err != nil {
+                    log.Error(err)
+                    return
+                }
                 return
             }
         }
-        log.Info("Updating job type", id)
-        scalecli.UpdateJobType(url, id, job_type)
+        // no entry found, create a new one
+        log.Info("Creating new job type entry for", job_type.Name, "version", job_type.Version)
+        err = scalecli.CreateJobType(url, job_type)
+        if err != nil {
+            log.Error(err)
+            return
+        }
     }
 }
 
@@ -473,7 +489,7 @@ func jobs_run(c *cli.Context) {
         log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
         return
     }
-    if c.NArg() != 1 {
+    if c.NArg() != 1 && c.NArg() != 2 {
         log.Fatal("Must specify a single job type name or id.")
         return
     }
@@ -496,6 +512,10 @@ func jobs_run(c *cli.Context) {
             log.Fatal(err)
             return
         }
+        var version string
+        if c.NArg() == 2 {
+            version = c.Args()[1]
+        }
         switch(len(job_types)) {
         case 0:
             log.Fatal("Job type not found.")
@@ -505,11 +525,20 @@ func jobs_run(c *cli.Context) {
             found = true
             break
         default:
-            log.Fatal("Multiple job types found")
             for _, jt := range job_types {
-                fmt.Printf("%4d [%25s] - %s\n", jt.Id, jt.Name, jt.Title)
+                if jt.Version == version {
+                    job_type = jt
+                    found = true
+                    break
+                }
             }
-            return
+            if !found {
+                log.Error("Multiple job types found")
+                for _, jt := range job_types {
+                    fmt.Printf("%4d %8s [%25s] - %s\n", jt.Id, jt.Version, jt.Name, jt.Title)
+                }
+                return
+            }
         }
     }
     data_file := c.String("data")
@@ -519,11 +548,12 @@ func jobs_run(c *cli.Context) {
         log.Fatal(err)
         return
     }
-    err = scalecli.RunJob(url, job_type.Id, job_data)
+    update_location, err := scalecli.RunJob(url, job_type.Id, job_data)
     if err != nil {
         log.Fatal(err)
         return
     }
+    color.Blue(fmt.Sprintf("Job submited, updates available at %s", update_location))
 }
 
 var Jobs_commands = []cli.Command{

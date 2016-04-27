@@ -190,27 +190,28 @@ func UpdateJobType(base_url string, job_type_id int, job_type JobType) error {
     return nil
 }
 
-func RunJob(base_url string, job_type_id int, job_data JobData) error {
+func RunJob(base_url string, job_type_id int, job_data JobData) (update_location string, err error) {
     var new_job_data = struct {
             JobTypeId      int `json:"job_type_id"`
             JobData        JobData `json:"job_data"`
         }{ job_type_id, job_data }
     json_data, err := json.Marshal(new_job_data)
     if err != nil {
-        return err
+        return
     }
-    fmt.Println(base_url + "/queue/new-job/")
     resp, err := resty.R().SetHeaders(map[string]string{
             "Accept":"application/json",
             "Content-type":"application/json",
         }).SetBody(json_data).Post(base_url + "/queue/new-job/")
     if resp == nil && err != nil {
-        return err
+        return
     } else if resp == nil {
-        return fmt.Errorf("Unknown error")
+        err = fmt.Errorf("Unknown error")
+        return
     } else if resp.StatusCode() != 201 {
-        return fmt.Errorf(resp.String())
+        err = fmt.Errorf(resp.String())
+        return
     }
-    fmt.Println(resp.Header()["Location"])
-    return nil
+    update_location = resp.Header()["Location"][0]
+    return
 }
