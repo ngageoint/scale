@@ -47,6 +47,31 @@ cat $2/results_manifest.json
     ".dockerignore": `job_type.json
 job_type.yml
 `,
+    "job_type.yml": `---
+name: {{ .name }}
+version: "1.0.0"
+title: {{ .name }}
+description: {{ .description }}
+author_name: "{{ .maintainer }}"
+docker_image: "{{ .image_name }}"
+priority: 250
+timeout: 300
+max_tries: 3
+cpus_required: 1.0
+mem_required: 512.0
+interface:
+  version: "1.0"
+  command: "./entryPoint.sh"
+  command_arguments: "${input_file} ${job_output_dir}"
+  output_data:
+    - type: file
+      required: true
+      name: output_file
+  input_data:
+    - required: true
+      type: file
+      name: input_file
+`,
 }
 
 func get_label_value(dockerfile_name string, label_name string) (label_value string, err error) {
@@ -329,6 +354,30 @@ func jobs_push(c *cli.Context) {
     log.Info(string(output))
 }
 
+func jobs_validate(c *cli.Context) {
+    var job_type scalecli.JobType
+    err := Parse_json_or_yaml("job_type", &job_type)
+    if err != nil {
+        log.Error(err)
+    }
+
+    url := c.GlobalString("url")
+    if url == "" {
+        log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
+        return
+    }
+    warnings, err := scalecli.ValidateJobType(url, job_type)
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
+    if warnings == "" {
+        color.White("Job type specification is valid.")
+    } else {
+        color.Yellow(warnings)
+    }
+}
+
 func jobs_deploy(c *cli.Context) {
     // pull the image
     err := error(nil) // some weird scoping issues if we don't declare here
@@ -520,6 +569,11 @@ var Jobs_commands = []cli.Command{
         Name: "push",
         Usage: "Push the docker image to the docker index.",
         Action: jobs_push,
+    },
+    {
+        Name: "validate",
+        Usage: "Validate the job_type data in job_type.json or job_type.yml.",
+        Action: jobs_validate,
     },
     {
         Name: "deploy",

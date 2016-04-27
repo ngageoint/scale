@@ -5,7 +5,7 @@ description: Signature matching with ACE followed but clustering and centroid de
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
 icon_code: "xf0fb"
 docker_image: "geoint/ace_1.0"
-prioerity: 250
+priority: 250
 timeout: 300
 max_tries: 2
 cpus_required: 2.0
