@@ -16,6 +16,7 @@ import (
     "io"
     "encoding/json"
     "os/exec"
+    "fmt"
 )
 
 // hardcoded defaults
@@ -417,6 +418,65 @@ func jobs_deploy(c *cli.Context) {
     }
 }
 
+func jobs_run(c *cli.Context) {
+    url := c.GlobalString("url")
+    if url == "" {
+        log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
+        return
+    }
+    if c.NArg() != 1 {
+        log.Fatal("Must specify a single job type name or id.")
+        return
+    }
+    var job_type scalecli.JobType
+    found := false
+    id, err := strconv.Atoi(c.Args()[0])
+    if err == nil {
+        var resp_code int
+        job_type, resp_code, err = scalecli.GetJobTypeDetails(url, id)
+        if err != nil && resp_code != 404 {
+            log.Fatal(err)
+            return
+        } else if err == nil {
+            found = true
+        }
+    }
+    if !found {
+        job_types, err := scalecli.GetJobTypes(url, c.Args()[0])
+        if err != nil {
+            log.Fatal(err)
+            return
+        }
+        switch(len(job_types)) {
+        case 0:
+            log.Fatal("Job type not found.")
+            return
+        case 1:
+            job_type = job_types[0]
+            found = true
+            break
+        default:
+            log.Fatal("Multiple job types found")
+            for _, jt := range job_types {
+                fmt.Printf("%4d [%25s] - %s\n", jt.Id, jt.Name, jt.Title)
+            }
+            return
+        }
+    }
+    data_file := c.String("data")
+    var job_data scalecli.JobData
+    err = Parse_json_or_yaml(data_file, &job_data)
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
+    err = scalecli.RunJob(url, job_type.Id, job_data)
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
+}
+
 var Jobs_commands = []cli.Command{
     {
         Name: "init",
@@ -479,5 +539,17 @@ var Jobs_commands = []cli.Command{
             },
         },
         Action: jobs_deploy,
+    },
+    {
+        Name: "run",
+        Usage: "Run a new job.",
+        ArgsUsage: "[Job type ID | job type name]",
+        Flags: []cli.Flag{
+            cli.StringFlag{
+                Name: "data, d",
+                Usage: "Job data file (json or yaml).",
+            },
+        },
+        Action: jobs_run,
     },
 }

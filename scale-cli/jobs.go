@@ -37,6 +37,24 @@ type SharedResources struct {
     Required        bool `json:"required,omitempty"`
 }
 
+type JobData struct {
+    Version         string `json:"version,omitempty"`
+    InputData       []JobInputData `json:"input_data,omitempty"`
+    OutputData      []JobOutputData `json:"output_data,omitempty"`
+}
+
+type JobInputData struct {
+    Name            string `json:"name"`
+    Value           string `json:"value,omitempty"`
+    FileId          int `json:"file_id,omitempty"`
+    FileIds         []int `json:"file_ids,omitempty"`
+}
+
+type JobOutputData struct {
+    Name            string `json:"name"`
+    WorkspaceId     int `json:"workspace_id"`
+}
+
 type ErrorMapping struct {
     Version             string `json:"version"`
     ExitCodes           map[string][]string `json:"exit_codes"`
@@ -100,6 +118,20 @@ func GetJobTypes(base_url string, name string) (job_types []JobType, err error) 
     return jtlist.Results, nil
 }
 
+func GetJobTypeDetails(base_url string, id int) (job_type JobType, resp_code int, err error) {
+    resp, err := resty.R().SetHeader("Accept", "application/json").
+                           Get(fmt.Sprintf("%s/job-types/%d/", base_url, id))
+    if resp == nil {
+        return
+    } else if resp.StatusCode() != 200 {
+        resp_code = resp.StatusCode()
+        err = fmt.Errorf("http: server error %s", resp.String())
+        return
+    }
+    err = json.Unmarshal([]byte(resp.String()), &job_type)
+    return
+}
+
 func ValidateJobType(base_url string, job_type JobType) (warnings string, err error) {
     json_data, err := json.Marshal(job_type)
     if err != nil {
@@ -155,5 +187,30 @@ func UpdateJobType(base_url string, job_type_id int, job_type JobType) error {
     } else if resp.StatusCode() != 200 {
         return fmt.Errorf("http: server error %s", resp.String())
     }
+    return nil
+}
+
+func RunJob(base_url string, job_type_id int, job_data JobData) error {
+    var new_job_data = struct {
+            JobTypeId      int `json:"job_type_id"`
+            JobData        JobData `json:"job_data"`
+        }{ job_type_id, job_data }
+    json_data, err := json.Marshal(new_job_data)
+    if err != nil {
+        return err
+    }
+    fmt.Println(base_url + "/queue/new-job/")
+    resp, err := resty.R().SetHeaders(map[string]string{
+            "Accept":"application/json",
+            "Content-type":"application/json",
+        }).SetBody(json_data).Post(base_url + "/queue/new-job/")
+    if resp == nil && err != nil {
+        return err
+    } else if resp == nil {
+        return fmt.Errorf("Unknown error")
+    } else if resp.StatusCode() != 201 {
+        return fmt.Errorf(resp.String())
+    }
+    fmt.Println(resp.Header()["Location"])
     return nil
 }

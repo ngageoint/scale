@@ -51,8 +51,17 @@ func find_template_in_path(template_name string, template_path string) (string, 
 }
 
 func Parse_json_or_yaml(basename string, parsed_data interface{}) error {
-    json_file := basename + ".json"
-    yaml_file := basename + ".yml"
+    // check the basename first
+    _, err := os.Stat(basename)
+    var json_file, yaml_file string
+    if err == nil {
+        // file exists, try it as both json and yaml
+        json_file = basename
+        yaml_file = basename
+    } else {
+        json_file = basename + ".json"
+        yaml_file = basename + ".yml"
+    }
     json_stat, err := os.Stat(json_file)
     if err != nil {
         if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOENT {
@@ -71,22 +80,25 @@ func Parse_json_or_yaml(basename string, parsed_data interface{}) error {
             return err
         }
     }
+    if yaml_stat == nil {
+        yaml_file = basename + ".yaml"
+        yaml_stat, err = os.Stat(yaml_file)
+        if err != nil {
+            if e, ok := err.(*os.PathError); ok && e.Err == syscall.ENOENT {
+                yaml_stat = nil // not present
+            } else {
+                // error stating the file
+                return err
+            }
+        }
+    }
     if json_stat == nil && yaml_stat == nil {
         return errors.New("Neither JSON nor YAML files exist. " + basename)
     }
-    if json_stat != nil && yaml_stat != nil {
+    if json_file != yaml_file && json_stat != nil && yaml_stat != nil {
         return errors.New("Both JSON and YAML files exists. " + basename)
     }
     var json_data []byte
-    if json_stat != nil {
-        tmp, err := os.Open(json_file)
-        if err != nil {
-            return err
-        }
-        json_data = make([]byte, json_stat.Size())
-        tmp.Read(json_data)
-        tmp.Close()
-    }
     if yaml_stat != nil {
         tmp, err := os.Open(yaml_file)
         if err != nil {
@@ -96,9 +108,18 @@ func Parse_json_or_yaml(basename string, parsed_data interface{}) error {
         tmp.Read(data)
         tmp.Close()
         json_data, err = yaml.YAMLToJSON(data)
+        if err != nil && json_file != yaml_file {
+            return err
+        }
+    }
+    if json_data == nil && json_stat != nil {
+        tmp, err := os.Open(json_file)
         if err != nil {
             return err
         }
+        json_data = make([]byte, json_stat.Size())
+        tmp.Read(json_data)
+        tmp.Close()
     }
     return json.Unmarshal(json_data, &parsed_data)
 }

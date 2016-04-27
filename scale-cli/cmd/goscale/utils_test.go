@@ -74,6 +74,17 @@ func TestParse_json_or_yaml(t *testing.T) {
         t.Error("Structs not equal:", pdata, "!=", test_data)
     }
 
+    // test json specifying an explicit filename
+    pdata = test_data_type{}
+    err = Parse_json_or_yaml(json_name, &pdata)
+    if err != nil {
+        t.Error(err)
+    }
+
+    if !reflect.DeepEqual(pdata, test_data) {
+        t.Error("Structs not equal:", pdata, "!=", test_data)
+    }
+
     // test yaml
     yaml_name := filepath.Join(tmpdir, "test.yml")
     yaml_file, err := os.Create(yaml_name)
@@ -92,6 +103,17 @@ func TestParse_json_or_yaml(t *testing.T) {
     }
     os.Remove(json_name)
     err = Parse_json_or_yaml(base_name, &pdata2)
+    if err != nil {
+        t.Error(err)
+    }
+
+    if !reflect.DeepEqual(pdata2, test_data) {
+        t.Error("Structs not equal:", pdata2, "!=", test_data)
+    }
+
+    // test yaml specifying an explicit filename
+    pdata2 = test_data_type{}
+    err = Parse_json_or_yaml(yaml_name, &pdata2)
     if err != nil {
         t.Error(err)
     }
