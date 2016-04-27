@@ -68,7 +68,6 @@ These services provide access to information about recipes.
 |                    |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .event             | JSON Object       | The trigger event that is associated with the recipe.                          |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -144,7 +143,6 @@ These services provide access to information about recipes.
 |                    |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | event              | JSON Object       | The trigger event that is associated with the recipe.                          |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

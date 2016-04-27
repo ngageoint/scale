@@ -75,7 +75,6 @@ These services provide access to information about recipe types.
 | .archived          | ISO-8601 Datetime | When the recipe type was archived (no longer active).                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .trigger_rule      | JSON Object       | The linked trigger rule that automatically invokes the recipe type.            |
-|                    |                   | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -158,7 +157,6 @@ These services provide access to information about recipe types.
 | trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
 |                    |                   |          | The type and configuration fields are required if setting a rule.   |
 |                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
-|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -361,7 +359,6 @@ These services provide access to information about recipe types.
 | trigger_rule       | JSON Object       | Optional | The linked trigger rule that automatically invokes the recipe type. |
 |                    |                   |          | The type and configuration fields are required if setting a rule.   |
 |                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
-|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -486,7 +483,6 @@ These services provide access to information about recipe types.
 | archived           | ISO-8601 Datetime | When the recipe type was archived (no longer active).                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | trigger_rule       | JSON Object       | The associated trigger rule that automatically invokes this recipe type.       |
-|                    |                   | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_types          | Array             | List of all job_types that are referenced by this recipe type's definition     |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
@@ -618,7 +614,6 @@ These services provide access to information about recipe types.
 |                    |                   |          | The type and configuration fields are required if setting a rule.   |
 |                    |                   |          | The is_active field is optional and can be used to pause the recipe.|
 |                    |                   |          | Set this field to null to remove the existing trigger rule.         |
-|                    |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`)       |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
