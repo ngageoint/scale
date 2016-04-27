@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <batch xmlns="https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd">
 
-  <wizard filename="/tmp/ace.wiz">
+  <wizard filename="/wizards/ace.wiz">
     <parameter item="Import Data Set" name="Input Filename" type="Filename">
       <value></value>
     </parameter>
@@ -16,6 +16,27 @@
     </parameter>
     <parameter item="Export Data Set" name="Exporter Name" type="string">
       <value>GeoTIFF Exporter</value>
+    </parameter>
+    <parameter item="Threshold Data" name="Ace Threshold" type="double">
+      <value>0.4225</value>
+    </parameter>
+    <parameter item="Threshold Data" name="Region Units" type="RegionUnits">
+      <value>Raw</value>
+    </parameter>
+    <parameter item="Threshold Data" name="Pass Area" type="PassArea">
+      <value>Upper</value>
+    </parameter>
+    <parameter item="QT Cluster" name="Cluster Size" type="double">
+      <value>50</value>
+    </parameter>
+    <parameter item="QT Cluster" name="Display Type" type="string">
+      <value>Centroid</value>
+    </parameter>
+    <parameter item="Export Data Set" name="Shapefile Name" type="Filename">
+      <value></value>
+    </parameter>
+    <parameter item="Export Data Set" name="Shapefile Exporter Name" type="string">
+      <value>Shape File Exporter</value>
     </parameter>
   </wizard>
 

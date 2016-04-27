@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('scaleService', function (scaleConfig) {
+    angular.module('scaleApp').service('scaleService', function ($q, $http, scaleConfig) {
         function padWithZero (input, length) {
             // Cast input to string
             input = '' + input;
@@ -80,6 +80,20 @@
                     return true;
                 }
                 return false;
+            },
+            getVersion: function () {
+                var d = $q.defer();
+
+                $http({
+                    url: scaleConfig.urls.apiPrefix + 'v' + scaleConfig.majorVersion + '/version/',
+                    method: 'GET'
+                }).success(function (data) {
+                    d.resolve(data);
+                }).error(function (error) {
+                    d.reject(error);
+                });
+
+                return d.promise;
             }
         }
     });

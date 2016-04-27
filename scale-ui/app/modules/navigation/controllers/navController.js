@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('navController', function($scope, $location, $window, scaleConfig, navService) {
+    angular.module('scaleApp').controller('navController', function($scope, $location, $window, scaleConfig, scaleService, navService) {
         document.getElementsByTagName('body')[0].style.backgroundColor = scaleConfig.colors.nav_bg;
 
         $scope.activePage = 'overview';
@@ -20,6 +20,5 @@
             navService.registerObserver(locationUpdated);
         };
         initialize();
-
     });
 })();
