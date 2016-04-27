@@ -65,12 +65,24 @@
             return getSync(jobTypeStatusOverrideUrl);
         });
 
+        // Job Type Details
+        var jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType1.json';
+        var jobTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/.*/', 'i');
+        $httpBackend.whenGET(jobTypeDetailsRegex).respond(function (method, url) {
+            // get the jobType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType' + id + '.json';
+            return getSync(jobTypeDetailsOverrideUrl);
+        });
+
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
         var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
         $httpBackend.whenGET(jobTypesRegex).respond(function () {
             return getSync(jobTypesOverrideUrl);
         });
+
 
         // Metrics Plot Data Detail
         var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
