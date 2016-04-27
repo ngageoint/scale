@@ -90,7 +90,7 @@ func get_docker_image_name(c *cli.Context) (docker_image string, err error) {
         log.Error(err)
         return
     }
-    docker_registry := c.GlobalString("docker-registry")
+    docker_registry := c.GlobalString("registry")
     if docker_registry == "" {
         docker_image = job_type.DockerImage
     } else {
@@ -338,8 +338,8 @@ func jobs_deploy(c *cli.Context) {
             log.Error(err)
             return
         }
-    } else if c.GlobalString("docker-registry") != "" {
-        docker_image = c.GlobalString("docker-registry") + "/" + docker_image
+    } else if c.GlobalString("registry") != "" {
+        docker_image = c.GlobalString("registry") + "/" + docker_image
     }
     if c.Bool("pull") {
         log.Info("Pulling", docker_image)

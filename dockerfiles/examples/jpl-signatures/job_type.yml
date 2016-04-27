@@ -2,7 +2,6 @@ name: jpl-signatures
 version: "1.0.2"
 title: JPL Signature Library
 description: Select a signature from the JPL signature library.
-author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
 icon_code: f012
 docker_image: "geoint/jpl-signatures_1.0"
 prioerity: 250

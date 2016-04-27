@@ -12,4 +12,3 @@ import:
 - package: golang.org/x/net
   subpackages:
   - publicsuffix
-
