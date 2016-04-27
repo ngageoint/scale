@@ -1,3 +1,4 @@
+app/bower_components
 app/styles/**/*.css
 node_modules
 build
