@@ -251,7 +251,6 @@ These services provide access to information about "all", "currently running" an
 |                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | environment          | JSON Object       | An interface description for the environment the job execution executed in.    |
-|                      |                   | (See :ref:`architecture_jobs_job_environment_spec`)                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | cpus_scheduled       | Decimal           | The number of CPUs scheduled for the execution.                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -264,14 +263,12 @@ These services provide access to information about "all", "currently running" an
 | disk_total_scheduled | Decimal           | The total amount of disk space in MiB scheduled for the execution.             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | results              | JSON Object       | An interface description for all the possible job results meta-data.           |
-|                      |                   | (See :ref:`architecture_jobs_job_results_spec`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | current_stdout_url   | URL               | The URL of the standard output log for the execution.                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | current_stderr_url   | URL               | The URL of the standard error log for the job execution.                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | results_manifest     | JSON Object       | An interface description for all the actual job results meta-data.             |
-|                      |                   | (See :ref:`architecture_jobs_job_results_spec`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                |
 |                                                                                                                           |

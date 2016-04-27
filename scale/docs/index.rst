@@ -12,9 +12,9 @@ Scale Documentation
 
    overview/index
    cli/index
-   interface/index
    algorithm_integration/index
    architecture/index
+   rest/index
    install/index
    development/index
 

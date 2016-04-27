@@ -80,7 +80,6 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .event             | JSON Object       | The trigger event that is associated with the job.                             |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .error             | JSON Object       | The error that is associated with the job.                                     |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
@@ -201,7 +200,6 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | event              | JSON Object       | The trigger event that is associated with the count.                           |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | error              | JSON Object       | The error that is associated with the count.                                   |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
@@ -240,7 +238,6 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`architecture_jobs_job_data_spec`)                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | results            | JSON Object       | An interface description for all the job results meta-data.                    |
-|                    |                   | (See :ref:`architecture_jobs_job_results_spec`)                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | recipes            | Array             | A list of all recipes associated with the job.                                 |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
@@ -621,7 +618,6 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .event             | JSON Object       | The trigger event that is associated with the job.                             |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .error             | JSON Object       | The error that is associated with the job.                                     |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
@@ -808,7 +804,6 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .event             | JSON Object       | The trigger event that is associated with the count.                           |
-|                    |                   | (See :ref:`Trigger Event Details <rest_trigger_event_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .error             | JSON Object       | The error that is associated with the count.                                   |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
