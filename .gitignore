@@ -2,6 +2,3 @@ env/
 .idea/
 .DS_Store
 temp/
-bin/
-pkg/
-src/
