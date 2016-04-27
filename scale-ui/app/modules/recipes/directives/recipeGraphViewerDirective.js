@@ -5,7 +5,6 @@
     angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService) {
         $scope.vertices = [];
         $scope.edges = [];
-        $scope.isUpdate = false;
         $scope.selectedJob = null;
         $scope.selectedInputProvider = null;
         $scope.mode = null;
@@ -67,6 +66,7 @@
         $scope.isIE = scaleService.isIE();
 
         var startJob = null;
+        var zoomScale = 0;
 
         // Dagre variables
         var svg = null;
@@ -196,11 +196,45 @@
                     $scope.redraw();
 
                 } else if ($scope.editMode === 'addInput') {
-                    $scope.selectedInputProvider = job;
-                    $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
-                    $('#' + name).addClass('selected-node-dependency');
-                    $('#output-selector').css({top: pos.top, left: pos.left, position: 'absolute'});
-                    console.log('toggle input selector');
+                    if (job.name === 'start') {
+                        var contentStr = '<ul class="list-group">';
+                        _.forEach($scope.recipeType.definition.input_data, function (recipeInput) {
+                            contentStr = contentStr + '<li class="list-group-item">';
+                            contentStr = contentStr + '<a onclick="mapInputRecipeInput(\'' + recipeInput.name + '\')">' + recipeInput.name + '</a>';
+                            if (recipeInput.media_types) {
+                                contentStr = contentStr + '<div class="input-media-types">' + recipeInput.media_types.join(',') + '</div>';
+                            }
+                            contentStr = contentStr + '</li>';
+                        });
+                        contentStr = contentStr + '</ul>';
+                        $name.popover({
+                            container: 'body',
+                            content: contentStr,
+                            html: true,
+                            title: 'Select provider/output'
+                        });
+                        $name.popover('show');
+                    } else {
+                        var contentStr = '<ul class="list-group">';
+                        _.forEach(job.job_type.job_type_interface.output_data, function (d) {
+                            contentStr = contentStr + '<li class="list-group-item">';
+                            contentStr = contentStr + '<a onclick="mapInput(\'' + job.name + '\', \'' + d.name + '\')">' + d.name + '</a>';
+                            contentStr = contentStr + '<div class="input-media-types">' + d.media_type + '</div></li>';
+                        });
+                        contentStr = contentStr + '</ul>';
+                        $name.popover({
+                            container: 'body',
+                            content: contentStr,
+                            html: true,
+                            title: 'Select provider/output'
+                        });
+                        $name.popover('show');
+                    }
+                    // $scope.selectedInputProvider = job;
+                    // $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                    // $('#' + name).addClass('selected-node-dependency');
+                    // $('#output-selector').css({top: pos.top, left: pos.left, position: 'absolute'});
+                    // console.log('toggle input selector');
                 } else if ($scope.editMode === 'addOutput'){
                     $scope.selectedOutputReceiver = job;
                     // set position of output-selector
@@ -670,7 +704,7 @@
 
                     initGraph();
                     getIoMappings();
-                    drawGraph($scope.isUpdate);
+                    drawGraph();
                 }
             });
             if($rootScope.user){
@@ -701,8 +735,9 @@
             inner = svg.select("g"); //.on("click", clicked);
             // Set up zoom support
             zoom = d3.behavior.zoom().on("zoom", function () {
+                zoomScale = d3.event.scale;
                 inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                    "scale(" + d3.event.scale + ")");
+                    "scale(" + zoomScale + ")");
             });
             svg.call(zoom);
 
@@ -719,7 +754,7 @@
             });
         };
 
-        drawGraph = function (isUpdate) {
+        drawGraph = function () {
             // globals because dagre needs a reference to angular scope
             window.nodeClick = function(name) {
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
@@ -729,13 +764,21 @@
             };
 
             window.mapInput = function(jobName, jobOutput){
+                $('#' + jobName).popover('destroy');
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
                 scope.$apply(function () {
                     scope.mapInput(jobName, jobOutput);
                 });
             };
 
-            $scope.isUpdate = true;
+            window.mapInputRecipeInput = function (recipeInputName) {
+                $('#start').popover('destroy');
+                var scope = angular.element(document.getElementById('recipeviewer')).scope();
+                scope.$apply(function () {
+                    scope.mapInputRecipeInput(recipeInputName);
+                });
+            };
+
             if($scope.recipe){
                 $scope.lastStatusChange = $scope.recipe.last_modified ? moment.duration(moment.utc($scope.recipe.last_modified).diff(moment.utc())).humanize(true) : '';
             }
@@ -842,25 +885,7 @@
             // wait for current call stack to clear
             _.defer(function () {
                 inner.call(render, graph);
-
-                // Zoom and scale to fit
-                var zoomScale = zoom.scale();
-                var graphWidth = graph.graph().width + 40;
-                var graphHeight = graph.graph().height + 40;
-                var width = parseInt(svg.style("width").replace(/px/, ""));
-                var height = parseInt(svg.style("height").replace(/px/, ""));
-                //zoomScale = Math.min(width / graphWidth, height / graphHeight);
-                //if(zoomScale<0.80){
-                //  zoomScale = 0.80;
-                // }
-                zoomScale = 0.75;
-                if(zoomScale < 1){
-                    //console.log('zoomScale: ' + zoomScale);
-                    var translate = [0,0];// [(width*zoomScale)-(graphWidth*zoomScale), 0];
-                    zoom.translate(translate);
-                    zoom.scale(zoomScale);
-                    zoom.event(isUpdate ? svg.transition().duration(500) : d3.select("svg"));
-                }
+                zoom.event(d3.select("svg"));
 
                 // add selected class to appropriate node
                 if($scope.selectedJob){

@@ -28,6 +28,18 @@
         margin-top: 0;
     }
 
+    .io-selector {
+        width: 200px;
+        margin: 0 0 0 0;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        z-index: 20;
+
+        .io-selector-title {
+            color: #fff;
+        }
+    }
+
     .panel-heading {
         h4 {
             margin: 0;
@@ -72,12 +84,12 @@
 
     .col-graph {
         width: 100%;
-        height: 66.5vh;
+        height: 65vh;
         //border: #ccc 1px solid;
         //border-radius: 5px;
 
         &.edit-recipe {
-            height: 61vh;
+            height: 59vh;
         }
 
         &.panel-default {
@@ -277,38 +289,36 @@
     }
 
     .live.map .node g div {
-        width: 220px;
-        height: 40px;
+        min-width: 165px;
+        min-height: 30px;
         //   color: #fff;
         border-radius: 5px;
         font-weight: normal;
-        line-height: 40px;
-        vertical-align: middle;
-        font-size: 20px;
+        line-height: 31px;
+        //vertical-align: middle;
+        font-size: 16px;
     }
 
     .live.map .node g div.selected-node {
-        transition-property: border;
-        transition-duration: .1s;
-        transition-timing-function: linear;
         border: #ADFF2F 3px solid;
+        line-height: 25px;
     }
 
     .live.map .node g div.selected-node-selectable {
         border: yellow 3px solid;
         background: #663;
+        line-height: 25px;
     }
 
     .live.map .node g div.selected-node-secondary {
         border: yellow 3px solid;
         background: #663;
+        line-height: 25px;
     }
 
     .live.map .node g div.selected-node-dependency {
-        transition-property: border;
-        transition-duration: .1s;
-        transition-timing-function: linear;
         border: #2FFFAD 3px solid;
+        line-height: 25px;
     }
 
     .live.map .node g div span.consumers {
