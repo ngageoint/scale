@@ -231,7 +231,6 @@ These services provide access to information about job types.
 | trigger_rule            | JSON Object       | Optional | A linked trigger rule that automatically invokes the job type. |
 |                         |                   |          | Type and configuration fields are required if setting a rule.  |
 |                         |                   |          | The is_active field is optional and can be used to pause.      |
-|                         |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -414,7 +413,6 @@ These services provide access to information about job types.
 | trigger_rule            | JSON Object       | Optional | A linked trigger rule that automatically invokes the job type. |
 |                         |                   |          | Type and configuration fields are required if setting a rule.  |
 |                         |                   |          | The is_active field is optional and can be used to pause.      |
-|                         |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -592,7 +590,6 @@ These services provide access to information about job types.
 | trigger_rule             | JSON Object       | A linked trigger rule that automatically invokes the job type.           |
 |                          |                   | Type and configuration fields are required if setting a rule.            |
 |                          |                   | The is_active field is optional and can be used to pause.                |
-|                          |                   | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`             |
 +--------------------------+-------------------+----------+---------------------------------------------------------------+
 | errors                   | Array             | List of all errors that are referenced by this job type's error mapping. |
 |                          |                   | (See :ref:`Error Details <rest_error_details>`)                          |
@@ -774,7 +771,6 @@ These services provide access to information about job types.
 | trigger_rule            | JSON Object       | Optional | A linked trigger rule that automatically invokes the job type. |
 |                         |                   |          | Type and configuration fields are required if setting a rule.  |
 |                         |                   |          | The is_active field is optional and can be used to pause.      |
-|                         |                   |          | (See :ref:`Trigger Rule Details <rest_trigger_rule_details>`   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
