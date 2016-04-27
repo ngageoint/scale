@@ -26,3 +26,15 @@ options. An example scale config file looks like::
     url: http://scalemaster/api/v3
     registry: scaleregistry.localnet.prv:5000
 
+
+The currently supported fields and values are:
+
++---------------+--------------------------------------------------------------+
+| **Field Name**| **Description**                                              |
++===============+==============================================================+
+| url           | The scale API server URL.                                    |
+|               | Only required for operations which connect to the API server |
++---------------+--------------------------------------------------------------+
+| registry      | Optional docker registry. If not specified, pushes and pulls |
+|               | will use the primary docker index at docker.io               |
++---------------+--------------------------------------------------------------+
