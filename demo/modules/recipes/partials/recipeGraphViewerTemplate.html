@@ -46,10 +46,10 @@
             </div>
             <div class="col-xs-3 text-right">
                 <div class="btn-group btn-group-sm" ng-show="allowEdit && !readonly">
-                    <button class="btn" ng-class="saveBtnClass" ng-click="openAddJob()" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-show="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe"><i class="fa fa-save"></i></button>
-                    <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-show="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}"><i class="fa" ng-class="editBtnIcon"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="openAddJob()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe"><i class="fa fa-save"></i></button>
+                    <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
                 </div>
             </div>
         </div>
@@ -65,37 +65,37 @@
                 <div class="live map">
                     <div class="row">
                         <div class="col-xs-9">
-                            <div class="col-graph panel panel-default" ng-class="{ 'new-recipe': !recipeType.id }">
+                            <div class="col-graph panel panel-default" ng-class="{ 'edit-recipe': !recipeType.id || mode === 'edit' }">
                                 <svg style="{{ detailContainerStyle }}"><g/></svg>
                             </div>
-                            <div id="output-selector" ng-show="selectedInputProvider">
-                                <div id="output-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
-                                    <div>Select provider/output</div>
-                                    <ul ng-show="selectedInputProvider.job_type.job_type_interface.output_data.length > 0" class="list-group">
-                                        <li ng-repeat="joboutput in selectedInputProvider.job_type.job_type_interface.output_data" class="list-group-item">
-                                            <a ng-click="mapInput(selectedInputProvider.name, joboutput.name)">{{ joboutput.name }}</a>
-                                            <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
-                                        </li>
-                                    </ul>
-                                    <ul ng-show="selectedInputProvider.name === 'start'" class="list-group">
-                                        <li ng-repeat="recipeInput in recipeType.definition.input_data" class="list-group-item">
-                                            <a ng-click="mapInputRecipeInput(recipeInput.name)">{{ recipeInput.name }}</a>
-                                            <div class="input-media-types" ng-show="recipeInput.media_types">{{ recipeInput.media_types.join(',') }}</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div id="input-selector" ng-show="selectedOutputReceiver">
-                                <div id="input-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
-                                    <div>Select receiver/input</div>
-                                    <ul ng-show="selectedOutputReceiver.job_type.job_type_interface.input_data.length > 0" class="list-group">
-                                        <li ng-repeat="jobinput in selectedOutputReceiver.job_type.job_type_interface.input_data" class="list-group-item">
-                                            <a ng-click="mapOutput(selectedOutputReceiver.name, jobinput.name)">{{ jobinput.name }}</a>
-                                            <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <!--<div id="output-selector" ng-show="selectedInputProvider">-->
+                                <!--<div id="output-selector-container" class="io-selector">-->
+                                    <!--<div class="io-selector-title">Select provider/output</div>-->
+                                    <!--<ul ng-show="selectedInputProvider.job_type.job_type_interface.output_data.length > 0" class="list-group">-->
+                                        <!--<li ng-repeat="joboutput in selectedInputProvider.job_type.job_type_interface.output_data" class="list-group-item">-->
+                                            <!--<a ng-click="mapInput(selectedInputProvider.name, joboutput.name)">{{ joboutput.name }}</a>-->
+                                            <!--<div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                    <!--<ul ng-show="selectedInputProvider.name === 'start'" class="list-group">-->
+                                        <!--<li ng-repeat="recipeInput in recipeType.definition.input_data" class="list-group-item">-->
+                                            <!--<a ng-click="mapInputRecipeInput(recipeInput.name)">{{ recipeInput.name }}</a>-->
+                                            <!--<div class="input-media-types" ng-show="recipeInput.media_types">{{ recipeInput.media_types.join(',') }}</div>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div id="input-selector" ng-show="selectedOutputReceiver">-->
+                                <!--<div id="input-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">-->
+                                    <!--<div>Select receiver/input</div>-->
+                                    <!--<ul ng-show="selectedOutputReceiver.job_type.job_type_interface.input_data.length > 0" class="list-group">-->
+                                        <!--<li ng-repeat="jobinput in selectedOutputReceiver.job_type.job_type_interface.input_data" class="list-group-item">-->
+                                            <!--<a ng-click="mapOutput(selectedOutputReceiver.name, jobinput.name)">{{ jobinput.name }}</a>-->
+                                            <!--<div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </div>
                         <div class="col-xs-3">
                             <div class="text-center" ng-show="!selectedJob">
@@ -103,7 +103,10 @@
                             </div>
                             <div class="col-details panel panel-primary" ng-show="selectedJob">
                                 <div class="panel-heading">
-                                    <h4>{{selectedJob.job_type.title}} {{selectedJob.job_type.version}} <button ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="btn btn-default btn-xs pull-right" ng-click="deleteRecipeJob(selectedJob.name)"><i class="fa fa-remove"></i></button></h4>
+                                    <h4>
+                                        <span ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="badge pull-right" ng-click="deleteRecipeJob(selectedJob.name)" uib-tooltip="Remove Job" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                        {{selectedJob.job_type.title}} {{selectedJob.job_type.version}}
+                                    </h4>
                                 </div>
                                 <div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>
                                 <div id="jobdetail" class="job-details" ng-if="selectedJob.job_type.id">
@@ -111,22 +114,30 @@
                                         <a href="{{ '#/jobs/job/' + selectedRecipeJob.job.id }}">{{ selectedRecipeJob.job.status }}</a>
                                     </div>
                                     <div class="job-active">
-                                        <h4 ng-show="selectedJob.dependencies.length > 0 || mode === 'edit' || mode === 'add'">Dependencies <button class="btn btn-default btn-xs" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddDependency()"><i id="btn-add-dependency" class="fa" ng-class="dependencyBtnClass"></i></button></h4>
+                                        <h4 ng-show="selectedJob.dependencies.length > 0 || mode === 'edit' || mode === 'add'">
+                                            Dependencies
+                                            <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddDependency()" uib-tooltip="Add Dependency" tooltip-append-to-body="true" tooltip-placement="right"><i id="btn-add-dependency" class="fa" ng-class="dependencyBtnClass"></i></span>
+                                        </h4>
                                          <div class="margin-bottom-md" ng-show="editMode === 'addDependency'">Click a highlighted job node to select a dependency.</div>
                                          <ul ng-show="selectedJob.dependencies.length > 0" class="list-group">
-                                             <li ng-repeat="dependency in selectedJob.dependencies" class="list-group-item">{{ dependency.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeDependency(dependency.name)"><i class="fa fa-remove"></i></button></li>
+                                             <li ng-repeat="dependency in selectedJob.dependencies" class="list-group-item">
+                                                 <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeDependency(dependency.name)" uib-tooltip="Remove Dependency" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                 {{ dependency.name }}
+                                             </li>
                                         </ul>
                                     </div>
                                     <div ng-show="selectedJob.job_type.job_type_interface.input_data.length > 0"><h4>Inputs</h4>
                                          <ul class="list-group">
                                              <li ng-repeat="jobinput in selectedJob.job_type.job_type_interface.input_data" class="list-group-item">
-                                                 {{ jobinput.name }}<span ng-show="jobinput.required">*</span> <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)"><i class="fa fa-link"></i></button>
+                                                 <span class="badge margin-right-md" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)" uib-tooltip="Add Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-link"></i></span>
+                                                 {{ jobinput.name }} <span class="required" ng-show="jobinput.required">*</span>
                                                  <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
-                                                 <div ng-show="jobinput.dependencies.length > 0">
+                                                 <div ng-show="jobinput.dependencies.length > 0" class="margin-top-md">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
                                                          <li ng-repeat="dep in jobinput.dependencies" class="list-group-item">
-                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.output}}</span><button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeInputMapping(dep.name, dep.output)"><i class="fa fa-remove"></i></button>
+                                                             <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeInputMapping(dep.name, dep.output)" uib-tooltip="Remove Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.output}}</span>
                                                          </li>
                                                      </ul>
                                                  </div>
@@ -136,13 +147,15 @@
                                      <div ng-show="selectedJob.job_type.job_type_interface.output_data.length > 0"><h4>Outputs</h4>
                                          <ul class="list-group">
                                              <li ng-repeat="joboutput in selectedJob.job_type.job_type_interface.output_data" class="list-group-item">
-                                                 {{ joboutput.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddOutput(joboutput)"><i class="fa fa-link"></i></button>
+                                                 <span class="badge margin-right-md" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddOutput(joboutput)" uib-tooltip="Add Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-link"></i></span>
+                                                 {{ joboutput.name }}
                                                  <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
-                                                 <div ng-show="joboutput.dependents.length > 0">
+                                                 <div ng-show="joboutput.dependents.length > 0" class="margin-top-md">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
                                                          <li ng-repeat="dep in joboutput.dependents" class="list-group-item">
-                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.input}}</span> <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeOutputMapping(dep.name, dep.output)"><i class="fa fa-remove"></i></button>
+                                                             <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeOutputMapping(dep.name, dep.output)" uib-tooltip="Remove Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.input}}</span>
                                                          </li>
                                                      </ul>
                                                  </div>
@@ -244,7 +257,7 @@
         <div class="modal-header">
             <h3>Select a Job Type</h3>
         </div>
-        <div class="modal-body">
+        <div class="modal-body master">
             <div class="master-container" style="max-height: 50vh; overflow: auto">
                 <div class="add-job-list">
                     <ul class="list-unstyled">

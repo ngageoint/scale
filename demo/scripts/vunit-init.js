@@ -7,6 +7,10 @@ new vUnit({
             // What to base the value on (vh, vw, vmin or vmax)
             reference: 'vh'
         },
+        '.vh_min-height': {
+            property: 'min-height',
+            reference: 'vh'
+        },
         '.vh_max-height': {
             property: 'max-height',
             reference: 'vh'
