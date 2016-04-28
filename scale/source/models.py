@@ -1,4 +1,6 @@
-'''Defines the database model for source files'''
+"""Defines the database model for source files"""
+from __future__ import unicode_literals
+
 import logging
 import os
 
@@ -17,11 +19,11 @@ logger = logging.getLogger(__name__)
 
 
 class SourceFileManager(models.GeoManager):
-    '''Provides additional methods for handling source files
-    '''
+    """Provides additional methods for handling source files
+    """
 
     def get_sources(self, started=None, ended=None, is_parsed=None, file_name=None, order=None):
-        '''Returns a list of source files within the given time range.
+        """Returns a list of source files within the given time range.
 
         :param started: Query source files updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -35,7 +37,7 @@ class SourceFileManager(models.GeoManager):
         :type order: list[str]
         :returns: The list of source files that match the time range.
         :rtype: list[:class:`source.models.SourceFile`]
-        '''
+        """
 
         # Fetch a list of source files
         sources = SourceFile.objects.all()
@@ -61,10 +63,45 @@ class SourceFileManager(models.GeoManager):
 
         return sources
 
+    def get_details(self, source_id):
+        """Gets additional details for the given source model based on related model attributes.
+
+        :param source_id: The unique identifier of the source.
+        :type source_id: int
+        :returns: The source with extra related attributes: ingests and products.
+        :rtype: :class:`source.models.Source`
+        """
+
+        # Attempt to fetch the requested source
+        source = SourceFile.objects.all().select_related('workspace')
+        source = source.get(pk=source_id)
+
+        # Attempt to fetch all ingests for the source
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from ingest.models import Ingest
+            source.ingests = Ingest.objects.filter(source_file=source).order_by('created')
+        except:
+            source.ingests = []
+
+        # Attempt to fetch all products derived from the source
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from product.models import FileAncestryLink
+            links = FileAncestryLink.objects.filter(ancestor_id=source.id)
+            links = links.select_related('descendant', 'descendant__job_type', 'descendant__workspace')
+            links = links.defer('descendant__workspace__json_config')
+            links = links.prefetch_related('descendant__countries').order_by('created')
+            source.products = [link.descendant for link in links]
+        except:
+            source.products = []
+
+        return source
+
     @transaction.atomic
     def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path,
                            work_dir):
-        '''Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
+        """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
         transaction.
 
         :param src_file_id: The ID of the source file
@@ -83,7 +120,7 @@ class SourceFileManager(models.GeoManager):
         :param work_dir: Absolute path to a local work directory available to assist in moving the source file. Only
             needed if new_workspace_path is not None.
         :type work_dir: str
-        '''
+        """
 
         geom = None
         props = None
@@ -127,7 +164,7 @@ class SourceFileManager(models.GeoManager):
             raise
 
     def store_file(self, work_dir, local_path, data_types, workspace, remote_path):
-        '''Stores the given local source file in the workspace
+        """Stores the given local source file in the workspace
 
         :param work_dir: Absolute path to a local work directory available to assist in storing the source file
         :type work_dir: str
@@ -141,7 +178,7 @@ class SourceFileManager(models.GeoManager):
         :type remote_path: str
         :returns: The model of the saved source file
         :rtype: :class:`source.models.SourceFile`
-        '''
+        """
 
         file_name = os.path.basename(local_path)
         upload_dir = os.path.join(work_dir, 'upload')
@@ -162,7 +199,7 @@ class SourceFileManager(models.GeoManager):
                 src_file = SourceFile.objects.get(file_name=file_name)
                 # Duplicate files that are deleted should be stored again
                 if not src_file.is_deleted:
-                    raise DuplicateFile(u'\'%s\' already exists' % file_name)
+                    raise DuplicateFile('\'%s\' already exists' % file_name)
             except SourceFile.DoesNotExist:
                 src_file = SourceFile()  # New file
 
@@ -184,7 +221,7 @@ class SourceFileManager(models.GeoManager):
 
 
 class SourceFile(ScaleFile):
-    '''Represents a source data file that is available for processing. This is an extension of the
+    """Represents a source data file that is available for processing. This is an extension of the
     :class:`storage.models.ScaleFile` model.
 
     :keyword file: The corresponding ScaleFile model
@@ -194,9 +231,9 @@ class SourceFile(ScaleFile):
     :type is_parsed: :class:`django.db.models.BooleanField`
     :keyword parsed: When the source file was parsed
     :type parsed: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
-    file = models.OneToOneField(u'storage.ScaleFile', primary_key=True, parent_link=True)
+    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
 
     is_parsed = models.BooleanField(default=False)
     parsed = models.DateTimeField(blank=True, null=True)
@@ -204,5 +241,5 @@ class SourceFile(ScaleFile):
     objects = SourceFileManager()
 
     class Meta(object):
-        '''meta information for the db'''
-        db_table = u'source_file'
+        """meta information for the db"""
+        db_table = 'source_file'
