@@ -6,7 +6,7 @@
   "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity.",
   "category": "spectral",
   "is_operational": true,
-  "icon_code": "f248",
+  "icon_code": "f140",
   "docker_privileged": false,
   "docker_image": "10.4.4.10:5000/scm:1.0",
   "priority": 1,

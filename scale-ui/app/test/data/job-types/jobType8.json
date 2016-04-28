@@ -6,7 +6,7 @@
   "description": "Applies Orthorectification to Landsat 8 data",
   "category": "spectral",
   "is_operational": true,
-  "icon_code": "f248",
+  "icon_code": "f1c0",
   "docker_privileged": false,
   "docker_image": "10.4.4.10:5000/ls8-ortho:2.1.9",
   "priority": 1,
