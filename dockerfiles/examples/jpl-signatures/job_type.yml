@@ -1,5 +1,5 @@
 name: jpl-signatures
-version: "1.0.2"
+version: "1.0.0"
 title: JPL Signature Library
 description: Select a signature from the JPL signature library.
 icon_code: f012
