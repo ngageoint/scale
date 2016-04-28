@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('navController', function($scope, $location, $window, scaleConfig, scaleService, navService) {
+    angular.module('scaleApp').controller('navController', function($scope, $location, $window, scaleConfig, scaleService, stateService, navService) {
         document.getElementsByTagName('body')[0].style.backgroundColor = scaleConfig.colors.nav_bg;
 
         $scope.version = '';

@@ -6,7 +6,7 @@
   "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra.",
   "category": "spectral",
   "is_operational": true,
-  "icon_code": "f248",
+  "icon_code": "f0e7",
   "docker_privileged": false,
   "docker_image": "10.4.4.10:5000/sam:1.0",
   "priority": 1,
