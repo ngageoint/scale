@@ -63,6 +63,41 @@ class SourceFileManager(models.GeoManager):
 
         return sources
 
+    def get_details(self, source_id):
+        """Gets additional details for the given source model based on related model attributes.
+
+        :param source_id: The unique identifier of the source.
+        :type source_id: int
+        :returns: The source with extra related attributes: ingests and products.
+        :rtype: :class:`source.models.Source`
+        """
+
+        # Attempt to fetch the requested source
+        source = SourceFile.objects.all().select_related('workspace')
+        source = source.get(pk=source_id)
+
+        # Attempt to fetch all ingests for the source
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from ingest.models import Ingest
+            source.ingests = Ingest.objects.filter(source_file=source).order_by('created')
+        except:
+            source.ingests = []
+
+        # Attempt to fetch all products derived from the source
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from product.models import FileAncestryLink
+            links = FileAncestryLink.objects.filter(ancestor_id=source.id)
+            links = links.select_related('descendant', 'descendant__job_type', 'descendant__workspace')
+            links = links.defer('descendant__workspace__json_config')
+            links = links.prefetch_related('descendant__countries').order_by('created')
+            source.products = [link.descendant for link in links]
+        except:
+            source.products = []
+
+        return source
+
     @transaction.atomic
     def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path):
         """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
