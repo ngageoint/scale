@@ -147,11 +147,22 @@
             return getSync(recipesOverrideUrl);
         });
 
-        // Recipe Type Detail service
-        var recipeTypeDetailOverrideUrl = 'test/data/recipeTypeDetail.json';
-        var recipeTypeDetailRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/.*/', 'i');
-        $httpBackend.whenGET(recipeTypeDetailRegex).respond(function () {
-            return getSync(recipeTypeDetailOverrideUrl);
+        // Recipe type validation service
+        var recipeTypeValidationOverrideUrl = 'test/data/recipeTypeValidationSuccess.json';
+        var recipeTypeValidationRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/validation/', 'i');
+        $httpBackend.whenPOST(recipeTypeValidationRegex).respond(function () {
+            return getSync(recipeTypeValidationOverrideUrl);
+        });
+
+        // Recipe Type Details
+        var recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType1.json';
+        var recipeTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/.*/', 'i');
+        $httpBackend.whenGET(recipeTypeDetailsRegex).respond(function (method, url) {
+            // get the recipeType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType' + id + '.json';
+            return getSync(recipeTypeDetailsOverrideUrl);
         });
 
         // Recipe Types service
@@ -159,6 +170,24 @@
         var recipeTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
         $httpBackend.whenGET(recipeTypesRegex).respond(function () {
             return getSync(recipeTypesOverrideUrl);
+        });
+
+        // Save Recipe Type
+        var recipeTypeSaveOverrideUrl = '';
+        var recipeTypeSaveRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
+        $httpBackend.whenPOST(recipeTypeSaveRegex).respond(function (method, url, data) {
+            var recipeJobTypes = [],
+                jobTypeData = getSync('test/data/jobTypes.json'),
+                jobTypes = JSON.parse(jobTypeData[1]).results,
+                recipeType = JSON.parse(data),
+                uniqueRecipeTypeJobs = _.uniq(recipeType.definition.jobs, 'job_type');
+            _.forEach(uniqueRecipeTypeJobs, function (job) {
+                recipeJobTypes.push(_.find(jobTypes, function (jobType) {
+                    return jobType.name === job.job_type.name && jobType.version === job.job_type.version;
+                }));
+            });
+            recipeType.job_types = recipeJobTypes;
+            return [200, JSON.stringify(recipeType), {}];
         });
 
         // Status service

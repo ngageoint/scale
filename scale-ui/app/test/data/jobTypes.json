@@ -7,7 +7,7 @@
             "id": 1,
             "name": "landsat8-parse",
             "title": "Landsat 8 Parse",
-            "version": "1.0",
+            "version": "1.0.0",
             "description": "Parses Landsat 8 multi-tif files in tar.gz archives",
             "category": "landsat",
             "author_name": null,
@@ -210,7 +210,7 @@
         },{
             "id": 8,
             "name": "landsat8-ortho",
-            "title": "Landsat 8 Ortho",
+            "title": "Landsat 8 Ortho (OSSIM)",
             "version": "2.0",
             "description": "Applies Orthorectification to Landsat 8 GeoTiffs",
             "category": "spectral",

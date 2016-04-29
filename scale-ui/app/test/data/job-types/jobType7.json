@@ -1,6 +1,6 @@
 {
   "id": 7,
-  "name": "ls8-atmos-corr",
+  "name": "landsat8-atmos-corr",
   "title": "Landsat 8 Atmospheric Correction",
   "version": "2.1.9",
   "description": "Applies Atmospheric Correction to Landsat 8 GeoTiffs",
@@ -18,9 +18,9 @@
   "disk_out_mult_required": 0.0,
   "interface": {
     "output_data": [{
-      "media_type": "image/tiff",
+      "media_type": "image/nitf",
       "required": true,
-      "type": "file",
+      "type": "image",
       "name": "ls8-corrected"
     }],
     "shared_resources": [],

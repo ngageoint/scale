@@ -2,7 +2,7 @@
  * <ais-scale-recipe-viewer />
  */
 (function () {
-    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService) {
+    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, JobType) {
         $scope.vertices = [];
         $scope.edges = [];
         $scope.selectedJob = null;
@@ -106,7 +106,7 @@
 
         var enableSaveRecipe = function () {
             $scope.recipeType.modified = true;
-            // $scope.saveBtnClass = 'btn-success';
+            //$scope.saveBtnClass = 'btn-primary';
         };
 
         var disableSaveRecipe = function () {
@@ -332,7 +332,7 @@
             });
 
             modalInstance.result.then(function () {
-                if ( $scope.mode === 'edit' || $scope.mode === 'add' ) {
+                if ($scope.mode === 'edit' || $scope.mode === 'add') {
                     $scope.recipeType.trigger_rule.configuration.condition.data_types = $scope.recipeTypeTrigger.dataTypes ? $scope.recipeTypeTrigger.dataTypes.split(',') : [];
                     enableSaveRecipe();
                 }
@@ -429,7 +429,6 @@
 
         $scope.saveRecipeType = function () {
             $scope.savingRecipe = true;
-            console.log('save recipe: ' + $scope.recipeType.name);
             recipeService.validateRecipeType($scope.recipeType).then(function (validationResult) {
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
@@ -440,6 +439,7 @@
                     recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
                         $scope.savingRecipe = false;
                         $scope.recipeType = saveResult;
+                        console.log(JSON.stringify($scope.recipeType));
                         $scope.redraw();
                         //$location.path('/recipes/types/' + saveResult.id);
                     });
@@ -710,27 +710,34 @@
             });
 
             $scope.$watch('recipeType', function (newValue, oldValue) {
-                if ($scope.recipeType) {
-                    if (!$scope.recipeType.id || $scope.recipeType.id === 0) {
-                        $scope.mode = 'add';
-                    }
-                    _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
-                        if (!job.job_type.job_type_interface && $scope.recipeType.job_types) {
-                            var jobTypeData = _.find($scope.recipeType.job_types, {name: job.job_type.name, version: job.job_type.version});
-                            $scope.recipeType.definition.jobs[idx].job_type = jobTypeData;
-                        }
-
-                    });
-
-                    // setup string to bind comma delimited list of trigger rule configuration condition data types
-                    if ($scope.recipeType.trigger_rule && $scope.recipeType.trigger_rule.configuration && $scope.recipeType.trigger_rule.configuration.condition && $scope.recipeType.trigger_rule.configuration.condition.data_types) {
-                        $scope.recipeTypeTrigger.dataTypes = $scope.recipeType.trigger_rule.configuration.condition.data_types.join(',');
-                    }
-
-                    initGraph();
-                    getIoMappings();
-                    drawGraph();
+                if (!$scope.recipeType) {
+                    $scope.recipeType = new RecipeType();
                 }
+                if (!$scope.recipeType.id || $scope.recipeType.id === 0) {
+                    $scope.mode = 'add';
+                }
+                _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
+                    if (!job.job_type.job_type_interface && $scope.recipeType.job_types) {
+                        var jobTypeData = _.find($scope.recipeType.job_types, {name: job.job_type.name, version: job.job_type.version});
+                        $scope.recipeType.definition.jobs[idx].job_type = jobTypeData;
+                    }
+
+                });
+
+                // setup string to bind comma delimited list of trigger rule configuration condition data types
+                if ($scope.recipeType.trigger_rule) {
+                    if ($scope.recipeType.trigger_rule.configuration) {
+                        if ($scope.recipeType.trigger_rule.configuration.condition) {
+                            if ($scope.recipeType.trigger_rule.configuration.condition.data_types) {
+                                $scope.recipeTypeTrigger.dataTypes = $scope.recipeType.trigger_rule.configuration.condition.data_types.join(',');
+                            }
+                        }
+                    }
+                }
+
+                initGraph();
+                getIoMappings();
+                drawGraph();
             });
             if ($rootScope.user) {
                 $scope.readonly = false;
@@ -825,7 +832,7 @@
             for (var idx in jobs) {
                 var job = jobs[idx];
 
-                if ( job.dependencies === undefined || job.dependencies.length < 1) {
+                if (job.dependencies === undefined || job.dependencies.length < 1) {
                     job.depStart = true;
                 }
                 var className = getRecipeTypeJobClassName(job);

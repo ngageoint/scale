@@ -46,9 +46,9 @@
             </div>
             <div class="col-xs-3 text-right">
                 <div class="btn-group btn-group-sm" ng-show="allowEdit && !readonly">
-                    <button class="btn" ng-class="saveBtnClass" ng-click="openAddJob()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-default" ng-click="openAddJob()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-default" ng-click="validateRecipeType()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-disabled="!recipeType.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe" tooltip-placement="left"><i class="fa fa-save"></i></button>
                     <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
                 </div>
             </div>
@@ -232,15 +232,17 @@
         <div class="modal-header">
             <h3>Select a Job Type</h3>
         </div>
-        <div class="modal-body master">
-            <div class="master-container" style="max-height: 50vh; overflow: auto">
-                <div class="add-job-list">
-                    <ul class="list-unstyled">
-                        <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedJobType.name === jobType.name }" ng-click="selectJobTypeToAdd(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
-                    </ul>
+        <div class="modal-body">
+            <div class="master-container">
+                <div class="master-content" style="max-height: 50vh; overflow: auto">
+                    <div class="add-job-list">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedJobType.name === jobType.name }" ng-click="selectJobTypeToAdd(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
+                        </ul>
+                    </div>
                 </div>
-                Selected: <b>{{ selectedJobType.name }}</b>
             </div>
+            <div class="margin-top-md">Selected: <b>{{ selectedJobType.name }}</b></div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>

@@ -68,14 +68,13 @@
                 return d.promise;
             },
 
-            saveRecipeType: function(recipeType) {
+            saveRecipeType: function (recipeType) {
                 var d = $q.defer();
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
-                if(!cleanRecipeType.id){
+                if (!cleanRecipeType.id) {
                     $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {
-                        recipeType.id = result;
-                        d.resolve(recipeType);
+                        d.resolve(result);
                     }).error(function(error){
                         d.reject(error);
                     });
