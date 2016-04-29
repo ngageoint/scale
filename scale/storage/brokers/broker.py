@@ -184,6 +184,16 @@ class Broker(object):
         self._uses_mount = False
 
     @property
+    def broker_type(self):
+        """The type of this broker
+
+        :returns: The broker type
+        :rtype: string
+        """
+
+        return self._broker_type
+
+    @property
     def mount(self):
         """If this broker uses a mounted file system (uses_mount is True), this property returns the remote location
         that should be mounted into the task container. If uses_mount is False, this property should be None.
