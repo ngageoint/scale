@@ -8,6 +8,7 @@ from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 from mock import MagicMock, patch
 
+from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.test import utils as job_utils
 from product.configuration.product_data_file import ProductDataFileStore
 from recipe.test import utils as recipe_utils
@@ -67,7 +68,7 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         media_type_4 = None
 
         # Set up mocks
-        def new_upload_files(upload_dir, work_dir, file_entries, input_file_ids, job_exe, workspace):
+        def new_upload_files(file_entries, input_file_ids, job_exe, workspace):
             results = []
             for file_entry in file_entries:
                 # Check base remote path for job type name and version
@@ -96,11 +97,10 @@ class TestProductDataFileStoreStoreFiles(TestCase):
 
         parent_ids = {98, 99}
 
-        upload_dir = 'upload_dir'
-        results = ProductDataFileStore().store_files(upload_dir, 'work_dir', data_files, parent_ids, self.job_exe)
+        results = ProductDataFileStore().store_files(data_files, parent_ids, self.job_exe)
 
-        self.assertDictEqual(results, {os.path.join(upload_dir, local_path_1): long(1), os.path.join(upload_dir, local_path_2): long(2),
-                                       os.path.join(upload_dir, local_path_3): long(3), os.path.join(upload_dir, local_path_4): long(4)})
+        self.assertDictEqual(results, {local_path_1: long(1), local_path_2: long(2), local_path_3: long(3),
+                                       local_path_4: long(4)})
         mock_create_file_ancestry_links.assert_once_called_with(parent_ids, {1, 2, 3, 4}, self.job_exe)
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
@@ -126,7 +126,7 @@ class TestProductDataFileStoreStoreFiles(TestCase):
         media_type_4 = None
 
         # Set up mocks
-        def new_upload_files(upload_dir, work_dir, file_entries, input_file_ids, job_exe, workspace):
+        def new_upload_files(file_entries, input_file_ids, job_exe, workspace):
             results = []
             for file_entry in file_entries:
                 # Check base remote path for recipe type and job type information
@@ -155,8 +155,7 @@ class TestProductDataFileStoreStoreFiles(TestCase):
 
         parent_ids = {98, 99}  # Dummy values
 
-        upload_dir = 'upload_dir'
-        ProductDataFileStore().store_files(upload_dir, 'work_dir', data_files, parent_ids, job_exe_in_recipe)
+        ProductDataFileStore().store_files(data_files, parent_ids, job_exe_in_recipe)
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
     @patch('product.models.ProductFile.objects.upload_files')
@@ -173,19 +172,19 @@ class TestProductDataFileStoreStoreFiles(TestCase):
             }
         }
 
-        upload_dir = 'upload_dir'
-        work_dir = 'work_dir'
-
         parent_ids = set([98, 99])
         local_path_1 = os.path.join('my', 'path', 'one', 'my_test.txt')
+        full_local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, local_path_1)
         remote_path_1 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_1)
         media_type_1 = 'text/plain'
         local_path_2 = os.path.join('my', 'path', 'one', 'my_test.json')
+        full_local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, local_path_2)
         remote_path_2 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_2)
         media_type_2 = 'application/json'
 
-        data_files = {self.workspace_1.id: [(local_path_1, media_type_1, geo_metadata), (local_path_2, media_type_2)]}
-        ProductDataFileStore().store_files(upload_dir, work_dir, data_files, parent_ids, self.job_exe)
-        files_to_store = [(local_path_1, remote_path_1, media_type_1, geo_metadata),
-                          (local_path_2, remote_path_2, media_type_2)]
-        mock_upload_files.assert_called_with(upload_dir, work_dir, files_to_store, parent_ids, self.job_exe, self.workspace_1)
+        data_files = {self.workspace_1.id: [(full_local_path_1, media_type_1, geo_metadata),
+                                            (full_local_path_2, media_type_2)]}
+        ProductDataFileStore().store_files(data_files, parent_ids, self.job_exe)
+        files_to_store = [(full_local_path_1, remote_path_1, media_type_1, geo_metadata),
+                          (full_local_path_2, remote_path_2, media_type_2)]
+        mock_upload_files.assert_called_with(files_to_store, parent_ids, self.job_exe, self.workspace_1)

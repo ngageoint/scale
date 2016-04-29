@@ -1,4 +1,5 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
+
 import datetime
 import os
 import time
@@ -14,8 +15,8 @@ import product.test.utils as prod_test_utils
 import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
+from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from product.models import FileAncestryLink, ProductFile
-from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
@@ -68,7 +69,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
                                         ancestor_job_exe=job_exe_1, ancestor_job=job_exe_1.job)
 
     def test_inputs(self):
-        '''Tests creating links for only input files before any products are generated.'''
+        """Tests creating links for only input files before any products are generated."""
 
         parent_ids = [self.file_4.id, self.file_6.id, self.file_7.id]
         job_exe = job_test_utils.create_job_exe()
@@ -92,7 +93,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         self.assertSetEqual(file_8_ancestor_ids, set([self.file_1.id, self.file_2.id, self.file_3.id]))
 
     def test_products(self):
-        '''Tests creating links for inputs with generated products at the same time.'''
+        """Tests creating links for inputs with generated products at the same time."""
 
         file_8 = storage_test_utils.create_file()
 
@@ -117,7 +118,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         self.assertSetEqual(file_8_ancestor_ids, set([self.file_1.id, self.file_2.id, self.file_3.id]))
 
     def test_inputs_and_products(self):
-        '''Tests creating links for inputs and then later replacing with generated products.'''
+        """Tests creating links for inputs and then later replacing with generated products."""
 
         file_8 = storage_test_utils.create_file()
 
@@ -202,7 +203,7 @@ class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
                                         ancestor_job_exe=job_exe_1, ancestor_job=job_exe_1.job)
 
     def test_successful(self):
-        '''Tests calling FileAncestryLinkManager.get_source_ancestors() successfully.'''
+        """Tests calling FileAncestryLinkManager.get_source_ancestors() successfully."""
 
         source_files = FileAncestryLink.objects.get_source_ancestors([self.file_6.id, self.file_8.id])
 
@@ -215,7 +216,7 @@ class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
 
 
 class TestProductFileManagerGetProductUpdatesQuery(TestCase):
-    '''Tests on the ProductFileManager.get_product_updates_query() method'''
+    """Tests on the ProductFileManager.get_product_updates_query() method"""
 
     def setUp(self):
         django.setup()
@@ -241,7 +242,7 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
         self.last_modified_end = now()
 
     def test_no_job_types(self):
-        '''Tests calling ProductFileManager.get_updates() without a "job_type_ids" argument value'''
+        """Tests calling ProductFileManager.get_updates() without a "job_type_ids" argument value"""
 
         updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end)
         list_of_ids = []
@@ -252,7 +253,7 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
         self.assertListEqual(list_of_ids, expected_ids)
 
     def test_job_types(self):
-        '''Tests calling ProductFileManager.get_updates() with a "job_type_ids" argument value'''
+        """Tests calling ProductFileManager.get_updates() with a "job_type_ids" argument value"""
 
         job_type_ids = [self.job_type_1_id, self.job_type_2_id]
         updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end, job_type_ids)
@@ -265,7 +266,7 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
 
 
 class TestProductFileManagerPopulateSourceAncestors(TestCase):
-    '''Tests on the ProductFileManager.populate_source_ancestors() method'''
+    """Tests on the ProductFileManager.populate_source_ancestors() method"""
 
     def setUp(self):
         django.setup()
@@ -297,7 +298,7 @@ class TestProductFileManagerPopulateSourceAncestors(TestCase):
                                         job=self.job_exe_2.job, recipe=self.recipe_job_2.recipe)
 
     def test_successful(self):
-        '''Tests calling ProductFileManager.populate_source_ancestors() successfully'''
+        """Tests calling ProductFileManager.populate_source_ancestors() successfully"""
 
         products = ProductFile.objects.filter(id__in=[self.product_1.id, self.product_2.id, self.product_3.id])
 
@@ -321,12 +322,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.workspace.upload_files = MagicMock()
         self.workspace.delete_files = MagicMock()
 
-        self.upload_dir = os.path.join('upload', 'dir')
-        self.work_dir = os.path.join('work', 'dir')
-        self.workspace_work_dir = ScaleFile.objects._get_workspace_work_dir(self.work_dir, self.workspace)
-
-        self.source_file = source_test_utils.create_source(file_name=u'input1.txt',
-                                                                       workspace=self.workspace)
+        self.source_file = source_test_utils.create_source(file_name='input1.txt', workspace=self.workspace)
 
         self.job_exe = job_test_utils.create_job_exe()
         self.job_exe_no = job_test_utils.create_job_exe()
@@ -336,38 +332,33 @@ class TestProductFileManagerUploadFiles(TestCase):
             self.job_exe_no.job.save()
             self.job_exe_no.job.job_type.save()
 
+        self.local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt')
+        self.local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/2/file.json')
+        self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
+
         self.files = [
-            (u'local/1/file.txt', u'remote/1/file.txt', None),
-            (u'local/2/file.json', u'remote/2/file.json', u'application/x-custom-json'),
+            (self.local_path_1, 'remote/1/file.txt', None),
+            (self.local_path_2, 'remote/2/file.json', 'application/x-custom-json'),
         ]
         self.files_no = [
-            (u'local/3/file.h5', u'remote/3/file.h5', u'image/x-hdf5-image'),
+            (self.local_path_3, 'remote/3/file.h5', 'image/x-hdf5-image'),
         ]
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_success(self):
-        '''Tests calling ProductFileManager.upload_files() successfully'''
-        products = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                    self.job_exe, self.workspace)
+        """Tests calling ProductFileManager.upload_files() successfully"""
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id], self.job_exe, self.workspace)
 
-        self.workspace.upload_files.assert_called_once_with(
-            self.upload_dir, self.workspace_work_dir, [
-                ('local/1/file.txt', 'remote/1/file.txt'),
-                ('local/2/file.json', 'remote/2/file.json'),
-            ]
-        )
-        self.assertListEqual(self.workspace.delete_files.call_args_list, [])
-
-        self.assertEqual(u'file.txt', products[0].file_name)
-        self.assertEqual(u'remote/1/file.txt', products[0].file_path)
-        self.assertEqual(u'text/plain', products[0].media_type)
+        self.assertEqual('file.txt', products[0].file_name)
+        self.assertEqual('remote/1/file.txt', products[0].file_path)
+        self.assertEqual('text/plain', products[0].media_type)
         self.assertEqual(self.workspace.id, products[0].workspace_id)
         self.assertIsNotNone(products[0].uuid)
         self.assertTrue(products[0].is_operational)
 
-        self.assertEqual(u'file.json', products[1].file_name)
-        self.assertEqual(u'remote/2/file.json', products[1].file_path)
-        self.assertEqual(u'application/x-custom-json', products[1].media_type)
+        self.assertEqual('file.json', products[1].file_name)
+        self.assertEqual('remote/2/file.json', products[1].file_path)
+        self.assertEqual('application/x-custom-json', products[1].media_type)
         self.assertEqual(self.workspace.id, products[1].workspace_id)
         self.assertIsNotNone(products[1].uuid)
         self.assertTrue(products[1].is_operational)
@@ -376,51 +367,46 @@ class TestProductFileManagerUploadFiles(TestCase):
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_non_operational_product(self):
-        '''Tests calling ProductFileManager.upload_files() with a non-operational input file'''
-        products_no = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files_no, [self.source_file.id], self.job_exe_no, self.workspace)
-        products = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id, products_no[0].file.id],
+        """Tests calling ProductFileManager.upload_files() with a non-operational input file"""
+        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
+                                                       self.workspace)
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].file.id],
                                                     self.job_exe, self.workspace)
         self.assertFalse(products[0].is_operational)
         self.assertFalse(products[1].is_operational)
 
-
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_geo_metadata(self):
-        '''Tests calling ProductFileManager.upload_files() successfully with extra geometry meta data'''
+        """Tests calling ProductFileManager.upload_files() successfully with extra geometry meta data"""
         geo_metadata = {
-            u'data_started': u'2015-05-15T10:34:12Z',
-            u'data_ended': u'2015-05-15T10:36:12Z',
-            u'geo_json': {
-                u'type': u'Polygon',
-                u'coordinates': [
+            'data_started': '2015-05-15T10:34:12Z',
+            'data_ended': '2015-05-15T10:36:12Z',
+            'geo_json': {
+                'type': 'Polygon',
+                'coordinates': [
                     [[1.0, 10.0], [2.0, 10.0], [2.0, 20.0], [1.0, 20.0], [1.0, 10.0]],
                 ]
             }
         }
-        files = [(u'local/1/file.txt', u'remote/1/file.txt', u'text/plain', geo_metadata)]
+        files = [(os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt'), 'remote/1/file.txt', 'text/plain',
+                  geo_metadata)]
 
-        products = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, files,
-                                                    [self.source_file.id], self.job_exe, self.workspace)
+        products = ProductFile.objects.upload_files(files, [self.source_file.id], self.job_exe, self.workspace)
 
-        self.workspace.upload_files.assert_called_once_with(self.upload_dir, self.workspace_work_dir,
-                                                            [(u'local/1/file.txt', u'remote/1/file.txt')])
-        self.assertListEqual(self.workspace.delete_files.call_args_list, [])
-
-        self.assertEqual(u'file.txt', products[0].file_name)
-        self.assertEqual(u'remote/1/file.txt', products[0].file_path)
-        self.assertEqual(u'text/plain', products[0].media_type)
+        self.assertEqual('file.txt', products[0].file_name)
+        self.assertEqual('remote/1/file.txt', products[0].file_path)
+        self.assertEqual('text/plain', products[0].media_type)
         self.assertEqual(self.workspace.id, products[0].workspace_id)
-        self.assertEqual(u'Polygon', products[0].geometry.geom_type)
-        self.assertEqual(u'Point', products[0].center_point.geom_type)
+        self.assertEqual('Polygon', products[0].geometry.geom_type)
+        self.assertEqual('Point', products[0].center_point.geom_type)
         self.assertEqual(datetime.datetime(2015, 5, 15, 10, 34, 12, tzinfo=utc), products[0].data_started)
         self.assertEqual(datetime.datetime(2015, 5, 15, 10, 36, 12, tzinfo=utc), products[0].data_ended)
         self.assertIsNotNone(products[0].uuid)
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):
-        '''Tests setting UUIDs on products from a single job execution.'''
-        products = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [],
-                                                    self.job_exe, self.workspace)
+        """Tests setting UUIDs on products from a single job execution."""
+        products = ProductFile.objects.upload_files(self.files, [], self.job_exe, self.workspace)
 
         # Make sure multiple products from the same job have different UUIDs
         self.assertIsNotNone(products[0].uuid)
@@ -429,15 +415,13 @@ class TestProductFileManagerUploadFiles(TestCase):
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid_use_job_exe(self):
-        '''Tests setting UUIDs on products from multiple job executions of the same type.'''
+        """Tests setting UUIDs on products from multiple job executions of the same type."""
         job = job_test_utils.create_job()
         job_exe1 = job_test_utils.create_job_exe(job=job)
         job_exe2 = job_test_utils.create_job_exe(job=job)
 
-        products1 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                     job_exe1, self.workspace)
-        products2 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                     job_exe2, self.workspace)
+        products1 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe1, self.workspace)
+        products2 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe2, self.workspace)
 
         # Make sure products produced by multiple runs of the same job type have the same UUIDs
         self.assertIsNotNone(products1[0].uuid)
@@ -447,13 +431,11 @@ class TestProductFileManagerUploadFiles(TestCase):
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid_use_input_files(self):
-        '''Tests setting UUIDs on products with different source input files.'''
-        source_file2 = source_test_utils.create_source(file_name=u'input2.txt', workspace=self.workspace)
+        """Tests setting UUIDs on products with different source input files."""
+        source_file2 = source_test_utils.create_source(file_name='input2.txt', workspace=self.workspace)
 
-        products1 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                     self.job_exe, self.workspace)
-        products2 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [source_file2.id],
-                                                     self.job_exe, self.workspace)
+        products1 = ProductFile.objects.upload_files(self.files, [self.source_file.id], self.job_exe, self.workspace)
+        products2 = ProductFile.objects.upload_files(self.files, [source_file2.id], self.job_exe, self.workspace)
 
         # Make sure the source files are taken into account
         self.assertIsNotNone(products1[0].uuid)
@@ -463,13 +445,11 @@ class TestProductFileManagerUploadFiles(TestCase):
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid_use_job_type(self):
-        '''Tests setting UUIDs on products with different job types.'''
+        """Tests setting UUIDs on products with different job types."""
         job_exe2 = job_test_utils.create_job_exe()
 
-        products1 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                     self.job_exe, self.workspace)
-        products2 = ProductFile.objects.upload_files(self.upload_dir, self.work_dir, self.files, [self.source_file.id],
-                                                     job_exe2, self.workspace)
+        products1 = ProductFile.objects.upload_files(self.files, [self.source_file.id], self.job_exe, self.workspace)
+        products2 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe2, self.workspace)
 
         # Make sure the same inputs with different job types have different UUIDs
         self.assertIsNotNone(products1[0].uuid)
