@@ -1,30 +1,23 @@
 <ais-header name="'Recipe Types'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
 
 <div class="row">
-    <div class="master vh_height78 vh_max-height78 vmin_margin-bottom2" ng-class="masterClass">
-        <div class="row master-controls">
-            <div ng-class="newBtnContainerClass" ng-show="!minimizeMaster">
-                <button class="btn btn-sm" ng-class="addBtnClass" ng-show="user.is_admin" ng-click="newRecipeType()"><i class="fa" ng-class="addBtnIcon"></i> {{ addBtnText }}</button>
-            </div>
-            <div ng-class="minimizeBtnContainerClass">
+    <div class="master-container vh_height78 vh_max-height78" ng-class="masterClass">
+        <div class="master-content">
+            <div class="master-controls">
+                <div ng-if="user.is_admin" class="pull-right"><button class="btn btn-sm" ng-show="!minimizeMaster" ng-class="addBtnClass" ng-click="newRecipeType()"><i class="fa" ng-class="addBtnIcon"></i> {{ addBtnText }}</button></div>
                 <button class="btn btn-default btn-sm" ng-click="toggleMaster()"><i ng-class="minimizeBtnClass"></i></button>
             </div>
-        </div>
-        <div class="master-container" ng-show="!minimizeMaster">
-            <ul class="list-unstyled">
+            <ul class="list-unstyled" ng-show="!minimizeMaster">
                 <li ng-repeat="recipeType in recipeTypes" ng-class="{ active: activeRecipeType.id === recipeType.id }" ng-click="loadRecipeType(recipeType.id)">{{ recipeType.title + ' ' + recipeType.version }}</li>
             </ul>
         </div>
     </div>
-    <div class="detail vh_height78 vh_max-height78 vmin_margin-bottom2" ng-class="detailClass">
+    <div class="detail-container vh_height78 vh_max-height78" ng-class="detailClass">
         <div class="text-center" ng-if="!activeRecipeType">
             <h2>Select a recipe type to view its details.</h2>
         </div>
-        <div ng-if="activeRecipeType">
-            <div class="detail-container no-tabs vh_height78">
-                <ais-scale-recipe-graph-viewer recipe-type="activeRecipeType" allow-edit="true" has-container="true"></ais-scale-recipe-graph-viewer>
-            </div>
+        <div class="detail-content no-tabs" ng-if="activeRecipeType">
+            <ais-scale-recipe-graph-viewer recipe-type="activeRecipeType" allow-edit="true" has-container="true"></ais-scale-recipe-graph-viewer>
         </div>
     </div>
 </div>
-

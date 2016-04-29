@@ -23,8 +23,6 @@
         $scope.masterClass = 'col-xs-3';
         $scope.detailClass = 'col-xs-9';
         $scope.minimizeMaster = false;
-        $scope.newBtnContainerClass = 'hidden';
-        $scope.minimizeBtnContainerClass = 'hidden';
         $scope.minimizeBtnClass = 'fa fa-chevron-left';
         $scope.user = userService.getUserCreds();
 
@@ -121,11 +119,9 @@
             } else {
                 $scope.minimizeMaster = !$scope.minimizeMaster;
             }
-            $scope.masterClass = $scope.minimizeMaster ? 'col-xs-1' : 'col-xs-3';
+            $scope.masterClass = $scope.minimizeMaster ? 'col-xs-1 minimized' : 'col-xs-3';
             $scope.detailClass = $scope.minimizeMaster ? 'col-xs-11' : 'col-xs-9';
-            $scope.minimizeBtnContainerClass = $scope.minimizeMaster ? 'col-xs-12' : $rootScope.user ? 'col-xs-6 text-right' : 'col-xs-12 text-right';
             $scope.minimizeBtnClass = $scope.minimizeMaster ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
-            $scope.newBtnContainerClass = $scope.minimizeMaster ? 'hidden' : 'col-xs-6';
         };
 
         $rootScope.$on('toggleEdit', function (event, data) {
@@ -137,11 +133,6 @@
         $rootScope.$on('recipeModified', function () {
             $scope.isRecipeModified = true;
             $scope.saveBtnClass = 'btn-success';
-        });
-
-        angular.element(document).ready(function () {
-            $scope.newBtnContainerClass = $rootScope.user ? 'col-xs-6' : 'hidden';
-            $scope.minimizeBtnContainerClass = $rootScope.user ? 'col-xs-6 text-right' : 'col-xs-12 text-right';
         });
     });
 })();

@@ -68,34 +68,6 @@
                             <div class="col-graph panel panel-default" ng-class="{ 'edit-recipe': !recipeType.id || mode === 'edit' }">
                                 <svg style="{{ detailContainerStyle }}"><g/></svg>
                             </div>
-                            <!--<div id="output-selector" ng-show="selectedInputProvider">-->
-                                <!--<div id="output-selector-container" class="io-selector">-->
-                                    <!--<div class="io-selector-title">Select provider/output</div>-->
-                                    <!--<ul ng-show="selectedInputProvider.job_type.job_type_interface.output_data.length > 0" class="list-group">-->
-                                        <!--<li ng-repeat="joboutput in selectedInputProvider.job_type.job_type_interface.output_data" class="list-group-item">-->
-                                            <!--<a ng-click="mapInput(selectedInputProvider.name, joboutput.name)">{{ joboutput.name }}</a>-->
-                                            <!--<div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>-->
-                                        <!--</li>-->
-                                    <!--</ul>-->
-                                    <!--<ul ng-show="selectedInputProvider.name === 'start'" class="list-group">-->
-                                        <!--<li ng-repeat="recipeInput in recipeType.definition.input_data" class="list-group-item">-->
-                                            <!--<a ng-click="mapInputRecipeInput(recipeInput.name)">{{ recipeInput.name }}</a>-->
-                                            <!--<div class="input-media-types" ng-show="recipeInput.media_types">{{ recipeInput.media_types.join(',') }}</div>-->
-                                        <!--</li>-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div id="input-selector" ng-show="selectedOutputReceiver">-->
-                                <!--<div id="input-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">-->
-                                    <!--<div>Select receiver/input</div>-->
-                                    <!--<ul ng-show="selectedOutputReceiver.job_type.job_type_interface.input_data.length > 0" class="list-group">-->
-                                        <!--<li ng-repeat="jobinput in selectedOutputReceiver.job_type.job_type_interface.input_data" class="list-group-item">-->
-                                            <!--<a ng-click="mapOutput(selectedOutputReceiver.name, jobinput.name)">{{ jobinput.name }}</a>-->
-                                            <!--<div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>-->
-                                        <!--</li>-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                            <!--</div>-->
                         </div>
                         <div class="col-xs-3">
                             <div class="text-center" ng-show="!selectedJob">

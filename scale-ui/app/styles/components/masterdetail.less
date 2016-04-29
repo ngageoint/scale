@@ -1,18 +1,25 @@
 @import 'colors';
 
-.master {
+.master-container {
     overflow-y: auto;
 
-    .master-controls {
-        margin-bottom: 10px;
-    }
-
-    .master-container {
+    .master-content {
+        height: 100%;
         background-color: #fff;
-        border: 1px solid #ddd;
-        min-height: 50%;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        border-left: 1px solid #ddd;
+
+        .master-controls {
+            background: @view_bg;
+            padding: 0 0 10px 0;
+            outline: 1px solid @view_bg;
+            margin-bottom: 1px;
+        }
 
         ul {
+            border-top: 1px solid #ddd;
+
             li {
                 display: block;
                 background: #fff;
@@ -32,17 +39,24 @@
             }
         }
     }
+
+    &.minimized {
+        .master-content {
+            background-color: @view_bg;
+            border: none;
+        }
+    }
 }
 
-.detail {
+.detail-container {
     overflow-y: auto;
 
-    .detail-container {
+    .detail-content {
+        min-height: 100%;
         background: #fff;
         border-left: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
         border-right: 1px solid #ddd;
-        overflow-y: auto;
 
         &.no-tabs {
             border-top: 1px solid #ddd;
@@ -69,6 +83,11 @@
 
         #details, #performance, #errors {
             padding: 0 10px;
+        }
+
+        .nav-tabs {
+            background: #F2F9FF;
+            margin: 0 -1px;
         }
 
         .tab-content {
