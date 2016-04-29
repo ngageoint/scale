@@ -65,6 +65,13 @@
             return getSync(jobTypeStatusOverrideUrl);
         });
 
+        // Running job types
+        var runningJobsOverrideUrl = 'test/data/runningJobs.json';
+        var runningJobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/running/', 'i');
+        $httpBackend.whenGET(runningJobsRegex).respond(function () {
+            return getSync(runningJobsOverrideUrl);
+        });
+
         // Job Type Details
         var jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType1.json';
         var jobTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/.*/', 'i');

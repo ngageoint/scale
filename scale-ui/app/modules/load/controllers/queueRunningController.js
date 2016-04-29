@@ -34,7 +34,7 @@
                     field: 'title',
                     displayName: 'Job Type',
                     enableFiltering: false,
-                    cellTemplate: '<div class="ui-grid-cell-contents"><i class="fa fa-{{ row.entity.getIcon() }}"></i> {{ row.entity.job_type.title }}</div>'
+                    cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
                 },
                 {field: 'job_type.version', enableFiltering: false},
                 {field: 'count', displayName: 'Number of Jobs', enableFiltering: false},
