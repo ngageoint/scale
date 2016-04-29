@@ -6,7 +6,7 @@
   "description": "Parses WorldView-2 GeoTiffs",
   "category": "spectral",
   "is_operational": true,
-  "icon_code": "f248",
+  "icon_code": "f0c2",
   "docker_privileged": false,
   "docker_image": "10.4.4.10:5000/wv2-parse:1.0.1",
   "priority": 1,

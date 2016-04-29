@@ -6,7 +6,7 @@
   "description": "Applies Orthorectification to WorldView-2 data",
   "category": "spectral",
   "is_operational": true,
-  "icon_code": "f248",
+  "icon_code": "f219",
   "docker_privileged": false,
   "docker_image": "10.4.4.10:5000/wv2-ortho:2.0",
   "priority": 1,
