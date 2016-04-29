@@ -48,10 +48,9 @@ class TestPreJobSteps(TestCase):
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', command_arguments=cmd_args, timeout=timeout, queued=now())
 
-    @patch('job.management.commands.scale_post_steps.subprocess.check_call')
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
-    def test_scale_pre_steps_successful(self, mock_job_exe, mock_sysexit, mock_subprocess):
+    def test_scale_pre_steps_successful(self, mock_job_exe, mock_sysexit):
         """Tests successfully executing scale_pre_steps."""
 
         # Set up mocks
