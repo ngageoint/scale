@@ -57,10 +57,6 @@ class Command(BaseCommand):
 
         logger.info(u'Command starting: scale_scheduler')
         logger.info(u' - Master: %s', mesos_master)
-        executor = mesos_pb2.ExecutorInfo()
-        executor.executor_id.value = 'scale'
-        executor.command.value = '%s %s scale_executor' % (settings.PYTHON_EXECUTABLE, settings.MANAGE_FILE)
-        executor.name = 'Scale Executor (Python)'
 
         try:
             scheduler_zk = settings.SCHEDULER_ZK
@@ -71,14 +67,14 @@ class Command(BaseCommand):
             import socket
             from scheduler import cluster_utils
             my_id = socket.gethostname()
-            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master, executor)
+            cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master)
         else:
             # leader election is disabled
-            self.run_scheduler(mesos_master, executor)
+            self.run_scheduler(mesos_master)
 
-    def run_scheduler(self, mesos_master, executor):
+    def run_scheduler(self, mesos_master):
         logger.info("I am the leader")
-        self.scheduler = ScaleScheduler(executor)
+        self.scheduler = ScaleScheduler()
 
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.

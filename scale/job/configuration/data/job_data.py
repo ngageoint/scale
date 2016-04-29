@@ -8,7 +8,6 @@ from numbers import Integral
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.results.job_results import JobResults
-from job.execution.file_system import get_job_exe_output_data_dir, get_job_exe_output_work_dir
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
 

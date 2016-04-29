@@ -3,12 +3,6 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta, abstractmethod
 import logging
-import os
-
-from job.execution.file_system import get_job_exe_input_data_dir, get_job_exe_input_work_dir, \
-    get_job_exe_output_data_dir, get_job_exe_output_work_dir, \
-    delete_normal_job_exe_dir_tree
-from storage.models import ScaleFile, Workspace
 
 
 logger = logging.getLogger(__name__)

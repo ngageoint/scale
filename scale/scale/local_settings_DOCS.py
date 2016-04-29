@@ -1,5 +1,3 @@
-#@PydevCodeAnalysisIgnore
-
 # Settings file for use with readthedocs sphinx generation
 
 # Include all the default settings.

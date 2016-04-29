@@ -1,7 +1,6 @@
 """Defines the class for a job execution post-task"""
 from __future__ import unicode_literals
 
-from job import settings
 from job.execution.running.tasks.base_task import Task
 from job.management.commands.scale_post_steps import EXIT_CODE_DICT as POST_EXIT_CODE_DICT
 from job.models import JobExecution
@@ -26,7 +25,7 @@ class PostTask(Task):
         self._docker_image = None
         self._docker_params = job_exe.get_job_configuration().get_pre_task_docker_params()
         self._is_docker_privileged = False
-        self._command = '%s %s scale_post_steps' % (settings.settings.PYTHON_EXECUTABLE, settings.settings.MANAGE_FILE)
+        self._command = '%s %s scale_post_steps'
         self._command_arguments = '-i %i' % job_exe.id
 
     def complete(self, task_results):

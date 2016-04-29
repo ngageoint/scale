@@ -8,20 +8,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import scale
+import sys
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# These are used to build the commands executed by mesos for pre/post tasks, etc.
-# They should be automatically set to the executable and manage.py used to
-# start the mesos scheduler. If you need to use different settings, override
-# in the local settings.
-import sys
-PYTHON_EXECUTABLE = sys.executable
-MANAGE_FILE = os.path.join(BASE_DIR, 'manage.py')
-
 # Project version
-import scale
 VERSION = scale.__version__
 
 # Mesos connection information. Default for -m
@@ -47,10 +41,6 @@ SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-# If this is true, we don't delete the job_dir after it is finished.
-# This might fill up the disk but can be useful for debugging.
-SKIP_CLEANUP_JOB_DIR = False
 
 TEMPLATE_DEBUG = False
 

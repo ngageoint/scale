@@ -94,11 +94,6 @@
   command: easy_install /tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
   become: true
 
-- name: Create node workdir
-  tags: mesos-slave
-  file: path='{{ node_work_dir }}' state=directory mode=0777
-  become: true
-
 - name: Create scale user
   tags: mesos-slave
   user: name=scale

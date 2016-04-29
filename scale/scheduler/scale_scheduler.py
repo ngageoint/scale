@@ -51,15 +51,11 @@ class ScaleScheduler(MesosScheduler):
     # Warning threshold for callbacks that include database queries
     DATABASE_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, executor):
+    def __init__(self):
         """Constructor
-
-        :param executor: The executor to use for launching tasks
-        :type executor: :class:`mesos_pb2.ExecutorInfo`
         """
 
         self._driver = None
-        self._executor = executor
         self._framework_id = None
         self._master_hostname = None
         self._master_port = None

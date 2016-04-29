@@ -1,5 +1,3 @@
-#@PydevCodeAnalysisIgnore
-
 # Settings file for use with travis-ci
 
 # Include all the default settings.
@@ -40,13 +38,6 @@ DATABASES = {
       'HOST': 'localhost',
    },
 }
-
-# Node settings
-NODE_WORK_DIR = '/scale_data'
-
-# If this is true, we don't delete the job_dir after it is finished.
-# This might fill up the disk but can be useful for debugging.
-SKIP_CLEANUP_JOB_DIR = False
 
 # Master settings
 MESOS_MASTER = 'zk://localhost:2181/mesos'

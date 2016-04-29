@@ -1,5 +1,3 @@
-#@PydevCodeAnalysisIgnore
-
 # This is a sample file that can be used as a starting place for creating a
 # local_settings.py file for production purposes. Copy this file and rename it
 # to local_settings.py. Then make any additional changes you need to configure
@@ -46,13 +44,6 @@ DATABASES = {
         'PORT': '5432',
     },
 }
-
-# Node settings
-NODE_WORK_DIR = '/tmp/scale/work'
-
-# If this is true, we don't delete the job_dir after it is finished.
-# This might fill up the disk but can be useful for debugging.
-SKIP_CLEANUP_JOB_DIR = False
 
 # Master settings
 MESOS_MASTER = ''

@@ -1,7 +1,6 @@
 """Defines the class for a job execution job task"""
 from __future__ import unicode_literals
 
-from job import settings
 from job.execution.running.tasks.base_task import Task
 from job.models import JobExecution
 from job.resources import NodeResources
@@ -27,9 +26,6 @@ class JobTask(Task):
             self._docker_params = job_exe.get_job_configuration().get_job_task_docker_params()
         self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
-        if job_exe.is_system:
-            self._command = '%s %s %s' % (settings.settings.PYTHON_EXECUTABLE, settings.settings.MANAGE_FILE,
-                                          self._command)
         self._command_arguments = job_exe.command_arguments
 
     def complete(self, task_results):
