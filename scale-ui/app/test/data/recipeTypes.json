@@ -5,10 +5,10 @@
   "results": [
     {
       "id": 1,
-      "name": "landsat",
-      "version": "1.0.1",
-      "title": "Landsat",
-      "description": "Do stuff with landsat files",
+      "name": "landsat8",
+      "version": "1.0.0",
+      "title": "Landsat8",
+      "description": "Process Landsat 8 sensor data",
       "is_active": true,
       "definition": {
         "input_data": [{
@@ -98,154 +98,87 @@
     },
     {
       "id": 2,
-      "name": "landsat8",
-      "version": "1.0.0",
-      "title": "Landsat 8",
-      "description": "Process Landsat 8 sensor data",
+      "name": "spectral",
+      "version": "1.5.0",
+      "title": "Spectral Analysis",
+      "description": "Perform spectral analysis on a NITF",
       "is_active": true,
       "definition":{
-        "input_data":[
-          {
-            "media_types":[
-              "application/octet-stream"
-            ],
-            "required":true,
-            "type":"file",
-            "name":"input_file"
-          }
-        ],
-        "version":"1.0",
-        "jobs":[
-          {
-            "dependencies":[
-
-            ],
-            "job_type":{
-              "version":"1.0.0",
-              "name":"landsat-extract"
-            },
-            "name":"landsat-extract",
-            "recipe_inputs":[
-              {
-                "job_input":"infile",
-                "recipe_input":"input_file"
-              }
-            ]
+        "input_data": [{
+          "name": "input_file",
+          "required": true,
+          "type": "file",
+          "media_types": ["image/nitf"]
+        }],
+        "version": "1.0",
+        "jobs": [{
+          "recipe_inputs": [],
+          "name": "sam",
+          "job_type": {
+            "name": "sam",
+            "version": "1.0"
           },
-          {
-            "dependencies":[
-              {
-                "connections":[
-                  {
-                    "output":"b11-tir2",
-                    "input":"thermal"
-                  }
-                ],
-                "name":"landsat-extract"
-              }
-            ],
-            "job_type":{
-              "version":"1.0.0",
-              "name":"landsat-hotspots"
-            },
-            "name":"landsat-hotspots",
-            "recipe_inputs":[
-
-            ]
+          "dependencies": []
+        }, {
+          "recipe_inputs": [],
+          "name": "scm",
+          "job_type": {
+            "name": "scm",
+            "version": "1.0"
           },
-          {
-            "dependencies":[
-              {
-                "connections":[
-                  {
-                    "output":"b2-blue",
-                    "input":"blue"
-                  },
-                  {
-                    "output":"b3-green",
-                    "input":"green"
-                  },
-                  {
-                    "output":"b4-red",
-                    "input":"red"
-                  }
-                ],
-                "name":"landsat-extract"
-              }
-            ],
-            "job_type":{
-              "version":"1.0.0",
-              "name":"landsat-rgb"
-            },
-            "name":"landsat-rgb",
-            "recipe_inputs":[
-
-            ]
+          "dependencies": []
+        }, {
+          "recipe_inputs": [],
+          "name": "cem",
+          "job_type": {
+            "name": "cem",
+            "version": "1.0"
           },
-          {
-            "dependencies":[
-              {
-                "connections":[
-                  {
-                    "output":"hotspots",
-                    "input":"geotiff"
-                  }
-                ],
-                "name":"landsat-hotspots"
-              }
-            ],
-            "job_type":{
-              "version":"1.0.0",
-              "name":"publish-hotspots"
-            },
-            "name":"publish-hotspots",
-            "recipe_inputs":[
-
-            ]
+          "dependencies": []
+        }, {
+          "recipe_inputs": [],
+          "name": "export-shp",
+          "job_type": {
+            "name": "export-shp",
+            "version": "2.0"
           },
-          {
-            "dependencies":[
-              {
-                "connections":[
-                  {
-                    "output":"landsat-rgb",
-                    "input":"geotiff"
-                  }
-                ],
-                "name":"landsat-rgb"
-              }
-            ],
-            "job_type":{
-              "version":"1.0.0",
-              "name":"publish-rgb"
-            },
-            "name":"publish-rgb",
-            "recipe_inputs":[
-
-            ]
-          }
-        ]
+          "dependencies": [{
+            "name": "cem",
+            "connections": [{
+              "output": "cem-detections",
+              "input": "infile"
+            }]
+          }, {
+            "name": "scm",
+            "connections": [{
+              "output": "scm-detections",
+              "input": "infile"
+            }]
+          }, {
+            "name": "sam",
+            "connections": [{
+              "output": "sam-detections",
+              "input": "infile"
+            }]
+          }]
+        }]
       },
       "revision_num": 1,
-      "created": "2015-06-15T19:03:26.346Z",
-      "last_modified": "2015-06-15T19:03:26.346Z",
+      "created": "2016-04-29T19:03:26.346Z",
+      "last_modified": "2016-04-29T19:03:26.346Z",
       "archived": null,
-      "trigger_rule":{
-        "id":74,
-        "type":"INGEST",
-        "name":"landsat8",
-        "is_active":true,
-        "configuration":{
-          "version":"1.0",
-          "data":{
-            "workspace_name":"products",
-            "input_data_name":"input_file"
+      "trigger_rule": {
+        "type": "INGEST",
+        "name": "spectral",
+        "is_active": true,
+        "configuration": {
+          "condition": {
+            "media_type": "",
+            "data_types": ["spectral"]
           },
-          "condition":{
-            "media_type":"",
-            "data_types":[
-              "landsat"
-            ]
+          "data": {
+            "workspace_name": "products",
+            "input_data_name": "input_file"
           }
         }
       }

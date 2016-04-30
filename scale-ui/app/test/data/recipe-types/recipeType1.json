@@ -1,9 +1,9 @@
 {
   "id": 1,
-  "name": "landsat",
-  "version": "1.0.1",
-  "title": "Landsat",
-  "description": "Do stuff with landsat files",
+  "name": "landsat8",
+  "version": "1.0.0",
+  "title": "Landsat8",
+  "description": "Process Landsat 8 sensor data",
   "definition": {
     "input_data": [{
       "name": "input_file",
