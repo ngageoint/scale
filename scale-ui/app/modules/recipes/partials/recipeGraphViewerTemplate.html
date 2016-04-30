@@ -74,13 +74,13 @@
                                 <h3>Click a job node to view dependencies, inputs, and outputs</h3>
                             </div>
                             <div class="col-details panel panel-primary" ng-show="selectedJob">
-                                <div class="panel-heading">
+                                <div class="panel-heading margin-bottom-md">
                                     <h4>
                                         <span ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="badge pull-right" ng-click="deleteRecipeJob(selectedJob.name)" uib-tooltip="Remove Job" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
                                         {{selectedJob.job_type.title}} {{selectedJob.job_type.version}}
                                     </h4>
                                 </div>
-                                <div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>
+                                <!--<div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>-->
                                 <div id="jobdetail" class="job-details" ng-if="selectedJob.job_type.id">
                                     <div class="job-active" ng-show="selectedRecipeJob">
                                         <a href="{{ '#/jobs/job/' + selectedRecipeJob.job.id }}">{{ selectedRecipeJob.job.status }}</a>

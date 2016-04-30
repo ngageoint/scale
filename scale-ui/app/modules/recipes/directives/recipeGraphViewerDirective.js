@@ -180,7 +180,7 @@
             $('div').removeClass('job-active');
 
             // find the job in the recipe definition
-            var job = _.find($scope.recipeType.definition.jobs,{name: name});
+            var job = _.find($scope.recipeType.definition.jobs, { name: name });
 
             if (name === 'start') {
                 job = startJob;
@@ -459,7 +459,8 @@
         $scope.addJobType = function (selectedJobType) {
             console.log(selectedJobType.name);
             $scope.recipeType.definition.addJob(selectedJobType);
-            $scope.$broadcast('redrawRecipes');
+            //$scope.$broadcast('redrawRecipes');
+            $scope.redraw();
         };
 
         $scope.mapInput = function (providerName, providerOutput) {
@@ -713,11 +714,11 @@
                 if (!$scope.recipeType) {
                     $scope.recipeType = new RecipeType();
                 }
-                
-                if (!$scope.recipeType.id || $scope.recipeType.id === 0) {
+
+                if (typeof $scope.recipeType.id === 'undefined' || $scope.recipeType.id === null || $scope.recipeType.id === 0) {
                     $scope.mode = 'add';
                 } else {
-                    $scope.mode = 'view';
+                    $scope.mode = $scope.mode || 'view';
                 }
                 _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
                     if (!job.job_type.job_type_interface && $scope.recipeType.job_types) {
