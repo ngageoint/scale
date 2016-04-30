@@ -713,8 +713,11 @@
                 if (!$scope.recipeType) {
                     $scope.recipeType = new RecipeType();
                 }
+                
                 if (!$scope.recipeType.id || $scope.recipeType.id === 0) {
                     $scope.mode = 'add';
+                } else {
+                    $scope.mode = 'view';
                 }
                 _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
                     if (!job.job_type.job_type_interface && $scope.recipeType.job_types) {

@@ -182,6 +182,79 @@
           }
         }
       }
+    },
+    {
+      "id": 3,
+      "name": "worldview",
+      "version": "1.0.2",
+      "title": "WorldView",
+      "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification",
+      "is_active": true,
+      "definition": {
+        "input_data": [{
+          "name": "input_file",
+          "required": true,
+          "type": "file",
+          "media_types": ["image/nitf"]
+        }],
+        "version": "1.0",
+        "jobs": [{
+          "recipe_inputs": [],
+          "name": "wv2-parse",
+          "job_type": {
+            "name": "wv2-parse",
+            "version": "1.0.1"
+          },
+          "dependencies": []
+        }, {
+          "recipe_inputs": [],
+          "name": "wv2-atmosphere-corr",
+          "job_type": {
+            "name": "wv2-atmosphere-corr",
+            "version": "1.0.1"
+          },
+          "dependencies": [{
+            "name": "wv2-parse",
+            "connections": [{
+              "output": "wv2-parsed",
+              "input": "infile"
+            }]
+          }]
+        }, {
+          "recipe_inputs": [],
+          "name": "wv2-ortho",
+          "job_type": {
+            "name": "wv2-ortho",
+            "version": "2.0"
+          },
+          "dependencies": [{
+            "name": "wv2-parse",
+            "connections": [{
+              "output": "wv2-parsed",
+              "input": "infile"
+            }]
+          }]
+        }]
+      },
+      "revision_num": 1,
+      "created": "2016-04-30T19:03:26.346Z",
+      "last_modified": "2016-04-30T19:03:26.346Z",
+      "archived": null,
+      "trigger_rule": {
+        "type": "INGEST",
+        "name": "worldview",
+        "is_active": true,
+        "configuration": {
+          "condition": {
+            "media_type": "",
+            "data_types": ["worldview"]
+          },
+          "data": {
+            "workspace_name": "products",
+            "input_data_name": "input_file"
+          }
+        }
+      }
     }
   ]
 }

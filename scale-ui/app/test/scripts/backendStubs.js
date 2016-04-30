@@ -92,17 +92,68 @@
 
 
         // Metrics Plot Data Detail
-        var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
+        //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
         var metricsPlotDataRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/.*/','i');
-        $httpBackend.whenGET(metricsPlotDataRegex).respond(function () {
-            return getSync(metricsPlotDataOverrideUrl);
+        $httpBackend.whenGET(metricsPlotDataRegex).respond(function (method, url) {
+            var obj = {};
+            url.split('?')[1].split('&').forEach(function(item) {
+                var s = item.split('='),
+                    k = s[0],
+                    v = s[1] && decodeURIComponent(s[1]);
+                (k in obj) ? obj[k].push(v) : obj[k] = [v]
+            });
+
+            var returnObj = {
+                count: 28,
+                next: null,
+                previous: null,
+                results: []
+            };
+
+            var numDays = moment.utc(obj.ended[0]).diff(moment.utc(obj.started[0]), 'd') + 1;
+
+            _.forEach(obj.column, function (metric) {
+                var returnResult = {
+                    column: { title: _.startCase(metric) },
+                    min_x: moment.utc(obj.started[0]).format('YYYY-MM-DD'),
+                    max_x: moment.utc(obj.ended[0]).format('YYYY-MM-DD'),
+                    min_y: 1,
+                    max_y: 1000,
+                    values: []
+                };
+
+                for (var i = 0; i < numDays; i++) {
+                    if (obj.choice_id && obj.choice_id.length > 1) {
+                        _.forEach(obj.choice_id, function (id) {
+                            returnResult.values.push({
+                                date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                                id: id
+                            });
+                        });
+                    } else {
+                        returnResult.values.push({
+                            date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                            value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                        });
+                    }
+                }
+                returnObj.results.push(returnResult);
+            });
+
+            return [200, returnObj, {}];
         });
 
         // Metrics Detail
-        var metricsDetailOverrideUrl = 'test/data/metricsIngest.json';
         var metricsDetailRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/','i');
-        $httpBackend.whenGET(metricsDetailRegex).respond(function () {
-            return getSync(metricsDetailOverrideUrl);
+        $httpBackend.whenGET(metricsDetailRegex).respond(function (method, url) {
+            var urlArr = url.split('/'),
+                detailType = urlArr[urlArr.length - 2];
+
+            if (detailType === 'job-types') {
+                return getSync('test/data/metricsJobTypes.json')
+            }
+            return getSync('test/data/metricsIngest.json');
         });
 
         // Metrics
@@ -138,6 +189,13 @@
         var queueStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'queue/status/', 'i');
         $httpBackend.whenGET(queueStatusRegex).respond(function () {
             return getSync(queueStatusOverrideUrl);
+        });
+        
+        // Recipe Details
+        var recipeDetailsOverrideUrl = 'test/data/recipeDetails.json';
+        var recipeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/.*/', 'i');
+        $httpBackend.whenGET(recipeDetailsRegex).respond(function () {
+            return getSync(recipeDetailsOverrideUrl);
         });
 
         // Recipes service
