@@ -16,7 +16,7 @@ from job.configuration.data.exceptions import InvalidData, StatusError
 from job.models import Job, JobType
 from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
 from recipe.models import Recipe, RecipeType
 from recipe.serializers import RecipeDetailsSerializer
 
@@ -123,10 +123,12 @@ class QueueNewRecipeView(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 
-class QueueStatusView(GenericAPIView):
+class QueueStatusView(ListAPIView):
     """This view is the endpoint for retrieving the queue status."""
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -134,9 +136,26 @@ class QueueStatusView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        queue_statuses = Queue.objects.get_queue_status()
 
-        queue_status = Queue.objects.get_queue_status()
-        return Response({'queue_status': queue_status})
+        page = self.paginate_queryset(queue_statuses)
+        serializer = self.get_serializer(page, many=True)
+        response = self.get_paginated_response(serializer.data)
+
+        # TODO Remove legacy queue_status structure once the UI is migrated
+        results = []
+        for queue_status in queue_statuses:
+            results.append({
+                'count': queue_status.count,
+                'longest_queued': queue_status.longest_queued,
+                'job_type_name': queue_status.job_type.name,
+                'job_type_version': queue_status.job_type.version,
+                'job_type_icon_code': queue_status.job_type.icon_code,
+                'highest_priority': queue_status.highest_priority,
+                'is_job_type_paused': queue_status.job_type.is_paused,
+            })
+        response.data['queue_status'] = results
+        return response
 
 
 class RequeueJobsView(GenericAPIView):

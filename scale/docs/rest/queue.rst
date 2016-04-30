@@ -83,7 +83,7 @@ place jobs and recipes on the queue for processing.
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Get Queue Status**                                                                                                    |
 +=========================================================================================================================+
-| Returns the current status of the queue by grouping the queued jobs by their types                                      |
+| Returns the current status of the queue by grouping the queued jobs by their types.                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /queue/status/                                                                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -95,33 +95,49 @@ place jobs and recipes on the queue for processing.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| queue_status       | List              | List of job types on the queue with meta-data                                  |
+| count              | Integer           | The total number of results that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The number of jobs of this type on the queue                                   |
+| next               | URL               | A URL to the next page of results.                                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| longest_queued     | ISO-8601 Datetime | When the job that has been queued the longest of this type was queued          |
+| previous           | URL               | A URL to the previous page of results.                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_type_name      | String            | The name of this job type                                                      |
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_type_version   | String            | The version of this job type                                                   |
+| .job_type          | JSON Object       | The job type being summarized within the queue.                                |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| highest_priority   | Integer           | The highest priority of any job of this type                                   |
+| .count             | Integer           | The total number of jobs of the type in the queue.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_job_type_paused | Boolean           | If this job type has been paused (jobs of this type won't be scheduled)        |
+| .longest_queued    | ISO-8601 Datetime | When the job that has been queued the longest of the type was queued.          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .highest_priority  | Integer           | The highest priority of any job of the type in the queue.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
-|        "queue_status": [                                                                                                |
-|           {                                                                                                             |
-|              "count": 19,                                                                                               |
-|              "longest_queued": "1970-01-01T00:00:00.000Z",                                                              |
-|              "job_type_name": "My Job Type",                                                                            |
-|              "job_type_version": "1.0",                                                                                 |
-|              "highest_priority": 1,                                                                                     |
-|              "is_job_type_paused": false                                                                                |
-|           },                                                                                                            |
-|           ...                                                                                                           |
+|        "count": 1,                                                                                                      |
+|        "next": null,                                                                                                    |
+|        "previous": null,                                                                                                |
+|        "results": [                                                                                                     |
+|            {                                                                                                            |
+|                "job_type": {                                                                                            |
+|                    "id": 1,                                                                                             |
+|                    "name": "scale-ingest",                                                                              |
+|                    "version": "1.0",                                                                                    |
+|                    "title": "Scale Ingest",                                                                             |
+|                    "description": "Ingests a source file into a workspace",                                             |
+|                    "is_system": true,                                                                                   |
+|                    "is_long_running": false,                                                                            |
+|                    "is_active": true,                                                                                   |
+|                    "is_operational": true,                                                                              |
+|                    "is_paused": false,                                                                                  |
+|                    "icon_code": "f013"                                                                                  |
+|                },                                                                                                       |
+|                "count": 19,                                                                                             |
+|                "longest_queued": "1970-01-01T00:00:00.000Z",                                                            |
+|                "highest_priority": 1                                                                                    |
+|            },                                                                                                           |
+|            ...                                                                                                          |
 |        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
