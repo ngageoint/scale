@@ -3,7 +3,9 @@
   "name": "scm",
   "title": "Spectral Correlation Mapper",
   "version": "1.0",
-  "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity.",
+  "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity. The Spectral Correlation Mapper (SCM) method is a derivative of Pearsonian Correlation Coefficient that eliminates negative correlation and maintains the SAM characteristic of minimizing the shading effect resulting in better results. The SCM varies from –1 to 1 and cos (SAM) varies from 0 to 1. Figure 1 – Graphic area in relation to the deviations beginning at x mean and y mean. Figure 2 – Exemplification of correlation: a) positive – with the major part of points presenting signals similar in relation at x mean and y mean; b) negative – with the major part of points with apposite signals in relation at x mean and y mean. The SCM algorithm method, similar to SAM, uses the reference spectrum defined by the investigator, in accordance with the image s/he wants to classify.",
+  "author_name": "Universidade de Brasília",
+  "author_url": "http://aviris.jpl.nasa.gov/proceedings/workshops/00_docs/Osmar_1_carvalho__web.pdf",
   "category": "spectral",
   "is_operational": true,
   "icon_code": "f140",
@@ -26,10 +28,10 @@
     "shared_resources": [],
     "command_arguments": "${infile} ${job_output_dir}",
     "input_data": [{
-      "media_types": ["application/octet-stream"],
+      "media_types": ["image/nitf"],
       "required": true,
       "type": "file",
-      "name": "geotiff"
+      "name": "image"
     },{
       "media_types": ["text/csv"],
       "required": true,

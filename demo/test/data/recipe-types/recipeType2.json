@@ -1,0 +1,199 @@
+{
+  "id": 2,
+  "name": "spectral",
+  "version": "1.5.0",
+  "title": "Spectral Analysis",
+  "description": "Perform spectral analysis on a NITF",
+  "definition": {
+    "input_data": [{
+      "name": "input_file",
+      "required": true,
+      "type": "file",
+      "media_types": ["image/nitf"]
+    }],
+    "version": "1.0",
+    "jobs": [{
+      "recipe_inputs": [],
+      "name": "sam",
+      "job_type": {
+        "name": "sam",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "scm",
+      "job_type": {
+        "name": "scm",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "cem",
+      "job_type": {
+        "name": "cem",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "export-shp",
+      "job_type": {
+        "name": "export-shp",
+        "version": "2.0"
+      },
+      "dependencies": [{
+        "name": "cem",
+        "connections": [{
+          "output": "cem-detections",
+          "input": "infile"
+        }]
+      }, {
+        "name": "scm",
+        "connections": [{
+          "output": "scm-detections",
+          "input": "infile"
+        }]
+      }, {
+        "name": "sam",
+        "connections": [{
+          "output": "sam-detections",
+          "input": "infile"
+        }]
+      }]
+    }]
+  },
+  "trigger_rule": {
+    "type": "INGEST",
+    "name": "spectral",
+    "is_active": true,
+    "configuration": {
+      "condition": {
+        "media_type": "",
+        "data_types": ["spectral"]
+      },
+      "data": {
+        "workspace_name": "products",
+        "input_data_name": "input_file"
+      }
+    }
+  },
+  "job_types": [{
+    "id": 2,
+    "name": "sam",
+    "title": "Spectral Angle Mapper",
+    "version": "1.0",
+    "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra.",
+    "category": "spectral",
+    "author_name": null,
+    "author_url": null,
+    "is_system": true,
+    "is_long_running": false,
+    "is_active": true,
+    "is_operational": true,
+    "is_paused": false,
+    "icon_code": "f102",
+    "uses_docker": false,
+    "docker_privileged": false,
+    "docker_image": null,
+    "priority": 10,
+    "timeout": 0,
+    "max_tries": 0,
+    "cpus_required": 0.5,
+    "mem_required": 64,
+    "disk_out_const_required": 64,
+    "disk_out_mult_required": 0,
+    "created": "2015-03-11T00:00:00Z",
+    "archived": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+  }, {
+    "id": 3,
+    "name": "scm",
+    "title": "Spectral Correlation Mapper",
+    "version": "1.0",
+    "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity.",
+    "category": "spectral",
+    "author_name": null,
+    "author_url": null,
+    "is_system": true,
+    "is_long_running": false,
+    "is_active": true,
+    "is_operational": true,
+    "is_paused": false,
+    "icon_code": "f101",
+    "uses_docker": false,
+    "docker_privileged": false,
+    "docker_image": null,
+    "priority": 10,
+    "timeout": 0,
+    "max_tries": 0,
+    "cpus_required": 0.5,
+    "mem_required": 64,
+    "disk_out_const_required": 64,
+    "disk_out_mult_required": 0,
+    "created": "2015-03-11T00:00:00Z",
+    "archived": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+  }, {
+    "id": 4,
+    "name": "cem",
+    "title": "Constrained Energy Minimization",
+    "version": "1.0",
+    "description": "CEM is used for target detection in hyperspectral remote sensing imagery.",
+    "category": "spectral",
+    "author_name": null,
+    "author_url": null,
+    "is_system": true,
+    "is_long_running": false,
+    "is_active": true,
+    "is_operational": true,
+    "is_paused": false,
+    "icon_code": "f185",
+    "uses_docker": false,
+    "docker_privileged": false,
+    "docker_image": null,
+    "priority": 10,
+    "timeout": 0,
+    "max_tries": 0,
+    "cpus_required": 0.5,
+    "mem_required": 64,
+    "disk_out_const_required": 64,
+    "disk_out_mult_required": 0,
+    "created": "2015-03-11T00:00:00Z",
+    "archived": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+  }, {
+    "id": 10,
+    "name": "export-shp",
+    "title": "Export Shapefile",
+    "version": "2.0",
+    "description": "Creates shapefile (.shp) from raster data",
+    "category": "export",
+    "author_name": null,
+    "author_url": null,
+    "is_system": true,
+    "is_long_running": false,
+    "is_active": true,
+    "is_operational": true,
+    "is_paused": false,
+    "icon_code": "f278",
+    "uses_docker": false,
+    "docker_privileged": false,
+    "docker_image": null,
+    "priority": 10,
+    "timeout": 0,
+    "max_tries": 0,
+    "cpus_required": 0.5,
+    "mem_required": 64,
+    "disk_out_const_required": 64,
+    "disk_out_mult_required": 0,
+    "created": "2015-03-11T00:00:00Z",
+    "archived": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z"
+  }]
+}
