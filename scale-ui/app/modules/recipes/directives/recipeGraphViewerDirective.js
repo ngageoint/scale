@@ -2,7 +2,7 @@
  * <ais-scale-recipe-viewer />
  */
 (function () {
-    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, JobType) {
+    angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, RecipeTypeDetail, JobType, localStorage) {
         $scope.vertices = [];
         $scope.edges = [];
         $scope.selectedJob = null;
@@ -438,10 +438,13 @@
                 } else {
                     recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
                         $scope.savingRecipe = false;
-                        $scope.recipeType = saveResult;
-                        console.log(JSON.stringify($scope.recipeType));
+                        $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
+                        if (scaleConfig.static) {
+                            console.log(JSON.stringify($scope.recipeType));
+                            localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
+                        }
                         $scope.redraw();
-                        //$location.path('/recipes/types/' + saveResult.id);
+                        $location.path('/recipes/types/' + $scope.recipeType.id);
                     });
                 }
             }).catch(function (error) {

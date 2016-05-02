@@ -33,8 +33,8 @@
               var d = $q.defer();
 
               $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/' + id + '/').success(function (data) {
-                var returnData = RecipeTypeDetail.transformer(data);
-                d.resolve(returnData);
+                  var returnData = RecipeTypeDetail.transformer(data);
+                  d.resolve(returnData);
               });
               return d.promise;
             },
@@ -70,7 +70,16 @@
 
             saveRecipeType: function (recipeType) {
                 var d = $q.defer();
-                var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
+                var cleanRecipeType = RecipeTypeValidation.transformer({
+                    id: recipeType.id,
+                    name: recipeType.name,
+                    version: recipeType.version,
+                    title: recipeType.title,
+                    description: recipeType.description,
+                    input_data: recipeType.definition.input_data,
+                    jobs: recipeType.definition.jobs,
+                    trigger_rule: recipeType.trigger_rule
+                });
 
                 if (!cleanRecipeType.id) {
                     $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {

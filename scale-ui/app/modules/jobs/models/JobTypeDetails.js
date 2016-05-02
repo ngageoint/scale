@@ -148,7 +148,7 @@
                     data.archived,
                     data.paused,
                     data.last_modified,
-                    data.interface,
+                    data.job_type_interface,
                     data.error_mapping,
                     data.trigger_rule,
                     data.errors,

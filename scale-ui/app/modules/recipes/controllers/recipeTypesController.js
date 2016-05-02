@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService) {
+    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService, localStorage) {
         $scope.loading = true;
         $scope.recipeTypes = [];
         $scope.recipeTypeIds = [];
@@ -39,6 +39,19 @@
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
                 $scope.recipeTypes = data;
+                if (scaleConfig.static) {
+                    var i = 0,
+                        oJson = {},
+                        sKey;
+                    for (; sKey = localStorage.key(i); i++) {
+                        oJson[sKey] = localStorage.getItem(sKey);
+                    }
+                    _.filter(_.pairs(oJson), function (o) {
+                        if (_.contains(o[0], 'recipeType')) {
+                            $scope.recipeTypes.push(JSON.parse(o[1]));
+                        }
+                    });
+                }
                 $scope.recipeTypeIds = _.pluck(data, 'id');
                 $scope.viewRecipeTypeDetail($scope.requestedRecipeTypeId);
                 hotkeys.bindTo($scope)
@@ -78,9 +91,9 @@
             $location.path('/recipes/types/0');
         };
 
-        $scope.viewRecipeTypeDetail = function(recipeTypeId){
+        $scope.viewRecipeTypeDetail = function (recipeTypeId) {
             if (recipeTypeId > 0) {
-                recipeService.getRecipeTypeDetail(recipeTypeId).then(function (data){
+                recipeService.getRecipeTypeDetail(recipeTypeId).then(function (data) {
                     $scope.activeRecipeType = data;
                 });
             } else if( recipeTypeId === 0) {
@@ -89,7 +102,7 @@
         };
 
         $scope.loadRecipeType = function (id) {
-            if($scope.activeRecipeType && $scope.activeRecipeType.modified){
+            if ($scope.activeRecipeType && $scope.activeRecipeType.modified) {
                 confirmChangeRecipe().then(function () {
                     // OK
                     $location.path('/recipes/types/' + id);

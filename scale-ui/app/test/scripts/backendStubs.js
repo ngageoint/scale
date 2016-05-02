@@ -220,7 +220,13 @@
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
             recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType' + id + '.json';
-            return getSync(recipeTypeDetailsOverrideUrl);
+            var returnValue = getSync(recipeTypeDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('recipeType' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
         });
 
         // Recipe Types service
@@ -231,21 +237,43 @@
         });
 
         // Save Recipe Type
-        var recipeTypeSaveOverrideUrl = '';
         var recipeTypeSaveRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
         $httpBackend.whenPOST(recipeTypeSaveRegex).respond(function (method, url, data) {
             var recipeJobTypes = [],
+                recipeJobTypesDetails = [],
                 jobTypeData = getSync('test/data/jobTypes.json'),
                 jobTypes = JSON.parse(jobTypeData[1]).results,
                 recipeType = JSON.parse(data),
-                uniqueRecipeTypeJobs = _.uniq(recipeType.definition.jobs, 'job_type');
+                uniqueRecipeTypeJobs = _.uniq(recipeType.jobs, 'job_type');
             _.forEach(uniqueRecipeTypeJobs, function (job) {
                 recipeJobTypes.push(_.find(jobTypes, function (jobType) {
                     return jobType.name === job.job_type.name && jobType.version === job.job_type.version;
                 }));
             });
-            recipeType.job_types = recipeJobTypes;
-            return [200, JSON.stringify(recipeType), {}];
+            _.forEach(recipeJobTypes, function (jobType) {
+                var jt = getSync('test/data/job-types/jobType' + jobType.id + '.json');
+                recipeJobTypesDetails.push(JSON.parse(jt[1]));
+            });
+            var returnRecipe = {
+                id: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                name: recipeType.name,
+                version: recipeType.version,
+                title: recipeType.title,
+                description: recipeType.description,
+                is_active: true,
+                definition: {
+                    input_data: recipeType.input_data,
+                    version: recipeType.version,
+                    jobs: recipeType.jobs
+                },
+                revision_num: 1,
+                created: new Date().toISOString(),
+                last_modified: new Date().toISOString(),
+                archived: null,
+                trigger_rule: recipeType.trigger_rule,
+                job_types: recipeJobTypesDetails
+            };
+            return [200, JSON.stringify(returnRecipe), {}];
         });
 
         // Status service
