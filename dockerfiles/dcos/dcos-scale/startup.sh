@@ -1,9 +1,8 @@
 #!/bin/bash
 sed -i 's/Scale\ Framework\ (Python)/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /opt/scale/scheduler/management/commands/scale_scheduler.py
 sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"$DCOS_PACKAGE_FRAMEWORK_NAME".marathon.slave.mesos:"$PORT0"/'" scheduler/management/commands/scale_scheduler.py
-sed -i 's/\ \/scale/\ \/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /etc/httpd/conf.d/scale.conf
-sed -i 's/\/scale/\/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /opt/scale/ui/scripts/scaleConfig.local.js
-sed -i 's/scale/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /var/www/html/index.html
+sed -i 's/\/SCALE/\/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /etc/httpd/conf.d/scale.conf
+#sed -i 's/\/scale/\/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /opt/scale/ui/scripts/scaleConfig.local.js
 sed -i '/Listen 80/ aListen '$PORT0 /etc/httpd/conf/httpd.conf
 
 if [[ "$DEPLOY_DB" = "true" ]]; then
