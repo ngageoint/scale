@@ -271,6 +271,9 @@ class TestQueueStatusView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.job_type = job_test_utils.create_job_type()
+        self.queue = queue_test_utils.create_queue(job_type=self.job_type, priority=123)
+
     def test_successful(self):
         """Tests successfully calling the queue status view."""
 
@@ -279,8 +282,11 @@ class TestQueueStatusView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue('queue_status' in result, 'Result is missing queue_status field')
-        self.assertTrue(isinstance(result['queue_status'], list), 'queue_status must be a list')
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['results'][0]['count'], 1)
+        self.assertEqual(result['results'][0]['highest_priority'], 123)
+        self.assertIsNotNone(result['results'][0]['longest_queued'])
 
 
 class TestRequeueJobsView(TestCase):
