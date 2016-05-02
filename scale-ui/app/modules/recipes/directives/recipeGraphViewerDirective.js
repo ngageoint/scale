@@ -711,6 +711,7 @@
             });
 
             $scope.$watch('recipeType', function (newValue, oldValue) {
+                $scope.mode = null;
                 if (!$scope.recipeType) {
                     $scope.recipeType = new RecipeType();
                 }
