@@ -24,6 +24,7 @@ from scheduler.offer.offer import ResourceOffer
 from scheduler.sync.job_type_manager import JobTypeManager
 from scheduler.sync.node_manager import NodeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
+from scheduler.sync.workspace_manager import WorkspaceManager
 from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
@@ -65,6 +66,7 @@ class ScaleScheduler(MesosScheduler):
         self._node_manager = NodeManager()
         self._offer_manager = OfferManager()
         self._scheduler_manager = SchedulerManager()
+        self._workspace_manager = WorkspaceManager()
 
         self._db_sync_thread = None
         self._recon_thread = None
@@ -93,10 +95,11 @@ class ScaleScheduler(MesosScheduler):
         # Initial database sync
         self._job_type_manager.sync_with_database()
         self._scheduler_manager.sync_with_database()
+        self._workspace_manager.sync_with_database()
 
         # Start up background threads
         self._db_sync_thread = DatabaseSyncThread(self._driver, self._job_exe_manager, self._job_type_manager,
-                                                  self._node_manager, self._scheduler_manager)
+                                                  self._node_manager, self._scheduler_manager, self._workspace_manager)
         db_sync_thread = threading.Thread(target=self._db_sync_thread.run)
         db_sync_thread.daemon = True
         db_sync_thread.start()
@@ -107,7 +110,8 @@ class ScaleScheduler(MesosScheduler):
         recon_thread.start()
 
         self._scheduling_thread = SchedulingThread(self._driver, self._job_exe_manager, self._job_type_manager,
-                                                   self._node_manager, self._offer_manager, self._scheduler_manager)
+                                                   self._node_manager, self._offer_manager, self._scheduler_manager,
+                                                   self._workspace_manager)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()

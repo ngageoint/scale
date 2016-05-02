@@ -1,8 +1,9 @@
-'''Defines utility methods for testing jobs and job types'''
+"""Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
 import django.utils.timezone as timezone
 import trigger.test.utils as trigger_test_utils
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidConnection
 from job.models import Job, JobExecution, JobType, JobTypeRevision
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -22,8 +23,8 @@ MOCK_ERROR_TYPE = 'MOCK_JOB_TRIGGER_RULE_ERROR_TYPE'
 
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
-    '''Mock trigger rule configuration for testing
-    '''
+    """Mock trigger rule configuration for testing
+    """
 
     def __init__(self, trigger_rule_type, configuration):
         super(MockTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
@@ -36,8 +37,8 @@ class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
 
 
 class MockErrorTriggerRuleConfiguration(JobTriggerRuleConfiguration):
-    '''Mock error trigger rule configuration for testing
-    '''
+    """Mock error trigger rule configuration for testing
+    """
 
     def __init__(self, trigger_rule_type, configuration):
         super(MockErrorTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
@@ -50,8 +51,8 @@ class MockErrorTriggerRuleConfiguration(JobTriggerRuleConfiguration):
 
 
 class MockTriggerRuleHandler(TriggerRuleHandler):
-    '''Mock trigger rule handler for testing
-    '''
+    """Mock trigger rule handler for testing
+    """
 
     def __init__(self):
         super(MockTriggerRuleHandler, self).__init__(MOCK_TYPE)
@@ -61,8 +62,8 @@ class MockTriggerRuleHandler(TriggerRuleHandler):
 
 
 class MockErrorTriggerRuleHandler(TriggerRuleHandler):
-    '''Mock error trigger rule handler for testing
-    '''
+    """Mock error trigger rule handler for testing
+    """
 
     def __init__(self):
         super(MockErrorTriggerRuleHandler, self).__init__(MOCK_ERROR_TYPE)
@@ -77,11 +78,11 @@ register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
                started=None, ended=None, last_status_change=None, priority=100, results=None):
-    '''Creates a job model for unit testing
+    """Creates a job model for unit testing
 
     :returns: The job model
     :rtype: :class:`job.models.Job`
-    '''
+    """
 
     if not job_type:
         job_type = create_job_type()
@@ -111,19 +112,21 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     return job
 
 
-def create_job_exe(job_type=None, job=None, status='RUNNING', error=None, command_arguments='test_arg', timeout=None,
-                   node=None, created=None, queued=None, started=None, pre_started=None, pre_completed=None,
-                   job_started=None, job_completed=None, post_started=None, post_completed=None, ended=None,
-                   last_modified=None):
-    '''Creates a job execution model for unit testing
+def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None, error=None,
+                   command_arguments='test_arg', timeout=None, node=None, created=None, queued=None, started=None,
+                   pre_started=None, pre_completed=None, job_started=None, job_completed=None, post_started=None,
+                   post_completed=None, ended=None, last_modified=None):
+    """Creates a job execution model for unit testing
 
     :returns: The job execution model
     :rtype: :class:`job.models.JobExecution`
-    '''
+    """
 
     when = timezone.now()
     if not job:
         job = create_job(job_type=job_type)
+    if not configuration:
+        configuration = JobConfiguration().get_dict()
     if not timeout:
         timeout = job.timeout
     if not node:
@@ -137,20 +140,21 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', error=None, comman
     if not last_modified:
         last_modified = when
 
-    return JobExecution.objects.create(job=job, status=status, error=error, command_arguments=command_arguments,
-                                       timeout=timeout, node=node, created=created, queued=queued, started=started,
-                                       pre_started=pre_started, pre_completed=pre_completed, job_started=job_started,
+    return JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
+                                       command_arguments=command_arguments, timeout=timeout, node=node, created=created,
+                                       queued=queued, started=started, pre_started=pre_started,
+                                       pre_completed=pre_completed, job_started=job_started,
                                        job_completed=job_completed, post_started=post_started,
                                        post_completed=post_completed, ended=ended, last_modified=last_modified)
 
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_operational=True, trigger_rule=None):
-    '''Creates a job type model for unit testing
+    """Creates a job type model for unit testing
 
     :returns: The job type model
     :rtype: :class:`job.models.JobType`
-    '''
+    """
 
     if not name:
         global JOB_TYPE_NAME_COUNTER
@@ -193,11 +197,11 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
 
 def create_clock_rule(name=None, rule_type='CLOCK', event_type=None, schedule='PT1H0M0S', is_active=True):
-    '''Creates a scale clock trigger rule model for unit testing
+    """Creates a scale clock trigger rule model for unit testing
 
     :returns: The trigger rule model
     :rtype: :class:`trigger.models.TriggerRule`
-    '''
+    """
 
     if not event_type:
         global RULE_EVENT_COUNTER
@@ -215,11 +219,11 @@ def create_clock_rule(name=None, rule_type='CLOCK', event_type=None, schedule='P
 
 
 def create_clock_event(rule=None, occurred=None):
-    '''Creates a scale clock trigger event model for unit testing
+    """Creates a scale clock trigger event model for unit testing
 
     :returns: The trigger event model
     :rtype: :class:`trigger.models.TriggerEvent`
-    '''
+    """
 
     if not rule:
         rule = create_clock_rule()

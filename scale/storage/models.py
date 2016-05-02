@@ -661,7 +661,7 @@ class Workspace(models.Model):
         :rtype: :class:`storage.brokers.broker.Broker`
         """
 
-        if not self._broker:
+        if not hasattr(self, '_broker'):
             broker_config = self.json_config['broker']
             broker_type = broker_config['type']
             broker = get_broker(broker_type)

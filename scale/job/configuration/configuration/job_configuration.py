@@ -7,6 +7,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
+from storage.container import get_workspace_mount_path
 
 
 logger = logging.getLogger(__name__)
@@ -98,12 +99,12 @@ class DockerParam(object):
         self.value = value
 
 
-class JobWorkspace(object):
+class TaskWorkspace(object):
     """Represents a workspace needed by a job task
     """
 
     def __init__(self, name, mode):
-        """Creates a job workspace
+        """Creates a task workspace
 
         :param name: The name of the workspace
         :type name: string
@@ -220,6 +221,20 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('Duplicate workspace %s in pre task' % name)
         self._configuration['pre_task']['workspaces'].append({'name': name, 'mode': mode})
 
+    def configure_workspace_docker_params(self, workspaces):
+        """Configures the Docker parameters needed for each workspace in the job execution tasks
+
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
+        """
+
+        for param in self._get_workspace_docker_params(self.get_pre_task_workspaces(), workspaces):
+            self.add_pre_task_docker_param(param)
+        for param in self._get_workspace_docker_params(self.get_job_task_workspaces(), workspaces):
+            self.add_job_task_docker_param(param)
+        for param in self._get_workspace_docker_params(self.get_post_task_workspaces(), workspaces):
+            self.add_post_task_docker_param(param)
+
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task
 
@@ -263,12 +278,12 @@ class JobConfiguration(object):
         """Returns the workspaces needed for the job task
 
         :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.configuration.job_configuration.JobWorkspace`]
+        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
         workspaces = []
         for workspace_dict in self._configuration['job_task']['workspaces']:
-            workspace = JobWorkspace(workspace_dict['name'], workspace_dict['mode'])
+            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
             workspaces.append(workspace)
         return workspaces
 
@@ -276,12 +291,12 @@ class JobConfiguration(object):
         """Returns the workspaces needed for the post task
 
         :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.configuration.job_configuration.JobWorkspace`]
+        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
         workspaces = []
         for workspace_dict in self._configuration['post_task']['workspaces']:
-            workspace = JobWorkspace(workspace_dict['name'], workspace_dict['mode'])
+            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
             workspaces.append(workspace)
         return workspaces
 
@@ -289,12 +304,12 @@ class JobConfiguration(object):
         """Returns the workspaces needed for the pre task
 
         :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.configuration.job_configuration.JobWorkspace`]
+        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
         workspaces = []
         for workspace_dict in self._configuration['pre_task']['workspaces']:
-            workspace = JobWorkspace(workspace_dict['name'], workspace_dict['mode'])
+            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
             workspaces.append(workspace)
         return workspaces
 
@@ -306,6 +321,28 @@ class JobConfiguration(object):
         """
 
         return self._configuration
+
+    def _get_workspace_docker_params(self, task_workspaces, workspaces):
+        """Returns the Docker parameters needed for the given task workspaces
+
+        :param task_workspaces: List of the task workspaces
+        :type task_workspaces: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
+        :returns: The Docker parameters needed by the given workspaces
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
+        """
+
+        params = []
+        for task_workspace in task_workspaces:
+            name = task_workspace.name
+            mode = task_workspace.mode
+            if name in workspaces:
+                workspace = workspaces[name]
+                if workspace.uses_mount and workspace.mount:
+                    broker_volume = '%s:%s:%s' % (workspace.mount, get_workspace_mount_path(name), mode)
+                    params.append(DockerParam('volume', broker_volume))
+        return params
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values

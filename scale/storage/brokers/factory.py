@@ -2,7 +2,7 @@
 from storage.brokers.host.host_broker import HostBroker
 
 
-BROKERS = {HostBroker.broker_type: HostBroker}
+BROKERS = {HostBroker().broker_type: HostBroker}
 
 
 def get_broker(broker_type):

@@ -611,13 +611,15 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions):
+    def schedule_job_executions(self, job_executions, workspaces):
         """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
         be deleted from the database. All database changes occur in an atomic transaction.
 
         :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
             run
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job executions
         :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
@@ -668,7 +670,7 @@ class QueueManager(models.Manager):
 
         # Schedule job executions
         scheduled_job_exes = []
-        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule):
+        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule, workspaces):
             scheduled_job_exes.append(RunningJobExecution(job_exe))
 
         # Clear the job executions from the queue

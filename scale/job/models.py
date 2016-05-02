@@ -13,13 +13,15 @@ from django.db import models, transaction
 from django.db.models import Q
 
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, SCALE_JOB_EXE_INPUT_PATH,\
+    SCALE_JOB_EXE_OUTPUT_PATH
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -988,7 +990,7 @@ class JobExecutionManager(models.Manager):
         return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions):
+    def schedule_job_executions(self, job_executions, workspaces):
         """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
         Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
         will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
@@ -998,6 +1000,8 @@ class JobExecutionManager(models.Manager):
             schedule it on, and the resources it will be given
         :type job_executions: list[(:class:`job.models.JobExecution`, :class:`node.models.Node`,
             :class:`job.resources.JobResources`)]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
         :rtype: list[:class:`job.models.JobExecution`]
         """
@@ -1037,6 +1041,7 @@ class JobExecutionManager(models.Manager):
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node = node
+            job_exe.configure_docker_params(workspaces)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1304,6 +1309,41 @@ class JobExecution(models.Model):
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()
+
+    def configure_docker_params(self, workspaces):
+        """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
+        determine any Docker parameters that might be required by this job execution's workspaces.
+
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
+        """
+
+        configuration = self.get_job_configuration()
+
+        # Mount in local_settings.py from the host
+        local_settings_volume = '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py:ro'
+        if self.job.job_type.is_system:
+            configuration.add_job_task_docker_param(DockerParam('volume', local_settings_volume))
+        else:
+            configuration.add_pre_task_docker_param(DockerParam('volume', local_settings_volume))
+            configuration.add_post_task_docker_param(DockerParam('volume', local_settings_volume))
+
+        if not self.job.job_type.is_system:
+            # Non-system jobs get named Docker volumes for input and output data
+            input_vol_name = get_job_exe_input_vol_name(self.id)
+            output_vol_name = get_job_exe_output_vol_name(self.id)
+            input_volume = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
+            output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
+            output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
+            configuration.add_pre_task_docker_param(DockerParam('volume', input_volume))
+            configuration.add_job_task_docker_param(DockerParam('volume', input_volume))
+            configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
+            configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
+
+        # Configure any Docker parameters needed for workspaces
+        configuration.configure_workspace_docker_params(workspaces)
+
+        self.configuration = configuration.get_dict()
 
     def get_docker_image(self):
         """Gets the Docker image for the job execution

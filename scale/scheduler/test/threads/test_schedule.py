@@ -18,6 +18,7 @@ from scheduler.offer.offer import ResourceOffer
 from scheduler.sync.job_type_manager import JobTypeManager
 from scheduler.sync.node_manager import NodeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
+from scheduler.sync.workspace_manager import WorkspaceManager
 from scheduler.threads.schedule import SchedulingThread
 
 
@@ -34,6 +35,7 @@ class TestSchedulingThread(TransactionTestCase):
         self._node_manager = NodeManager()
         self._offer_manager = OfferManager()
         self._scheduler_manager = SchedulerManager(None)
+        self._workspace_manager = WorkspaceManager()
 
         self._scheduler_manager.sync_with_database()
 
@@ -55,7 +57,8 @@ class TestSchedulingThread(TransactionTestCase):
         self._job_type_manager.sync_with_database()
 
         self._scheduling_thread = SchedulingThread(self._driver, self._job_exe_manager, self._job_type_manager,
-                                                   self._node_manager, self._offer_manager, self._scheduler_manager)
+                                                   self._node_manager, self._offer_manager, self._scheduler_manager,
+                                                   self._workspace_manager)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_successful_schedule(self, mock_taskinfo):
