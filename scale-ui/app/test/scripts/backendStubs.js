@@ -194,7 +194,11 @@
         // Recipe Details
         var recipeDetailsOverrideUrl = 'test/data/recipeDetails.json';
         var recipeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/.*/', 'i');
-        $httpBackend.whenGET(recipeDetailsRegex).respond(function () {
+        $httpBackend.whenGET(recipeDetailsRegex).respond(function (method, url) {
+            // get the recipeDetail.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            recipeDetailsOverrideUrl = 'test/data/recipe-details/recipeDetail' + id + '.json';
             return getSync(recipeDetailsOverrideUrl);
         });
 

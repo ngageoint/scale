@@ -4,7 +4,7 @@
   "title": "WorldView-2 Rigorous Orthorectification",
   "version": "2.0",
   "description": "Applies Orthorectification to WorldView-2 data",
-  "category": "spectral",
+  "category": "worldview",
   "is_operational": true,
   "icon_code": "f219",
   "docker_privileged": false,

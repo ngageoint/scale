@@ -4,7 +4,7 @@
   "title": "Landsat 8 Atmospheric Correction",
   "version": "2.1.9",
   "description": "Applies Atmospheric Correction to Landsat 8 GeoTiffs",
-  "category": "spectral",
+  "category": "landsat",
   "is_operational": true,
   "icon_code": "f00c",
   "docker_privileged": false,

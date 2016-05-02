@@ -6,7 +6,7 @@
   "description": "Parses WorldView-2 imagery. WorldView-2 is a commercial Earth observation satellite owned by DigitalGlobe. WorldView-2 provides commercially available panchromatic imagery of .46 m resolution, and eight-band multispectral imagery with 1.84 m (6 ft 0 in) resolution. It was launched October 8, 2009 to become DigitalGlobe's third satellite in orbit, joining WorldView-1 which was launched in 2007 and QuickBird which was launched in 2001. It takes a new photograph of any place on Earth every 1.1 days.",
   "author_name": "DigitalGlobe",
   "author_url": "https://en.wikipedia.org/wiki/WorldView-2",
-  "category": "spectral",
+  "category": "worldview",
   "is_operational": true,
   "icon_code": "f0c2",
   "docker_privileged": false,

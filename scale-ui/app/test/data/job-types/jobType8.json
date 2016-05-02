@@ -6,7 +6,7 @@
   "description": "OSSIM is a powerful suite of geospatial libraries and applications used to process imagery, maps, terrain, and vector data. The software has been under active development since 1996 and is deployed across a number of private, federal and civilian agencies.",
   "author_name": "Radiant Blue",
   "author_url": "https://trac.osgeo.org/ossim/",
-  "category": "spectral",
+  "category": "landsat",
   "is_operational": true,
   "icon_code": "f1c0",
   "docker_privileged": false,
