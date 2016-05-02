@@ -122,10 +122,10 @@
     state: reloaded
     restart_policy: always
     env:
-      SITE_NAME: 'Scale Sample Site'
+      SITE_NAME: 'Scale Landsat Data Ingest'
       SITE_PASSWORD: 'admin'
     volumes:
-      - '/exports/ingest:/var/www/upload/server/php/files'
+      - '/exports/ingest/landsat:/var/www/upload/server/php/files'
     ports:
       - '8081:80'
   become: true

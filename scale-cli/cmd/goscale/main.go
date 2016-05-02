@@ -81,6 +81,12 @@ func main() {
             Subcommands: Jobs_commands,
         },
         {
+            Name:    "recipes",
+            Aliases: []string{"recipe"},
+            Usage:   "Recipe commands",
+            Subcommands: Recipes_commands,
+        },
+        {
             Name:    "workspaces",
             Aliases: []string{"workspace", "ws"},
             Usage:   "Workspace information and modification",
