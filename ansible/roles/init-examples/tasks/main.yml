@@ -66,14 +66,35 @@
 
 - name: Build ace docker image
   tags: init-examples
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/ace"
-    name: "ace_1.0"
-    tag: "{{ example_image_tag }}"
-    state: build
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/ace"
   become: true
-  notify:
-    - push ace
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Deploy the ace job
+  tags: init-examples
+  command: /scale/bin/goscale jobs deploy chdir="{{ scale_build_root }}/dockerfiles/examples/ace"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Build jpl-signatures docker image
+  tags: init-examples
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/jpl-signatures"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Deploy the jpl-signatures job
+  tags: init-examples
+  command: /scale/bin/goscale jobs deploy chdir="{{ scale_build_root }}/dockerfiles/examples/jpl-signatures"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
 
 - name: Build parse-binary docker image
   tags: init-examples
