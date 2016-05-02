@@ -12,16 +12,18 @@ from error.models import Error, CACHED_BUILTIN_ERRORS
 from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
+from scheduler.models import Scheduler
 
 
 class TestRunningJobExecution(TestCase):
     """Tests the RunningJobExecution class"""
 
-    fixtures = ['basic_job_errors.json', 'scheduler.json']
+    fixtures = ['basic_job_errors.json']
 
     def setUp(self):
         django.setup()
 
+        Scheduler.objects.initialize_scheduler()
         job_type = job_test_utils.create_job_type(max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')

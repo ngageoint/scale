@@ -24,11 +24,10 @@ from scheduler.threads.schedule import SchedulingThread
 
 class TestSchedulingThread(TransactionTestCase):
 
-    fixtures = ['scheduler.json']
-
     def setUp(self):
         django.setup()
 
+        Scheduler.objects.initialize_scheduler()
         self._driver = MagicMock()
         self._job_exe_manager = RunningJobExecutionManager()
         self._job_type_manager = JobTypeManager()
