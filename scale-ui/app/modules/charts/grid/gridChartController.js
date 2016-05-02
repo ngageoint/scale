@@ -186,8 +186,8 @@
         var drag = d3.behavior.drag()
             .on('dragstart', function () {
                 // track offsetX and offsetY to distinguish between drag and click
-                dragOffsetX = d3.event.sourceEvent.offsetX;
-                dragOffsetY = d3.event.sourceEvent.offsetY;
+                dragOffsetX = d3.event.sourceEvent.layerX;
+                dragOffsetY = d3.event.sourceEvent.layerY;
             });
 
         var getCellFill = function (d) {
@@ -268,8 +268,8 @@
 
         var cellClickHandler = function (target) {
             // track offsetX and offsetY to distinguish between drag and click
-            clickOffsetX = d3.event.offsetX;
-            clickOffsetY = d3.event.offsetY;
+            clickOffsetX = d3.event.layerX;
+            clickOffsetY = d3.event.layerY;
             if (dragOffsetX === clickOffsetX && dragOffsetY === clickOffsetY) {
                 // offsets are the same; no dragging occurred; process as click event
                 $scope.$apply(function () {
