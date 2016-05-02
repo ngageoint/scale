@@ -117,6 +117,8 @@
         // static methods, assigned to class
         JobTypeDetails.build = function (data) {
             if (data) {
+                // TODO: change property returned by API from "interface" to "job_type_interface" because "interface" is a reserved word in JS
+                var jobTypeInterface = data.interface ? data.interface : data.job_type_interface;
                 return new JobTypeDetails(
                     data.id,
                     data.name,
@@ -148,7 +150,7 @@
                     data.archived,
                     data.paused,
                     data.last_modified,
-                    data.job_type_interface,
+                    jobTypeInterface,
                     data.error_mapping,
                     data.trigger_rule,
                     data.errors,

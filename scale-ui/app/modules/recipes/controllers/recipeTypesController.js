@@ -25,6 +25,8 @@
         $scope.minimizeMaster = false;
         $scope.minimizeBtnClass = 'fa fa-chevron-left';
         $scope.user = userService.getUserCreds();
+        $scope.scaleConfig = scaleConfig;
+        $scope.localRecipeTypes = [];
 
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         subnavService.setCurrentPath('recipes/types');
@@ -48,7 +50,9 @@
                     }
                     _.filter(_.pairs(oJson), function (o) {
                         if (_.contains(o[0], 'recipeType')) {
-                            $scope.recipeTypes.push(JSON.parse(o[1]));
+                            var type = JSON.parse(o[1]);
+                            $scope.localRecipeTypes.push(type);
+                            $scope.recipeTypes.push(type);
                         }
                     });
                 }
@@ -85,6 +89,13 @@
                     $scope.loading = false;
                 }
             })
+        };
+
+        $scope.clearLocalRecipeTypes = function () {
+            _.forEach($scope.localRecipeTypes, function (type) {
+                localStorage.removeItem('recipeType' + type.id);
+            });
+            $location.path('/recipes/types');
         };
 
         $scope.newRecipeType = function(){

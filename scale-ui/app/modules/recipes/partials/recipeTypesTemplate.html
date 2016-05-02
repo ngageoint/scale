@@ -10,6 +10,7 @@
             <ul class="list-unstyled" ng-show="!minimizeMaster">
                 <li ng-repeat="recipeType in recipeTypes" ng-class="{ active: activeRecipeType.id === recipeType.id }" ng-click="loadRecipeType(recipeType.id)">{{ recipeType.title + ' ' + recipeType.version }}</li>
             </ul>
+            <div class="text-center"><button ng-if="scaleConfig.static && localRecipeTypes.length > 0" class="btn btn-sm btn-danger" ng-click="clearLocalRecipeTypes()">Clear Local Recipes</button></div>
         </div>
     </div>
     <div class="detail-container vh_height78 vh_max-height78" ng-class="detailClass">
