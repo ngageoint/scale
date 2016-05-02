@@ -4,13 +4,15 @@
     <div class="master-container vh_height78 vh_max-height78" ng-class="masterClass">
         <div class="master-content">
             <div class="master-controls">
-                <div ng-if="user.is_admin" class="pull-right"><button class="btn btn-sm" ng-show="!minimizeMaster" ng-class="addBtnClass" ng-click="newRecipeType()"><i class="fa" ng-class="addBtnIcon"></i> {{ addBtnText }}</button></div>
+                <div ng-if="user.is_admin" class="pull-right">
+                    <button ng-if="scaleConfig.static && localRecipeTypes.length > 0 && !minimizeMaster" class="btn btn-sm btn-default" ng-click="clearLocalRecipeTypes()" title="Clear local recipe types"><i class="fa fa-remove"></i></button>
+                    <button class="btn btn-sm" ng-show="!minimizeMaster" ng-class="addBtnClass" ng-click="newRecipeType()"><i class="fa" ng-class="addBtnIcon"></i> {{ addBtnText }}</button>
+                </div>
                 <button class="btn btn-default btn-sm" ng-click="toggleMaster()"><i ng-class="minimizeBtnClass"></i></button>
             </div>
             <ul class="list-unstyled" ng-show="!minimizeMaster">
                 <li ng-repeat="recipeType in recipeTypes" ng-class="{ active: activeRecipeType.id === recipeType.id }" ng-click="loadRecipeType(recipeType.id)">{{ recipeType.title + ' ' + recipeType.version }}</li>
             </ul>
-            <div class="text-center"><button ng-if="scaleConfig.static && localRecipeTypes.length > 0" class="btn btn-sm btn-danger" ng-click="clearLocalRecipeTypes()">Clear Local Recipes</button></div>
         </div>
     </div>
     <div class="detail-container vh_height78 vh_max-height78" ng-class="detailClass">
