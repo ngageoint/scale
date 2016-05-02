@@ -1,6 +1,8 @@
 usermod -u $NFS_POSTGRES_UID postgres
 groupmod -g $NFS_POSTGRES_GID postgres
 
+chown postgres:postgres /var/lib/pgsql/data
+
 /usr/bin/postgresql-setup initdb
 chown -R postgres:postgres /var/run/postgresql
 

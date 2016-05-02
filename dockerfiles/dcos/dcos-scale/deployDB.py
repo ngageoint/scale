@@ -13,7 +13,7 @@ if dbHostVol == '':
   volumes=''
 else:
   volumes='{"containerPath": "/var/lib/pgsql/data","hostPath": "'+dbHostVol+'","mode": "RW"}'
-marathon='{"id": "/'+frameworkName+'-db","instances": 1,"constraints": [["hostname","UNIQUE"]],"container": {"docker": {"forcePullImage": false,"image": "'+dockerImage+'","network": "BRIDGE","portMappings": [{"containerPort": 5432, "hostPort": 0}],"privileged": false},"type": "DOCKER","volumes": ['+volumes+']},"cpus": 2,"disk": 0,"env": {"SCALE_DB_NAME": "'+scaleDBName+'","SCALE_DB_USER": "'+scaleDBUser+'","SCALE_DB_PASS": "'+scaleDBPass+'","NFS_POSTGRES_UID": "'+nfsPostgresUid+'","NFS_POSTGRES_GID": "'+nfsPostgresGid+'"},"healthChecks": [{"gracePeriodSeconds": 300,"ignoreHttp1xx": false,"intervalSeconds": 60,"maxConsecutiveFailures": 3,"portIndex": 0,"protocol": "TCP","timeoutSeconds": 20}],"labels": {},"mem": 1024,"ports": [5432]}'
+marathon='{"id": "/'+frameworkName+'-db","instances": 1,"constraints": [["hostname","UNIQUE"]],"container": {"docker": {"forcePullImage": true,"image": "'+dockerImage+'","network": "BRIDGE","portMappings": [{"containerPort": 5432, "hostPort": 0}],"privileged": false},"type": "DOCKER","volumes": ['+volumes+']},"cpus": 2,"disk": 0,"env": {"SCALE_DB_NAME": "'+scaleDBName+'","SCALE_DB_USER": "'+scaleDBUser+'","SCALE_DB_PASS": "'+scaleDBPass+'","NFS_POSTGRES_UID": "'+nfsPostgresUid+'","NFS_POSTGRES_GID": "'+nfsPostgresGid+'"},"healthChecks": [{"gracePeriodSeconds": 300,"ignoreHttp1xx": false,"intervalSeconds": 20,"maxConsecutiveFailures": 3,"portIndex": 0,"protocol": "TCP","timeoutSeconds": 20}],"labels": {},"mem": 1024,"ports": [5432]}'
 r = requests.post('http://marathon.mesos:8080/v2/apps/', data=marathon)
 #if "already exists" in r.text:
 #  print "Already in Marathon."
