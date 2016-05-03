@@ -9,6 +9,7 @@ import urllib
 
 import django.utils.timezone as timezone
 import djorm_pgjson.fields
+from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 
@@ -1324,13 +1325,25 @@ class JobExecution(models.Model):
 
         configuration = self.get_job_configuration()
 
-        # Mount in local_settings.py from the host
-        local_settings_volume = '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py:ro'
+        # Pass database connection details from scheduler as environment variables
+        db = settings.DATABASES['default']
         if self.job.job_type.is_system:
-            configuration.add_job_task_docker_param(DockerParam('volume', local_settings_volume))
+            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
         else:
-            configuration.add_pre_task_docker_param(DockerParam('volume', local_settings_volume))
-            configuration.add_post_task_docker_param(DockerParam('volume', local_settings_volume))
+            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
 
         if not self.job.job_type.is_system:
             # Non-system jobs get named Docker volumes for input and output data

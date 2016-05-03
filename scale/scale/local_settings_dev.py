@@ -1,23 +1,20 @@
-# This is a sample file that can be used as a starting place for creating a
-# local_settings.py file for production purposes. Copy this file and rename it
-# to local_settings.py. Then make any additional changes you need to configure
-# it for your production environment.
+# This is a sample file that can be used as a starting place for creating a local_settings.py file for development
+# purposes. Copy this file and rename it to local_settings.py. Then make any additional changes you need to configure it
+# for your development environment.
 
 # Include all the default settings.
 from settings import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'my-secret-development-key'
 
 # Use the following lines to enable developer/debug mode.
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # Set the external URL context here
-FORCE_SCRIPT_NAME = '/scale3/api'
+FORCE_SCRIPT_NAME = '/scale-dev/api'
 USE_X_FORWARDED_HOST = True
-
-ALLOWED_HOSTS = []
 
 STATIC_ROOT = 'static/'
 STATIC_URL = '/scale/static/'
@@ -42,15 +39,17 @@ DATABASES = {
         'PASSWORD': 'USER_PASSWORD',
         'HOST': 'DATABASE_HOST',
         'PORT': '5432',
+        'TEST': {'NAME': 'test_scale_USER_NAME'},
     },
 }
 
-# Master settings
-MESOS_MASTER = ''
+# Logging configuration
+LOGGING = LOG_CONSOLE_FILE_DEBUG
 
-# Metrics collection directory
-#METRICS_DIR = ''
+# Mesos connection information. Default for -m
+# This can be something like "127.0.0.1:5050"
+# or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
+MESOS_MASTER = None
 
-# Base URL for influxdb access in the form http://<machine>:8086/db/<cadvisor_db_name>/series?u=<username>&p=<password>&
-# An invalid or None entry will disable gathering of these statistics
-#INFLUXDB_BASE_URL = None
+# Zookeeper URL for scheduler leader election. If this is None, only a single not is used and election isn't performed.
+SCHEDULER_ZK = None

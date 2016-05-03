@@ -305,14 +305,12 @@ class TestJobExecutionManager(TransactionTestCase):
         configuration_2.add_job_task_workspace('Dummy_name', MODE_RO)
         job_exe_1 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_1.get_dict())
         job_exe_2 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_2.get_dict())
-        local_settings_volume = '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py:ro'
         input_data_volume_1 = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_1.id), SCALE_JOB_EXE_INPUT_PATH)
         input_data_volume_2 = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
         output_data_volume_2 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
         workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
         workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
-        job_exe_1_pre_task_params = [DockerParam('volume', local_settings_volume),
-                                     DockerParam('volume', input_data_volume_1),
+        job_exe_1_pre_task_params = [DockerParam('volume', input_data_volume_1),
                                      DockerParam('volume', workspace_volume_1)]
         job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2),
                                      DockerParam('volume', output_data_volume_2),

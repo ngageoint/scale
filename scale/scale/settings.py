@@ -23,7 +23,7 @@ VERSION = scale.__version__
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
 MESOS_MASTER = None
 
-# Zookeeper URL for scheduler leader election. If this is None, only a single not is used and election isn't performed.
+# Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
 
 # Directory for rotating metrics storage
@@ -37,14 +37,15 @@ INFLUXDB_BASE_URL = None
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+INSECURE_DEFAULT_KEY = 'this-key-is-insecure'
+SECRET_KEY = INSECURE_DEFAULT_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -158,9 +159,7 @@ STATICFILES_FINDERS = (
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
-LOG_NAME = 'scale'  # This environment var can be set
-if 'LOG_NAME' in os.environ:
-    LOG_NAME = os.environ['LOG_NAME']
+LOG_NAME = 'scale'
 LOG_FORMATTERS = {
     'standard': {
         'format': ('%(asctime)s %(levelname)s ' +
@@ -221,6 +220,30 @@ LOG_HANDLERS = {
         'model': 'error.models.LogEntry',
     },
 }
+LOG_CONSOLE_DEBUG = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console', 'console-err'],
+            'level': 'DEBUG',
+        },
+    },
+}
+LOG_CONSOLE_INFO = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console', 'console-err'],
+            'level': 'INFO',
+        },
+    },
+}
 LOG_CONSOLE_FILE_DEBUG = {
     'version': 1,
     'formatters': LOG_FORMATTERS,
@@ -245,7 +268,7 @@ LOG_CONSOLE_FILE_INFO = {
         },
     },
 }
-LOGGING = LOG_CONSOLE_FILE_INFO
+LOGGING = LOG_CONSOLE_INFO
 
 
 # Hack to fix ISO8601 for datetime filters.
