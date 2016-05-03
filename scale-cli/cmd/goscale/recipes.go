@@ -8,15 +8,13 @@ import (
     "fmt"
 )
 
-func recipes_run(c *cli.Context) {
+func recipes_run(c *cli.Context) error {
     url := c.GlobalString("url")
     if url == "" {
-        log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
-        return
+        return cli.NewExitError("A URL must be provided with the SCALE_URL environment variable or the --url argument", 1)
     }
     if c.NArg() != 1 && c.NArg() != 2 {
-        log.Fatal("Must specify a single recipe type name or id.")
-        return
+        return cli.NewExitError("Must specify a single recipe type name or id.", 1)
     }
     var recipe_type scalecli.RecipeType
     found := false
@@ -25,8 +23,7 @@ func recipes_run(c *cli.Context) {
         var resp_code int
         recipe_type, resp_code, err = scalecli.GetRecipeTypeDetails(url, id)
         if err != nil && resp_code != 404 {
-            log.Fatal(err)
-            return
+            return cli.NewExitError(err.Error(), 1)
         } else if err == nil {
             found = true
         }
@@ -35,8 +32,7 @@ func recipes_run(c *cli.Context) {
         name := c.Args()[0]
         recipe_types, err := scalecli.GetRecipeTypes(url)
         if err != nil {
-            log.Fatal(err)
-            return
+            return cli.NewExitError(err.Error(), 1)
         }
         var version string
         if c.NArg() == 2 {
@@ -44,8 +40,7 @@ func recipes_run(c *cli.Context) {
         }
         switch(len(recipe_types)) {
         case 0:
-            log.Fatal("Recipe type not found.")
-            return
+            return cli.NewExitError("Recipe type not found.", 1)
         case 1:
             recipe_type = recipe_types[0]
             found = true
@@ -59,11 +54,10 @@ func recipes_run(c *cli.Context) {
                 }
             }
             if !found {
-                log.Error("Multiple recipe types found")
                 for _, rt := range recipe_types {
                     fmt.Printf("%4d %8s [%25s] - %s\n", rt.Id, rt.Version, rt.Name, rt.Title)
                 }
-                return
+                return cli.NewExitError("Multiple recipe types found", 1)
             }
         }
     }
@@ -71,15 +65,14 @@ func recipes_run(c *cli.Context) {
     var recipe_data scalecli.RecipeData
     err = Parse_json_or_yaml(data_file, &recipe_data)
     if err != nil {
-        log.Fatal(err)
-        return
+        return cli.NewExitError(err.Error(), 1)
     }
     update_location, err := scalecli.RunRecipe(url, recipe_type.Id, recipe_data)
     if err != nil {
-        log.Fatal(err)
-        return
+        return cli.NewExitError(err.Error(), 1)
     }
     color.Blue(fmt.Sprintf("Recipe submited, updates available at %s", update_location))
+    return nil
 }
 
 var Recipes_commands = []cli.Command{

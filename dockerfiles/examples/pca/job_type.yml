@@ -1,0 +1,25 @@
+name: pca
+version: "1.0.0"
+title: Principal Components Analysis
+description: Generate Principal Components image.
+author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
+docker_image: "geoint/pca_1.0"
+priority: 250
+timeout: 300
+max_tries: 3
+cpus_required: 2.0
+mem_required: 1024.0
+interface:
+  version: "1.0"
+  command: "./runOpticks.sh"
+  command_arguments: '${image} ${job_output_dir}'
+  input_data:
+    - media_types: [ "image/tiff" ]
+      required: true
+      type: file
+      name: image
+  output_data:
+    - media_type: "image/tiff"
+      required: true
+      type: file
+      name: pca

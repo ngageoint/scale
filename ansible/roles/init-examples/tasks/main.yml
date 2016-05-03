@@ -98,25 +98,46 @@
 
 - name: Build parse-binary docker image
   tags: init-examples
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/binary-parse"
-    name: "parse-binary_1.0"
-    tag: "{{ example_image_tag }}"
-    state: build
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
   become: true
-  notify:
-    - push parse-binary
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Deploy the parse-binary job
+  tags: init-examples
+  command: /scale/bin/goscale jobs deploy chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+# currently no interface to see if a strike exists so in order to prevent a
+# playbook failure on the second execution, need to ingnore_errors: true
+- name: Deploy the parse-binary strike
+  tags: init-examples
+  command: /scale/bin/goscale strike create -d strike.yml chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
+  ignore_errors: yes
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
 
 - name: Build vash docker image
   tags: init-examples
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/vash"
-    name: "vash_1.0"
-    tag: "{{ example_image_tag }}"
-    state: build
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/vash"
   become: true
-  notify:
-    - push vash
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Deploy the vash job
+  tags: init-examples
+  command: /scale/bin/goscale jobs deploy chdir="{{ scale_build_root }}/dockerfiles/examples/vash"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
 
 - name: Static example product web server
   tags: init-examples

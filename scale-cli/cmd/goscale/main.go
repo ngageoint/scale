@@ -45,6 +45,7 @@ func main() {
     // hard defaults for config values...prevents type assertions on nil
     config := map[string]interface{} {
         "registry": "",
+        "tag": "",
         "url": "",
     }
 
@@ -72,6 +73,13 @@ func main() {
             EnvVar: "DOCKER_REGISTRY",
             Value: config["registry"].(string),
         },
+        cli.StringFlag{
+            Name: "tag, t",
+            Usage: `Optional docker tag to append to docker image names. \
+               This should not be used if you've already included the tag in the image name.`,
+            EnvVar: "DOCKER_TAG",
+            Value: config["tag"].(string),
+        },
     }
     app.Commands = []cli.Command{
         {
@@ -85,6 +93,11 @@ func main() {
             Aliases: []string{"recipe"},
             Usage:   "Recipe commands",
             Subcommands: Recipes_commands,
+        },
+        {
+            Name:    "strike",
+            Usage:   "Strike commands",
+            Subcommands: Strike_commands,
         },
         {
             Name:    "workspaces",
