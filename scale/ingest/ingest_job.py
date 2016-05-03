@@ -14,6 +14,7 @@ from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from source.models import SourceFile
 from storage.exceptions import DuplicateFile
+from storage.nfs import nfs_mount, nfs_umount
 from util.retry import retry_database_query
 
 
@@ -33,36 +34,43 @@ def perform_ingest(ingest_id, mount):
     # transaction with as few queries as possible, include retries
     ingest = _get_ingest(ingest_id)
     job_exe_id = _get_job_exe_id(ingest)
+    if not os.path.exists(SCALE_INGEST_MOUNT_PATH):
+        logger.info('Creating %s', SCALE_INGEST_MOUNT_PATH)
+        os.makedirs(SCALE_INGEST_MOUNT_PATH, mode=0755)
     dup_path = os.path.join(SCALE_INGEST_MOUNT_PATH, 'duplicate', ingest.file_name)
     ingest_path = os.path.join(SCALE_INGEST_MOUNT_PATH, ingest.ingest_path)
+    nfs_mount(mount, SCALE_INGEST_MOUNT_PATH, read_only=False)
 
-    # Check condition of the ingest
-    ingest = _set_ingesting_status(ingest, ingest_path, dup_path)
-    if ingest is None:
-        return
-
-    logger.info('Storing %s into %s on %s', ingest_path, ingest.file_path, ingest.workspace.name)
     try:
-        # TODO: future refactor: before copying file, grab existing source file (no lock) or create and save model
-        # This guarantees that source file exists and can be used to check if file is duplicate
-        # After this step, the source file should be marked as is_deleted so that it can't be used yet
-        src_file = SourceFile.objects.store_file(ingest_path, ingest.get_data_type_tags(), ingest.workspace,
-                                                 ingest.file_path)
+        # Check condition of the ingest
+        ingest = _set_ingesting_status(ingest, ingest_path, dup_path)
+        if ingest is None:
+            return
 
-        _complete_ingest(ingest, 'INGESTED', src_file)
-        _delete_ingest_file(ingest_path)
-        logger.info('Ingest successful: %s', ingest_path)
-    except DuplicateFile:
-        logger.warning('Duplicate file detected: %i', ingest_id, exc_info=True)
-        # TODO: future refactor: pass source file model in so source files have duplicate ingests tied to them
-        _complete_ingest(ingest, 'DUPLICATE', None)
-        _move_ingest_file(ingest_path, dup_path)
-    except Exception:
-        # TODO: have this delete the stored source file using some SourceFile.objects.delete_file method
-        # TODO: future refactor: pass source file model in so source files have errored ingests tied to them
-        # TODO: change ERRORED to FAILED
-        _complete_ingest(ingest, 'ERRORED', None)
-        raise  # File remains where it is so it can be processed again
+        logger.info('Storing %s into %s on %s', ingest_path, ingest.file_path, ingest.workspace.name)
+        try:
+            # TODO: future refactor: before copying file, grab existing source file (no lock) or create and save model
+            # This guarantees that source file exists and can be used to check if file is duplicate
+            # After this step, the source file should be marked as is_deleted so that it can't be used yet
+            src_file = SourceFile.objects.store_file(ingest_path, ingest.get_data_type_tags(), ingest.workspace,
+                                                     ingest.file_path)
+
+            _complete_ingest(ingest, 'INGESTED', src_file)
+            _delete_ingest_file(ingest_path)
+            logger.info('Ingest successful: %s', ingest_path)
+        except DuplicateFile:
+            logger.warning('Duplicate file detected: %i', ingest_id, exc_info=True)
+            # TODO: future refactor: pass source file model in so source files have duplicate ingests tied to them
+            _complete_ingest(ingest, 'DUPLICATE', None)
+            _move_ingest_file(ingest_path, dup_path)
+        except Exception:
+            # TODO: have this delete the stored source file using some SourceFile.objects.delete_file method
+            # TODO: future refactor: pass source file model in so source files have errored ingests tied to them
+            # TODO: change ERRORED to FAILED
+            _complete_ingest(ingest, 'ERRORED', None)
+            raise  # File remains where it is so it can be processed again
+    finally:
+        nfs_umount(SCALE_INGEST_MOUNT_PATH)
 
     try:
         cleanup_job_exe(job_exe_id)
