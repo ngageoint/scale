@@ -9,6 +9,7 @@ from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
 from queue.job_exe import QueuedJobExecution
 from queue.test import utils as queue_test_utils
+from scheduler.models import Scheduler
 from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
 
@@ -17,6 +18,9 @@ class TestOfferManager(TestCase):
 
     def setUp(self):
         django.setup()
+
+        Scheduler.objects.initialize_scheduler()
+        self._docker_repo = Scheduler.objects.all().first().docker_repository
 
         self.node_agent = 'agent_1'
         self.node_agent_paused = 'agent_paused'
@@ -64,7 +68,7 @@ class TestOfferManager(TestCase):
         result = manager.consider_new_job_exe(job_exe_1)
         self.assertEqual(result, OfferManager.NO_NODES_AVAILABLE)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_1)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
         result = manager.consider_next_task(job_exe_2)
         self.assertEqual(result, OfferManager.NODE_OFFLINE)
 
@@ -82,7 +86,7 @@ class TestOfferManager(TestCase):
         result = manager.consider_new_job_exe(job_exe_1)
         self.assertEqual(result, OfferManager.NO_NODES_AVAILABLE)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_1)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
         result = manager.consider_next_task(job_exe_2)
         self.assertEqual(result, OfferManager.NODE_OFFLINE)
 
@@ -101,7 +105,7 @@ class TestOfferManager(TestCase):
         result = manager.consider_new_job_exe(job_exe_1)
         self.assertEqual(result, OfferManager.ACCEPTED)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_1)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
         result = manager.consider_next_task(job_exe_2)
         self.assertEqual(result, OfferManager.ACCEPTED)
 
@@ -123,7 +127,7 @@ class TestOfferManager(TestCase):
         result = manager.consider_new_job_exe(job_exe_1)
         self.assertEqual(result, OfferManager.ACCEPTED)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_1)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
         result = manager.consider_next_task(job_exe_2)
         self.assertEqual(result, OfferManager.ACCEPTED)
 

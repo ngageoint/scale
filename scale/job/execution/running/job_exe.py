@@ -33,12 +33,14 @@ class RunningJobExecution(object):
 
         return int(task_id.split('_')[0])
 
-    def __init__(self, job_exe):
+    def __init__(self, job_exe, docker_repo):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type and
             job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param docker_repo: The name of the Docker repository containing the Scale Docker image
+        :type docker_repo: string
         """
 
         self._id = job_exe.id
@@ -53,10 +55,10 @@ class RunningJobExecution(object):
 
         # Create tasks
         if not job_exe.is_system:
-            self._remaining_tasks.append(PreTask(job_exe))
-        self._remaining_tasks.append(JobTask(job_exe))
+            self._remaining_tasks.append(PreTask(job_exe, docker_repo))
+        self._remaining_tasks.append(JobTask(job_exe, docker_repo))
         if not job_exe.is_system:
-            self._remaining_tasks.append(PostTask(job_exe))
+            self._remaining_tasks.append(PostTask(job_exe, docker_repo))
 
     @property
     def current_task(self):

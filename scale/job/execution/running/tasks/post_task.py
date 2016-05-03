@@ -11,21 +11,23 @@ class PostTask(Task):
     """Represents a job execution post-task
     """
 
-    def __init__(self, job_exe):
+    def __init__(self, job_exe, docker_repo):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
         models populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param docker_repo: The name of the Docker repository containing the Scale Docker image
+        :type docker_repo: string
         """
 
         super(PostTask, self).__init__('%i_post' % job_exe.id, job_exe)
 
-        self._uses_docker = False
-        self._docker_image = None
-        self._docker_params = job_exe.get_job_configuration().get_pre_task_docker_params()
+        self._uses_docker = True
+        self._docker_image = self.create_scale_image_name(job_exe.get_docker_image(), docker_repo)
+        self._docker_params = job_exe.get_job_configuration().get_post_task_docker_params()
         self._is_docker_privileged = False
-        self._command = '%s %s scale_post_steps'
+        self._command = 'scale_post_steps'
         self._command_arguments = '-i %i' % job_exe.id
 
     def complete(self, task_results):

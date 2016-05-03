@@ -24,6 +24,7 @@ class TestRunningJobExecution(TestCase):
         django.setup()
 
         Scheduler.objects.initialize_scheduler()
+        self.docker_repo = Scheduler.objects.all().first().docker_repository
         job_type = job_test_utils.create_job_type(max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
@@ -33,7 +34,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a normal job execution successfully"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
@@ -123,7 +124,7 @@ class TestRunningJobExecution(TestCase):
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         error = error_test_utils.create_error()
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
@@ -160,7 +161,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
@@ -190,7 +191,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that gets lost"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
@@ -220,7 +221,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that gets canceled"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
@@ -247,7 +248,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start pre-task
         task = running_job_exe.start_next_task()
@@ -270,7 +271,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start pre-task
         task = running_job_exe.start_next_task()
@@ -308,7 +309,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start pre-task
         task = running_job_exe.start_next_task()
@@ -362,7 +363,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(job_exe, self.docker_repo)
 
         # Start pre-task
         task = running_job_exe.start_next_task()

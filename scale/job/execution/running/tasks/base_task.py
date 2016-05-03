@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
 
 from error.models import Error
+from scale import __version__
 
 
 class Task(object):
@@ -39,7 +40,7 @@ class Task(object):
         self._agent_id = job_exe.node.slave_id
 
         # These values will vary by different task subclasses
-        self._uses_docker = True
+        self._uses_docker = False
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
@@ -185,6 +186,19 @@ class Task(object):
             else:
                 return Error.objects.get_builtin_error('task-launch')
         return None
+
+    def create_scale_image_name(self, image_name, docker_repo):
+        """Creates the full image name to use for running the Scale Docker image
+
+        :param image_name: The name of the Scale Docker image
+        :type image_name: string
+        :param docker_repo: The name of the Docker repository containing the Scale Docker image
+        :type docker_repo: string
+        :returns: The full Scale Docker image name
+        :rtype: string
+        """
+
+        return '%s/%s:%s' % (docker_repo, image_name, __version__)
 
     @abstractmethod
     def get_resources(self):

@@ -10,21 +10,26 @@ class JobTask(Task):
     """Represents a job execution job task (runs the actual job/algorithm)
     """
 
-    def __init__(self, job_exe):
+    def __init__(self, job_exe, docker_repo):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
         models populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param docker_repo: The name of the Docker repository containing the Scale Docker image
+        :type docker_repo: string
         """
 
         super(JobTask, self).__init__('%i_job' % job_exe.id, job_exe)
 
         self._uses_docker = job_exe.uses_docker()
-        self._docker_image = job_exe.get_docker_image()
         if self._uses_docker:
+            if job_exe.job.job_type.is_system:
+                self._docker_image = self.create_scale_image_name(job_exe.get_docker_image(), docker_repo)
+            else:
+                self._docker_image = job_exe.get_docker_image()
             self._docker_params = job_exe.get_job_configuration().get_job_task_docker_params()
-        self._is_docker_privileged = job_exe.is_docker_privileged()
+            self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
         self._command_arguments = job_exe.command_arguments
 

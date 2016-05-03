@@ -28,6 +28,7 @@ class TestSchedulingThread(TransactionTestCase):
         django.setup()
 
         Scheduler.objects.initialize_scheduler()
+        self._docker_repo = Scheduler.objects.all().first().docker_repository
         self._driver = MagicMock()
         self._job_exe_manager = RunningJobExecutionManager()
         self._job_type_manager = JobTypeManager()
@@ -103,7 +104,7 @@ class TestSchedulingThread(TransactionTestCase):
         queue_6_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
         self._job_type_manager.sync_with_database()
         # One job of this type is already running
-        self._job_exe_manager.add_job_exes([RunningJobExecution(job_exe_1)])
+        self._job_exe_manager.add_job_exes([RunningJobExecution(job_exe_1, self._docker_repo)])
 
         offer_1 = ResourceOffer('offer_1',  self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
         offer_2 = ResourceOffer('offer_2',  self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
