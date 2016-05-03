@@ -221,6 +221,25 @@ class QueueEventProcessor(object):
         raise NotImplemented()
 
 
+class QueueStatus(object):
+    """Represents queue status statistics.
+
+    :keyword job_type: The job type being counted.
+    :type job_type: :class:`job.models.JobType`
+    :keyword count: The number of job executions running for the associated job type.
+    :type count: int
+    :keyword longest_queued: The date/time of the last queued job execution for the associated job type.
+    :type longest_queued: datetime.datetime
+    :keyword highest_priority: The priority of the most important job execution for the associated job type.
+    :type highest_priority: int
+    """
+    def __init__(self, job_type, count=0, longest_queued=None, highest_priority=100):
+        self.job_type = job_type
+        self.count = count
+        self.longest_queued = longest_queued
+        self.highest_priority = highest_priority
+
+
 class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
@@ -238,31 +257,27 @@ class QueueManager(models.Manager):
         return Queue.objects.order_by('priority', 'queued').iterator()
 
     def get_queue_status(self):
-        """Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
-        version with overall stats for that type
+        """Returns the current status of the queue with statistics broken down by job type.
 
-        :returns: The list of each job type with stats
-        :rtype: list of dict
+        :returns: A list of each job type with calculated statistics.
+        :rtype: list[:class:`queue.models.QueueStatus`]
         """
 
-        status_qry = Queue.objects.values('job_type__name', 'job_type__version', 'job_type__is_paused')
-        status_qry = status_qry.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
-                                         highest_priority=models.Min('priority'))
-        status_qry = status_qry.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
+        status_dicts = Queue.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
+        status_dicts = status_dicts.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
+                                             highest_priority=models.Min('priority'))
+        status_dicts = status_dicts.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
 
-        # Remove double underscores
-        for entry in status_qry:
-            name = entry['job_type__name']
-            version = entry['job_type__version']
-            is_paused = entry['job_type__is_paused']
-            del entry['job_type__name']
-            del entry['job_type__version']
-            del entry['job_type__is_paused']
-            entry['job_type_name'] = name
-            entry['job_type_version'] = version
-            entry['is_job_type_paused'] = is_paused
+        # Convert each result to a real job type model with added statistics
+        results = []
+        for status_dict in status_dicts:
+            job_type_dict = {f: status_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
+            job_type = JobType(**job_type_dict)
 
-        return status_qry
+            status = QueueStatus(job_type, status_dict['count'], status_dict['longest_queued'],
+                                 status_dict['highest_priority'])
+            results.append(status)
+        return results
 
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
