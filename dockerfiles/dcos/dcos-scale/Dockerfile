@@ -45,7 +45,7 @@ ADD startup.sh /opt/scale/startup.sh
 RUN chmod +x /opt/scale/startup.sh
 
 ADD scaleConfig.local.js /opt/scale/ui/scripts/scaleConfig.local.js
-RUN echo '<html><head><META http-equiv="refresh" content=".5;URL=/scale/"></head></html>' > /var/www/html/index.html
+RUN echo '<html><head><META http-equiv="refresh" content=".5;URL=./ui/"></head></html>' > /var/www/html/index.html
 
 RUN pip install requests
 ADD deployDB.py /opt/scale/deployDB.py

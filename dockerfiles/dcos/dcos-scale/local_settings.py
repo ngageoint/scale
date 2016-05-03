@@ -12,8 +12,10 @@ ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
 #STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static/')
 #STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static')
 STATIC_ROOT = 'static'
-STATIC_URL = '/'+os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', '')+'/static/'
-FORCE_SCRIPT_NAME = '/'+os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', '')+'/api'
+#STATIC_URL = '/'+os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', '')+'/static/'
+#FORCE_SCRIPT_NAME = '/'+os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', '')+'/api'
+STATIC_URL = '/service/'+os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', '')+'/ui/static/'
+FORCE_SCRIPT_NAME = '/ui/api'
 
 TIME_ZONE = os.environ.get('SCALE_TIME_ZONE', 'UTC')
 
