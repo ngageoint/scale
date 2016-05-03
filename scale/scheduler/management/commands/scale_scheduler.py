@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import logging
 import signal
 import sys
@@ -6,6 +8,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from scale import __version__
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
@@ -14,14 +17,14 @@ logger = logging.getLogger(__name__)
 try:
     from mesos.interface import mesos_pb2
     from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
-    logger.info(u'Successfully imported pesos bindings')
+    logger.info('Successfully imported pesos bindings')
 except ImportError:
     try:
        from mesos.interface import mesos_pb2
        from mesos.native import MesosSchedulerDriver
-       logger.info(u'Successfully imported native Mesos bindings')
+       logger.info('Successfully imported native Mesos bindings')
     except ImportError:
-       logger.info(u'No native Mesos bindings, falling back to stubs')
+       logger.info('No native Mesos bindings, falling back to stubs')
        import mesos_api.mesos_pb2 as mesos_pb2
        from mesos_api.mesos import MesosSchedulerDriver
 
@@ -33,8 +36,8 @@ DEFAULT_SECRET = None
 
 
 class Command(BaseCommand):
-    '''Command that launches the Scale scheduler
-    '''
+    """Command that launches the Scale scheduler
+    """
 
     option_list = BaseCommand.option_list + (
         make_option('-m', '--master', action='store', type='str', default=settings.MESOS_MASTER,
@@ -44,10 +47,10 @@ class Command(BaseCommand):
     help = 'Launches the Scale scheduler'
 
     def handle(self, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the scheduler.
-        '''
+        """
 
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
@@ -55,8 +58,7 @@ class Command(BaseCommand):
         # TODO: clean this up
         mesos_master = options.get('master')
 
-        logger.info(u'Command starting: scale_scheduler')
-        logger.info(u' - Master: %s', mesos_master)
+        logger.info('Scale Scheduler %s', __version__)
 
         try:
             scheduler_zk = settings.SCHEDULER_ZK
@@ -78,7 +80,9 @@ class Command(BaseCommand):
 
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.
-        framework.name = 'Scale Framework (Python)'
+        framework.name = 'Scale'
+
+        logger.info('Connecting to Mesos master at %s', mesos_master)
 
         # TODO(vinod): Make checkpointing the default when it is default on the slave.
         if MESOS_CHECKPOINT:
@@ -109,31 +113,31 @@ class Command(BaseCommand):
         # Perform any required clean up operations like stopping background threads
         status = status or self._shutdown()
 
-        logger.info(u'Command completed: scale_scheduler')
+        logger.info('Exiting...')
         sys.exit(status)
 
     def _onsigterm(self, signum, _frame):
-        '''See signal callback registration: :py:func:`signal.signal`.
+        """See signal callback registration: :py:func:`signal.signal`.
 
         This callback performs a clean shutdown when a TERM signal is received.
-        '''
-        logger.info(u'Scheduler command terminated due to signal: %i', signum)
+        """
+        logger.info('Scheduler command terminated due to signal: %i', signum)
         self._shutdown()
         sys.exit(1)
 
     def _shutdown(self):
-        '''Performs any clean up required by this command.
+        """Performs any clean up required by this command.
 
         :returns: The exit status code based on whether the shutdown operation was clean with no exceptions.
         :rtype: int
-        '''
+        """
         status = 0
 
         try:
             if self.scheduler:
                 self.scheduler.shutdown()
         except:
-            logger.exception('Failed to properly shutdown scale scheduler.')
+            logger.exception('Failed to properly shutdown Scale scheduler.')
             status = 1
 
         try:
