@@ -80,6 +80,22 @@
     DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
 
+- name: Build tad docker image
+  tags: init-examples
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/tad"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Deploy the tad job
+  tags: init-examples
+  command: /scale/bin/goscale jobs deploy chdir="{{ scale_build_root }}/dockerfiles/examples/tad"
+  become: true
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
 - name: Build jpl-signatures docker image
   tags: init-examples
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/jpl-signatures"
