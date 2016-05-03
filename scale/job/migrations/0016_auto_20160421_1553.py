@@ -44,8 +44,12 @@ class Migration(migrations.Migration):
             if not job.job_type.is_system:
                 for name in input_workspaces:
                     configuration.add_pre_task_workspace(name, MODE_RO)
+                    # We add input workspaces to post task so it can perform a parse results move if requested by the
+                    # job's results manifest
+                    configuration.add_post_task_workspace(name, MODE_RW)
                 for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
-                    configuration.add_post_task_workspace(workspace.name, MODE_RW)
+                    if workspace.name not in input_workspaces:
+                        configuration.add_post_task_workspace(workspace.name, MODE_RW)
             elif job.job_type.name == 'scale-ingest':
                 ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
                 from ingest.models import Ingest
