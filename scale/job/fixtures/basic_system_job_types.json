@@ -13,9 +13,9 @@
             "is_active": true,
             "is_paused": false,
             "requires_cleanup": false,
-            "uses_docker": false,
+            "uses_docker": true,
             "docker_privileged": false,
-            "docker_image": null,
+            "docker_image": "scale",
             "interface": {
                  "version": "1.0",
                  "command": "scale_cleanup",
@@ -65,9 +65,9 @@
             "is_active": true,
             "is_paused": false,
             "requires_cleanup": false,
-            "uses_docker": false,
+            "uses_docker": true,
             "docker_privileged": false,
-            "docker_image": null,
+            "docker_image": "scale",
             "interface": {
                  "version": "1.0",
                  "command": "scale_clock",
