@@ -393,9 +393,13 @@ class JobManager(models.Manager):
         if not job.job_type.is_system:
             for name in input_workspaces:
                 configuration.add_pre_task_workspace(name, MODE_RO)
+                # We add input workspaces to post task so it can perform a parse results move if requested by the job's
+                # results manifest
+                configuration.add_post_task_workspace(name, MODE_RW)
             # TODO: Using workspace names in job data instead of IDs would save a query here
             for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
-                configuration.add_post_task_workspace(workspace.name, MODE_RW)
+                if workspace.name not in input_workspaces:
+                    configuration.add_post_task_workspace(workspace.name, MODE_RW)
         elif job.job_type.name == 'scale-ingest':
             # TODO: This is an ugly hack. Figure out a better way for an ingest job type to pass along that it requires
             # a certain workspace. Not sure I like using job data for this.

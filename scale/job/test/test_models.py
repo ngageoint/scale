@@ -35,6 +35,7 @@ class TestJobManager(TransactionTestCase):
 
         workspace_1 = storage_test_utils.create_workspace()
         workspace_2 = storage_test_utils.create_workspace()
+        workspace_3 = storage_test_utils.create_workspace()
         file_1 = storage_test_utils.create_file(workspace=workspace_1)
         file_2 = storage_test_utils.create_file(workspace=workspace_2)
         interface = {
@@ -68,7 +69,7 @@ class TestJobManager(TransactionTestCase):
             }],
             'output_data': [{
                 'name': 'Output 1',
-                'workspace_id': workspace_2.id
+                'workspace_id': workspace_3.id
             }]}
         job_data = JobData(data)
 
@@ -93,11 +94,14 @@ class TestJobManager(TransactionTestCase):
             name_set.add(workspace.name)
             self.assertEqual(workspace.mode, MODE_RO)
         self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
-        # Make sure only the output workspace will be used for the post-task and it is in read-write mode
+        # Make sure all input and output workspaces will be used for the post-task and they are in read-write mode
         post_task_workspaces = job.get_job_configuration().get_post_task_workspaces()
-        self.assertEqual(len(post_task_workspaces), 1)
-        self.assertEqual(post_task_workspaces[0].name, workspace_2.name)
-        self.assertEqual(post_task_workspaces[0].mode, MODE_RW)
+        self.assertEqual(len(post_task_workspaces), 3)
+        name_set = set()
+        for workspace in post_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RW)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name, workspace_3.name})
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""

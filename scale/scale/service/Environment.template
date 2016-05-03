@@ -1,5 +1,0 @@
-#This file should be placed in /etc/scale/Environment where the services will look for it
-
-#These are used for remote debugging
-PYDEV_SRC=/wherever/pydev/src/is
-REMOTE_DEBUG_HOST=host-where-pydev-debug-server-is-running

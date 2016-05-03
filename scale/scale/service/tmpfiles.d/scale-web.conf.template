@@ -1,1 +1,0 @@
-d /run/scale/web 0755 $SCALE_USER $SCALE_GROUP -
