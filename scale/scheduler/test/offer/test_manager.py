@@ -150,7 +150,7 @@ class TestOfferManager(TestCase):
         result = manager.consider_new_job_exe(job_exe_1)
         self.assertEqual(result, OfferManager.ACCEPTED)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_2)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_2, self._docker_repo)
         result = manager.consider_next_task(job_exe_2)
         self.assertEqual(result, OfferManager.ACCEPTED)
 

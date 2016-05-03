@@ -28,7 +28,9 @@ class TestPerformIngest(TransactionTestCase):
     @patch('ingest.ingest_job._delete_ingest_file')
     @patch('ingest.ingest_job._move_ingest_file')
     @patch('ingest.ingest_job.SourceFile')
-    def test_successful(self, mock_SourceFile, mock_move_ingest_file, mock_delete_ingest_file, mock_exists, mock_makedirs, mock_cleanup):
+    @patch('ingest.ingest_job.nfs_mount')
+    def test_successful(self, mock_nfs, mock_SourceFile, mock_move_ingest_file, mock_delete_ingest_file, mock_exists,
+                        mock_makedirs, mock_cleanup):
         """Tests processing a new ingest successfully."""
         # Set up mocks
         def new_exists(file_path):

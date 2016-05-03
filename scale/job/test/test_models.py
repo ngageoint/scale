@@ -4,6 +4,7 @@ import datetime
 
 import django
 import django.utils.timezone as timezone
+from django.conf import settings
 from django.test import TestCase, TransactionTestCase
 
 import error.test.utils as error_test_utils
@@ -310,8 +311,13 @@ class TestJobExecutionManager(TransactionTestCase):
         output_data_volume_2 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
         workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
         workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
-        job_exe_1_pre_task_params = [DockerParam('volume', input_data_volume_1),
-                                     DockerParam('volume', workspace_volume_1)]
+        db = settings.DATABASES['default']
+        env_vars = [DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']), DockerParam('e', 'SCALE_DB_USER=' + db['USER']),
+                    DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']),
+                    DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('e', 'SCALE_DB_PORT=' + db['PORT'])]
+        job_exe_1_pre_task_params = env_vars
+        job_exe_1_pre_task_params.extend([DockerParam('volume', input_data_volume_1),
+                                          DockerParam('volume', workspace_volume_1)])
         job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2),
                                      DockerParam('volume', output_data_volume_2),
                                      DockerParam('volume', workspace_volume_2)]
