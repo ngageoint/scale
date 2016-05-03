@@ -248,7 +248,7 @@
                 jobTypeData = getSync('test/data/jobTypes.json'),
                 jobTypes = JSON.parse(jobTypeData[1]).results,
                 recipeType = JSON.parse(data),
-                uniqueRecipeTypeJobs = _.uniq(recipeType.jobs, 'job_type');
+                uniqueRecipeTypeJobs = _.uniq(recipeType.definition.jobs, 'job_type');
             _.forEach(uniqueRecipeTypeJobs, function (job) {
                 recipeJobTypes.push(_.find(jobTypes, function (jobType) {
                     return jobType.name === job.job_type.name && jobType.version === job.job_type.version;
@@ -265,11 +265,7 @@
                 title: recipeType.title,
                 description: recipeType.description,
                 is_active: true,
-                definition: {
-                    input_data: recipeType.input_data,
-                    version: recipeType.version,
-                    jobs: recipeType.jobs
-                },
+                definition: recipeType.definition,
                 revision_num: 1,
                 created: new Date().toISOString(),
                 last_modified: new Date().toISOString(),

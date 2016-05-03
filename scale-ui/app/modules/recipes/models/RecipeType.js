@@ -14,21 +14,25 @@
             this.created = created;
             this.last_modified = last_modified;
             this.archived = archived;
-            this.trigger_rule = {
-                type: trigger_rule ? trigger_rule.type : '',
-                name: trigger_rule ? trigger_rule.name : '',
-                is_active: trigger_rule ? trigger_rule.is_active : false,
-                configuration: {
-                    condition: {
-                        media_type: trigger_rule ? trigger_rule.configuration.condition.media_type : '',
-                        data_types: trigger_rule ? trigger_rule.configuration.condition.data_types : []
-                    },
-                    data: {
-                        workspace_name: trigger_rule ? trigger_rule.configuration.data.workspace_name : '',
-                        input_data_name: trigger_rule ? trigger_rule.configuration.data.input_data_name : ''
+            if (trigger_rule) {
+                this.trigger_rule = trigger_rule;
+            } else {
+                this.trigger_rule = {
+                    type: '',
+                    name: '',
+                    is_active: false,
+                    configuration: {
+                        condition: {
+                            media_type: '',
+                            data_types: []
+                        },
+                        data: {
+                            workspace_name: '',
+                            input_data_name: ''
+                        }
                     }
-                }
-            };
+                };
+            }
             this.modified = false;
         };
 

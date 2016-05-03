@@ -70,16 +70,7 @@
 
             saveRecipeType: function (recipeType) {
                 var d = $q.defer();
-                var cleanRecipeType = RecipeTypeValidation.transformer({
-                    id: recipeType.id,
-                    name: recipeType.name,
-                    version: recipeType.version,
-                    title: recipeType.title,
-                    description: recipeType.description,
-                    input_data: recipeType.definition.input_data,
-                    jobs: recipeType.definition.jobs,
-                    trigger_rule: recipeType.trigger_rule
-                });
+                var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
                 if (!cleanRecipeType.id) {
                     $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {

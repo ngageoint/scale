@@ -19,7 +19,7 @@
             return jobsOut;
         };
         
-        var RecipeTypeValidation = function (id, name, version, title, description, input_data, jobs, trigger_rule) {
+        var RecipeTypeValidation = function (id, name, version, title, description, definition, trigger_rule) {
             if (id) {
                 this.id = id;
             }
@@ -27,8 +27,10 @@
             this.version = version;
             this.title = title;
             this.description = description;
-            this.input_data = input_data;
-            this.jobs = getRecipeTypeValidationJobs(jobs);
+            this.definition = {
+                input_data: definition.input_data,
+                jobs: getRecipeTypeValidationJobs(definition.jobs)
+            };
             this.trigger_rule = trigger_rule;
         };
 
@@ -41,8 +43,7 @@
                     data.version,
                     data.title,
                     data.description,
-                    data.input_data,
-                    data.jobs,
+                    data.definition,
                     data.trigger_rule
                 );
             }
