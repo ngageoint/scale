@@ -339,7 +339,7 @@ func jobs_commit(c *cli.Context) error {
     cmd := exec.Command("docker", "build", "-t", docker_image, ".")
     output, err := cmd.CombinedOutput()
     if err != nil {
-        return cli.NewExitError(err.Error(), 1)
+        return cli.NewExitError(string(output), 1)
     }
     log.Info(string(output))
 
