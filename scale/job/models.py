@@ -1833,13 +1833,9 @@ class JobTypeManager(models.Manager):
         :rtype: list[:class:`job.models.JobTypeRunningStatus`]
         """
 
-        # Make a list of all the basic job type fields to fetch
-        job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
-                           'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code']
-
         # Fetch a count of all running jobs with type information
         # We have to specify values to workaround the JSON fields throwing an error when used with annotate
-        job_dicts = Job.objects.values(*['job_type__%s' % f for f in job_type_fields])
+        job_dicts = Job.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
         job_dicts = job_dicts.filter(status='RUNNING')
         job_dicts = job_dicts.annotate(count=models.Count('job_type'),
                                        longest_running=models.Min('last_status_change'))
@@ -1848,7 +1844,7 @@ class JobTypeManager(models.Manager):
         # Convert each result to a real job type model with added statistics
         results = []
         for job_dict in job_dicts:
-            job_type_dict = {f: job_dict['job_type__%s' % f] for f in job_type_fields}
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
             job_type = JobType(**job_type_dict)
 
             status = JobTypeRunningStatus(job_type, job_dict['count'], job_dict['longest_running'])
@@ -1865,16 +1861,12 @@ class JobTypeManager(models.Manager):
         :rtype: list[:class:`job.models.JobTypeFailedStatus`]
         """
 
-        # Make a list of all the basic job type fields to fetch
-        job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
-                           'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code']
-
         # Make a list of all the basic error fields to fetch
-        error_fields = ['id', 'name', 'description', 'category', 'created', 'last_modified']
+        error_fields = ['id', 'name', 'title', 'description', 'category', 'created', 'last_modified']
 
         # We have to specify values to workaround the JSON fields throwing an error when used with annotate
         query_fields = []
-        query_fields.extend(['job_type__%s' % f for f in job_type_fields])
+        query_fields.extend(['job_type__%s' % f for f in JobType.BASE_FIELDS])
         query_fields.extend(['error__%s' % f for f in error_fields])
 
         # Fetch a count of all running jobs with type information
@@ -1888,7 +1880,7 @@ class JobTypeManager(models.Manager):
         # Convert each result to a real job type model with added statistics
         results = []
         for job_dict in job_dicts:
-            job_type_dict = {f: job_dict['job_type__%s' % f] for f in job_type_fields}
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
             job_type = JobType(**job_type_dict)
 
             error_dict = {f: job_dict['error__%s' % f] for f in error_fields}
@@ -2057,6 +2049,9 @@ class JobType(models.Model):
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
+    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
+                   'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code')
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
                          'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')
