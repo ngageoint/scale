@@ -15,10 +15,10 @@
                 return 'JobTypeStatus';
             },
             getPerformance: function () {
-                var failedArr = _.where(this.job_counts, { 'status': 'FAILED' });
-
-                var completed = _.find(this.job_counts, 'status', 'COMPLETED') || { count: 0 },
+                var failedArr = _.sortByOrder(_.filter(this.job_counts, { status: 'FAILED' }), ['count'], ['desc']),
+                    completed = _.find(this.job_counts, 'status', 'COMPLETED') || { count: 0 },
                     failed = _.sum(failedArr, 'count'),
+                    failedCategory = failedArr.length > 0 ? failedArr[0].category : '',
                     total = failedArr.length > 0 ? failed + completed.count : completed.count,
                     successRate = total === 0 ? 0 : 100 - ((failed / total) * 100).toFixed(2),
                     successRateDescription = 'success';
@@ -35,6 +35,7 @@
                     rate: successRate,
                     rateDescription: successRateDescription,
                     failed: failed,
+                    failedCategory: failedCategory,
                     completed: completed.count,
                     total: total
                 };
@@ -53,22 +54,25 @@
                             returnArr.push({ status: val.category, count: val.count });
                         });
                     });
-                    return returnArr;
+                    return _.sortByOrder(returnArr, ['count'], ['desc']);
                 };
 
                 return getFailureCounts(failedValues);
             },
             getCellFill: function () {
-                var status = this.getPerformance().rateDescription;
-                if (status === 'success') {
-                    return scaleConfig.colors.chart_green;
-                } else if (status === 'warning') {
-                    return scaleConfig.colors.chart_yellow;
-                } else if (status === 'error') {
-                    return scaleConfig.colors.chart_red;
-                } else if (status === 'z_inactive') {
-                    return scaleConfig.colors.chart_gray_dark;
+                var status = this.getPerformance();
+                if (status.failedCategory === 'SYSTEM') {
+                    return scaleConfig.colors.failure_system;
+                } else if (status.failedCategory === 'DATA') {
+                    return scaleConfig.colors.failure_data;
+                } else if (status.failedCategory === 'ALGORITHM') {
+                    return scaleConfig.colors.failure_algorithm;
+                } else {
+                    if (status.rateDescription === 'z_inactive') {
+                        return scaleConfig.colors.chart_gray_dark;
+                    }
                 }
+                return scaleConfig.colors.chart_green;
             },
             getCellActivity: function () {
                 var running = this.getRunning();

@@ -48,7 +48,11 @@
             "patternEmo": ["#556270","#4ecdc4","#c7f464","#ff6b6b","#c44d58"],
             "patternVa": ["#f2385a","#f5a503","#e9f1df","#4ad9d9","#3681bf"],
             "patternDf": ["#566669","#bfe2ff","#0a131a","#122031","#00010d"],
-            "patternD320": ["#1f77bf","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"]
+            "patternD320": ["#1f77bf","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"],
+
+            "failure_system": "#67000d",
+            "failure_data": "#a50f15",
+            "failure_algorithm": "#cb181d"
         },
 
         "queueThresholds": {
