@@ -1,68 +1,97 @@
 @import 'colors';
 
-.master-controls {
-    padding-bottom: 10px;
-}
-
 .master-container {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    overflow-y: auto;
 
-    ul {
-        li {
-            display: block;
-            background: #fff;
-            padding: 10px 5px;
-            font-size: 15px;
-            border-bottom: 1px solid #e7e7e7;
+    .master-content {
+        height: 100%;
+        background-color: #fff;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        border-left: 1px solid #ddd;
 
-            &:hover {
-                background: #efefef;
-                cursor: pointer;
+        .master-controls {
+            background: @view_bg;
+            padding: 0 0 10px 0;
+            outline: 1px solid @view_bg;
+            margin-bottom: 1px;
+        }
+
+        ul {
+            border-top: 1px solid #ddd;
+
+            li {
+                display: block;
+                background: #fff;
+                padding: 10px 5px;
+                font-size: 15px;
+                border-bottom: 1px solid #e7e7e7;
+
+                &:hover {
+                    background: #efefef;
+                    cursor: pointer;
+                }
+
+                &.active {
+                    background: #efefef;
+                    cursor: default;
+                }
             }
+        }
+    }
 
-            &.active {
-                background: #efefef;
-                cursor: default;
-            }
+    &.minimized {
+        .master-content {
+            background-color: @view_bg;
+            border: none;
         }
     }
 }
 
 .detail-container {
-    background: #fff;
-    border-left: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    overflow-y: auto;
 
-    &.no-tabs {
-        border-top: 1px solid #ddd;
-        padding: 10px;
+    .detail-content {
+        min-height: 100%;
+        background: #fff;
+        border-left: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+
+        &.no-tabs {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+
+            h3 {
+                padding: 0;
+            }
+
+            #details, #performance, #errors {
+                padding: 0;
+            }
+        }
 
         h3 {
-            padding: 0;
+            margin: 0;
+            padding: 20px 10px 0 10px;
+        }
+
+        h5 {
+            margin: 0;
+            font-weight: 600;
         }
 
         #details, #performance, #errors {
-            padding: 0;
+            padding: 0 10px;
         }
-    }
 
-    h3 {
-        margin: 0;
-        padding: 20px 10px 0 10px;
-    }
+        .nav-tabs {
+            background: #F2F9FF;
+            margin: 0 -1px;
+        }
 
-    h5 {
-        margin: 0;
-        font-weight: 600;
-    }
-
-    #details, #performance, #errors {
-        padding: 0 10px;
-    }
-
-    .tab-content {
-        border: none;
+        .tab-content {
+            border: none;
+        }
     }
 }

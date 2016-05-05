@@ -1,235 +1,199 @@
 <ais-header name="'Job Detail'" show-subnav="true" subnav-links="subnavLinks" loading="loadingJobDetail"></ais-header>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-9 text-left">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ job.id }}</a></li>
-                <li><a data-target="#executions" data-toggle="tab">Executions ({{job.num_exes}})</a></li>
-                <!--<li><a data-target="#recentExecution" data-toggle="tab" ng-if="latestExecution">Latest Execution</a></li>-->
-                <!--<li><a data-target="#products" data-toggle="tab">Products ({{ job.products.length }})</a></li>-->
-                <!--<li><a data-target="#childJobs" data-toggle="tab">Child Jobs</a></li>-->
-            </ul>
+<div class="row">
+    <div class="col-xs-9 text-left">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ job.id }}</a></li>
+            <li><a data-target="#executions" data-toggle="tab">Executions ({{job.num_exes}})</a></li>
+            <!--<li><a data-target="#recentExecution" data-toggle="tab" ng-if="latestExecution">Latest Execution</a></li>-->
+            <!--<li><a data-target="#products" data-toggle="tab">Products ({{ job.products.length }})</a></li>-->
+            <!--<li><a data-target="#childJobs" data-toggle="tab">Child Jobs</a></li>-->
+        </ul>
+    </div>
+    <span class="col-xs-3 text-right">
+        <span ng-show="!readonly && (job.status === 'FAILED' || job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+        <span ng-show="!readonly && job.status !== 'COMPLETED' && job.status !== 'CANCELED'"><button ng-click="cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="details">
+        <h4 class="margin-top-sm margin-bottom-sm">
+            <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
+            <span ng-show="job.status === 'FAILED'" class="label label-default">{{ job.error.category }} Error: {{ job.error.title }}. {{ job.error.description }}</span>
+        </h4>
+        <div class="row">
+            <div class="col-xs-6">
+                <table class="table table-hover table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Overview</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{job.job_type.id}}"><span ng-bind-html="job.job_type.getIcon()"></span> {{ job.job_type.title }} {{ job.job_type.version }}</a></td></tr>
+                        <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].recipe_type.title }} {{ job.recipes[0].recipe_type.version }}</a></td></tr>
+                        <tr><td>Status:</td><td><div class="label {{job.getStatusClass()}}">{{ job.status }}</div></td></tr>
+                        <tr><td>Trigger:</td><td>{{ job.event.type }} {{ triggerOccurred }}</td></tr>
+                        <tr><td>Priority:</td><td>{{ job.priority }}</td></tr>
+                        <tr><td>Created:</td><td>{{ job.created }}</td></tr>
+                        <tr><td>Last Updated:</td><td>{{ job.last_modified }}</td></tr>
+                        <tr><td>Num Executions:</td><td>{{ job.num_exes }}</td></tr>
+                        <tr><td>Max Tries:</td><td>{{ job.max_tries }}</td></tr>
+                        <tr ng-show="job.timeout"><td>Timeout:</td><td>{{ job.timeout }} seconds</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-6">
+                <strong>Timeline</strong>
+                <ais-timeline tasks="timeline" started="'started'" ended="'ended'"></ais-timeline>
+            </div>
         </div>
-        <span class="col-xs-3 text-right">
-            <span ng-show="!readonly && (job.status === 'FAILED' || job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
-            <span ng-show="!readonly && job.status !== 'COMPLETED' && job.status !== 'CANCELED'"><button ng-click="cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped table-bordered" cols="5" ng-if="inputs.length > 0">
+                    <tbody>
+                        <caption>Inputs</caption>
+                        <tr>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-1">Type</th>
+                            <th class="col-md-9">Value</th>
+                        </tr>
+                        <tr ng-repeat="input in inputs">
+                            <td>{{ input.name }}</td>
+                            <td>{{ input.type }}</td>
+                            <td>
+                                <span ng-if="input.type === 'file' && input.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr ng-if="$index === 0">
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a></td>
+                                            <td>{{ calculateFileSize(input.value.file_size) }}</td>
+                                            <td>{{ input.value.created }}</td>
+                                            <td>{{ input.value.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="input.type === 'files' && input.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr ng-repeat="v in input.value">
+                                            <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                            <td>{{ calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ v.created }}</td>
+                                            <td>{{ v.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="input.type === 'property' && input.value">
+                                    {{input.value}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-bordered" ng-if="outputs.length > 0">
+                    <tbody>
+                        <caption>Outputs</caption>
+                        <tr>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-1">Type</th>
+                            <th class="col-md-9">Value</th>
+                        </tr>
+                        <tr ng-repeat="output in outputs">
+                            <td>{{ output.name }}</td>
+                            <td>{{ output.type }}</td>
+                            <td>
+                                <span ng-if="output.type === 'file' && output.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a></td>
+                                            <td>{{ calculateFileSize(output.value.file_size) }}</td>
+                                            <td>{{ output.value.created }}</td>
+                                            <td>{{ output.value.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="output.type === 'files' && output.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr ng-repeat="v in output.value">
+                                            <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                            <td>{{ calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ v.created }}</td>
+                                            <td>{{ v.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="output.type === 'property' && output.value">
+                                    {{output.value}}
+                                </span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    <div class="tab-content">
-        <div class="tab-pane active" id="details">
-            <h4 class="margin-top-sm margin-bottom-sm">
-                <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
-                <span ng-show="job.status === 'FAILED'" class="label label-default">{{ job.error.category }} Error: {{ job.error.title }}. {{ job.error.description }}</span>
-            </h4>
-            <div class="row">
-                <div class="col-xs-6">
-                    <table class="table table-hover table-condensed table-striped">
-                        <thead>
-                            <tr>
-                                <th colspan="2">Overview</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{job.job_type.id}}"><span ng-bind-html="job.job_type.getIcon()"></span> {{ job.job_type.title }} {{ job.job_type.version }}</a></td></tr>
-                            <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].recipe_type.title }} {{ job.recipes[0].recipe_type.version }}</a></td></tr>
-                            <tr><td>Status:</td><td><div class="label {{job.getStatusClass()}}">{{ job.status }}</div></td></tr>
-                            <tr><td>Trigger:</td><td>{{ job.event.type }} {{ triggerOccurred }}</td></tr>
-                            <tr><td>Priority:</td><td>{{ job.priority }}</td></tr>
-                            <tr><td>Created:</td><td>{{ job.created }}</td></tr>
-                            <tr><td>Last Updated:</td><td>{{ job.last_modified }}</td></tr>
-                            <tr><td>Num Executions:</td><td>{{ job.num_exes }}</td></tr>
-                            <tr><td>Max Tries:</td><td>{{ job.max_tries }}</td></tr>
-                            <tr ng-show="job.timeout"><td>Timeout:</td><td>{{ job.timeout }} seconds</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-xs-6">
-                    <strong>Timeline</strong>
-                    <ais-timeline tasks="timeline" started="'started'" ended="'ended'"></ais-timeline>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <table class="table table-striped table-bordered" cols="5" ng-if="inputs.length > 0">
-                        <tbody>
-                            <caption>Inputs</caption>
-                            <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-1">Type</th>
-                                <th class="col-md-9">Value</th>
-                            </tr>
-                            <tr ng-repeat="input in inputs">
-                                <td>{{ input.name }}</td>
-                                <td>{{ input.type }}</td>
-                                <td>
-                                    <span ng-if="input.type === 'file' && input.value">
-                                        <table class="table table-hover table-condensed">
-                                            <tr ng-if="$index === 0">
-                                                <td>File Name</td>
-                                                <td>File Size</td>
-                                                <td>Created</td>
-                                                <td>Last Modified</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a></td>
-                                                <td>{{ calculateFileSize(input.value.file_size) }}</td>
-                                                <td>{{ input.value.created }}</td>
-                                                <td>{{ input.value.last_modified }}</td>
-                                            </tr>
-                                        </table>
-                                    </span>
-                                    <span ng-if="input.type === 'files' && input.value">
-                                        <table class="table table-hover table-condensed">
-                                            <tr>
-                                                <td>File Name</td>
-                                                <td>File Size</td>
-                                                <td>Created</td>
-                                                <td>Last Modified</td>
-                                            </tr>
-                                            <tr ng-repeat="v in input.value">
-                                                <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
-                                                <td>{{ calculateFileSize(v.file_size) }}</td>
-                                                <td>{{ v.created }}</td>
-                                                <td>{{ v.last_modified }}</td>
-                                            </tr>
-                                        </table>
-                                    </span>
-                                    <span ng-if="input.type === 'property' && input.value">
-                                        {{input.value}}
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-striped table-bordered" ng-if="outputs.length > 0">
-                        <tbody>
-                            <caption>Outputs</caption>
-                            <tr>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-1">Type</th>
-                                <th class="col-md-9">Value</th>
-                            </tr>
-                            <tr ng-repeat="output in outputs">
-                                <td>{{ output.name }}</td>
-                                <td>{{ output.type }}</td>
-                                <td>
-                                    <span ng-if="output.type === 'file' && output.value">
-                                        <table class="table table-hover table-condensed">
-                                            <tr>
-                                                <td>File Name</td>
-                                                <td>File Size</td>
-                                                <td>Created</td>
-                                                <td>Last Modified</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a></td>
-                                                <td>{{ calculateFileSize(output.value.file_size) }}</td>
-                                                <td>{{ output.value.created }}</td>
-                                                <td>{{ output.value.last_modified }}</td>
-                                            </tr>
-                                        </table>
-                                    </span>
-                                    <span ng-if="output.type === 'files' && output.value">
-                                        <table class="table table-hover table-condensed">
-                                            <tr>
-                                                <td>File Name</td>
-                                                <td>File Size</td>
-                                                <td>Created</td>
-                                                <td>Last Modified</td>
-                                            </tr>
-                                            <tr ng-repeat="v in output.value">
-                                                <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
-                                                <td>{{ calculateFileSize(v.file_size) }}</td>
-                                                <td>{{ v.created }}</td>
-                                                <td>{{ v.last_modified }}</td>
-                                            </tr>
-                                        </table>
-                                    </span>
-                                    <span ng-if="output.type === 'property' && output.value">
-                                        {{output.value}}
-                                    </span>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="executions">
-            <table class="table table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Queued</th>
-                        <th>Started</th>
-                        <th>Ended</th>
-                        <th>Last Modified</th>
-                        <th class="text-center">View Log</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="link" ng-repeat="execution in job.job_exes">
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.status }}</td>
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.ended_formatted }}</td>
-                        <td ng-click="showExecutionDetails(execution.id)">{{ execution.last_modified_formatted }}</td>
-                        <td class="text-center"><button class="btn btn-xs btn-default" ng-click="showLog(execution)"><i class="fa fa-file-text"></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!--<div class="tab-pane" id="recentExecution" ng-if="latestExecution">-->
-            <!--<job-execution-log execution="job.getLatestExecution()"></job-execution-log>-->
-        <!--</div>-->
-        <!--<div class="tab-pane" id="products">-->
-            <!--<span ng-show="publishedProductsGrouped.length === 0">No published products were found.</span>-->
-            <!--<table class="" style="width: 100%" ng-show="publishedProductsGrouped.length > 0">-->
-                <!--<tbody>-->
-                    <!--<tr ng-repeat="group in publishedProductsGrouped">-->
-                        <!--<td>-->
-                            <!--<table class="table table-condensed table-striped">-->
-                                <!--<caption>Job Execution ID: <a ng-click="showExecutionDetails(group[0])">{{ group[0] }}</a></caption>-->
-                                <!--<thead>-->
-                                    <!--<tr>-->
-                                        <!--<th>Filename</th>-->
-                                        <!--<th>Filesize</th>-->
-                                        <!--<th>Created</th>-->
-                                        <!--<th>Last Modified</th>-->
-                                        <!--<th>Type</th>-->
-                                    <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody>-->
-                                    <!--<tr ng-repeat="product in group[1]">-->
-                                        <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.media_type)"></i> <a href="{{ product.url }}" target="_blank">{{ product.file_name }}</a></td>-->
-                                        <!--<td>{{ product.file_size_readable }}</td>-->
-                                        <!--<td>{{ product.created_formatted }}</td>-->
-                                        <!--<td>{{ product.last_modified_formatted }}</td>-->
-                                        <!--<td>{{ product.is_operational_label }}</td>-->
-                                    <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
-            <!--<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" ng-show="unpublishedProducts.length > 0">-->
-                <!--<div class="panel panel-default">-->
-                    <!--<a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#unpublishedProducts" aria-expanded="true" aria-controls="unpublishedProducts">-->
-                        <!--<div class="panel-heading" role="tab" id="unpublishedProductsHeading">-->
-                            <!--<h4 class="panel-title">-->
-                                <!--Unpublished Products-->
-                            <!--</h4>-->
-                        <!--</div>-->
-                    <!--</a>-->
-                    <!--<div id="unpublishedProducts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unpublishedProductsHeading">-->
-                        <!--<div class="panel-body">-->
-                            <!--<table class="table table-condensed table-striped">-->
-                                <!--<thead>-->
+    <div class="tab-pane" id="executions">
+        <table class="table table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Queued</th>
+                    <th>Started</th>
+                    <th>Ended</th>
+                    <th>Last Modified</th>
+                    <th class="text-center">View Log</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="link" ng-repeat="execution in job.job_exes">
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.status }}</td>
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.ended_formatted }}</td>
+                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.last_modified_formatted }}</td>
+                    <td class="text-center"><button class="btn btn-xs btn-default" ng-click="showLog(execution)"><i class="fa fa-file-text"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--<div class="tab-pane" id="recentExecution" ng-if="latestExecution">-->
+        <!--<job-execution-log execution="job.getLatestExecution()"></job-execution-log>-->
+    <!--</div>-->
+    <!--<div class="tab-pane" id="products">-->
+        <!--<span ng-show="publishedProductsGrouped.length === 0">No published products were found.</span>-->
+        <!--<table class="" style="width: 100%" ng-show="publishedProductsGrouped.length > 0">-->
+            <!--<tbody>-->
+                <!--<tr ng-repeat="group in publishedProductsGrouped">-->
+                    <!--<td>-->
+                        <!--<table class="table table-condensed table-striped">-->
+                            <!--<caption>Job Execution ID: <a ng-click="showExecutionDetails(group[0])">{{ group[0] }}</a></caption>-->
+                            <!--<thead>-->
                                 <!--<tr>-->
                                     <!--<th>Filename</th>-->
                                     <!--<th>Filesize</th>-->
@@ -237,27 +201,60 @@
                                     <!--<th>Last Modified</th>-->
                                     <!--<th>Type</th>-->
                                 <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody>-->
-                                <!--<tr ng-repeat="product in unpublishedProducts">-->
-                                    <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.mediaType)"></i> <a href="{{ product.url }}" target="_blank">{{ product.fileName }}</a></td>-->
-                                    <!--<td>{{ product.getReadableFilesize() }}</td>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                                <!--<tr ng-repeat="product in group[1]">-->
+                                    <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.media_type)"></i> <a href="{{ product.url }}" target="_blank">{{ product.file_name }}</a></td>-->
+                                    <!--<td>{{ product.file_size_readable }}</td>-->
                                     <!--<td>{{ product.created_formatted }}</td>-->
                                     <!--<td>{{ product.last_modified_formatted }}</td>-->
                                     <!--<td>{{ product.is_operational_label }}</td>-->
                                 <!--</tr>-->
-                                <!--</tbody>-->
-                            <!--</table>-->
-                        <!--</div>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+        <!--<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" ng-show="unpublishedProducts.length > 0">-->
+            <!--<div class="panel panel-default">-->
+                <!--<a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#unpublishedProducts" aria-expanded="true" aria-controls="unpublishedProducts">-->
+                    <!--<div class="panel-heading" role="tab" id="unpublishedProductsHeading">-->
+                        <!--<h4 class="panel-title">-->
+                            <!--Unpublished Products-->
+                        <!--</h4>-->
+                    <!--</div>-->
+                <!--</a>-->
+                <!--<div id="unpublishedProducts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unpublishedProductsHeading">-->
+                    <!--<div class="panel-body">-->
+                        <!--<table class="table table-condensed table-striped">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th>Filename</th>-->
+                                <!--<th>Filesize</th>-->
+                                <!--<th>Created</th>-->
+                                <!--<th>Last Modified</th>-->
+                                <!--<th>Type</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                            <!--<tr ng-repeat="product in unpublishedProducts">-->
+                                <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.mediaType)"></i> <a href="{{ product.url }}" target="_blank">{{ product.fileName }}</a></td>-->
+                                <!--<td>{{ product.getReadableFilesize() }}</td>-->
+                                <!--<td>{{ product.created_formatted }}</td>-->
+                                <!--<td>{{ product.last_modified_formatted }}</td>-->
+                                <!--<td>{{ product.is_operational_label }}</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
         <!--</div>-->
-        <!--<div class="tab-pane" id="childJobs">
+    <!--</div>-->
+    <!--<div class="tab-pane" id="childJobs">
 
-        </div>-->
-    </div>
-
+    </div>-->
 </div>
 <script type="text/ng-template" id="showLog.html">
     <div>

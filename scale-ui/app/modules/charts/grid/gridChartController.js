@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $uibModal, userService, scaleConfig) {
+    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $uibModal, userService, scaleConfig, scaleService) {
         var svg = null,
             rect = null,
             scale = parseFloat($scope.scale),
@@ -33,7 +33,7 @@
         };
 
         var width = $('.grid-chart').width(),
-            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
+            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : $scope.mode === 'zoom' ? scaleService.getViewportSize().height * 2 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
             cols = 0,
             rows = 0,
             cellFontLg = .4,
@@ -52,12 +52,13 @@
                     });
                     $scope.dataValues = _.sortByOrder(_.values(data.data), ['status.has_running', 'status.description', 'name'], ['asc', 'asc', 'asc']);
                 } else if (dataType === 'Node') {
-                    $scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
+                    $scope.dataValues = _.values(data.data);
+                    //$scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
                     // associate Node with NodeStatus
                     _.forEach($scope.dataValues, function (val) {
                         val.status = _.find(data.status, 'node.id', val.id);
                     });
-                    $scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
+                    //$scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
                 } else {
                     $scope.dataValues = data.data;
                 }
@@ -185,8 +186,8 @@
         var drag = d3.behavior.drag()
             .on('dragstart', function () {
                 // track offsetX and offsetY to distinguish between drag and click
-                dragOffsetX = d3.event.sourceEvent.offsetX;
-                dragOffsetY = d3.event.sourceEvent.offsetY;
+                dragOffsetX = d3.event.sourceEvent.layerX;
+                dragOffsetY = d3.event.sourceEvent.layerY;
             });
 
         var getCellFill = function (d) {
@@ -267,8 +268,8 @@
 
         var cellClickHandler = function (target) {
             // track offsetX and offsetY to distinguish between drag and click
-            clickOffsetX = d3.event.offsetX;
-            clickOffsetY = d3.event.offsetY;
+            clickOffsetX = d3.event.layerX;
+            clickOffsetY = d3.event.layerY;
             if (dragOffsetX === clickOffsetX && dragOffsetY === clickOffsetY) {
                 // offsets are the same; no dragging occurred; process as click event
                 $scope.$apply(function () {
@@ -524,7 +525,18 @@
                 })
                 .attr('text-anchor', 'middle')
                 .attr('x', $scope.cellWidth / 2)
-                .attr('y', ($scope.cellHeight / 2) + 8)
+                .attr('y', function (d) {
+                    if (d.toString() === 'JobType') {
+                        return ($scope.cellHeight / 2) + 8;
+                    }
+                    return $scope.cellHeight / 2;
+                })
+                .style('font-size', function (d) {
+                    if (d.toString() === 'Node') {
+                        return $scope.scale * 8 + 'px';
+                    }
+                    return '';
+                })
                 .style('display', $scope.enableReveal ? 'block' : 'none');
 
             cellGroup.append('text')
@@ -641,10 +653,10 @@
                         return getCellPauseResume(d);
                     })
                     .attr('text-anchor', 'start')
-                    .attr('x', 5)
-                    .attr('y', 20)
+                    .attr('x', $scope.enableReveal ? 2 : 5)
+                    .attr('y', $scope.enableReveal ? $scope.scale * 8 : 20)
                     .style('display', $scope.enableReveal ? 'none' : 'block')
-                    .style('font-size', '1.3em')
+                    .style('font-size', $scope.enableReveal ? $scope.scale * 7 + 'px' : '1.3em')
                     .on('mouseover', function () {
                         d3.select(this)
                             .style('cursor', 'pointer')

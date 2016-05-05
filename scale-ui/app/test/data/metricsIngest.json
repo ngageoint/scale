@@ -124,7 +124,7 @@
         }
     ],
     "choices": [
-        {"id": 1, "name": "strike-y", "title": "Strike Y Processor"},
-        {"id": 2, "name": "strike-x", "title": "Strike X Processor"}
+        {"id": 1, "name": "landsat", "title": "Landsat Processor"},
+        {"id": 2, "name": "worldview", "title": "WorldView Processor"}
     ]
 }
