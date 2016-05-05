@@ -57,15 +57,16 @@ hr {
     width: 100%;
 }
 
+.required {
+    color: @bootstrap-danger;
+}
+
 .align-right {
     text-align: right;
 }
 
 .container-fluid {
-    height: 100%;
-}
-.row {
-    height: 100%;
+    background: @view_bg;
 }
 
 .strong {
@@ -78,7 +79,7 @@ hr {
 
 .view {
     overflow: hidden;
-    min-height: 96vh;
+
 
     .nav-ctr, .content-ctr {
         margin-bottom: -99999px;
@@ -94,12 +95,6 @@ hr {
     .content-ctr {
         background: @view_bg;
     }
-}
-
-.footer-ctr {
-    padding: 10px 0;
-    color: #aaa;
-    background: @nav_bg;
 }
 
 // STATUS STYLES
@@ -219,6 +214,11 @@ hr {
 
 /************ Bootstrap Overrides ************/
 
+.popover-content {
+    max-height: 25vh;
+    overflow-y: auto;
+}
+
 caption {
     font-size: 15px;
     font-weight: bold;
@@ -232,6 +232,12 @@ caption {
 .page-header {
     margin: 0;
     border: none;
+    padding-bottom: 0;
+
+    .btn {
+        margin-bottom: -10px;
+        margin-top: -22px;
+    }
 }
 
 ol.breadcrumb {

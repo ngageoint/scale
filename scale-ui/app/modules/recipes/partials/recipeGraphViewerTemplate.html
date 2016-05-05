@@ -45,11 +45,11 @@
                 </div>
             </div>
             <div class="col-xs-3 text-right">
-                <div ng-show="allowEdit && !readonly">
-                    <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="openAddJob()" ng-show="mode === 'edit' || mode === 'add'">Add Job</button>
-                    <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="validateRecipeType()" ng-show="mode === 'edit' || mode === 'add'"><i class="fa fa-check"></i> Validate</button>
-                    <button class="btn btn-sm" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-enabled="isRecipeModified" ng-show="mode === 'edit' || mode === 'add'"><i class="fa fa-save"></i> Save Recipe</button>
-                    <button class="btn btn-sm" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-show="mode !== 'add'"><i class="fa" ng-class="editBtnIcon"></i> {{ editBtnText }}</button>
+                <div class="btn-group btn-group-sm" ng-show="allowEdit && !readonly">
+                    <button class="btn btn-default" ng-click="openAddJob()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Add Job"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-default" ng-click="validateRecipeType()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="saveRecipeType()" ng-disabled="!recipeType.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Recipe" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                    <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="{{ editBtnText }}" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
                 </div>
             </div>
         </div>
@@ -65,36 +65,8 @@
                 <div class="live map">
                     <div class="row">
                         <div class="col-xs-9">
-                            <div class="col-graph panel panel-default">
+                            <div class="col-graph panel panel-default" ng-class="{ 'edit-recipe': !recipeType.id || mode === 'edit' }">
                                 <svg style="{{ detailContainerStyle }}"><g/></svg>
-                            </div>
-                            <div id="output-selector" ng-show="selectedInputProvider">
-                                <div id="output-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
-                                    <div>Select provider/output</div>
-                                    <ul ng-show="selectedInputProvider.job_type.job_type_interface.output_data.length > 0" class="list-group">
-                                        <li ng-repeat="joboutput in selectedInputProvider.job_type.job_type_interface.output_data" class="list-group-item">
-                                            <a ng-click="mapInput(selectedInputProvider.name, joboutput.name)">{{ joboutput.name }}</a>
-                                            <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
-                                        </li>
-                                    </ul>
-                                    <ul ng-show="selectedInputProvider.name === 'start'" class="list-group">
-                                        <li ng-repeat="recipeInput in recipeType.definition.input_data" class="list-group-item">
-                                            <a ng-click="mapInputRecipeInput(recipeInput.name)">{{ recipeInput.name }}</a>
-                                            <div class="input-media-types" ng-show="recipeInput.media_types">{{ recipeInput.media_types.join(',') }}</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div id="input-selector" ng-show="selectedOutputReceiver">
-                                <div id="input-selector-container" class="io-selector" style="width: 200px; height: 200px; margin: 0 0 0 0; background: #ddd; z-index: 20">
-                                    <div>Select receiver/input</div>
-                                    <ul ng-show="selectedOutputReceiver.job_type.job_type_interface.input_data.length > 0" class="list-group">
-                                        <li ng-repeat="jobinput in selectedOutputReceiver.job_type.job_type_interface.input_data" class="list-group-item">
-                                            <a ng-click="mapOutput(selectedOutputReceiver.name, jobinput.name)">{{ jobinput.name }}</a>
-                                            <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                         <div class="col-xs-3">
@@ -102,31 +74,42 @@
                                 <h3>Click a job node to view dependencies, inputs, and outputs</h3>
                             </div>
                             <div class="col-details panel panel-primary" ng-show="selectedJob">
-                                <div class="panel-heading">
-                                    <h4>{{selectedJob.job_type.title}} {{selectedJob.job_type.version}} <button ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="btn btn-default btn-xs pull-right" ng-click="deleteRecipeJob(selectedJob.name)"><i class="fa fa-remove"></i></button></h4>
+                                <div class="panel-heading margin-bottom-md">
+                                    <h4>
+                                        <span ng-show="(mode === 'edit' || mode === 'add') && selectedJob.name.toLowerCase() !== 'start'" class="badge pull-right" ng-click="deleteRecipeJob(selectedJob.name)" uib-tooltip="Remove Job" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                        {{selectedJob.job_type.title}} {{selectedJob.job_type.version}}
+                                    </h4>
                                 </div>
-                                <div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>
+                                <!--<div class="margin-top-md margin-bottom-md">{{ selectedJob.job_type.description }}</div>-->
                                 <div id="jobdetail" class="job-details" ng-if="selectedJob.job_type.id">
                                     <div class="job-active" ng-show="selectedRecipeJob">
                                         <a href="{{ '#/jobs/job/' + selectedRecipeJob.job.id }}">{{ selectedRecipeJob.job.status }}</a>
                                     </div>
                                     <div class="job-active">
-                                        <h4 ng-show="selectedJob.dependencies.length > 0 || mode === 'edit' || mode === 'add'">Dependencies <button class="btn btn-default btn-xs" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddDependency()"><i id="btn-add-dependency" class="fa" ng-class="dependencyBtnClass"></i></button></h4>
+                                        <h4 ng-show="selectedJob.dependencies.length > 0 || mode === 'edit' || mode === 'add'">
+                                            Dependencies
+                                            <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddDependency()" uib-tooltip="Add Dependency" tooltip-append-to-body="true" tooltip-placement="right"><i id="btn-add-dependency" class="fa" ng-class="dependencyBtnClass"></i></span>
+                                        </h4>
                                          <div class="margin-bottom-md" ng-show="editMode === 'addDependency'">Click a highlighted job node to select a dependency.</div>
                                          <ul ng-show="selectedJob.dependencies.length > 0" class="list-group">
-                                             <li ng-repeat="dependency in selectedJob.dependencies" class="list-group-item">{{ dependency.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeDependency(dependency.name)"><i class="fa fa-remove"></i></button></li>
+                                             <li ng-repeat="dependency in selectedJob.dependencies" class="list-group-item">
+                                                 <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeDependency(dependency.name)" uib-tooltip="Remove Dependency" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                 {{ dependency.name }}
+                                             </li>
                                         </ul>
                                     </div>
                                     <div ng-show="selectedJob.job_type.job_type_interface.input_data.length > 0"><h4>Inputs</h4>
                                          <ul class="list-group">
                                              <li ng-repeat="jobinput in selectedJob.job_type.job_type_interface.input_data" class="list-group-item">
-                                                 {{ jobinput.name }}<span ng-show="jobinput.required">*</span> <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)"><i class="fa fa-link"></i></button>
+                                                 <span class="badge margin-right-md" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddInput(jobinput)" uib-tooltip="Add Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-link"></i></span>
+                                                 {{ jobinput.name }} <span class="required" ng-show="jobinput.required">*</span>
                                                  <div class="input-media-types" ng-show="jobinput.media_types">{{ jobinput.media_types.join(',') }}</div>
-                                                 <div ng-show="jobinput.dependencies.length > 0">
+                                                 <div ng-show="jobinput.dependencies.length > 0" class="margin-top-md">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
                                                          <li ng-repeat="dep in jobinput.dependencies" class="list-group-item">
-                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.output}}</span><button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeInputMapping(dep.name, dep.output)"><i class="fa fa-remove"></i></button>
+                                                             <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeInputMapping(dep.name, dep.output)" uib-tooltip="Remove Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.output}}</span>
                                                          </li>
                                                      </ul>
                                                  </div>
@@ -136,13 +119,15 @@
                                      <div ng-show="selectedJob.job_type.job_type_interface.output_data.length > 0"><h4>Outputs</h4>
                                          <ul class="list-group">
                                              <li ng-repeat="joboutput in selectedJob.job_type.job_type_interface.output_data" class="list-group-item">
-                                                 {{ joboutput.name }} <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddOutput(joboutput)"><i class="fa fa-link"></i></button>
+                                                 <span class="badge margin-right-md" ng-show="mode === 'edit' || mode === 'add'" ng-click="toggleAddOutput(joboutput)" uib-tooltip="Add Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-link"></i></span>
+                                                 {{ joboutput.name }}
                                                  <div class="input-media-types" ng-show="joboutput.media_type">{{ joboutput.media_type }}</div>
-                                                 <div ng-show="joboutput.dependents.length > 0">
+                                                 <div ng-show="joboutput.dependents.length > 0" class="margin-top-md">
                                                      <h5>Connections</h5>
                                                      <ul class="list-group dependents">
                                                          <li ng-repeat="dep in joboutput.dependents" class="list-group-item">
-                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.input}}</span> <button class="btn btn-default btn-xs pull-right" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeOutputMapping(dep.name, dep.output)"><i class="fa fa-remove"></i></button>
+                                                             <span class="badge" ng-show="mode === 'edit' || mode === 'add'" ng-click="removeOutputMapping(dep.name, dep.output)" uib-tooltip="Remove Connection" tooltip-append-to-body="true" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                                             <span class="job-name">{{dep.name}}</span>.<span class="property">{{dep.input}}</span>
                                                          </li>
                                                      </ul>
                                                  </div>
@@ -151,25 +136,23 @@
                                      </div>
                                  </div>
                                 <div id="startDetail" class="job-details panel-body" ng-if="selectedJob && !selectedJob.job_type.id">
-                                    <div>
-                                        <h4>Trigger <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs" ng-click="openEditTrigger()"><i class="fa fa-edit"></i></button></h4>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <div class="input-name">{{recipeType.trigger_rule.name}} <span ng-show="!recipeType.trigger_rule.is_active" class="input-media-types pull-right">Inactive</span></div>
-                                                <div class="input-name">{{recipeType.trigger_rule.type}}</div>
-                                                <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.media_type">media_type: {{ recipeType.trigger_rule.configuration.condition.media_type }}</div>
-                                                <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.data_types">data_types: {{ recipeType.trigger_rule.configuration.condition.data_types.join(", ") }}</div>
-                                            </li>
-                                        </ul>
-                                    </div><div>
-                                        <h4>Recipe Inputs <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs" ng-click="openAddInput()"><i class="fa fa-plus"></i></button></h4>
-                                        <ul class="list-group">
-                                            <li ng-repeat="input in recipeType.definition.input_data" class="list-group-item">
-                                                <div class="input-name">{{input.name}}<span ng-show="input.required">*</span> <button ng-show="mode === 'edit' || mode === 'add'" class="btn btn-default btn-xs pull-right" ng-click="deleteRecipeInput(input.name)"><i class="fa fa-remove"></i></button></div>
-                                                <div class="input-media-types">{{ input.media_types.join(", ") }}</div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <h4>Trigger <span ng-show="mode === 'edit' || mode === 'add'" class="badge" ng-click="openEditTrigger()" uib-tooltip="Edit Trigger"><i class="fa fa-edit"></i></span></h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            {{recipeType.trigger_rule.name}} <span ng-show="!recipeType.trigger_rule.is_active" class="input-media-types pull-right">Inactive</span><br />
+                                            {{recipeType.trigger_rule.type}}
+                                            <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.media_type">media_type: {{ recipeType.trigger_rule.configuration.condition.media_type }}</div>
+                                            <div class="input-media-types" ng-show="recipeType.trigger_rule.configuration.condition.data_types">data_types: {{ recipeType.trigger_rule.configuration.condition.data_types.join(", ") }}</div>
+                                        </li>
+                                    </ul>
+                                    <h4>Recipe Inputs <span ng-show="mode === 'edit' || mode === 'add'" class="badge" ng-click="openAddInput()" uib-tooltip="Add Input"><i class="fa fa-plus"></i></span></h4>
+                                    <ul class="list-group">
+                                        <li ng-repeat="input in recipeType.definition.input_data" class="list-group-item">
+                                            <span ng-show="input.required" class="required">*</span> <span ng-show="mode === 'edit' || mode === 'add'" class="badge" ng-click="deleteRecipeInput(input.name)" uib-tooltip="Remove Input" tooltip-placement="left"><i class="fa fa-remove"></i></span>
+                                            {{input.name}}
+                                            <div class="input-media-types">{{ input.media_types.join(", ") }}</div>
+                                        </li>
+                                    </ul>
                                 </div>
                              </div>
                          </div>
@@ -200,13 +183,17 @@
                     <input id="triggerName" type="text" class="form-control" ng-model="recipeType.trigger_rule.name">
                 </div>
                 <div class="col-xs-4">
-                    <label for="triggerActive">Active</label>
-                    <input id="triggerActive" type="checkbox" class="form-control" ng-model="recipeType.trigger_rule.is_active">
+                    <div class="checkbox">
+                        <label for="triggerActive">
+                            <input id="triggerActive" type="checkbox" ng-model="recipeType.trigger_rule.is_active">
+                            Active
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-6">
-                    <h5 colspan="2">Condition</h5>
+                    <h5>Condition</h5>
                     <div class="form-group">
                         <label for="triggerConditionMediaType">Media Type</label>
                         <input id="triggerConditionMediaType" type="text" class="form-control" ng-model="recipeType.trigger_rule.configuration.condition.media_type">
@@ -218,16 +205,17 @@
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <h5 colspan="2">Data</h5>
+                    <h5>Data</h5>
                     <div class="form-group">
                         <label for="triggerWorkspaceName">Workspace</label>
-                        <select id="triggerWorkspaceName" class="form-control input-sm" ng-model="recipeType.trigger_rule.configuration.data.workspace_name">
+                        <select id="triggerWorkspaceName" class="form-control" ng-model="recipeType.trigger_rule.configuration.data.workspace_name">
                             <option ng-repeat="workspace in availableWorkspaces" value="{{workspace.name}}" ng-selected="recipeType.trigger_rule.configuration.data.workspace_name === workspace.name">{{workspace.title}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="triggerInputDataName">Recipe Input Name</label>
-                        <select id="triggerInputDataName" class="form-control input-sm" ng-model="recipeType.trigger_rule.configuration.data.input_data_name">
+                        <div ng-show="recipeType.definition.input_data.length === 0">No recipe inputs found.</div>
+                        <select id="triggerInputDataName" class="form-control" ng-model="recipeType.trigger_rule.configuration.data.input_data_name" ng-show="recipeType.definition.input_data.length > 0">
                             <option ng-repeat="recipeInput in recipeType.definition.input_data" value="{{recipeInput.name}}" ng-selected="recipeType.trigger_rule.configuration.data.input_data_name === recipeInput.name">{{recipeInput.name}}</option>
                         </select>
                     </div>
@@ -246,13 +234,15 @@
         </div>
         <div class="modal-body">
             <div class="master-container">
-                <div class="add-job-list">
-                    <ul class="list-unstyled">
-                        <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedJobType.name === jobType.name }" ng-click="selectJobTypeToAdd(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
-                    </ul>
+                <div class="master-content" style="max-height: 50vh; overflow: auto">
+                    <div class="add-job-list">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="jobType in jobTypeValues" ng-class="{ active: selectedJobType.name === jobType.name }" ng-click="selectJobTypeToAdd(jobType)"><span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }}</li>
+                        </ul>
+                    </div>
                 </div>
-                Selected: <b>{{ selectedJobType.name }}</b>
             </div>
+            <div class="margin-top-md">Selected: <b>{{ selectedJobType.name }}</b></div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>

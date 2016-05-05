@@ -2,10 +2,10 @@
     'use strict';
 
     angular.module('scaleApp').factory('NodeResources', function(){
-        var NodeResources = function (cpus, mem, disk) {
-            this.cpus = cpus;
-            this.mem = mem;
-            this.disk = disk;
+        var NodeResources = function (total, scheduled, used) {
+            this.total = total;
+            this.scheduled = scheduled;
+            this.used = used;
         };
 
         //public methods
@@ -19,9 +19,9 @@
         NodeResources.build = function (data) {
             if (data) {
                 return new NodeResources(
-                    data.cpus,
-                    data.mem,
-                    data.disk
+                    data.total,
+                    data.scheduled,
+                    data.used
                 );
             }
             return new NodeResources();

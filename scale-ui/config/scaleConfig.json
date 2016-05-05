@@ -193,7 +193,7 @@
                 { "path": "feed/ingests", "label": "Ingest Records" }
             ]
         },
-        "headerOffset": 160,
-        "dateFilterOffset": 65
+        "headerOffset": 165,
+        "dateFilterOffset": 45
     }
 }

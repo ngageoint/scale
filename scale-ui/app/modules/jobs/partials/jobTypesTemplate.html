@@ -1,8 +1,8 @@
 <ais-header name="'Job Types (' + jobTypeCount + ')'" show-subnav="true" subnav-links="subnavLinks" loading="loading"></ais-header>
 
 <div class="row">
-    <div class="col-xs-3">
-        <div class="master-container" style="{{ masterContainerStyle }}">
+    <div class="col-xs-3 master-container" style="{{ containerStyle }}">
+        <div class="master-content">
             <ul class="list-unstyled">
                 <li ng-repeat="jobType in jobTypes" ng-class="{ active: activeJobType.id === jobType.id }" ng-click="viewDetails(jobType.id)">
                     <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
@@ -10,128 +10,121 @@
             </ul>
         </div>
     </div>
-    <div class="col-xs-9">
-        <div class="text-center" ng-show="selectJobClass === 'visible'">
-            <h2>Select a job type to view its performance and other details.</h2>
-        </div>
-        <div ng-class="jobDetailsClass">
+    <div class="col-xs-9 detail-container" style="{{ containerStyle }}">
+        <h2 ng-if="!activeJobType" class="text-center">Select a job type to view its performance and other details.</h2>
+        <div class="detail-content" ng-class="jobDetailsClass">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a data-target="#details" data-toggle="tab">Details</a></li>
                 <li><a data-target="#errors" data-toggle="tab" ng-show="showJobTypeErrors">Errors</a></li>
             </ul>
-            <div class="detail-container" style="{{ detailContainerStyle }}">
-                <h3>
-                    <span ng-bind-html="activeJobType.getIcon()"></span>
-                    {{ activeJobType.title + ' ' + activeJobType.version }}
-                    <span class="pull-right margin-bottom-md">
-                        <span class="label paused" ng-show="activeJobTypeDetails.is_paused">PAUSED</span>
-                        <span ng-show="user.is_admin">
-                            <button class="btn btn-default margin-bottom-sm" ng-click="togglePause()"><i class="fa" ng-class="pauseBtnClass"></i></button>
-                        </span>
-                        <span ng-show="activeJobType.isActive" ng-bind-html="activityIcon"></span>
+            <h3>
+                <span ng-bind-html="activeJobType.getIcon()"></span>
+                {{ activeJobType.title + ' ' + activeJobType.version }}
+                <span class="pull-right margin-bottom-md">
+                    <span class="label paused" ng-show="activeJobTypeDetails.is_paused">PAUSED</span>
+                    <span ng-show="user.is_admin">
+                        <button class="btn btn-default margin-bottom-sm" ng-click="togglePause()" uib-tooltip="Pause Job Type" tooltip-placement="left"><i class="fa" ng-class="pauseBtnClass"></i></button>
                     </span>
-                </h3>
-                <hr />
-                <div class="tab-content">
-                    <div class="tab-pane active" id="details">
-                        <div class="row">
-                            <div class="col-xs-8">
-                                <div class="margin-bottom-md">{{ activeJobTypeDetails.description }}</div>
-                                <div class="margin-bottom-md">
-                                    <strong>Author:</strong> {{ activeJobTypeDetails.author_name }}<br />
-                                    <span ng-show="activeJobTypeDetails.author_url"><a href="{{ activeJobTypeDetails.author_url }}" target="_blank">Algorithm Description</a></span>
-                                </div>
-                                <ais-job-type-interface job-type-interface="activeJobTypeDetails.job_type_interface"></ais-job-type-interface>
+                    <span ng-show="activeJobType.isActive" ng-bind-html="activityIcon"></span>
+                </span>
+            </h3>
+            <hr />
+            <div class="tab-content">
+                <div class="tab-pane active" id="details">
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <div class="margin-bottom-md">{{ activeJobTypeDetails.description }}</div>
+                            <div class="margin-bottom-md">
+                                <strong ng-show="activeJobTypeDetails.author_name">Author:</strong> {{ activeJobTypeDetails.author_name }}<br />
+                                <span ng-show="activeJobTypeDetails.author_url"><a href="{{ activeJobTypeDetails.author_url }}" target="_blank">Algorithm Description</a></span>
                             </div>
-                            <div class="col-xs-4">
-                                <dl class="dl-horizontal">
-                                    <dt>Created:</dt>
-                                    <dd>{{ activeJobTypeDetails.created }}</dd>
-                                    <dt>Last Modified:</dt>
-                                    <dd>{{ activeJobTypeDetails.last_modified }}</dd>
-                                    <dt>Archived:</dt>
-                                    <dd ng-show="activeJobTypeDetails.archived">{{ activeJobTypeDetails.archived }}</dd>
-                                    <dd>{{ activeJobTypeDetails.last_modified }}</dd>
-                                    <dt>CPUs Required:</dt>
-                                    <dd>{{ activeJobTypeDetails.cpus_required }}</dd>
-                                    <dt>Memory Required:</dt>
-                                    <dd>{{ activeJobTypeDetails.mem_required }}</dd>
-                                    <dt>Disk Required:</dt>
-                                    <dd>{{ activeJobTypeDetails.disk_out_const_required_formatted }}</dd>
-                                    <dt>Input Size Multiplier:</dt>
-                                    <dd>{{ activeJobTypeDetails.disk_out_mult_required }}</dd>
-                                    <dt>Docker Image:</dt>
-                                    <dd>{{ activeJobTypeDetails.docker_image }}</dd>
-                                    <dt>Max Tries:</dt>
-                                    <dd>{{ activeJobTypeDetails.max_tries }}</dd>
-                                    <dt>Priority:</dt>
-                                    <dd>{{ activeJobTypeDetails.priority }}</dd>
-                                    <dt>Timeout:</dt>
-                                    <dd ng-show="activeJobTypeDetails.timeout">{{ activeJobTypeDetails.timeout }} seconds</dd>
-                                    <dt>Category:</dt>
-                                    <dd>{{ activeJobTypeDetails.category }}</dd>
-                                    <dt>System Type:</dt>
-                                    <dd>{{ activeJobTypeDetails.is_system }}</dd>
-                                    <dt>Long Running:</dt>
-                                    <dd>{{ activeJobTypeDetails.is_long_running }}</dd>
-                                    <dt>Active:</dt>
-                                    <dd>{{ activeJobTypeDetails.is_active }}</dd>
-                                    <dt>Operational:</dt>
-                                    <dd>{{ activeJobTypeDetails.is_operational }}</dd>
-                                    <dt>Paused:</dt>
-                                    <dd>{{ activeJobTypeDetails.is_paused }}</dd>
-                                    <dt ng-show="activeJobTypeDetails.paused">Paused Date:</dt>
-                                    <dd ng-show-="activeJobTypeDetails.paused">{{ activeJobTypeDetails.paused }}</dd>
-                                </dl>
-                            </div>
+                            <ais-job-type-interface job-type-interface="activeJobTypeDetails.job_type_interface"></ais-job-type-interface>
                         </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-xs-4 text-center">
-                                <h2>6 Hours</h2>
-                                {{ activeJobTypeStats.hour6.failed }} Failure(s) / {{ activeJobTypeStats.hour6.total }} Job(s)
-                                <ais-health data="healthData6" error-label="'Error Types'" type="'hour6'"></ais-health>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <h2>12 Hours</h2>
-                                {{ activeJobTypeStats.hour12.failed }} Failure(s) / {{ activeJobTypeStats.hour12.total }} Job(s)
-                                <ais-health data="healthData12" error-label="'Error Types'" type="'hour12'"></ais-health>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <h2>24 Hours</h2>
-                                {{ activeJobTypeStats.hour24.failed }} Failure(s) / {{ activeJobTypeStats.hour24.total }} Job(s)
-                                <ais-health data="healthData24" error-label="'Error Types'" type="'hour24'"></ais-health>
-                            </div>
+                        <div class="col-xs-5">
+                            <dl class="dl-horizontal">
+                                <dt ng-if="activeJobTypeDetails.created">Created:</dt>
+                                <dd ng-if="activeJobTypeDetails.created">{{ activeJobTypeDetails.created }}</dd>
+                                <dt ng-if="activeJobTypeDetails.last_modified">Last Modified:</dt>
+                                <dd ng-if="activeJobTypeDetails.last_modified">{{ activeJobTypeDetails.last_modified }}</dd>
+                                <dt ng-if="activeJobTypeDetails.archived">Archived:</dt>
+                                <dd ng-if="activeJobTypeDetails.archived">{{ activeJobTypeDetails.archived }}</dd>
+                                <dt ng-if="activeJobTypeDetails.cpus_required">CPUs Required:</dt>
+                                <dd ng-if="activeJobTypeDetails.cpus_required">{{ activeJobTypeDetails.cpus_required }}</dd>
+                                <dt ng-if="activeJobTypeDetails.mem_required">Memory Required:</dt>
+                                <dd ng-if="activeJobTypeDetails.mem_required">{{ activeJobTypeDetails.mem_required }}</dd>
+                                <dt ng-if="activeJobTypeDetails.disk_out_const_required_formatted">Disk Required:</dt>
+                                <dd ng-if="activeJobTypeDetails.disk_out_const_required_formatted">{{ activeJobTypeDetails.disk_out_const_required_formatted }}</dd>
+                                <dt ng-if="activeJobTypeDetails.disk_out_mult_required">Input Size Multiplier:</dt>
+                                <dd ng-if="activeJobTypeDetails.disk_out_mult_required">{{ activeJobTypeDetails.disk_out_mult_required }}</dd>
+                                <dt ng-if="activeJobTypeDetails.docker_image">Docker Image:</dt>
+                                <dd ng-if="activeJobTypeDetails.docker_image">{{ activeJobTypeDetails.docker_image }}</dd>
+                                <dt ng-if="activeJobTypeDetails.max_tries">Max Tries:</dt>
+                                <dd ng-if="activeJobTypeDetails.max_tries">{{ activeJobTypeDetails.max_tries }}</dd>
+                                <dt ng-if="activeJobTypeDetails.priority">Priority:</dt>
+                                <dd ng-if="activeJobTypeDetails.priority">{{ activeJobTypeDetails.priority }}</dd>
+                                <dt ng-if="activeJobTypeDetails.timeout">Timeout:</dt>
+                                <dd ng-if="activeJobTypeDetails.timeout">{{ activeJobTypeDetails.timeout }} seconds</dd>
+                                <dt ng-if="activeJobTypeDetails.category">Category:</dt>
+                                <dd ng-if="activeJobTypeDetails.category">{{ activeJobTypeDetails.category }}</dd>
+                                <dt ng-if="activeJobTypeDetails.is_system">System Type:</dt>
+                                <dd ng-if="activeJobTypeDetails.is_system">{{ activeJobTypeDetails.is_system }}</dd>
+                                <dt ng-if="activeJobTypeDetails.is_long_running">Long Running:</dt>
+                                <dd ng-if="activeJobTypeDetails.is_long_running">{{ activeJobTypeDetails.is_long_running }}</dd>
+                                <dt ng-if="activeJobTypeDetails.is_active">Active:</dt>
+                                <dd ng-if="activeJobTypeDetails.is_active">{{ activeJobTypeDetails.is_active }}</dd>
+                                <dt ng-if="activeJobTypeDetails.is_operational">Operational:</dt>
+                                <dd ng-if="activeJobTypeDetails.is_operational">{{ activeJobTypeDetails.is_operational }}</dd>
+                                <dt ng-if="activeJobTypeDetails.is_paused">Paused:</dt>
+                                <dd ng-if="activeJobTypeDetails.is_paused">{{ activeJobTypeDetails.is_paused }}</dd>
+                                <dt ng-if="activeJobTypeDetails.paused">Paused Date:</dt>
+                                <dd ng-if="activeJobTypeDetails.paused">{{ activeJobTypeDetails.paused }}</dd>
+                            </dl>
                         </div>
-                        <hr />
-
                     </div>
-                    <div class="tab-pane" id="errors" ng-if="showJobTypeErrors">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <table class="table condensed">
-                                    <thead>
-                                        <tr>
-                                            <th>Exit Code</th>
-                                            <th>Error</th>
-                                            <th>Description</th>
-                                            <th>Category</th>
-                                            <th>Created</th>
-                                            <th>Last Modified</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="error in activeJobTypeErrors">
-                                            <td>{{ error.code }}</td>
-                                            <td>{{ error.data.title }}</td>
-                                            <td>{{ error.data.description }}</td>
-                                            <td>{{ error.data.category }}</td>
-                                            <td>{{ error.data.created_formatted }}</td>
-                                            <td>{{ error.data.last_modified_formatted }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <h2>6 Hours</h2>
+                            {{ activeJobTypeStats.hour6.failed }} Failure(s) / {{ activeJobTypeStats.hour6.total }} Job(s)
+                            <ais-health data="healthData6" error-label="'Error Types'" type="'hour6'"></ais-health>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <h2>12 Hours</h2>
+                            {{ activeJobTypeStats.hour12.failed }} Failure(s) / {{ activeJobTypeStats.hour12.total }} Job(s)
+                            <ais-health data="healthData12" error-label="'Error Types'" type="'hour12'"></ais-health>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <h2>24 Hours</h2>
+                            {{ activeJobTypeStats.hour24.failed }} Failure(s) / {{ activeJobTypeStats.hour24.total }} Job(s)
+                            <ais-health data="healthData24" error-label="'Error Types'" type="'hour24'"></ais-health>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="errors" ng-if="showJobTypeErrors">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Exit Code</th>
+                                        <th>Error</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Created</th>
+                                        <th>Last Modified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="error in activeJobTypeErrors">
+                                        <td>{{ error.code }}</td>
+                                        <td>{{ error.data.title }}</td>
+                                        <td>{{ error.data.description }}</td>
+                                        <td>{{ error.data.category }}</td>
+                                        <td>{{ error.data.created_formatted }}</td>
+                                        <td>{{ error.data.last_modified_formatted }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

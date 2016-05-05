@@ -375,49 +375,51 @@
                 if (query.filtersApplied.length > 0) {
                     // filters were applied, so build data source accordingly
                     _.forEach(data.results, function (result) {
-                        // values for all filters are returned in one array of arrays,
-                        // so group results by id to isolate filter values
-                        var groupedResult = _.groupBy(result.values, 'id'),
-                            resultObj = {},
-                            filterIds = _.pluck(query.filtersApplied, 'id');
-                        // try to get each filter id from groupedResult.
-                        // if it's undefined, an empty array will be returned
-                        // this allows a zeroed array to appear in the chart,
-                        // since we want to include all filters selected by the user
-                        // regardless of value
-                        if (filterIds.length > 1) {
-                            // when more than one filter is requested, then an id
-                            // value is present within data.results
-                            _.forEach(filterIds, function (id) {
-                                resultObj[id] = _.get(groupedResult, id, []);
-                            });
-                        } else {
-                            // when one filter is requested, no id value is included
-                            // in data.results, so build resultObj with the other
-                            // info we have
-                            resultObj[query.choice_id[0]] = _.pairs(groupedResult)[0][1];
-                        }
-                        _.forEach(_.pairs(resultObj), function (d) {
-                            valueArr = [];
-                            // d[0] will be choice id, d[1] will be values
-                            // if only one filter was selected, d[0] will return as string 'undefined' since no id is included in this case
-                            queryFilter = d[0] === 'undefined' ? query.filtersApplied[0] : _.find(query.filtersApplied, { id: parseInt(d[0]) });
-                            queryDates = d[1];
-
-                            // add result values to valueArr
-                            _.forEach(xArr, function (xDate) {
-                                var valueObj = _.find(queryDates, function (qDate) {
-                                    return moment.utc(qDate.date).isSame(xDate, 'day');
+                        if (result.values.length > 0) {
+                            // values for all filters are returned in one array of arrays,
+                            // so group results by id to isolate filter values
+                            var groupedResult = _.groupBy(result.values, 'id'),
+                                resultObj = {},
+                                filterIds = _.pluck(query.filtersApplied, 'id');
+                            // try to get each filter id from groupedResult.
+                            // if it's undefined, an empty array will be returned
+                            // this allows a zeroed array to appear in the chart,
+                            // since we want to include all filters selected by the user
+                            // regardless of value
+                            if (filterIds.length > 1) {
+                                // when more than one filter is requested, then an id
+                                // value is present within data.results
+                                _.forEach(filterIds, function (id) {
+                                    resultObj[id] = _.get(groupedResult, id, []);
                                 });
-                                // push 0 if data for xDate is not present in queryDates
-                                valueArr.push(valueObj ? valueObj.value : 0);
-                            });
+                            } else {
+                                // when one filter is requested, no id value is included
+                                // in data.results, so build resultObj with the other
+                                // info we have
+                                resultObj[query.choice_id[0]] = _.pairs(groupedResult)[0][1];
+                            }
+                            _.forEach(_.pairs(resultObj), function (d) {
+                                valueArr = [];
+                                // d[0] will be choice id, d[1] will be values
+                                // if only one filter was selected, d[0] will return as string 'undefined' since no id is included in this case
+                                queryFilter = d[0] === 'undefined' ? query.filtersApplied[0] : _.find(query.filtersApplied, {id: parseInt(d[0])});
+                                queryDates = d[1];
 
-                            // prepend valueArr with filter title, and push onto colArr
-                            valueArr.unshift(queryFilter.name + queryFilter.id);
-                            colNames[queryFilter.name + queryFilter.id] = queryFilter.version ? queryFilter.title + ' ' + queryFilter.version : queryFilter.title;
-                            colArr.push(valueArr);
-                        });
+                                // add result values to valueArr
+                                _.forEach(xArr, function (xDate) {
+                                    var valueObj = _.find(queryDates, function (qDate) {
+                                        return moment.utc(qDate.date).isSame(xDate, 'day');
+                                    });
+                                    // push 0 if data for xDate is not present in queryDates
+                                    valueArr.push(valueObj ? valueObj.value : 0);
+                                });
+
+                                // prepend valueArr with filter title, and push onto colArr
+                                valueArr.unshift(queryFilter.name + queryFilter.id);
+                                colNames[queryFilter.name + queryFilter.id] = queryFilter.version ? queryFilter.title + ' ' + queryFilter.version : queryFilter.title;
+                                colArr.push(valueArr);
+                            });
+                        }
                     });
                 } else {
                     // no filters were applied, so show aggregate statistics
