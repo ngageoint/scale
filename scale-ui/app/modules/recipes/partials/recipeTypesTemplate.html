@@ -1,7 +1,7 @@
 <ais-header name="'Recipe Types'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
 
 <div class="row">
-    <div class="master-container vh_height78 vh_max-height78" ng-class="masterClass">
+    <div class="master-container" ng-class="masterClass" style="{{ containerStyle }}">
         <div class="master-content">
             <div class="master-controls">
                 <div ng-if="user.is_admin" class="pull-right">
@@ -15,7 +15,7 @@
             </ul>
         </div>
     </div>
-    <div class="detail-container vh_height78 vh_max-height78" ng-class="detailClass">
+    <div class="detail-container" ng-class="detailClass" style="{{ containerStyle }}">
         <div class="text-center" ng-if="!activeRecipeType">
             <h2>Select a recipe type to view its details.</h2>
         </div>

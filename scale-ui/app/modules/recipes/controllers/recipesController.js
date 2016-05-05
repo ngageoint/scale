@@ -224,7 +224,7 @@
         angular.element(document).ready(function(){
            // set container height equal to available page height
             var viewport = scaleService.getViewportSize();
-            var offset = scaleConfig.headerOffset + scaleConfig.footerOffset + scaleConfig.dateFilterOffset;
+            var offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset;
             var gridMaxHeight = viewport.height - offset;
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px;';
         });

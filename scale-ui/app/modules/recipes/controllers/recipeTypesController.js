@@ -3,6 +3,7 @@
 
     angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService, localStorage) {
         $scope.loading = true;
+        $scope.containerStyle = '';
         $scope.recipeTypes = [];
         $scope.recipeTypeIds = [];
         $scope.requestedRecipeTypeId = parseInt($routeParams.id);
@@ -157,6 +158,15 @@
         $rootScope.$on('recipeModified', function () {
             $scope.isRecipeModified = true;
             $scope.saveBtnClass = 'btn-success';
+        });
+
+        angular.element(document).ready(function () {
+            // set container heights equal to available page height
+            var viewport = scaleService.getViewportSize(),
+                offset = scaleConfig.headerOffset,
+                containerMaxHeight = viewport.height - offset;
+
+            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
         });
     });
 })();

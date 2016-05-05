@@ -2,6 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
+        $scope.containerStyle = '';
         $scope.requestedJobTypeId = parseInt($routeParams.id);
         $scope.jobTypes = [];
         $scope.jobTypeIds = [];
@@ -154,5 +155,14 @@
         };
 
         initialize();
+
+        angular.element(document).ready(function () {
+            // set container heights equal to available page height
+            var viewport = scaleService.getViewportSize(),
+                offset = scaleConfig.headerOffset,
+                containerMaxHeight = viewport.height - offset;
+
+            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
+        });
     });
 })();
