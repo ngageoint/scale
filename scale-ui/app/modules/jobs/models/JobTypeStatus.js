@@ -61,16 +61,8 @@
             },
             getCellFill: function () {
                 var status = this.getPerformance();
-                if (status.failedCategory === 'SYSTEM') {
-                    return scaleConfig.colors.failure_system;
-                } else if (status.failedCategory === 'DATA') {
-                    return scaleConfig.colors.failure_data;
-                } else if (status.failedCategory === 'ALGORITHM') {
-                    return scaleConfig.colors.failure_algorithm;
-                } else {
-                    if (status.rateDescription === 'z_inactive') {
-                        return scaleConfig.colors.chart_gray_dark;
-                    }
+                if (status.rateDescription === 'z_inactive') {
+                    return scaleConfig.colors.chart_gray_dark;
                 }
                 return scaleConfig.colors.chart_green;
             },

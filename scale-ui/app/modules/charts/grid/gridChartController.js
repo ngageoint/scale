@@ -292,6 +292,63 @@
 
             // UPDATE
             // Update old elements as needed.
+            containerGroup.selectAll('.stop1')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 1) {
+                            return '100%';
+                        }
+                        return '0%';
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return failures[0] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[0] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
+            containerGroup.selectAll('.stop2')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 3) {
+                            return '50%';
+                        } else if (failures.length === 2) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        return failures[1] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[1] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
+            containerGroup.selectAll('.stop3')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        if (failures.length === 3) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        return failures[2] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[2] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
             containerGroup.selectAll('.cell')
                 .data($scope.gridData, function (d) { return d.coords; })
                 .transition()
@@ -300,8 +357,12 @@
                     return d ? '#fff' : 'none';
                 })
                 .style('fill', function (d) {
-                    return getCellFill(d);
+                    if (d.toString() === 'Node') {
+                        return getCellFill(d);
+                    }
                 });
+
+            var cg = containerGroup.selectAll('.cell-gradient');
 
             containerGroup.selectAll('.cell-text')
                 .data($scope.gridData, function (d) { return d.coords; })
@@ -371,12 +432,87 @@
                 .append('g')
                 .attr('class', 'cell-group');
 
+            var defs = cellGroup.append('defs');
+            var gradient = defs.append('linearGradient')
+                .attr('id', function (d) {
+                    return d.name;
+                })
+                .attr('class', 'cell-gradient')
+                .attr('x1', 0)
+                .attr('y1', 0)
+                .attr('x2', 0)
+                .attr('y2', 1);
+            gradient.append('stop')
+                .attr('class', 'stop1')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 1) {
+                            return '100%';
+                        }
+                        return '0%';
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return failures[0] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[0] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+            gradient.append('stop')
+                .attr('class', 'stop2')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        if (failures.length === 3) {
+                            return '50%';
+                        } else if (failures.length === 2) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        return failures[1] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[1] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+            gradient.append('stop')
+                .attr('class', 'stop3')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        if (failures.length === 3) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        return failures[2] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[2] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
             cellGroup.append('rect')
                 .attr('class', 'cell')
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
                 .style('fill', function (d) {
-                    return getCellFill(d);
+                    if (d.toString() === 'Node') {
+                        return getCellFill(d);
+                    }
+                })
+                .attr('fill', function (d) {
+                    if (d.toString() === 'JobType') {
+                        return 'url(#' + d.name + ')';
+                    }
                 })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
@@ -491,13 +627,14 @@
                 .attr('class', 'cell-overlay')
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
+                .style('fill', '#fff')
                 .on('mouseover', function () {
-                    d3.select(d3.select(this)[0][0].parentElement.children[0])
-                        .style('fill-opacity', '0.75');
+                    d3.select(this)
+                        .style('fill-opacity', '0.25');
                 })
                 .on('mouseout', function () {
-                    d3.select(d3.select(this)[0][0].parentElement.children[0])
-                        .style('fill-opacity', '1.0');
+                    d3.select(this)
+                        .style('fill-opacity', '0');
                 })
                 .on('click', function (d) {
                     cellClickHandler(d);

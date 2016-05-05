@@ -60,6 +60,24 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 45,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "SYSTEM"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 56,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "DATA"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 2,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 875,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -182,6 +200,18 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 10,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "DATA"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 12,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 322,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -244,6 +274,12 @@
                     "count": 4,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
+                },
+                {
+                    "status": "FAILED",
+                    "count": 10,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
                 },
                 {
                     "status": "COMPLETED",
