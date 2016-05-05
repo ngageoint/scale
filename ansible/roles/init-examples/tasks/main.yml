@@ -5,7 +5,7 @@
   template: src=example_data.py.j2 dest='/tmp/example_data.py'
 
 - name: Install the countries shapefile
-  tags: init-examples
+  tags: [ init-examples, example-database ]
   unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
 
 - name: Initialize example database

@@ -1,4 +1,4 @@
-FROM geoint/scale
+FROM scale:develop
 MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 
 VOLUME /opt/scale/static

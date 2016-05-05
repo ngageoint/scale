@@ -1328,22 +1328,22 @@ class JobExecution(models.Model):
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
         if self.job.job_type.is_system:
-            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_job_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
         else:
-            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_pre_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
-            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_post_task_docker_param(DockerParam('e', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
 
         if not self.job.job_type.is_system:
             # Non-system jobs get named Docker volumes for input and output data

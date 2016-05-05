@@ -55,10 +55,10 @@
   file: path='{{ scale_build_root }}' state=directory mode=755
   become: true
 
-- name: Install scale
-  tags: [ build-scale, build-scale-sync ]
-  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
-  become: true
+#- name: Install scale
+#  tags: [ build-scale, build-scale-sync ]
+#  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
+#  become: true
 
 - name: Install python build libraries
   tags: [ build-scale, build-scale-minimal ]

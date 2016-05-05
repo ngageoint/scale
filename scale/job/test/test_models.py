@@ -312,9 +312,9 @@ class TestJobExecutionManager(TransactionTestCase):
         workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
         workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
         db = settings.DATABASES['default']
-        env_vars = [DockerParam('e', 'SCALE_DB_NAME=' + db['NAME']), DockerParam('e', 'SCALE_DB_USER=' + db['USER']),
-                    DockerParam('e', 'SCALE_DB_PASS=' + db['PASSWORD']),
-                    DockerParam('e', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('e', 'SCALE_DB_PORT=' + db['PORT'])]
+        env_vars = [DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']), DockerParam('env', 'SCALE_DB_USER=' + db['USER']),
+                    DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']),
+                    DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])]
         job_exe_1_pre_task_params = env_vars
         job_exe_1_pre_task_params.extend([DockerParam('volume', input_data_volume_1),
                                           DockerParam('volume', workspace_volume_1)])

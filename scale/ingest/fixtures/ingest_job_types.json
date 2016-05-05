@@ -18,8 +18,8 @@
 			"docker_image": "scale",
 			"interface": {
 			     "version": "1.0",
-			     "command": "scale_ingest",
-			     "command_arguments": "${-i :Ingest ID} ${-m :Mount}",
+                             "command": "",
+			     "command_arguments": "scale_ingest ${-i :Ingest ID} ${-m :Mount}",
 			     "input_data": [ { "name": "Ingest ID", "type": "property" },
 			                     { "name": "Mount", "type": "property" } ]
 			},
@@ -45,8 +45,8 @@
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
-                 "command": "scale_ingest",
-                 "command_arguments": "${-i :Ingest ID} ${-m :Mount}",
+                 "command": "",
+                 "command_arguments": "${scale_ingest -i :Ingest ID} ${-m :Mount}",
                  "input_data": [ { "name": "Ingest ID", "type": "property" },
                                  { "name": "Mount", "type": "property" } ]
             },
@@ -72,8 +72,8 @@
             "docker_image": "scale",
             "interface": {
                  "version": "1.0",
-                 "command": "scale_strike",
-                 "command_arguments": "${-i :Strike ID}",
+                 "command": "",
+                 "command_arguments": "scale_strike ${-i :Strike ID}",
                  "input_data": [ { "name": "Strike ID", "type": "property" } ]
             },
             "revision_num": 1,
@@ -98,8 +98,8 @@
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
-                 "command": "scale_strike",
-                 "command_arguments": "${-i :Strike ID}",
+                 "command": "",
+                 "command_arguments": "scale_strike ${-i :Strike ID}",
                  "input_data": [ { "name": "Strike ID", "type": "property" } ]
             },
             "created": "2015-11-06T00:00:00.0Z"

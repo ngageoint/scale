@@ -27,8 +27,7 @@ class PostTask(Task):
         self._docker_image = self.create_scale_image_name(job_exe.get_docker_image(), docker_repo)
         self._docker_params = job_exe.get_job_configuration().get_post_task_docker_params()
         self._is_docker_privileged = False
-        self._command = 'scale_post_steps'
-        self._command_arguments = '-i %i' % job_exe.id
+        self._command_arguments = 'scale_post_steps -i %i' % job_exe.id
 
     def complete(self, task_results):
         """See :meth:`job.execution.running.tasks.base_task.Task.complete`
