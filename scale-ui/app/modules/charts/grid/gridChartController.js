@@ -306,6 +306,12 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .html(function (d) {
                     return getCellText(d);
+                })
+                .attr('y', function (d) {
+                    if (d.toString() === 'JobType' && getCellActivityTotal(d) > 0) {
+                        return $scope.cellHeight / 2;
+                    }
+                    return ($scope.cellHeight / 2) + 10;
                 });
 
             containerGroup.selectAll('.cell-total-active')
@@ -384,7 +390,12 @@
                 })
                 .attr('text-anchor', 'middle')
                 .attr('x', $scope.cellWidth / 2)
-                .attr('y', ($scope.cellHeight / 2))
+                .attr('y', function (d) {
+                    if (d.toString() === 'JobType' && getCellActivityTotal(d) > 0) {
+                        return $scope.cellHeight / 2;
+                    }
+                    return ($scope.cellHeight / 2) + 10;
+                })
                 .style('display', $scope.enableReveal ? 'block' : 'none');
 
             cellGroup.append('text')
