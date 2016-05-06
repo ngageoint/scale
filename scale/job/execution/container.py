@@ -7,7 +7,7 @@ from storage.container import SCALE_ROOT_PATH
 
 
 SCALE_JOB_EXE_INPUT_PATH = os.path.join(SCALE_ROOT_PATH, 'input_data')
-SCALE_JOB_EXE_OUTPUT_PATH = os.path.join(SCALE_ROOT_PATH, 'input_data')
+SCALE_JOB_EXE_OUTPUT_PATH = os.path.join(SCALE_ROOT_PATH, 'output_data')
 
 
 def get_job_exe_input_vol_name(job_exe_id):
