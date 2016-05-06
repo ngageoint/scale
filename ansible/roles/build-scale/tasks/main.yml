@@ -35,6 +35,57 @@
   yum: name=protobuf
   become: true
 
+- name: Install git
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  yum: name=git
+  become: true
+
+- name: Download golang
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  get_url: url=https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz dest=/tmp/ mode=0666
+
+- name: Install golang
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  unarchive: src=/tmp/go1.6.2.linux-amd64.tar.gz dest=/usr/local/ copy=no
+  become: true
+
+- name: Setup go links
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  file: src='/usr/local/go/bin/go' dest='/usr/bin/go' state=link
+  become: true
+
+- name: Download glide
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  get_url: url=https://github.com/Masterminds/glide/releases/download/0.10.2/glide-0.10.2-linux-386.tar.gz dest=/tmp/ mode=0666
+
+- name: Unpack glide
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  unarchive: src=/tmp/glide-0.10.2-linux-386.tar.gz dest=/tmp/ copy=no
+
+- name: Install glide
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  command: "install -m 0755 /tmp/linux-386/glide /usr/bin/"
+  become: true
+
+- name: Setup GOPATH
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  file: src='{{ scale_build_root }}' dest='{{ scale_build_root }}/src/github.com/ngageoint/scale' state=link
+  become: true
+
+- name: Grab dependencies
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  command: /usr/bin/glide install -u chdir='{{ scale_build_root }}/src/github.com/ngageoint/scale/scale-cli'
+  environment:
+    GOROOT: '/usr/local/go'
+    GOPATH: '{{ scale_build_root }}'
+
+- name: Build cli
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  command: go install github.com/ngageoint/scale/scale-cli/cmd/goscale creates='{{ scale_build_root }}/bin/goscale'
+  environment:
+    GOROOT: '/usr/local/go'
+    GOPATH: '{{ scale_build_root }}'
+
 - name: Install npm
   tags: [ build-scale, build-scale-minimal ]
   yum: name=npm

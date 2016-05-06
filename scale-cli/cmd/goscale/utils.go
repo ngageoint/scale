@@ -121,5 +121,6 @@ func Parse_json_or_yaml(basename string, parsed_data interface{}) error {
         tmp.Read(json_data)
         tmp.Close()
     }
-    return json.Unmarshal(json_data, &parsed_data)
+    err= json.Unmarshal(json_data, &parsed_data)
+    return err
 }
