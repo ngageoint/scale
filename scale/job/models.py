@@ -1361,6 +1361,11 @@ class JobExecution(models.Model):
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(workspaces)
 
+        # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
+        # jobs no longer mount within the container.
+        if self.job.job_type.name in ['scale-strike', 'scale-ingest']:
+            configuration.add_job_task_docker_param(DockerParam('env', 'ENABLE_NFS=1'))
+
         self.configuration = configuration.get_dict()
 
     def get_docker_image(self):
