@@ -17,13 +17,13 @@ if not storage.models.Workspace.objects.filter(name="raw").exists():
     storage.models.Workspace.objects.create(name="raw", title="raw", description="Raw ingested data",
         base_url="http://{{ example_server }}:8080/raw",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/raw" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/raw", "type": "host"}}).save()
 
 if not storage.models.Workspace.objects.filter(name="products").exists():
     storage.models.Workspace.objects.create(name="products", title="products", description="Product storage",
         base_url="http://{{ example_server }}:8080/products",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/products" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/products", "type": "host"}}).save()
 
 # Triggers
 if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():

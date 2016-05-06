@@ -1,7 +1,7 @@
 FROM centos:centos7
 MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 
-RUN useradd -M -d /opt/scale scale
+RUN useradd --uid 1001 -M -d /opt/scale scale
 ADD scale.sudoers /etc/sudoers.d/scale
 
 ADD epel-release-7-5.noarch.rpm /tmp/
