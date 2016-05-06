@@ -34,9 +34,6 @@
         "dist/fonts/*",
         "dist/js/bootstrap.js"
       ]
-    },
-    "vunit": {
-      "main": "dist/*.js"
     }
   }
 }
