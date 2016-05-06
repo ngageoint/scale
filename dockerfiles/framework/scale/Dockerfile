@@ -17,7 +17,7 @@ RUN chmod a+x manage.py && pip install 'protobuf<3.0.0b1.post1' && easy_install 
 COPY local_settings.py /opt/scale/scale/
 COPY entryPoint.sh /opt/scale/
 
-RUN mkdir /var/log/scale /var/lib/scale-metrics /scale_data \
- && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale_data
+RUN mkdir /var/log/scale /var/lib/scale-metrics /scale \
+ && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale
 USER scale
 ENTRYPOINT ["./entryPoint.sh"]

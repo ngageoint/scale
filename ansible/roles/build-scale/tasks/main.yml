@@ -81,9 +81,9 @@
   tags: [ build-scale, build-scale-minimal ]
   unarchive: copy=no src='{{ scale_build_root }}/scale-ui/deploy/scale-ui.tar.gz' dest='{{ scale_build_root }}/scale/ui'
 
-- name: Install local_settings.py
-  tags: [ build-scale, build-scale-minimal ]
-  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
+#- name: Install local_settings.py
+#  tags: [ build-scale, build-scale-minimal ]
+#  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
 
 - name: Create database migrations.
   tags: [ build-scale, build-scale-minimal ]

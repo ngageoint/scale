@@ -47,6 +47,8 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+DEFAULT_SCHEDULER_DOCKER_REPOSITORY = "geoint"
+
 # Application definition
 
 INSTALLED_APPS = (

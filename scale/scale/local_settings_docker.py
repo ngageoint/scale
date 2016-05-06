@@ -19,6 +19,8 @@ ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
 
+DEFAULT_SCHEDULER_DOCKER_REPOSITORY = os.environ.get('SCALE_DEFAULT_SCHEDULER_DOCKER_REPOSITORY', DEFAULT_SCHEDULER_DOCKER_RESPOSITORY)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
