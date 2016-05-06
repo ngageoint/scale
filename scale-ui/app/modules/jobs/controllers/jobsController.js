@@ -5,7 +5,7 @@
         var self = this;
 
         self.jobsParams = {
-            page: null, page_size: null, started: null, ended: null, order: $rootScope.jobsControllerOrder || '-last_modified', status: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
+            page: null, page_size: null, started: null, ended: null, order: $rootScope.jobsControllerOrder || '-last_modified', status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
         };
 
         // check for jobsParams in query string, and update as necessary
@@ -19,6 +19,7 @@
         var gridPageNumber = self.jobsParams.page || 1,
             filteredByJobType = self.jobsParams.job_type_id ? true : false,
             filteredByJobStatus = self.jobsParams.status ? true : false,
+            filteredByErrorCategory = self.jobsParams.error_category ? true : false,
             filteredByOrder = self.jobsParams.order ? true : false;
 
         $scope.jobsData = {};
@@ -28,6 +29,8 @@
         $scope.selectedJobType = self.jobsParams.job_type_id || 0;
         $scope.jobStatusValues = scaleConfig.jobStatus;
         $scope.selectedJobStatus = self.jobsParams.status || $scope.jobStatusValues[0];
+        $scope.errorCategoryValues = scaleConfig.errorCategories;
+        $scope.selectedErrorCategory = self.jobsParams.error_category || $scope.errorCategoryValues[0];
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
         $scope.actionClicked = false;
         $scope.gridStyle = '';
@@ -76,8 +79,21 @@
             { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
             {
                 field: 'status',
+                width: 150,
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.status }} <button ng-show="((!grid.appScope.readonly) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.requeueJobs({ job_ids: [row.entity.id] })" class="btn btn-xs btn-default" title="Requeue Job"><i class="fa fa-repeat"></i></button> <button ng-show="!grid.appScope.readonly && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job"><i class="fa fa-ban"></i></button></div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobStatus"><option ng-selected="{{ grid.appScope.jobStatusValues[$index] == grid.appScope.selectedJobStatus }}" value="{{ grid.appScope.jobStatusValues[$index] }}" ng-repeat="status in grid.appScope.jobStatusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
+            },
+            {
+                field: 'error.category',
+                width: 150,
+                displayName: 'Error Category',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedErrorCategory"><option ng-selected="{{ grid.appScope.errorCategoryValues[$index] == grid.appScope.selectedErrorCategory }}" value="{{ grid.appScope.errorCategoryValues[$index] }}" ng-repeat="error in grid.appScope.errorCategoryValues track by $index">{{ error.toUpperCase() }}</option></select></div>'
+            },
+            {
+                field: 'error.title',
+                displayName: 'Error',
+                width: 200,
+                enableFiltering: false
             },
             {
                 field: 'id',
@@ -168,6 +184,18 @@
             }
         };
 
+        self.updateErrorCategory = function (value) {
+            if (value != self.jobsParams.error_category) {
+                self.jobsParams.page = 1;
+            }
+            self.jobsParams.error_category = value === 'VIEW ALL' ? null : value;
+            self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
+            console.log('selectedErrorCategory');
+            if (!$scope.loading) {
+                $scope.filterResults();
+            }
+        };
+
         $scope.$watch('selectedJobStatus', function (value) {
             if ($scope.loading) {
                 if (filteredByJobStatus) {
@@ -176,6 +204,17 @@
             } else {
                 filteredByJobStatus = value !== 'VIEW ALL';
                 self.updateJobStatus(value);
+            }
+        });
+
+        $scope.$watch('selectedErrorCategory', function (value) {
+            if ($scope.loading) {
+                if (filteredByErrorCategory) {
+                    self.updateErrorCategory(value);
+                }
+            } else {
+                filteredByErrorCategory = value !== 'VIEW ALL';
+                self.updateErrorCategory(value);
             }
         });
 
@@ -231,7 +270,9 @@
         };
 
         $scope.requeueJobs = function (jobsParams) {
-            jobsParams = jobsParams || { started: $scope.lastModifiedStart.toISOString(), ended: $scope.lastModifiedStop.toISOString()};
+            if (!jobsParams) {
+                jobsParams = self.jobsParams ? self.jobsParams : { started: $scope.lastModifiedStart.toISOString(), ended: $scope.lastModifiedStop.toISOString() };
+            }
             $scope.actionClicked = true;
             $scope.loading = true;
             loadService.requeueJobs(jobsParams).then(function () {

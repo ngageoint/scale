@@ -146,6 +146,7 @@
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
         "axisTypes": ["linear", "time"],
         "executions": ["success","warning","error"],
+        "errorCategories": ["VIEW ALL","SYSTEM","DATA","ALGORITHM"],
         "defaultIcon": "gear",
         "defaultIconCode": "f013",
         "activityIconCode": "f110",

@@ -2,9 +2,10 @@
     'use strict';
 
     angular.module('scaleApp').factory('Job', function (scaleConfig, JobType, scaleService) {
-        var Job = function (id, job_type, event, error, status, priority, num_exes, timeout, max_tries, cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started, ended, last_status_change, last_modified) {
+        var Job = function (id, job_type, job_type_rev, event, error, status, priority, num_exes, timeout, max_tries, cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started, ended, last_status_change, last_modified) {
             this.id = id;
             this.job_type = JobType.transformer(job_type);
+            this.job_type_rev = job_type_rev;
             this.event = event;
             this.error = error;
             this.status = status;
@@ -41,6 +42,7 @@
                 return new Job(
                     data.id,
                     data.job_type,
+                    data.job_type_rev,
                     data.event,
                     data.error,
                     data.status,
