@@ -120,6 +120,9 @@ class TestSourceDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        self.assertEqual(result['id'], self.source.id)
+        self.assertEqual(result['file_name'], self.source.file_name)
+
         if self.ingest:
             self.assertEqual(len(result['ingests']), 1)
             self.assertEqual(result['ingests'][0]['id'], self.ingest.id)
@@ -136,6 +139,9 @@ class TestSourceDetailsView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(result['id'], self.source.id)
+        self.assertEqual(result['file_name'], self.source.file_name)
 
         if self.ingest:
             self.assertEqual(len(result['ingests']), 1)

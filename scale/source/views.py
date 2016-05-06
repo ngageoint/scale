@@ -45,12 +45,12 @@ class SourcesView(ListAPIView):
 
 
 class SourceDetailsView(RetrieveAPIView):
-    """This view is the endpoint for retrieving/updating details of an ingest."""
+    """This view is the endpoint for retrieving/updating details of a source file."""
     queryset = SourceFile.objects.all()
     serializer_class = SourceFileDetailsSerializer
 
     def retrieve(self, request, source_id=None, file_name=None):
-        """Retrieves the details for an ingest and return them in JSON form
+        """Retrieves the details for a source file and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
