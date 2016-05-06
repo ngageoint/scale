@@ -58,18 +58,6 @@ class Command(BaseCommand):
             job_interface.perform_pre_steps(job_data, job_environment)
             command_args = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
 
-            # Perform a force pull for docker jobs to get the latest version of the image before running
-            # TODO: Remove this hack in favor of the feature in Mesos 0.22.x, see MESOS-1886 for details
-            docker_image = job_exe.job.job_type.docker_image
-            if docker_image:
-                logger.info('Pulling latest docker image: %s', docker_image)
-                try:
-                    subprocess.check_call(['sudo', 'docker', 'pull', docker_image])
-                except subprocess.CalledProcessError:
-                    logger.exception('Docker pull returned unexpected exit code.')
-                except OSError:
-                    logger.exception('OS unable to run docker pull command.')
-
             logger.info('Executing job: %i -> %s', job_exe_id, ' '.join(command_args))
             self._populate_command_arguments(job_exe_id, command_args)
         except Exception as ex:
