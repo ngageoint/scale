@@ -63,7 +63,7 @@
                 //cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'',                
             },
             { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
-            { field: 'completed', enableFiltering: false, enableSorting: true, cellTemplate: '<div class="ui-grid-cell-contents status completed" ng-if="row.entity.completed">Completed {{ row.entity.last_status_change }}</div>' }
+            { field: 'completed', enableFiltering: false, enableSorting: true }
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();
