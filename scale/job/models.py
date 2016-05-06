@@ -1349,11 +1349,12 @@ class JobExecution(models.Model):
             # Non-system jobs get named Docker volumes for input and output data
             input_vol_name = get_job_exe_input_vol_name(self.id)
             output_vol_name = get_job_exe_output_vol_name(self.id)
-            input_volume = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
+            input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
+            input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
             output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
-            configuration.add_pre_task_docker_param(DockerParam('volume', input_volume))
-            configuration.add_job_task_docker_param(DockerParam('volume', input_volume))
+            configuration.add_pre_task_docker_param(DockerParam('volume', input_volume_rw))
+            configuration.add_job_task_docker_param(DockerParam('volume', input_volume_ro))
             configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
