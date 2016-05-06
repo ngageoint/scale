@@ -24,7 +24,7 @@ class PostTask(Task):
         super(PostTask, self).__init__('%i_post' % job_exe.id, job_exe)
 
         self._uses_docker = True
-        self._docker_image = self.create_scale_image_name(job_exe.get_docker_image(), docker_repo)
+        self._docker_image = self.create_scale_image_name('scale', docker_repo)
         self._docker_params = job_exe.get_job_configuration().get_post_task_docker_params()
         self._is_docker_privileged = False
         self._command_arguments = 'scale_post_steps -i %i' % job_exe.id
