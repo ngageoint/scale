@@ -17,8 +17,8 @@
 			"docker_image": "scale",
 			"interface": {
 			     "version": "1.0",
-			     "command": "scale_daily_metrics",
-			     "command_arguments": "${:Day}",
+			     "command": "",
+			     "command_arguments": "scale_daily_metrics ${:Day}",
 			     "input_data": [{ "name": "Day", "type": "property" }]
 			},
 			"revision_num": 1,
@@ -43,8 +43,8 @@
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
-                 "command": "scale_daily_metrics",
-                 "command_arguments": "${:Day}",
+                 "command": "",
+                 "command_arguments": "scale_daily_metrics ${:Day}",
                  "input_data": [{ "name": "Day", "type": "property" }]
             },
             "created": "2015-11-06T00:00:00.0Z"
