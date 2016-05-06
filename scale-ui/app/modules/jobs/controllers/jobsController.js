@@ -92,6 +92,7 @@
             {
                 field: 'error.title',
                 displayName: 'Error',
+                cellTemplate: '<div class="ui-grid-cell-contents"><div uib-tooltip="{{ row.entity.error.description }}" tooltip-append-to-body="true">{{ row.entity.error.title }}</div></div>',
                 width: 200,
                 enableFiltering: false
             },
