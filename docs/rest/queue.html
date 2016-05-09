@@ -1,0 +1,1132 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Queue Services &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="REST API" href="index.html"/>
+        <link rel="next" title="Recipe Services" href="recipe.html"/>
+        <link rel="prev" title="Product Services" href="product.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">REST API</a> &raquo;</li>
+      
+    <li>Queue Services</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rest/queue.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="queue-services">
+<span id="rest-queue"></span><h1>Queue Services<a class="headerlink" href="#queue-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about the current and historical queue state, as well as allowing a user to
+place jobs and recipes on the queue for processing.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Load</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns statistics about the current job load organized by job type. Jobs are counted when they are in the PENDING,
+QUEUED, and RUNNING states. NOTE: Time range must be within a one month period (31 days).</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /load/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Required</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).
+Defaults to the past 1 week.</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Required</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Count only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Count only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Count only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_priority</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Count only jobs with a given job type priority.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.time</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the counts were actually recorded.</td>
+</tr>
+<tr class="row-even"><td>.pending_count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs in the pending state at the measured time.</td>
+</tr>
+<tr class="row-odd"><td>.queued_count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs in the queued state at the measured time.</td>
+</tr>
+<tr class="row-even"><td>.running_count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs in the running state at the measured time.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">28</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-21T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pending_count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;queued_count&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;running_count&quot;</span><span class="o">:</span> <span class="mi">0</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Get Queue Status</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns the current status of the queue by grouping the queued jobs by their types.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /queue/status/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td>The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td>The job type being summarized within the queue.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.count</td>
+<td>Integer</td>
+<td>The total number of jobs of the type in the queue.</td>
+</tr>
+<tr class="row-even"><td>.longest_queued</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job that has been queued the longest of the type was queued.</td>
+</tr>
+<tr class="row-odd"><td>.highest_priority</td>
+<td>Integer</td>
+<td>The highest priority of any job of the type in the queue.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+            <span class="s2">&quot;longest_queued&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;highest_priority&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Queue New Job</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Creates a new job and places it onto the queue</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>POST</strong> /queue/new-job/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>The ID of the job type for the new job</td>
+</tr>
+<tr class="row-odd"><td>job_data</td>
+<td>JSON Object</td>
+<td>JSON defining the data to run the job on, see <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data"><span>Job Data</span></a></td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+    <span class="s2">&quot;job_data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Param 1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;HELLO&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Param 2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">9876</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Param 3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">15</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="2">URL pointing to the details for the newly queued job execution</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>JSON Object</td>
+<td>All fields are the same as the job details model.
+The status will always be QUEUED and a new job_exe will be included.
+(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
+    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML representation of the data&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+        <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">128.0</span><span class="p">,</span>
+        <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-01T00:00:00Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-01T00:00:00Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;/usr/local/bin/python2.7 /app/parser/manage.py create_footprint_kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-11-06T00:00:00Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">10278</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:31:29.282Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:31:29.282Z&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.467Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">210</span><span class="p">,</span>
+    <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">15360.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">8480</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">8484</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;recipes&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4832</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Recipe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Recipe description&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.280Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:32:20.912Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:35:20.912Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:35:20.912Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;job_exes&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14552</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;pre_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:32.435Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pre_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:34.346Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pre_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:42.437Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:46.762Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;post_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:47.246Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;post_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;post_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.753Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.716Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:32.022Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.606Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15586</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;products&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8484</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:48.477Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.639Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">35</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">19</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Queue New Recipe</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Creates a new recipe and places it onto the queue</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>POST</strong> /queue/new-recipe/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>recipe_type_id</td>
+<td>Integer</td>
+<td>The ID of the recipe type to queue</td>
+</tr>
+<tr class="row-odd"><td>recipe_data</td>
+<td>JSON Object</td>
+<td>Defines the data to run the recipe, see <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><span>Recipe Data</span></a></td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;georeference_data&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">1235</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">12</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="2">URL pointing to the details for the newly queued recipe data</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>JSON Object</td>
+<td>All fields are the same as the recipe details model.
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyRecipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;image/png&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;products&quot;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T19:03:59.054Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;data-file.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parse_id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+        <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+    <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T19:03:59.054Z&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">210</span><span class="p">,</span>
+                <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+                <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">15360.0</span><span class="p">,</span>
+                <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Requeue Jobs</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Increases the maximum failure allowance for existing jobs and puts them back on the queue.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /queue/requeue-jobs/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Queue only jobs with a status matching these strings.
+Choices: [CANCELED, FAILED].</td>
+</tr>
+<tr class="row-odd"><td>job_ids</td>
+<td>Array[Integer]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given identifier.</td>
+</tr>
+<tr class="row-even"><td>job_type_ids</td>
+<td>Array[Integer]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given job type identifier.</td>
+</tr>
+<tr class="row-odd"><td>job_type_names</td>
+<td>Array[String]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given job type name.</td>
+</tr>
+<tr class="row-even"><td>job_type_categories</td>
+<td>Array[String]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given job type category.</td>
+</tr>
+<tr class="row-odd"><td>error_categories</td>
+<td>Array[String]</td>
+<td>Optional</td>
+<td>Queue only jobs with a given error category.</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Change the priority of matching jobs when adding them to the queue.
+Defaults to jobs current priority, lower number is higher priority.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>JSON Object</td>
+<td colspan="2">All fields are the same as the jobs model.
+The status will be PENDING or BLOCKED if the job has never been queued.
+The status will be QUEUED if the job has been previously queued.
+(See <a class="reference internal" href="job.html#rest-job-list"><span>Job List</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;QUEUED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.html" class="btn btn-neutral float-right" title="Recipe Services" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="product.html" class="btn btn-neutral" title="Product Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -89,7 +89,7 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
@@ -132,6 +132,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
 </ul>
@@ -382,6 +383,35 @@
 <div class="section" id="module-product.test.test_views">
 <span id="product-test-test-views-module"></span><h2>product.test.test_views module<a class="headerlink" href="#module-product.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="product.test.test_views.TestProductDetailsView">
+<em class="property">class </em><code class="descclassname">product.test.test_views.</code><code class="descname">TestProductDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="product.test.test_views.TestProductDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductDetailsView.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductDetailsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view by file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductDetailsView.test_id">
+<code class="descname">test_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductDetailsView.test_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view by id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_views.TestProductDetailsView.test_missing">
+<code class="descname">test_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductDetailsView.test_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source files view with an invalid id or file name.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="product.test.test_views.TestProductsUpdatesView">
 <em class="property">class </em><code class="descclassname">product.test.test_views.</code><code class="descname">TestProductsUpdatesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsUpdatesView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -539,6 +569,22 @@
 <div class="section" id="module-product.test.utils">
 <span id="product-test-utils-module"></span><h2>product.test.utils module<a class="headerlink" href="#module-product.test.utils" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility methods for testing products</p>
+<dl class="function">
+<dt id="product.test.utils.create_file_link">
+<code class="descclassname">product.test.utils.</code><code class="descname">create_file_link</code><span class="sig-paren">(</span><em>ancestor=None</em>, <em>descendant=None</em>, <em>job=None</em>, <em>job_exe=None</em>, <em>recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_file_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a file ancestry link model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file ancestry link model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="product.html#product.models.FileAncestryLink" title="product.models.FileAncestryLink"><code class="xref py py-class docutils literal"><span class="pre">product.models.FileAncestryLink</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="product.test.utils.create_product">
 <code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>

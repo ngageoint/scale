@@ -11,9 +11,10 @@ Scale Documentation
    :maxdepth: 2
 
    overview/index
-   interface/index
+   cli/index
    algorithm_integration/index
    architecture/index
+   rest/index
    install/index
    development/index
 

@@ -89,7 +89,7 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
@@ -132,6 +132,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
 </ul>
@@ -480,6 +481,24 @@ complete successfully and has not been unpublished.</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling product files</p>
 <dl class="method">
+<dt id="product.models.ProductFileManager.get_details">
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>product_id</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets additional details for the given product model based on related model attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>product_id</strong> (<em>int</em>) &#8211; The unique identifier of the product.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The product with extra related attributes: sources, ancestor/descendant products.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">source.models.ProductFile</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="product.models.ProductFileManager.get_products">
 <code class="descname">get_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of product files within the given time range.</p>
@@ -512,7 +531,7 @@ complete successfully and has not been unpublished.</li>
 <dl class="method">
 <dt id="product.models.ProductFileManager.populate_source_ancestors">
 <code class="descname">populate_source_ancestors</code><span class="sig-paren">(</span><em>products</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.populate_source_ancestors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Populates each of the given products with its source file ancestors in a field called &#8220;source_files&#8221;</p>
+<dd><p>Populates ancestors of the given products with its source file ancestors in a field called &#8220;source_files&#8221;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -619,6 +638,20 @@ workspace path for storing the file, media_type)</li>
 </dd></dl>
 
 <dl class="class">
+<dt id="product.serializers.ProductFileDetailsSerializer">
+<em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileSerializer" title="product.serializers.ProductFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializer</span></code></a></p>
+<p>Converts product file model fields to REST output</p>
+<dl class="class">
+<dt id="product.serializers.ProductFileDetailsSerializer.SourceFileSerializer">
+<em class="property">class </em><code class="descname">SourceFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileDetailsSerializer.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="source.html#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></code></a></p>
+<p>Converts source file model fields to REST output</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="product.serializers.ProductFileSerializer">
 <em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileBaseSerializer" title="product.serializers.ProductFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileBaseSerializer</span></code></a></p>
@@ -689,6 +722,49 @@ workspace path for storing the file, media_type)</li>
 <div class="section" id="module-product.views">
 <span id="product-views-module"></span><h2>product.views module<a class="headerlink" href="#module-product.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful product services</p>
+<dl class="class">
+<dt id="product.views.ProductDetailsView">
+<em class="property">class </em><code class="descclassname">product.views.</code><code class="descname">ProductDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
+<p>This view is the endpoint for retrieving/updating details of a product file.</p>
+<dl class="attribute">
+<dt id="product.views.ProductDetailsView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#product.views.ProductDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.views.ProductDetailsView.retrieve">
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>product_id=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a product file and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>product_id</strong> (<em>int encoded as a string</em>) &#8211; The id of the product</li>
+<li><strong>file_name</strong> (<em>string</em>) &#8211; The name of the product</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.views.ProductDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#product.views.ProductDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ProductFileDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="product.views.ProductUpdatesView">
 <em class="property">class </em><code class="descclassname">product.views.</code><code class="descname">ProductUpdatesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductUpdatesView" title="Permalink to this definition">¶</a></dt>

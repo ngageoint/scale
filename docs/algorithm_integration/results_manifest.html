@@ -89,7 +89,7 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="step2.html">Capturing your algorithm outputs with a Scale Results Manifest</a></li>
@@ -104,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rest/index.html">REST API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
 </ul>
@@ -198,49 +199,47 @@ location &#8220;/tmp/job_exe_231/outputs/output.csv&#8221;.</p>
 <div class="section" id="results-manifest-specification-version-1-1">
 <h2>Results Manifest Specification Version 1.1<a class="headerlink" href="#results-manifest-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
 <p>A valid results manifest is a JSON document with the following structure:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span>{
-   &quot;version&quot;: STRING,
-   &quot;output_data&quot;: [
-      {
-         &quot;name&quot;: STRING,
-         &quot;file&quot;: {
-            &quot;path&quot;: STRING,
-            &quot;geo_metadata&quot;: {
-               &quot;data_started&quot;: STRING(ISO-8601),
-               &quot;data_ended&quot;: STRING(ISO-8601),
-               &quot;geo_json&quot;: JSON
-            }
-         },
-         &quot;files&quot;: [
-            {
-               &quot;path&quot;: STRING,
-               &quot;geo_metadata&quot;: {
-                  &quot;data_started&quot;: STRING(ISO-8601),
-                  &quot;data_ended&quot;: STRING(ISO-8601),
-                  &quot;geo_json&quot;: JSON
-               }
-            }
-         ]
-      }
-   ],
-   &quot;parse_results&quot;: [
-      {
-         &quot;filename&quot;: STRING,
-         &quot;new_workspace_path&quot;: STRING,
-         &quot;data_types&quot;: [
-            STRING,
-            STRING
-         ],
-         &quot;geo_metadata&quot;: {
-            &quot;data_started&quot;: STRING(ISO-8601),
-            &quot;data_ended&quot;: STRING(ISO-8601),
-            &quot;geo_json&quot;: JSON
-         }
-      }
-   ],
-   &quot;info&quot;: {},  # TODO: document when completed
-   &quot;errors&quot;: {}  # TODO: document when completed
-}
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;file&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+            <span class="s2">&quot;geo_metadata&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+               <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+               <span class="s2">&quot;geo_json&quot;</span><span class="o">:</span> <span class="nx">JSON</span>
+            <span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+               <span class="s2">&quot;geo_metadata&quot;</span><span class="o">:</span> <span class="p">{</span>
+                  <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+                  <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+                  <span class="s2">&quot;geo_json&quot;</span><span class="o">:</span> <span class="nx">JSON</span>
+               <span class="p">}</span>
+            <span class="p">}</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;parse_results&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;new_workspace_path&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;geo_metadata&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+            <span class="s2">&quot;geo_json&quot;</span><span class="o">:</span> <span class="nx">JSON</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p><strong>version</strong>: JSON string</p>
@@ -347,36 +346,34 @@ extents of the data, a center point is auto calculated.</div></blockquote>
 <div class="section" id="results-manifest-specification-version-1-0">
 <h2>Results Manifest Specification Version 1.0<a class="headerlink" href="#results-manifest-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
 <p>A valid version 1.0 results manifest is a JSON document with the following structure:</p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span>{
-   &quot;version&quot;: STRING,
-   &quot;files&quot;: [
-      {
-         &quot;name&quot;: STRING,
-         &quot;path&quot;: STRING
-      },
-      {
-         &quot;name&quot;: STRING,
-         &quot;paths&quot;: [
-            STRING,
-            STRING
-         ]
-      }
-   ],
-   &quot;parse_results&quot;: [
-      {
-         &quot;filename&quot;: STRING,
-         &quot;data_started&quot;: STRING(ISO-8601),
-         &quot;data_ended&quot;: STRING(ISO-8601),
-         &quot;data_types&quot;: [
-            STRING,
-            STRING
-         ],
-         &quot;gis_data_path&quot;: STRING
-      }
-   ],
-   &quot;info&quot;: {},  # TODO: document when completed
-   &quot;errors&quot;: {}  # TODO: document when completed
-}
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;paths&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;parse_results&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+         <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">(</span><span class="nx">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="p">),</span>
+         <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;gis_data_path&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p><strong>version</strong>: JSON string</p>

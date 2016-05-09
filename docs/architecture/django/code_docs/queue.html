@@ -89,7 +89,7 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../interface/index.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
@@ -133,6 +133,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
 </ul>
@@ -705,15 +706,14 @@ job</li>
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue_status">
 <code class="descname">get_queue_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
-version with overall stats for that type</p>
+<dd><p>Returns the current status of the queue with statistics broken down by job type.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of each job type with stats</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of each job type with calculated statistics.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dict</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.QueueStatus" title="queue.models.QueueStatus"><code class="xref py py-class docutils literal"><span class="pre">queue.models.QueueStatus</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -980,6 +980,27 @@ run</td>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="queue.models.QueueStatus">
+<em class="property">class </em><code class="descclassname">queue.models.</code><code class="descname">QueueStatus</code><span class="sig-paren">(</span><em>job_type</em>, <em>count=0</em>, <em>longest_queued=None</em>, <em>highest_priority=100</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents queue status statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type being counted.</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of job executions running for the associated job type.</li>
+<li><strong>longest_queued</strong> (<em>datetime.datetime</em>) &#8211; The date/time of the last queued job execution for the associated job type.</li>
+<li><strong>highest_priority</strong> (<em>int</em>) &#8211; The priority of the most important job execution for the associated job type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-queue.serializers">
 <span id="queue-serializers-module"></span><h2>queue.serializers module<a class="headerlink" href="#module-queue.serializers" title="Permalink to this headline">¶</a></h2>
@@ -989,6 +1010,20 @@ run</td>
 <em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">JobLoadGroupSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.JobLoadGroupSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts job load model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="queue.serializers.QueueStatusSerializer">
+<em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">QueueStatusSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts queue status model fields to REST output</p>
+<dl class="class">
+<dt id="queue.serializers.QueueStatusSerializer.JobTypeBaseSerializer">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1110,11 +1145,11 @@ run</td>
 <dl class="class">
 <dt id="queue.views.QueueStatusView">
 <em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">QueueStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the queue status.</p>
 <dl class="method">
-<dt id="queue.views.QueueStatusView.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView.get" title="Permalink to this definition">¶</a></dt>
+<dt id="queue.views.QueueStatusView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.QueueStatusView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the current status of the queue and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1128,6 +1163,17 @@ run</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.views.QueueStatusView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.QueueStatusView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.views.QueueStatusView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.QueueStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">QueueStatusSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

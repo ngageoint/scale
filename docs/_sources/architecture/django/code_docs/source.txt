@@ -38,6 +38,14 @@ source.serializers module
     :undoc-members:
     :show-inheritance:
 
+source.serializers_extra module
+-------------------------------
+
+.. automodule:: source.serializers_extra
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 source.urls module
 ------------------
 

@@ -1,0 +1,1534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Job Services &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="REST API" href="index.html"/>
+        <link rel="next" title="Job Execution Services" href="job_execution.html"/>
+        <link rel="prev" title="Ingest Services" href="ingest.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">REST API</a> &raquo;</li>
+      
+    <li>Job Services</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rest/job.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-services">
+<span id="rest-job"></span><h1>Job Services<a class="headerlink" href="#job-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about &#8220;all&#8221;, &#8220;currently running&#8221; and &#8220;previously finished&#8221; jobs.</p>
+<table border="1" class="docutils" id="rest-job-list">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of all jobs.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=name&amp;order=version).
+Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a status matching this string.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-odd"><td>job_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>error_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs that failed due to an error with a given category.
+Choices: [SYSTEM, DATA, ALGORITHM].
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the job.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_type_rev</td>
+<td>JSON Object</td>
+<td colspan="2">The job type revision that is associated with the job.
+This represents the definition at the time the job was scheduled.
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.event</td>
+<td>JSON Object</td>
+<td colspan="2">The trigger event that is associated with the job.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td colspan="2">The error that is associated with the job.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.status</td>
+<td>String</td>
+<td colspan="2">The current status of the job.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-even"><td>.priority</td>
+<td>Integer</td>
+<td colspan="2">The priority of the job.</td>
+</tr>
+<tr class="row-odd"><td>.num_exes</td>
+<td>Integer</td>
+<td colspan="2">The number of executions this job has had.</td>
+</tr>
+<tr class="row-even"><td>.timeout</td>
+<td>Integer</td>
+<td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>.max_tries</td>
+<td>Integer</td>
+<td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
+</tr>
+<tr class="row-even"><td>.cpus_required</td>
+<td>Decimal</td>
+<td colspan="2">The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td>.mem_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.disk_in_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
+</tr>
+<tr class="row-odd"><td>.disk_out_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.queued</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job was added to the queue to be run when resources are available.</td>
+</tr>
+<tr class="row-even"><td>.started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job started running.</td>
+</tr>
+<tr class="row-odd"><td>.ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job stopped running, which could be due to success or failure.</td>
+</tr>
+<tr class="row-even"><td>.last_status_change</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the status of the job was last changed.</td>
+</tr>
+<tr class="row-odd"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-details">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns a specific job and all its related model information including executions, recipes, and products.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /jobs/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model.</td>
+</tr>
+<tr class="row-odd"><td>job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the count.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_type_rev</td>
+<td>JSON Object</td>
+<td>The job type revision that is associated with the job.
+This represents the definition at the time the job was scheduled.
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>event</td>
+<td>JSON Object</td>
+<td>The trigger event that is associated with the count.</td>
+</tr>
+<tr class="row-even"><td>error</td>
+<td>JSON Object</td>
+<td>The error that is associated with the count.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>status</td>
+<td>String</td>
+<td>The current status of the job.</td>
+</tr>
+<tr class="row-even"><td>priority</td>
+<td>Integer</td>
+<td>The priority of the job.</td>
+</tr>
+<tr class="row-odd"><td>num_exes</td>
+<td>Integer</td>
+<td>The number of executions this job has had.</td>
+</tr>
+<tr class="row-even"><td>timeout</td>
+<td>Integer</td>
+<td>The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>max_tries</td>
+<td>Integer</td>
+<td>The maximum number of times to attempt this job when failed (minimum one).</td>
+</tr>
+<tr class="row-even"><td>cpus_required</td>
+<td>Decimal</td>
+<td>The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td>mem_required</td>
+<td>Decimal</td>
+<td>The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>disk_in_required</td>
+<td>Decimal</td>
+<td>The amount of disk space in MiB required for input files for this job.</td>
+</tr>
+<tr class="row-odd"><td>disk_out_required</td>
+<td>Decimal</td>
+<td>The amount of disk space in MiB required for output files for this job.</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>queued</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job was added to the queue to be run when resources are available.</td>
+</tr>
+<tr class="row-even"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job started running.</td>
+</tr>
+<tr class="row-odd"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job stopped running, which could be due to success or failure.</td>
+</tr>
+<tr class="row-even"><td>last_status_change</td>
+<td>ISO-8601 Datetime</td>
+<td>When the status of the job was last changed.</td>
+</tr>
+<tr class="row-odd"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>data</td>
+<td>JSON Object</td>
+<td>An interface description for all the job input and output files.
+(See <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span>Job Data Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>JSON Object</td>
+<td>An interface description for all the job results meta-data.</td>
+</tr>
+<tr class="row-even"><td>recipes</td>
+<td>Array</td>
+<td>A list of all recipes associated with the job.
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>job_exes</td>
+<td>Array</td>
+<td>A list of all job executions associated with the job.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>inputs</td>
+<td>Array</td>
+<td>A list of job interface inputs merged with their respective job data values.</td>
+</tr>
+<tr class="row-odd"><td>.name</td>
+<td>String</td>
+<td>The name of the input as defined by the job type interface.
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.type</td>
+<td>String</td>
+<td>The type of the input as defined by teh job type interface.
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.value</td>
+<td>Various</td>
+<td>The actual value of the input, which can vary depending on the type. Simple
+property inputs will include primitive values, whereas the file or files type
+will include a full JSON representation of a Scale file object.
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>outputs</td>
+<td>Array</td>
+<td>A list of job interface outputs merged with their respective job result values.</td>
+</tr>
+<tr class="row-odd"><td>.name</td>
+<td>String</td>
+<td>The name of the output as defined by the job type interface.
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.type</td>
+<td>String</td>
+<td>The type of the output as defined by teh job type interface.
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.value</td>
+<td>Various</td>
+<td>The actual value of the output, which can vary depending on the type. A file or
+files type will include a full JSON representation of a Product file object.
+(See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
+    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML representation of the data&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+        <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">128.0</span><span class="p">,</span>
+        <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-01T00:00:00Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-01T00:00:00Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;/usr/local/bin/python2.7 /app/parser/manage.py create_footprint_kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-11-06T00:00:00Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">10278</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:31:29.282Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:31:29.282Z&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.467Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">210</span><span class="p">,</span>
+    <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">15360.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">8480</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">8484</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipes&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4832</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Recipe&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Recipe description&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.280Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:32:20.912Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:35:20.912Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T20:35:20.912Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;job_exes&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14552</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${input_file} ${job_output_dir}&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;pre_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:32.435Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pre_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:34.346Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pre_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:42.437Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:46.762Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;post_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:47.246Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;post_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;post_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.753Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:31.716Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:32.022Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.606Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15586</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+                <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8484</span><span class="p">,</span>
+                <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file.kml&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+                <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:48.477Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.639Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-01T17:27:49.461Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">35</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">19</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-update">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Update Job</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Update the details of a job.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>PATCH</strong> /jobs/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing job.
+The fields below are currently allowed. Additional fields are not tolerated.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td><dl class="first last docutils">
+<dt>The new status for the job. The only status change currently allowed is:</dt>
+<dd>CANCELED - This will cancel a running, queued, or blocked job.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Error Responses</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">400 BAD REQUEST</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>text/plain</em></td>
+</tr>
+<tr class="row-even"><td colspan="3">Unexpected fields were specified. An error message lists them. Or no fields or invalid values were specified.</td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">404 NOT FOUND</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>text/plain</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3">The specified job or associated job executions (if applicable) were not found in the database.</td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">500 SERVER ERROR</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>text/plain</em></td>
+</tr>
+<tr class="row-even"><td colspan="3">A miscellaneous (and rare) server error or database timing error occurred. Repeating the request may result in success.
+The exact error reason will appear in the response content.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-updates">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Updates</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of jobs with associated input files that changed status in the given time range.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/updates/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=name&amp;order=version).
+Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a status matching this string.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-odd"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the job.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_type_rev</td>
+<td>JSON Object</td>
+<td colspan="2">The job type revision that is associated with the job.
+This represents the definition at the time the job was scheduled.
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.event</td>
+<td>JSON Object</td>
+<td colspan="2">The trigger event that is associated with the job.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td colspan="2">The error that is associated with the job.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.status</td>
+<td>String</td>
+<td colspan="2">The current status of the job.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-even"><td>.priority</td>
+<td>Integer</td>
+<td colspan="2">The priority of the job.</td>
+</tr>
+<tr class="row-odd"><td>.num_exes</td>
+<td>Integer</td>
+<td colspan="2">The number of executions this job has had.</td>
+</tr>
+<tr class="row-even"><td>.timeout</td>
+<td>Integer</td>
+<td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>.max_tries</td>
+<td>Integer</td>
+<td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
+</tr>
+<tr class="row-even"><td>.cpus_required</td>
+<td>Decimal</td>
+<td colspan="2">The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td>.mem_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.disk_in_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
+</tr>
+<tr class="row-odd"><td>.disk_out_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.queued</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job was added to the queue to be run when resources are available.</td>
+</tr>
+<tr class="row-even"><td>.started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job started running.</td>
+</tr>
+<tr class="row-odd"><td>.ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job stopped running, which could be due to success or failure.</td>
+</tr>
+<tr class="row-even"><td>.last_status_change</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the status of the job was last changed.</td>
+</tr>
+<tr class="row-odd"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>.input_files</td>
+<td>JSON Object</td>
+<td colspan="2">A list of files that the job used as input.
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+                    <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+                    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-job-with-execution-list">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job with Execution List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of all jobs with their latest execution.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/executions/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=name&amp;order=version).
+Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a status matching this string.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-odd"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>error_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs that failed due to an error with a given category.
+Choices: [SYSTEM, DATA, ALGORITHM].
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the count.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.event</td>
+<td>JSON Object</td>
+<td colspan="2">The trigger event that is associated with the count.</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td colspan="2">The error that is associated with the count.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.status</td>
+<td>String</td>
+<td colspan="2">The current status of the job.
+Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-even"><td>.priority</td>
+<td>Integer</td>
+<td colspan="2">The priority of the job.</td>
+</tr>
+<tr class="row-odd"><td>.num_exes</td>
+<td>Integer</td>
+<td colspan="2">The number of executions this job has had.</td>
+</tr>
+<tr class="row-even"><td>.timeout</td>
+<td>Integer</td>
+<td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>.max_tries</td>
+<td>Integer</td>
+<td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
+</tr>
+<tr class="row-even"><td>.cpus_required</td>
+<td>Decimal</td>
+<td colspan="2">The number of CPUs needed for a job of this type.</td>
+</tr>
+<tr class="row-odd"><td>.mem_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
+</tr>
+<tr class="row-even"><td>.disk_in_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
+</tr>
+<tr class="row-odd"><td>.disk_out_required</td>
+<td>Decimal</td>
+<td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.queued</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job was added to the queue to be run when resources are available.</td>
+</tr>
+<tr class="row-even"><td>.started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job started running.</td>
+</tr>
+<tr class="row-odd"><td>.ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job stopped running, which could be due to success or failure.</td>
+</tr>
+<tr class="row-even"><td>.last_status_change</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the status of the job was last changed.</td>
+</tr>
+<tr class="row-odd"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>.latest_job_exe</td>
+<td>JSON Object</td>
+<td colspan="2">The most recent execution of the job.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;latest_job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+                <span class="s2">&quot;pre_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;pre_completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;pre_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;job_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:44.703Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;job_completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:45.906Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;job_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;post_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;post_completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;post_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.033Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.010Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:44.494Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:45.906Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:45.992Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job_execution.html" class="btn btn-neutral float-right" title="Job Execution Services" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ingest.html" class="btn btn-neutral" title="Ingest Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,1200 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Product Services &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="REST API" href="index.html"/>
+        <link rel="next" title="Queue Services" href="queue.html"/>
+        <link rel="prev" title="Import/Export Services" href="port.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Product Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">REST API</a> &raquo;</li>
+      
+    <li>Product Services</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rest/product.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="product-services">
+<span id="rest-product"></span><h1>Product Services<a class="headerlink" href="#product-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about products that Scale has produced.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Product List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of all products</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /products/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=file_name&amp;order=created).
+Nested objects require a delimiter (ex: order=job_type__name).
+Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>is_operational</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Return only products flagged as operational status versus R&amp;D.</td>
+</tr>
+<tr class="row-even"><td>file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only products with a given file name.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace that has stored the product.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.file_name</td>
+<td>String</td>
+<td colspan="2">The name of the product file.</td>
+</tr>
+<tr class="row-even"><td>.media_type</td>
+<td>String</td>
+<td colspan="2">The IANA media type of the product file.</td>
+</tr>
+<tr class="row-odd"><td>.file_size</td>
+<td>Integer</td>
+<td colspan="2">The size of the product file in bytes.</td>
+</tr>
+<tr class="row-even"><td>.data_type</td>
+<td>Array</td>
+<td colspan="2">List of strings describing the data type of the product.</td>
+</tr>
+<tr class="row-odd"><td>.is_deleted</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file has been deleted.</td>
+</tr>
+<tr class="row-even"><td>.uuid</td>
+<td>String</td>
+<td colspan="2">A unique identifier that stays stable across multiple job execution runs.</td>
+</tr>
+<tr class="row-odd"><td>.url</td>
+<td>URL</td>
+<td colspan="2">The absolute URL to use for downloading the file.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.deleted</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was deleted.</td>
+</tr>
+<tr class="row-even"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file started.</td>
+</tr>
+<tr class="row-odd"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file ended.</td>
+</tr>
+<tr class="row-even"><td>.geometry</td>
+<td>WKT String</td>
+<td colspan="2">The full geospatial geometry footprint of the product.</td>
+</tr>
+<tr class="row-odd"><td>.center_point</td>
+<td>WKT String</td>
+<td colspan="2">The central geospatial location of the product.</td>
+</tr>
+<tr class="row-even"><td>.meta_data</td>
+<td>JSON Object</td>
+<td colspan="2">A dictionary of key/value pairs that describe product-specific attributes.</td>
+</tr>
+<tr class="row-odd"><td>.countries</td>
+<td>Array</td>
+<td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td>.is_operational</td>
+<td>Boolean</td>
+<td colspan="2">Whether this product was produced by an operational job type or a job type
+still in research and development.</td>
+</tr>
+<tr class="row-even"><td>.is_published</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file is currently published.</td>
+</tr>
+<tr class="row-odd"><td>.has_been_published</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file has ever been published.</td>
+</tr>
+<tr class="row-even"><td>.published</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was originally published by Scale.</td>
+</tr>
+<tr class="row-odd"><td>.unpublished</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was unpublished by Scale.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The type of job that generated the product.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job</td>
+<td>JSON Object</td>
+<td colspan="2">The job instance that generated the product.
+(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_exe</td>
+<td>JSON Object</td>
+<td colspan="2">The specific job execution that generated the product.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">465</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TCT&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML file.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">47</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">49</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-product-details">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Product Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns a specific product file and all its related model information including sources and derived products.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /products/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /products/{file_name}/</dt>
+<dd>Where {file_name} is the unique name of a product file associated with an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model.</td>
+</tr>
+<tr class="row-even"><td>workspace</td>
+<td>JSON Object</td>
+<td>The workspace that has stored the product file.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>file_name</td>
+<td>String</td>
+<td>The name of the product file.</td>
+</tr>
+<tr class="row-even"><td>media_type</td>
+<td>String</td>
+<td>The IANA media type of the product file.</td>
+</tr>
+<tr class="row-odd"><td>file_size</td>
+<td>Integer</td>
+<td>The size of the product file in bytes.</td>
+</tr>
+<tr class="row-even"><td>data_type</td>
+<td>Array</td>
+<td>List of strings describing the data type of the product file.</td>
+</tr>
+<tr class="row-odd"><td>is_deleted</td>
+<td>Boolean</td>
+<td>Whether the product file has been deleted.</td>
+</tr>
+<tr class="row-even"><td>uuid</td>
+<td>String</td>
+<td>A unique identifier that stays stable across multiple job execution runs.</td>
+</tr>
+<tr class="row-odd"><td>url</td>
+<td>URL</td>
+<td>The absolute URL to use for downloading the file.</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>deleted</td>
+<td>ISO-8601 Datetime</td>
+<td>When the product file was deleted.</td>
+</tr>
+<tr class="row-even"><td>data_started</td>
+<td>ISO-8601 Datetime</td>
+<td>When collection of the underlying data file started.</td>
+</tr>
+<tr class="row-odd"><td>data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When collection of the underlying data file ended.</td>
+</tr>
+<tr class="row-even"><td>geometry</td>
+<td>WKT String</td>
+<td>The full geospatial geometry footprint of the product file.</td>
+</tr>
+<tr class="row-odd"><td>center_point</td>
+<td>WKT String</td>
+<td>The central geospatial location of the product file.</td>
+</tr>
+<tr class="row-even"><td>meta_data</td>
+<td>JSON Object</td>
+<td>A dictionary of key/value pairs that describe product-specific attributes.</td>
+</tr>
+<tr class="row-odd"><td>countries</td>
+<td>Array</td>
+<td>A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td>is_operational</td>
+<td>Boolean</td>
+<td>Whether this product is operational (True) or is still in a research &amp;
+development (R&amp;D) phase (False).</td>
+</tr>
+<tr class="row-even"><td>is_published</td>
+<td>Boolean</td>
+<td>Whether the product file is currently published.</td>
+</tr>
+<tr class="row-odd"><td>has_been_published</td>
+<td>Boolean</td>
+<td>Whether the product file has ever been published.</td>
+</tr>
+<tr class="row-even"><td>published</td>
+<td>ISO-8601 Datetime</td>
+<td>When the product file was originally published by Scale.</td>
+</tr>
+<tr class="row-odd"><td>unpublished</td>
+<td>ISO-8601 Datetime</td>
+<td>When the product file was unpublished by Scale.</td>
+</tr>
+<tr class="row-even"><td>job_type</td>
+<td>JSON Object</td>
+<td>The type of job that created the product.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>job</td>
+<td>JSON Object</td>
+<td>The job that created the product.
+(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>job_exe</td>
+<td>JSON Object</td>
+<td>The job execution that created the product.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>sources</td>
+<td>Array</td>
+<td>A list of source files used to derive this product file during jobs.
+(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>ancestors</td>
+<td>Array</td>
+<td>A list of all product files used to derive this product file during jobs.
+(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>descendants</td>
+<td>Array</td>
+<td>A list of all product files derived from this product file during jobs.
+(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file2.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;03696f8c30b1757c9108fb9a7d67924f&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file2.png&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;png-filter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;PNG Filter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Filters PNG images into a new PNG image&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span>
+    <span class="p">}</span>
+    <span class="s2">&quot;sources&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;ancestors&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file1.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;03696f8c30b1757c9108fb9a7d67924f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file1.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;png-filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;PNG Filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Filters PNG images into a new PNG image&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="kc">null</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;descendants&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file3.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;03696f8c30b1757c9108fb9a7d67924f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file3.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;png-filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;PNG Filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Filters PNG images into a new PNG image&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="kc">null</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-product-updates">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Product Updates</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns the product updates (published, unpublished, and deleted products) that have occurred in the given time range.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /products/updates/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=file_name&amp;order=created).
+Nested objects require a delimiter (ex: order=job_type__name).
+Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only jobs with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>is_operational</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Return only products flagged as operational status versus R&amp;D.</td>
+</tr>
+<tr class="row-even"><td>file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only products with a given file name.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace that has stored the product.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.file_name</td>
+<td>String</td>
+<td colspan="2">The name of the product file.</td>
+</tr>
+<tr class="row-even"><td>.media_type</td>
+<td>String</td>
+<td colspan="2">The IANA media type of the product file.</td>
+</tr>
+<tr class="row-odd"><td>.file_size</td>
+<td>Integer</td>
+<td colspan="2">The size of the product file in bytes.</td>
+</tr>
+<tr class="row-even"><td>.data_type</td>
+<td>Array</td>
+<td colspan="2">List of strings describing the data type of the product.</td>
+</tr>
+<tr class="row-odd"><td>.is_deleted</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file has been deleted.</td>
+</tr>
+<tr class="row-even"><td>.uuid</td>
+<td>String</td>
+<td colspan="2">A unique identifier that stays stable across multiple job execution runs.</td>
+</tr>
+<tr class="row-odd"><td>.url</td>
+<td>URL</td>
+<td colspan="2">The absolute URL to use for downloading the file.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.deleted</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was deleted.</td>
+</tr>
+<tr class="row-even"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file started.</td>
+</tr>
+<tr class="row-odd"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file ended.</td>
+</tr>
+<tr class="row-even"><td>.geometry</td>
+<td>WKT String</td>
+<td colspan="2">The full geospatial geometry footprint of the product.</td>
+</tr>
+<tr class="row-odd"><td>.center_point</td>
+<td>WKT String</td>
+<td colspan="2">The central geospatial location of the product.</td>
+</tr>
+<tr class="row-even"><td>.meta_data</td>
+<td>JSON Object</td>
+<td colspan="2">A dictionary of key/value pairs that describe product-specific attributes.</td>
+</tr>
+<tr class="row-odd"><td>.countries</td>
+<td>Array</td>
+<td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td>.is_operational</td>
+<td>Boolean</td>
+<td colspan="2">Whether this product was produced by an operational job type or a job type
+still in research and development.</td>
+</tr>
+<tr class="row-even"><td>.is_published</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file is currently published.</td>
+</tr>
+<tr class="row-odd"><td>.has_been_published</td>
+<td>Boolean</td>
+<td colspan="2">Whether the product file has ever been published.</td>
+</tr>
+<tr class="row-even"><td>.published</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was originally published by Scale.</td>
+</tr>
+<tr class="row-odd"><td>.unpublished</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the product file was unpublished by Scale.</td>
+</tr>
+<tr class="row-even"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The type of job that generated the product.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job</td>
+<td>JSON Object</td>
+<td colspan="2">The job instance that generated the product.
+(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job_exe</td>
+<td>JSON Object</td>
+<td colspan="2">The specific job execution that generated the product.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.update</td>
+<td>JSON Object</td>
+<td colspan="2">Contains the details of this update.</td>
+</tr>
+<tr class="row-even"><td>..action</td>
+<td>String</td>
+<td colspan="2">The product update that occurred.
+Choices: [PUBLISHED, UNPUBLISHED, DELETED].</td>
+</tr>
+<tr class="row-odd"><td>..when</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the action occurred.</td>
+</tr>
+<tr class="row-even"><td>.source_files</td>
+<td>Array</td>
+<td colspan="2">List of source files involved in the creation of this product.
+(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">465</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Products&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TCT&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML file.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;footprint&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">47</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">49</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;update&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;action&quot;</span><span class="o">:</span> <span class="s2">&quot;PUBLISHED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;when&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;source_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">464</span><span class="p">,</span>
+                    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.h5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/x-hdf5-image&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+                    <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;3d8e577bddb17db339eae0b3d9bcf180&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.h5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+                    <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TCT&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="queue.html" class="btn btn-neutral float-right" title="Queue Services" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="port.html" class="btn btn-neutral" title="Import/Export Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

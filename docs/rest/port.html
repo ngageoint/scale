@@ -1,0 +1,589 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Import/Export Services &mdash; Scale 3.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+        <link rel="up" title="REST API" href="index.html"/>
+        <link rel="next" title="Product Services" href="product.html"/>
+        <link rel="prev" title="Node Services" href="node.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#services">Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Import/Export Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">REST API</a> &raquo;</li>
+      
+    <li>Import/Export Services</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/rest/port.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="import-export-services">
+<span id="rest-port"></span><h1>Import/Export Services<a class="headerlink" href="#import-export-services" title="Permalink to this headline">¶</a></h1>
+<p>These services allow administrators to export recipe, job, and error records and safely import them to another system.</p>
+<table border="1" class="docutils" id="rest-port-export">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Export</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Exports configuration records for recipe types, job types, and errors.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /configuration/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>include</td>
+<td>String</td>
+<td>Optional</td>
+<td>The types of records to include in the export. Defaults to all.
+Choices: [recipe_types, job_types, errors].
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>recipe_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only recipe types with a given recipe type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>recipe_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only recipe types with a given recipe type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only job types with a given job type identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only job types with a given job type name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>job_type_category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only job types with a given job type category.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>error_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only errors with a given error identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>error_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only errors with a given error name.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>String</td>
+<td colspan="2">The version number of the configuration schema.</td>
+</tr>
+<tr class="row-even"><td>recipe_types</td>
+<td>Array</td>
+<td colspan="2">List of exported recipe types.
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>job_types</td>
+<td>Array</td>
+<td colspan="2">List of exported job types.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>errors</td>
+<td>Array</td>
+<td colspan="2">List of exported errors.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Runs my recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Runs my job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;uses_docker&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;docker_privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_const_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_mult_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;bad-data&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Bad Data&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Bad data detected&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;DATA&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-port-import">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Import</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Imports configuration records for recipe types, job types, and errors.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /configuration/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>import</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>The previously exported configuration to load.</td>
+</tr>
+<tr class="row-odd"><td>.version</td>
+<td>String</td>
+<td>Optional</td>
+<td>The version number of the configuration schema.
+Defaults to the latest version.</td>
+</tr>
+<tr class="row-even"><td>.recipe_types</td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of recipe types to import.
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job_types</td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of job types to import.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.errors</td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of errors to import.
+(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>warnings</td>
+<td>Array</td>
+<td colspan="2">A list of warnings discovered during import.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>String</td>
+<td colspan="2">An identifier for the warning.</td>
+</tr>
+<tr class="row-odd"><td>.details</td>
+<td>String</td>
+<td colspan="2">A human-readable description of the problem.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-port-validate">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Validate Import</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Validate import configuration records for recipe types, job types, and errors.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /configuration/validation/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>import</td>
+<td>JSON Object</td>
+<td>Required</td>
+<td>The previously exported configuration to check.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>warnings</td>
+<td>Array</td>
+<td colspan="2">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>String</td>
+<td colspan="2">An identifier for the warning.</td>
+</tr>
+<tr class="row-odd"><td>.details</td>
+<td>String</td>
+<td colspan="2">A human-readable description of the problem.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Export Download</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first">Exports configuration records for recipe types, job types, and errors as a download attachment response.
+All the request parameters and response fields are identical to the normal export.
+(See <a class="reference internal" href="#rest-port-export"><span>Export</span></a>)</p>
+<p class="last">This is purely a convenience API for web applications to provide a <em>Save As...</em> download prompt to users.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><strong>GET</strong> /configuration/download/</td>
+</tr>
+<tr class="row-even"><td><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">No</span> <span class="nx">Response</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Import Upload</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first">Imports configuration records for recipe types, job types, and errors using a multi-part form encoding.
+All the request parameters and response fields are identical to the normal import.
+(See <a class="reference internal" href="#rest-port-import"><span>Import</span></a>)</p>
+<p>This is purely a convenience API for web applications to provide a <em>Browse...</em> file input to users.
+The API supports traditional file uploads using a form element like this:</p>
+<div class="highlight-html"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&quot;multipart/form-data&quot;</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;SERVER/configuration/upload/&quot;</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;file&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;import&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">input</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span><span class="p">&gt;</span>Import<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p class="last">The API also supports more modern AJAX file uploads by providing the file name in the header: <em>HTTP_X_FILE_NAME</em>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><strong>POST</strong> /configuration/upload/</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="product.html" class="btn btn-neutral float-right" title="Product Services" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="node.html" class="btn btn-neutral" title="Node Services" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'3.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
