@@ -1,4 +1,3 @@
-package: github.com/ngageoint/scale/scale-cli
 import:
 - package: github.com/codegangsta/cli
 - package: gopkg.in/resty.v0

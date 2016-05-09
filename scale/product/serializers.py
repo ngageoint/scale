@@ -12,8 +12,11 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
     """Converts product file model fields to REST output"""
     is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()
+    has_been_published = serializers.BooleanField()
+
     published = serializers.DateTimeField()
     unpublished = serializers.DateTimeField()
+
     job_type = ModelIdSerializer()
     job = ModelIdSerializer()
     job_exe = ModelIdSerializer()
@@ -24,6 +27,15 @@ class ProductFileSerializer(ProductFileBaseSerializer):
     from job.serializers import JobTypeBaseSerializer
 
     job_type = JobTypeBaseSerializer()
+
+
+class ProductFileDetailsSerializer(ProductFileSerializer):
+    """Converts product file model fields to REST output"""
+    from source.serializers import SourceFileSerializer
+
+    sources = SourceFileSerializer(many=True)
+    ancestors = ProductFileSerializer(many=True, source='ancestor_products')
+    descendants = ProductFileSerializer(many=True, source='descendant_products')
 
 
 class ProductFileUpdateField(fields.Field):

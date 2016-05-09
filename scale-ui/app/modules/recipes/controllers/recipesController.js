@@ -76,7 +76,12 @@
                 width: 120,
                 cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
             },
-            { field: 'completed', enableFiltering: false, enableSorting: true, cellTemplate: '<div class="ui-grid-cell-contents status completed" ng-if="row.entity.completed">Completed {{ row.entity.last_status_change }}</div>' }
+            {
+                field: 'completed',
+                enableFiltering: false,
+                enableSorting: true,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.completed_formatted }}</div>'
+            }
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();
