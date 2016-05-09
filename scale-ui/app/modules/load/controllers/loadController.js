@@ -36,7 +36,7 @@
                         enableFiltering: false,
                         cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type_name }}</div>'
                     },
-                    { field: 'job_type_version', enableFiltering: false },
+                    { field: 'job_type_version', displayName: 'Version', enableFiltering: false },
                     { field: 'highest_priority', enableFiltering: false },
                     {
                         field: 'longestQueued',
