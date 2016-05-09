@@ -145,9 +145,9 @@ class TestProductDetailsView(TestCase):
         django.setup()
 
         self.source = source_test_utils.create_source()
-        self.ancestor = product_test_utils.create_product()
-        self.descendant = product_test_utils.create_product()
-        self.product = product_test_utils.create_product()
+        self.ancestor = product_test_utils.create_product(file_name='test_ancestor.txt')
+        self.descendant = product_test_utils.create_product(file_name='test_descendant.txt')
+        self.product = product_test_utils.create_product(file_name='test_product.txt')
 
         product_test_utils.create_file_link(ancestor=self.source, descendant=self.ancestor)
         product_test_utils.create_file_link(ancestor=self.source, descendant=self.product)
@@ -162,7 +162,6 @@ class TestProductDetailsView(TestCase):
         url = '/products/%i/' % self.product.id
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
-        print result
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

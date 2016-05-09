@@ -76,7 +76,7 @@
                 $scope.loading = false
             });
 
-            navService.updateLocation('queue');
+            navService.updateLocation('load');
         };
         initialize();
 
