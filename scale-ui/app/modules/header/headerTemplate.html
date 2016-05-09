@@ -3,8 +3,8 @@
     <ul class="nav nav-pills" ng-show="showSubnav">
         <li ng-repeat="navLink in subnavLinks" ng-class="{ active: navLink.path === currentPath }"><a ng-href="#{{ navLink.path }}">{{ navLink.label }}</a></li>
     </ul>
-    <h1 ng-show="!hideTitle">{{ name }}</h1>
-    <hr />
+    <h1 ng-if="!hideTitle">{{ name }}</h1>
+    <hr ng-if="!hideTitle" />
     <ol class="breadcrumb" ng-show="showBreadcrumbs">
         <li ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-class="{ active: $last }">
             <a ng-if="!$last" ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label" class="margin-right-xs"></a>

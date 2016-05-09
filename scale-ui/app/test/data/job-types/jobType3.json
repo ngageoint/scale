@@ -1,0 +1,45 @@
+{
+  "id": 3,
+  "name": "scm",
+  "title": "Spectral Correlation Mapper",
+  "version": "1.0",
+  "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity. The Spectral Correlation Mapper (SCM) method is a derivative of Pearsonian Correlation Coefficient that eliminates negative correlation and maintains the SAM characteristic of minimizing the shading effect resulting in better results. The SCM varies from –1 to 1 and cos (SAM) varies from 0 to 1. Figure 1 – Graphic area in relation to the deviations beginning at x mean and y mean. Figure 2 – Exemplification of correlation: a) positive – with the major part of points presenting signals similar in relation at x mean and y mean; b) negative – with the major part of points with apposite signals in relation at x mean and y mean. The SCM algorithm method, similar to SAM, uses the reference spectrum defined by the investigator, in accordance with the image s/he wants to classify.",
+  "author_name": "Universidade de Brasília",
+  "author_url": "http://aviris.jpl.nasa.gov/proceedings/workshops/00_docs/Osmar_1_carvalho__web.pdf",
+  "category": "spectral",
+  "is_operational": true,
+  "icon_code": "f140",
+  "docker_privileged": false,
+  "docker_image": "10.4.4.10:5000/scm:1.0",
+  "priority": 1,
+  "timeout": 30,
+  "max_tries": 3,
+  "cpus_required": 0.25,
+  "mem_required": 512.0,
+  "disk_out_const_required": 2048.0,
+  "disk_out_mult_required": 0.0,
+  "interface": {
+    "output_data": [{
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "file",
+      "name": "scm-detections"
+    }],
+    "shared_resources": [],
+    "command_arguments": "${infile} ${job_output_dir}",
+    "input_data": [{
+      "media_types": ["image/nitf"],
+      "required": true,
+      "type": "file",
+      "name": "image"
+    },{
+      "media_types": ["text/csv"],
+      "required": true,
+      "type": "file",
+      "name": "signature"
+    }],
+    "version": "1.0",
+    "command": "./scm.sh"
+  },
+  "error_mapping": {}
+}

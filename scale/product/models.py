@@ -227,6 +227,39 @@ class ProductFileManager(models.GeoManager):
 
         return products
 
+    def get_details(self, product_id):
+        """Gets additional details for the given product model based on related model attributes.
+
+        :param product_id: The unique identifier of the product.
+        :type product_id: int
+        :returns: The product with extra related attributes: sources, ancestor/descendant products.
+        :rtype: :class:`source.models.ProductFile`
+        """
+
+        # Attempt to fetch the requested product
+        product = ProductFile.objects.all().select_related('workspace')
+        product = product.get(pk=product_id)
+
+        # Attempt to fetch all ancestor sources
+        sources = SourceFile.objects.filter(descendants__descendant_id=product.id)
+        sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
+        sources = sources.prefetch_related('countries').order_by('created')
+        product.sources = sources
+
+        # Attempt to fetch all ancestor products
+        ancestors = ProductFile.objects.filter(descendants__descendant_id=product.id)
+        ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
+        ancestors = ancestors.prefetch_related('countries').order_by('created')
+        product.ancestor_products = ancestors
+
+        # Attempt to fetch all descendant products
+        descendants = ProductFile.objects.filter(ancestors__ancestor_id=product.id)
+        descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
+        descendants = descendants.prefetch_related('countries').order_by('created')
+        product.descendant_products = descendants
+
+        return product
+
     def populate_source_ancestors(self, products):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
 

@@ -1,7 +1,7 @@
 app/styles/**/*.css
 node_modules
 build
-dist/
+/dist/
 reports
 .idea
 .idea/workspace.xml

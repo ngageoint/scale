@@ -14,11 +14,8 @@
                 return scaleService.calculateDuration(this.longest_running, moment.utc().toISOString());
             },
             getIcon: function () {
-                var configJobType = _.find(scaleConfig.jobTypes, 'title', this.job_type.name);
-                if (configJobType) {
-                    return configJobType.icon;
-                }
-                return scaleConfig.defaultIcon;
+                var icon = this.job_type.icon_code ? '<i class="fa">&#x' + this.job_type.icon_code + '</i>' : '<i class="fa">&#x' + scaleConfig.defaultIconCode + '</i>';
+                return icon;
             }
         };
 

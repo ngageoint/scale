@@ -25,7 +25,7 @@
     "innersvg-polyfill": "~0.0.2",
     "font-awesome": "fontawesome#~4.5.0",
     "angular-mocks": "~1.4.9",
-    "angular-bootstrap": "^1.2.1"
+    "angular-bootstrap": "*"
   },
   "devDependencies": {},
   "overrides": {

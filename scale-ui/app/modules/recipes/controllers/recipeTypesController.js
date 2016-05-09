@@ -1,12 +1,9 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService) {
+    angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService, localStorage) {
         $scope.loading = true;
-        $scope.masterContainerStyle = '';
-        $scope.detailContainerStyle = '';
-        $scope.masterMaxHeight = 0;
-        $scope.detailMaxHeight = 0;
+        $scope.containerStyle = '';
         $scope.recipeTypes = [];
         $scope.recipeTypeIds = [];
         $scope.requestedRecipeTypeId = parseInt($routeParams.id);
@@ -27,10 +24,10 @@
         $scope.masterClass = 'col-xs-3';
         $scope.detailClass = 'col-xs-9';
         $scope.minimizeMaster = false;
-        $scope.newBtnContainerClass = 'hidden';
-        $scope.minimizeBtnContainerClass = 'hidden';
         $scope.minimizeBtnClass = 'fa fa-chevron-left';
-        $scope.user = $rootScope.user;
+        $scope.user = userService.getUserCreds();
+        $scope.scaleConfig = scaleConfig;
+        $scope.localRecipeTypes = [];
 
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         subnavService.setCurrentPath('recipes/types');
@@ -45,6 +42,21 @@
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
                 $scope.recipeTypes = data;
+                if (scaleConfig.static) {
+                    var i = 0,
+                        oJson = {},
+                        sKey;
+                    for (; sKey = localStorage.key(i); i++) {
+                        oJson[sKey] = localStorage.getItem(sKey);
+                    }
+                    _.filter(_.pairs(oJson), function (o) {
+                        if (_.contains(o[0], 'recipeType')) {
+                            var type = JSON.parse(o[1]);
+                            $scope.localRecipeTypes.push(type);
+                            $scope.recipeTypes.push(type);
+                        }
+                    });
+                }
                 $scope.recipeTypeIds = _.pluck(data, 'id');
                 $scope.viewRecipeTypeDetail($scope.requestedRecipeTypeId);
                 hotkeys.bindTo($scope)
@@ -80,13 +92,20 @@
             })
         };
 
+        $scope.clearLocalRecipeTypes = function () {
+            _.forEach($scope.localRecipeTypes, function (type) {
+                localStorage.removeItem('recipeType' + type.id);
+            });
+            $location.path('/recipes/types');
+        };
+
         $scope.newRecipeType = function(){
             $location.path('/recipes/types/0');
         };
 
-        $scope.viewRecipeTypeDetail = function(recipeTypeId){
+        $scope.viewRecipeTypeDetail = function (recipeTypeId) {
             if (recipeTypeId > 0) {
-                recipeService.getRecipeTypeDetail(recipeTypeId).then(function (data){
+                recipeService.getRecipeTypeDetail(recipeTypeId).then(function (data) {
                     $scope.activeRecipeType = data;
                 });
             } else if( recipeTypeId === 0) {
@@ -95,7 +114,7 @@
         };
 
         $scope.loadRecipeType = function (id) {
-            if($scope.activeRecipeType && $scope.activeRecipeType.modified){
+            if ($scope.activeRecipeType && $scope.activeRecipeType.modified) {
                 confirmChangeRecipe().then(function () {
                     // OK
                     $location.path('/recipes/types/' + id);
@@ -125,11 +144,9 @@
             } else {
                 $scope.minimizeMaster = !$scope.minimizeMaster;
             }
-            $scope.masterClass = $scope.minimizeMaster ? 'col-xs-1' : 'col-xs-3';
+            $scope.masterClass = $scope.minimizeMaster ? 'col-xs-1 minimized' : 'col-xs-3';
             $scope.detailClass = $scope.minimizeMaster ? 'col-xs-11' : 'col-xs-9';
-            $scope.minimizeBtnContainerClass = $scope.minimizeMaster ? 'col-xs-12' : $rootScope.user ? 'col-xs-6 text-right' : 'col-xs-12 text-right';
             $scope.minimizeBtnClass = $scope.minimizeMaster ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
-            $scope.newBtnContainerClass = $scope.minimizeMaster ? 'hidden' : 'col-xs-6';
         };
 
         $rootScope.$on('toggleEdit', function (event, data) {
@@ -144,18 +161,12 @@
         });
 
         angular.element(document).ready(function () {
-            $scope.newBtnContainerClass = $rootScope.user ? 'col-xs-6' : 'hidden';
-            $scope.minimizeBtnContainerClass = $rootScope.user ? 'col-xs-6 text-right' : 'col-xs-12 text-right';
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                masterOffset = scaleConfig.headerOffset + document.getElementsByClassName('master-controls')[0].scrollHeight,
-                detailOffset = scaleConfig.headerOffset;
+                offset = scaleConfig.headerOffset,
+                containerMaxHeight = viewport.height - offset;
 
-            $scope.masterMaxHeight = viewport.height - masterOffset;
-            $scope.detailMaxHeight = viewport.height - detailOffset;
-
-            $scope.masterContainerStyle = 'height: ' + $scope.masterMaxHeight + 'px; max-height: ' + $scope.masterMaxHeight + 'px; overflow-y: auto;';
-            $scope.detailContainerStyle = 'height: ' + $scope.detailMaxHeight + 'px; max-height: ' + $scope.detailMaxHeight + 'px';
+            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
         });
     });
 })();

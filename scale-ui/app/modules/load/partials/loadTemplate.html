@@ -1,10 +1,9 @@
 <ais-header name="'Queued (' + totalQueued + ' jobs; ' + gridOptions.totalItems + ' job types)'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
 
-<div class="container-fluid">
-    <div class="grid-container">
-        <div ng-show="queueStatusError" class="alert alert-danger text-center"><strong>{{ queueStatusError }}</strong> {{ queueStatusErrorStatus }}</div>
-        <div ng-show="!queueStatusError">
-            <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid" style="{{ gridStyle }}"></div>
-        </div>
+
+<div class="grid-container">
+    <div ng-show="queueStatusError" class="alert alert-danger text-center"><strong>{{ queueStatusError }}</strong> {{ queueStatusErrorStatus }}</div>
+    <div ng-show="!queueStatusError">
+        <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid" style="{{ gridStyle }}"></div>
     </div>
 </div>

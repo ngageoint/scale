@@ -1,8 +1,9 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService) {
+    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService, scaleService) {
         $scope.nodeId = $routeParams.id;
+        $scope.scaleService = scaleService;
 
         var getNodeDetails = function (nodeId) {
             nodeService.getNode(nodeId).then( function (data) {

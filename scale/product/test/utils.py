@@ -19,7 +19,7 @@ def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, rec
         else:
             job = job_utils.create_job()
     if not job_exe:
-        if descendant and descendant.job:
+        if descendant and descendant.job_exe:
             job_exe = descendant.job_exe
         else:
             job_exe = job_utils.create_job_exe(job_type=job.job_type, job=job)

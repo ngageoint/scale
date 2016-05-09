@@ -65,6 +65,24 @@
             return getSync(jobTypeStatusOverrideUrl);
         });
 
+        // Running job types
+        var runningJobsOverrideUrl = 'test/data/runningJobs.json';
+        var runningJobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/running/', 'i');
+        $httpBackend.whenGET(runningJobsRegex).respond(function () {
+            return getSync(runningJobsOverrideUrl);
+        });
+
+        // Job Type Details
+        var jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType1.json';
+        var jobTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/.*/', 'i');
+        $httpBackend.whenGET(jobTypeDetailsRegex).respond(function (method, url) {
+            // get the jobType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType' + id + '.json';
+            return getSync(jobTypeDetailsOverrideUrl);
+        });
+
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
         var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
@@ -72,18 +90,70 @@
             return getSync(jobTypesOverrideUrl);
         });
 
+
         // Metrics Plot Data Detail
-        var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
+        //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
         var metricsPlotDataRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/.*/','i');
-        $httpBackend.whenGET(metricsPlotDataRegex).respond(function () {
-            return getSync(metricsPlotDataOverrideUrl);
+        $httpBackend.whenGET(metricsPlotDataRegex).respond(function (method, url) {
+            var obj = {};
+            url.split('?')[1].split('&').forEach(function(item) {
+                var s = item.split('='),
+                    k = s[0],
+                    v = s[1] && decodeURIComponent(s[1]);
+                (k in obj) ? obj[k].push(v) : obj[k] = [v]
+            });
+
+            var returnObj = {
+                count: 28,
+                next: null,
+                previous: null,
+                results: []
+            };
+
+            var numDays = moment.utc(obj.ended[0]).diff(moment.utc(obj.started[0]), 'd') + 1;
+
+            _.forEach(obj.column, function (metric) {
+                var returnResult = {
+                    column: { title: _.startCase(metric) },
+                    min_x: moment.utc(obj.started[0]).format('YYYY-MM-DD'),
+                    max_x: moment.utc(obj.ended[0]).format('YYYY-MM-DD'),
+                    min_y: 1,
+                    max_y: 1000,
+                    values: []
+                };
+
+                for (var i = 0; i < numDays; i++) {
+                    if (obj.choice_id && obj.choice_id.length > 1) {
+                        _.forEach(obj.choice_id, function (id) {
+                            returnResult.values.push({
+                                date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                                id: id
+                            });
+                        });
+                    } else {
+                        returnResult.values.push({
+                            date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                            value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                        });
+                    }
+                }
+                returnObj.results.push(returnResult);
+            });
+
+            return [200, returnObj, {}];
         });
 
         // Metrics Detail
-        var metricsDetailOverrideUrl = 'test/data/metricsIngest.json';
         var metricsDetailRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/','i');
-        $httpBackend.whenGET(metricsDetailRegex).respond(function () {
-            return getSync(metricsDetailOverrideUrl);
+        $httpBackend.whenGET(metricsDetailRegex).respond(function (method, url) {
+            var urlArr = url.split('/'),
+                detailType = urlArr[urlArr.length - 2];
+
+            if (detailType === 'job-types') {
+                return getSync('test/data/metricsJobTypes.json')
+            }
+            return getSync('test/data/metricsIngest.json');
         });
 
         // Metrics
@@ -100,6 +170,13 @@
             return getSync(nodeStatusOverrideUrl);
         });
 
+        // Node details
+        var nodeOverrideUrl = 'test/data/node.json';
+        var nodeRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/.*/', 'i');
+        $httpBackend.whenGET(nodeRegex).respond(function () {
+            return getSync(nodeOverrideUrl);
+        });
+
         // Nodes
         var nodesOverrideUrl = 'test/data/nodes.json';
         var nodesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/', 'i');
@@ -113,6 +190,17 @@
         $httpBackend.whenGET(queueStatusRegex).respond(function () {
             return getSync(queueStatusOverrideUrl);
         });
+        
+        // Recipe Details
+        var recipeDetailsOverrideUrl = 'test/data/recipeDetails.json';
+        var recipeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/.*/', 'i');
+        $httpBackend.whenGET(recipeDetailsRegex).respond(function (method, url) {
+            // get the recipeDetail.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            recipeDetailsOverrideUrl = 'test/data/recipe-details/recipeDetail' + id + '.json';
+            return getSync(recipeDetailsOverrideUrl);
+        });
 
         // Recipes service
         var recipesOverrideUrl = 'test/data/recipes.json';
@@ -121,11 +209,28 @@
             return getSync(recipesOverrideUrl);
         });
 
-        // Recipe Type Detail service
-        var recipeTypeDetailOverrideUrl = 'test/data/recipeTypeDetail.json';
-        var recipeTypeDetailRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/.*/', 'i');
-        $httpBackend.whenGET(recipeTypeDetailRegex).respond(function () {
-            return getSync(recipeTypeDetailOverrideUrl);
+        // Recipe type validation service
+        var recipeTypeValidationOverrideUrl = 'test/data/recipeTypeValidationSuccess.json';
+        var recipeTypeValidationRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/validation/', 'i');
+        $httpBackend.whenPOST(recipeTypeValidationRegex).respond(function () {
+            return getSync(recipeTypeValidationOverrideUrl);
+        });
+
+        // Recipe Type Details
+        var recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType1.json';
+        var recipeTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/.*/', 'i');
+        $httpBackend.whenGET(recipeTypeDetailsRegex).respond(function (method, url) {
+            // get the recipeType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType' + id + '.json';
+            var returnValue = getSync(recipeTypeDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('recipeType' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
         });
 
         // Recipe Types service
@@ -133,6 +238,42 @@
         var recipeTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
         $httpBackend.whenGET(recipeTypesRegex).respond(function () {
             return getSync(recipeTypesOverrideUrl);
+        });
+
+        // Save Recipe Type
+        var recipeTypeSaveRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
+        $httpBackend.whenPOST(recipeTypeSaveRegex).respond(function (method, url, data) {
+            var recipeJobTypes = [],
+                recipeJobTypesDetails = [],
+                jobTypeData = getSync('test/data/jobTypes.json'),
+                jobTypes = JSON.parse(jobTypeData[1]).results,
+                recipeType = JSON.parse(data),
+                uniqueRecipeTypeJobs = _.uniq(recipeType.definition.jobs, 'job_type');
+            _.forEach(uniqueRecipeTypeJobs, function (job) {
+                recipeJobTypes.push(_.find(jobTypes, function (jobType) {
+                    return jobType.name === job.job_type.name && jobType.version === job.job_type.version;
+                }));
+            });
+            _.forEach(recipeJobTypes, function (jobType) {
+                var jt = getSync('test/data/job-types/jobType' + jobType.id + '.json');
+                recipeJobTypesDetails.push(JSON.parse(jt[1]));
+            });
+            var returnRecipe = {
+                id: Math.floor(Math.random() * (10000 - 5 + 1)) + 5,
+                name: recipeType.name,
+                version: recipeType.version,
+                title: recipeType.title,
+                description: recipeType.description,
+                is_active: true,
+                definition: recipeType.definition,
+                revision_num: 1,
+                created: new Date().toISOString(),
+                last_modified: new Date().toISOString(),
+                archived: null,
+                trigger_rule: recipeType.trigger_rule,
+                job_types: recipeJobTypesDetails
+            };
+            return [200, JSON.stringify(returnRecipe), {}];
         });
 
         // Status service

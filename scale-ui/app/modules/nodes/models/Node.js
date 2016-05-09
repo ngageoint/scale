@@ -2,12 +2,11 @@
     'use strict';
 
     angular.module('scaleApp').factory('Node', function (NodeResources, scaleService) {
-        var Node = function (id, hostname, port, slave_id, pause_reason, is_paused, is_paused_errors, is_active, archived, created, last_offer, last_modified, resources) {
+        var Node = function (id, hostname, port, slave_id, is_paused, is_paused_errors, is_active, archived, created, last_offer, last_modified, job_exes_running, resources) {
             this.id = id;
             this.hostname = hostname;
             this.port = port;
             this.slave_id = slave_id;
-            this.pause_reason = pause_reason;
             this.is_paused = is_paused;
             this.is_paused_errors = is_paused_errors;
             this.is_active = is_active;
@@ -15,6 +14,7 @@
             this.created = created;
             this.last_offer = last_offer;
             this.last_modified = last_modified;
+            this.job_exes_running = job_exes_running;
             this.resources = NodeResources.transformer(resources);
         };
 
@@ -43,7 +43,6 @@
                     data.hostname,
                     data.port,
                     data.slave_id,
-                    data.pause_reason,
                     data.is_paused,
                     data.is_paused_errors,
                     data.is_active,
@@ -51,6 +50,7 @@
                     data.created,
                     data.last_offer,
                     data.last_modified,
+                    data.job_exes_running,
                     data.resources
                 );
             }
