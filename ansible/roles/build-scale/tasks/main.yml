@@ -67,6 +67,11 @@
   command: "install -m 0755 /tmp/linux-386/glide /usr/bin/"
   become: true
 
+- name: Setup go src
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  file: path='{{ scale_build_root }}/src/github.com/ngageoint' state=directory
+  become: true
+
 - name: Setup GOPATH
   tags: [ build-scale, build-scale-minimal, build-scale-cli ]
   file: src='{{ scale_build_root }}' dest='{{ scale_build_root }}/src/github.com/ngageoint/scale' state=link
