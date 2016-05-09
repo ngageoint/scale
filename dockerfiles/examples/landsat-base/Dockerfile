@@ -8,4 +8,5 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && pip install rasterio
 
 RUN useradd --uid 1001 scale
-USER scale
+# This needs to be changed back when we have volume creation working properly
+#USER scale

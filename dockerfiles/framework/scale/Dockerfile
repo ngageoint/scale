@@ -19,5 +19,6 @@ COPY entryPoint.sh /opt/scale/
 
 RUN mkdir /var/log/scale /var/lib/scale-metrics /scale \
  && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale
-USER scale
+# This needs to be changed back when we have volume creation working properly
+#USER scale
 ENTRYPOINT ["./entryPoint.sh"]
