@@ -143,9 +143,6 @@ class Scheduler(models.Model):
     :type master_hostname: :class:`django.db.models.CharField`
     :keyword master_port: The port being used by the Mesos master REST API
     :type master_port: :class:`django.db.models.IntegerField`
-
-    :keyword docker_repository: The name of the Docker repository that contains the Scale Docker images
-    :type docker_repository: :class:`django.db.models.CharField`
     """
 
     is_paused = models.BooleanField(default=False)
@@ -154,8 +151,6 @@ class Scheduler(models.Model):
 
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
-
-    docker_repository = models.CharField(max_length=250, default='geoint')
 
     objects = SchedulerManager()
 

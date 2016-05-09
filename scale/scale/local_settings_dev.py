@@ -53,3 +53,6 @@ MESOS_MASTER = None
 
 # Zookeeper URL for scheduler leader election. If this is None, only a single not is used and election isn't performed.
 SCHEDULER_ZK = None
+
+# The full name for the Scale Docker image (without version tag)
+SCALE_DOCKER_IMAGE = 'geoint/scale'

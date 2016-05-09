@@ -254,8 +254,7 @@ class SchedulingThread(object):
 
         started = now()
 
-        docker_repo = self._scheduler_manager.get_scheduler().docker_repository
-        scheduled_job_executions = Queue.objects.schedule_job_executions(job_executions, workspaces, docker_repo)
+        scheduled_job_executions = Queue.objects.schedule_job_executions(job_executions, workspaces)
 
         duration = now() - started
         msg = 'Query to schedule job executions took %.3f seconds'

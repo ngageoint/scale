@@ -26,6 +26,9 @@ MESOS_MASTER = None
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = None
 
+# The full name for the Scale Docker image (without version tag)
+SCALE_DOCKER_IMAGE = 'geoint/scale'
+
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
@@ -46,8 +49,6 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
-DEFAULT_SCHEDULER_DOCKER_REPOSITORY = "geoint"
 
 # Application definition
 

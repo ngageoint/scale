@@ -20,7 +20,6 @@ class TestNodeOffers(TestCase):
         django.setup()
 
         Scheduler.objects.initialize_scheduler()
-        self._docker_repo = Scheduler.objects.all().first().docker_repository
 
         self.node_agent = 'agent_1'
         self.node_agent_paused = 'agent_paused'
@@ -150,25 +149,25 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
-        job_exe_1 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
         result = node_offers.consider_next_task(job_exe_1)
         self.assertEqual(result, NodeOffers.ACCEPTED)
         result = node_offers.consider_next_task(job_exe_1)  # Same job_exe, should have no effect
         self.assertEqual(result, NodeOffers.ACCEPTED)
 
-        job_exe_high_cpus = RunningJobExecution(self.running_job_exe_high_cpus, self._docker_repo)
+        job_exe_high_cpus = RunningJobExecution(self.running_job_exe_high_cpus)
         result = node_offers.consider_next_task(job_exe_high_cpus)
         self.assertEqual(result, NodeOffers.NOT_ENOUGH_CPUS)
 
-        job_exe_high_mem = RunningJobExecution(self.running_job_exe_high_mem, self._docker_repo)
+        job_exe_high_mem = RunningJobExecution(self.running_job_exe_high_mem)
         result = node_offers.consider_next_task(job_exe_high_mem)
         self.assertEqual(result, NodeOffers.NOT_ENOUGH_MEM)
 
-        job_exe_high_disk = RunningJobExecution(self.running_job_exe_high_disk, self._docker_repo)
+        job_exe_high_disk = RunningJobExecution(self.running_job_exe_high_disk)
         result = node_offers.consider_next_task(job_exe_high_disk)
         self.assertEqual(result, NodeOffers.NOT_ENOUGH_DISK)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_2, self._docker_repo)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_2)
         result = node_offers.consider_next_task(job_exe_2)
         self.assertEqual(result, NodeOffers.ACCEPTED)
 
@@ -194,11 +193,11 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
         # Ensure it accepts new tasks for already running job executions
-        job_exe_1 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
         result = node_offers.consider_next_task(job_exe_1)
         self.assertEqual(result, NodeOffers.ACCEPTED)
 
-        job_exe_2 = RunningJobExecution(self.running_job_exe_2, self._docker_repo)
+        job_exe_2 = RunningJobExecution(self.running_job_exe_2)
         result = node_offers.consider_next_task(job_exe_2)
         self.assertEqual(result, NodeOffers.ACCEPTED)
 
@@ -229,7 +228,7 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
         # Accept a couple job executions
-        job_exe_1 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
         result = node_offers.consider_next_task(job_exe_1)
         self.assertEqual(result, NodeOffers.ACCEPTED)
 
@@ -257,7 +256,7 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
-        job_exe_1 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
         result = node_offers.consider_next_task(job_exe_1)
         self.assertEqual(result, NodeOffers.NO_OFFERS)
 
@@ -281,7 +280,7 @@ class TestNodeOffers(TestCase):
         self.assertListEqual(node_offers.get_accepted_running_job_exes(), [])
         self.assertListEqual(node_offers.get_accepted_new_job_exes(), [])
 
-        job_exe_1 = RunningJobExecution(self.running_job_exe_1, self._docker_repo)
+        job_exe_1 = RunningJobExecution(self.running_job_exe_1)
         job_exe_1.execution_canceled()
         result = node_offers.consider_next_task(job_exe_1)
         self.assertEqual(result, NodeOffers.TASK_INVALID)

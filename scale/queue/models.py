@@ -626,7 +626,7 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions, workspaces, docker_repo):
+    def schedule_job_executions(self, job_executions, workspaces):
         """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
         be deleted from the database. All database changes occur in an atomic transaction.
 
@@ -635,8 +635,6 @@ class QueueManager(models.Manager):
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
-        :param docker_repo: The name of the Docker repository containing the Scale Docker image
-        :type docker_repo: string
         :returns: The scheduled job executions
         :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
@@ -688,7 +686,7 @@ class QueueManager(models.Manager):
         # Schedule job executions
         scheduled_job_exes = []
         for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule, workspaces):
-            scheduled_job_exes.append(RunningJobExecution(job_exe, docker_repo))
+            scheduled_job_exes.append(RunningJobExecution(job_exe))
 
         # Clear the job executions from the queue
         Queue.objects.filter(job_exe_id__in=job_exe_ids).delete()

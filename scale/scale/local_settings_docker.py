@@ -19,8 +19,6 @@ ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
 
-DEFAULT_SCHEDULER_DOCKER_REPOSITORY = os.environ.get('SCALE_DEFAULT_SCHEDULER_DOCKER_REPOSITORY', DEFAULT_SCHEDULER_DOCKER_RESPOSITORY)
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -39,3 +37,6 @@ MESOS_MASTER = os.environ.get('MESOS_MASTER_URL', None)
 
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
 SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', None)
+
+# The full name for the Scale Docker image (without version tag)
+SCALE_DOCKER_IMAGE = os.environ.get('SCALE_DOCKER_IMAGE', SCALE_DOCKER_IMAGE)

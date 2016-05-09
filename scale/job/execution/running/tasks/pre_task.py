@@ -11,20 +11,18 @@ class PreTask(Task):
     """Represents a job execution pre-task
     """
 
-    def __init__(self, job_exe, docker_repo):
+    def __init__(self, job_exe):
         """Constructor
 
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
         models populated
         :type job_exe: :class:`job.models.JobExecution`
-        :param docker_repo: The name of the Docker repository containing the Scale Docker image
-        :type docker_repo: string
         """
 
         super(PreTask, self).__init__('%i_pre' % job_exe.id, job_exe)
 
         self._uses_docker = True
-        self._docker_image = self.create_scale_image_name('scale', docker_repo)
+        self._docker_image = self.create_scale_image_name()
         self._docker_params = job_exe.get_job_configuration().get_pre_task_docker_params()
         self._is_docker_privileged = False
         self._command_arguments = 'scale_pre_steps -i %i' % job_exe.id
