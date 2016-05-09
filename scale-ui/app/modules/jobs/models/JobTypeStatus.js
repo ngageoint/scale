@@ -54,7 +54,7 @@
                             returnArr.push({ status: val.category, count: val.count });
                         });
                     });
-                    return _.sortByOrder(returnArr, ['count'], ['desc']);
+                    return _.sortByOrder(returnArr, ['status'], ['asc']);
                 };
 
                 return getFailureCounts(failedValues);
@@ -82,7 +82,7 @@
             },
             getCellTotal: function () {
                 var performance = this.getPerformance();
-                return 'Completed: ' + performance.completed;
+                return performance.completed;
             },
             getCellPauseResume: function () {
                 return;

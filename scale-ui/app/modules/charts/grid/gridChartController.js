@@ -10,12 +10,24 @@
                 .offset([-10, 0])
                 .html(function(d) {
                     var failures = d.status.getFailures(),
-                        failStr = failures.length > 0 ? '<br /><br />' : '';
+                        failStr = failures.length > 0 ? '<br /><br />' : '',
+                        running = getCellActivityTotal(d),
+                        completed = getCellTotal(d),
+                        statusStr = running > 0 || completed > 0 ? '<br />' : '';
+
+                    if (running > 0) {
+                        statusStr = statusStr + '<span class="label label-running">Running: ' + running + '</span>';
+                    }
+                    if (completed > 0) {
+                        statusStr = statusStr + ' <span class="label label-completed">Completed: ' + completed + '</span>';
+                    }
+
+                    failures = _.sortByOrder(failures, ['status'], ['desc']);
 
                     _.forEach(failures, function (f) {
                         failStr = failStr + '<span class="label label-' + f.status.toLowerCase() + '">' + _.capitalize(f.status.toLowerCase()) + ': ' + f.count + '</span> ';
                     });
-                    return d.title + ' ' + d.version + '<br />' + getCellTotal(d) + failStr;
+                    return d.title + ' ' + d.version + '<br />' + statusStr + failStr;
                 });
 
         $scope.loading = true;
