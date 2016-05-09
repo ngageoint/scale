@@ -18,13 +18,13 @@
             this.disk_in_required = disk_in_required;
             this.disk_out_required = disk_out_required;
             this.created = created;
-            this.created_formatted = moment.utc(created).toISOString();
+            this.created_formatted = moment.utc(created).format(scaleConfig.dateFormats.day_second_utc);
             this.queued = queued;
-            this.queued_formatted = moment.utc(queued).toISOString();
+            this.queued_formatted = moment.utc(queued).format(scaleConfig.dateFormats.day_second_utc);
             this.started = started;
-            this.started_formatted = moment.utc(started).toISOString();
+            this.started_formatted = moment.utc(started).format(scaleConfig.dateFormats.day_second_utc);
             this.ended = ended;
-            this.ended_formatted = moment.utc(ended).toISOString();
+            this.ended_formatted = moment.utc(ended).format(scaleConfig.dateFormats.day_second_utc);
             this.last_status_change = last_status_change;
             this.last_modified = last_modified;
             this.data = {
