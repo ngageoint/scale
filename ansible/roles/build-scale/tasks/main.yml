@@ -141,6 +141,10 @@
 #  tags: [ build-scale, build-scale-minimal ]
 #  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
 
+- name: Set scale version
+  tags: [ build-scale, build-scale-minimal ]
+  template: src=__init__.py.j2 dest='{{ scale_build_root }}/scale/scale/__init__.py'
+
 - name: Create database migrations.
   tags: [ build-scale, build-scale-minimal ]
   django_manage: command=makemigrations app_path='{{ django_build_dir }}'
