@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful source services'''
+"""Defines the URLs for the RESTful source services"""
 from django.conf.urls import patterns, url
 
 import source.views as views

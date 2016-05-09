@@ -1,0 +1,50 @@
+{
+  "id": 1,
+  "name": "landsat8-parse",
+  "version": "1.0.0",
+  "title": "Landsat 8 Parse",
+  "description": "The Landsat 8 satellite images the entire Earth every 16 days in an 8-day offset from Landsat 7. Data collected by the instruments onboard the satellite are available to download at no charge from GloVis, EarthExplorer, or via the LandsatLook Viewer within 24 hours of reception. Landsat 8 carries two instruments: The Operational Land Imager (OLI) sensor includes refined heritage bands, along with three new bands: a deep blue band for coastal/aerosol studies, a shortwave infrared band for cirrus detection*, and a Quality Assessment band. The Thermal Infrared Sensor (TIRS) provides two thermal bands. These sensors both provide improved signal-to-noise (SNR) radiometric performance quantized over a 12-bit dynamic range. (This translates into 4096 potential grey levels in an image compared with only 256 grey levels in previous 8-bit instruments.) Improved signal to noise performance enable better characterization of land cover state and condition. Products are delivered as 16-bit images (scaled to 55,000 grey levels).",
+  "author_name": "USGS",
+  "author_url": "http://landsat.usgs.gov/landsat8.php",
+  "category": "Landsat",
+  "is_operational": true,
+  "icon_code": "f248",
+  "docker_privileged": false,
+  "docker_image": "10.4.4.10:5000/landsat-parse_1.0:dev",
+  "priority": 1,
+  "timeout": 30,
+  "max_tries": 3,
+  "cpus_required": 0.25,
+  "mem_required": 512.0,
+  "disk_out_const_required": 2048.0,
+  "disk_out_mult_required": 0.0,
+  "interface": {
+    "output_data": [{
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "file",
+      "name": "multispectral"
+    }, {
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "file",
+      "name": "panchromatic"
+    }, {
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "file",
+      "name": "thermal"
+    }],
+    "shared_resources": [],
+    "command_arguments": "${infile} ${job_output_dir}",
+    "input_data": [{
+      "media_types": ["application/octet-stream"],
+      "required": true,
+      "type": "file",
+      "name": "infile"
+    }],
+    "version": "1.0",
+    "command": "./parse_landsat.sh"
+  },
+  "error_mapping": {}
+}

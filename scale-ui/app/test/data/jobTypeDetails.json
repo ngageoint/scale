@@ -2,6 +2,7 @@
     "id": 1,
     "name": "alfa",
     "version": "1.0",
+    "title": "Alfa",
     "description": "Ingests a source file into a workspace",
     "category": "system",
     "author_name": null,
@@ -15,8 +16,10 @@
     "uses_docker": false,
     "docker_privileged": false,
     "docker_image": null,
+    "revision_num": 1,
     "priority": 10,
     "timeout": 1800,
+    "max_scheduled": null,
     "max_tries": 3,
     "cpus_required": 0.5,
     "mem_required": 64.0,
@@ -63,6 +66,7 @@
         "command": "Foo"
     },
     "error_mapping": {},
+    "trigger_rule": {},
     "errors": [],
     "job_counts_6h": [
         {

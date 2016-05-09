@@ -1,16 +1,16 @@
     {
-    "count": 2,
+    "count": 10,
     "next": null,
     "previous": null,
     "results": [
         {
             "job_type": {
                 "id": 1,
-                "name": "alfa",
-                "version": "1.0",
-                "title": "Alfa",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "landsat-parse",
+                "version": "1.0.0",
+                "title": "Landsat 8 Parse",
+                "description": "Parse Landsat 8 multi-tif files in tar.gz archives",
+                "category": "Landsat",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -18,7 +18,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f13d"
+                    "icon_code": "f248"
             },
             "job_counts": [
                 {
@@ -26,18 +26,6 @@
                     "count": 78,
                     "most_recent": "2015-08-31T22:09:12.674Z",
                     "category": null
-                },
-                {
-                     "status": "FAILED",
-                     "count": 154,
-                     "most_recent": "2015-08-31T19:28:30.799Z",
-                     "category": "SYSTEM"
-                },
-                {
-                     "status": "FAILED",
-                     "count": 66,
-                     "most_recent": "2015-08-31T19:28:30.799Z",
-                     "category": "DATA"
                 },
                 {
                     "status": "COMPLETED",
@@ -50,11 +38,11 @@
         {
             "job_type": {
                 "id": 2,
-                "name": "bravo",
+                "name": "sam",
                 "version": "1.0",
-                "title": "Bravo",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "title": "Spectral Angle Mapper",
+                "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra.",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -82,11 +70,11 @@
         {
             "job_type": {
                 "id": 3,
-                "name": "charlie",
+                "name": "scm",
                 "version": "1.0",
-                "title": "Charlie",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "title": "Spectral Correlation Mapper",
+                "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity.",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -114,11 +102,11 @@
         {
             "job_type": {
                 "id": 4,
-                "name": "delta",
+                "name": "cem",
                 "version": "1.0",
-                "title": "Delta",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "title": "Constrained Energy Minimization",
+                "description": "CEM is used for target detection in hyperspectral remote sensing imagery.",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -126,7 +114,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f017"
+                "icon_code": "f185"
             },
             "job_counts": [
                 {
@@ -140,11 +128,11 @@
         {
             "job_type": {
                 "id": 5,
-                "name": "echo",
-                "version": "1.0",
-                "title": "Echo",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "wv2-parse",
+                "version": "1.0.1",
+                "title": "WorldView-2 Parse",
+                "description": "Parses WorldView-2 GeoTiffs",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -172,11 +160,11 @@
         {
             "job_type": {
                 "id": 6,
-                "name": "foxtrot",
-                "version": "1.0",
-                "title": "Foxtrot",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "wv2-atmosphere-corr",
+                "version": "1.0.1",
+                "title": "WorldView-2 Atmospheric Correction",
+                "description": "Applies Atmospheric Correction to WorldView-2 GeoTiffs",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -204,11 +192,11 @@
         {
             "job_type": {
                 "id": 7,
-                "name": "golf",
-                "version": "1.0",
-                "title": "Golf",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "ls8-atmos-corr",
+                "version": "2.1.9",
+                "title": "Landsat 8 Atmospheric Correction",
+                "description": "Applies Atmospheric Correction to Landsat 8 GeoTiffs",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -216,7 +204,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f05b"
+                "icon_code": "f00c"
             },
             "job_counts": [
                 {
@@ -236,11 +224,11 @@
         {
             "job_type": {
                 "id": 8,
-                "name": "hotel",
-                "version": "1.0",
-                "title": "Hotel",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "ls8-ortho",
+                "version": "2.1.9",
+                "title": "Landsat 8 Ortho",
+                "description": "Applies Orthorectification to Landsat 8 data",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -258,24 +246,6 @@
                     "category": null
                 },
                 {
-                    "status": "FAILED",
-                    "count": 46,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "ALGORITHM"
-                },
-                {
-                    "status": "FAILED",
-                    "count": 98,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "SYSTEM"
-                },
-                {
-                    "status": "FAILED",
-                    "count": 32,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "DATA"
-                },
-                {
                     "status": "COMPLETED",
                     "count": 30,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -286,11 +256,11 @@
         {
             "job_type": {
                 "id": 9,
-                "name": "india",
-                "version": "1.0",
-                "title": "India",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
+                "name": "wv2-ortho",
+                "version": "2.0",
+                "title": "WorldView-2 Rigorous Orthorectification",
+                "description": "Applies Orthorectification to WorldView-2 data",
+                "category": "spectral",
                 "author_name": null,
                 "author_url": null,
                 "is_system": true,
@@ -318,10 +288,10 @@
         {
             "job_type": {
                 "id": 10,
-                "name": "juliet",
-                "version": "1.0",
-                "title": "Juliet",
-                "description": "Ingests a source file into a workspace",
+                "name": "export-shp",
+                "version": "2.0",
+                "title": "Export Shapefile",
+                "description": "Creates shapefile (.shp) from raster data",
                 "category": "system",
                 "author_name": null,
                 "author_url": null,
@@ -336,512 +306,6 @@
                 {
                     "status": "COMPLETED",
                     "count": 189,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 11,
-                "name": "kilo",
-                "version": "1.0",
-                "title": "Kilo",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f0f3"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 31,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "FAILED",
-                    "count": 26,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "SYSTEM"
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 12,
-                "name": "lima",
-                "version": "1.0",
-                "title": "Lima",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f030"
-            },
-            "job_counts": [
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 13,
-                "name": "mike",
-                "version": "1.0",
-                "title": "Mike",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f127"
-            },
-            "job_counts": [
-                {
-                    "status": "FAILED",
-                    "count": 46,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "ALGORITHM"
-                },
-                {
-                    "status": "FAILED",
-                    "count": 32,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "DATA"
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 14,
-                "name": "november",
-                "version": "1.0",
-                "title": "November",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f192"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 25,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 15,
-                "name": "oscar",
-                "version": "1.0",
-                "title": "Oscar",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f071"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 78,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 16,
-                "name": "papa",
-                "version": "1.0",
-                "title": "Papa",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f21e"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 32,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 17,
-                "name": "quebec",
-                "version": "1.0",
-                "title": "Quebec",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f279"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 46,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 18,
-                "name": "romeo",
-                "version": "1.0",
-                "title": "Romeo",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f267"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 82,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 19,
-                "name": "sierra",
-                "version": "1.0",
-                "title": "Sierra",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f1d8"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 77,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "FAILED",
-                    "count": 435,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "SYSTEM"
-                },
-                {
-                    "status": "FAILED",
-                    "count": 18,
-                    "most_recent": "2015-08-31T19:28:30.799Z",
-                    "category": "ALGORITHM"
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 20,
-                "name": "tango",
-                "version": "1.0",
-                "title": "Tango",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f197"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 12,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 21,
-                "name": "uniform",
-                "version": "1.0",
-                "title": "Uniform",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f21d"
-            },
-            "job_counts": [
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 22,
-                "name": "victor",
-                "version": "1.0",
-                "title": "Victor",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f007"
-            },
-            "job_counts": [
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 23,
-                "name": "whiskey",
-                "version": "1.0",
-                "title": "Whiskey",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f08d"
-            },
-            "job_counts": [
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 24,
-                "name": "xray",
-                "version": "1.0",
-                "title": "Xray",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f1d0"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 47,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 25,
-                "name": "yankee",
-                "version": "1.0",
-                "title": "Yankee",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f285"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 58,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
-                    "most_recent": "2015-08-31T21:51:12.674Z",
-                    "category": null
-                }
-            ]
-        },
-        {
-            "job_type": {
-                "id": 26,
-                "name": "zulu",
-                "version": "1.0",
-                "title": "Zulu",
-                "description": "Ingests a source file into a workspace",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": false,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f084"
-            },
-            "job_counts": [
-                {
-                    "status": "RUNNING",
-                    "count": 33,
-                    "most_recent": "2015-08-31T22:09:12.674Z",
-                    "category": null
-                },
-                {
-                    "status": "COMPLETED",
-                    "count": 50,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }

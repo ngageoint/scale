@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').factory('JobTypeDetails', function (scaleConfig, JobTypeInterface, JobTypeErrorMapping, JobTypeError, scaleService) {
-        var JobTypeDetails = function (id, name, version, title, description, category, author_name, author_url, is_system, is_long_running, is_active, is_operational, is_paused, icon_code, uses_docker, docker_privileged, docker_image, priority, timeout, max_tries, cpus_required, mem_required, disk_out_const_required, disk_out_mult_required, created, archived, paused, last_modified, job_type_interface, error_mapping, errors, job_counts_6h, job_counts_12h, job_counts_24h) {
+        var JobTypeDetails = function (id, name, version, title, description, category, author_name, author_url, is_system, is_long_running, is_active, is_operational, is_paused, icon_code, uses_docker, docker_privileged, docker_image, revision_num, priority, timeout, max_scheduled, max_tries, cpus_required, mem_required, disk_out_const_required, disk_out_mult_required, created, archived, paused, last_modified, job_type_interface, error_mapping, trigger_rule, errors, job_counts_6h, job_counts_12h, job_counts_24h) {
             this.id = id;
             this.name = name;
             this.version = version;
@@ -20,8 +20,10 @@
             this.uses_docker = uses_docker;
             this.docker_privileged = docker_privileged;
             this.docker_image = docker_image;
+            this.revision_num = revision_num;
             this.priority = priority;
             this.timeout = timeout;
+            this.max_scheduled = max_scheduled;
             this.max_tries = max_tries;
             this.cpus_required = cpus_required;
             this.mem_required = mem_required;
@@ -35,6 +37,7 @@
             this.last_modified = last_modified;
             this.job_type_interface = job_type_interface;
             this.error_mapping = JobTypeErrorMapping.transformer(error_mapping);
+            this.trigger_rule = trigger_rule;
             this.errors = JobTypeError.transformer(errors);
             this.job_counts_6h = job_counts_6h;
             this.job_counts_12h = job_counts_12h;
@@ -114,6 +117,8 @@
         // static methods, assigned to class
         JobTypeDetails.build = function (data) {
             if (data) {
+                // TODO: change property returned by API from "interface" to "job_type_interface" because "interface" is a reserved word in JS
+                var jobTypeInterface = data.interface ? data.interface : data.job_type_interface;
                 return new JobTypeDetails(
                     data.id,
                     data.name,
@@ -132,8 +137,10 @@
                     data.uses_docker,
                     data.docker_privileged,
                     data.docker_image,
+                    data.revision_num,
                     data.priority,
                     data.timeout,
+                    data.max_scheduled,
                     data.max_tries,
                     data.cpus_required,
                     data.mem_required,
@@ -143,8 +150,9 @@
                     data.archived,
                     data.paused,
                     data.last_modified,
-                    data.interface,
+                    jobTypeInterface,
                     data.error_mapping,
+                    data.trigger_rule,
                     data.errors,
                     data.job_counts_6h,
                     data.job_counts_12h,

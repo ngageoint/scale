@@ -69,7 +69,7 @@ class SourceFileManager(models.GeoManager):
         :param source_id: The unique identifier of the source.
         :type source_id: int
         :returns: The source with extra related attributes: ingests and products.
-        :rtype: :class:`source.models.Source`
+        :rtype: :class:`source.models.SourceFile`
         """
 
         # Attempt to fetch the requested source
@@ -87,12 +87,11 @@ class SourceFileManager(models.GeoManager):
         # Attempt to fetch all products derived from the source
         # Use a localized import to make higher level application dependencies optional
         try:
-            from product.models import FileAncestryLink
-            links = FileAncestryLink.objects.filter(ancestor_id=source.id)
-            links = links.select_related('descendant', 'descendant__job_type', 'descendant__workspace')
-            links = links.defer('descendant__workspace__json_config')
-            links = links.prefetch_related('descendant__countries').order_by('created')
-            source.products = [link.descendant for link in links]
+            from product.models import ProductFile
+            products = ProductFile.objects.filter(ancestors__ancestor_id=source.id)
+            products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
+            products = products.prefetch_related('countries').order_by('created')
+            source.products = products
         except:
             source.products = []
 
