@@ -42,7 +42,7 @@
                         field: 'longestQueued',
                         displayName: 'Duration of Longest Queued Job',
                         enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>'
+                        cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
                     },
                     { field: 'count', enableFiltering: false },
                     { field: 'is_job_type_paused', enableFiltering: false }
