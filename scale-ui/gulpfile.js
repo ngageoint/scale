@@ -119,12 +119,6 @@ gulp.task('vendor', ['compileBootstrap'], function () {
         .pipe(gulp.dest('./build/stylesheets'));
 });
 
-// vunit is seperate because it goes in the document head
-gulp.task('vunit', ['clean'], function () {
-    return gulp.src(['./app/bower_components/vunit/src/vunit.js', './app/scripts/vunit-init.js'])
-        .pipe(gulp.dest('./build/scripts'));
-});
-
 // vendor fonts
 gulp.task('fontawesome', ['clean'], function () {
     return gulp.src('./app/bower_components/font-awesome/fonts/**/*.{otf,eot,woff,woff2,svg,ttf}')
@@ -143,7 +137,7 @@ gulp.task('ui-grid', ['clean'], function () {
 
 gulp.task('vendor-fonts', ['fontawesome','glyphicons', 'ui-grid']);
 
-gulp.task('vendor-build', ['vendor', 'vunit', 'vendor-fonts']);
+gulp.task('vendor-build', ['vendor', 'vendor-fonts']);
 
 // app
 var appJs = function () {

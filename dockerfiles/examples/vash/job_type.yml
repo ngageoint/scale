@@ -1,0 +1,36 @@
+name: vash
+version: "1.0.0"
+title: Visual hash
+description: Generate a Visual Hash (vash) of the data.
+author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
+docker_image: "geoint/vash.0"
+priority: 250
+timeout: 300
+max_tries: 1
+cpus_required: 0.5
+mem_required: 100.0
+interface:
+  version: "1.0"
+  command: "./parse_binary.sh"
+  command_arguments: '${infile} ${job_output_dir}'
+  input_data:
+    - media_types: [ "application/octet-stream" ]
+      required: true
+      type: file
+      name: infile
+  output_data:
+    - media_type: "image/jpeg"
+      required: true
+      type: file
+      name: results
+trigger_rule:
+  type: PARSE
+  is_active: true
+  configuration:
+    version: "1.0"
+    condition:
+      media_type: "application/octet-stream"
+    data:
+      input_data_name: infile
+      workspace_name: products
+

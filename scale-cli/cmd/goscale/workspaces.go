@@ -6,16 +6,15 @@ import (
     "github.com/fatih/color"
 )
 
-func workspaces_list(c *cli.Context) {
+func workspaces_list(c *cli.Context) error {
     max := c.Int("max")
     url := c.GlobalString("url")
     if url == "" {
-        log.Fatal("A URL must be provided with the SCALE_URL environment variable or the --url argument")
-        return
+        return cli.NewExitError("A URL must be provided with the SCALE_URL environment variable or the --url argument", 1)
     }
     workspaces, err := scalecli.GetWorkspaceList(url, max)
     if err != nil {
-        log.Fatal(err)
+        return cli.NewExitError(err.Error(), 1)
     }
     for _, workspace := range(workspaces) {
         if workspace.Is_active {
@@ -24,6 +23,7 @@ func workspaces_list(c *cli.Context) {
             color.White(workspace.String())
         }
     }
+    return nil
 }
 
 var Workspaces_commands = []cli.Command{
