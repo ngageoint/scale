@@ -19,6 +19,12 @@
             return getSync(ingestsStatusOverrideUrl);
         });
 
+        // Ingests
+        var ingestsOverrideUrl = 'test/data/ingests.json';
+        var ingestsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/', 'i');
+        $httpBackend.whenGET(ingestsRegex).respond(function () {
+            return getSync(ingestsOverrideUrl);
+        });
 
         // Job load
         var jobLoadRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'load/', 'i');

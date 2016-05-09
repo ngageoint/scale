@@ -36,13 +36,13 @@
                         enableFiltering: false,
                         cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type_name }}</div>'
                     },
-                    { field: 'job_type_version', enableFiltering: false },
+                    { field: 'job_type_version', displayName: 'Version', enableFiltering: false },
                     { field: 'highest_priority', enableFiltering: false },
                     {
                         field: 'longestQueued',
                         displayName: 'Duration of Longest Queued Job',
                         enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>'
+                        cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
                     },
                     { field: 'count', enableFiltering: false },
                     { field: 'is_job_type_paused', enableFiltering: false }

@@ -36,13 +36,13 @@
                     enableFiltering: false,
                     cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
                 },
-                {field: 'job_type.version', enableFiltering: false},
+                {field: 'job_type.version', displayName: 'Version', enableFiltering: false},
                 {field: 'count', displayName: 'Number of Jobs', enableFiltering: false},
                 {
                     field: 'longestRunning',
                     displayName: 'Duration of Longest Running Job',
                     enableFiltering: false,
-                    cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>'
+                    cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
                 }
             ];
             $scope.gridOptions.data = [];
