@@ -17,8 +17,7 @@ RUN chmod a+x manage.py && pip install 'protobuf<3.0.0b1.post1' && easy_install 
 COPY local_settings.py /opt/scale/scale/
 COPY entryPoint.sh /opt/scale/
 
-RUN mkdir /var/log/scale /var/lib/scale-metrics /scale \
+RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data \
  && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale
-# This needs to be changed back when we have volume creation working properly
-#USER scale
+USER scale
 ENTRYPOINT ["./entryPoint.sh"]
