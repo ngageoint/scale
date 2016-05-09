@@ -6,7 +6,7 @@
             this.id = id;
             this.created = created;
             this.completed = completed;
-            this.completed_formatted = this.completed ? moment.utc(this.completed).toISOString() : this.completed;
+            this.completed_formatted = this.completed ? moment.utc(this.completed).format(scaleConfig.dateFormats.day_second_utc) : this.completed;
             this.last_modified = last_modified;
             this.data = RecipeData.transformer(data);
             this.recipe_type = RecipeType.transformer(recipe_type);
