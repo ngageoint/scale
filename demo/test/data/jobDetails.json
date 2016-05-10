@@ -203,7 +203,7 @@
                 "data_type": [],
                 "is_deleted": false,
                 "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "/test/data/output/SAM-Oil_result.png",
+                "url": "./test/data/output/SAM-Oil_result.png",
                 "created": "2016-05-15T17:27:48.477Z",
                 "deleted": null,
                 "data_started": null,

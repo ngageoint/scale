@@ -294,17 +294,8 @@
                 "type": "STRIKE_TRANSFER",
                 "occurred": "2016-05-01T05:11:46Z"
             },
-            "error": {
-                "id": 1,
-                "name": "unknown",
-                "title": "Unknown",
-                "description": "The error that caused the failure is unknown.",
-                "category": "SYSTEM",
-                "is_builtin": true,
-                "created": "2016-05-05T16:31:57Z",
-                "last_modified": "2016-05-05T16:31:57Z"
-            },
-            "status": "FAILED",
+            "error": null,
+            "status": "COMPLETED",
             "priority": 82,
             "num_exes": 91,
             "timeout": 1175,
@@ -347,17 +338,8 @@
                 "type": "STRIKE_TRANSFER",
                 "occurred": "2016-04-29T12:53:31Z"
             },
-            "error": {
-                "id": 1,
-                "name": "missing-input",
-                "title": "Missing Input",
-                "description": "Input file not found.",
-                "category": "DATA",
-                "is_builtin": true,
-                "created": "2016-05-04T10:21:14Z",
-                "last_modified": "2016-05-04T10:21:14Z"
-            },
-            "status": "FAILED",
+            "error": null,
+            "status": "COMPLETED",
             "priority": 66,
             "num_exes": 32,
             "timeout": 2764,
