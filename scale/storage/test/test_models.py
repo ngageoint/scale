@@ -1,16 +1,16 @@
 from __future__ import unicode_literals
 
+import datetime
 import os
 
 import django
+import django.contrib.gis.geos as geos
+from django.db import transaction
 from django.test import TestCase
 from django.utils.text import get_valid_filename
 from django.utils.timezone import utc
-from django.db import transaction
 from mock import MagicMock, patch
 
-import datetime
-import django.contrib.gis.geos as geos
 import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
