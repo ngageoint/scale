@@ -16,7 +16,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f090"
+                "icon_code": "f248"
             },
             "job_type_rev": {
                 "id": 56,
@@ -60,7 +60,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f102"
+                "icon_code": "f0e7"
             },
             "job_type_rev": {
                 "id": 67,
@@ -104,7 +104,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f101"
+                "icon_code": "f140"
             },
             "job_type_rev": {
                 "id": 62,
@@ -192,7 +192,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0ac"
+                "icon_code": "f0c2"
             },
             "job_type_rev": {
                 "id": 35,
@@ -236,7 +236,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0c2"
+                "icon_code": "f14e"
             },
             "job_type_rev": {
                 "id": 30,
@@ -280,7 +280,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0c2"
+                "icon_code": "f00c"
             },
             "job_type_rev": {
                 "id": 34,
@@ -324,7 +324,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0b2"
+                "icon_code": "f1c0"
             },
             "job_type_rev": {
                 "id": 27,
@@ -368,7 +368,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0b2"
+                "icon_code": "f219"
             },
             "job_type_rev": {
                 "id": 70,
@@ -412,7 +412,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f278"
+                "icon_code": "f06e"
             },
             "job_type_rev": {
                 "id": 78,
