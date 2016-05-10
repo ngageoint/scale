@@ -1,8 +1,7 @@
 .. _system_dependencies:
 
-===============================================================================
 System Dependencies
-===============================================================================
+===================
 
 Scale requires the following to be installed on all masters and slaves
 
@@ -10,11 +9,11 @@ Scale requires the following to be installed on all masters and slaves
 * Docker 1.5.x
 * Python 2.7.x
 
-* Virtualenv
-* Pip
+* virtualenv
+* pip
 * python-setuptools
 * geos
-* postgis2_93 (TODO: is this right?)
+* postgis2_93
 
 **Installation on CentOS7**
 

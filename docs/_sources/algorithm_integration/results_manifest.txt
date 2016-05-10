@@ -2,7 +2,7 @@
 .. _algorithm_integration_results_manifest:
 
 Results Manifest
-===============================================================================
+================
 
 The results manifest is a JSON document that defines the output of an algorithm's run. Using the results manifest, you
 can specify your outputs, parse information, run_information and errors. In addition, you can register artifacts by
@@ -99,9 +99,7 @@ A valid results manifest is a JSON document with the following structure:
                "geo_json": JSON
             }
          }
-      ],
-      "info": {},  # TODO: document when completed
-      "errors": {}  # TODO: document when completed
+      ]
    }
 
 **version**: JSON string
@@ -256,9 +254,7 @@ A valid version 1.0 results manifest is a JSON document with the following struc
             ],
             "gis_data_path": STRING
          }
-      ],
-      "info": {},  # TODO: document when completed
-      "errors": {}  # TODO: document when completed
+      ]
    }
 
 **version**: JSON string
