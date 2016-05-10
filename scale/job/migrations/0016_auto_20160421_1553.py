@@ -19,6 +19,9 @@ class Migration(migrations.Migration):
         ScaleFile = apps.get_model('storage', 'ScaleFile')
         Workspace = apps.get_model('storage', 'Workspace')
         total_count = Job.objects.all().count()
+        workspaces = {}
+        for workspace in Workspace.objects.all().iterator():
+            workspaces[workspace.id] = workspace
         print 'Populating new configuration field for %s jobs' % str(total_count)
         done_count = 0
         for job in Job.objects.select_related('job_type').iterator():
@@ -47,7 +50,8 @@ class Migration(migrations.Migration):
                     # We add input workspaces to post task so it can perform a parse results move if requested by the
                     # job's results manifest
                     configuration.add_post_task_workspace(name, MODE_RW)
-                for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
+                for workspace_id in data.get_output_workspace_ids():
+                    workspace = workspaces[workspace_id]
                     if workspace.name not in input_workspaces:
                         configuration.add_post_task_workspace(workspace.name, MODE_RW)
             elif job.job_type.name == 'scale-ingest':
