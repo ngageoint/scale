@@ -1,5 +1,5 @@
 """Defines the factory for creating brokers"""
-from storage.brokers.host.host_broker import HostBroker
+from storage.brokers.host_broker import HostBroker
 
 
 BROKERS = {HostBroker().broker_type: HostBroker}
