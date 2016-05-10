@@ -346,6 +346,32 @@
                     "category": null
                 }
             ]
+        },
+        {
+            "job_type": {
+                "id": 11,
+                "name": "export-kml",
+                "version": "1.5",
+                "title": "Export KML",
+                "description": "Creates KML from data",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f0ac"
+            },
+            "job_counts": [
+                {
+                    "status": "COMPLETED",
+                    "count": 54,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
         }
     ]
 }
