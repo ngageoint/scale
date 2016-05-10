@@ -321,7 +321,7 @@ class JobConfiguration(object):
             mode = task_workspace.mode
             if name in workspaces:
                 workspace = workspaces[name]
-                if workspace.uses_mount and workspace.mount:
+                if workspace.mount:
                     broker_volume = '%s:%s:%s' % (workspace.mount, get_workspace_mount_path(name), mode)
                     params.append(DockerParam('volume', broker_volume))
         return params

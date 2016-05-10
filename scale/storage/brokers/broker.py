@@ -181,7 +181,6 @@ class Broker(object):
 
         self._broker_type = broker_type
         self._mount = None
-        self._uses_mount = False
 
     @property
     def broker_type(self):
@@ -195,8 +194,8 @@ class Broker(object):
 
     @property
     def mount(self):
-        """If this broker uses a mounted file system (uses_mount is True), this property returns the remote location
-        that should be mounted into the task container. If uses_mount is False, this property should be None.
+        """If this broker uses a mounted file system, this property returns the remote location that should be mounted
+        into the task container. If this broker does not use a mounted file system, this property should be None.
 
         :returns: The remote file system location to mount, possibly None
         :rtype: string
@@ -204,30 +203,20 @@ class Broker(object):
 
         return self._mount
 
-    @property
-    def uses_mount(self):
-        """Indicates if this broker needs to mount a remote file system location into the task container
-
-        :returns: True if this broker needs to mount a remote file system location, False otherwise
-        :rtype: bool
-        """
-
-        return self._uses_mount
-
     def delete_files(self, mount_location, files):
         """Deletes the given files.
 
-        If this broker uses a mounted file system (uses_mount is True), mount_location will contain the absolute local
-        container location where that remote file system is mounted. This means that the remote path to where a
-        ScaleFile currently exists is the result of os.path.join(mount_location, files[i].file_path). If uses_mount is
-        False, None will be given for mount_location.
+        If this broker uses a mounted file system, mount_location will contain the absolute local container location
+        where that remote file system is mounted. This means that the remote path to where a ScaleFile currently exists
+        is the result of os.path.join(mount_location, files[i].file_path). If this broker does not use a mounted file
+        system, None will be given for mount_location.
 
         The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
         each file itself and not any parent directories. No changes should be made to the ScaleFile models. Scale will
         mark the models as deleted in the database after the files have been successfully deleted.
 
         :param mount_location: Absolute path to the local container location onto which the remote file system was
-            mounted, None if uses_mount is False
+            mounted, None if this broker does not use a mounted file system
         :type mount_location: string
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
@@ -238,17 +227,17 @@ class Broker(object):
     def download_files(self, mount_location, file_downloads):
         """Downloads the given files to the given local file system paths.
 
-        If this broker uses a mounted file system (uses_mount is True), mount_location will contain the absolute local
-        container location where that remote file system is mounted. This means that the remote path to a ScaleFile that
-        is accessible to the container is the result of os.path.join(mount_location, file_downloads[i].file.file_path).
-        If uses_mount is False, None will be given for mount_location.
+        If this broker uses a mounted file system, mount_location will contain the absolute local container location
+        where that remote file system is mounted. This means that the remote path to a ScaleFile that is accessible to
+        the container is the result of os.path.join(mount_location, file_downloads[i].file.file_path). If this broker
+        does not use a mounted file system, None will be given for mount_location.
 
         The file_downloads list contains named tuples that each contain a ScaleFile model to be downloaded and the
         absolute local container path where the file should be downloaded. No changes should be made to the ScaleFile
         models. Any directories in the absolute local container paths should already exist.
 
         :param mount_location: Absolute path to the local container location onto which the remote file system was
-            mounted, None if uses_mount is False
+            mounted, None if this broker does not use a mounted file system
         :type mount_location: string
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
@@ -268,11 +257,11 @@ class Broker(object):
     def move_files(self, mount_location, file_moves):
         """Moves the given files to the new file system paths.
 
-        If this broker uses a mounted file system (uses_mount is True), mount_location will contain the absolute local
-        container location where that remote file system is mounted. This means that the remote path to where a
-        ScaleFile currently exists is the result of os.path.join(mount_location, files_moves[i].file.file_path) and the
-        new path is given by os.path.join(mount_location, files_moves[i].file.new_path). If uses_mount is False, None
-        will be given for mount_location.
+        If this broker uses a mounted file system, mount_location will contain the absolute local container location
+        where that remote file system is mounted. This means that the remote path to where a ScaleFile currently exists
+        is the result of os.path.join(mount_location, files_moves[i].file.file_path) and the new path is given by
+        os.path.join(mount_location, files_moves[i].file.new_path). If this broker does not use a mounted file system,
+        None will be given for mount_location.
 
         The file_moves list contains named tuples that each contain a ScaleFile model to be moved and the new relative
         file_path field for the new location of the file. The broker is expected to set the file_path field of each
@@ -282,7 +271,7 @@ class Broker(object):
         so it is the responsibility of the broker to create them if necessary.
 
         :param mount_location: Absolute path to the local container location onto which the remote file system was
-            mounted, None if uses_mount is False
+            mounted, None if this broker does not use a mounted file system
         :type mount_location: string
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
@@ -293,10 +282,10 @@ class Broker(object):
     def upload_files(self, mount_location, file_uploads):
         """Uploads the given files from the given local file system paths.
 
-        If this broker uses a mounted file system (uses_mount is True), mount_location will contain the absolute local
-        container location where that remote file system is mounted. This means that the remote path to where a
-        ScaleFile should be uploaded is the result of os.path.join(mount_location, file_uploads[i].file.file_path). If
-        uses_mount is False, None will be given for mount_location.
+        If this broker uses a mounted file system, mount_location will contain the absolute local container location
+        where that remote file system is mounted. This means that the remote path to where a ScaleFile should be
+        uploaded is the result of os.path.join(mount_location, file_uploads[i].file.file_path). If this broker does not
+        use a mounted file system, None will be given for mount_location.
 
         The file_uploads list contains named tuples that each contain a ScaleFile model to be uploaded and the absolute
         local container path where the file currently exists. The broker is free to alter the ScaleFile fields of the
@@ -307,7 +296,7 @@ class Broker(object):
         not exist, so it is the responsibility of the broker to create them if necessary.
 
         :param mount_location: Absolute path to the local container location onto which the remote file system was
-            mounted, None if uses_mount is False
+            mounted, None if this broker does not use a mounted file system
         :type mount_location: string
         :param file_uploads: List of files to upload
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]

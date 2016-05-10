@@ -565,24 +565,15 @@ class Workspace(models.Model):
 
     @property
     def mount(self):
-        """If this workspace's broker uses a mounted file system (uses_mount is True), this property returns the remote
-        location that should be mounted into the task container. If uses_mount is False, this property should be None.
+        """If this workspace's broker uses a mounted file system, this property returns the remote location that should
+        be mounted into the task container. If this workspace's broker does not use a mounted file system, this property
+        should be None.
 
         :returns: The remote file system location to mount, possibly None
         :rtype: string
         """
 
         return self._get_broker().mount
-
-    @property
-    def uses_mount(self):
-        """Indicates if this workspace's broker needs to mount a remote file system location into the task container
-
-        :returns: True if this broker needs to mount a remote file system location, False otherwise
-        :rtype: bool
-        """
-
-        return self._get_broker().uses_mount
 
     @property
     def workspace_mount_path(self):
@@ -595,9 +586,9 @@ class Workspace(models.Model):
         return get_workspace_mount_path(self.name)
 
     def delete_files(self, files):
-        """Deletes the given files using the workspace's broker. If this workspace's broker uses a mounted file system
-        (uses_mount is True), the workspace expects this file system to already be mounted at workspace_mount_path or an
-        exception will be raised.
+        """Deletes the given files using the workspace's broker. If this workspace's broker uses a mounted file system,
+        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
+        raised.
 
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
@@ -609,8 +600,8 @@ class Workspace(models.Model):
 
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths using the workspace's broker. If this
-        workspace's broker uses a mounted file system (uses_mount is True), the workspace expects this file system to
-        already be mounted at workspace_mount_path or an exception will be raised.
+        workspace's broker uses a mounted file system, the workspace expects this file system to already be mounted at
+        workspace_mount_path or an exception will be raised.
 
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
@@ -629,9 +620,9 @@ class Workspace(models.Model):
         self._get_broker().download_files(mount_location, file_downloads)
 
     def move_files(self, file_moves):
-        """Moves the given files to the new file system paths. If this workspace's broker uses a mounted file system
-        (uses_mount is True), the workspace expects this file system to already be mounted at workspace_mount_path or an
-        exception will be raised.
+        """Moves the given files to the new file system paths. If this workspace's broker uses a mounted file system,
+        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
+        raised.
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
@@ -643,8 +634,8 @@ class Workspace(models.Model):
 
     def upload_files(self, file_uploads):
         """Uploads the given files from the given local file system paths. If this workspace's broker uses a mounted
-        file system (uses_mount is True), the workspace expects this file system to already be mounted at
-        workspace_mount_path or an exception will be raised.
+        file system, the workspace expects this file system to already be mounted at workspace_mount_path or an
+        exception will be raised.
 
         :param file_uploads: List of files to upload
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
@@ -679,7 +670,7 @@ class Workspace(models.Model):
         """
 
         mount_location = None
-        if self.uses_mount:
+        if self.mount:
             mount_location = self.workspace_mount_path
             if not os.path.exists(mount_location):
                 raise MissingRemoteMount('Expected file system mounted at %s' % mount_location)

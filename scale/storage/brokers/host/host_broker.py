@@ -48,7 +48,6 @@ class HostBroker(Broker):
         """
 
         self._mount = config['host_path']
-        self._uses_mount = True
 
     def move_files(self, mount_location, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`
