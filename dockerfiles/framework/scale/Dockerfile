@@ -18,6 +18,8 @@ COPY local_settings.py /opt/scale/scale/
 COPY entryPoint.sh /opt/scale/
 
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data \
- && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale
+ && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
+ && chmod -R 777 /scale/output_data
+
 USER scale
 ENTRYPOINT ["./entryPoint.sh"]
