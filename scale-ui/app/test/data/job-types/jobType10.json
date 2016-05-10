@@ -8,7 +8,7 @@
   "is_operational": true,
   "icon_code": "f06e",
   "docker_privileged": false,
-  "docker_image": "10.4.4.10:5000/wv2-ortho:2.0",
+  "docker_image": "10.4.4.10:5000/export-shp:2.0",
   "priority": 1,
   "timeout": 30,
   "max_tries": 3,

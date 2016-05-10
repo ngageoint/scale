@@ -12,6 +12,7 @@ from django.db.models import Q
 import storage.geospatial_utils as geo_utils
 from recipe.models import RecipeJob
 from source.models import SourceFile
+from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
 
@@ -260,7 +261,7 @@ class ProductFileManager(models.GeoManager):
         return product
 
     def populate_source_ancestors(self, products):
-        """Populates ancestors of the given products with its source file ancestors in a field called "source_files"
+        """Populates each of the given products with its source file ancestors in a field called "source_files"
 
         :param products: List of products
         :type products: list of :class:`product.models.ProductFile`
@@ -301,17 +302,12 @@ class ProductFileManager(models.GeoManager):
             product.published = when
             product.save()
 
-    def upload_files(self, upload_dir, work_dir, file_entries, input_file_ids, job_exe, workspace):
+    def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace. All database changes will be made in an atomic
-        transaction. This method assumes that ScaleFileManager.setup_upload_dir() has already been called with the same
-        upload and work directories.
+        transaction.
 
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in uploading
-        :type work_dir: str
-        :param file_entries: List of files where each file is a tuple of (source path relative to upload directory,
-            workspace path for storing the file, media_type)
+        :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
+            storing the file, media_type)
         :type file_entries: list of tuple(str, str, str)
         :param input_file_ids: List of identifiers for files used to produce the given file entries
         :type input_file_ids: list of int
@@ -343,6 +339,7 @@ class ProductFileManager(models.GeoManager):
             product.job_type = job_exe.job.job_type
             product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
             product.media_type = media_type
+            product.file_path = remote_path
 
             # Add a stable identifier based on the job type, input files, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
@@ -368,9 +365,9 @@ class ProductFileManager(models.GeoManager):
                     product.meta_data = props
                     product.center_point = geo_utils.get_center_point(geom)
 
-            products_to_save.append((product, local_path, remote_path))
+            products_to_save.append(FileUpload(product, local_path))
 
-        return ScaleFile.objects.upload_files(upload_dir, work_dir, workspace, products_to_save)
+        return ScaleFile.objects.upload_files(workspace, products_to_save)
 
 
 class ProductFile(ScaleFile):

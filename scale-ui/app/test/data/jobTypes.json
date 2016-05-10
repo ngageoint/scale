@@ -1,5 +1,5 @@
 {
-    "count": 10,
+    "count": 11,
     "next": null,
     "previous": null,
     "results":[
@@ -294,6 +294,35 @@
             "archived": null,
             "paused": null,
             "last_modified": "2015-03-11T00:00:00Z"
+        },{
+            "id": 11,
+            "name": "export-kml",
+            "title": "Export KML",
+            "version": "1.5",
+            "description": "Creates KML from data",
+            "category": "export",
+            "author_name": null,
+            "author_url": null,
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0ac",
+            "uses_docker": false,
+            "docker_privileged": false,
+            "docker_image": null,
+            "priority": 10,
+            "timeout": 0,
+            "max_tries": 0,
+            "cpus_required": 2.0,
+            "mem_required": 2048.0,
+            "disk_out_const_required": 1024.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2015-05-10T00:00:00Z",
+            "archived": null,
+            "paused": null,
+            "last_modified": "2015-05-10T00:00:00Z"
         }
     ]
 }

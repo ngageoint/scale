@@ -8,14 +8,14 @@ import re
 
 import djorm_pgjson.fields
 from django.db import transaction
-from django.db.models.aggregates import Sum
 from django.utils.text import get_valid_filename
 
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
-from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
+from storage.container import get_workspace_mount_path
+from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingRemoteMount
 from storage.media_type import get_media_type
 from storage.nfs import nfs_umount
 
@@ -156,346 +156,133 @@ class ScaleFileManager(models.Manager):
     """Provides additional methods for handling Scale files
     """
 
-    def cleanup_download_dir(self, download_dir, work_dir):
-        """Performs any cleanup necessary for a previous download_files() call
+    def download_files(self, file_downloads):
+        """Downloads the given files to the given local file system paths. Each ScaleFile model should have its related
+        workspace field populated.
 
-        :param download_dir: Absolute path to the local directory for the files to download
-        :type download_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in downloading
-        :type work_dir: str
+        :param file_downloads: List of files to download
+        :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+        :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
+        :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
         """
 
-        download_dir = os.path.normpath(download_dir)
-        work_dir = os.path.normpath(work_dir)
-        workspace_root_dir = self._get_workspace_root_dir(work_dir)
-
-        for workspace in Workspace.objects.all():
-            workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
-            if os.path.exists(workspace_work_dir):
-                workspace.cleanup_download_dir(download_dir, workspace_work_dir)
-                logger.info('Deleting %s', workspace_work_dir)
-                os.rmdir(workspace_work_dir)
-
-        if os.path.exists(workspace_root_dir):
-            logger.info('Deleting %s', workspace_root_dir)
-            os.rmdir(workspace_root_dir)
-
-    def cleanup_move_dir(self, work_dir):
-        """Performs any cleanup necessary for a previous move_files() call
-
-        :param work_dir: Absolute path to a local work directory available to assist in moving
-        :type work_dir: str
-        :param workspace: The workspace to upload files into
-        :type workspace: :class:`storage.models.Workspace`
-        """
-
-        work_dir = os.path.normpath(work_dir)
-
-        workspace_root_dir = self._get_workspace_root_dir(work_dir)
-
-        if os.path.exists(workspace_root_dir):
-            for name in os.listdir(workspace_root_dir):
-                sub_dir = os.path.join(workspace_root_dir, name)
-                nfs_umount(sub_dir)
-                logger.info('Deleting %s', sub_dir)
-                os.rmdir(sub_dir)
-            logger.info('Deleting %s', workspace_root_dir)
-            os.rmdir(workspace_root_dir)
-
-    def cleanup_upload_dir(self, upload_dir, work_dir, workspace):
-        """Performs any cleanup necessary for a previous setup_upload_dir() call
-
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in uploading
-        :type work_dir: str
-        :param workspace: The workspace to upload files into
-        :type workspace: :class:`storage.models.Workspace`
-        """
-
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
-
-        delete_root_dir = self._get_delete_root_dir(work_dir)
-        delete_work_dir = self._get_delete_work_dir(work_dir, workspace)
-        workspace_root_dir = self._get_workspace_root_dir(work_dir)
-        workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
-
-        if os.path.exists(workspace_work_dir):
-            workspace.cleanup_upload_dir(upload_dir, workspace_work_dir)
-            logger.info('Deleting %s', workspace_work_dir)
-            os.rmdir(workspace_work_dir)
-            if not os.listdir(workspace_root_dir):
-                logger.info('Deleting %s', workspace_root_dir)
-                os.rmdir(workspace_root_dir)
-
-        if os.path.exists(delete_work_dir):
-            nfs_umount(delete_work_dir)
-            logger.info('Deleting %s', delete_work_dir)
-            os.rmdir(delete_work_dir)
-            if not os.listdir(delete_root_dir):
-                logger.info('Deleting %s', delete_root_dir)
-                os.rmdir(delete_root_dir)
-
-    def download_files(self, download_dir, work_dir, files_to_download):
-        """Downloads the given Scale files into the given download directory. After all use of the downloaded files is
-        complete, the caller should call cleanup_download_dir(). Each ScaleFile model should have its related workspace
-        field populated.
-
-        :param download_dir: Absolute path to the local directory for the files to download
-        :type download_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in downloading. This directory must
-            not be within the download directory.
-        :type work_dir: str
-        :param files_to_download: List of tuples (Scale file, destination path relative to download directory)
-        :type files_to_download: list of (:class:`storage.models.ScaleFile`, str)
-        """
-
-        download_dir = os.path.normpath(download_dir)
-        work_dir = os.path.normpath(work_dir)
-
-        # {Workspace ID: (workspace, list of (file_path, local_path))}
-        wp_dict = {}
+        wp_dict = {}  # {Workspace ID: (workspace, [file download])}
         # Organize files by workspace
-        for entry in files_to_download:
-            scale_file = entry[0]
-            download_path = entry[1]
-            workspace_path = scale_file.file_path
-            workspace = scale_file.workspace
+        for file_download in file_downloads:
+            workspace = file_download.file.workspace
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
-            if scale_file.is_deleted:
-                raise DeletedFile('%s has been deleted' % scale_file.file_name)
+            if file_download.file.is_deleted:
+                raise DeletedFile('%s has been deleted' % file_download.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
                 wp_list = []
                 wp_dict[workspace.id] = (workspace, wp_list)
-            wp_list.append((workspace_path, download_path))
+            wp_list.append(file_download)
 
-        # Retrieve files for each workspace
+        # Download files for each workspace
         for wp_id in wp_dict:
             workspace = wp_dict[wp_id][0]
-            download_file_list = wp_dict[wp_id][1]
-            workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
-            logger.info('Creating %s', workspace_work_dir)
-            os.makedirs(workspace_work_dir, mode=0755)
-            workspace.setup_download_dir(download_dir, workspace_work_dir)
-            workspace.download_files(download_dir, workspace_work_dir, download_file_list)
+            wp_file_downloads = wp_dict[wp_id][1]
+            workspace.download_files(wp_file_downloads)
 
-    def get_total_file_size(self, file_ids):
-        """Returns the total file size of the given file IDs in bytes
+    def get_files(self, file_ids):
+        """Returns the files with the given IDs. The files will have their related workspace field populated.
 
-        :param files: List of file IDs
-        :type files: list[int]
-        :returns: Total file size in bytes
-        :rtype: long
+        :param file_ids: The file IDs
+        :type file_ids: list[int]
+        :returns: The files that match the given IDs
+        :rtype: [:class:`storage.models.ScaleFile`]
         """
 
-        results = ScaleFile.objects.filter(id__in=file_ids).aggregate(Sum('file_size'))
+        return self.filter(id__in=file_ids).select_related('workspace').iterator()
 
-        file_size = 0
-        if 'file_size__sum' in results:
-            file_size_sum = results['file_size__sum']
-            if file_size_sum is not None:
-                file_size = long(file_size_sum)
-        return file_size
+    def move_files(self, file_moves):
+        """Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace
+        field populated. This method will update the file_path field in each ScaleFile model to the new path, but the
+        caller is responsible for performing the model save.
 
-    @transaction.atomic
-    def move_files(self, work_dir, files_to_move):
-        """Moves the given Scale files to the new workspace location. Each ScaleFile model should have its related
-        workspace field populated and the caller must have obtained a model lock on each using select_for_update().
-
-        :param work_dir: Absolute path to a local work directory available to assist in moving
-        :type work_dir: str
-        :param files_to_move: List of tuples (Scale file, destination workspace path)
-        :type files_to_move: list of (:class:`storage.models.ScaleFile`, str)
+        :param file_moves: List of files to move
+        :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+        :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
+        :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
         """
 
-        # {Workspace ID: (workspace, list of (workspace_path, new_workspace_path))}
-        wp_dict = {}
+        wp_dict = {}  # {Workspace ID: (workspace, [file move])}
         # Organize files by workspace
-        for entry in files_to_move:
-            scale_file = entry[0]
-            new_workspace_path = self._correct_workspace_path(entry[1])
-            workspace_path = scale_file.file_path
-            workspace = scale_file.workspace
+        for file_move in file_moves:
+            workspace = file_move.file.workspace
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
-            if scale_file.is_deleted:
-                raise DeletedFile('%s has been deleted' % scale_file.file_name)
+            if file_move.file.is_deleted:
+                raise DeletedFile('%s has been deleted' % file_move.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
                 wp_list = []
                 wp_dict[workspace.id] = (workspace, wp_list)
-            wp_list.append((workspace_path, new_workspace_path))
-            # Update workspace path in model
-            scale_file.file_path = new_workspace_path
-            scale_file.save()
+            wp_list.append(file_move)
 
         # Move files for each workspace
         for wp_id in wp_dict:
             workspace = wp_dict[wp_id][0]
-            move_file_list = wp_dict[wp_id][1]
-            workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
-            logger.info('Creating %s', workspace_work_dir)
-            os.makedirs(workspace_work_dir, mode=0755)
-            workspace.move_files(workspace_work_dir, move_file_list)
+            wp_file_moves = wp_dict[wp_id][1]
+            workspace.move_files(wp_file_moves)
 
-    def setup_upload_dir(self, upload_dir, work_dir, workspace):
-        """Sets up the given upload directory to upload Scale files into the given workspace. Note that moving/copying
-        files into an upload directory after this method has been called may be expensive as the setup upload directory
-        may not be a local directory.
+    def upload_files(self, workspace, file_uploads):
+        """Uploads the given files from the given local file system paths into the given workspace. Each ScaleFile model
+        should have its file_path field populated with the relative location where the file should be stored within the
+        workspace. This method will update the workspace and other fields (including possibly changing file_path) in
+        each ScaleFile model and will save the models to the database in an atomic transaction.
 
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in uploading. This directory must
-            not be within the upload directory.
-        :type work_dir: str
         :param workspace: The workspace to upload files into
         :type workspace: :class:`storage.models.Workspace`
+        :param file_uploads: List of files to upload
+        :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
+        :returns: The list of saved file models
+        :rtype: [:class:`storage.models.ScaleFile`]
+        :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
         """
 
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
-        workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
-
-        if not os.path.exists(workspace_work_dir):
-            logger.info('Creating %s', workspace_work_dir)
-            os.makedirs(workspace_work_dir, mode=0755)
-
-        workspace.setup_upload_dir(upload_dir, workspace_work_dir)
-
-    def upload_files(self, upload_dir, work_dir, workspace, files_to_upload):
-        """Uploads the given files in the given upload directory into the workspace. This method assumes that
-        setup_upload_dir() has already been called with the same upload and work directories. The ScaleFile models will
-        be saved in an atomic database transaction.
-
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in uploading
-        :type work_dir: str
-        :param workspace: The workspace to upload files into
-        :type workspace: :class:`storage.models.Workspace`
-        :param files_to_upload: List of tuples (ScaleFile model, source path relative to upload directory, workspace
-            path for storing the file)
-        :type files_to_upload: list of (:class:`storage.models.ScaleFile`, str, str)
-        :returns: The list of the saved file models
-        :rtype: list of :class:`storage.models.ScaleFile`
-        """
-
-        upload_dir = os.path.normpath(upload_dir)
-        work_dir = os.path.normpath(work_dir)
-        workspace_work_dir = self._get_workspace_work_dir(work_dir, workspace)
+        if not workspace.is_active:
+            raise ArchivedWorkspace('%s is no longer active' % workspace.name)
 
         file_list = []
-        wksp_upload_list = []   # Info to pass the workspace so it can upload files
-        wksp_delete_list = []   # Info needed to delete the files if the database save fails
-        for entry in files_to_upload:
-            scale_file = entry[0]
-            upload_path = entry[1]
-            workspace_path = entry[2]
-            full_upload_path = os.path.join(upload_dir, upload_path)
+        for file_upload in file_uploads:
+            scale_file = file_upload.file
             media_type = scale_file.media_type
 
             # Determine file properties
-            file_name = os.path.basename(full_upload_path)
+            file_name = os.path.basename(file_upload.local_path)
             if not media_type:
                 media_type = get_media_type(file_name)
-            file_size = os.path.getsize(full_upload_path)
+            file_size = os.path.getsize(file_upload.local_path)
 
             scale_file.file_name = file_name
             scale_file.media_type = media_type
             scale_file.file_size = file_size
-            scale_file.file_path = workspace_path
             scale_file.workspace = workspace
             scale_file.is_deleted = False
             scale_file.deleted = None
 
             file_list.append(scale_file)
-            wksp_upload_list.append((upload_path, workspace_path))
-            wksp_delete_list.append(workspace_path)
 
-        try:
-            # Store files in workspace
-            workspace.upload_files(upload_dir, workspace_work_dir, wksp_upload_list)
+        # Store files in workspace
+        workspace.upload_files(file_uploads)
 
-            with transaction.atomic():
-                for scale_file in file_list:
-                    # save to create a pkey, update the country list, then save again
-                    scale_file.save()
-                    scale_file.set_countries()
-                    scale_file.save()
+        with transaction.atomic():
+            for file_upload in file_uploads:
+                scale_file = file_upload.file
+                # Save model to get model ID, update the country list, then save again
+                scale_file.save()
+                scale_file.set_countries()
+                scale_file.save()
 
-            return file_list
-        except Exception as ex:
-            # Attempt to clean up failed files before propagating exception
-            try:
-                delete_work_dir = self._get_delete_work_dir(work_dir, workspace)
-                logger.info('Creating %s', delete_work_dir)
-                os.makedirs(delete_work_dir, mode=0755)
-                workspace.delete_files(delete_work_dir, wksp_delete_list)
-            except Exception:
-                # Failure to delete should not override ex
-                logger.exception('Error cleaning up files that failed to upload')
-            raise ex
-
-    def _correct_workspace_path(self, workspace_path):
-        """Applies any needed corrections to the given workspace path (path should be normalized and relative)
-
-        :param workspace_path: The workspace path to correct
-        :type workspace_path: str
-        :returns: The corrected workspace path
-        :rtype: str
-        """
-
-        # Make sure path is relative
-        if os.path.isabs(workspace_path):
-            root_path = os.path.abspath(os.sep)
-            workspace_path = os.path.relpath(workspace_path, root_path)
-
-        return os.path.normpath(workspace_path)
-
-    def _get_delete_root_dir(self, work_dir):
-        """Returns the root directory for workspace sub-directories used for deleting files
-
-        :param work_dir: Absolute path to a local work directory available to Scale
-        :type work_dir: str
-        """
-
-        return os.path.join(work_dir, 'delete')
-
-    def _get_delete_work_dir(self, work_dir, workspace):
-        """Returns a work sub-directory used to delete files from the given workspace
-
-        :param work_dir: Absolute path to a local work directory available to Scale
-        :type work_dir: str
-        :param workspace: The workspace
-        :type workspace: :class:`storage.models.Workspace`
-        """
-
-        return os.path.join(self._get_delete_root_dir(work_dir), get_valid_filename(workspace.name))
-
-    def _get_workspace_root_dir(self, work_dir):
-        """Returns the root directory for workspace work sub-directories
-
-        :param work_dir: Absolute path to a local work directory available to Scale
-        :type work_dir: str
-        """
-
-        return os.path.join(work_dir, 'workspaces')
-
-    def _get_workspace_work_dir(self, work_dir, workspace):
-        """Returns a work sub-directory for the given workspace
-
-        :param work_dir: Absolute path to a local work directory available to Scale
-        :type work_dir: str
-        :param workspace: The workspace
-        :type workspace: :class:`storage.models.Workspace`
-        """
-
-        return os.path.join(self._get_workspace_root_dir(work_dir), get_valid_filename(workspace.name))
+        return file_list
 
 
 class ScaleFile(models.Model):
@@ -776,109 +563,87 @@ class Workspace(models.Model):
 
     objects = WorkspaceManager()
 
-    def cleanup_download_dir(self, download_dir, work_dir):
-        """Performs any cleanup necessary for a previous setup_download_dir() call
+    @property
+    def mount(self):
+        """If this workspace's broker uses a mounted file system, this property returns the remote location that should
+        be mounted into the task container. If this workspace's broker does not use a mounted file system, this property
+        should be None.
 
-        :param download_dir: Absolute path to the local directory for the files to download
-        :type download_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
+        :returns: The remote file system location to mount, possibly None
+        :rtype: string
         """
 
-        broker = self._get_broker()
-        broker.cleanup_download_dir(download_dir, work_dir)
+        return self._get_broker().mount
 
-    def cleanup_upload_dir(self, upload_dir, work_dir):
-        """Performs any cleanup necessary for a previous setup_upload_dir() call
+    @property
+    def workspace_mount_path(self):
+        """Returns the absolute local path within the container for the remote mount for this workspace
 
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
+        :returns: The absolute local path within the container for the remote mount
+        :rtype: string
         """
 
-        broker = self._get_broker()
-        broker.cleanup_upload_dir(upload_dir, work_dir)
+        return get_workspace_mount_path(self.name)
 
-    def delete_files(self, work_dir, workspace_paths):
-        """Deletes the workspace files with the given workspace paths
+    def delete_files(self, files):
+        """Deletes the given files using the workspace's broker. If this workspace's broker uses a mounted file system,
+        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
+        raised.
 
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
-        :param workspace_paths: The relative workspace paths of the files to delete
-        :type workspace_paths: list of str
+        :param files: List of files to delete
+        :type files: [:class:`storage.models.ScaleFile`]
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
-        broker = self._get_broker()
-        broker.delete_files(work_dir, workspace_paths)
+        mount_location = self._get_mount_location()
+        self._get_broker().delete_files(mount_location, files)
 
-    def download_files(self, download_dir, work_dir, files_to_download):
-        """Downloads the given workspace files into the given download directory. This method assumes that
-        setup_download_dir() has already been called with the same download and work directories.
+    def download_files(self, file_downloads):
+        """Downloads the given files to the given local file system paths using the workspace's broker. If this
+        workspace's broker uses a mounted file system, the workspace expects this file system to already be mounted at
+        workspace_mount_path or an exception will be raised.
 
-        :param download_dir: Absolute path to the local directory for the files to download
-        :type download_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
-        :param files_to_download: List of tuples (workspace path of a file to download, destination path relative to
-            download directory)
-        :type files_to_download: list of (str, str)
+        :param file_downloads: List of files to download
+        :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
-        broker = self._get_broker()
-        broker.download_files(download_dir, work_dir, files_to_download)
+        mount_location = self._get_mount_location()
 
-    def move_files(self, work_dir, files_to_move):
-        """Moves the workspace files to the new workspace paths
+        # Create parent directories for the local download paths if necessary
+        for file_download in file_downloads:
+            file_download_dir = os.path.dirname(file_download.local_path)
+            if not os.path.exists(file_download_dir):
+                logger.info('Creating %s', file_download_dir)
+                os.makedirs(file_download_dir, mode=0755)
 
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
-        :param files_to_move: List of tuples (current workspace path of a file to move, new workspace path for the file)
-        :type files_to_move: list of (str, str)
+        self._get_broker().download_files(mount_location, file_downloads)
+
+    def move_files(self, file_moves):
+        """Moves the given files to the new file system paths. If this workspace's broker uses a mounted file system,
+        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
+        raised.
+
+        :param file_moves: List of files to move
+        :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
-        broker = self._get_broker()
-        broker.move_files(work_dir, files_to_move)
+        mount_location = self._get_mount_location()
+        self._get_broker().move_files(mount_location, file_moves)
 
-    def setup_download_dir(self, download_dir, work_dir):
-        """Sets up the given download directory to download files from the workspace
+    def upload_files(self, file_uploads):
+        """Uploads the given files from the given local file system paths. If this workspace's broker uses a mounted
+        file system, the workspace expects this file system to already be mounted at workspace_mount_path or an
+        exception will be raised.
 
-        :param download_dir: Absolute path to the local directory for the files to download
-        :type download_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
+        :param file_uploads: List of files to upload
+        :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
-        broker = self._get_broker()
-        broker.setup_download_dir(download_dir, work_dir)
-
-    def setup_upload_dir(self, upload_dir, work_dir):
-        """Sets up the given upload directory to upload files into the workspace
-
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
-        """
-
-        broker = self._get_broker()
-        broker.setup_upload_dir(upload_dir, work_dir)
-
-    def upload_files(self, upload_dir, work_dir, files_to_upload):
-        """Uploads the given files in the given upload directory into the workspace. This method assumes that
-        setup_upload_dir() has already been called with the same upload and work directories.
-
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to the workspace
-        :type work_dir: str
-        :param files_to_upload: List of tuples (source path relative to upload directory, workspace path for storing the
-            file)
-        :type files_to_upload: list of (str, str)
-        """
-
-        broker = self._get_broker()
-        broker.upload_files(upload_dir, work_dir, files_to_upload)
+        mount_location = self._get_mount_location()
+        self._get_broker().upload_files(mount_location, file_uploads)
 
     def _get_broker(self):
         """Returns the configured broker for this workspace
@@ -887,11 +652,29 @@ class Workspace(models.Model):
         :rtype: :class:`storage.brokers.broker.Broker`
         """
 
-        broker_config = self.json_config['broker']
-        broker_type = broker_config['type']
-        broker = get_broker(broker_type)
-        broker.load_config(broker_config)
-        return broker
+        if not hasattr(self, '_broker'):
+            broker_config = self.json_config['broker']
+            broker_type = broker_config['type']
+            broker = get_broker(broker_type)
+            broker.load_configuration(broker_config)
+            self._broker = broker
+        return self._broker
+
+    def _get_mount_location(self):
+        """Returns the local mount location for this workspace's remote mount if it uses one, otherwise returns None. If
+        the workspace uses a remote mount and it is missing, an exception is raised.
+
+        :returns: The absolute local path within the container for the remote mount, possibly None
+        :rtype: string
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+        """
+
+        mount_location = None
+        if self.mount:
+            mount_location = self.workspace_mount_path
+            if not os.path.exists(mount_location):
+                raise MissingRemoteMount('Expected file system mounted at %s' % mount_location)
+        return mount_location
 
     class Meta(object):
         """meta information for the db"""

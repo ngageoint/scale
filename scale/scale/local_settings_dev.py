@@ -1,15 +1,12 @@
-#@PydevCodeAnalysisIgnore
-
-# This is a sample file that can be used as a starting place for creating a
-# local_settings.py file for development purposes. Copy this file and rename it
-# to local_settings.py. Then make any additional changes you need to configure
-# it for your development environment.
+# This is a sample file that can be used as a starting place for creating a local_settings.py file for development
+# purposes. Copy this file and rename it to local_settings.py. Then make any additional changes you need to configure it
+# for your development environment.
 
 # Include all the default settings.
 from settings import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'my-secret-development-key'
 
 # Use the following lines to enable developer/debug mode.
 DEBUG = True
@@ -18,8 +15,6 @@ TEMPLATE_DEBUG = DEBUG
 # Set the external URL context here
 FORCE_SCRIPT_NAME = '/scale-dev/api'
 USE_X_FORWARDED_HOST = True
-
-ALLOWED_HOSTS = []
 
 STATIC_ROOT = 'static/'
 STATIC_URL = '/scale/static/'
@@ -48,19 +43,16 @@ DATABASES = {
     },
 }
 
-# Node settings
-NODE_WORK_DIR = '/tmp/scale/work'
+# Logging configuration
+LOGGING = LOG_CONSOLE_FILE_DEBUG
 
-# If this is true, we don't delete the job_dir after it is finished.
-# This might fill up the disk but can be useful for debugging.
-SKIP_CLEANUP_JOB_DIR = False
+# Mesos connection information. Default for -m
+# This can be something like "127.0.0.1:5050"
+# or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
+MESOS_MASTER = None
 
-# Master settings
-MESOS_MASTER = ''
+# Zookeeper URL for scheduler leader election. If this is None, only a single not is used and election isn't performed.
+SCHEDULER_ZK = None
 
-# Metrics collection directory
-METRICS_DIR = '/tmp'
-
-# Base URL for influxdb access in the form http://<machine>:8086/db/<cadvisor_db_name>/series?u=<username>&p=<password>&
-# An invalid or None entry will disable gathering of these statistics
-#INFLUXDB_BASE_URL = None
+# The full name for the Scale Docker image (without version tag)
+SCALE_DOCKER_IMAGE = 'geoint/scale'

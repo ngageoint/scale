@@ -3,7 +3,6 @@ external_docker_registry: ''
 docker_registry: ''
 docker_api_version: '1.20'
 host_http_port: 80
-node_work_dir: '/scale_data'
 db_name: scale
 db_username: scale
 db_password: scale
@@ -11,3 +10,4 @@ db_host: localhost
 django_debug: 'False'
 scale_build_root: '/scale'
 django_build_dir: '{{ scale_build_root }}/scale'
+scale_docker_version: '{{ scale_version | join(".") }}'

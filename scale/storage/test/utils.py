@@ -50,7 +50,7 @@ def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size
     return scale_file
 
 
-def create_workspace(name=None, title=None, base_url=None, is_active=True, archived=None):
+def create_workspace(name=None, title=None, json_config=None, base_url=None, is_active=True, archived=None):
     """Creates a workspace model for unit testing
 
     :returns: The workspace model
@@ -68,4 +68,5 @@ def create_workspace(name=None, title=None, base_url=None, is_active=True, archi
     if is_active is False and not archived:
         archived = timezone.now()
 
-    return Workspace.objects.create(name=name, title=title, base_url=base_url, is_active=is_active, archived=archived)
+    return Workspace.objects.create(name=name, title=title, json_config=json_config, base_url=base_url,
+                                    is_active=is_active, archived=archived)

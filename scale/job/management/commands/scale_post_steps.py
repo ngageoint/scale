@@ -1,8 +1,7 @@
-'''Defines the command that performs the post-job steps'''
+"""Defines the command that performs the post-job steps"""
 from __future__ import unicode_literals
 
 import logging
-import subprocess
 import sys
 from optparse import make_option
 
@@ -10,8 +9,6 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.utils import DatabaseError, OperationalError
 
-import job.execution.file_system as file_system
-import job.settings as settings
 from error.models import Error
 from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
@@ -35,8 +32,8 @@ EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
 
 
 class Command(BaseCommand):
-    '''Command that performs the post-job steps for a job execution
-    '''
+    """Command that performs the post-job steps for a job execution
+    """
 
     option_list = BaseCommand.option_list + (
         make_option('-i', '--job-exe-id', action='store', type='int',
@@ -46,33 +43,24 @@ class Command(BaseCommand):
     help = 'Performs the post-job steps for a job execution'
 
     def handle(self, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the command.
-        '''
+        """
         exe_id = options.get('job_exe_id')
 
         logger.info('Command starting: scale_post_steps - Job Execution ID: %i', exe_id)
         try:
-            output_dir = file_system.get_job_exe_output_dir(exe_id)
-
-            # TODO: remove when we can
-            # This shouldn't be necessary once we have user namespaces in docker
-            if output_dir:
-                subprocess.call(['sudo', 'chmod', '-R', '777', output_dir])
-
             # Get the pre-loaded job_exe for efficiency
             job_exe = self._get_job_exe(exe_id)
 
             self._perform_post_steps(job_exe)
 
-            if not settings.settings.SKIP_CLEANUP_JOB_DIR:
-                self._cleanup(exe_id)
+            self._cleanup(exe_id)
         except Exception as ex:
             logger.exception('Job Execution %i: Error performing post-job steps', exe_id)
 
-            if not settings.settings.SKIP_CLEANUP_JOB_DIR:
-                self._cleanup(exe_id)
+            self._cleanup(exe_id)
 
             exit_code = GENERAL_FAIL_EXIT_CODE
             if isinstance(ex, OperationalError):
@@ -88,8 +76,8 @@ class Command(BaseCommand):
         logger.info('Command completed: scale_post_steps')
 
     def _cleanup(self, exe_id):
-        '''Cleans up the work directory for the job. This method is safe and should not throw any exceptions.
-        '''
+        """Cleans up the work directory for the job. This method is safe and should not throw any exceptions.
+        """
 
         try:
             cleanup_job_exe(exe_id)
@@ -98,23 +86,23 @@ class Command(BaseCommand):
 
     @retry_database_query
     def _get_job_exe(self, job_exe_id):
-        '''Returns the job execution for the ID with its related job and job type models
+        """Returns the job execution for the ID with its related job and job type models
 
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         :returns: The job execution model
         :rtype: :class:`job.models.JobExecution`
-        '''
+        """
 
         return JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
 
     @retry_database_query
     def _perform_post_steps(self, job_exe):
-        '''Populates the full set of command arguments for the job execution
+        """Populates the full set of command arguments for the job execution
 
         :param job_exe: The job execution
         :type job_exe: :class:`job.models.JobExecution`
-        '''
+        """
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()

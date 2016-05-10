@@ -11,7 +11,7 @@ from mock import patch
 import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
-from ingest.file_system import get_ingest_work_dir
+from ingest.container import SCALE_INGEST_MOUNT_PATH
 from ingest.models import Ingest
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
@@ -41,7 +41,7 @@ class TestStrikeDeferFile(TestCase):
         self.job_exe = job_test_utils.create_job_exe()
 
         self.strike_proc = StrikeProcessor(1, self.job_exe.id, self.config)
-        self.strike_dir = get_ingest_work_dir(self.job_exe.id)
+        self.strike_dir = SCALE_INGEST_MOUNT_PATH
 
     def test_config_bad_filename_regex(self):
         '''Tests failing validation for invalid filename regex.'''

@@ -1,4 +1,4 @@
-'''Defines the interface for executing a job'''
+"""Defines the interface for executing a job"""
 from __future__ import unicode_literals
 
 import json
@@ -13,8 +13,7 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.execution.file_system import get_job_exe_input_data_dir, \
-    get_job_exe_output_data_dir, get_job_exe_output_work_dir
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
 logger = logging.getLogger(__name__)
@@ -121,15 +120,15 @@ JOB_INTERFACE_SCHEMA = {
 
 
 class JobInterface(object):
-    '''Represents the interface for executing a job'''
+    """Represents the interface for executing a job"""
 
     def __init__(self, definition):
-        '''Creates a job interface from the given definition. If the definition is invalid, a
+        """Creates a job interface from the given definition. If the definition is invalid, a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` exception will be thrown.
 
         :param definition: The interface definition
         :type definition: dict
-        '''
+        """
         self.definition = definition
         self._param_names = set()
 
@@ -155,7 +154,7 @@ class JobInterface(object):
         self._create_validation_dicts()
 
     def add_output_to_connection(self, output_name, job_conn, input_name):
-        '''Adds the given output from the interface as a new input to the given job connection
+        """Adds the given output from the interface as a new input to the given job connection
 
         :param output_name: The name of the output to add to the connection
         :type output_name: str
@@ -163,7 +162,7 @@ class JobInterface(object):
         :type job_conn: :class:`job.configuration.data.job_connection.JobConnection`
         :param input_name: The name of the connection input
         :type input_name: str
-        '''
+        """
 
         output_data = self._get_output_data_item_by_name(output_name)
         if output_data:
@@ -177,19 +176,19 @@ class JobInterface(object):
                 job_conn.add_input_file(input_name, multiple, media_types, optional)
 
     def add_workspace_to_data(self, job_data, workspace_id):
-        '''Adds the given workspace ID to the given job data for every output in this job interface
+        """Adds the given workspace ID to the given job data for every output in this job interface
 
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param workspace_id: The workspace ID
         :type workspace_id: int
-        '''
+        """
 
         for file_output_name in self.get_file_output_names():
             job_data.add_output(file_output_name, workspace_id)
 
     def fully_populate_command_argument(self, job_data, job_environment, job_exe_id):
-        '''Return a fully populated command arguments string. If pre-steps are necessary
+        """Return a fully populated command arguments string. If pre-steps are necessary
         (see are_pre_steps_needed), they should be run before this.  populated with information
         from the job_data, job_environment, job_input_dir, and job_output_dir.This gets the properties and
         input_files from the job_data, the shared_resources from the job_environment, and ${input}
@@ -203,51 +202,49 @@ class JobInterface(object):
         :type job_environment: :class:`job.configuration.environment.job_environment.JobEnvironment`
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
-        '''
+        """
         # TODO: don't ignore job_envirnoment
         command_arguments = self.populate_command_argument_properties(job_data)
-
-        job_input_dir = get_job_exe_input_data_dir(job_exe_id)
-        job_output_dir = get_job_exe_output_data_dir(job_exe_id)
 
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
             input_type = input_data['type']
             if input_type == 'file':
-                param_dir = os.path.join(job_input_dir, input_name)
+                param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 file_path = self._get_one_file_from_directory(param_dir)
                 command_arguments = self._replace_command_parameter(command_arguments, input_name, file_path)
             elif input_type == 'files':
                 #TODO: verify folder exists
-                param_dir = os.path.join(job_input_dir, input_name)
+                param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 command_arguments = self._replace_command_parameter(command_arguments, input_name, param_dir)
 
-        command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir', job_output_dir)
+        command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir',
+                                                            SCALE_JOB_EXE_OUTPUT_PATH)
         return command_arguments
 
     def get_command(self):
-        '''Gets the command
+        """Gets the command
         :return: the command
         :rtype: str
-        '''
+        """
 
         return self.definition['command']
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this job interface
+        """Returns the internal dictionary that represents this job interface
 
         :returns: The internal dictionary
         :rtype: dict
-        '''
+        """
 
         return self.definition
 
     def get_file_output_names(self):
-        '''Returns the output parameter names for all file outputs
+        """Returns the output parameter names for all file outputs
 
         :return: The file output parameter names
         :rtype: list of str
-        '''
+        """
 
         names = []
         for output_data in self.definition['output_data']:
@@ -256,7 +253,7 @@ class JobInterface(object):
         return names
 
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
-        '''Stores the files and deletes any working directories
+        """Stores the files and deletes any working directories
 
         :param job_exe: The job execution model with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
@@ -267,11 +264,10 @@ class JobInterface(object):
         :return: A tuple of the job results and the results manifest generated by the job execution
         :rtype: (:class:`job.configuration.results.job_results.JobResults`,
             :class:`job.configuration.results.results_manifest.results_manifest.ResultsManifest`)
-        '''
+        """
 
         manifest_data = {}
-        job_output_dir = get_job_exe_output_data_dir(job_exe.id)
-        path_to_manifest_file = os.path.join(job_output_dir, 'results_manifest.json')
+        path_to_manifest_file = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'results_manifest.json')
         if os.path.exists(path_to_manifest_file):
             logger.info('Opening results manifest...')
             with open(path_to_manifest_file, 'r') as manifest_file:
@@ -321,38 +317,33 @@ class JobInterface(object):
             data_ended = geo_metadata.get('data_ended', None)
             data_types = parse_result.get('data_types', [])
             new_workspace_path = parse_result.get('new_workspace_path', None)
-            work_dir = None
             if new_workspace_path:
                 new_workspace_path = os.path.join(new_workspace_path, filename)
-                work_dir = os.path.join(get_job_exe_output_work_dir(job_exe.id), 'move_source_file_in_workspace')
-            job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path,
-                                                work_dir)
+            job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path)
 
         job_data.save_parse_results(job_data_parse_results)
         return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
 
-    def perform_pre_steps(self, job_data, job_environment, job_exe_id):
-        '''Performs steps prep work before a job can actually be run.  This includes downloading input files.
+    def perform_pre_steps(self, job_data, job_environment):
+        """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param job_environment: The job environment
         :type job_environment: :class:`job.configuration.environment.job_environment.JobEnvironment`
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        '''
+        """
         retrieve_files_dict = self._create_retrieve_files_dict()
-        job_data.setup_job_dir(retrieve_files_dict, job_exe_id)
+        job_data.setup_job_dir(retrieve_files_dict)
 
     def populate_command_argument_properties(self, job_data):
-        '''Return the command arguments string,
+        """Return the command arguments string,
         populated with the properties from the job_data.
 
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :return: command arguments for the given properties
         :rtype: str
-        '''
+        """
         command_arguments = self.definition['command_arguments']
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
@@ -364,7 +355,7 @@ class JobInterface(object):
         return command_arguments
 
     def validate_connection(self, job_conn):
-        '''Validates the given job connection to ensure that the connection will provide sufficient data to run a job
+        """Validates the given job connection to ensure that the connection will provide sufficient data to run a job
         with this interface
 
         :param job_conn: The job data
@@ -373,7 +364,7 @@ class JobInterface(object):
         :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If there is a configuration problem.
-        '''
+        """
 
         warnings = []
         warnings.extend(job_conn.validate_input_files(self._input_file_validation_dict))
@@ -384,7 +375,7 @@ class JobInterface(object):
         return warnings
 
     def validate_data(self, job_data):
-        '''Ensures that the job_data matches the job_interface description
+        """Ensures that the job_data matches the job_interface description
 
         :param job_data: The job data
         :type data: :class:`job.configuration.data.job_data.JobData`
@@ -392,7 +383,7 @@ class JobInterface(object):
         :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
-        '''
+        """
 
         warnings = []
         warnings.extend(job_data.validate_input_files(self._input_file_validation_dict))
@@ -401,12 +392,12 @@ class JobInterface(object):
         return warnings
 
     def _check_param_name_uniqueness(self):
-        '''Ensures all the parameter names are unique throws a
+        """Ensures all the parameter names are unique throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
 
         :return: command arguments for the given properties
         :rtype: str
-        '''
+        """
 
         for input_data in self.definition['input_data']:
             if input_data['name'] in self._param_names:
@@ -419,12 +410,12 @@ class JobInterface(object):
             self._param_names.add(shared_resource['name'])
 
     def _create_retrieve_files_dict(self):
-        '''creates parameter folders and returns the dict needed to call
+        """creates parameter folders and returns the dict needed to call
         :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
 
         :return: a dictionary representing the files to retrieve
         :rtype:  dist of str->tuple with input_name->(is_multiple, input_path)
-        '''
+        """
 
         retrieve_files_dict = {}
         for input_data in self.definition['input_data']:
@@ -432,12 +423,12 @@ class JobInterface(object):
             input_type = input_data['type']
             if input_type in ['file', 'files']:
                 is_multiple = input_type == 'files'
-                input_path = input_name
+                input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 retrieve_files_dict[input_name] = (is_multiple, input_path)
         return retrieve_files_dict
 
     def _create_validation_dicts(self):
-        '''Creates the validation dicts required by job_data to perform its validation'''
+        """Creates the validation dicts required by job_data to perform its validation"""
         for input_data in self.definition['input_data']:
             name = input_data['name']
             required = input_data['required']
@@ -463,14 +454,14 @@ class JobInterface(object):
                 self._output_file_manifest_dict[name] = (output_type == 'files', required)
 
     def _get_artifacts_from_stdout(self, stdout):
-        '''Parses stdout looking for artifacts of the form ARTIFACT:<ouput_name>:<output_path>
+        """Parses stdout looking for artifacts of the form ARTIFACT:<ouput_name>:<output_path>
         :param stdout: the standard out from the job execution
         :type stdout: str
 
         :return: a list of artifacts that were found by parsing stdout
         :rtype: a list of artifact dicts.  each artifact dict has a "name" and either a "path" or "paths
         see job.configuration.results.manifest.RESULTS_MANIFEST_SCHEMA
-        '''
+        """
         artifacts_found = {}
         artifacts_pattern = '^ARTIFACT:([^:]*):(.*)'
         for artifact_match in re.findall(artifacts_pattern, stdout, re.MULTILINE):
@@ -490,7 +481,7 @@ class JobInterface(object):
         return artifacts_found.values()
 
     def _get_one_file_from_directory(self, dir_path):
-        '''Checks a directory for one and only one file.  If there is not one file, raise a
+        """Checks a directory for one and only one file.  If there is not one file, raise a
         :exception:`job.configuration.data.exceptions.InvalidData`.  If there is one file, this method
         returns the full path of that file.
 
@@ -498,24 +489,24 @@ class JobInterface(object):
         :type data: string
         :return: The path to the one file in a given directory
         :rtype: str
-        '''
+        """
         entries_in_dir = os.listdir(dir_path)
         if len(entries_in_dir) != 1:
             raise InvalidData('Unable to create run command.  Expected one file in %s', dir_path)
         return os.path.join(dir_path, entries_in_dir[0])
 
     def _get_output_data_item_by_name(self, data_item_name):
-        '''gets an output data item with the given name
+        """gets an output data item with the given name
         :param data_item_name: The name of the data_item_name
         :type data_item_name: str
-        '''
+        """
 
         for output_data in self.definition['output_data']:
             if data_item_name == output_data['name']:
                 return output_data
 
     def _populate_default_values(self):
-        '''Goes through the definition and fills in any missing default values'''
+        """Goes through the definition and fills in any missing default values"""
         if 'version' not in self.definition:
             self.definition['version'] = '1.0'
         if 'input_data' not in self.definition:
@@ -530,7 +521,7 @@ class JobInterface(object):
         self._populate_output_data_defaults()
 
     def _populate_input_data_defaults(self):
-        '''populates the default values for any missing input_data values'''
+        """populates the default values for any missing input_data values"""
         for input_data in self.definition['input_data']:
             if 'required' not in input_data:
                 input_data['required'] = True
@@ -538,19 +529,19 @@ class JobInterface(object):
                 input_data['media_types'] = []
 
     def _populate_output_data_defaults(self):
-        '''populates the default values for any missing output_data values'''
+        """populates the default values for any missing output_data values"""
         for output_data in self.definition['output_data']:
             if 'required' not in output_data:
                 output_data['required'] = True
 
     def _populate_resource_defaults(self):
-        '''populates the default values for any missing shared_resource values'''
+        """populates the default values for any missing shared_resource values"""
         for shared_resource in self.definition['shared_resources']:
             if 'required' not in shared_resource:
                 shared_resource['required'] = True
 
     def _replace_command_parameter(self, command_arguments, param_name, param_value):
-        '''find all occurances of a parameter with a given name in the command_arguments string and
+        """find all occurances of a parameter with a given name in the command_arguments string and
         replace it with the param value. If the parameter replacement string in the command uses a
         custom output ( ${-f :foo}).
         The parameter will be replaced with the string preceding the colon and the given param value
@@ -564,7 +555,7 @@ class JobInterface(object):
         :type data: string
         :return: The string with all replacements made
         :rtype: str
-        '''
+        """
         ret_str = command_arguments
         param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
         pattern_prog = re.compile(param_pattern)
@@ -583,11 +574,11 @@ class JobInterface(object):
         return ret_str
 
     def _validate_command_arguments(self):
-        '''Ensure the command string is valid, and any parameters used
+        """Ensure the command string is valid, and any parameters used
         are actually in the input_data or shared_resources.
         Will raise a :exception:`job.configuration.data.exceptions.InvalidInterfaceDefinition`
         if the arguments are not valid
-        '''
+        """
         command_arguments = self.definition['command_arguments']
 
         param_pattern = '\$\{(?:[^\}]*:)?([^\}]*)\}'
