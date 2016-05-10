@@ -314,6 +314,54 @@
                     }
                 }
             }
+        },
+        {
+            "id": 5,
+            "name": "caffe-aircraft-detection",
+            "version": "1.0",
+            "title": "Caffe Aircraft Detection",
+            "description": "Detect aircraft using BVL Caffe deep learning algorithms",
+            "is_active": true,
+            "definition": {
+                "input_data": [{
+                    "media_types": ["image/nitf"],
+                    "required": true,
+                    "type": "file",
+                    "name": "input_file"
+                }],
+                "version": "1.0",
+                "jobs": [{
+                    "recipe_inputs": [{
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }],
+                    "name": "caffe-aircraft-detection",
+                    "job_type": {
+                        "name": "caffe-aircraft-detection",
+                        "version": "1.0"
+                    },
+                    "dependencies": []
+                }]
+            },
+            "revision_num": 1,
+            "created": "2016-05-10T21:19:16.320Z",
+            "last_modified": "2016-05-10T21:19:16.320Z",
+            "archived": null,
+            "trigger_rule": {
+                "type": "INGEST",
+                "name": "aircraft",
+                "is_active": true,
+                "configuration": {
+                    "condition": {
+                        "media_type": "",
+                        "data_types": ["image/nitf"]
+                    },
+                    "data": {
+                        "workspace_name": "products",
+                        "input_data_name": "input_file"
+                    }
+                }
+            }
         }
     ]
 }
