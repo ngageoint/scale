@@ -1,0 +1,147 @@
+{
+    "id": 4,
+    "name": "oil-detection",
+    "version": "1.0",
+    "title": "Oil Detection",
+    "description": "Detect oil on the surface of water",
+    "is_active": true,
+    "definition": {
+        "input_data": [{
+            "media_types": ["image/tiff"],
+            "required": true,
+            "type": "file",
+            "name": "input_file"
+        }],
+        "version": "1.0",
+        "jobs": [{
+            "recipe_inputs": [],
+            "name": "sam",
+            "job_type": {
+                "name": "sam",
+                "version": "1.0"
+            },
+            "dependencies": []
+        }, {
+            "recipe_inputs": [],
+            "name": "export-kml",
+            "job_type": {
+                "name": "export-kml",
+                "version": "1.5"
+            },
+            "dependencies": [{
+                "name": "sam",
+                "connections": [{
+                    "output": "sam-detections",
+                    "input": "infile"
+                }]
+            }]
+        }]
+    },
+    "created": "2016-05-10T16:32:31.718Z",
+    "last_modified": "2016-05-10T16:32:31.718Z",
+    "archived": null,
+    "trigger_rule": {
+        "type": "INGEST",
+        "name": "oil",
+        "is_active": true,
+        "configuration": {
+            "condition": {
+                "media_type": "",
+                "data_types": ["spectral"]
+            },
+            "data": {
+                "workspace_name": "products",
+                "input_data_name": "input_file"
+            }
+        }
+    },
+    "job_types": [{
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra. This technique, developed by J.W. Boardman, determines the spectral similarity between given reference spectra, r, (i.e., the image endmember in this case) and the spectra found at each pixel, t (Kruse, et al., 1992). The result of the comparison is reported as the angular difference (in radians) between the two spectra. Each pair of spectra is treated as a vector in nb-space, allowing the similarity of the spectra to be determined without regard to their relative brightness values. The result of the SAM calculation is an image for each reference spectrum, with high values (displayed in brighter values) corresponding to a better match between reference and test spectra.",
+        "category": "spectral",
+        "author_name": "Boardman",
+        "author_url": "http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19940012238.pdf",
+        "is_operational": true,
+        "icon_code": "f0e7",
+        "docker_privileged": false,
+        "docker_image": "10.4.4.10:5000/sam:1.0",
+        "priority": 1,
+        "timeout": 30,
+        "max_tries": 3,
+        "cpus_required": 0.25,
+        "mem_required": 512,
+        "mem_required_formatted": "512.00 MB",
+        "disk_out_const_required": 2048,
+        "disk_out_const_required_formatted": "2.00 GB",
+        "disk_out_mult_required": 0,
+        "job_type_interface": {
+            "output_data": [{
+                "media_type": "image/tiff",
+                "required": true,
+                "type": "file",
+                "name": "sam-detections"
+            }],
+            "shared_resources": [],
+            "command_arguments": "${infile} ${job_output_dir}",
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "image"
+            }, {
+                "media_types": ["text/csv"],
+                "required": true,
+                "type": "file",
+                "name": "signature"
+            }],
+            "version": "1.0",
+            "command": "./sam.sh"
+        },
+        "error_mapping": {},
+        "errors": {}
+    }, {
+        "id": 10,
+        "name": "export-kml",
+        "version": "1.5",
+        "title": "Export KML",
+        "description": "Creates KML from data",
+        "category": "export",
+        "is_operational": true,
+        "icon_code": "f0ac",
+        "docker_privileged": false,
+        "docker_image": "10.4.4.10:5000/export-kml:2.0",
+        "priority": 1,
+        "timeout": 30,
+        "max_tries": 3,
+        "cpus_required": 2,
+        "mem_required": 2048,
+        "mem_required_formatted": "2.00 GB",
+        "disk_out_const_required": 1024,
+        "disk_out_const_required_formatted": "1.00 GB",
+        "disk_out_mult_required": 0,
+        "job_type_interface": {
+            "output_data": [{
+                "media_type": "image/kml",
+                "required": true,
+                "type": "file",
+                "name": "kml"
+            }],
+            "shared_resources": [],
+            "command_arguments": "${infile} ${job_output_dir}",
+            "input_data": [{
+                "media_types": ["application/octet-stream"],
+                "required": true,
+                "type": "file",
+                "name": "infile"
+            }],
+            "version": "2.0",
+            "command": "./export_kml.sh"
+        },
+        "error_mapping": {},
+        "errors": {}
+    }],
+    "modified": false
+}
