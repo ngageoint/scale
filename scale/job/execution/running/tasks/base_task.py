@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta, abstractmethod
 
+from django.conf import settings
+
 from error.models import Error
 
 
@@ -39,7 +41,7 @@ class Task(object):
         self._agent_id = job_exe.node.slave_id
 
         # These values will vary by different task subclasses
-        self._uses_docker = True
+        self._uses_docker = False
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
@@ -88,10 +90,10 @@ class Task(object):
 
     @property
     def docker_params(self):
-        """Returns the Docker parameters used to run this task.
+        """Returns the Docker parameters used to run this task
 
         :returns: The Docker parameters
-        :rtype: [[str, str]]
+        :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
         return self._docker_params
@@ -185,6 +187,15 @@ class Task(object):
             else:
                 return Error.objects.get_builtin_error('task-launch')
         return None
+
+    def create_scale_image_name(self):
+        """Creates the full image name to use for running the Scale Docker image
+
+        :returns: The full Scale Docker image name
+        :rtype: string
+        """
+
+        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.VERSION)
 
     @abstractmethod
     def get_resources(self):

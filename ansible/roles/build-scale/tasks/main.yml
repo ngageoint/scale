@@ -67,6 +67,11 @@
   command: "install -m 0755 /tmp/linux-386/glide /usr/bin/"
   become: true
 
+- name: Setup go src
+  tags: [ build-scale, build-scale-minimal, build-scale-cli ]
+  file: path='{{ scale_build_root }}/src/github.com/ngageoint' state=directory
+  become: true
+
 - name: Setup GOPATH
   tags: [ build-scale, build-scale-minimal, build-scale-cli ]
   file: src='{{ scale_build_root }}' dest='{{ scale_build_root }}/src/github.com/ngageoint/scale' state=link
@@ -106,10 +111,10 @@
   file: path='{{ scale_build_root }}' state=directory mode=755
   become: true
 
-- name: Install scale
-  tags: [ build-scale, build-scale-sync ]
-  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
-  become: true
+#- name: Install scale
+#  tags: [ build-scale, build-scale-sync ]
+#  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
+#  become: true
 
 - name: Install python build libraries
   tags: [ build-scale, build-scale-minimal ]
@@ -132,9 +137,13 @@
   tags: [ build-scale, build-scale-minimal ]
   unarchive: copy=no src='{{ scale_build_root }}/scale-ui/deploy/scale-ui.tar.gz' dest='{{ scale_build_root }}/scale/ui'
 
-- name: Install local_settings.py
+#- name: Install local_settings.py
+#  tags: [ build-scale, build-scale-minimal ]
+#  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
+
+- name: Set scale version
   tags: [ build-scale, build-scale-minimal ]
-  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
+  template: src=__init__.py.j2 dest='{{ scale_build_root }}/scale/scale/__init__.py'
 
 - name: Create database migrations.
   tags: [ build-scale, build-scale-minimal ]

@@ -13,13 +13,13 @@
             "is_active": true,
             "is_paused": false,
             "requires_cleanup": false,
-            "uses_docker": false,
+            "uses_docker": true,
             "docker_privileged": false,
-            "docker_image": null,
+            "docker_image": "scale",
             "interface": {
                  "version": "1.0",
-                 "command": "scale_cleanup",
-                 "command_arguments": "${-i :Job Exe ID}",
+                 "command": "",
+                 "command_arguments": "scale_cleanup ${-i :Job Exe ID}",
                  "input_data": [ { "name": "Job Exe ID", "type": "property" } ]
             },
             "revision_num": 1,
@@ -44,8 +44,8 @@
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
-                 "command": "scale_cleanup",
-                 "command_arguments": "${-i :Job Exe ID}",
+                 "command": "",
+                 "command_arguments": "scale_cleanup ${-i :Job Exe ID}",
                  "input_data": [ { "name": "Job Exe ID", "type": "property" } ]
             },
             "created": "2015-11-06T00:00:00.0Z"
@@ -65,13 +65,13 @@
             "is_active": true,
             "is_paused": false,
             "requires_cleanup": false,
-            "uses_docker": false,
+            "uses_docker": true,
             "docker_privileged": false,
-            "docker_image": null,
+            "docker_image": "scale",
             "interface": {
                  "version": "1.0",
-                 "command": "scale_clock",
-                 "command_arguments": ""
+                 "command": "",
+                 "command_arguments": "scale_clock"
             },
             "revision_num": 1,
             "error_mapping": null,
@@ -95,8 +95,8 @@
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
-                 "command": "scale_clock",
-                 "command_arguments": ""
+                 "command": "",
+                 "command_arguments": "scale_clock"
             },
             "created": "2015-11-06T00:00:00.0Z"
         }

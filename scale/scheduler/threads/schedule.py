@@ -34,7 +34,8 @@ class SchedulingThread(object):
     SCHEDULE_LOOP_WARN_THRESHOLD = datetime.timedelta(seconds=1)
     SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, driver, job_exe_manager, job_type_manager, node_manager, offer_manager, scheduler_manager):
+    def __init__(self, driver, job_exe_manager, job_type_manager, node_manager, offer_manager, scheduler_manager,
+                 workspace_manager):
         """Constructor
 
         :param driver: The Mesos scheduler driver
@@ -49,6 +50,8 @@ class SchedulingThread(object):
         :type offer_manager: :class:`scheduler.offer.manager.OfferManager`
         :param scheduler_manager: The scheduler manager
         :type scheduler_manager: :class:`scheduler.sync.scheduler_manager.SchedulerManager`
+        :param workspace_manager: The workspace manager
+        :type workspace_manager: :class:`scheduler.sync.workspace_manager.WorkspaceManager`
         """
 
         self._driver = driver
@@ -57,6 +60,7 @@ class SchedulingThread(object):
         self._node_manager = node_manager
         self._offer_manager = offer_manager
         self._scheduler_manager = scheduler_manager
+        self._workspace_manager = workspace_manager
         self._job_types = {}  # {Job Type ID: Job Type}
         self._job_type_limit_available = {}  # {Job Type ID: Number still available to be scheduled}
         self._running = True
@@ -206,7 +210,8 @@ class SchedulingThread(object):
 
         try:
             # Schedule queued job executions and start their first tasks
-            scheduled_job_exes = self._schedule_queued_job_executions(queued_job_exes_to_schedule)
+            workspaces = self._workspace_manager.get_workspaces()
+            scheduled_job_exes = self._schedule_queued_job_executions(queued_job_exes_to_schedule, workspaces)
             self._job_exe_manager.add_job_exes(scheduled_job_exes)
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
@@ -235,19 +240,21 @@ class SchedulingThread(object):
         return total_num_tasks
 
     @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
-    def _schedule_queued_job_executions(self, job_executions):
+    def _schedule_queued_job_executions(self, job_executions, workspaces):
         """Schedules the given queued job executions
 
         :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
             run
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job executions
         :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
 
         started = now()
 
-        scheduled_job_executions = Queue.objects.schedule_job_executions(job_executions)
+        scheduled_job_executions = Queue.objects.schedule_job_executions(job_executions, workspaces)
 
         duration = now() - started
         msg = 'Query to schedule job executions took %.3f seconds'

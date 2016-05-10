@@ -27,7 +27,7 @@ class DatabaseSyncThread(object):
 
     THROTTLE = 10  # seconds
 
-    def __init__(self, driver, job_exe_manager, job_type_manager, node_manager, scheduler_manager):
+    def __init__(self, driver, job_exe_manager, job_type_manager, node_manager, scheduler_manager, workspace_manager):
         """Constructor
 
         :param driver: The Mesos scheduler driver
@@ -40,6 +40,8 @@ class DatabaseSyncThread(object):
         :type node_manager: :class:`scheduler.sync.node_manager.NodeManager`
         :param scheduler_manager: The scheduler manager
         :type scheduler_manager: :class:`scheduler.sync.scheduler_manager.SchedulerManager`
+        :param workspace_manager: The workspace manager
+        :type workspace_manager: :class:`scheduler.sync.workspace_manager.WorkspaceManager`
         """
 
         self._driver = driver
@@ -47,6 +49,7 @@ class DatabaseSyncThread(object):
         self._job_type_manager = job_type_manager
         self._node_manager = node_manager
         self._scheduler_manager = scheduler_manager
+        self._workspace_manager = workspace_manager
         self._running = True
 
     @property
@@ -108,6 +111,7 @@ class DatabaseSyncThread(object):
 
         self._scheduler_manager.sync_with_database()
         self._job_type_manager.sync_with_database()
+        self._workspace_manager.sync_with_database()
 
         scheduler = self._scheduler_manager.get_scheduler()
         self._node_manager.sync_with_database(scheduler.master_hostname, scheduler.master_port)

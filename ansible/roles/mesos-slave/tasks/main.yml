@@ -94,11 +94,6 @@
   command: easy_install /tmp/mesos-0.24.1-py2.7-linux-x86_64.egg
   become: true
 
-- name: Create node workdir
-  tags: mesos-slave
-  file: path='{{ node_work_dir }}' state=directory mode=0777
-  become: true
-
 - name: Create scale user
   tags: mesos-slave
   user: name=scale
@@ -124,17 +119,17 @@
   become: true
 
 # Need to do this or anisble will complain that we're trying to change a normal file to a symlink
-- name: Remove existing local_settings
-  tags: mesos-slave
-  file: path=/opt/scale/scale/local_settings.py state=absent
-  become: true
-  become_user: scale
+#- name: Remove existing local_settings
+#  tags: mesos-slave
+#  file: path=/opt/scale/scale/local_settings.py state=absent
+#  become: true
+#  become_user: scale
 
-- name: Setup local_settings
-  tags: mesos-slave
-  file: src=/etc/scale/local_settings.py dest=/opt/scale/scale/local_settings.py state=link
-  become: true
-  become_user: scale
+#- name: Setup local_settings
+#  tags: mesos-slave
+#  file: src=/etc/scale/local_settings.py dest=/opt/scale/scale/local_settings.py state=link
+#  become: true
+#  become_user: scale
 
 - name: Setup mesos zk
   tags: mesos-slave

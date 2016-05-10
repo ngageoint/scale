@@ -1,5 +1,5 @@
-'''Defines the Strike Processor which watches a directory for incoming files and prepares them to be ingested after they
-are fully transferred'''
+"""Defines the Strike Processor which watches a directory for incoming files and prepares them to be ingested after they
+are fully transferred"""
 from __future__ import unicode_literals
 
 import logging
@@ -9,7 +9,7 @@ from datetime import datetime
 from django.db import transaction
 from django.utils.timezone import now
 
-from ingest.file_system import get_ingest_work_dir
+from ingest.container import SCALE_INGEST_MOUNT_PATH
 from ingest.models import Ingest
 from queue.models import Queue
 from storage.media_type import get_media_type
@@ -21,15 +21,15 @@ logger = logging.getLogger(__name__)
 
 
 class StrikeProcessor(object):
-    '''This class processes files in a given directory (the Strike directory)
+    """This class processes files in a given directory (the Strike directory)
     by waiting until a file has been completely transferred to the Strike
     directory (tracking progress along the way) and then determining if the
     file should be ingested (by creating an ingest task) or deferred for later
     evaluation.
-    '''
+    """
 
     def __init__(self, strike_id, job_exe_id, configuration):
-        '''Constructor
+        """Constructor
 
         :param strike_id: The ID of the Strike process
         :type strike_id: int
@@ -37,14 +37,14 @@ class StrikeProcessor(object):
         :type job_exe_id: int
         :param configuration: The Strike configuration
         :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
-        '''
+        """
 
         self.strike_id = strike_id
         self.job_exe_id = job_exe_id
         self.configuration = configuration
         self.mount = None
 
-        self.strike_dir = get_ingest_work_dir(job_exe_id)
+        self.strike_dir = SCALE_INGEST_MOUNT_PATH
         self.rel_deferred_dir = 'deferred'
         self.rel_duplicate_dir = 'duplicate'
         self.rel_ingest_dir = 'ingesting'
@@ -55,19 +55,19 @@ class StrikeProcessor(object):
         self.load_configuration(configuration)
 
     def load_configuration(self, configuration):
-        '''Loads the given configuration
+        """Loads the given configuration
 
         :param configuration: The Strike configuration
         :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
-        '''
+        """
 
         self.configuration = configuration
 
         self.mount = self.configuration.get_mount()
 
     def mount_and_process_dir(self):
-        '''Mounts NFS and processes the current files in the Strike directory
-        '''
+        """Mounts NFS and processes the current files in the Strike directory
+        """
 
         try:
             if not os.path.exists(self.strike_dir):
@@ -82,13 +82,13 @@ class StrikeProcessor(object):
             nfs_umount(self.strike_dir)
 
     def _complete_transfer(self, ingest, size):
-        '''Completes the transfer for the given ingest and updates the database
+        """Completes the transfer for the given ingest and updates the database
 
         :param transfer: The ingest model
         :type transfer: :class:`ingest.models.Ingest`
         :param size: Total size of the file in bytes
         :type size: long
-        '''
+        """
 
         file_name = ingest.file_name
         file_path = os.path.join(self.strike_dir, file_name)
@@ -119,12 +119,12 @@ class StrikeProcessor(object):
         logger.info('Ingest marked as TRANSFERRED: %s', file_name)
 
     def _defer_file(self, ingest):
-        '''Defers the file for the given ingest by moving the file and updating
+        """Defers the file for the given ingest by moving the file and updating
         the database
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`
-        '''
+        """
 
         file_name = ingest.file_name
         file_path = os.path.join(self.strike_dir, file_name)
@@ -158,7 +158,7 @@ class StrikeProcessor(object):
             logger.info('Ingest for %s marked as ERRORED', file_name)
 
     def _final_filename(self, file_name):
-        '''Returns the final name (after transferring is done) for the given
+        """Returns the final name (after transferring is done) for the given
         file. If the file is already done transferring the name given is simply
         returned.
 
@@ -166,7 +166,7 @@ class StrikeProcessor(object):
         :type file_name: str
         :returns: The final name of the file after transferring
         :rtype: str
-        '''
+        """
 
         suffix = self.configuration.get_transfer_suffix()
         if file_name.endswith(suffix):
@@ -174,8 +174,8 @@ class StrikeProcessor(object):
         return file_name
 
     def _init_dirs(self):
-        ''' Creates the directories necessary for processing files
-        '''
+        """ Creates the directories necessary for processing files
+        """
 
         if not os.path.exists(self.deferred_dir):
             logger.info('Creating %s', self.deferred_dir)
@@ -188,14 +188,14 @@ class StrikeProcessor(object):
             os.makedirs(self.ingest_dir, mode=0755)
 
     def _is_still_transferring(self, file_name):
-        ''' Indicates whether the given file in the Strike directory is still
+        """ Indicates whether the given file in the Strike directory is still
         transferring
 
         :param file_name: The name of the file
         :type file_name: str
         :returns: True if the file is still transferring, False otherwise
         :rtype: bool
-        '''
+        """
 
         suffix = self.configuration.get_transfer_suffix()
         if file_name.endswith(suffix):
@@ -203,12 +203,12 @@ class StrikeProcessor(object):
         return False
 
     def _prepare_file_for_ingest(self, ingest):
-        '''Prepares the file for ingest by moving the file and starting an
+        """Prepares the file for ingest by moving the file and starting an
         ingest task
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`
-        '''
+        """
 
         file_name = ingest.file_name
         file_path = os.path.join(self.strike_dir, file_name)
@@ -239,8 +239,8 @@ class StrikeProcessor(object):
         self._start_ingest_task(ingest)
 
     def _process_dir(self):
-        '''Processes the current files in the Strike directory
-        '''
+        """Processes the current files in the Strike directory
+        """
         logger.debug('Processing %s', self.strike_dir)
 
         # Get current files ordered ascending by modification time
@@ -288,7 +288,7 @@ class StrikeProcessor(object):
                 logger.exception(msg, file_name)
 
     def _process_file(self, file_name, ingest):
-        '''Processes the given file in the Strike directory. The file_name
+        """Processes the given file in the Strike directory. The file_name
         argument represents a file in the Strike directory to process. If
         file_name is None, then the ingest argument represents an ongoing
         transfer where the file is unexpectedly not in the Strike directory.
@@ -300,7 +300,7 @@ class StrikeProcessor(object):
         :type file_name: str
         :param ingest: The ingest model for the file (possibly None)
         :type ingest: :class:`ingest.models.Ingest`
-        '''
+        """
         if file_name is None and ingest is None:
             raise Exception('Nothing for Strike to process')
         if file_name is None:
@@ -354,11 +354,11 @@ class StrikeProcessor(object):
             raise Exception(msg, ingest.status)
 
     def _start_ingest_task(self, ingest):
-        '''Starts a task for the given ingest
+        """Starts a task for the given ingest
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`
-        '''
+        """
         logger.info('Creating ingest task for %s', ingest.file_name)
 
         # TODO: change this when updating ingest job
@@ -374,9 +374,9 @@ class StrikeProcessor(object):
             }
             desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
             event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, ingest.transfer_ended)
-            job_id = Queue.objects.queue_new_job(ingest_job_type, data, event)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
 
-            ingest.job_id = job_id
+            ingest.job = ingest_job
             ingest.status = 'QUEUED'
             ingest.save()
 

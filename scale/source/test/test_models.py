@@ -1,14 +1,16 @@
+from __future__ import unicode_literals
+
 import datetime
 import os
 
 import django
 from django.test import TestCase
-from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 from mock import patch, MagicMock
 
 from job.test import utils as job_utils
 from source.models import SourceFile
+from storage.brokers.broker import FileMove
 from storage.models import Workspace
 from storage.test import utils as storage_utils
 from trigger.models import TriggerEvent
@@ -24,10 +26,10 @@ class TestSourceFileManagerSaveParseResults(TestCase):
     def setUp(self):
         django.setup()
 
-        workspace = Workspace.objects.create(name=u'Test Workspace', is_active=True, created=now(), last_modified=now())
+        workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(), last_modified=now())
 
-        self.src_file = SourceFile.objects.create(file_name=u'text.txt', media_type=u'text/plain', file_size=10,
-                                                  data_type=u'type', file_path=u'the_path', workspace=workspace)
+        self.src_file = SourceFile.objects.create(file_name='text.txt', media_type='text/plain', file_size=10,
+                                                  data_type='type', file_path='the_path', workspace=workspace)
 
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
@@ -36,14 +38,13 @@ class TestSourceFileManagerSaveParseResults(TestCase):
     def test_move_source_file(self, mock_move_files):
         """Tests calling save_parse_results so that the source file is moved to a different path in the workspace"""
 
-        work_dir = os.path.join('the', 'work', 'dir')
         new_path = os.path.join('the', 'new', 'workspace', 'path', self.src_file.file_name)
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, None, None, None, [], new_path, work_dir)
+        SourceFile.objects.save_parse_results(self.src_file.id, None, None, None, [], new_path)
 
         # Check results
-        mock_move_files.assert_called_once_with(work_dir, [(self.src_file, new_path)])
+        mock_move_files.assert_called_once_with([FileMove(self.src_file, new_path)])
 
     @patch('source.models.ScaleFile.objects.move_files')
     def test_move_source_file_denied(self, mock_move_files):
@@ -51,11 +52,10 @@ class TestSourceFileManagerSaveParseResults(TestCase):
 
         self.src_file.workspace.is_move_enabled = False
         self.src_file.workspace.save()
-        work_dir = os.path.join('the', 'work', 'dir')
         new_path = os.path.join('the', 'new', 'workspace', 'path', self.src_file.file_name)
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, None, None, None, [], new_path, work_dir)
+        SourceFile.objects.save_parse_results(self.src_file.id, None, None, None, [], new_path)
 
         # Check results
         self.assertFalse(mock_move_files.called, 'ScaleFile.objects.move_files() should not be called')
@@ -64,7 +64,8 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_COLLECTION_GEOJSON, self.started, self.ended, [], None, None)
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_COLLECTION_GEOJSON, self.started, self.ended,
+                                              [], None)
 
         # Check results
         src_file = SourceFile.objects.get(pk=self.src_file.id)
@@ -72,7 +73,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.parsed)
         self.assertEqual(src_file.data_started, self.started)
         self.assertEqual(src_file.data_ended, self.ended)
-        self.assertDictEqual(src_file.meta_data, {u'prop_a': u'A', u'prop_b': u'B'})
+        self.assertDictEqual(src_file.meta_data, {'prop_a': 'A', 'prop_b': 'B'})
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)
 
@@ -80,7 +81,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, None)
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
 
         # Check results
         src_file = SourceFile.objects.get(pk=self.src_file.id)
@@ -88,7 +89,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.parsed)
         self.assertEqual(src_file.data_started, self.started)
         self.assertEqual(src_file.data_ended, self.ended)
-        self.assertDictEqual(src_file.meta_data, {u'prop_a': u'A', u'prop_b': u'B'})
+        self.assertDictEqual(src_file.meta_data, {'prop_a': 'A', 'prop_b': 'B'})
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)
 
@@ -97,9 +98,9 @@ class TestSourceFileManagerSaveParseResults(TestCase):
 
         # Setup parse rule
         workspace = storage_utils.create_workspace()
-        configuration = {u'version': u'1.0',
-                         u'condition': {u'media_type': u'text/plain', u'data_types': [u'type']},
-                         u'data': {u'input_data_name': u'my_input', u'workspace_name': workspace.name}}
+        configuration = {'version': '1.0',
+                         'condition': {'media_type': 'text/plain', 'data_types': ['type']},
+                         'data': {'input_data_name': 'my_input', 'workspace_name': workspace.name}}
         rule_model = trigger_utils.create_trigger_rule(trigger_type='PARSE', configuration=configuration)
         interface = {'version': '1.0', 'command': '', 'command_arguments': '', 'input_data': [{'name': 'my_input', 'type': 'file'}]}
         job_type = job_utils.create_job_type(interface=interface)
@@ -107,18 +108,18 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         job_type.save()
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None, None)
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
         
         # Ensure there's an event for the parse
         evt = TriggerEvent.objects.first()
-        self.assertEqual(evt.description[u'version'], u'1.0')
-        self.assertEqual(evt.description[u'file_name'], u'text.txt')
+        self.assertEqual(evt.description['version'], '1.0')
+        self.assertEqual(evt.description['file_name'], 'text.txt')
 
     def test_valid_polygon(self):
         """Tests calling save_parse_results with valid arguments"""
 
         # Call method to test
-        SourceFile.objects.save_parse_results(self.src_file.id, POLYGON_GEOJSON, None, None, [], None, None)
+        SourceFile.objects.save_parse_results(self.src_file.id, POLYGON_GEOJSON, None, None, [], None)
 
         # Check results
         src_file = SourceFile.objects.get(pk=self.src_file.id)
@@ -136,34 +137,23 @@ class TestSourceFileManagerStoreFile(TestCase):
     def setUp(self):
         django.setup()
 
-    @patch('source.models.execute_command_line')
     @patch('storage.models.os.path.getsize')
     @patch('storage.models.os.mkdir')
-    def test_success_new(self, mock_mkdir, mock_getsize, mock_execute):
+    def test_success_new(self, mock_mkdir, mock_getsize):
         """Tests calling SourceFileManager.store_file() successfully with a new source file"""
         def new_getsize(path):
             return 100
         mock_getsize.side_effect = new_getsize
 
-        work_dir = 'work'
         workspace = storage_utils.create_workspace()
-        remote_path = u'my/remote/path/file.txt'
-        local_path = u'my/local/path/file.txt'
-        workspace.cleanup_upload_dir = MagicMock()
+        remote_path = 'my/remote/path/file.txt'
+        local_path = 'my/local/path/file.txt'
         workspace.upload_files = MagicMock()
-        workspace.setup_upload_dir = MagicMock()
-        workspace.delete_files = MagicMock()
-        
-        wksp_upload_dir = os.path.join(work_dir, 'upload')
-        wksp_work_dir = os.path.join(work_dir, 'work', 'workspaces', get_valid_filename(workspace.name))
 
-        src_file = SourceFile.objects.store_file(work_dir, local_path, [], workspace, remote_path)
+        src_file = SourceFile.objects.store_file(local_path, [], workspace, remote_path)
 
-        workspace.upload_files.assert_called_once_with(wksp_upload_dir, wksp_work_dir, [('file.txt', remote_path)])
-        self.assertListEqual(workspace.delete_files.call_args_list, [])
-
-        self.assertEqual(u'file.txt', src_file.file_name)
-        self.assertEqual(u'3d8e577bddb17db339eae0b3d9bcf180', src_file.uuid)
+        self.assertEqual('file.txt', src_file.file_name)
+        self.assertEqual('3d8e577bddb17db339eae0b3d9bcf180', src_file.uuid)
         self.assertEqual(remote_path, src_file.file_path)
-        self.assertEqual(u'text/plain', src_file.media_type)
+        self.assertEqual('text/plain', src_file.media_type)
         self.assertEqual(workspace.id, src_file.workspace_id)

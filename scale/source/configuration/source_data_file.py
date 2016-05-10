@@ -28,11 +28,10 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
             data_ended = parse_result[2]
             data_types = parse_result[3]
             new_workspace_path = parse_result[4]
-            work_dir = parse_result[5]
             if data_started:
                 data_started = parse_datetime(data_started)
             if data_ended:
                 data_ended = parse_datetime(data_ended)
 
             SourceFile.objects.save_parse_results(src_file_id, geo_json, data_started, data_ended, data_types,
-                                                  new_workspace_path, work_dir)
+                                                  new_workspace_path)

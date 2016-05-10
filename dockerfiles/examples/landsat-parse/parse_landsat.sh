@@ -1,5 +1,16 @@
 #!/bin/bash -x
 
+err_report() {
+    # print some useful permissions debugging info
+    ls -ld $1
+    ls -l $1/
+    id
+}
+trap 'err_report $2' ERR
+
+# ensure failure when a command errors
+set -e
+
 echo "Running landsat_parse.sh " $*
 mkdir /tmp/data
 tar -C /tmp/data -zxvf $1

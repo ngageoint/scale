@@ -10,9 +10,9 @@ from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
 from source.triggers.parse_trigger_handler import ParseTriggerHandler
+from storage.brokers.broker import FileMove, FileUpload
 from storage.exceptions import DuplicateFile
 from storage.models import ScaleFile
-from util.command import execute_command_line
 
 
 logger = logging.getLogger(__name__)
@@ -98,8 +98,7 @@ class SourceFileManager(models.GeoManager):
         return source
 
     @transaction.atomic
-    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path,
-                           work_dir):
+    def save_parse_results(self, src_file_id, geo_json, data_started, data_ended, data_types, new_workspace_path):
         """Saves the given parse results to the source file for the given ID. All database changes occur in an atomic
         transaction.
 
@@ -116,9 +115,6 @@ class SourceFileManager(models.GeoManager):
         :param new_workspace_path: New workspace path to move the source file to now that parse data is available. If
             None, the source file should not be moved.
         :type new_workspace_path: str
-        :param work_dir: Absolute path to a local work directory available to assist in moving the source file. Only
-            needed if new_workspace_path is not None.
-        :type work_dir: str
         """
 
         geom = None
@@ -148,9 +144,10 @@ class SourceFileManager(models.GeoManager):
         src_file.save()
 
         # Move the source file if a new workspace path is provided and the workspace allows it
+        old_workspace_path = src_file.file_path
         if new_workspace_path and src_file.workspace.is_move_enabled:
-            old_workspace_path = src_file.file_path
-            ScaleFile.objects.move_files(work_dir, [(src_file, new_workspace_path)])
+            ScaleFile.objects.move_files([FileMove(src_file, new_workspace_path)])
+            src_file.save()
 
         try:
             # Check trigger rules for parsed source files
@@ -158,15 +155,13 @@ class SourceFileManager(models.GeoManager):
         except Exception:
             # Move file back if there was an error
             if new_workspace_path and src_file.workspace.is_move_enabled:
-                ScaleFile.objects.move_files(work_dir, [(src_file, old_workspace_path)])
-
+                ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
+                src_file.save()
             raise
 
-    def store_file(self, work_dir, local_path, data_types, workspace, remote_path):
+    def store_file(self, local_path, data_types, workspace, remote_path):
         """Stores the given local source file in the workspace
 
-        :param work_dir: Absolute path to a local work directory available to assist in storing the source file
-        :type work_dir: str
         :param local_path: The absolute local path of the source file to store
         :type local_path: str
         :param data_types: The data type tags of the source file
@@ -180,43 +175,27 @@ class SourceFileManager(models.GeoManager):
         """
 
         file_name = os.path.basename(local_path)
-        upload_dir = os.path.join(work_dir, 'upload')
-        workspace_work_dir = os.path.join(work_dir, 'work')
-        if not os.path.exists(upload_dir):
-            logger.info('Creating %s', upload_dir)
-            os.mkdir(upload_dir, 0755)
-        if not os.path.exists(workspace_work_dir):
-            logger.info('Creating %s', workspace_work_dir)
-            os.mkdir(workspace_work_dir, 0755)
-        upload_file_path = os.path.join(upload_dir, file_name)
 
-        ScaleFile.objects.setup_upload_dir(upload_dir, workspace_work_dir, workspace)
+        # Check for duplicate file, else create new file
+        # TODO: fix race condition with many files with same name?
         try:
-            # Check for duplicate file, else create new file
-            # TODO: fix race condition with many files with same name?
-            try:
-                src_file = SourceFile.objects.get(file_name=file_name)
-                # Duplicate files that are deleted should be stored again
-                if not src_file.is_deleted:
-                    raise DuplicateFile('\'%s\' already exists' % file_name)
-            except SourceFile.DoesNotExist:
-                src_file = SourceFile()  # New file
+            src_file = SourceFile.objects.get(file_name=file_name)
+            # Duplicate files that are deleted should be stored again
+            if not src_file.is_deleted:
+                raise DuplicateFile('\'%s\' already exists' % file_name)
+        except SourceFile.DoesNotExist:
+            src_file = SourceFile()  # New file
 
-            # Add a stable identifier based on the file name
-            src_file.update_uuid(file_name)
+        # Add a stable identifier based on the file name
+        src_file.update_uuid(file_name)
 
-            # Add tags and store the new/updated source file
-            for tag in data_types:
-                src_file.add_data_type_tag(tag)
+        # Add tags and store the new/updated source file
+        for tag in data_types:
+            src_file.add_data_type_tag(tag)
 
-            # Link source file into upload directory and upload it
-            if not os.path.islink(upload_file_path):
-                logger.info('Creating link %s -> %s', upload_file_path, local_path)
-                execute_command_line(['ln', '-s', local_path, upload_file_path])
-            return ScaleFile.objects.upload_files(upload_dir, workspace_work_dir, workspace,
-                                                  [(src_file, file_name, remote_path)])[0]
-        finally:
-            ScaleFile.objects.cleanup_upload_dir(upload_dir, workspace_work_dir, workspace)
+        src_file.file_path = remote_path
+
+        return ScaleFile.objects.upload_files(workspace, [FileUpload(src_file, local_path)])[0]
 
 
 class SourceFile(ScaleFile):

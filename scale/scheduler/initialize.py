@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from job.models import Job, JobType
 from queue.models import Queue
+from scheduler.models import Scheduler
 from trigger.models import TriggerEvent
 
 
@@ -18,6 +19,8 @@ def initialize_system():
     """Performs any necessary functions needed for initializing Scale"""
 
     logger.info('Initializing system')
+
+    Scheduler.objects.initialize_scheduler()
 
     # Make sure clock job has been created
     clock_job_type = JobType.objects.get_clock_job_type()
