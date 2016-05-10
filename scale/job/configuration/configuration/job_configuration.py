@@ -242,11 +242,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        params = []
-        for param_dict in self._configuration['job_task']['docker_params']:
-            param = DockerParam(param_dict['flag'], param_dict['value'])
-            params.append(param)
-        return params
+        params = self._configuration['job_task']['docker_params']
+        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
 
     def get_post_task_docker_params(self):
         """Returns the Docker parameters needed for the post task
@@ -255,11 +252,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        params = []
-        for param_dict in self._configuration['post_task']['docker_params']:
-            param = DockerParam(param_dict['flag'], param_dict['value'])
-            params.append(param)
-        return params
+        params = self._configuration['post_task']['docker_params']
+        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
 
     def get_pre_task_docker_params(self):
         """Returns the Docker parameters needed for the pre task
@@ -268,11 +262,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        params = []
-        for param_dict in self._configuration['pre_task']['docker_params']:
-            param = DockerParam(param_dict['flag'], param_dict['value'])
-            params.append(param)
-        return params
+        params = self._configuration['pre_task']['docker_params']
+        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
 
     def get_job_task_workspaces(self):
         """Returns the workspaces needed for the job task
@@ -281,11 +272,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
-        workspaces = []
-        for workspace_dict in self._configuration['job_task']['workspaces']:
-            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
-            workspaces.append(workspace)
-        return workspaces
+        workspaces = self._configuration['job_task']['workspaces']
+        return [TaskWorkspace(workspace_dict['name'], workspace_dict['mode']) for workspace_dict in workspaces]
 
     def get_post_task_workspaces(self):
         """Returns the workspaces needed for the post task
@@ -294,11 +282,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
-        workspaces = []
-        for workspace_dict in self._configuration['post_task']['workspaces']:
-            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
-            workspaces.append(workspace)
-        return workspaces
+        workspaces = self._configuration['post_task']['workspaces']
+        return [TaskWorkspace(workspace_dict['name'], workspace_dict['mode']) for workspace_dict in workspaces]
 
     def get_pre_task_workspaces(self):
         """Returns the workspaces needed for the pre task
@@ -307,11 +292,8 @@ class JobConfiguration(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         """
 
-        workspaces = []
-        for workspace_dict in self._configuration['pre_task']['workspaces']:
-            workspace = TaskWorkspace(workspace_dict['name'], workspace_dict['mode'])
-            workspaces.append(workspace)
-        return workspaces
+        workspaces = self._configuration['pre_task']['workspaces']
+        return [TaskWorkspace(workspace_dict['name'], workspace_dict['mode']) for workspace_dict in workspaces]
 
     def get_dict(self):
         """Returns the internal dictionary that represents this job configuration

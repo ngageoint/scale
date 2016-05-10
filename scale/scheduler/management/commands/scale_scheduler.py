@@ -8,7 +8,6 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from scale import __version__
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
@@ -58,7 +57,7 @@ class Command(BaseCommand):
         # TODO: clean this up
         mesos_master = options.get('master')
 
-        logger.info('Scale Scheduler %s', __version__)
+        logger.info('Scale Scheduler %s', settings.VERSION)
 
         try:
             scheduler_zk = settings.SCHEDULER_ZK
