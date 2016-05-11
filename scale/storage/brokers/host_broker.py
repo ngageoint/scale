@@ -86,11 +86,7 @@ class HostBroker(Broker):
             os.chmod(path_to_upload, 0644)
 
     def validate_configuration(self, config):
-        """Validates the given configuration
-
-        :param config: The configuration as a dictionary
-        :type config: dict
-        :raises :class:`storage.brokers.exceptions.InvalidBrokerConfiguration`: If the given configuration is invalid
+        """See :meth:`storage.brokers.broker.Broker.validate_configuration`
         """
 
         # TODO: implement broker configuration validation
