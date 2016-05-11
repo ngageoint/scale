@@ -1,18 +1,18 @@
 ---
 # scale-web/tasks/main.yml
-- name: scale rest api server
-  tags: scale-web
-  docker:
-    name: scale-web
-    docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale-web:{{ scale_docker_version }}'
-    state: restarted
-    pull: always
-    restart_policy: always
-    volumes:
-      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
-      - '/etc/scale/scaleConfig.local.js:/opt/scale/ui/scripts/scaleConfig.local.js'
-  become: true
+#- name: scale rest api server
+#  tags: scale-web
+#  docker:
+#    name: scale-web
+#    docker_api_version: '{{ docker_api_version }}'
+#    image: '{{ docker_registry }}scale-web:{{ scale_docker_version }}'
+#    state: restarted
+#    pull: always
+#    restart_policy: always
+#    volumes:
+#      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
+#      - '/etc/scale/scaleConfig.local.js:/opt/scale/ui/scripts/scaleConfig.local.js'
+#  become: true
 
 - name: static scale web server
   tags: scale-web-static
@@ -23,9 +23,10 @@
     state: restarted
     pull: always
     restart_policy: always
-    volumes_from: scale-web
+    volumes_from: scale-scheduler
+    net: default
     links:
-      - 'scale-web:scale-web'
+      - 'scale-scheduler:scale-web'
     ports:
       - '{{ host_http_port }}:80'
   become: true
