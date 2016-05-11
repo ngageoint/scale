@@ -9,6 +9,7 @@ from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
 from queue.job_exe import QueuedJobExecution
 from queue.test import utils as queue_test_utils
+from scheduler.models import Scheduler
 from scheduler.offer.node import NodeOffers
 from scheduler.offer.offer import ResourceOffer
 
@@ -17,6 +18,8 @@ class TestNodeOffers(TestCase):
 
     def setUp(self):
         django.setup()
+
+        Scheduler.objects.initialize_scheduler()
 
         self.node_agent = 'agent_1'
         self.node_agent_paused = 'agent_paused'

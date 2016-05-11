@@ -1,0 +1,91 @@
+{
+    "id": 5,
+    "name": "caffe-aircraft-detection",
+    "version": "1.0",
+    "title": "Caffe Aircraft Detection",
+    "description": "Detect aircraft using BVL Caffe deep learning algorithms",
+    "is_active": true,
+    "definition": {
+        "input_data": [{
+            "media_types": ["image/nitf"],
+            "required": true,
+            "type": "file",
+            "name": "input_file"
+        }],
+        "version": "1.0",
+        "jobs": [{
+            "recipe_inputs": [{
+                "job_input": "input_file",
+                "recipe_input": "input_file"
+            }],
+            "name": "caffe-aircraft-detection",
+            "job_type": {
+                "name": "caffe-aircraft-detection",
+                "version": "1.0"
+            },
+            "dependencies": []
+        }]
+    },
+    "created": "2016-05-10T21:19:16.320Z",
+    "last_modified": "2016-05-10T21:19:16.320Z",
+    "archived": null,
+    "trigger_rule": {
+        "type": "INGEST",
+        "name": "aircraft",
+        "is_active": true,
+        "configuration": {
+            "condition": {
+                "media_type": "",
+                "data_types": ["nitf"]
+            },
+            "data": {
+                "workspace_name": "products",
+                "input_data_name": "input_file"
+            }
+        }
+    },
+    "job_types": [{
+        "id": 10,
+        "name": "caffe-aircraft-detection",
+        "version": "1.0",
+        "title": "Caffe Aircraft Detection",
+        "description": "Caffe is a deep learning framework made with expression, speed, and modularity in mind. It is developed by the Berkeley Vision and Learning Center (BVLC) and by community contributors. Yangqing Jia created the project during his PhD at UC Berkeley.",
+        "category": "export",
+        "author_name": "Yangqing Jia ",
+        "author_url": "http://caffe.berkeleyvision.org/",
+        "is_operational": true,
+        "icon_code": "f072",
+        "docker_privileged": false,
+        "docker_image": "10.4.4.10:5000/caffe-aircraft-detection:1.0",
+        "priority": 1,
+        "timeout": 30,
+        "max_tries": 3,
+        "cpus_required": 2,
+        "mem_required": 2048,
+        "mem_required_formatted": "2.00 GB",
+        "disk_out_const_required": 1024,
+        "disk_out_const_required_formatted": "1.00 GB",
+        "disk_out_mult_required": 0,
+        "job_type_interface": {
+            "output_data": [{
+                "media_type": "image/tiff",
+                "required": true,
+                "type": "file",
+                "name": "outfile"
+            }],
+            "shared_resources": [],
+            "command_arguments": "${infile} ${job_output_dir}",
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "infile"
+            }],
+            "version": "1.0",
+            "command": "./aircraft.py"
+        },
+        "error_mapping": {},
+        "errors": {}
+    }],
+    "modified": false
+}

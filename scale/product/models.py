@@ -1,4 +1,4 @@
-'''Defines the database model for product files'''
+"""Defines the database model for product files"""
 from __future__ import unicode_literals
 
 import logging
@@ -12,6 +12,7 @@ from django.db.models import Q
 import storage.geospatial_utils as geo_utils
 from recipe.models import RecipeJob
 from source.models import SourceFile
+from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
 
@@ -20,12 +21,12 @@ logger = logging.getLogger(__name__)
 
 
 class FileAncestryLinkManager(models.Manager):
-    '''Provides additional methods for handling ancestry links for files used in jobs
-    '''
+    """Provides additional methods for handling ancestry links for files used in jobs
+    """
 
     @transaction.atomic
     def create_file_ancestry_links(self, parent_ids, child_ids, job_exe):
-        '''Creates the appropriate file ancestry links for the given parent and child files. All database changes are
+        """Creates the appropriate file ancestry links for the given parent and child files. All database changes are
         made in an atomic transaction.
 
         :param parent_ids: Set of parent file IDs
@@ -35,7 +36,7 @@ class FileAncestryLinkManager(models.Manager):
         :type child_ids: set of int
         :param job_exe: The job execution that is creating the file links
         :type job_exe: :class:`job.models.JobExecution`
-        '''
+        """
         new_links = []
         created = timezone.now()
 
@@ -99,14 +100,14 @@ class FileAncestryLinkManager(models.Manager):
         FileAncestryLink.objects.bulk_create(new_links)
 
     def get_source_ancestors(self, file_ids):
-        '''Returns a list of the source file ancestors for the given file IDs. This will include any of the given files
+        """Returns a list of the source file ancestors for the given file IDs. This will include any of the given files
         that are source files themselves.
 
         :param file_ids: The file IDs
         :type file_ids: list[int]
         :returns: The list of ancestor source files
         :rtype: list[:class:`source.models.SourceFile`]
-        '''
+        """
 
         source_files = Q(id__in=file_ids)
         product_files = Q(descendants__descendant_id__in=file_ids)
@@ -114,7 +115,7 @@ class FileAncestryLinkManager(models.Manager):
 
 
 class FileAncestryLink(models.Model):
-    '''Represents an ancestry link between two files where the ancestor resulted in the descendant through a series of
+    """Represents an ancestry link between two files where the ancestor resulted in the descendant through a series of
     one or more job executions. A direct ancestry link (parent to child) is formed when the parent is passed as input to
     a job execution and the child is created as an output of that job execution.
 
@@ -143,7 +144,7 @@ class FileAncestryLink(models.Model):
 
     :keyword created: When the file link was created
     :type created: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     ancestor = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT, related_name='descendants')
     descendant = models.ForeignKey('product.ProductFile', blank=True, null=True, on_delete=models.PROTECT,
@@ -164,17 +165,17 @@ class FileAncestryLink(models.Model):
     objects = FileAncestryLinkManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'file_ancestry_link'
 
 
 class ProductFileManager(models.GeoManager):
-    '''Provides additional methods for handling product files
-    '''
+    """Provides additional methods for handling product files
+    """
 
     def get_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
                      is_operational=None, file_name=None, order=None):
-        '''Returns a list of product files within the given time range.
+        """Returns a list of product files within the given time range.
 
         :param started: Query product files updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -194,7 +195,7 @@ class ProductFileManager(models.GeoManager):
         :type order: list[str]
         :returns: The list of product files that match the time range.
         :rtype: list[:class:`product.models.ProductFile`]
-        '''
+        """
 
         # Fetch a list of product files
         products = ProductFile.objects.filter(has_been_published=True)
@@ -226,12 +227,45 @@ class ProductFileManager(models.GeoManager):
 
         return products
 
+    def get_details(self, product_id):
+        """Gets additional details for the given product model based on related model attributes.
+
+        :param product_id: The unique identifier of the product.
+        :type product_id: int
+        :returns: The product with extra related attributes: sources, ancestor/descendant products.
+        :rtype: :class:`source.models.ProductFile`
+        """
+
+        # Attempt to fetch the requested product
+        product = ProductFile.objects.all().select_related('workspace')
+        product = product.get(pk=product_id)
+
+        # Attempt to fetch all ancestor sources
+        sources = SourceFile.objects.filter(descendants__descendant_id=product.id)
+        sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
+        sources = sources.prefetch_related('countries').order_by('created')
+        product.sources = sources
+
+        # Attempt to fetch all ancestor products
+        ancestors = ProductFile.objects.filter(descendants__descendant_id=product.id)
+        ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
+        ancestors = ancestors.prefetch_related('countries').order_by('created')
+        product.ancestor_products = ancestors
+
+        # Attempt to fetch all descendant products
+        descendants = ProductFile.objects.filter(ancestors__ancestor_id=product.id)
+        descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
+        descendants = descendants.prefetch_related('countries').order_by('created')
+        product.descendant_products = descendants
+
+        return product
+
     def populate_source_ancestors(self, products):
-        '''Populates each of the given products with its source file ancestors in a field called "source_files"
+        """Populates each of the given products with its source file ancestors in a field called "source_files"
 
         :param products: List of products
         :type products: list of :class:`product.models.ProductFile`
-        '''
+        """
 
         product_lists = {}  # {product ID: list of source files}
         for product in products:
@@ -251,14 +285,14 @@ class ProductFileManager(models.GeoManager):
 
     @transaction.atomic
     def publish_products(self, job_exe_id, when):
-        '''Publishes all of the products produced by the given job execution. All database changes will be made in an
+        """Publishes all of the products produced by the given job execution. All database changes will be made in an
         atomic transaction.
 
         :param job_exe_id: The ID of the job execution
         :type job_exe_id: int
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         # Acquire model lock
         product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe_id).order_by('id')
@@ -268,17 +302,12 @@ class ProductFileManager(models.GeoManager):
             product.published = when
             product.save()
 
-    def upload_files(self, upload_dir, work_dir, file_entries, input_file_ids, job_exe, workspace):
-        '''Uploads the given local product files into the workspace. All database changes will be made in an atomic
-        transaction. This method assumes that ScaleFileManager.setup_upload_dir() has already been called with the same
-        upload and work directories.
+    def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
+        """Uploads the given local product files into the workspace. All database changes will be made in an atomic
+        transaction.
 
-        :param upload_dir: Absolute path to the local directory of the files to upload
-        :type upload_dir: str
-        :param work_dir: Absolute path to a local work directory available to assist in uploading
-        :type work_dir: str
-        :param file_entries: List of files where each file is a tuple of (source path relative to upload directory,
-            workspace path for storing the file, media_type)
+        :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
+            storing the file, media_type)
         :type file_entries: list of tuple(str, str, str)
         :param input_file_ids: List of identifiers for files used to produce the given file entries
         :type input_file_ids: list of int
@@ -288,7 +317,7 @@ class ProductFileManager(models.GeoManager):
         :type workspace: :class:`storage.models.Workspace`
         :returns: The list of the saved product models
         :rtype: list of :class:`product.models.ProductFile`
-        '''
+        """
 
         # Build a list of UUIDs for the input files
         input_files = ScaleFile.objects.filter(pk__in=input_file_ids).values('uuid', 'id').order_by('uuid')
@@ -310,6 +339,7 @@ class ProductFileManager(models.GeoManager):
             product.job_type = job_exe.job.job_type
             product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
             product.media_type = media_type
+            product.file_path = remote_path
 
             # Add a stable identifier based on the job type, input files, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
@@ -335,13 +365,13 @@ class ProductFileManager(models.GeoManager):
                     product.meta_data = props
                     product.center_point = geo_utils.get_center_point(geom)
 
-            products_to_save.append((product, local_path, remote_path))
+            products_to_save.append(FileUpload(product, local_path))
 
-        return ScaleFile.objects.upload_files(upload_dir, work_dir, workspace, products_to_save)
+        return ScaleFile.objects.upload_files(workspace, products_to_save)
 
 
 class ProductFile(ScaleFile):
-    '''Represents a product file that has been created by Scale. This is an extension of the
+    """Represents a product file that has been created by Scale. This is an extension of the
     :class:`storage.models.ScaleFile` model.
 
     :keyword file: The corresponding ScaleFile model
@@ -367,7 +397,7 @@ class ProductFile(ScaleFile):
     :type published: :class:`django.db.models.DateTimeField`
     :keyword unpublished: When this product was unpublished
     :type unpublished: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
@@ -383,5 +413,5 @@ class ProductFile(ScaleFile):
     objects = ProductFileManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'product_file'

@@ -85,23 +85,38 @@
                 field: 'file_size',
                 displayName: 'File Size',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.file_size_formatted }}</div>',
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.file_size_formatted }}</div>'
             },
-            { field: 'strike.title', displayName: 'Strike Process', enableFiltering: false },
+            {
+                field: 'strike.id',
+                displayName: 'Strike Process',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.strike.id }}</div>'
+            },
             {
                 field: 'status',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedStatus"><option ng-selected="{{ grid.appScope.statusValues[$index] == grid.appScope.selectedStatus }}" value="{{ grid.appScope.statusValues[$index] }}" ng-repeat="status in grid.appScope.statusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
             },
             {
                 field: 'transfer_started',
-                enableFiltering: false
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.transfer_started_formatted }}</div>'
             },
-            { field: 'transfer_ended', enableFiltering: false },
+            {
+                field: 'transfer_ended',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.transfer_ended_formatted }}</div>'
+            },
             {
                 field: 'ingest_started',
-                enableFiltering: false
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.ingest_started_formatted }}</div>'
             },
-            { field: 'ingest_ended', enableFiltering: false }
+            {
+                field: 'ingest_ended',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.ingest_ended_formatted }}</div>'
+            }
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();
@@ -190,7 +205,7 @@
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
+                offset = scaleConfig.headerOffset + scaleConfig.footerOffset + scaleConfig.dateFilterOffset,
                 gridMaxHeight = viewport.height - offset;
 
             $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';

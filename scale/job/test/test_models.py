@@ -4,6 +4,7 @@ import datetime
 
 import django
 import django.utils.timezone as timezone
+from django.conf import settings
 from django.test import TestCase, TransactionTestCase
 
 import error.test.utils as error_test_utils
@@ -12,11 +13,16 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import Error
+from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, SCALE_JOB_EXE_INPUT_PATH, \
+    SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
 from job.resources import JobResources
+from storage.container import get_workspace_mount_path
 from trigger.models import TriggerRule
 
 
@@ -24,6 +30,79 @@ class TestJobManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+    def test_populate_job_data(self):
+        """Tests calling JobManager.populate_job_data()"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_2 = storage_test_utils.create_workspace()
+        workspace_3 = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }, {
+                'name': 'Input 2',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_1.id
+            }, {
+                'name': 'Input 2',
+                'file_id': file_2.id
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'workspace_id': workspace_3.id
+            }]}
+        job_data = JobData(data)
+
+        Job.objects.populate_job_data(job, job_data)
+
+        job = Job.objects.get(id=job.id)
+
+        # Check that the correct workspaces are configured for the job
+        # Make sure both workspaces will be used for the pre-task in read-only mode
+        pre_task_workspaces = job.get_job_configuration().get_pre_task_workspaces()
+        self.assertEqual(len(pre_task_workspaces), 2)
+        name_set = set()
+        for workspace in pre_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RO)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
+        # Make sure both workspaces will be used for the job-task in read-only mode
+        job_task_workspaces = job.get_job_configuration().get_job_task_workspaces()
+        self.assertEqual(len(job_task_workspaces), 2)
+        name_set = set()
+        for workspace in job_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RO)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
+        # Make sure all input and output workspaces will be used for the post-task and they are in read-write mode
+        post_task_workspaces = job.get_job_configuration().get_post_task_workspaces()
+        self.assertEqual(len(post_task_workspaces), 3)
+        name_set = set()
+        for workspace in post_task_workspaces:
+            name_set.add(workspace.name)
+            self.assertEqual(workspace.mode, MODE_RW)
+        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name, workspace_3.name})
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
@@ -218,14 +297,38 @@ class TestJobExecutionManager(TransactionTestCase):
         self.assertDictEqual(latest_job_exes, expected_result, 'latest job executions do not match expected results')
 
     def test_schedule_job_executions(self):
-        job_exe_1 = job_test_utils.create_job_exe(status='QUEUED')
-        job_exe_2 = job_test_utils.create_job_exe(status='QUEUED')
+        workspace_1 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host', 'host_path': '/scale'}})
+        workspace_2 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host', 'host_path': '/scale'}})
+        configuration_1 = JobConfiguration()
+        configuration_1.add_pre_task_workspace(workspace_1.name, MODE_RO)
+        configuration_2 = JobConfiguration()
+        configuration_2.add_job_task_workspace(workspace_2.name, MODE_RW)
+        configuration_2.add_job_task_workspace('Dummy_name', MODE_RO)
+        job_exe_1 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_1.get_dict())
+        job_exe_2 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_2.get_dict())
+        input_data_volume_1 = '%s:%s:rw' % (get_job_exe_input_vol_name(job_exe_1.id), SCALE_JOB_EXE_INPUT_PATH)
+        input_data_volume_2 = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
+        output_data_volume_2 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
+        workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
+        workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
+        db = settings.DATABASES['default']
+        env_vars = [DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']), DockerParam('env', 'SCALE_DB_USER=' + db['USER']),
+                    DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']),
+                    DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])]
+        job_exe_1_pre_task_params = env_vars
+        job_exe_1_pre_task_params.extend([DockerParam('volume', input_data_volume_1),
+                                          DockerParam('volume', workspace_volume_1)])
+        job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2),
+                                     DockerParam('volume', output_data_volume_2),
+                                     DockerParam('volume', workspace_volume_2)]
         node_1 = node_test_utils.create_node()
         node_2 = node_test_utils.create_node()
         resources_1 = JobResources(cpus=1, mem=2, disk_in=3, disk_out=4, disk_total=7)
         resources_2 = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
+        workspaces = {workspace_1.name: workspace_1, workspace_2.name: workspace_2}
 
-        job_exes = JobExecution.objects.schedule_job_executions([(job_exe_1, node_1, resources_1), (job_exe_2, node_2, resources_2)])
+        job_exes = JobExecution.objects.schedule_job_executions([(job_exe_1, node_1, resources_1),
+                                                                 (job_exe_2, node_2, resources_2)], workspaces)
 
         for job_exe in job_exes:
             if job_exe.id == job_exe_1.id:
@@ -234,6 +337,13 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_1.job.status, 'RUNNING')
                 self.assertEqual(job_exe_1.node_id, node_1.id)
                 self.assertIsNotNone(job_exe_1.started)
+                params = job_exe_1.get_job_configuration().get_pre_task_docker_params()
+                self.assertEqual(len(params), len(job_exe_1_pre_task_params))
+                for i in range(len(params)):
+                    param = params[i]
+                    expected_param = job_exe_1_pre_task_params[i]
+                    self.assertEqual(param.flag, expected_param.flag)
+                    self.assertEqual(param.value, expected_param.value)
                 self.assertEqual(job_exe_1.cpus_scheduled, 1)
                 self.assertEqual(job_exe_1.mem_scheduled, 2)
                 self.assertEqual(job_exe_1.disk_in_scheduled, 3)
@@ -246,6 +356,13 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_2.job.status, 'RUNNING')
                 self.assertEqual(job_exe_2.node_id, node_2.id)
                 self.assertIsNotNone(job_exe_2.started)
+                params = job_exe_2.get_job_configuration().get_job_task_docker_params()
+                self.assertEqual(len(params), len(job_exe_2_job_task_params))
+                for i in range(len(params)):
+                    param = params[i]
+                    expected_param = job_exe_2_job_task_params[i]
+                    self.assertEqual(param.flag, expected_param.flag)
+                    self.assertEqual(param.value, expected_param.value)
                 self.assertEqual(job_exe_2.cpus_scheduled, 10)
                 self.assertEqual(job_exe_2.mem_scheduled, 11)
                 self.assertEqual(job_exe_2.disk_in_scheduled, 12)

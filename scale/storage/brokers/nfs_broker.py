@@ -5,7 +5,7 @@ import logging
 import os
 import shutil
 
-from storage.brokers.broker import Broker
+from storage.brokers.broker import OldBroker
 from storage.nfs import nfs_umount, nfs_mount
 from util.command import execute_command_line
 
@@ -13,7 +13,7 @@ from util.command import execute_command_line
 logger = logging.getLogger(__name__)
 
 
-class NfsBroker(Broker):
+class NfsBroker(OldBroker):
     """Broker that utilizes the NFS (Network File System) protocol
     """
 

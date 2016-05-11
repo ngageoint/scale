@@ -2,9 +2,8 @@
     'use strict';
 
     angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
+        $scope.containerStyle = '';
         $scope.requestedJobTypeId = parseInt($routeParams.id);
-        $scope.masterContainerStyle = '';
-        $scope.detailContainerStyle = '';
         $scope.jobTypes = [];
         $scope.jobTypeIds = [];
         $scope.jobTypeCount = 0;
@@ -19,8 +18,7 @@
         $scope.healthData12 = {};
         $scope.healthData24 = {};
         $scope.activityIcon = '<i class="fa fa-pulse">&#x' + scaleConfig.activityIconCode + '</i>';
-        $scope.selectJobClass = 'visible';
-        $scope.jobDetailsClass = 'invisible';
+        $scope.jobDetailsClass = 'hidden';
         $scope.pauseBtnClass = 'fa-pause';
         $scope.user = userService.getUserCreds();
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -40,7 +38,6 @@
             //formatJobTypeStats();
 
             $scope.jobDetailsClass = 'visible';
-            $scope.selectJobClass = 'invisible';
         };
 
         $scope.togglePause = function () {
@@ -157,18 +154,15 @@
             navService.updateLocation('jobs');
         };
 
+        initialize();
+
         angular.element(document).ready(function () {
             // set container heights equal to available page height
             var viewport = scaleService.getViewportSize(),
-                masterOffset = scaleConfig.headerOffset,
-                detailOffset = scaleConfig.headerOffset + document.getElementsByClassName('nav-tabs')[0].scrollHeight,
-                masterMaxHeight = viewport.height - masterOffset,
-                detailMaxHeight = viewport.height - detailOffset;
+                offset = scaleConfig.headerOffset,
+                containerMaxHeight = viewport.height - offset;
 
-            $scope.masterContainerStyle = 'height: ' + masterMaxHeight + 'px; max-height: ' + masterMaxHeight + 'px; overflow-y: auto;';
-            $scope.detailContainerStyle = 'height: ' + detailMaxHeight + 'px; max-height: ' + detailMaxHeight + 'px; overflow-y: auto;';
+            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
         });
-
-        initialize();
     });
 })();

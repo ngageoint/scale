@@ -56,14 +56,32 @@
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedRecipeType"><option ng-selected="{{ grid.appScope.recipeTypeValues[$index].id == grid.appScope.selectedRecipeType }}" value="{{ grid.appScope.recipeTypeValues[$index].id }}" ng-repeat="recipeType in grid.appScope.recipeTypeValues track by $index">{{ grid.appScope.recipeTypeValues[$index].title }} {{ grid.appScope.recipeTypeValues[$index].version }}</option></select>'
             },
             //{ field: 'created', enableFiltering: false, cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\''},
-            { field: 'created', enableFiltering: false},
+            {
+                field: 'created',
+                displayName: 'Created (Z)',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.created_formatted }}</div>'
+            },
             {
                 field: 'last_modified',
+                displayName: 'Last Modified (Z)',
                 enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
                 //cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'',                
             },
-            { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' },
-            { field: 'completed', enableFiltering: false, enableSorting: true, cellTemplate: '<div class="ui-grid-cell-contents status completed" ng-if="row.entity.completed">Completed {{ row.entity.last_status_change }}</div>' }
+            {
+                field: 'duration',
+                enableFiltering: false,
+                enableSorting: false,
+                width: 120,
+                cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
+            },
+            {
+                field: 'completed',
+                enableFiltering: false,
+                enableSorting: true,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.completed_formatted }}</div>'
+            }
         ];
 
         $scope.gridOptions = gridFactory.defaultGridOptions();

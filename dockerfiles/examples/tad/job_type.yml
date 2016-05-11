@@ -1,0 +1,23 @@
+name: tad
+version: "1.0.0"
+title: Topological Anomaly Detector
+description: Detects spectral anomalies using the tad anomaly detector. Stores result in a PostGIS database.
+author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
+docker_image: "geoint/tad_1.0"
+priority: 250
+timeout: 300
+max_tries: 2
+cpus_required: 3.0
+mem_required: 1024.0
+interface:
+  version: "1.0"
+  command: "./runOpticks.sh"
+  command_arguments: '${image} ${job_output_dir} ${pg_connect_string}'
+  input_data:
+    - media_types: [ "image/tiff" ]
+      required: true
+      type: file
+      name: image
+    - required: true
+      type: property
+      name: pg_connect_string

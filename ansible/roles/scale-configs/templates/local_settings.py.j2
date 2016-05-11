@@ -41,13 +41,6 @@ DATABASES = {
    },
 }
 
-# Node settings
-NODE_WORK_DIR = '{{ node_work_dir }}'
-
-# If this is true, we don't delete the job_dir after it is finished.
-# This might fill up the disk but can be useful for debugging.
-SKIP_CLEANUP_JOB_DIR = False
-
 # Master settings
 MESOS_MASTER = '{{ mesos_zk }}'
 

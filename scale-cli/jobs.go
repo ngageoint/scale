@@ -1,8 +1,6 @@
 package scalecli
 
 import (
-)
-import (
     "gopkg.in/resty.v0"
     "fmt"
     "encoding/json"
@@ -20,21 +18,21 @@ type JobTypeInterface struct {
 type InputData struct {
     Name            string `json:"name"`
     Type            string `json:"type"`
-    Required        bool `json:"required,omitempty"`
+    Required        bool `json:"required"`
     MediaTypes      []string `json:"media_types,omitempty"`
 }
 
 type OutputData struct {
     Name            string `json:"name"`
     Type            string `json:"type"`
-    Required        bool `json:"required,omitempty"`
+    Required        bool `json:"required"`
     MediaType       string `json:"media_type,omitempty"`
 }
 
 type SharedResources struct {
     Name            string `json:"name"`
     Type            string `json:"type"`
-    Required        bool `json:"required,omitempty"`
+    Required        bool `json:"required"`
 }
 
 type JobData struct {

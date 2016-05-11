@@ -12,16 +12,18 @@ from error.models import Error, CACHED_BUILTIN_ERRORS
 from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
+from scheduler.models import Scheduler
 
 
 class TestRunningJobExecution(TestCase):
     """Tests the RunningJobExecution class"""
 
-    fixtures = ['basic_job_errors.json', 'scheduler.json']
+    fixtures = ['basic_job_errors.json']
 
     def setUp(self):
         django.setup()
 
+        Scheduler.objects.initialize_scheduler()
         job_type = job_test_utils.create_job_type(max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
@@ -259,7 +261,7 @@ class TestRunningJobExecution(TestCase):
         # Check results
         job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
         self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error.name, 'task-launch')
+        self.assertEqual(job_exe.error.name, 'docker-task-launch')
 
     def test_job_task_launch_error(self):
         """Tests running through a job execution where a Docker-based job-task fails to launch"""
@@ -350,7 +352,7 @@ class TestRunningJobExecution(TestCase):
         # Check results
         job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
         self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error.name, 'task-launch')
+        self.assertEqual(job_exe.error.name, 'docker-task-launch')
 
     def test_general_algorithm_error(self):
         """Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)

@@ -43,9 +43,10 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     :type disk_total_required: float
     """
 
-    job_exe = job_test_utils.create_job_exe(job_type=job_type, status='QUEUED')
+    job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
+    job_exe = job_test_utils.create_job_exe(job=job, status='QUEUED')
 
-    return Queue.objects.create(job_exe=job_exe, job_type=job_exe.job.job_type, priority=priority,
+    return Queue.objects.create(job_exe=job_exe, job=job, job_type=job.job_type, priority=priority,
                                 cpus_required=cpus_required, mem_required=mem_required,
                                 disk_in_required=disk_in_required, disk_out_required=disk_out_required,
                                 disk_total_required=disk_total_required, queued=timezone.now())

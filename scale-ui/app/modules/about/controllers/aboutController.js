@@ -11,10 +11,7 @@
 
         initialize();
 
-        $scope.$watch('stateService.getVersion()', function (newValue, oldValue) {
-            if (angular.equals(newValue, oldValue)) {
-                return;
-            }
+        $scope.$watch('stateService.getVersion()', function (newValue) {
             $scope.version = newValue;
         });
     });

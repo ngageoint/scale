@@ -1,0 +1,38 @@
+{
+  "id": 6,
+  "name": "wv2-atmosphere-corr",
+  "title": "WorldView-2 Atmospheric Correction",
+  "version": "1.0.1",
+  "description": "Applies Atmospheric Correction to WorldView-2 GeoTiffs",
+  "category": "worldview",
+  "is_operational": true,
+  "icon_code": "f14e",
+  "docker_privileged": false,
+  "docker_image": "10.4.4.10:5000/wv2-parse:1.0.1",
+  "priority": 1,
+  "timeout": 30,
+  "max_tries": 3,
+  "cpus_required": 4.0,
+  "mem_required": 2048.0,
+  "disk_out_const_required": 2048.0,
+  "disk_out_mult_required": 0.0,
+  "interface": {
+    "output_data": [{
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "image",
+      "name": "wv2-corrected"
+    }],
+    "shared_resources": [],
+    "command_arguments": "${infile} ${job_output_dir}",
+    "input_data": [{
+      "media_types": ["image/nitf"],
+      "required": true,
+      "type": "image",
+      "name": "infile"
+    }],
+    "version": "1.0.1",
+    "command": "./correct_wv2.py"
+  },
+  "error_mapping": {}
+}

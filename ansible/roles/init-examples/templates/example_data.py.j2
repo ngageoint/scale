@@ -4,7 +4,6 @@ from job.configuration.interface.job_interface import JobInterface
 import ingest.models
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 import recipe.models
-import storage.models
 import trigger.models
 import trigger.handler as trigger_handler
 
@@ -17,13 +16,13 @@ if not storage.models.Workspace.objects.filter(name="raw").exists():
     storage.models.Workspace.objects.create(name="raw", title="raw", description="Raw ingested data",
         base_url="http://{{ example_server }}:8080/raw",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/raw" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/raw", "type": "host"}}).save()
 
 if not storage.models.Workspace.objects.filter(name="products").exists():
     storage.models.Workspace.objects.create(name="products", title="products", description="Product storage",
         base_url="http://{{ example_server }}:8080/products",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/products" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/products", "type": "host"}}).save()
 
 # Triggers
 if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
@@ -39,32 +38,6 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
             "workspace_name": "products"
         }
     }, "landsat-parse", True)
-if not trigger.models.TriggerRule.objects.filter(name="binary-ingest").exists():
-    rule_handler = trigger_handler.get_trigger_rule_handler("INGEST")
-    trigger_rule = rule_handler.create_trigger_rule({
-        "version": "1.0",
-        "condition": {
-            "media_type": "application/octet-stream",
-            "data_types": []
-        },
-        "data": {
-            "input_data_name": "infile",
-            "workspace_name": "products"
-        }
-    }, "binary-ingest", True)
-if not trigger.models.TriggerRule.objects.filter(name="binary-parse").exists():
-    rule_handler = trigger_handler.get_trigger_rule_handler("PARSE")
-    trigger_rule = rule_handler.create_trigger_rule({
-        "version": "1.0",
-        "condition": {
-            "media_type": "application/octet-stream",
-            "data_types": []
-        },
-        "data": {
-            "input_data_name": "infile",
-            "workspace_name": "products"
-        }
-    }, "binary-parse", True)
 
 # Job types
 if not job.models.JobType.objects.filter(name="landsat-parse").exists():
@@ -83,22 +56,6 @@ if not job.models.JobType.objects.filter(name="landsat-parse").exists():
                                                     docker_image="%slandsat-parse_1.0:%s" % (registry, docker_tag),
                                                     priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
     jt.title = "Landsat Parse"
-    jt.save()
-if not job.models.JobType.objects.filter(name="binary-parse").exists():
-    trigger_rule = trigger.models.TriggerRule.objects.get(name="binary-ingest")
-    assert(trigger_rule is not None)
-    jt = job.models.JobType.objects.create_job_type("binary-parse", "1.0.0",
-            JobInterface({"output_data": [],
-            "shared_resources": [],
-            "command_arguments": "${infile} ${job_output_dir}",
-            "input_data": [
-                {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
-            "version": "1.0", "command": "parse_binary.sh"}),
-        description="Parse arbitrary binary files extracting the date from the file metadata",
-        docker_image="%sparse-binary_1.0:%s" % (registry, docker_tag),
-        priority=200, timeout=300, max_tries=1, cpus_required=0.25, mem_required=100.,
-        trigger_rule=trigger_rule)
-    jt.title = "Binary File Parse"
     jt.save()
 if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
     jt = job.models.JobType.objects.create_job_type("landsat-ndwi", "1.0.0",
@@ -128,51 +85,6 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
                                                     priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat Tiles"
     jt.save()
-if not job.models.JobType.objects.filter(name="ace").exists():
-    jt = job.models.JobType.objects.create_job_type("ace", "1.0.0",
-                                                    JobInterface({"output_data": [
-                                                        {"media_type": "image/tiff", "required": True, "type": "file", "name": "results"}],
-                                                        "shared_resources": [],
-                                                        "command_arguments": "${image} ${job_output_dir}",
-                                                        "input_data": [
-                                                            {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
-                                                        "version": "1.0", "command": "./runOpticks.sh"}),
-                                                    description="Generate Principal Components image.",
-                                                    docker_image="%sace_1.0:%s" % (registry, docker_tag),
-                                                    priority=250, timeout=300, max_tries=3, cpus_required=2., mem_required=1024.)
-    jt.title = "Adaptive Cosine Estimation"
-    jt.save()
-if not job.models.JobType.objects.filter(name="vash").exists():
-    trigger_rule = trigger.models.TriggerRule.objects.get(name="binary-parse")
-    assert(trigger_rule is not None)
-    jt = job.models.JobType.objects.create_job_type("vash", "1.0.0",
-            JobInterface({"output_data": [
-                {"media_type": "image/jpeg", "required": True, "type": "file", "name": "results"}],
-            "shared_resources": [],
-            "command_arguments": "${infile} ${job_output_dir}",
-            "input_data": [
-                {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
-            "version": "1.0", "command": "./run.sh"}),
-        description="Generate a Visual Hash (vash) of the data.",
-        docker_image="%svash_1.0:%s" % (registry, docker_tag),
-        priority=250, timeout=300, max_tries=1, cpus_required=0.5, mem_required=100.,
-        trigger_rule=trigger_rule)
-    jt.title = "Visual Hash"
-    jt.save()
-if not job.models.JobType.objects.filter(name="pca").exists():
-    jt = job.models.JobType.objects.create_job_type("pca", "1.0.0",
-            JobInterface({"output_data": [
-                {"media_type": "image/tiff", "required": True, "type": "file", "name": "pca"}],
-            "shared_resources": [],
-            "command_arguments": "${image} ${job_output_dir}",
-            "input_data": [
-                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
-            "version": "1.0", "command": "./runOpticks.sh"}),
-        description="Generate Principal Components image.",
-        docker_image="%spca_1.0:%s" % (registry, docker_tag),
-        priority=250, timeout=300, max_tries=3, cpus_required=2., mem_required=1024.)
-    jt.title = "Principal Components Analysis"
-    jt.save()
 
 try:
     ingest_jt = job.models.JobType.objects.filter(name="scale-ingest")
@@ -182,7 +94,7 @@ try:
             ingest_jt.mem_required = 512.
             ingest_jt.save()
 except:
-    print("scale-ingest not found! did you load_all_data?")
+    raise Exception("scale-ingest not found! did you load_all_data?")
 
 # Recipes
 if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
@@ -260,21 +172,6 @@ if not ingest.models.Strike.objects.filter(name="landsat").exists():
 		}
 	    ],
 	    "mount": "%s:/ingest/landsat" % nfs_server,
-	    "transfer_suffix": "_tmp",
-	    "version": "1.0"
-	}).save()
-if not ingest.models.Strike.objects.filter(name="data").exists():
-    ingest.models.Strike.objects.create_strike_process("data", "Binary data", "Arbitrary binary data ingest",
-	{
-	    "files_to_ingest": [
-		{
-		    "data_types": [],
-		    "filename_regex": r".*.bin",
-		    "workspace_name": "raw",
-		    "workspace_path": "binary"
-		}
-	    ],
-	    "mount": "%s:/ingest/binary" % nfs_server,
 	    "transfer_suffix": "_tmp",
 	    "version": "1.0"
 	}).save()

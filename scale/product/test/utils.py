@@ -2,8 +2,30 @@
 from __future__ import unicode_literals
 
 from job.test import utils as job_utils
-from product.models import ProductFile
+from product.models import FileAncestryLink, ProductFile
 from storage.test import utils as storage_utils
+
+
+def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, recipe=None):
+    """Creates a file ancestry link model for unit testing
+
+    :returns: The file ancestry link model
+    :rtype: :class:`product.models.FileAncestryLink`
+    """
+
+    if not job:
+        if descendant and descendant.job:
+            job = descendant.job
+        else:
+            job = job_utils.create_job()
+    if not job_exe:
+        if descendant and descendant.job_exe:
+            job_exe = descendant.job_exe
+        else:
+            job_exe = job_utils.create_job_exe(job_type=job.job_type, job=job)
+
+    return FileAncestryLink.objects.create(ancestor=ancestor, descendant=descendant, job=job, job_exe=job_exe,
+                                           recipe=recipe)
 
 
 def create_product(job_exe=None, workspace=None, has_been_published=False, file_name='my_test_file.txt',

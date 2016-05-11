@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import os
@@ -7,7 +6,6 @@ import django
 from django.test import TestCase
 from mock import patch, MagicMock, Mock
 
-import job.execution.file_system as file_system
 import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
@@ -15,6 +13,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
 class TestJobInterfaceAddOutputToConnection(TestCase):
@@ -23,7 +22,7 @@ class TestJobInterfaceAddOutputToConnection(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling JobInterface.add_output_to_connection() successfully.'''
+        """Tests calling JobInterface.add_output_to_connection() successfully."""
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
@@ -264,7 +263,7 @@ class TestJobInterfacePostSteps(TestCase):
 
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.save_parse_results.assert_called_with({
-            '/some/path/foo.txt': (geo_json, '2015-01-01T00:00:00Z', None, [], None, None),
+            '/some/path/foo.txt': (geo_json, '2015-01-01T00:00:00Z', None, [], None),
         })
 
     @patch('os.path.exists')
@@ -299,7 +298,7 @@ class TestJobInterfacePostSteps(TestCase):
         job_interface = JobInterface(job_interface_dict)
         job_data = Mock(spec=JobData)
         job_data.save_parse_results = Mock()
-        fake_stdout = '''
+        fake_stdout = """
 This text is supposed to mimic the output
 of a program we should see artifacts registered with
 the format: ARTIFACT:<input-name>:path, but it needs be at the beginning of a line
@@ -307,7 +306,7 @@ so the example above won't match, but this will
 ARTIFACT:output_file:/path/to/foo.txt
 We should also be able to have text after the artifact and multiple artifacts.
 ARTIFACT:output_file_2:/path/to/foo_2.txt
-'''
+"""
 
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.store_output_data_files.assert_called_with({
@@ -343,13 +342,13 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         job_interface = JobInterface(job_interface_dict)
         job_data = Mock(spec=JobData)
         job_data.save_parse_results = Mock()
-        fake_stdout = '''
+        fake_stdout = """
 This text is supposed to mimic the output
 of a program we should see artifacts registered with
 the format: ARTIFACT:<input-name>:path, but it needs be at the beginning of a line
 so the example above won't match, but this will
 ARTIFACT:output_file:/path/to/foo.txt
-'''
+"""
 
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.store_output_data_files.assert_called_with({
@@ -394,7 +393,7 @@ ARTIFACT:output_file:/path/to/foo.txt
         job_interface = JobInterface(job_interface_dict)
         job_data = Mock(spec=JobData)
         job_data.save_parse_results = Mock()
-        fake_stdout = '''
+        fake_stdout = """
 This text is supposed to mimic the output
 of a program we should see artifacts registered with
 the format: ARTIFACT:<input-name>:path, but it needs be at the beginning of a line
@@ -402,7 +401,7 @@ so the example above won't match, but this will
 ARTIFACT:output_file:/path/to/foo.txt
 We should also be able to have text after the artifact and multiple artifacts.
 ARTIFACT:output_file_2:/path/to/foo_2.txt
-'''
+"""
 
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.store_output_data_files.assert_called_with({
@@ -444,7 +443,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         job_interface = JobInterface(job_interface_dict)
         job_data = Mock(spec=JobData)
         job_data.save_parse_results = Mock()
-        fake_stdout = '''
+        fake_stdout = """
 This text is supposed to mimic the output
 of a program we should see artifacts registered with
 the format: ARTIFACT:<input-name>:path, but it needs be at the beginning of a line
@@ -452,7 +451,7 @@ so the example above won't match, but this will
 ARTIFACT:output_file:/path/to/foo.txt
 We should also be able to have text after the artifact and multiple artifacts.
 ARTIFACT:output_file_2:/path/to/foo_2.txt
-'''
+"""
 
         job_interface.perform_post_steps(job_exe, job_data, fake_stdout)
         job_data.store_output_data_files.assert_called_with({
@@ -529,7 +528,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = JobEnvironment(job_environment_dict)
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment, 1)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 
@@ -551,7 +550,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = JobEnvironment(job_environment_dict)
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment, 1)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, 'property-value', 'expected a different command from pre_steps')
 
@@ -573,24 +572,22 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = JobEnvironment(job_environment_dict)
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment, 1)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '-f property-value', 'expected a different command from pre_steps')
 
-    @patch('job.configuration.data.job_data.ScaleFile.objects.setup_upload_dir')
     @patch('job.configuration.interface.job_interface.JobInterface._get_one_file_from_directory')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file, mock_setup_upload):
+    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file):
         job_exe_id = 1
-        job_input_dir = file_system.get_job_exe_input_data_dir(job_exe_id)
 
-        def new_retrieve(arg1, arg2, arg3):
+        def new_retrieve(arg1):
             return {
                 'file1_out': [input_file_path],
             }
 
-        input_file_path = os.path.join(job_input_dir, 'file1', 'foo.txt')
+        input_file_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'file1', 'foo.txt')
         mock_retrieve_call.side_effect = new_retrieve
         mock_get_one_file.side_effect = lambda(arg1): input_file_path
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
@@ -613,17 +610,14 @@ class TestJobInterfacePreSteps(TestCase):
         job_data = JobData(job_data_dict)
         job_environment = JobEnvironment(job_environment_dict)
 
-        job_interface.perform_pre_steps(job_data, job_environment, job_exe_id)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, input_file_path, 'expected a different command from pre_steps')
-        mock_setup_upload.assert_called_once_with(file_system.get_job_exe_output_data_dir(job_exe_id),
-                                                  file_system.get_job_exe_output_work_dir(job_exe_id), self.workspace)
 
-    @patch('job.configuration.data.job_data.ScaleFile.objects.setup_upload_dir')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_setup_upload):
-        def new_retrieve(arg1, arg2, arg3):
+    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir):
+        def new_retrieve(arg1):
             return {
                 'files1_out': ['/test/file1/foo.txt', '/test/file1/bar.txt'],
             }
@@ -649,15 +643,12 @@ class TestJobInterfacePreSteps(TestCase):
         job_data = JobData(job_data_dict)
         job_environment = JobEnvironment(job_environment_dict)
         job_exe_id = 1
-        job_input_dir = file_system.get_job_exe_input_data_dir(job_exe_id)
 
-        job_interface.perform_pre_steps(job_data, job_environment, 1)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
-        expected_command_arguments = os.path.join(job_input_dir, 'files1')
+        expected_command_arguments = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'files1')
         self.assertEqual(job_command_arguments, expected_command_arguments,
                          'expected a different command from pre_steps')
-        mock_setup_upload.assert_called_once_with(file_system.get_job_exe_output_data_dir(job_exe_id),
-                                                  file_system.get_job_exe_output_work_dir(job_exe_id), self.workspace)
 
     def test_output_dir_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
@@ -667,9 +658,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_data = JobData(job_data_dict)
         job_environment = JobEnvironment(job_environment_dict)
         job_exe_id = 1
-        job_output_dir = file_system.get_job_exe_output_data_dir(job_exe_id)
+        job_output_dir = SCALE_JOB_EXE_OUTPUT_PATH
 
-        job_interface.perform_pre_steps(job_data, job_environment, 1)
+        job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, job_output_dir, 'expected a different command from pre_steps')
 
@@ -701,7 +692,7 @@ class TestJobInterfaceValidateConnection(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling JobInterface.validate_connection() successfully.'''
+        """Tests calling JobInterface.validate_connection() successfully."""
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
@@ -731,7 +722,7 @@ class TestJobInterfaceValidateConnection(TestCase):
         job_interface.validate_connection(job_conn)
 
     def test_required_workspace_missing(self):
-        '''Tests calling JobInterface.validate_connection() when a required workspace is missing'''
+        """Tests calling JobInterface.validate_connection() when a required workspace is missing"""
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
@@ -759,7 +750,7 @@ class TestJobInterfaceValidateConnection(TestCase):
         self.assertRaises(InvalidConnection, job_interface.validate_connection, job_conn)
 
     def test_no_workspace_needed(self):
-        '''Tests calling JobInterface.validate_connection() without a workspace, but none is needed.'''
+        """Tests calling JobInterface.validate_connection() without a workspace, but none is needed."""
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
@@ -1092,7 +1083,7 @@ class TestJobInterfaceValidation(TestCase):
                 pass
 
     def test_bad_version(self):
-        '''Tests calling JobInterface constructor with good and bad versions.  Versions longer than 50 should fail.'''
+        """Tests calling JobInterface constructor with good and bad versions.  Versions longer than 50 should fail."""
 
         definition = {
             'command': 'test-command',

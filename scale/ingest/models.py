@@ -423,9 +423,9 @@ class StrikeManager(models.Manager):
         job_data = {'input_data': [{'name': 'Strike ID', 'value': unicode(strike.id)}]}
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        job_id = Queue.objects.queue_new_job(strike_type, job_data, event)
+        strike_job = Queue.objects.queue_new_job(strike_type, job_data, event)
 
-        strike.job_id = job_id
+        strike.job = strike_job
         strike.save()
 
         return strike

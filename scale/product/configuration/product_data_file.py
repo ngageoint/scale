@@ -8,6 +8,7 @@ from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 
 from job.configuration.data.data_file import AbstractDataFileStore
+from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from product.models import FileAncestryLink, ProductFile
 from recipe.models import Recipe
 from storage.models import Workspace
@@ -30,7 +31,7 @@ class ProductDataFileStore(AbstractDataFileStore):
 
         return results
 
-    def store_files(self, upload_dir, work_dir, data_files, input_file_ids, job_exe):
+    def store_files(self, data_files, input_file_ids, job_exe):
         """See :meth:`job.configuration.data.data_file.AbstractDataFileStore.store_files`
         """
 
@@ -46,7 +47,11 @@ class ProductDataFileStore(AbstractDataFileStore):
                 for file_tuple in file_list:
                     local_path = file_tuple[0]
                     media_type = file_tuple[1]
-                    remote_file_path = os.path.join(remote_path, local_path)
+                    if local_path.startswith(SCALE_JOB_EXE_OUTPUT_PATH):
+                        rel_local_path = os.path.relpath(local_path, SCALE_JOB_EXE_OUTPUT_PATH)
+                    else:
+                        rel_local_path = os.path.basename(local_path)
+                    remote_file_path = os.path.join(remote_path, rel_local_path)
 
                     # Pass along geospatial information if available
                     if len(file_tuple) > 2:
@@ -55,11 +60,10 @@ class ProductDataFileStore(AbstractDataFileStore):
                         file_to_store = (local_path, remote_file_path, media_type)
                     files_to_store.append(file_to_store)
 
-                product_files = ProductFile.objects.upload_files(upload_dir, work_dir, files_to_store, input_file_ids,
-                                                                 job_exe, workspace)
+                product_files = ProductFile.objects.upload_files(files_to_store, input_file_ids, job_exe, workspace)
 
                 for i in range(len(product_files)):
-                    full_local_path = os.path.normpath(os.path.join(upload_dir, file_list[i][0]))
+                    full_local_path = file_list[i][0]
                     product_file = product_files[i]
                     results[full_local_path] = product_file.id
 
