@@ -1,0 +1,183 @@
+{
+    "id": 5,
+    "recipe_type": {
+        "id": 5,
+        "name": "caffe-aircraft-detection",
+        "version": "1.0",
+        "title": "Caffe Aircraft Detection",
+        "description": "Detect aircraft using BVL Caffe deep learning algorithms",
+        "is_active": true,
+        "definition": {
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "input_file"
+            }],
+            "version": "1.0",
+            "jobs": [{
+                "recipe_inputs": [{
+                    "job_input": "input_file",
+                    "recipe_input": "input_file"
+                }],
+                "name": "caffe-aircraft-detection",
+                "job_type": {
+                    "name": "caffe-aircraft-detection",
+                    "version": "1.0"
+                },
+                "dependencies": []
+            }]
+        },
+        "created": "2016-05-11T16:32:31.718Z",
+        "last_modified": "2016-05-11T16:32:31.718Z",
+        "archived": null
+    },
+    "recipe_type_rev": {
+        "id":6,
+        "recipe_type": {
+            "id": 5
+        },
+        "revision_num": 3,
+        "definition": {
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "input_file"
+            }],
+            "version": "1.0",
+            "jobs": [{
+                "recipe_inputs": [{
+                    "job_input": "input_file",
+                    "recipe_input": "input_file"
+                }],
+                "name": "caffe-aircraft-detection",
+                "job_type": {
+                    "name": "caffe-aircraft-detection",
+                    "version": "1.0"
+                },
+                "dependencies": []
+            }]
+        },
+        "created": "2016-05-11T16:32:31.718Z"
+    },
+    "event": {
+        "id": 7,
+        "type": "INGEST",
+        "rule": {
+            "id": 8,
+            "type": "INGEST",
+            "is_active": true,
+            "configuration": {
+                "trigger": {
+                    "media_type": "",
+                    "data_types": ["nitf"]
+                },
+                "create": {
+                    "recipes": [
+                        {
+                            "recipe_type": {
+                                "name": "caffe-aircraft-detection",
+                                "version": "1.0"
+                            },
+                            "file_input_name": "input_file",
+                            "workspace_name": "products"
+                        }
+                    ]
+                },
+                "version": "1.0"
+            }
+        },
+        "occurred": "2016-04-28T19:03:59.054Z",
+        "description": {
+            "file_name": "data-file.nitf",
+            "version": "1.0",
+            "parse_id": 1
+        }
+    },
+    "created": "2016-04-15T19:03:26.346Z",
+    "completed": "2016-05-15T19:03:26.346Z",
+    "last_modified": "2016-05-15T19:03:26.346Z",
+    "data": {
+        "input_data": [
+            {
+                "name": "input_file",
+                "file_id": 4
+            }
+        ],
+        "version": "1.0",
+        "workspace_id": 2
+    },
+    "input_files": [
+        {
+            "id": 4,
+            "workspace": {
+                "id": 1,
+                "name": "products"
+            },
+            "file_name": "image.nitf",
+            "media_type": "image/nitf",
+            "file_size": 7346298,
+            "data_type": ["nitf"],
+            "is_deleted": false,
+            "uuid": "d897wae9y80u9af9y8afhiuadfihouas",
+            "url": "./test/data/input/caffe-aircraft-detection.png",
+            "created": "2016-04-10T15:24:53.962Z",
+            "deleted": null,
+            "data_started": "2016-04-10T15:24:53.962Z",
+            "data_ended": "2016-04-10T15:24:53.962Z",
+            "geometry": null,
+            "center_point": null,
+            "meta_data": {},
+            "last_modified": "2016-04-10T15:24:53.962Z"
+        }
+    ],
+    "jobs": [
+        {
+            "job_name": "caffe-aircraft-detection",
+            "job": {
+                "id": 12,
+                "job_type": {
+                    "id": 10,
+                    "name": "caffe-aircraft-detection",
+                    "version": "1.0",
+                    "title": "Caffe Aircraft Detection",
+                    "description": "Caffe is a deep learning framework made with expression, speed, and modularity in mind. It is developed by the Berkeley Vision and Learning Center (BVLC) and by community contributors. Yangqing Jia created the project during his PhD at UC Berkeley.",
+                    "category": "export",
+                    "author_name": "Yangqing Jia ",
+                    "author_url": "http://caffe.berkeleyvision.org/",
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f072"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "INGEST",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2016-05-14T15:31:59.054Z"
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 0.25,
+                "mem_required": 512,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2016-05-12T00:00:00Z",
+                "queued": "2016-05-12T00:00:00Z",
+                "started": "2016-05-12T00:00:00Z",
+                "ended": "2016-05-12T00:00:00Z",
+                "last_status_change": "2016-06-11T00:00:00Z",
+                "last_modified": "2016-05-12T00:00:00Z"
+            }
+        }
+    ]
+}

@@ -10,7 +10,14 @@
     restart_policy: always
     pull: always
     command: 'scale_scheduler'
-    net: host
-    volumes:
-      - '/etc/scale/local_settings.py:/opt/scale/scale/local_settings.py'
+    env:
+      SCALE_SECRET_KEY: '$6$D6zJhmUX3htFBnBk$Mkl/xVyXS2In5eHrwXz2QzzspaHPQPMFrfoA7DPxifGx.5O4kzedqx1DO5PrdSF0VuO1XqMEmpAhrXecPC5y51'
+      SCALE_DEBUG: 'False'
+      SCALE_DB_USER: 'scale'
+      SCALE_DB_PASS: 'scale'
+      SCALE_DB_HOST: 'suolocin'
+      SCALE_DB_PORT: '5432'
+      MESOS_MASTER_URL: 'zk://scalemaster:2181/mesos'
+      SCALE_DOCKER_IMAGE: '{{ docker_registry }}scale'
+      ENABLE_GUNICORN: '1'
   become: true

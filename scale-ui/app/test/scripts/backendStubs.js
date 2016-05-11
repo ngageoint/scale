@@ -13,10 +13,45 @@
         };
 
         // Ingests Status
-        var ingestsStatusOverrideUrl = 'test/data/ingestStatus.json';
         var ingestsStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/status/', 'i');
         $httpBackend.whenGET(ingestsStatusRegex).respond(function () {
-            return getSync(ingestsStatusOverrideUrl);
+            var strikes = JSON.parse(getSync('test/data/ingestStrikes.json')[1]),
+                startDate = moment.utc().subtract(1, 'w').startOf('d').toISOString(),
+                endDate = moment.utc().add(1, 'd').startOf('d').toISOString(),
+                numHours = moment.utc(endDate).diff(moment.utc(startDate), 'h'),
+                thisTime = '',
+                values = [],
+                results = [];
+
+            _.forEach(strikes.results, function (strike) {
+                values = [];
+
+                for (var i = 0; i < numHours; i++) {
+                    thisTime = moment.utc(startDate).add(i, 'h').toISOString();
+                    values.push({
+                        time: thisTime,
+                        files: Math.floor(Math.random() * (500 - 5 + 1)) + 5,
+                        size: Math.floor(Math.random() * (500000000 - 5000000 + 1)) + 5000000
+                    });
+                }
+
+                results.push({
+                    strike: strike,
+                    most_recent: moment.utc().startOf('h').toISOString(),
+                    files: 2,
+                    size: 123456789,
+                    values: values
+                });
+            });
+
+            var data = {
+                count: 2,
+                next: null,
+                previous: null,
+                results: results
+            };
+
+            return [200, data, {}];
         });
 
         // Ingests
@@ -53,7 +88,12 @@
         // Job details
         var jobDetailsOverrideUrl = 'test/data/jobDetails.json';
         var jobDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/.*/', 'i');
-        $httpBackend.whenGET(jobDetailsRegex).respond(function () {
+        $httpBackend.whenGET(jobDetailsRegex).respond(function (method, url) {
+            //return getSync(jobDetailsOverrideUrl);
+            // get the jobType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            jobDetailsOverrideUrl = 'test/data/job-details/jobDetails' + id + '.json';
             return getSync(jobDetailsOverrideUrl);
         });
 

@@ -195,7 +195,8 @@ class Task(object):
         :rtype: string
         """
 
-        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.VERSION)
+        # Docker tags do not support the + character, so we replace it with _
+        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.VERSION.replace("+", "_"))
 
     @abstractmethod
     def get_resources(self):

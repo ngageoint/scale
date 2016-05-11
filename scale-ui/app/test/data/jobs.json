@@ -1,5 +1,5 @@
 {
-    "count": 10,
+    "count": 12,
     "next": "http://localhost/api/jobs/?page=2",
     "previous": null,
     "results": [
@@ -16,7 +16,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f090"
+                "icon_code": "f248"
             },
             "job_type_rev": {
                 "id": 56,
@@ -60,7 +60,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f102"
+                "icon_code": "f0e7"
             },
             "job_type_rev": {
                 "id": 67,
@@ -104,7 +104,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f101"
+                "icon_code": "f140"
             },
             "job_type_rev": {
                 "id": 62,
@@ -192,7 +192,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0ac"
+                "icon_code": "f0c2"
             },
             "job_type_rev": {
                 "id": 35,
@@ -236,7 +236,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0c2"
+                "icon_code": "f14e"
             },
             "job_type_rev": {
                 "id": 30,
@@ -280,7 +280,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0c2"
+                "icon_code": "f00c"
             },
             "job_type_rev": {
                 "id": 34,
@@ -292,19 +292,10 @@
             "event": {
                 "id": 1,
                 "type": "STRIKE_TRANSFER",
-                "occurred": "2016-05-01T05:11:46Z"
+                "occurred": "2016-05-15T05:11:46Z"
             },
-            "error": {
-                "id": 1,
-                "name": "unknown",
-                "title": "Unknown",
-                "description": "The error that caused the failure is unknown.",
-                "category": "SYSTEM",
-                "is_builtin": true,
-                "created": "2016-05-05T16:31:57Z",
-                "last_modified": "2016-05-05T16:31:57Z"
-            },
-            "status": "FAILED",
+            "error": null,
+            "status": "COMPLETED",
             "priority": 82,
             "num_exes": 91,
             "timeout": 1175,
@@ -333,7 +324,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0b2"
+                "icon_code": "f1c0"
             },
             "job_type_rev": {
                 "id": 27,
@@ -347,17 +338,8 @@
                 "type": "STRIKE_TRANSFER",
                 "occurred": "2016-04-29T12:53:31Z"
             },
-            "error": {
-                "id": 1,
-                "name": "missing-input",
-                "title": "Missing Input",
-                "description": "Input file not found.",
-                "category": "DATA",
-                "is_builtin": true,
-                "created": "2016-05-04T10:21:14Z",
-                "last_modified": "2016-05-04T10:21:14Z"
-            },
-            "status": "FAILED",
+            "error": null,
+            "status": "COMPLETED",
             "priority": 66,
             "num_exes": 32,
             "timeout": 2764,
@@ -386,7 +368,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f0b2"
+                "icon_code": "f219"
             },
             "job_type_rev": {
                 "id": 70,
@@ -430,7 +412,7 @@
                 "is_active": true,
                 "is_operational": true,
                 "is_paused": false,
-                "icon_code": "f278"
+                "icon_code": "f06e"
             },
             "job_type_rev": {
                 "id": 78,
@@ -454,12 +436,100 @@
             "mem_required": "229.5",
             "disk_in_required": "89.8",
             "disk_out_required": "47.7",
-            "created": "2016-05-01T16:09:53Z",
-            "queued": "2016-05-01T16:11:41Z",
-            "started": "2016-05-01T16:16:48Z",
-            "ended": "2016-05-01T16:25:43Z",
-            "last_status_change": "2016-05-01T16:25:43Z",
-            "last_modified": "2016-05-01T16:25:43Z"
+            "created": "2016-05-15T16:09:53Z",
+            "queued": "2016-05-15T16:11:41Z",
+            "started": "2016-05-15T16:16:48Z",
+            "ended": "2016-05-15T16:25:43Z",
+            "last_status_change": "2016-05-15T16:25:43Z",
+            "last_modified": "2016-05-15T16:25:43Z"
+        },
+        {
+            "id": 11,
+            "job_type": {
+                "id": 10,
+                "name": "export-kml",
+                "title": "Export KML",
+                "version": "1.5",
+                "description": "Creates KML from data",
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f0ac"
+            },
+            "job_type_rev": {
+                "id": 78,
+                "job_type": {
+                    "id": 11
+                },
+                "revision_num": 3
+            },
+            "event": {
+                "id": 51,
+                "type": "STRIKE_TRANSFER",
+                "occurred": "2016-05-14T21:16:09Z"
+            },
+            "error": null,
+            "status": "COMPLETED",
+            "priority": 80,
+            "num_exes": 43,
+            "timeout": 2361,
+            "max_tries": 1,
+            "cpus_required": 2.0,
+            "mem_required": 2048.0,
+            "disk_out_const_required": 1024.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2016-05-15T16:09:53Z",
+            "queued": "2016-05-15T16:11:41Z",
+            "started": "2016-05-15T16:16:48Z",
+            "ended": "2016-05-15T16:25:43Z",
+            "last_status_change": "2016-05-15T16:25:43Z",
+            "last_modified": "2016-05-15T16:25:43Z"
+        },
+        {
+            "id": 12,
+            "job_type": {
+                "id": 10,
+                "name": "caffe-aircraft-detection",
+                "title": "Caffe Aircraft Detection",
+                "version": "1.0",
+                "description": "Caffe is a deep learning framework made with expression, speed, and modularity in mind. It is developed by the Berkeley Vision and Learning Center (BVLC) and by community contributors. Yangqing Jia created the project during his PhD at UC Berkeley.",
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f072"
+            },
+            "job_type_rev": {
+                "id": 78,
+                "job_type": {
+                    "id": 12
+                },
+                "revision_num": 3
+            },
+            "event": {
+                "id": 51,
+                "type": "STRIKE_TRANSFER",
+                "occurred": "2016-05-14T21:16:09Z"
+            },
+            "error": null,
+            "status": "COMPLETED",
+            "priority": 80,
+            "num_exes": 43,
+            "timeout": 2361,
+            "max_tries": 1,
+            "cpus_required": 2.0,
+            "mem_required": 2048.0,
+            "disk_out_const_required": 1024.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2016-05-15T16:09:53Z",
+            "queued": "2016-05-15T16:11:41Z",
+            "started": "2016-05-15T16:16:48Z",
+            "ended": "2016-05-15T16:25:43Z",
+            "last_status_change": "2016-05-15T16:25:43Z",
+            "last_modified": "2016-05-15T16:25:43Z"
         }
     ]
 }

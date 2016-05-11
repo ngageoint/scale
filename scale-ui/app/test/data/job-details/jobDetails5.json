@@ -1,26 +1,26 @@
 {
-    "id": 15096,
+    "id": 124,
     "job_type": {
-        "id": 2,
-        "name": "sam",
-        "title": "Spectral Angle Mapper",
-        "version": "1.0",
-        "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra. This technique, developed by J.W. Boardman, determines the spectral similarity between given reference spectra, r, (i.e., the image endmember in this case) and the spectra found at each pixel, t (Kruse, et al., 1992). The result of the comparison is reported as the angular difference (in radians) between the two spectra. Each pair of spectra is treated as a vector in nb-space, allowing the similarity of the spectra to be determined without regard to their relative brightness values. The result of the SAM calculation is an image for each reference spectrum, with high values (displayed in brighter values) corresponding to a better match between reference and test spectra.",
+        "id": 5,
+        "name": "wv2-parse",
+        "title": "WorldView-2 Parse",
+        "version": "1.0.1",
+        "description": "Parses WorldView-2 imagery. WorldView-2 is a commercial Earth observation satellite owned by DigitalGlobe. WorldView-2 provides commercially available panchromatic imagery of .46 m resolution, and eight-band multispectral imagery with 1.84 m (6 ft 0 in) resolution. It was launched October 8, 2009 to become DigitalGlobe's third satellite in orbit, joining WorldView-1 which was launched in 2007 and QuickBird which was launched in 2001. It takes a new photograph of any place on Earth every 1.1 days.",
         "is_system": false,
         "is_long_running": false,
         "is_active": true,
         "is_operational": true,
         "is_paused": false,
-        "icon_code": "f0e7",
+        "icon_code": "f0c2",
         "uses_docker": false,
         "docker_privileged": false,
         "docker_image": null,
         "priority": 2,
         "timeout": 600,
         "max_tries": 1,
-        "cpus_required": 0.5,
-        "mem_required": 128.0,
-        "disk_out_const_required": 0.0,
+        "cpus_required": 0.25,
+        "mem_required": 512.0,
+        "disk_out_const_required": 2048.0,
         "disk_out_mult_required": 0.0,
         "created": "2016-05-15T00:00:00Z",
         "archived": null,
@@ -30,25 +30,24 @@
     "job_type_rev": {
         "id": 5,
         "job_type": {
-            "id": 2
+            "id": 3
         },
         "revision_num": 1,
         "interface": {
-            "input_data": [
-                {
-                    "type": "file",
-                    "name": "input_file"
-                }
-            ],
-            "output_data": [
-                {
-                    "media_type": "iamge/tiff",
-                    "type": "file",
-                    "name": "output_file"
-                }
-            ],
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "infile"
+            }],
+            "output_data": [{
+                "media_type": "image/nitf",
+                "required": true,
+                "type": "file",
+                "name": "wv2-parsed"
+            }],
             "version": "1.0",
-            "command": "/usr/local/bin/python2.7 /app/parser/manage.py create_footprint_kml",
+            "command": "./cem.sh",
             "command_arguments": "${input_file} ${job_output_dir}"
         },
         "created": "2016-05-15T00:00:00Z"
@@ -72,10 +71,10 @@
     "num_exes": 1,
     "timeout": 1800,
     "max_tries": 3,
-    "cpus_required": 1.0,
-    "mem_required": 15360.0,
-    "disk_in_required": 2.0,
-    "disk_out_required": 16.0,
+    "cpus_required": 0.25,
+    "mem_required": 512.0,
+    "disk_out_const_required": 2048.0,
+    "disk_out_mult_required": 0.0,
     "created": "2016-05-15T17:55:41.005Z",
     "queued": "2016-05-15T17:56:41.005Z",
     "started": "2016-05-15T17:57:41.005Z",
@@ -197,13 +196,13 @@
                     "id": 2,
                     "name": "Products"
                 },
-                "file_name": "SAM-Oil_result.tiff",
+                "file_name": "output_file.tiff",
                 "media_type": "image/tiff",
                 "file_size": 1779751,
                 "data_type": [],
                 "is_deleted": false,
                 "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/SAM-Oil_result.png",
+                "url": "./test/data/output/output_file.tiff",
                 "created": "2016-05-15T17:27:48.477Z",
                 "deleted": null,
                 "data_started": null,
