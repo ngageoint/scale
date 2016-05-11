@@ -8,4 +8,4 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && pip install rasterio
 
 RUN useradd --uid 1001 scale
-USER scale
+#USER scale
