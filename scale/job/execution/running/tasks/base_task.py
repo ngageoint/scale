@@ -195,7 +195,7 @@ class Task(object):
         :rtype: string
         """
 
-        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.VERSION)
+        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.VERSION.replace("+", "_"))
 
     @abstractmethod
     def get_resources(self):

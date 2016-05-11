@@ -56,7 +56,7 @@ COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
 COPY scale /opt/scale
 
 # set the build number
-RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'
+RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'
 
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale-ui /opt/scale-ui
