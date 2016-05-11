@@ -308,6 +308,7 @@ class TestJobExecutionManager(TransactionTestCase):
         job_exe_2 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_2.get_dict())
         input_data_volume_1 = '%s:%s:rw' % (get_job_exe_input_vol_name(job_exe_1.id), SCALE_JOB_EXE_INPUT_PATH)
         input_data_volume_2 = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
+        output_data_volume_1 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_1.id), SCALE_JOB_EXE_OUTPUT_PATH)
         output_data_volume_2 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
         workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
         workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
@@ -317,6 +318,7 @@ class TestJobExecutionManager(TransactionTestCase):
                     DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])]
         job_exe_1_pre_task_params = env_vars
         job_exe_1_pre_task_params.extend([DockerParam('volume', input_data_volume_1),
+                                          DockerParam('volume', output_data_volume_1),
                                           DockerParam('volume', workspace_volume_1)])
         job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2),
                                      DockerParam('volume', output_data_volume_2),
