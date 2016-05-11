@@ -36,7 +36,7 @@
         "configuration": {
             "condition": {
                 "media_type": "",
-                "data_types": ["image/nitf"]
+                "data_types": ["nitf"]
             },
             "data": {
                 "workspace_name": "products",

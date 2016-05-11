@@ -34,18 +34,24 @@
         },
         "revision_num": 1,
         "interface": {
-            "input_data": [{
-                "media_types": ["image/nitf"],
-                "required": true,
-                "type": "file",
-                "name": "infile"
-            }],
-            "output_data": [{
-                "media_type": "image/tiff",
-                "required": true,
-                "type": "file",
-                "name": "outfile"
-            }],
+            "input_data": [
+                {
+                    "media_types": [
+                        "image/nitf"
+                    ],
+                    "required": true,
+                    "type": "file",
+                    "name": "infile"
+                }
+            ],
+            "output_data": [
+                {
+                    "media_type": "image/tiff",
+                    "required": true,
+                    "type": "file",
+                    "name": "outfile"
+                }
+            ],
             "version": "1.0",
             "command": "./parse_landsat.sh",
             "command_arguments": "${input_file} ${job_output_dir}"
@@ -189,315 +195,289 @@
     "outputs": [
         {
             "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
+            "type": "files",
+            "value": [
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip1.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip1.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
                 },
-                "file_name": "caffe-aircraft-detection-chip8.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip8.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip2.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip2.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
                 },
-                "job": {
-                    "id": 35
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip3.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip3.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
                 },
-                "job_exe": {
-                    "id": 19
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip4.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip4.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
+                },
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip5.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip5.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
+                },
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip6.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip6.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
+                },
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip7.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip7.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
+                },
+                {
+                    "id": 8484,
+                    "workspace": {
+                        "id": 2,
+                        "name": "Products"
+                    },
+                    "file_name": "caffe-aircraft-detection-chip8.tiff",
+                    "media_type": "image/tiff",
+                    "file_size": 1779751,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "./test/data/output/caffe-aircraft-detection-chip8.png",
+                    "created": "2016-05-15T17:27:48.477Z",
+                    "deleted": null,
+                    "data_started": null,
+                    "data_ended": null,
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T17:27:49.639Z",
+                    "is_operational": true,
+                    "is_published": true,
+                    "published": "2016-05-15T17:27:49.461Z",
+                    "unpublished": null,
+                    "job_type": {
+                        "id": 12
+                    },
+                    "job": {
+                        "id": 35
+                    },
+                    "job_exe": {
+                        "id": 19
+                    }
                 }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip2.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip2.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip3.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip3.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip4.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip4.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip5.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip5.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip6.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip6.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip7.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip7.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
-        },
-        {
-            "name": "output_file",
-            "type": "file",
-            "value": {
-                "id": 8484,
-                "workspace": {
-                    "id": 2,
-                    "name": "Products"
-                },
-                "file_name": "caffe-aircraft-detection-chip8.tiff",
-                "media_type": "image/tiff",
-                "file_size": 1779751,
-                "data_type": [],
-                "is_deleted": false,
-                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-                "url": "./test/data/output/caffe-aircraft-detection-chip8.png",
-                "created": "2016-05-15T17:27:48.477Z",
-                "deleted": null,
-                "data_started": null,
-                "data_ended": null,
-                "geometry": null,
-                "center_point": null,
-                "meta_data": {},
-                "last_modified": "2016-05-15T17:27:49.639Z",
-                "is_operational": true,
-                "is_published": true,
-                "published": "2016-05-15T17:27:49.461Z",
-                "unpublished": null,
-                "job_type": {
-                    "id": 12
-                },
-                "job": {
-                    "id": 35
-                },
-                "job_exe": {
-                    "id": 19
-                }
-            }
+            ]
         }
     ]
 }
