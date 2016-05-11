@@ -5,7 +5,7 @@ import logging
 import os
 import shutil
 
-from storage.brokers.broker import Broker
+from storage.brokers.broker import Broker, BrokerVolume
 from util.command import execute_command_line
 
 
@@ -23,22 +23,22 @@ class NfsBroker(Broker):
 
         super(NfsBroker, self).__init__('nfs')
 
-    def delete_files(self, mount_location, files):
+    def delete_files(self, volume_path, files):
         """See :meth:`storage.brokers.broker.Broker.delete_files`
         """
 
         for scale_file in files:
-            path_to_delete = os.path.join(mount_location, scale_file.file_path)
+            path_to_delete = os.path.join(volume_path, scale_file.file_path)
             if os.path.exists(path_to_delete):
                 logger.info('Deleting %s', path_to_delete)
                 os.remove(path_to_delete)
 
-    def download_files(self, mount_location, file_downloads):
+    def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`
         """
 
         for file_download in file_downloads:
-            path_to_download = os.path.join(mount_location, file_download.file.file_path)
+            path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
             # Create symlink to the file in the host mount
             logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
@@ -49,15 +49,15 @@ class NfsBroker(Broker):
         """
 
         # The docker-volume-netshare plugin requires the : separator between the NFS host and path to be a /
-        self._mount = config['nfs_path'].replace(':', '/')
+        self._volume = BrokerVolume('nfs', config['nfs_path'].replace(':', '/'))
 
-    def move_files(self, mount_location, file_moves):
+    def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`
         """
 
         for file_move in file_moves:
-            full_old_path = os.path.join(mount_location, file_move.file.file_path)
-            full_new_path = os.path.join(mount_location, file_move.new_path)
+            full_old_path = os.path.join(volume_path, file_move.file.file_path)
+            full_new_path = os.path.join(volume_path, file_move.new_path)
             full_new_path_dir = os.path.dirname(full_new_path)
 
             if not os.path.exists(full_new_path_dir):
@@ -70,12 +70,12 @@ class NfsBroker(Broker):
             os.chmod(full_new_path, 0644)
             file_move.file.file_path = file_move.new_path
 
-    def upload_files(self, mount_location, file_uploads):
+    def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`
         """
 
         for file_upload in file_uploads:
-            path_to_upload = os.path.join(mount_location, file_upload.file.file_path)
+            path_to_upload = os.path.join(volume_path, file_upload.file.file_path)
             path_to_upload_dir = os.path.dirname(path_to_upload)
 
             if not os.path.exists(path_to_upload_dir):
