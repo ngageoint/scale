@@ -2,23 +2,28 @@
 FROM centos:centos7
 MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 
-# environment variables
-# define ENABLE_NFS=1 to turn on NFS client locking
-#        ENABLE_GUNICORN to start the RESTful API server
-ENV SCALE_SECRET_KEY='THIS IS AN INSECURE KEY' \
-    SCALE_DEBUG='' \
-    SCALE_URL_PREFIX='' \
-    SCALE_ALLOWED_HOSTS='' \
-    SCALE_POSTGIS_TEMPLATE='template1' \
-    SCALE_DB_NAME='scale' \
-    SCALE_DB_USER_NAME='postgres' \
-    SCALE_DB_USER_PASSWORD='postgres' \
-    SCALE_DB_HOST='' \
-    SCALE_DB_PORT='' \
-    SCALE_NODE_WORK_DIR='/tmp/scale/work' \
-    SCALE_MESOS_MASTER='localhost' \
-    SCALE_METRICS_DIR='' \
-    SCALE_INFLUXDB_BASE_URL=''
+# allowed environment variables
+# ENABLE_NFS=1 to turn on NFS client locking
+# ENABLE_GUNICORN to start the RESTful API server
+# SCALE_SECRET_KEY
+# SCALE_DEBUG
+# SCALE_API_URL
+# SCALE_ALLOWED_HOSTS
+# SCALE_STATIC_ROOT
+# SCALE_STATIC_URL
+# SCALE_DB_HOST
+# SCALE_DB_PORT
+# SCALE_DB_NAME
+# SCALE_DB_USER
+# SCALE_DB_PASS
+# MESOS_MASTER_URL
+# SCALE_ZK_URL
+# SCALE_DOCKER_IMAGE
+
+# build arg to set the version qualifier. This should be blank for a
+# release build. Otherwise it is typically a build number or git hash.
+# if present, the qualifier will be '.${BUILDNUM}
+ARG BUILDNUM=''
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 1001 -M -d /opt/scale scale
@@ -50,6 +55,8 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
 COPY scale /opt/scale
 
+# set the build number
+RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'
 
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale-ui /opt/scale-ui
