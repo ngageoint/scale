@@ -653,8 +653,8 @@ class RecipeType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    title = models.CharField(blank=True, max_length=50)
-    description = models.CharField(blank=True, max_length=500)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.CharField(blank=True, max_length=500, null=True)
 
     is_active = models.BooleanField(default=True)
     definition = djorm_pgjson.fields.JSONField()
