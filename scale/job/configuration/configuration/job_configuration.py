@@ -7,7 +7,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
-from storage.container import get_workspace_mount_path
+from storage.container import get_workspace_volume_path
 
 
 logger = logging.getLogger(__name__)
@@ -322,7 +322,7 @@ class JobConfiguration(object):
             if name in workspaces:
                 workspace = workspaces[name]
                 if workspace.mount:
-                    broker_volume = '%s:%s:%s' % (workspace.mount, get_workspace_mount_path(name), mode)
+                    broker_volume = '%s:%s:%s' % (workspace.mount, get_workspace_volume_path(name), mode)
                     params.append(DockerParam('volume', broker_volume))
         return params
 
