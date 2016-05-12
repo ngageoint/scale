@@ -1,9 +1,13 @@
 #!/bin/bash
-sed -i 's/Scale\ Framework\ (Python)/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /opt/scale/scheduler/management/commands/scale_scheduler.py
+sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"$DCOS_PACKAGE_FRAMEWORK_NAME"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
 sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"$DCOS_PACKAGE_FRAMEWORK_NAME".marathon.slave.mesos:"$PORT0"/'" scheduler/management/commands/scale_scheduler.py
 sed -i 's/\/SCALE/\/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /etc/httpd/conf.d/scale.conf
-#sed -i 's/\/scale/\/'$DCOS_PACKAGE_FRAMEWORK_NAME'/' /opt/scale/ui/scripts/scaleConfig.local.js
-sed -i '/Listen 80/ aListen '$PORT0 /etc/httpd/conf/httpd.conf
+sed -i 's/\/api/.\/api/' /opt/scale/ui/config/scaleConfig.json
+sed -i 's/\/docs/.\/docs/' /opt/scale/ui/config/scaleConfig.json
+
+if [[ "$PORT0" != "" ]]; then
+  sed -i '/Listen 80/ aListen '$PORT0 /etc/httpd/conf/httpd.conf
+fi
 
 if [[ "$DEPLOY_DB" = "true" ]]; then
   chmod +x ./deployDB.py
@@ -27,9 +31,10 @@ while [[ "$CHECK1" = "0" ]]; do
   fi
 done
 
+./manage.py makemigrations
 ./manage.py migrate
 ./manage.py collectstatic --noinput
 ./manage.py load_all_data
-./manage.py scale_scheduler &
 /usr/sbin/httpd
-/usr/bin/gunicorn -b 0.0.0.0:8000 -w 4 scale.wsgi:application
+/usr/bin/gunicorn -b 0.0.0.0:8000 -w 4 scale.wsgi:application &
+./manage.py scale_scheduler
