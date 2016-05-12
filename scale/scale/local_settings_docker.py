@@ -19,14 +19,14 @@ ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
 
-DB_HOST = os.environ['SCALE_DB_HOST']
+DB_HOST = os.environ.get('SCALE_DB_HOST', '')
 if DB_HOST == '':
         DB_HOST = os.environ.get('DB_PORT_5432_TCP_ADDR', '')
-DB_PORT = os.environ['SCALE_DB_PORT']
+DB_PORT = os.environ.get('SCALE_DB_PORT', '')
 if DB_PORT == '':
-        DB_PORT = os.environ.get('DB_PORT_5432_TCP_PORT', '')
+        DB_PORT = os.environ.get('DB_PORT_5432_TCP_PORT', '5432')
 
-if DB_HOST != '' and DB_PORT != '':
+if DB_HOST != '':
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
