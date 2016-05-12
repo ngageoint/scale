@@ -17,10 +17,13 @@
 
 <div class="tab-content">
     <div class="tab-pane active" id="details">
-        <h4 class="margin-top-sm margin-bottom-sm">
+        <h3 class="margin-top-lg margin-bottom-sm">
             <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
-            <span ng-show="job.status === 'FAILED'" class="label label-default">{{ job.error.category }} Error: {{ job.error.title }}. {{ job.error.description }}</span>
-        </h4>
+        </h3>
+        <div class="well well-sm error-well margin-top-md margin-bottom-md" ng-show="job.status === 'FAILED'">
+            <h4 class="panel-title error-title"><strong>{{ job.error.category }} Error: {{ job.error.title }}</strong></h4>
+            {{ job.error.description }}
+        </div>
         <div class="row">
             <div class="col-xs-6">
                 <table class="table table-hover table-condensed table-striped">
