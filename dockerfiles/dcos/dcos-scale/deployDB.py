@@ -2,7 +2,6 @@
 import requests, os, json, time
 r = requests.get('http://marathon.mesos:8080/v2/apps/')
 scaleDBName = os.environ.get('SCALE_DB_NAME', 'scale')
-frameworkName = os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 scaleDBHost = os.environ.get('SCALE_DB_HOST', 'scale-db.marathon.slave.mesos').split(".")[0]
 scaleDBUser = os.environ.get('SCALE_DB_USER', 'scale')
 scaleDBPass = os.environ.get('SCALE_DB_PASS', 'scale')
@@ -18,10 +17,10 @@ marathon='{"id": "/'+scaleDBHost+'","instances": 1,"constraints": [["hostname","
 r = requests.post('http://marathon.mesos:8080/v2/apps/', data=marathon)
 #if "already exists" in r.text:
 #  print "Already in Marathon."
-while json.loads(requests.get('http://marathon.mesos:8080/v2/apps/'+frameworkName+'-db').text)['app']['tasksHealthy'] == 0:
+while json.loads(requests.get('http://marathon.mesos:8080/v2/apps/'+scaleDBHost).text)['app']['tasksHealthy'] == 0:
   #print "Waiting for Healthy DB!"
   time.sleep(5)
-dbPort = json.loads(requests.get('http://marathon.mesos:8080/v2/apps/'+frameworkName+'-db').text)['app']['tasks'][0]['ports'][0]
+dbPort = json.loads(requests.get('http://marathon.mesos:8080/v2/apps/'+scaleDBHost).text)['app']['tasks'][0]['ports'][0]
 os.putenv('SCALE_DB_PORT',str(dbPort))
 print dbPort
 exit()
