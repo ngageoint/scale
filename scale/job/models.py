@@ -1354,6 +1354,7 @@ class JobExecution(models.Model):
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
             output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
             configuration.add_pre_task_docker_param(DockerParam('volume', input_volume_rw))
+            configuration.add_pre_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_job_task_docker_param(DockerParam('volume', input_volume_ro))
             configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))

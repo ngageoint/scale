@@ -75,6 +75,17 @@
         var zoom = null;
         var render = null;
 
+        var getClosestNode = function (name) {
+            return d3.selectAll('.nodeRect').filter(function (d) {
+                return d === name;
+            });
+        };
+
+        var getOtherNodes = function (name) {
+            return d3.selectAll('.nodeRect').filter(function (d) {
+                return d !== name;
+            });
+        };
 
         var resetEditBtn = function () {
             $scope.editBtnText = $scope.mode === 'edit' ? 'Cancel Edit' : 'Edit';
@@ -175,9 +186,8 @@
 
         $scope.nodeClick = function (name) {
             // Remove selection class
-            $('div').removeClass('selected-node');
-            $('div').removeClass('selected-node-dependency');
-            $('div').removeClass('job-active');
+            //$('div').removeClass('selected-node');
+            d3.selectAll('.nodeRect').classed('selected-node', false);
 
             // find the job in the recipe definition
             var job = _.find($scope.recipeType.definition.jobs, { name: name });
@@ -236,11 +246,6 @@
                             $name.popover('show');
                         }
                     }
-                    // $scope.selectedInputProvider = job;
-                    // $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
-                    // $('#' + name).addClass('selected-node-dependency');
-                    // $('#output-selector').css({top: pos.top, left: pos.left, position: 'absolute'});
-                    // console.log('toggle input selector');
                 } else if ($scope.editMode === 'addOutput') {
                     $scope.selectedOutputReceiver = job;
                     if (job.job_type.job_type_interface.input_data.length > 0) {
@@ -262,12 +267,6 @@
                         });
                         $name.popover('show');
                     }
-                    // // set position of output-selector
-                    // $('#input-selector').css({top: pos.top, left: pos.left, position: 'absolute'});
-                    // //$scope.mode = 'addInputActive';
-                    // $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
-                    // $('#' + name).addClass('selected-node-dependency');
-                    // console.log('toggle output selector');
                 } else {
                     // update the selected job
                     $scope.selectedJob = job;
@@ -275,11 +274,13 @@
                         $scope.selectedRecipeJob = _.find($scope.recipe.jobs, { job_name: job.name });
                     }
                     // apply the selected-node class
-                    $name.addClass('selected-node');
+                    //$name.addClass('selected-node');
+                    getClosestNode(name).classed('selected-node', true);
                 }
             }
             else { // click selected node
-                $('div').removeClass('selected-node');
+                //$('div').removeClass('selected-node');
+                d3.selectAll('.nodeRect').classed('selected-node', false);
                 $scope.selectedJob = null;
                 $scope.selectedRecipeJob = null;
                 $scope.selectedOutputReceiver = null;
@@ -287,10 +288,12 @@
                 $scope.editMode = '';
                 $scope.dependencyBtnClass = 'fa-plus';
 
-                $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                getOtherNodes(name).classed('selected-node-selectable', false);
             }
             if ($scope.selectedJob) {
-                $('#' + $scope.selectedJob.name).addClass('selected-node');
+                //$('#' + $scope.selectedJob.name).addClass('selected-node');
+                getClosestNode($scope.selectedJob.name).classed('selected-node', true);
             }
         };
         $scope.toggleEditMode = function () {
@@ -541,36 +544,42 @@
             if ($scope.editMode === 'addDependency') {
                 $scope.editMode = '';
                 $scope.dependencyBtnClass = 'fa-plus';
-                $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+                //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
                 console.log('toggle addDependency mode');
                 $scope.editMode = 'addDependency';
                 $scope.dependencyBtnClass = 'fa-remove';
-                $('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
         $scope.toggleAddInput = function (jobinput) {
             if ($scope.editMode === 'addInput') {
                 $scope.editMode = '';
-                $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+                //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
                 $scope.selectedJobInput = jobinput;
                 console.log('toggle addInput mode');
                 $scope.editMode = 'addInput';
-                $('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
         $scope.toggleAddOutput = function (joboutput) {
             if ($scope.editMode === 'addOutput') {
                 $scope.editMode = '';
-                $('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+                //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
                 $scope.selectedJobOutput = joboutput;
                 console.log('toggle addOutput mode');
                 $scope.editMode = 'addOutput';
-                $('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
+                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
@@ -845,14 +854,16 @@
                 }
                 var className = getRecipeTypeJobClassName(job);
 
-                var html = '<div>';
+                var html = '<div class="recipeNode">';
                 //var html = "<div onclick=\"console.log('" + job.job_type.name + "')\">";
-                html += '<span class="status"></span>';
+                if (className !== 'nostatus') {
+                    html += '<span class="status"></span>';
+                }
                 //   html += "<span class=consumers>"+worker.consumers+"</span>";
                 html += '<span class="name">';
                 if (job.job_type) {
                     //console.log(job.jobType);
-                    html += '<div id="' + job.name + '" class="recipeNode" onclick="nodeClick(\'' + job.name + '\')"><span class="name">' + job.job_type.getIcon() + ' ' + job.name + '</span></div>';
+                    html += '<div id="' + job.name + '" class="" onclick="nodeClick(\'' + job.name + '\')"><span class="name">' + job.job_type.getIcon() + ' ' + job.name + '</span></div>';
                     //if (jobType.name) {
                     //    html += '<div id="' + job.name + '" class="recipeNode" onclick="nodeClick(\'' + job.name + '\')"><span class="name">' + jobType.getIcon() + ' ' + jobType.title + '</span></div>';
                     //} else {
@@ -916,7 +927,7 @@
             // set end node and edges
             graph.setNode('end', {
                 labelType: 'html',
-                label: '<div><span class=name>End</span></div>',
+                label: '<div class="recipeNode"><span class="name">End</span></div>',
                 rx: 5,
                 ry: 5,
                 padding: 0
@@ -935,9 +946,12 @@
                 inner.call(render, graph);
                 zoom.event(d3.select("svg"));
 
+                $('.node rect').attr('class', 'nodeRect');
+
                 // add selected class to appropriate node
                 if ($scope.selectedJob) {
-                    $('#' + $scope.selectedJob.name).addClass('selected-node');
+                    //$('#' + $scope.selectedJob.name).addClass('selected-node');
+                    getClosestNode($scope.selectedJob.name).classed('selected-node', true);
                 }
             });
         };
