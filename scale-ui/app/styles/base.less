@@ -57,8 +57,13 @@ hr {
     width: 100%;
 }
 
-.required {
+.required, .error-title {
     color: @bootstrap-danger;
+}
+
+.error-well {
+    background: lighten(@bootstrap-danger, 38%);
+    border: 1px solid lighten(@bootstrap-danger, 32%);
 }
 
 .align-right {

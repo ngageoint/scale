@@ -1,5 +1,9 @@
 <div ng-show="jobLogError" class="alert alert-danger text-center"><strong>{{ jobLogError }}</strong> {{ jobLogErrorStatus }}</div>
 <div ng-show="!jobLogError">
+    <div class="well well-sm error-well margin-top-md margin-bottom-md" ng-show="execLog.status === 'FAILED'">
+        <h4 class="panel-title error-title"><strong>{{ execLog.error.category }} Error: {{ execLog.error.title }}</strong></h4>
+        {{ execLog.error.description }}
+    </div>
     <div class="row">
         <div class="col-xs-6">
             <div ng-show="execLog.stdout" class="log">

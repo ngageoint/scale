@@ -75,8 +75,17 @@
         },
         "occurred": "2016-05-15T17:27:31.467Z"
     },
-    "error": null,
-    "status": "COMPLETED",
+    "error": {
+        "id": 1,
+        "name": "missing-input",
+        "title": "Missing Input",
+        "description": "The error that caused the failure is unknown. This needs to be a super long error message though to be able to see how to optimize the display. So even though I don't know what happened here I need to keep going on about the fact that an error occurred. So yeah, there was an error here and you're just going to have to deal with it.",
+        "category": "ALGORITHM",
+        "is_builtin": true,
+        "created": "2016-05-05T16:31:57Z",
+        "last_modified": "2016-05-05T16:31:57Z"
+    },
+    "status": "FAILED",
     "priority": 210,
     "num_exes": 1,
     "timeout": 1800,
