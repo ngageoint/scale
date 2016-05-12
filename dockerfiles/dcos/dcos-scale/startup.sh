@@ -31,9 +31,10 @@ while [[ "$CHECK1" = "0" ]]; do
   fi
 done
 
+./manage.py makemigrations
 ./manage.py migrate
 ./manage.py collectstatic --noinput
 ./manage.py load_all_data
-./manage.py scale_scheduler &
 /usr/sbin/httpd
-/usr/bin/gunicorn -b 0.0.0.0:8000 -w 4 scale.wsgi:application
+/usr/bin/gunicorn -b 0.0.0.0:8000 -w 4 scale.wsgi:application &
+./manage.py scale_scheduler

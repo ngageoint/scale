@@ -11,7 +11,6 @@ USER root
 RUN yum -y install httpd
 RUN rm -rf /etc/httpd/conf.d/welcome.conf
 COPY scale.conf /etc/httpd/conf.d/scale.conf
-#COPY local_settings.py /opt/scale/scale/local_settings.py
 ADD mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 
 RUN easy_install /tmp/mesos-0.25.0-py2.7-linux-x86_64.egg
@@ -38,7 +37,6 @@ ENV DEPLOY_DB='false' \
 ADD startup.sh /opt/scale/startup.sh
 RUN chmod +x /opt/scale/startup.sh
 
-#ADD scaleConfig.local.js /opt/scale/ui/scripts/scaleConfig.local.js
 RUN echo '<html><head><META http-equiv="refresh" content=".5;URL=./ui/"></head></html>' > /var/www/html/index.html
 
 RUN pip install requests
