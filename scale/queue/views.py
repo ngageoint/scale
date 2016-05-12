@@ -12,7 +12,7 @@ from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
 import util.rest as rest_util
-from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
 from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
@@ -140,22 +140,7 @@ class QueueStatusView(ListAPIView):
 
         page = self.paginate_queryset(queue_statuses)
         serializer = self.get_serializer(page, many=True)
-        response = self.get_paginated_response(serializer.data)
-
-        # TODO Remove legacy queue_status structure once the UI is migrated
-        results = []
-        for queue_status in queue_statuses:
-            results.append({
-                'count': queue_status.count,
-                'longest_queued': queue_status.longest_queued,
-                'job_type_name': queue_status.job_type.name,
-                'job_type_version': queue_status.job_type.version,
-                'job_type_icon_code': queue_status.job_type.icon_code,
-                'highest_priority': queue_status.highest_priority,
-                'is_job_type_paused': queue_status.job_type.is_paused,
-            })
-        response.data['queue_status'] = results
-        return response
+        return self.get_paginated_response(serializer.data)
 
 
 class RequeueJobsView(GenericAPIView):
@@ -201,38 +186,3 @@ class RequeueJobsView(GenericAPIView):
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
-
-# TODO: Remove this once the UI migrates to /queue/requeue-jobs/
-class RequeueExistingJobView(GenericAPIView):
-    """This view is the endpoint for requeuing jobs which have already been executed for the maximum number of tries
-    """
-    parser_classes = (JSONParser,)
-    serializer_class = JobDetailsSerializer
-
-    def post(self, request):
-        """Increase max_tries, place it on the queue, and returns the new job information in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_id: The ID of the job to requeue. This job must exist and must be in a FAILED or CANCELED state.
-        :rtype: int
-        :returns: the HTTP response to send back to the user
-        """
-        job_id = request.data['job_id']
-
-        try:
-            Queue.objects.requeue_existing_job(job_id)
-            job_details = Job.objects.get_details(job_id)
-
-            serializer = self.get_serializer(job_details)
-            return Response(serializer.data)
-        except Job.DoesNotExist:
-            raise Http404
-        except InvalidData:
-            logger.exception('Invalid job data submitted for requeue: %i', job_id)
-            return Response('Job meta data failed to validate: %i' % job_id, status=status.HTTP_400_BAD_REQUEST)
-        except StatusError:
-            logger.exception('Incorrect status for job submitted for requeue: %i', job_id)
-            return Response('Job must be in the CANCELED or FAILED state for requeue',
-                            status=status.HTTP_409_CONFLICT)
