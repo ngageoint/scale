@@ -1,4 +1,5 @@
-FROM geoint/scale
+#FROM geoint/scale
+FROM devdocker-reg:5000/scale:054b73b2239b59ba7fe23e892f77f390ed5a6dd2
 MAINTAINER Daniel E. Roessner <droessne@ball.com>
 
 EXPOSE 8000
