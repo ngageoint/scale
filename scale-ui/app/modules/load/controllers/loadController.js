@@ -31,12 +31,12 @@
             $scope.gridOptions.enableSorting = false;
             $scope.gridOptions.columnDefs = [
                     {
-                        field: 'job_type_name',
+                        field: 'job_type.title',
                         displayName: 'Job Type',
                         enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type_name }}</div>'
+                        cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
                     },
-                    { field: 'job_type_version', displayName: 'Version', enableFiltering: false },
+                    { field: 'job_type.version', displayName: 'Version', enableFiltering: false },
                     { field: 'highest_priority', enableFiltering: false },
                     {
                         field: 'longestQueued',
@@ -44,16 +44,16 @@
                         enableFiltering: false,
                         cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
                     },
-                    { field: 'count', enableFiltering: false },
-                    { field: 'is_job_type_paused', enableFiltering: false }
+                    { field: 'count', enableFiltering: false }
                 ];
             $scope.gridOptions.data = [];
             $scope.gridOptions.onRegisterApi = function (gridApi) {
                     //set gridApi on scope
                     $scope.gridApi = gridApi;
                     gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                        console.log(row);
-                        //$location.path('/jobs').search({job_type_id: row.entity.job_type_id, status: 'RUNNING'});
+                        $scope.$apply(function () {
+                            $location.path('/jobs').search({job_type_id: row.entity.job_type.id, status: 'QUEUED'});
+                        });
                     });
                     $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                         $scope.getPage(currentPage, pageSize);
@@ -63,9 +63,9 @@
 
             loadService.getQueueStatus(0, $scope.gridOptions.paginationPageSize).then(null, null, function (result) {
                 if (result.$resolved) {
-                    $scope.gridOptions.data = result.queue_status;
-                    $scope.gridOptions.totalItems = result.queue_status.length;
-                    $scope.totalQueued = _.sum(result.queue_status, 'count');
+                    $scope.gridOptions.data = result.results;
+                    $scope.gridOptions.totalItems = result.results.length;
+                    $scope.totalQueued = _.sum(result.results, 'count');
                     console.log('queue status updated');
                 } else {
                     if (result.statusText && result.statusText !== '') {
