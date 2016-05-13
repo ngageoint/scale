@@ -161,6 +161,7 @@ class ScaleFileManager(models.Manager):
 
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
@@ -205,6 +206,7 @@ class ScaleFileManager(models.Manager):
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
@@ -243,6 +245,7 @@ class ScaleFileManager(models.Manager):
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
         :returns: The list of saved file models
         :rtype: [:class:`storage.models.ScaleFile`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
         """
@@ -627,6 +630,7 @@ class Workspace(models.Model):
 
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
+
         :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
@@ -640,6 +644,7 @@ class Workspace(models.Model):
 
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+
         :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
@@ -661,6 +666,7 @@ class Workspace(models.Model):
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
         :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
@@ -674,6 +680,7 @@ class Workspace(models.Model):
 
         :param file_uploads: List of files to upload
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
+
         :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
@@ -701,6 +708,7 @@ class Workspace(models.Model):
 
         :returns: The absolute local path within the container for the remote mount, possibly None
         :rtype: string
+
         :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
         """
 
