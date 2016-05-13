@@ -1,21 +1,18 @@
 from __future__ import unicode_literals
 
 import time
-from datetime import timedelta
 
 import django
 from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
 from mock import MagicMock
 
-import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from job.configuration.data.exceptions import StatusError
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job
@@ -491,55 +488,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         recipe = Recipe.objects.get(pk=recipe_id)
         self.assertIsNone(recipe.completed)
-
-
-class TestQueueManagerRequeueExistingJob(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=workspace)
-
-        self.data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': source_file.id,
-            }],
-            'workspace_id': workspace.id,
-        }
-
-        self.job_type = job_test_utils.create_job_type()
-
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
-
-    def test_invalid_status(self):
-        """Tests rejecting requeue of existing job with an incorrect status."""
-        job = job_test_utils.create_job(job_type=self.job_type, status='RUNNING')
-
-        self.assertRaises(StatusError, Queue.objects.requeue_existing_job, job.id)
-
-    def test_successful(self):
-        """Tests calling QueueManager.requeue_existing_job() successfully."""
-        job = job_test_utils.create_job(job_type=self.job_type, status='FAILED', error=error_test_utils.create_error(),
-                                        data=self.data, num_exes=1)
-
-        old_max_tries = job.max_tries
-        job_exe = Queue.objects.requeue_existing_job(job.id)
-
-        # Make sure processor was called
-        self.assertTrue(self.mock_processor.process_queued.called_with(job_exe, False))
-
-        # Make sure the job attributes were updated (must refresh the model first)
-        job = Job.objects.get(pk=job.id)
-        self.assertGreater(job.max_tries, old_max_tries)
-        self.assertIsNone(job.error)
-
-        # Make sure a job execution was queued
-        self.assertTrue(Queue.objects.get(job_exe=job_exe))
 
 
 class TestQueueManagerRequeueJobs(TransactionTestCase):
