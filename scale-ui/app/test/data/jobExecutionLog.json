@@ -1,6 +1,6 @@
 {
     "id": 3,
-    "status": "FAILED",
+    "status": "COMPLETED",
     "command_arguments": "",
     "timeout": 1800,
     "pre_started": null,
@@ -42,7 +42,7 @@
             "id": 3
         },
         "error": null,
-        "status": "FAILED",
+        "status": "COMPLETED",
         "priority": 10,
         "num_exes": 1
     },
@@ -52,16 +52,7 @@
         "port": 5051,
         "slave_id": "20150821-123454-1683014024-5050-8216-S2"
     },
-    "error": {
-        "id": 1,
-        "name": "missing-input",
-        "title": "Missing Input",
-        "description": "The error that caused the failure is unknown. This needs to be a super long error message though to be able to see how to optimize the display. So even though I don't know what happened here I need to keep going on about the fact that an error occurred. So yeah, there was an error here and you're just going to have to deal with it.",
-        "category": "ALGORITHM",
-        "is_builtin": true,
-        "created": "2016-05-05T16:31:57Z",
-        "last_modified": "2016-05-05T16:31:57Z"
-    },
+    "error": null,
     "is_finished": true,
     "stdout": "Execution completed.",
     "stderr": "stderr output goes here."
