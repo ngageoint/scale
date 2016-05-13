@@ -6,6 +6,7 @@ import os
 import shutil
 
 from storage.brokers.broker import Broker, BrokerVolume
+from storage.brokers.exceptions import InvalidBrokerConfiguration
 from util.command import execute_command_line
 
 
@@ -91,8 +92,8 @@ class NfsBroker(Broker):
         """See :meth:`storage.brokers.broker.Broker.validate_configuration`
         """
 
-        # TODO: implement broker configuration validation
-        pass
+        if 'nfs_path' not in config or not config['nfs_path']:
+            raise InvalidBrokerConfiguration('NFS broker requires "nfs_path" to be populated')
 
     def _copy_file(self, src_path, dest_path):
         """Performs a copy from the src_path to the dest_path
