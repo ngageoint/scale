@@ -18,11 +18,11 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, SCALE_JOB_EXE_INPUT_PATH, \
-    SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, \
+    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
 from job.resources import JobResources
-from storage.container import get_workspace_mount_path
+from storage.container import get_workspace_volume_path
 from trigger.models import TriggerRule
 
 
@@ -297,32 +297,47 @@ class TestJobExecutionManager(TransactionTestCase):
         self.assertDictEqual(latest_job_exes, expected_result, 'latest job executions do not match expected results')
 
     def test_schedule_job_executions(self):
-        workspace_1 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host', 'host_path': '/scale'}})
-        workspace_2 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host', 'host_path': '/scale'}})
+        workspace_1 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host',
+                                                                                  'host_path': '/scale'}})
+        workspace_2 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'nfs',
+                                                                                  'nfs_path': 'scale:/scale'}})
         configuration_1 = JobConfiguration()
         configuration_1.add_pre_task_workspace(workspace_1.name, MODE_RO)
         configuration_2 = JobConfiguration()
+        configuration_2.add_pre_task_workspace(workspace_2.name, MODE_RW)
         configuration_2.add_job_task_workspace(workspace_2.name, MODE_RW)
         configuration_2.add_job_task_workspace('Dummy_name', MODE_RO)
         job_exe_1 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_1.get_dict())
         job_exe_2 = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration_2.get_dict())
         input_data_volume_1 = '%s:%s:rw' % (get_job_exe_input_vol_name(job_exe_1.id), SCALE_JOB_EXE_INPUT_PATH)
-        input_data_volume_2 = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
+        input_data_volume_2_ro = '%s:%s:ro' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
+        input_data_volume_2_rw = '%s:%s:rw' % (get_job_exe_input_vol_name(job_exe_2.id), SCALE_JOB_EXE_INPUT_PATH)
         output_data_volume_1 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_1.id), SCALE_JOB_EXE_OUTPUT_PATH)
-        output_data_volume_2 = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
-        workspace_volume_1 = '/scale:%s:ro' % get_workspace_mount_path(workspace_1.name)
-        workspace_volume_2 = '/scale:%s:rw' % get_workspace_mount_path(workspace_2.name)
+        output_data_volume_2_rw = '%s:%s:rw' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
+        output_data_volume_2_ro = '%s:%s:ro' % (get_job_exe_output_vol_name(job_exe_2.id), SCALE_JOB_EXE_OUTPUT_PATH)
+        workspace_volume_1 = '/scale:%s:ro' % get_workspace_volume_path(workspace_1.name)
+        workspace_volume_2 = '%s:%s:rw' % (get_workspace_volume_name(job_exe_2.id, workspace_2.name),
+                                           get_workspace_volume_path(workspace_2.name))
+        workspace_volume_2_create = '$(docker volume create --driver=nfs --name=%s scale/scale):%s:rw'
+        workspace_volume_2_create = workspace_volume_2_create % (get_workspace_volume_name(job_exe_2.id, workspace_2.name),
+                                                                 get_workspace_volume_path(workspace_2.name))
         db = settings.DATABASES['default']
         env_vars = [DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']), DockerParam('env', 'SCALE_DB_USER=' + db['USER']),
                     DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']),
                     DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']), DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])]
-        job_exe_1_pre_task_params = env_vars
+        job_exe_1_pre_task_params = list(env_vars)
         job_exe_1_pre_task_params.extend([DockerParam('volume', input_data_volume_1),
                                           DockerParam('volume', output_data_volume_1),
                                           DockerParam('volume', workspace_volume_1)])
-        job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2),
-                                     DockerParam('volume', output_data_volume_2),
+        job_exe_2_pre_task_params = list(env_vars)
+        job_exe_2_pre_task_params.extend([DockerParam('volume', input_data_volume_2_rw),
+                                          DockerParam('volume', output_data_volume_2_rw),
+                                          DockerParam('volume', workspace_volume_2_create)])
+        job_exe_2_job_task_params = [DockerParam('volume', input_data_volume_2_ro),
+                                     DockerParam('volume', output_data_volume_2_rw),
                                      DockerParam('volume', workspace_volume_2)]
+        job_exe_2_post_task_params = list(env_vars)
+        job_exe_2_post_task_params.extend([DockerParam('volume', output_data_volume_2_ro)])
         node_1 = node_test_utils.create_node()
         node_2 = node_test_utils.create_node()
         resources_1 = JobResources(cpus=1, mem=2, disk_in=3, disk_out=4, disk_total=7)
@@ -358,11 +373,25 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_2.job.status, 'RUNNING')
                 self.assertEqual(job_exe_2.node_id, node_2.id)
                 self.assertIsNotNone(job_exe_2.started)
+                params = job_exe_2.get_job_configuration().get_pre_task_docker_params()
+                self.assertEqual(len(params), len(job_exe_2_pre_task_params))
+                for i in range(len(params)):
+                    param = params[i]
+                    expected_param = job_exe_2_pre_task_params[i]
+                    self.assertEqual(param.flag, expected_param.flag)
+                    self.assertEqual(param.value, expected_param.value)
                 params = job_exe_2.get_job_configuration().get_job_task_docker_params()
                 self.assertEqual(len(params), len(job_exe_2_job_task_params))
                 for i in range(len(params)):
                     param = params[i]
                     expected_param = job_exe_2_job_task_params[i]
+                    self.assertEqual(param.flag, expected_param.flag)
+                    self.assertEqual(param.value, expected_param.value)
+                params = job_exe_2.get_job_configuration().get_post_task_docker_params()
+                self.assertEqual(len(params), len(job_exe_2_post_task_params))
+                for i in range(len(params)):
+                    param = params[i]
+                    expected_param = job_exe_2_post_task_params[i]
                     self.assertEqual(param.flag, expected_param.flag)
                     self.assertEqual(param.value, expected_param.value)
                 self.assertEqual(job_exe_2.cpus_scheduled, 10)
