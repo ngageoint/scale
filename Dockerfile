@@ -26,7 +26,7 @@ MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 ARG BUILDNUM=''
 
 # setup the scale user and sudo so mounts, etc. work properly
-RUN useradd --uid 1001 -M -d /opt/scale scale
+RUN useradd --uid 7498 -M -d /opt/scale scale
 COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
@@ -53,6 +53,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
+COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale
 
 # set the build number
@@ -90,9 +91,6 @@ USER scale
 
 # finish the build
 RUN ./manage.py collectstatic --noinput --settings=
-
-# add the local settings
-COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 
 # setup volumes
 VOLUME /opt/scale/static

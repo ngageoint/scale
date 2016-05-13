@@ -13,7 +13,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && pip install rasterio
 
 # This is important for permission issues
-RUN useradd --uid 1001 scale
+RUN useradd --uid 7498 scale
 USER scale
 
 COPY entryPoint.py ./

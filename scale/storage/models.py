@@ -6,14 +6,14 @@ import logging
 import os
 import re
 
-import djorm_pgjson.fields
-from django.db import transaction
-from django.utils.text import get_valid_filename
-
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
+import djorm_pgjson.fields
+from django.db import transaction
+
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
@@ -35,11 +35,11 @@ class CountryDataManager(models.Manager):
         """Updates the country border geometry for an existing country, adding a new entry for the new effective date.
 
         :param name: The name of an existing country
-        :type name: str
+        :type name: string
         :param border: The new border geometry. Either GEOSGeometry or geojson (which will be converted to GEOSGeometry)
-        :type border: GEOSGeometry or str
+        :type border: GEOSGeometry or dict
         :param effective: The effective date for the new border. If None, now() will be used
-        :type data_started: :class:`datetime.datetime`
+        :type effective: :class:`datetime.datetime`
         """
 
         if not isinstance(border, geos.geometry.GEOSGeometry):
@@ -60,10 +60,10 @@ class CountryDataManager(models.Manager):
         :param target_date: The target date
         :type target_date: :class:`datetime.datetime`
         :param name: The name of the country. Mutually exclusive with iso2. One of these is required.
-        :type name: str
+        :type name: string
         :param iso2: The iso2 abbreviation of the country. Mutually exclusive with name. One of these is required.
-        :type name: str
-        :rval: A query set
+        :type iso2: string
+        :returns: A query set
         :rtype: :class:`django.db.models.query.QuerySet`
         """
         assert((name is not None and iso2 is None) or (iso2 is not None and name is None))
@@ -80,7 +80,7 @@ class CountryDataManager(models.Manager):
         :type geom: :class:`django.contrib.gis.geos.geometry.GEOSGeometry`
         :param target_date: The target date
         :type target_date: :class:`datetime.datetime`
-        :rval: A dict of intersected countries mapped to enties
+        :returns: A dict of intersected countries mapped to entities
         :rtype: dict
         """
 
@@ -355,9 +355,9 @@ class ScaleFile(models.Model):
         """Computes and sets a new UUID value for this file by hashing the given arguments.
 
         :param args: One or more input objects to hash.
-        :type args: list[str]
+        :type args: [string]
         :returns: The generated unique identifier.
-        :rtype: str
+        :rtype: string
         """
 
         # Make sure a value is passed to avoid silently creating useless identifiers
@@ -379,7 +379,7 @@ class ScaleFile(models.Model):
         spaces.
 
         :param tag: The data type tag to add
-        :type tag: str
+        :type tag: string
         :raises InvalidDataTypeTag: If the given tag is invalid
         """
 
@@ -394,7 +394,7 @@ class ScaleFile(models.Model):
         """Returns the set of data type tags associated with this file
 
         :returns: The set of data type tags
-        :rtype: set of str
+        :rtype: {string}
         """
 
         tags = set()
@@ -422,7 +422,7 @@ class ScaleFile(models.Model):
         """Sets the data type tags on the model
 
         :param tags: The data type tags
-        :type tags: set of str
+        :type tags: {string}
         """
 
         self.data_type = ','.join(tags)
@@ -433,7 +433,7 @@ class ScaleFile(models.Model):
         Note that this property is only supported if the associated workspace supports HTTP downloads.
 
         :returns: The file download URL.
-        :rtype: str
+        :rtype: string
         """
 
         # Make sure a valid path can be created
@@ -459,6 +459,36 @@ class ScaleFile(models.Model):
 class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
+    @transaction.atomic
+    def create_workspace(self, name, title, description, configuration):
+        """Creates a new Workspace with the given configuration and returns the new Workspace model.
+        The Workspace model will be saved in the database and all changes to the database will occur in an atomic
+        transaction.
+
+        :param name: The stable name of this Workspace
+        :type name: string
+        :param title: The human-readable name of this Workspace
+        :type title: string
+        :param description: A description of this Workspace
+        :type description: string
+        :param configuration: The Workspace configuration
+        :type configuration: dict
+        :returns: The new Workspace
+        :rtype: :class:`storage.models.Workspace`
+        :raises InvalidWorkspaceConfiguration: If the configuration is invalid
+        """
+
+        # Validate the configuration, no exception is success
+        WorkspaceConfiguration(configuration)
+
+        workspace = Workspace()
+        workspace.name = name
+        workspace.title = title
+        workspace.description = description
+        workspace.configuration = configuration
+        workspace.save()
+        return workspace
+
     def get_details(self, workspace_id):
         """Returns the workspace for the given ID with all detail fields included.
 
@@ -483,11 +513,11 @@ class WorkspaceManager(models.Manager):
         :param ended: Query workspaces updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param names: Query workspaces with the given name.
-        :type names: list[str]
+        :type names: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of workspaces that match the time range.
-        :rtype: list[:class:`storage.models.Workspace`]
+        :rtype: [:class:`storage.models.Workspace`]
         """
 
         # Fetch a list of workspaces

@@ -10,8 +10,8 @@ from trigger.models import TriggerRule
 class ConfigurationErrorSerializer(serializers.ModelSerializer):
     """Converts error model fields to REST output."""
     name = serializers.CharField()
-    title = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
+    title = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    description = serializers.CharField(allow_blank=True, allow_null=True, required=False)
     category = serializers.ChoiceField(choices=Error.CATEGORIES, required=False)
 
     class Meta:
@@ -37,22 +37,22 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     version = serializers.CharField()
 
-    title = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
-    category = serializers.CharField(required=False)
-    author_name = serializers.CharField(required=False)
-    author_url = serializers.CharField(required=False)
+    title = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    description = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    category = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    author_name = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    author_url = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
     is_operational = serializers.BooleanField(required=False)
 
-    icon_code = serializers.CharField(required=False)
+    icon_code = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
     docker_privileged = serializers.BooleanField(required=False)
-    docker_image = serializers.CharField(required=False)
+    docker_image = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
     priority = serializers.IntegerField(required=False)
     timeout = serializers.IntegerField(required=False)
-    max_scheduled = serializers.IntegerField(required=False)
+    max_scheduled = serializers.IntegerField(allow_null=True, required=False)
     max_tries = serializers.IntegerField(required=False)
     cpus_required = serializers.FloatField(required=False)
     mem_required = serializers.FloatField(required=False)
@@ -75,8 +75,8 @@ class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):
     """Converts recipe type model fields to REST output."""
     name = serializers.CharField()
     version = serializers.CharField()
-    title = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
+    title = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    description = serializers.CharField(allow_blank=True, allow_null=True, required=False)
 
     definition = serializers.JSONField(required=False)
     trigger_rule = ConfigurationTriggerRuleSerializer(allow_null=True, required=False)
