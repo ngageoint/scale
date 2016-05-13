@@ -19,6 +19,7 @@ class TestWorkspaceConfigurationInit(TestCase):
         WorkspaceConfiguration({
             'broker': {
                 'type': 'host',
+                'host_path': '/the/path'
             },
         })
 
@@ -43,12 +44,23 @@ class TestWorkspaceConfigurationInit(TestCase):
         }
         self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
 
+    def test_bad_host_config(self):
+        """Tests calling WorkspaceConfiguration constructor with bad host broker configuration."""
+
+        config = {
+            'broker': {
+                'type': 'host',
+            },
+        }
+        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
+
     def test_successful(self):
         """Tests calling WorkspaceConfiguration constructor successfully with all information."""
 
         config = {
             'broker': {
                 'type': 'host',
+                'host_path': '/host/path'
             },
         }
         # No exception is success

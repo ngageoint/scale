@@ -246,25 +246,26 @@ class TestNfsBrokerUploadFiles(TestCase):
         two_calls = [call(full_workspace_path_file_1, 0644), call(full_workspace_path_file_2, 0644)]
         mock_chmod.assert_has_calls(two_calls)
 
-    class TestNfsBrokerValidateConfiguration(TestCase):
 
-        def setUp(self):
-            django.setup()
+class TestNfsBrokerValidateConfiguration(TestCase):
 
-        def test_successfully(self):
-            """Tests calling NfsBroker.validate_configuration() successfully"""
+    def setUp(self):
+        django.setup()
 
-            nfs_path = 'host:/dir'
+    def test_successfully(self):
+        """Tests calling NfsBroker.validate_configuration() successfully"""
 
-            # Call method to test
-            broker = NfsBroker()
-            # No exception is success
-            broker.validate_configuration({'type': NfsBroker().broker_type, 'nfs_path': nfs_path})
+        nfs_path = 'host:/dir'
 
-        def test_missing_nfs_path(self):
-            """Tests calling NfsBroker.validate_configuration() with a missing nfs_path value"""
+        # Call method to test
+        broker = NfsBroker()
+        # No exception is success
+        broker.validate_configuration({'type': NfsBroker().broker_type, 'nfs_path': nfs_path})
 
-            # Call method to test
-            broker = NfsBroker()
-            self.assertRaises(InvalidBrokerConfiguration, broker.validate_configuration,
-                              {'type': NfsBroker().broker_type})
+    def test_missing_nfs_path(self):
+        """Tests calling NfsBroker.validate_configuration() with a missing nfs_path value"""
+
+        # Call method to test
+        broker = NfsBroker()
+        self.assertRaises(InvalidBrokerConfiguration, broker.validate_configuration,
+                          {'type': NfsBroker().broker_type})

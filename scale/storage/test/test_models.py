@@ -467,6 +467,7 @@ class TestWorkspaceManagerCreate(TransactionTestCase):
             'version': '1.0',
             'broker': {
                 'type': 'host',
+                'host_path': '/host/path'
             },
         }
 

@@ -6,6 +6,7 @@ import os
 import shutil
 
 from storage.brokers.broker import Broker, BrokerVolume
+from storage.brokers.exceptions import InvalidBrokerConfiguration
 from util.command import execute_command_line
 
 
@@ -91,6 +92,6 @@ class HostBroker(Broker):
         """See :meth:`storage.brokers.broker.Broker.validate_configuration`
         """
 
-        # TODO: implement broker configuration validation
         # TODO: include checks against obvious 'bad' host mounts such as '/'
-        pass
+        if 'host_path' not in config or not config['host_path']:
+            raise InvalidBrokerConfiguration('Host broker requires "host_path" to be populated')

@@ -209,25 +209,26 @@ class TestHostBrokerUploadFiles(TestCase):
         two_calls = [call(full_workspace_path_file_1, 0644), call(full_workspace_path_file_2, 0644)]
         mock_chmod.assert_has_calls(two_calls)
 
-    class TestHostBrokerValidateConfiguration(TestCase):
 
-        def setUp(self):
-            django.setup()
+class TestHostBrokerValidateConfiguration(TestCase):
 
-        def test_successfully(self):
-            """Tests calling HostBroker.validate_configuration() successfully"""
+    def setUp(self):
+        django.setup()
 
-            host_path = 'host:/dir'
+    def test_successfully(self):
+        """Tests calling HostBroker.validate_configuration() successfully"""
 
-            # Call method to test
-            broker = HostBroker()
-            # No exception is success
-            broker.validate_configuration({'type': HostBroker().broker_type, 'host_path': host_path})
+        host_path = 'host:/dir'
 
-        def test_missing_host_path(self):
-            """Tests calling HostBroker.validate_configuration() with a missing host_path value"""
+        # Call method to test
+        broker = HostBroker()
+        # No exception is success
+        broker.validate_configuration({'type': HostBroker().broker_type, 'host_path': host_path})
 
-            # Call method to test
-            broker = HostBroker()
-            self.assertRaises(InvalidBrokerConfiguration, broker.validate_configuration,
-                              {'type': HostBroker().broker_type})
+    def test_missing_host_path(self):
+        """Tests calling HostBroker.validate_configuration() with a missing host_path value"""
+
+        # Call method to test
+        broker = HostBroker()
+        self.assertRaises(InvalidBrokerConfiguration, broker.validate_configuration,
+                          {'type': HostBroker().broker_type})
