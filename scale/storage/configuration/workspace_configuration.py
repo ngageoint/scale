@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+import storage.brokers.factory as broker_factory
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 
 DEFAULT_VERSION = '1.0'
@@ -20,17 +21,13 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
         },
         'broker': {
             'type': 'object',
-            'required': ['type', 'mount'],
+            'required': ['type'],
             'additionalProperties': False,
             'properties': {
                 'type': {
                     'type': 'string',
-                    'enum': ['nfs'],
+                    'enum': ['host'],
                 },
-                'mount': {
-                    'type': 'string',
-                    'minLength': 1,
-                }
             }
         }
     }
@@ -54,10 +51,15 @@ class WorkspaceConfiguration(object):
 
         self._configuration = configuration
 
+        # Valid the overall JSON schema
         try:
             validate(configuration, WORKSPACE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidWorkspaceConfiguration('Invalid Workspace configuration: %s' % unicode(ex))
+
+        # Validate the broker-specific attributes
+        broker = broker_factory.get_broker(self._configuration['broker']['type'])
+        broker.validate_configuration(self._configuration['broker'])
 
         self._populate_default_values()
         if not self._configuration['version'] == '1.0':

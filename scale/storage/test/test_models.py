@@ -466,8 +466,7 @@ class TestWorkspaceManagerCreate(TransactionTestCase):
         config = {
             'version': '1.0',
             'broker': {
-                'type': 'nfs',
-                'mount': 'host:/my/path',
+                'type': 'host',
             },
         }
 
@@ -475,5 +474,5 @@ class TestWorkspaceManagerCreate(TransactionTestCase):
         self.assertEqual(workspace.name, 'my_name')
         self.assertEqual(workspace.title, 'my_title')
         self.assertEqual(workspace.description, 'my_description')
-        self.assertEqual(workspace.configuration['broker']['mount'], 'host:/my/path')
+        self.assertEqual(workspace.configuration['broker']['type'], 'host')
         self.assertTrue(workspace.is_active)

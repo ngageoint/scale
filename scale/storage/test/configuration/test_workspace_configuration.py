@@ -18,8 +18,7 @@ class TestWorkspaceConfigurationInit(TestCase):
         # No exception is success
         WorkspaceConfiguration({
             'broker': {
-                'type': 'nfs',
-                'mount': 'host:/my/path',
+                'type': 'host',
             },
         })
 
@@ -29,8 +28,7 @@ class TestWorkspaceConfigurationInit(TestCase):
         config = {
             'version': 'BAD VERSION',
             'broker': {
-                'type': 'nfs',
-                'mount': 'host:/my/path',
+                'type': 'host',
             },
         }
         self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
@@ -41,18 +39,6 @@ class TestWorkspaceConfigurationInit(TestCase):
         config = {
             'broker': {
                 'type': 'BAD',
-                'mount': 'host:/my/path',
-            },
-        }
-        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
-
-    def test_blank_mount(self):
-        """Tests calling WorkspaceConfiguration constructor with blank mount."""
-
-        config = {
-            'broker': {
-                'type': 'nfs',
-                'mount': '',
             },
         }
         self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
@@ -62,8 +48,7 @@ class TestWorkspaceConfigurationInit(TestCase):
 
         config = {
             'broker': {
-                'type': 'nfs',
-                'mount': 'host:/my/path',
+                'type': 'host',
             },
         }
         # No exception is success
