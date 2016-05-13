@@ -75,8 +75,17 @@
         },
         "occurred": "2016-05-15T17:27:31.467Z"
     },
-    "error": null,
-    "status": "COMPLETED",
+    "error": {
+        "id": 1,
+        "name": "unknown",
+        "title": "Unknown",
+        "description": "The error that caused the failure is unknown. This needs to be a super long error message though to be able to see how to optimize the display. So even though I don't know what happened here I need to keep going on about the fact that an error occurred. So yeah, there was an error here and you're just going to have to deal with it.",
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "created": "2016-05-05T16:31:57Z",
+        "last_modified": "2016-05-05T16:31:57Z"
+    },
+    "status": "FAILED",
     "priority": 210,
     "num_exes": 1,
     "timeout": 1800,
@@ -133,21 +142,21 @@
                 "occurred": "2016-05-15T17:58:45.280Z"
             },
             "created": "2016-05-15T20:32:20.912Z",
-            "completed": "2016-05-15T20:35:20.912Z",
+            "completed": "",
             "last_modified": "2016-05-15T20:35:20.912Z"
         }
     ],
     "job_exes": [
         {
             "id": 14552,
-            "status": "COMPLETED",
+            "status": "FAILED",
             "command_arguments": "${input_file} ${job_output_dir}",
             "timeout": 1800,
             "pre_started": "2016-05-15T17:27:32.435Z",
             "pre_completed": "2016-05-15T17:27:34.346Z",
             "pre_exit_code": null,
             "job_started": "2016-05-15T17:27:42.437Z",
-            "job_completed": "2016-05-15T17:27:46.762Z",
+            "job_completed": null,
             "job_exit_code": null,
             "post_started": "2016-05-15T17:27:47.246Z",
             "post_completed": "2016-05-15T17:27:49.461Z",
