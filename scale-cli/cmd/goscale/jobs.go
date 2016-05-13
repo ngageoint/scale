@@ -28,7 +28,7 @@ MAINTAINER {{ .maintainer }}
 LABEL com.ngageoint.scale.job-type=""
 ###
 
-RUN useradd --uid 1001 scale
+RUN useradd --uid 7498 scale
 COPY entryPoint.sh ./
 ENTRYPOINT ["./entryPoint.sh"]
 `,

@@ -7,5 +7,5 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y python-devel gdal-devel gdal gdal-python python-pip numpy && yum clean all \
  && pip install rasterio
 
-RUN useradd --uid 1001 scale
+RUN useradd --uid 7498 scale
 #USER scale
