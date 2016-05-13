@@ -1,8 +1,18 @@
 <div ng-show="jobLogError" class="alert alert-danger text-center"><strong>{{ jobLogError }}</strong> {{ jobLogErrorStatus }}</div>
 <div ng-show="!jobLogError">
-    <div class="well well-sm error-well margin-top-md margin-bottom-md" ng-show="execLog.status === 'FAILED'">
-        <h4 class="panel-title error-title"><strong>{{ execLog.error.category }} Error: {{ execLog.error.title }}</strong></h4>
-        {{ execLog.error.description }}
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <div class="panel panel-error" ng-show="execLog.status === 'FAILED'">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong>{{ execLog.error.category }} Error: {{ execLog.error.title }}</strong>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {{ execLog.error.description }}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-6">
