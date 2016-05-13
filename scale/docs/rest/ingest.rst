@@ -251,7 +251,7 @@ These services provide access to information about ingested files processed by t
 |                        "workspace_path": "/workspace",                                                                  |
 |                        "data_types": [],                                                                                |
 |                        "filename_regex": "*.txt",                                                                       |
-|                        "workspace_name": "rs"                                                                           |
+|                        "workspace_name": "raw"                                                                          |
 |                    }                                                                                                    |
 |                ]                                                                                                        |
 |            },                                                                                                           |

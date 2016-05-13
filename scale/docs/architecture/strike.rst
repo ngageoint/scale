@@ -23,7 +23,7 @@ in the directory.
               "filename_regex": ".*h5",
               "data_types": [],
               "workspace_path": "/wrksp/path",
-              "workspace_name": "rs"
+              "workspace_name": "raw"
           }
       ]
    }

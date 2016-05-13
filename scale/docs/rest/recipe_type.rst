@@ -213,7 +213,7 @@ These services provide access to information about recipe types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |
@@ -413,7 +413,7 @@ These services provide access to information about recipe types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |
@@ -668,7 +668,7 @@ These services provide access to information about recipe types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |

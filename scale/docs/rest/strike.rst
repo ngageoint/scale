@@ -41,7 +41,7 @@ These services allow a user to create, view, and manage Strike processes.
 |            "files_to_ingest": [{                                                                                      |
 |                "filename_regex": ".*txt",                                                                             |
 |                "workspace_path": "/my/path",                                                                          |
-|                "workspace_name": "rs"                                                                                 |
+|                "workspace_name": "raw"                                                                                |
 |            }]                                                                                                         |
 |        }                                                                                                              |
 |    }                                                                                                                  |

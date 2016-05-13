@@ -101,7 +101,7 @@ These services provide access to information about workspaces that Scale uses to
 |            },                                                                                                           |
 |            {                                                                                                            |
 |                "id": 1,                                                                                                 |
-|                "name": "rs",                                                                                            |
+|                "name": "raw",                                                                                           |
 |                "title": "Raw Source",                                                                                   |
 |                "description": "Raw Source Workspace",                                                                   |
 |                "base_url": "http://host.com/rs",                                                                        |
@@ -167,7 +167,7 @@ These services provide access to information about workspaces that Scale uses to
 |                                                                                                                         |
 |    {                                                                                                                    |
 |        "id": 1,                                                                                                         |
-|        "name": "rs",                                                                                                    |
+|        "name": "raw",                                                                                                   |
 |        "title": "Raw Source",                                                                                           |
 |        "description": "Raw Source Workspace",                                                                           |
 |        "base_url": "http://host.com/rs",                                                                                |
