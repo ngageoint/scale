@@ -110,6 +110,11 @@
                 controller: 'jobTypesController',
                 templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
             })
+            .when('/jobs/performance', {
+                controller: 'jobTypesPerformanceController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/jobs/partials/jobTypesPerformanceTemplate.html'
+            })
             .when('/jobs/executions', {
                 controller: 'jobExecutionsController',
                 templateUrl: 'modules/jobs/partials/jobExecutionsTemplate.html'

@@ -175,6 +175,7 @@
         "subnavLinks": {
             "jobs": [
                 { "path": "jobs/types", "label": "Job Types" },
+                { "path": "jobs/performance", "label": "Job Types Performance"},
                 { "path": "jobs", "label": "Jobs" }
             ],
             "load": [

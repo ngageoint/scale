@@ -1,0 +1,6 @@
+<ais-header name="'Job Type Performance'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loading"></ais-header>
+
+<div class="row" ng-repeat="for value in vm.failedData.day1">
+    <div class="col-xs-3">{{ vm.getJobType(value.id).title }}</div>
+    <div class="col-xs-3">{{ value.count }}</div>
+</div>
