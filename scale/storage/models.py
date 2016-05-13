@@ -460,7 +460,7 @@ class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
     @transaction.atomic
-    def create_workspace(self, name, title, description, configuration):
+    def create_workspace(self, name, title, description, configuration, base_url=None, is_active=True):
         """Creates a new Workspace with the given configuration and returns the new Workspace model.
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
@@ -473,6 +473,10 @@ class WorkspaceManager(models.Manager):
         :type description: string
         :param configuration: The Workspace configuration
         :type configuration: dict
+        :param base_url: The URL prefix used to download files stored in the Workspace.
+        :type base_url: string
+        :param is_active: Whether or not the Workspace is available for use.
+        :type is_active: bool
         :returns: The new Workspace
         :rtype: :class:`storage.models.Workspace`
         :raises InvalidWorkspaceConfiguration: If the configuration is invalid
@@ -486,6 +490,8 @@ class WorkspaceManager(models.Manager):
         workspace.title = title
         workspace.description = description
         workspace.configuration = configuration
+        workspace.base_url = base_url
+        workspace.is_active = is_active
         workspace.save()
         return workspace
 
