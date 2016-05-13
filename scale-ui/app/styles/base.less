@@ -57,13 +57,21 @@ hr {
     width: 100%;
 }
 
-.required, .error-title {
+.required {
     color: @bootstrap-danger;
 }
 
 .error-well {
     background: lighten(@bootstrap-danger, 38%);
     border: 1px solid lighten(@bootstrap-danger, 32%);
+}
+
+.panel-error {
+    border: 1px solid lighten(@bootstrap-danger, 30%);
+    .panel-heading {
+        background: lighten(@bootstrap-danger, 38%);
+        color: @bootstrap-danger;
+    }
 }
 
 .align-right {
