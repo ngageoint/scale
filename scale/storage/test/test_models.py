@@ -6,7 +6,7 @@ import os
 import django
 import django.contrib.gis.geos as geos
 from django.db import transaction
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils.text import get_valid_filename
 from django.utils.timezone import utc
 from mock import MagicMock, patch
@@ -14,7 +14,7 @@ from mock import MagicMock, patch
 import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
-from storage.models import ScaleFile, CountryData
+from storage.models import CountryData, ScaleFile, Workspace
 
 
 class TestScaleFileUpdateUUID(TestCase):
@@ -368,31 +368,30 @@ class TestScaleFile(TestCase):
     def test_url(self):
         """Tests building a URL for a file."""
         ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost') 
-        file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
+        scale_file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
 
-        self.assertEqual(file.url, 'http://localhost/file/path/test.txt')
+        self.assertEqual(scale_file.url, 'http://localhost/file/path/test.txt')
 
     def test_url_base_url_missing(self):
         """Tests building a URL for a file in a workspace with no configured base URL."""
-        ws = storage_test_utils.create_workspace(name='test') 
-        file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
+        ws = storage_test_utils.create_workspace(name='test')
+        scale_file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
 
-        self.assertIsNone(file.url)
+        self.assertIsNone(scale_file.url)
 
     def test_url_base_slash(self):
         """Tests building a URL for a file where the workspace base URL has a trailing slash."""
-        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost/') 
-        file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
+        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost/')
+        scale_file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
 
-        self.assertEqual(file.url, 'http://localhost/file/path/test.txt')
+        self.assertEqual(scale_file.url, 'http://localhost/file/path/test.txt')
 
     def test_url_file_slash(self):
         """Tests building a URL for a file where the file path URL has a leading slash."""
-        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost') 
-        file = storage_test_utils.create_file(file_name='test.txt', file_path='/file/path/test.txt',
-                                                          workspace=ws)
+        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost')
+        scale_file = storage_test_utils.create_file(file_name='test.txt', file_path='/file/path/test.txt', workspace=ws)
 
-        self.assertEqual(file.url, 'http://localhost/file/path/test.txt')
+        self.assertEqual(scale_file.url, 'http://localhost/file/path/test.txt')
     
     def test_country_data(self):
         """Tests adding a border and country intersection calculation."""
@@ -400,22 +399,22 @@ class TestScaleFile(TestCase):
         testborder2 = geos.Polygon(((11, 0), (11, 8), (19, 8), (19, 0), (11, 0)))
         testborder3 = geos.Polygon(((11, 11), (11, 15), (15, 15), (15, 11), (11, 11)))
         testeffective = datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=utc)
-        CountryData.objects.create(name="Test Country", fips="TC", gmi="TCY", iso2="TC", iso3="TCY", iso_num=42,
+        CountryData.objects.create(name='Test Country', fips='TC', gmi='TCY', iso2='TC', iso3='TCY', iso_num=42,
                                    border=testborder, effective=testeffective)
-        CountryData.objects.create(name="Test Country 2", fips="TT", gmi="TCT", iso2="TT", iso3="TCT", iso_num=43,
+        CountryData.objects.create(name='Test Country 2', fips='TT', gmi='TCT', iso2='TT', iso3='TCT', iso_num=43,
                                    border=testborder2, effective=testeffective)
-        CountryData.objects.create(name="Test Country 3", fips="TH", gmi="TCH", iso2="TH", iso3="TCH", iso_num=44,
+        CountryData.objects.create(name='Test Country 3', fips='TH', gmi='TCH', iso2='TH', iso3='TCH', iso_num=44,
                                    border=testborder3, effective=testeffective)
-        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost') 
-        file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
+        ws = storage_test_utils.create_workspace(name='test', base_url='http://localhost')
+        scale_file = storage_test_utils.create_file(file_name='test.txt', workspace=ws)
         with transaction.atomic():
-            file.geometry = geos.Polygon(((5, 5), (5, 10), (12, 10), (12, 5), (5, 5)))
-            file.set_countries()
-            file.save()
-        tmp = [c.iso2 for c in file.countries.all()]
+            scale_file.geometry = geos.Polygon(((5, 5), (5, 10), (12, 10), (12, 5), (5, 5)))
+            scale_file.set_countries()
+            scale_file.save()
+        tmp = [c.iso2 for c in scale_file.countries.all()]
         self.assertEqual(len(tmp), 2)
-        self.assertIn("TC", tmp)
-        self.assertIn("TT", tmp)
+        self.assertIn('TC', tmp)
+        self.assertIn('TT', tmp)
 
 
 class TestCountryData(TestCase):
@@ -424,33 +423,56 @@ class TestCountryData(TestCase):
         django.setup()
         self.testborder = geos.Polygon(((0, 0), (0, 10), (10, 10), (0, 10), (0, 0)))
         self.testeffective = datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=utc)
-        CountryData.objects.create(name="Test Country", fips="TC", gmi="TCY", iso2="TC", iso3="TCY", iso_num=42,
+        CountryData.objects.create(name='Test Country', fips='TC', gmi='TCY', iso2='TC', iso3='TCY', iso_num=42,
                                    border=self.testborder, effective=self.testeffective)
 
     def test_access(self):
-        tmp = CountryData.objects.filter(name="Test Country")
+        tmp = CountryData.objects.filter(name='Test Country')
         self.assertEqual(tmp.count(), 1)
-        self.assertEqual(tmp[0].fips, "TC")
-        self.assertEqual(tmp[0].gmi, "TCY")
-        self.assertEqual(tmp[0].iso2, "TC")
-        self.assertEqual(tmp[0].iso3, "TCY")
+        self.assertEqual(tmp[0].fips, 'TC')
+        self.assertEqual(tmp[0].gmi, 'TCY')
+        self.assertEqual(tmp[0].iso2, 'TC')
+        self.assertEqual(tmp[0].iso3, 'TCY')
         self.assertEqual(tmp[0].iso_num, 42)
         self.assertEqual(tmp[0].border, self.testborder)
         self.assertEqual(tmp[0].effective, self.testeffective)
     
     def test_not_found(self):
-        tmp = CountryData.objects.filter(name="Kerblekistan")
+        tmp = CountryData.objects.filter(name='Kerblekistan')
         self.assertEqual(tmp.count(), 0)
     
     def test_border_update(self):
         newborder = geos.Polygon(((0, 0), (42, 0), (42, 42), (0, 42), (0, 0)))
         neweffective = datetime.datetime(2010, 4, 5, 18, 26, 0, tzinfo=utc)
-        CountryData.objects.update_border("Test Country", newborder, neweffective)
-        tmp = CountryData.objects.filter(name="Test Country", effective=neweffective)
+        CountryData.objects.update_border('Test Country', newborder, neweffective)
+        tmp = CountryData.objects.filter(name='Test Country', effective=neweffective)
         self.assertEqual(tmp[0].border, newborder)
         self.assertEqual(tmp[0].effective, neweffective)
-        self.assertEqual(tmp[0].fips, "TC")
+        self.assertEqual(tmp[0].fips, 'TC')
 
     def test_border_update_not_found(self):
         newborder = geos.Polygon(((0, 0), (42, 0), (42, 42), (0, 42), (0, 0)))
-        self.assertRaises(CountryData.DoesNotExist, CountryData.objects.update_border, "Kerblekistan", newborder)
+        self.assertRaises(CountryData.DoesNotExist, CountryData.objects.update_border, 'Kerblekistan', newborder)
+
+
+class TestWorkspaceManagerCreate(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_successful(self):
+        """Tests calling WorkspaceManager.create_workspace() successfully"""
+
+        config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'host',
+            },
+        }
+
+        workspace = Workspace.objects.create_workspace('my_name', 'my_title', 'my_description', config)
+        self.assertEqual(workspace.name, 'my_name')
+        self.assertEqual(workspace.title, 'my_title')
+        self.assertEqual(workspace.description, 'my_description')
+        self.assertEqual(workspace.configuration['broker']['type'], 'host')
+        self.assertTrue(workspace.is_active)

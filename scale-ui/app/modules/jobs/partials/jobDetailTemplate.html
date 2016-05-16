@@ -1,34 +1,45 @@
 <ais-header name="'Job Detail'" show-subnav="true" subnav-links="subnavLinks" loading="loadingJobDetail"></ais-header>
-<div class="row">
-    <div class="col-xs-9 text-left">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ job.id }}</a></li>
-            <li><a data-target="#executions" data-toggle="tab">Executions ({{job.num_exes}})</a></li>
-            <!--<li><a data-target="#recentExecution" data-toggle="tab" ng-if="latestExecution">Latest Execution</a></li>-->
-            <!--<li><a data-target="#products" data-toggle="tab">Products ({{ job.products.length }})</a></li>-->
-            <!--<li><a data-target="#childJobs" data-toggle="tab">Child Jobs</a></li>-->
-        </ul>
-    </div>
-    <span class="col-xs-3 text-right">
-        <span ng-show="!readonly && (job.status === 'FAILED' || job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
-        <span ng-show="!readonly && job.status !== 'COMPLETED' && job.status !== 'CANCELED'"><button ng-click="cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
-    </div>
+<div class="pull-right">
+    <span ng-show="!readonly && (job.status === 'FAILED' || job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+    <span ng-show="!readonly && job.status !== 'COMPLETED' && job.status !== 'CANCELED'"><button ng-click="cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
 </div>
-
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ job.id }}</a></li>
+    <li><a data-target="#executions" data-toggle="tab">Executions ({{job.num_exes}})</a></li>
+    <!--<li><a data-target="#recentExecution" data-toggle="tab" ng-if="latestExecution">Latest Execution</a></li>-->
+    <!--<li><a data-target="#products" data-toggle="tab">Products ({{ job.products.length }})</a></li>-->
+    <!--<li><a data-target="#childJobs" data-toggle="tab">Child Jobs</a></li>-->
+</ul>
 <div class="tab-content">
     <div class="tab-pane active" id="details">
-        <h4 class="margin-top-sm margin-bottom-sm">
-            <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
-            <span ng-show="job.status === 'FAILED'" class="label label-default">{{ job.error.category }} Error: {{ job.error.title }}. {{ job.error.description }}</span>
-        </h4>
+        <div class="margin-top-sm margin-bottom-lg">
+            <h3 ng-show="job.status !== 'FAILED'">
+                <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
+            </h3>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="col-xs-12 col-md-6 col-md-offset-3">-->
+                <!--<div class="well well-sm error-well margin-top-md margin-bottom-md" ng-show="job.status === 'FAILED'">-->
+                    <!--<h4 class="panel-title error-title"><strong>{{ job.error.category }} Error: {{ job.error.title }}</strong></h4>-->
+                    <!--{{ job.error.description }}-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-6">
+                <div class="panel panel-error" ng-show="job.status === 'FAILED'">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <strong>{{ job.status }} {{ lastStatusChange }}</strong>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h4 class="panel-title error-title"><strong>{{ job.error.category }} Error: {{ job.error.title }}</strong></h4>
+                        {{ job.error.description }}
+                    </div>
+                </div>
+                <strong>Overview</strong>
                 <table class="table table-hover table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Overview</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{job.job_type.id}}"><span ng-bind-html="job.job_type.getIcon()"></span> {{ job.job_type.title }} {{ job.job_type.version }}</a></td></tr>
                         <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].recipe_type.title }} {{ job.recipes[0].recipe_type.version }}</a></td></tr>
@@ -43,7 +54,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-6">
                 <strong>Timeline</strong>
                 <ais-timeline tasks="timeline" started="'started'" ended="'ended'"></ais-timeline>
             </div>

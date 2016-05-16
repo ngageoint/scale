@@ -135,6 +135,13 @@
         $httpBackend.whenGET(jobTypesRegex).respond(function () {
             return getSync(jobTypesOverrideUrl);
         });
+        
+        // Job execution logs
+        var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLog.json';
+        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-executions/.*/logs/', 'i');
+        $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
+            return getSync(jobExecutionLogsOverrideUrl);
+        });
 
 
         // Metrics Plot Data Detail

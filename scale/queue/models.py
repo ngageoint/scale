@@ -9,7 +9,7 @@ import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
@@ -534,51 +534,6 @@ class QueueManager(models.Manager):
         """
         logger.debug('Registering queue processor: %s', processor_class)
         self._processors.append(processor_class)
-
-    # TODO: deprecated, use requeue_jobs() instead
-    @transaction.atomic
-    def requeue_existing_job(self, job_id):
-        """Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
-        correspond to an existing model previously saved in the database and the job must have its related job_type
-        model. The new job_exe and queue models are saved in the database in an atomic transaction.
-
-        :param job_id: The ID of the job to update
-        :type job_id: int
-        :returns: The new job execution id or None if one was not created.
-        :rtype: int
-        :raises InvalidData: If the job data is invalid
-        :raises StatusError: If the job is not in a valid state to be queued.
-        """
-
-        # Make sure the job is ready to be re-queued
-        jobs = Job.objects.get_locked_jobs([job_id])
-        if not jobs:
-            raise Job.DoesNotExist
-        job = jobs[0]
-        if not job.is_ready_to_requeue:
-            raise StatusError
-
-        # Increase the max tries to ensure it can be scheduled
-        job.increase_max_tries()
-        Job.objects.filter(id=job.id).update(max_tries=job.max_tries)
-
-        when = timezone.now()
-        job_exe_id = None
-        if job.num_exes == 0:
-            # Job has never been queued before, set it to BLOCKED, might be changed to PENDING
-            Job.objects.update_status([job], 'BLOCKED', when)
-        else:
-            # Job has been queued before, so queue it again
-            self._queue_jobs([job])
-            job_exe = JobExecution.objects.get(job_id=job.id, status='QUEUED')
-            job_exe_id = job_exe.id
-
-        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
-        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
-        if handler:
-            jobs_to_pending = handler.get_pending_jobs()
-            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
-        return job_exe_id
 
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
