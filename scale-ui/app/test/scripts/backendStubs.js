@@ -141,7 +141,9 @@
         //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
         var metricsPlotDataRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/.*/','i');
         $httpBackend.whenGET(metricsPlotDataRegex).respond(function (method, url) {
-            var obj = {};
+            var obj = {},
+                random = 0;
+
             url.split('?')[1].split('&').forEach(function(item) {
                 var s = item.split('='),
                     k = s[0],
@@ -171,17 +173,23 @@
                 for (var i = 0; i < numDays; i++) {
                     if (obj.choice_id && obj.choice_id.length > 1) {
                         _.forEach(obj.choice_id, function (id) {
-                            returnResult.values.push({
-                                date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
-                                id: id
-                            });
+                            random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+                            //if (random % 2 == 0) {
+                                returnResult.values.push({
+                                    date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                    value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                                    id: parseInt(id)
+                                });
+                            //}
                         });
                     } else {
-                        returnResult.values.push({
-                            date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                            value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
-                        });
+                        random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+                        //if (random % 2 == 0) {
+                            returnResult.values.push({
+                                date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                            });
+                        //}
                     }
                 }
                 returnObj.results.push(returnResult);
