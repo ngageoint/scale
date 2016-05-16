@@ -207,7 +207,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -389,7 +389,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -747,7 +747,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
