@@ -26,12 +26,27 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
             'properties': {
                 'type': {
                     'type': 'string',
-                    'enum': ['host'],
+                    'enum': ['host', 'nfs'],
                 },
             }
         }
     }
 }
+
+
+class ValidationWarning(object):
+    """Tracks workspace configuration warnings during validation that may not prevent the workspacefrom working."""
+
+    def __init__(self, key, details):
+        """Constructor sets basic attributes.
+
+        :param key: A unique identifier clients can use to recognize the warning.
+        :type key: string
+        :param details: A user-friendly description of the problem, including field names and/or associated values.
+        :type details: string
+        """
+        self.key = key
+        self.details = details
 
 
 class WorkspaceConfiguration(object):
@@ -65,6 +80,15 @@ class WorkspaceConfiguration(object):
         if not self._configuration['version'] == '1.0':
             msg = 'Invalid Workspace configuration: %s is an unsupported version number'
             raise InvalidWorkspaceConfiguration(msg % self._configuration['version'])
+
+    def get_dict(self):
+        """Returns the internal dictionary that represents this workspace configuration.
+
+        :returns: The internal dictionary
+        :rtype: dict
+        """
+
+        return self._configuration
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""

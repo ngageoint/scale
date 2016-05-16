@@ -3,10 +3,13 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from mock import MagicMock
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
+import storage.brokers.factory as broker_factory
 import storage.test.utils as storage_test_utils
+from storage.brokers.broker import Broker
 from storage.models import Workspace
 
 
@@ -100,7 +103,7 @@ class TestWorkspaceCreateView(TestCase):
             'name': 'ws-name',
             'title': 'Workspace Title',
             'description': 'Workspace description',
-            'configuration': 123,
+            'json_config': 123,
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
@@ -114,7 +117,7 @@ class TestWorkspaceCreateView(TestCase):
             'name': 'ws-name',
             'title': 'Workspace Title',
             'description': 'Workspace description',
-            'configuration': {
+            'json_config': {
                 'broker': 123,
             }
         }
@@ -132,7 +135,7 @@ class TestWorkspaceCreateView(TestCase):
             'description': 'Workspace description',
             'base_url': 'http://host/my/path/',
             'is_active': False,
-            'configuration': {
+            'json_config': {
                 'broker': {
                     'type': 'host',
                 },
@@ -148,6 +151,7 @@ class TestWorkspaceCreateView(TestCase):
 
         self.assertEqual(result['title'], workspaces[0].title)
         self.assertEqual(result['description'], workspaces[0].description)
+        self.assertDictEqual(result['json_config'], workspaces[0].json_config)
         self.assertEqual(result['base_url'], workspaces[0].base_url)
         self.assertEqual(result['is_active'], workspaces[0].is_active)
         self.assertFalse(workspaces[0].is_active)
@@ -180,3 +184,106 @@ class TestWorkspaceDetailsView(TestCase):
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+
+
+class TestWorkspacesValidationView(TransactionTestCase):
+    """Tests related to the workspaces validation endpoint"""
+
+    def setUp(self):
+        django.setup()
+
+    def test_successful(self):
+        """Tests validating a new workspace."""
+        url = '/workspaces/validation/'
+        json_data = {
+            'name': 'ws-name',
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'base_url': 'http://host/my/path/',
+            'is_active': False,
+            'json_config': {
+                'broker': {
+                    'type': 'host',
+                },
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_missing_configuration(self):
+        """Tests validating a new workspace with missing configuration."""
+
+        url = '/workspaces/validation/'
+        json_data = {
+            'name': 'ws-name',
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests validating a new workspace with configuration that is not a dict."""
+
+        url = '/workspaces/validation/'
+        json_data = {
+            'name': 'ws-name',
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'json_config': 123,
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests validating a new workspace with invalid configuration."""
+
+        url = '/workspaces/validation/'
+        json_data = {
+            'name': 'ws-name',
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'json_config': {
+                'broker': 123,
+            }
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_warnings(self):
+        """Tests validating a new workspace where the broker type is changed."""
+        # TODO: Remove this once the NFS broker exists
+        test_broker = MagicMock(Broker)
+        test_broker.get_broker_type = 'nfs'
+        broker_factory.BROKERS['nfs'] = test_broker
+
+        json_config = {
+            'broker': {
+                'type': 'host',
+            },
+        }
+        storage_test_utils.create_workspace(name='ws-test', json_config=json_config)
+
+        url = '/workspaces/validation/'
+        json_data = {
+            'name': 'ws-test',
+            'json_config': {
+                'broker': {
+                    'type': 'nfs',
+                },
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'broker_type')

@@ -13,7 +13,7 @@ from django.db import transaction
 
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.workspace_configuration import ValidationWarning, WorkspaceConfiguration
 from storage.container import get_workspace_mount_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingRemoteMount
 from storage.media_type import get_media_type
@@ -463,7 +463,7 @@ class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
     @transaction.atomic
-    def create_workspace(self, name, title, description, configuration, base_url=None, is_active=True):
+    def create_workspace(self, name, title, description, json_config, base_url=None, is_active=True):
         """Creates a new Workspace with the given configuration and returns the new Workspace model.
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
@@ -474,25 +474,26 @@ class WorkspaceManager(models.Manager):
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param configuration: The Workspace configuration
-        :type configuration: dict
+        :param json_config: The Workspace configuration
+        :type json_config: dict
         :param base_url: The URL prefix used to download files stored in the Workspace.
         :type base_url: string
         :param is_active: Whether or not the Workspace is available for use.
         :type is_active: bool
         :returns: The new Workspace
         :rtype: :class:`storage.models.Workspace`
-        :raises InvalidWorkspaceConfiguration: If the configuration is invalid
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
         """
 
         # Validate the configuration, no exception is success
-        WorkspaceConfiguration(configuration)
+        configuration = WorkspaceConfiguration(json_config)
 
         workspace = Workspace()
         workspace.name = name
         workspace.title = title
         workspace.description = description
-        workspace.configuration = configuration
+        workspace.json_config = configuration.get_dict()
         workspace.base_url = base_url
         workspace.is_active = is_active
         workspace.save()
@@ -548,6 +549,37 @@ class WorkspaceManager(models.Manager):
         else:
             workspaces = workspaces.order_by('last_modified')
         return workspaces
+
+    def validate_workspace(self, name, json_config):
+        """Validates a new workspace prior to attempting a save
+
+        :param name: The stable name of this Workspace
+        :type name: string
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`storage.configuration.workspace_configuration.ValidationWarning`]
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
+        """
+        warnings = []
+
+        # Validate the configuration, no exception is success
+        # TODO: Add broker-specific warnings?
+        WorkspaceConfiguration(json_config)
+
+        # Check for issues when changing an existing workspace configuration
+        try:
+            workspace = Workspace.objects.get(name=name)
+
+            if (json_config['broker'] and workspace.json_config['broker'] and
+                    json_config['broker']['type'] != workspace.json_config['broker']['type']):
+                warnings.append(ValidationWarning('broker_type',
+                                                  'Changing the broker type may disrupt queued/running jobs.'))
+        except Workspace.DoesNotExist:
+            pass
+
+        return warnings
 
 
 class Workspace(models.Model):
