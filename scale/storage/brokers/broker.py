@@ -152,6 +152,7 @@ class Broker(object):
 
         :param config: The configuration as a dictionary
         :type config: dict
+
         :raises :class:`storage.brokers.exceptions.InvalidBrokerConfiguration`: If the given configuration is invalid
         """
 
