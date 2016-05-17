@@ -2,15 +2,15 @@
     'use strict';
     
     angular.module('scaleApp').controller('jobTypesPerformanceController', function (scaleConfig, subnavService, jobTypeService, metricsService, toastr, moment) {
-        var vm = this;
+        var vm = this,
+            started = moment.utc().subtract(3, 'd').toISOString(),
+            ended = moment.utc().toISOString(),
+            numDays = moment.utc(ended).diff(moment.utc(started), 'd'),
+            jobTypes = [];
 
         vm.loading = true;
-        vm.moment = moment;
-        vm._ = _;
-        vm.started = moment.utc().subtract(3, 'd').toISOString();
-        vm.ended = moment.utc().toISOString();
-        vm.jobTypes = [];
         vm.performanceData = [];
+        vm.dates = [];
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/performance');
 
@@ -18,11 +18,13 @@
             var valueArr = [],
                 currDate = '',
                 currTotal = 0,
-                currFailed = 0,
-                numDays = moment.utc(vm.ended).diff(moment.utc(vm.started), 'd');
+                currFailed = 0;
 
             for (var i = 0; i <= numDays; i++) {
-                currDate = moment.utc(vm.started).add(i, 'd').format('YYYY-MM-DD');
+                currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
+                if (vm.dates.length <= numDays) {
+                    vm.dates.push(currDate);
+                }
                 currTotal = _.find(total.values, { date: currDate, id: id });
                 currFailed = _.find(failed.values, { date: currDate, id: id });
                 valueArr.push({
@@ -37,14 +39,14 @@
 
         var initialize = function () {
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
-                vm.jobTypes = jobTypesData.results;
+                jobTypes = jobTypesData.results;
 
                 var metricsParams = {
                     page: null,
                     page_size: null,
-                    started: vm.started,
-                    ended: vm.ended,
-                    choice_id: _.map(vm.jobTypes, 'id'),
+                    started: started,
+                    ended: ended,
+                    choice_id: _.map(jobTypes, 'id'),
                     column: ['failed_count', 'total_count'],
                     group: null,
                     dataType: 'job-types'
@@ -54,7 +56,7 @@
                     var failed = _.find(data.results, { column: { title: 'Failed Count'}});
                     var total = _.find(data.results, { column: { title: 'Total Count'}});
 
-                    _.forEach(vm.jobTypes, function (jobType) {
+                    _.forEach(jobTypes, function (jobType) {
                         vm.performanceData.push({
                             id: jobType.id,
                             name: jobType.name,

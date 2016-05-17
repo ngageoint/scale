@@ -181,22 +181,22 @@
                     if (obj.choice_id && obj.choice_id.length > 1) {
                         _.forEach(obj.choice_id, function (id) {
                             random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                            //if (random % 2 == 0) {
+                            if (random % 2 == 0) {
                                 returnResult.values.push({
                                     date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
                                     value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
                                     id: parseInt(id)
                                 });
-                            //}
+                            }
                         });
                     } else {
                         random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                        //if (random % 2 == 0) {
+                        if (random % 2 == 0) {
                             returnResult.values.push({
                                 date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
                                 value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
                             });
-                        //}
+                        }
                     }
                 }
                 returnObj.results.push(returnResult);
