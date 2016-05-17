@@ -396,7 +396,7 @@ class StrikeManager(models.Manager):
         will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
         the database will occur in an atomic transaction.
 
-        :param name: The stable name of this Strike process
+        :param name: The identifying name of this Strike process
         :type name: str
         :param title: The human-readable name of this Strike process
         :type title: str
@@ -443,7 +443,7 @@ class StrikeManager(models.Manager):
 class Strike(models.Model):
     '''Represents an instance of a Strike process which will run and detect incoming files in a directory for ingest
 
-    :keyword name: The stable name of this Strike process
+    :keyword name: The identifying name of this Strike process
     :type name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of this Strike process
     :type title: :class:`django.db.models.CharField`

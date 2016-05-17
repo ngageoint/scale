@@ -59,7 +59,7 @@ These services provide access to information about job types.
 | .id                      | Integer           | The unique identifier of the model. Can be passed to the details API.    |
 |                          |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .name                    | String            | The stable name of the job type used for queries.                        |
+| .name                    | String            | The identifying name of the job type used for queries.                   |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .version                 | String            | The version of the job type.                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -176,7 +176,7 @@ These services provide access to information about job types.
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| name                    | String            | Required | The stable name of job type used for queries.                  |
+| name                    | String            | Required | The identifying name of job type used for queries.             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | version                 | String            | Required | The version of the job type.                                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -358,7 +358,7 @@ These services provide access to information about job types.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name                    | String            | Required | The stable name of job type used for queries.                  |
+| name                    | String            | Required | The identifying name of job type used for queries.             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | version                 | String            | Required | The version of the job type.                                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -518,7 +518,7 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | id                       | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| name                     | String            | The stable name of the job type used for queries.                        |
+| name                     | String            | The identifying name of the job type used for queries.                   |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | version                  | String            | The version of the job type.                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+

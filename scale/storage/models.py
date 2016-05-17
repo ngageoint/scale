@@ -468,7 +468,7 @@ class WorkspaceManager(models.Manager):
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
 
-        :param name: The stable name of this Workspace
+        :param name: The identifying name of this Workspace
         :type name: string
         :param title: The human-readable name of this Workspace
         :type title: string
@@ -553,7 +553,7 @@ class WorkspaceManager(models.Manager):
     def validate_workspace(self, name, json_config):
         """Validates a new workspace prior to attempting a save
 
-        :param name: The stable name of this Workspace
+        :param name: The identifying name of a Workspace to validate
         :type name: string
         :param json_config: The Workspace configuration
         :type json_config: dict
@@ -586,7 +586,7 @@ class Workspace(models.Model):
     """Represents a storage location where files can be stored and retrieved
     for processing
 
-    :keyword name: The stable name of the workspace used by clients for queries
+    :keyword name: The identifying name of the workspace used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of the workspace
     :type title: :class:`django.db.models.CharField`

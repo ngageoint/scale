@@ -625,7 +625,7 @@ class RecipeType(models.Model):
     """Represents a type of recipe that can be run on the cluster. Any updates to a recipe type model requires obtaining
     a lock on the model using select_for_update().
 
-    :keyword name: The stable name of the recipe type used by clients for queries
+    :keyword name: The identifying name of the recipe type used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the recipe type
     :type version: :class:`django.db.models.CharField`

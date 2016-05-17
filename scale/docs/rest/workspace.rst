@@ -56,7 +56,7 @@ These services provide access to information about workspaces that Scale uses to
 | .id                      | Integer           | The unique identifier of the model. Can be passed to the details API.    |
 |                          |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .name                    | String            | The stable name of the workspace used for queries.                       |
+| .name                    | String            | The identifying name of the workspace used for queries.                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .title                   | String            | The human readable display name of the workspace.                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -130,7 +130,7 @@ These services provide access to information about workspaces that Scale uses to
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| name                    | String            | Required | The stable name of the workspace used for queries.             |
+| name                    | String            | Required | The identifying name of the workspace used for queries.        |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | title                   | String            | Optional | The human-readable name of the workspace.                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -155,7 +155,8 @@ These services provide access to information about workspaces that Scale uses to
 |        "is_active": true,                                                                                               |
 |        "json_config": {                                                                                                 |
 |            "broker": {                                                                                                  |
-|                "type": "host"                                                                                           |
+|                "type": "host",                                                                                          |
+|                "host_path": "/host/path"                                                                                |
 |            }                                                                                                            |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -187,7 +188,8 @@ These services provide access to information about workspaces that Scale uses to
 |        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
 |        "json_config": {                                                                                                 |
 |            "broker": {                                                                                                  |
-|                "type": "host"                                                                                           |
+|                "type": "host",                                                                                          |
+|                "host_path": "/host/path"                                                                                |
 |            }                                                                                                            |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -213,7 +215,7 @@ These services provide access to information about workspaces that Scale uses to
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | id                       | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| name                     | String            | The stable name of the workspace used for queries.                       |
+| name                     | String            | The identifying name of the workspace used for queries.                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | title                    | String            | The human readable display name of the workspace.                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -255,7 +257,8 @@ These services provide access to information about workspaces that Scale uses to
 |        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
 |        "json_config": {                                                                                                 |
 |            "broker": {                                                                                                  |
-|                "type": "host"                                                                                           |
+|                "type": "host",                                                                                          |
+|                "host_path": "/host/path"                                                                                |
 |            }                                                                                                            |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -274,7 +277,7 @@ These services provide access to information about workspaces that Scale uses to
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| name                    | String            | Required | The stable name of the workspace used for queries.             |
+| name                    | String            | Required | The identifying name of the workspace used for queries.        |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | title                   | String            | Optional | The human-readable name of the workspace.                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -299,7 +302,8 @@ These services provide access to information about workspaces that Scale uses to
 |        "is_active": true,                                                                                               |
 |        "json_config": {                                                                                                 |
 |            "broker": {                                                                                                  |
-|                "type": "host"                                                                                           |
+|                "type": "host",                                                                                          |
+|                "host_path": "/host/path"                                                                                |
 |            }                                                                                                            |
 |        }                                                                                                                |
 |    }                                                                                                                    |

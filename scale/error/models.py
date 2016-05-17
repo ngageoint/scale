@@ -133,7 +133,7 @@ class ErrorManager(models.Manager):
 class Error(models.Model):
     """Represents an error that occurred during processing
 
-    :keyword name: The stable name of the error used by clients for queries
+    :keyword name: The identifying name of the error used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of the error
     :type title: :class:`django.db.models.CharField`

@@ -53,7 +53,7 @@ These services provide access to information about recipe types.
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
 |                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The stable name of recipe job type used for queries.                           |
+| .name              | String            | The identifying name of recipe job type used for queries.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .version           | String            | The version of the recipe type.                                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -143,7 +143,7 @@ These services provide access to information about recipe types.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Required | The stable name of recipe type used for queries.                    |
+| name               | String            | Required | The identifying name of recipe type used for queries.               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | version            | String            | Required | The version of the recipe type.                                     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -345,7 +345,7 @@ These services provide access to information about recipe types.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Required | The stable name of recipe job type used for queries.                |
+| name               | String            | Required | The identifying name of recipe job type used for queries.           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | version            | String            | Required | The version of the recipe type.                                     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
