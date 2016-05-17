@@ -487,13 +487,14 @@ class WorkspaceManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        configuration = WorkspaceConfiguration(json_config)
+        config = WorkspaceConfiguration(json_config)
+        config.validate_broker()
 
         workspace = Workspace()
         workspace.name = name
         workspace.title = title
         workspace.description = description
-        workspace.json_config = configuration.get_dict()
+        workspace.json_config = config.get_dict()
         workspace.base_url = base_url
         workspace.is_active = is_active
         workspace.save()
@@ -565,8 +566,7 @@ class WorkspaceManager(models.Manager):
         warnings = []
 
         # Validate the configuration, no exception is success
-        # TODO: Add broker-specific warnings?
-        WorkspaceConfiguration(json_config)
+        config = WorkspaceConfiguration(json_config)
 
         # Check for issues when changing an existing workspace configuration
         try:
@@ -579,6 +579,8 @@ class WorkspaceManager(models.Manager):
         except Workspace.DoesNotExist:
             pass
 
+        # Add broker-specific warnings
+        warnings.extend(config.validate_broker())
         return warnings
 
 

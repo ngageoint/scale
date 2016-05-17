@@ -152,11 +152,13 @@ class Broker(object):
 
         :param config: The configuration as a dictionary
         :type config: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: [:class:`storage.configuration.workspace_configuration.ValidationWarning`]
 
         :raises :class:`storage.brokers.exceptions.InvalidBrokerConfiguration`: If the given configuration is invalid
         """
 
-        pass
+        return []
 
 
 class BrokerVolume(object):
