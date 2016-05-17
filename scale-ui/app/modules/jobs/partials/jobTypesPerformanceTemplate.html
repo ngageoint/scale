@@ -4,14 +4,14 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Job Type</th>
+            <th>Error Type</th>
             <th ng-repeat="date in vm.dates track by $index">{{ date }}</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="data in vm.performanceData">
-            <td>{{ data.title }}</td>
-            <td ng-repeat="value in data.values">{{ value.failed }} / {{ value.total }}</td>
+            <td>{{ data.id }}</td>
+            <td ng-repeat="value in data.values">{{ value.value }}</td>
         </tr>
         </tbody>
     </table>

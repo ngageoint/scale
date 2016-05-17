@@ -182,9 +182,10 @@
                         _.forEach(obj.choice_id, function (id) {
                             random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                             if (random % 2 == 0) {
+                                var value = Math.floor(Math.random() * (100 - 5 + 1)) + 5;
                                 returnResult.values.push({
                                     date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                                    value: Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                                    value: value,
                                     id: parseInt(id)
                                 });
                             }
@@ -212,7 +213,9 @@
                 detailType = urlArr[urlArr.length - 2];
 
             if (detailType === 'job-types') {
-                return getSync('test/data/metricsJobTypes.json')
+                return getSync('test/data/metricsJobTypes.json');
+            } else if (detailType === 'error-types') {
+                return getSync('test/data/metricsErrorTypes.json');
             }
             return getSync('test/data/metricsIngest.json');
         });
