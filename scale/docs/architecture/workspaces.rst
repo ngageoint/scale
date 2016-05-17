@@ -6,7 +6,7 @@ Workspaces
 
 A workspace in the Scale system is a location where files are stored (source files, product files, etc). A workspace
 contains configuration specifying how files are stored into and retrieved from the workspace. Workspaces are configured
-to use various *brokers*, which know how to store/retrieve files in different storage systems (e.g. NFS, FTP).
+to use various *brokers*, which know how to store/retrieve files in different storage systems (e.g. NFS).
 
 **Example workspace configuration:**
 
@@ -16,12 +16,12 @@ to use various *brokers*, which know how to store/retrieve files in different st
       "version": "1.0",
       "broker": {
          "type": "nfs",
-         "mount": "host:/my/path"
+         "nfs_path": "host:/my/path"
       }
    }
 
 The *broker* value is a JSON object providing the configuration for this workspace's broker. The *type* value indicates
-that the NFS (Network File System) broker should be used for this workspace. The *mount* field specifies the NFS host
+that the NFS (Network File System) broker should be used for this workspace. The *nfs_path* field specifies the NFS host
 and path that should be mounted in order to access the files. To see all of the options for a workspace's configuration,
 please refer to the Workspace Configuration Specification below.
 
@@ -37,8 +37,7 @@ A valid workspace configuration is a JSON document with the following structure:
    {
       "version": STRING,
       "broker": {
-         "type": "nfs",
-         "mount": STRING
+         "type": STRING
       }
    }
 
@@ -53,19 +52,91 @@ A valid workspace configuration is a JSON document with the following structure:
 **broker**: JSON object
 
     The *broker* is a JSON object that defines the broker that the workspace should use for retrieving and storing
-    files. The *broker* JSON object has the following fields:
+    files. The *broker* JSON object always has the following field:
 
     **type**: JSON string
 
         The *type* is a required string that specifies the type of the broker to use. The other fields that configure
         the broker are based upon the type of the broker in the *type* field. The valid broker types are:
 
+        **host**
+
+            A "host" broker mounts a local directory from the host into the job's container. Usually this local
+            directory is a shared file system that has been mounted onto the host.
+
         **nfs**
 
-            An "nfs" broker utilizes an NFS (Network File System) for file storage. An NFS broker has the following
-            additional field:
+            An "nfs" broker utilizes an NFS (Network File System) for file storage
 
-            **mount**: JSON string
+        Additional *broker* fields may be required depending on the type of broker selected. See below for more
+        information on each broker type.
 
-                The *mount* is a required string that specifies the NFS host and path that should be mounted in order to
-                access the files (format is *host:/file/path*).
+Host Broker
+------------------------------------------------------------------------------------------------------------------------
+
+The host broker mounts a local directory from the host into the job's container. This local directory should be a shared
+file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted
+at the same location for this broker to work properly.
+
+**Permissions**
+
+The Scale Docker containers run with a UID and GID of 7498. To ensure that permissions are appropriately handled within
+Docker, make sure that your host's local directory is owned by a user/group with UID/GID of 7498/7498.
+
+**Security**
+
+There are potential security risks involved with mounting a host directory into a Docker container. It is recommended
+that you use another broker type if possible.
+
+Example host broker configuration:
+
+.. code-block:: javascript
+
+   {
+      "version": STRING,
+      "broker": {
+         "type": "host",
+         "host_path": "/the/absolute/host/path"
+      }
+   }
+
+The host broker requires one additional field in its configuration:
+
+**host_path**: JSON string
+
+    The *host_path* is a required string that specifies the absolute path of the host's local directory that should be
+    mounted into a job's container in order to access the workspace's files.
+
+NFS Broker
+------------------------------------------------------------------------------------------------------------------------
+
+The NFS broker mounts a remote network file system volume into the job's container.
+
+**Plugin Required**
+
+In order to use Scale's NFS broker, you must install and run the docker-volume-netshare plugin. Please see
+https://github.com/gondor/docker-volume-netshare for more information.
+
+**Permissions**
+
+The Scale Docker containers run with a UID and GID of 7498. To ensure that permissions are appropriately handled within
+Docker, make sure that the directories in your NFS file volume are owned by a user/group with UID/GID of 7498/7498.
+
+Example NFS broker configuration:
+
+.. code-block:: javascript
+
+   {
+      "version": STRING,
+      "broker": {
+         "type": "nfs",
+         "nfs_path": "host:/my/path"
+      }
+   }
+
+The NFS broker requires one additional field in its configuration:
+
+**nfs_path**: JSON string
+
+    The *nfs_path* is a required string that specifies the remote NFS path to use for storing and retrieving the
+    workspace files. It should be in the format *host:/path*.

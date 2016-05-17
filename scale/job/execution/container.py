@@ -32,3 +32,17 @@ def get_job_exe_output_vol_name(job_exe_id):
     """
 
     return 'scale_%s_output_data' % unicode(job_exe_id)
+
+
+def get_workspace_volume_name(job_exe_id, workspace):
+    """Returns the name of the workspace's container volume for the given job execution ID
+
+    :param job_exe_id: The job execution ID
+    :type job_exe_id: int
+    :param workspace: The name of the workspace
+    :type workspace: string
+    :returns: The workspace's container volume name
+    :rtype: string
+    """
+
+    return 'scale_%s_wksp_%s' % (unicode(job_exe_id), workspace)

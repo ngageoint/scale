@@ -31,9 +31,9 @@ class InvalidDataTypeTag(Exception):
     pass
 
 
-class MissingRemoteMount(Exception):
-    """Exception indicating that a workspace required a remote file system mount in order to perform an operation and
-    the required mount was missing
+class MissingVolumeMount(Exception):
+    """Exception indicating that a workspace required a volume file system mount in order to perform an operation and
+    the required volume mount was missing
     """
 
     pass

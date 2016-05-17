@@ -1360,7 +1360,7 @@ class JobExecution(models.Model):
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(workspaces)
+        configuration.configure_workspace_docker_params(self.id, workspaces)
 
         # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
         # jobs no longer mount within the container.

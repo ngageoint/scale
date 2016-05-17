@@ -7,7 +7,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
-from storage.container import get_workspace_mount_path
+from job.execution.container import get_workspace_volume_name
+from storage.container import get_workspace_volume_path
 
 
 logger = logging.getLogger(__name__)
@@ -221,18 +222,48 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('Duplicate workspace %s in pre task' % name)
         self._configuration['pre_task']['workspaces'].append({'name': name, 'mode': mode})
 
-    def configure_workspace_docker_params(self, workspaces):
+    def configure_workspace_docker_params(self, job_exe_id, workspaces):
         """Configures the Docker parameters needed for each workspace in the job execution tasks
 
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         """
 
-        for param in self._get_workspace_docker_params(self.get_pre_task_workspaces(), workspaces):
+        # Configure pre-task workspaces, any that need volumes will have them created
+        created_workspaces = set()
+        for param in self._get_workspace_docker_params(job_exe_id, self.get_pre_task_workspaces(), workspaces, True):
             self.add_pre_task_docker_param(param)
-        for param in self._get_workspace_docker_params(self.get_job_task_workspaces(), workspaces):
+        for task_workspace in self.get_pre_task_workspaces():
+            created_workspaces.add(task_workspace.name)
+
+        # Configure job-task workspaces, creating any volumes that were not created in a previous task
+        workspaces_already_created = []
+        workspaces_not_created = []
+        for task_workspace in self.get_job_task_workspaces():
+            if task_workspace.name in created_workspaces:
+                workspaces_already_created.append(task_workspace)
+            else:
+                workspaces_not_created.append(task_workspace)
+                created_workspaces.add(task_workspace.name)
+        for param in self._get_workspace_docker_params(job_exe_id, workspaces_already_created, workspaces, False):
             self.add_job_task_docker_param(param)
-        for param in self._get_workspace_docker_params(self.get_post_task_workspaces(), workspaces):
+        for param in self._get_workspace_docker_params(job_exe_id, workspaces_not_created, workspaces, True):
+            self.add_job_task_docker_param(param)
+
+        # Configure post-task workspaces, creating any volumes that were not created in a previous task
+        workspaces_already_created = []
+        workspaces_not_created = []
+        for task_workspace in self.get_post_task_workspaces():
+            if task_workspace.name in created_workspaces:
+                workspaces_already_created.append(task_workspace)
+            else:
+                workspaces_not_created.append(task_workspace)
+                created_workspaces.add(task_workspace.name)
+        for param in self._get_workspace_docker_params(job_exe_id, workspaces_already_created, workspaces, False):
+            self.add_post_task_docker_param(param)
+        for param in self._get_workspace_docker_params(job_exe_id, workspaces_not_created, workspaces, True):
             self.add_post_task_docker_param(param)
 
     def get_job_task_docker_params(self):
@@ -304,13 +335,17 @@ class JobConfiguration(object):
 
         return self._configuration
 
-    def _get_workspace_docker_params(self, task_workspaces, workspaces):
+    def _get_workspace_docker_params(self, job_exe_id, task_workspaces, workspaces, volume_create):
         """Returns the Docker parameters needed for the given task workspaces
 
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
         :param task_workspaces: List of the task workspaces
         :type task_workspaces: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
+        :param volume_create: Indicates if new volumes need to be created for these workspaces
+        :type volume_create: bool
         :returns: The Docker parameters needed by the given workspaces
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
@@ -321,9 +356,21 @@ class JobConfiguration(object):
             mode = task_workspace.mode
             if name in workspaces:
                 workspace = workspaces[name]
-                if workspace.mount:
-                    broker_volume = '%s:%s:%s' % (workspace.mount, get_workspace_mount_path(name), mode)
-                    params.append(DockerParam('volume', broker_volume))
+                if workspace.volume:
+                    vol = workspace.volume
+                    if vol.host:
+                        # Host mount is special, no volume name, just the host mount path
+                        volume_name = vol.remote_path
+                    elif volume_create:
+                        # Create job_exe workspace volume for first time
+                        volume_create_cmd = '$(docker volume create --driver=%s --name=%s %s)'
+                        volume_name = volume_create_cmd % (vol.driver, get_workspace_volume_name(job_exe_id, name),
+                                                           vol.remote_path)
+                    else:
+                        # Volume already created, re-use name
+                        volume_name = get_workspace_volume_name(job_exe_id, name)
+                    workspace_volume = '%s:%s:%s' % (volume_name, get_workspace_volume_path(name), mode)
+                    params.append(DockerParam('volume', workspace_volume))
         return params
 
     def _populate_default_values(self):
