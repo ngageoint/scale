@@ -1,8 +1,9 @@
 """Defines the factory for creating brokers"""
 from storage.brokers.host_broker import HostBroker
+from storage.brokers.nfs_broker import NfsBroker
 
 
-BROKERS = {HostBroker().broker_type: HostBroker}
+BROKERS = {HostBroker().broker_type: HostBroker, NfsBroker().broker_type: NfsBroker}
 
 
 def get_broker(broker_type):

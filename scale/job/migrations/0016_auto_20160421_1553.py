@@ -24,44 +24,46 @@ class Migration(migrations.Migration):
             workspaces[workspace.id] = workspace
         print 'Populating new configuration field for %s jobs' % str(total_count)
         done_count = 0
-        for job in Job.objects.select_related('job_type').iterator():
-            if done_count % 1000 == 0:
-                percent = (done_count / total_count) * 100.00
-                print 'Completed %s of %s jobs (%f%%)' % (done_count, total_count, percent)
-            done_count += 1
+        batch_size = 1000
+        while done_count < total_count:
+            percent = (float(done_count) / float(total_count)) * 100.00
+            print 'Completed %s of %s jobs (%f%%)' % (done_count, total_count, percent)
+            batch_end = done_count + batch_size
+            for job in Job.objects.select_related('job_type').order_by('id')[done_count:batch_end]:
 
-            # Ignore jobs that don't have their job data populated yet
-            if not job.data:
-                continue
+                # Ignore jobs that don't have their job data populated yet
+                if not job.data:
+                    continue
 
-            data = JobData(job.data)
-            input_file_ids = data.get_input_file_ids()
-            input_files = ScaleFile.objects.filter(id__in=input_file_ids).select_related('workspace').iterator()
-            input_workspaces = set()
-            for input_file in input_files:
-                input_workspaces.add(input_file.workspace.name)
+                data = JobData(job.data)
+                input_file_ids = data.get_input_file_ids()
+                input_files = ScaleFile.objects.filter(id__in=input_file_ids).select_related('workspace').iterator()
+                input_workspaces = set()
+                for input_file in input_files:
+                    input_workspaces.add(input_file.workspace.name)
 
-            configuration = JobConfiguration()
-            for name in input_workspaces:
-                configuration.add_job_task_workspace(name, MODE_RO)
-            if not job.job_type.is_system:
+                configuration = JobConfiguration()
                 for name in input_workspaces:
-                    configuration.add_pre_task_workspace(name, MODE_RO)
-                    # We add input workspaces to post task so it can perform a parse results move if requested by the
-                    # job's results manifest
-                    configuration.add_post_task_workspace(name, MODE_RW)
-                for workspace_id in data.get_output_workspace_ids():
-                    workspace = workspaces[workspace_id]
-                    if workspace.name not in input_workspaces:
-                        configuration.add_post_task_workspace(workspace.name, MODE_RW)
-            elif job.job_type.name == 'scale-ingest':
-                ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
-                from ingest.models import Ingest
-                ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
-                configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+                    configuration.add_job_task_workspace(name, MODE_RO)
+                if not job.job_type.is_system:
+                    for name in input_workspaces:
+                        configuration.add_pre_task_workspace(name, MODE_RO)
+                        # We add input workspaces to post task so it can perform a parse results move if requested by the
+                        # job's results manifest
+                        configuration.add_post_task_workspace(name, MODE_RW)
+                    for workspace_id in data.get_output_workspace_ids():
+                        workspace = workspaces[workspace_id]
+                        if workspace.name not in input_workspaces:
+                            configuration.add_post_task_workspace(workspace.name, MODE_RW)
+                elif job.job_type.name == 'scale-ingest':
+                    ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
+                    from ingest.models import Ingest
+                    ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
+                    configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
 
-            job.configuration = configuration.get_dict()
-            job.save()
+                job.configuration = configuration.get_dict()
+                job.save()
+            done_count += batch_size
         print 'All %s jobs completed' % str(total_count)
 
     operations = [

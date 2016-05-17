@@ -22,7 +22,7 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
         'broker': {
             'type': 'object',
             'required': ['type'],
-            'additionalProperties': False,
+            'additionalProperties': True,
             'properties': {
                 'type': {
                     'type': 'string',
