@@ -138,6 +138,7 @@ class TestWorkspaceCreateView(TestCase):
             'json_config': {
                 'broker': {
                     'type': 'host',
+                    'host_path': '/host/path',
                 },
             },
         }
@@ -204,6 +205,7 @@ class TestWorkspacesValidationView(TransactionTestCase):
             'json_config': {
                 'broker': {
                     'type': 'host',
+                    'host_path': '/host/path',
                 },
             },
         }
@@ -251,7 +253,7 @@ class TestWorkspacesValidationView(TransactionTestCase):
             'description': 'Workspace description',
             'json_config': {
                 'broker': 123,
-            }
+            },
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
@@ -259,14 +261,11 @@ class TestWorkspacesValidationView(TransactionTestCase):
 
     def test_warnings(self):
         """Tests validating a new workspace where the broker type is changed."""
-        # TODO: Remove this once the NFS broker exists
-        test_broker = MagicMock(Broker)
-        test_broker.get_broker_type = 'nfs'
-        broker_factory.BROKERS['nfs'] = test_broker
 
         json_config = {
             'broker': {
                 'type': 'host',
+                'host_path': '/host/path',
             },
         }
         storage_test_utils.create_workspace(name='ws-test', json_config=json_config)
@@ -277,6 +276,7 @@ class TestWorkspacesValidationView(TransactionTestCase):
             'json_config': {
                 'broker': {
                     'type': 'nfs',
+                    'nfs_path': 'host:/dir',
                 },
             },
         }
