@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import datetime
@@ -25,7 +24,7 @@ class TestIngestsView(TestCase):
         self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED')
 
     def test_successful(self):
-        '''Tests successfully calling the ingests view.'''
+        """Tests successfully calling the ingests view."""
 
         url = '/ingests/'
         response = self.client.generic('GET', url)
@@ -45,7 +44,7 @@ class TestIngestsView(TestCase):
             self.assertEqual(entry['status'], expected.status)
 
     def test_status(self):
-        '''Tests successfully calling the ingests view.'''
+        """Tests successfully calling the ingests view."""
 
         url = '/ingests/?status=%s' % self.ingest1.status
         response = self.client.generic('GET', url)
@@ -65,26 +64,40 @@ class TestIngestDetailsView(TestCase):
 
         self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
 
-    def test_not_found(self):
-        '''Tests calling the ingest details view with an id that does not exist.'''
-
-        url = '/ingests/100/'
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_successful(self):
-        '''Tests successfully calling the ingest details view.'''
+    def test_id(self):
+        """Tests successfully calling the ingests view by id."""
 
         url = '/ingests/%d/' % self.ingest.id
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.generic('GET', url)
         result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(result['id'], self.ingest.id)
-        self.assertEqual(result['file_name'], 'test1.txt')
-        self.assertEqual(result['status'], 'QUEUED')
+        self.assertEqual(result['file_name'], self.ingest.file_name)
+        self.assertEqual(result['status'], self.ingest.status)
+
+    def test_file_name(self):
+        """Tests successfully calling the ingests view by file name."""
+
+        url = '/ingests/%s/' % self.ingest.file_name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['id'], self.ingest.id)
+        self.assertEqual(result['file_name'], self.ingest.file_name)
+        self.assertEqual(result['status'], self.ingest.status)
+
+    def test_missing(self):
+        """Tests calling the ingests view with an invalid id or file name."""
+
+        url = '/ingests/12345/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND), response.content
+
+        url = '/ingests/missing_file.txt/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 class TestIngestStatusView(TestCase):
@@ -103,7 +116,7 @@ class TestIngestStatusView(TestCase):
                                                        ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=timezone.utc))
 
     def test_successful(self):
-        '''Tests successfully calling the ingest status view.'''
+        """Tests successfully calling the ingest status view."""
 
         url = '/ingests/status/'
         response = self.client.generic('GET', url)
@@ -119,7 +132,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size)
 
     def test_time_range(self):
-        '''Tests successfully calling the ingest status view with a time range filter.'''
+        """Tests successfully calling the ingest status view with a time range filter."""
 
         url = '/ingests/status/?started=2015-01-01T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -135,7 +148,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size + self.ingest4.file_size)
 
     def test_use_ingest_time(self):
-        '''Tests successfully calling the ingest status view grouped by ingest time instead of data time.'''
+        """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
 
         url = '/ingests/status/?started=2015-02-01T00:00:00Z&ended=2015-03-01T00:00:00Z&use_ingest_time=true'
         response = self.client.generic('GET', url)
@@ -151,7 +164,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest3.file_size)
 
     def test_fill_empty_slots(self):
-        '''Tests successfully calling the ingest status view with place holder zero values when no data exists.'''
+        """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
 
         url = '/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z'
         response = self.client.generic('GET', url)
@@ -168,7 +181,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(len(entry['values']), 24)
 
     def test_multiple_strikes(self):
-        '''Tests successfully calling the ingest status view with multiple strike process groupings.'''
+        """Tests successfully calling the ingest status view with multiple strike process groupings."""
         ingest_test_utils.create_strike()
         strike3 = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
@@ -191,7 +204,7 @@ class TestCreateStrikeView(TestCase):
         self.workspace = storage_test_utils.create_workspace()
 
     def test_missing_configuration(self):
-        '''Tests calling the create Strike view with missing configuration.'''
+        """Tests calling the create Strike view with missing configuration."""
 
         url = '/strike/create/'
         json_data = {
@@ -204,7 +217,7 @@ class TestCreateStrikeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_configuration_bad_type(self):
-        '''Tests calling the create Strike view with configuration that is not a dict.'''
+        """Tests calling the create Strike view with configuration that is not a dict."""
 
         url = '/strike/create/'
         json_data = {
@@ -218,7 +231,7 @@ class TestCreateStrikeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_configuration(self):
-        '''Tests calling the create Strike view with invalid configuration.'''
+        """Tests calling the create Strike view with invalid configuration."""
 
         url = '/strike/create/'
         json_data = {
@@ -234,7 +247,7 @@ class TestCreateStrikeView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_successful(self):
-        '''Tests calling the create Strike view successfully.'''
+        """Tests calling the create Strike view successfully."""
 
         url = '/strike/create/'
         json_data = {
