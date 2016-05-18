@@ -475,5 +475,5 @@ class TestWorkspaceManagerCreate(TransactionTestCase):
         self.assertEqual(workspace.name, 'my_name')
         self.assertEqual(workspace.title, 'my_title')
         self.assertEqual(workspace.description, 'my_description')
-        self.assertEqual(workspace.configuration['broker']['type'], 'host')
+        self.assertEqual(workspace.json_config['broker']['type'], 'host')
         self.assertTrue(workspace.is_active)

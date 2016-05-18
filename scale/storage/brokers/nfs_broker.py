@@ -94,6 +94,7 @@ class NfsBroker(Broker):
 
         if 'nfs_path' not in config or not config['nfs_path']:
             raise InvalidBrokerConfiguration('NFS broker requires "nfs_path" to be populated')
+        return []
 
     def _copy_file(self, src_path, dest_path):
         """Performs a copy from the src_path to the dest_path
@@ -121,7 +122,7 @@ class NfsBroker(Broker):
                         apply(os.path.join, srv_dest_path) if srv_dest_path[0] is not None else srv_dest_path[1]]
             execute_command_line(cmd_list)
             return
-        except OSError, e:
+        except OSError as e:
             # errno 2 is No such file or directory..bbcp not installed. We'll be quiet about it but fallback
             if e.errno != 2:
                 logger.exception("NFS Broker bbcp copy_file")  # Ignore the error and attempt a regular cp

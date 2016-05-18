@@ -92,6 +92,8 @@ class HostBroker(Broker):
         """See :meth:`storage.brokers.broker.Broker.validate_configuration`
         """
 
-        # TODO: include checks against obvious 'bad' host mounts such as '/'
         if 'host_path' not in config or not config['host_path']:
             raise InvalidBrokerConfiguration('Host broker requires "host_path" to be populated')
+
+        # TODO: include checks against obvious 'bad' host mounts such as '/'
+        return []

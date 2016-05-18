@@ -59,7 +59,7 @@ These services provide access to information about job types.
 | .id                      | Integer           | The unique identifier of the model. Can be passed to the details API.    |
 |                          |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .name                    | String            | The stable name of the job type used for queries.                        |
+| .name                    | String            | The identifying name of the job type used for queries.                   |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .version                 | String            | The version of the job type.                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -176,7 +176,7 @@ These services provide access to information about job types.
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| name                    | String            | Required | The stable name of job type used for queries.                  |
+| name                    | String            | Required | The identifying name of job type used for queries.             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | version                 | String            | Required | The version of the job type.                                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -207,7 +207,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -286,7 +286,7 @@ These services provide access to information about job types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |
@@ -358,7 +358,7 @@ These services provide access to information about job types.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name                    | String            | Required | The stable name of job type used for queries.                  |
+| name                    | String            | Required | The identifying name of job type used for queries.             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | version                 | String            | Required | The version of the job type.                                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -389,7 +389,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -468,7 +468,7 @@ These services provide access to information about job types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |
@@ -518,7 +518,7 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | id                       | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| name                     | String            | The stable name of the job type used for queries.                        |
+| name                     | String            | The identifying name of the job type used for queries.                   |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | version                  | String            | The version of the job type.                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -747,7 +747,7 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | timeout                 | Integer           | Optional | The maximum amount of time to allow a job of this type to run  |
 |                         |                   |          | before being killed (in seconds).                              |
-+-------------------------+-------------------+---------------------------------------------------------------------------+
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | max_scheduled           | Integer           | Optional | Indicates the maximum number of jobs of this type that may be  |
 |                         |                   |          | scheduled to run at the same time.                             |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -825,7 +825,7 @@ These services provide access to information about job types.
 |                },                                                                                                       |
 |                "data": {                                                                                                |
 |                    "input_data_name": "input_file",                                                                     |
-|                    "workspace_name": "rs"                                                                               |
+|                    "workspace_name": "raw"                                                                              |
 |                }                                                                                                        |
 |            }                                                                                                            |
 |        }                                                                                                                |

@@ -4,22 +4,25 @@ from __future__ import unicode_literals
 import logging
 
 from django.http.response import Http404
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import util.rest as rest_util
+from util.rest import BadParameter
+from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.models import Workspace
 from storage.serializers import WorkspaceDetailsSerializer, WorkspaceSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class WorkspacesView(ListAPIView):
+class WorkspacesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all workspaces."""
     queryset = Workspace.objects.all()
     serializer_class = WorkspaceSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the list of all workspaces and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -40,6 +43,31 @@ class WorkspacesView(ListAPIView):
         page = self.paginate_queryset(workspaces)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+    def create(self, request):
+        """Creates a new Workspace and returns it in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        json_config = rest_util.parse_dict(request, 'json_config')
+        base_url = rest_util.parse_string(request, 'base_url', required=False)
+        is_active = rest_util.parse_string(request, 'is_active', required=False)
+
+        try:
+            workspace = Workspace.objects.create_workspace(name, title, description, json_config, base_url, is_active)
+        except InvalidWorkspaceConfiguration as ex:
+            logger.exception('Unable to create new workspace: %s', name)
+            raise BadParameter(unicode(ex))
+
+        serializer = WorkspaceDetailsSerializer(workspace)
+        return Response(serializer.data)
 
 
 class WorkspaceDetailsView(RetrieveAPIView):
@@ -64,3 +92,35 @@ class WorkspaceDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(workspace)
         return Response(serializer.data)
+
+
+class WorkspacesValidationView(APIView):
+    """This view is the endpoint for validating a new workspace before attempting to actually create it"""
+    queryset = Workspace.objects.all()
+
+    def post(self, request):
+        """Validates a new workspace and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        json_config = rest_util.parse_dict(request, 'json_config')
+
+        rest_util.parse_string(request, 'title', required=False)
+        rest_util.parse_string(request, 'description', required=False)
+        rest_util.parse_string(request, 'base_url', required=False)
+        rest_util.parse_string(request, 'is_active', required=False)
+
+        # Validate the workspace configuration
+        try:
+            warnings = Workspace.objects.validate_workspace(name, json_config)
+        except InvalidWorkspaceConfiguration as ex:
+            logger.exception('Unable to validate new workspace: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})

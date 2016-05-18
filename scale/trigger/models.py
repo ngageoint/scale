@@ -138,7 +138,7 @@ class TriggerRule(models.Model):
 
     :keyword type: The type of the trigger for the rule
     :type type: :class:`django.db.models.CharField`
-    :keyword name: The stable name of the trigger rule used by clients for queries
+    :keyword name: The identifying name of the trigger rule used by clients for queries
     :type name: :class:`django.db.models.CharField`
 
     :keyword configuration: JSON configuration for the rule. This will contain fields specific to the type of the
