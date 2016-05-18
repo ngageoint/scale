@@ -3,7 +3,7 @@ version: "1.0.0"
 title: Principal Components Analysis
 description: Generate Principal Components image.
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
-docker_image: "geoint/pca_1.0"
+docker_image: "geoint/pca"
 priority: 250
 timeout: 300
 max_tries: 3
