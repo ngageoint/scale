@@ -3,7 +3,7 @@ version: "1.0.0"
 title: JPL Signature Library
 description: Select a signature from the JPL signature library.
 icon_code: f012
-docker_image: "geoint/jpl-signatures_1.0"
+docker_image: "geoint/jpl-signatures"
 priority: 250
 timeout: 300
 max_tries: 2
