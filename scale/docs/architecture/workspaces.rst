@@ -114,8 +114,8 @@ The NFS broker mounts a remote network file system volume into the job's contain
 
 **Plugin Required**
 
-In order to use Scale's NFS broker, you must install and run the docker-volume-netshare plugin. Please see
-https://github.com/gondor/docker-volume-netshare for more information.
+In order to use Scale's NFS broker, you must install and run the Netshare Docker plugin. Please see
+http://netshare.containx.io/ for more information.
 
 **Permissions**
 
