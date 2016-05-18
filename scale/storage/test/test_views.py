@@ -163,7 +163,14 @@ class TestWorkspaceDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace()
+        self.config = {
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace(json_config=self.config)
 
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
@@ -171,7 +178,7 @@ class TestWorkspaceDetailsView(TestCase):
         url = '/workspaces/100/'
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_successful(self):
         """Tests successfully calling the get workspace details view."""
@@ -180,11 +187,82 @@ class TestWorkspaceDetailsView(TestCase):
         response = self.client.get(url)
         result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a workspace"""
+
+        url = '/workspaces/%d/' % self.workspace.id
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+            'is_active': False,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.workspace.id)
+        self.assertEqual(result['title'], 'Title EDIT')
+        self.assertEqual(result['description'], 'Description EDIT')
+        self.assertDictEqual(result['json_config'], self.workspace.json_config)
+        self.assertFalse(result['is_active'])
+
+        workspace = Workspace.objects.get(pk=self.workspace.id)
+        self.assertEqual(workspace.title, 'Title EDIT')
+        self.assertEqual(workspace.description, 'Description EDIT')
+        self.assertFalse(result['is_active'])
+
+    def test_edit_config(self):
+        """Tests editing the configuration of a workspace"""
+
+        config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'nfs',
+                'nfs_path': 'host:/dir',
+            },
+        }
+
+        url = '/workspaces/%d/' % self.workspace.id
+        json_data = {
+            'json_config': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['id'], self.workspace.id)
+        self.assertEqual(result['title'], self.workspace.title)
+        self.assertDictEqual(result['json_config'], config)
+
+        workspace = Workspace.objects.get(pk=self.workspace.id)
+        self.assertEqual(workspace.title, self.workspace.title)
+        self.assertDictEqual(workspace.json_config, config)
+
+    def test_edit_bad_config(self):
+        """Tests attempting to edit a workspace using an invalid configuration"""
+
+        config = {
+            'version': 'BAD',
+            'broker': {
+                'type': 'nfs',
+                'host_path': 'host:/dir',
+            },
+        }
+
+        url = '/workspaces/%d/' % self.workspace.id
+        json_data = {
+            'json_config': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestWorkspacesValidationView(TransactionTestCase):

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.http.response import Http404
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -70,12 +70,12 @@ class WorkspacesView(ListCreateAPIView):
         return Response(serializer.data)
 
 
-class WorkspaceDetailsView(RetrieveAPIView):
+class WorkspaceDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a workspace."""
     queryset = Workspace.objects.all()
     serializer_class = WorkspaceDetailsSerializer
 
-    def retrieve(self, request, workspace_id):
+    def get(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form
 
         :param request: the HTTP GET request
@@ -89,6 +89,36 @@ class WorkspaceDetailsView(RetrieveAPIView):
             workspace = Workspace.objects.get_details(workspace_id)
         except Workspace.DoesNotExist:
             raise Http404
+
+        serializer = self.get_serializer(workspace)
+        return Response(serializer.data)
+
+    def patch(self, request, workspace_id):
+        """Edits an existing workspace and returns the updated details
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param workspace_id: The ID for the workspace.
+        :type workspace_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        json_config = rest_util.parse_dict(request, 'json_config', required=False)
+        base_url = rest_util.parse_string(request, 'base_url', required=False)
+        is_active = rest_util.parse_string(request, 'is_active', required=False)
+
+        try:
+            Workspace.objects.edit_workspace(workspace_id, title, description, json_config, base_url, is_active)
+
+            workspace = Workspace.objects.get_details(workspace_id)
+        except Workspace.DoesNotExist:
+            raise Http404
+        except InvalidWorkspaceConfiguration as ex:
+            logger.exception('Unable to edit workspace: %s', workspace_id)
+            raise BadParameter(unicode(ex))
 
         serializer = self.get_serializer(workspace)
         return Response(serializer.data)
