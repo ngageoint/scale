@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 
 import util.rest as rest_util
 from ingest.models import Ingest, Strike
-from ingest.serializers import IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer
+from ingest.serializers import IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer, StrikeSerializer
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from util.rest import BadParameter
 
@@ -104,6 +104,34 @@ class IngestsStatusView(ListAPIView):
         ingests = Ingest.objects.get_status(started, ended, use_ingest_time)
 
         page = self.paginate_queryset(ingests)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class StrikesView(ListAPIView):
+    """This view is the endpoint for retrieving the list of all Strike processors."""
+    queryset = Strike.objects.all()
+    serializer_class = StrikeSerializer
+
+    def list(self, request):
+        """Retrieves the list of all Strike processors and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        names = rest_util.parse_string_list(request, 'name', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        strikes = Strike.objects.get_strikes(started, ended, names, order)
+
+        page = self.paginate_queryset(strikes)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
