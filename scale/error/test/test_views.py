@@ -143,6 +143,9 @@ class TestErrorDetailsView(TestCase):
         self.assertEqual(result['category'], self.error2.category)
         self.assertFalse(result['is_builtin'])
 
+        error = Error.objects.get(pk=self.error2.id)
+        self.assertEqual(error.title, 'error EDIT')
+
     def test_edit_error_not_found(self):
         """Test calling the edit Error method with a bad error id."""
 
@@ -154,7 +157,7 @@ class TestErrorDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_edit_error_bad_catgory(self):
+    def test_edit_error_bad_category(self):
         """Test calling the edit Error method with a bad category."""
 
         url = '/errors/%d/' % self.error2.id
