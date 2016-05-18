@@ -4,13 +4,19 @@
   tags: [ init-examples, example-database ]
   template: src=example_data.py.j2 dest='/tmp/example_data.py'
 
+- name: Install unzip
+  tags: init-examples
+  yum: name=unzip
+  become: true
+
 - name: Install the countries shapefile
   tags: init-examples
   unarchive: src=TM_WORLD_BORDERS-0.3.zip dest=/tmp
 
 - name: Initialize example database
   tags: [ init-examples, example-database ]
-  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | {{ django_build_dir }}/manage.py shell"
+  command: sh -c "echo \"execfile('/tmp/example_data.py')\" | docker run --rm -i -v /tmp:/tmp:ro -e SCALE_DB_USER={{ db_username }} -e SCALE_DB_PASS={{ db_password }} -e SCALE_DB_HOST={{ db_host }} {{ docker_registry }}scale:{{ scale_docker_version }} shell"
+  become: true
 
 - name: Build landsat-base docker image
   tags: init-examples

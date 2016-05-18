@@ -10,4 +10,7 @@ db_host: localhost
 django_debug: 'False'
 scale_build_root: '/scale'
 django_build_dir: '{{ scale_build_root }}/scale'
-scale_docker_version: '{{ scale_version | join(".") }}'
+# to put in __init__.py. form is 3, 0, 0, '-latest'  etc.
+scale_version: '0, 0, 0, ""'
+# corresponding docker tag for the version. should replace + with _
+scale_docker_version: '0.0.0'
