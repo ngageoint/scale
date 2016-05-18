@@ -110,12 +110,12 @@ class IngestsStatusView(ListAPIView):
 
 
 class StrikesView(ListAPIView):
-    """This view is the endpoint for retrieving the list of all Strike processors."""
+    """This view is the endpoint for retrieving the list of all Strike process."""
     queryset = Strike.objects.all()
     serializer_class = StrikeSerializer
 
     def list(self, request):
-        """Retrieves the list of all Strike processors and returns it in JSON form
+        """Retrieves the list of all Strike process and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -138,16 +138,16 @@ class StrikesView(ListAPIView):
 
 
 class StrikeDetailsView(RetrieveAPIView):
-    """This view is the endpoint for retrieving/updating details of a Strike processor."""
+    """This view is the endpoint for retrieving/updating details of a Strike process."""
     queryset = Strike.objects.all()
     serializer_class = StrikeDetailsSerializer
 
     def retrieve(self, request, strike_id):
-        """Retrieves the details for a Strike processor and return them in JSON form
+        """Retrieves the details for a Strike process and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param strike_id: The id of the Strike processor
+        :param strike_id: The id of the Strike process
         :type strike_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user

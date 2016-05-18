@@ -11,7 +11,7 @@ These services allow a user to create, view, and manage Strike processes.
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Strike List**                                                                                                         |
 +=========================================================================================================================+
-| Returns a list of all Strike processors.                                                                                |
+| Returns a list of all Strike processes.                                                                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /strikes/                                                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -30,7 +30,7 @@ These services allow a user to create, view, and manage Strike processes.
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Optional | Return only Strike processors with a given name.                    |
+| name               | String            | Optional | Return only Strike processes with a given name.                     |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
@@ -56,13 +56,13 @@ These services allow a user to create, view, and manage Strike processes.
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API.          |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The identifying name of the Strike processor used for queries.                 |
+| .name              | String            | The identifying name of the Strike process used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .title             | String            | The human readable display name of the Strike processor.                       |
+| .title             | String            | The human readable display name of the Strike process.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .description       | String            | A longer description of the Strike processor.                                  |
+| .description       | String            | A longer description of the Strike process.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job               | JSON Object       | The job that is associated with the Strike processor.                          |
+| .job               | JSON Object       | The job that is associated with the Strike process.                            |
 |                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
@@ -193,13 +193,13 @@ These services allow a user to create, view, and manage Strike processes.
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| name               | String            | The identifying name of the Strike processor used for queries.                 |
+| name               | String            | The identifying name of the Strike process used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| title              | String            | The human readable display name of the Strike processor.                       |
+| title              | String            | The human readable display name of the Strike process.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| description        | String            | A longer description of the Strike processor.                                  |
+| description        | String            | A longer description of the Strike process.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job                | JSON Object       | The job that is associated with the Strike processor.                          |
+| job                | JSON Object       | The job that is associated with the Strike process.                            |
 |                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |

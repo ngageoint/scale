@@ -266,7 +266,7 @@ class TestStrikeDetailsView(TestCase):
         self.strike = ingest_test_utils.create_strike()
 
     def test_not_found(self):
-        """Tests successfully calling the get Strike processor details view with a model id that does not exist."""
+        """Tests successfully calling the get Strike process details view with a model id that does not exist."""
 
         url = '/strikes/100/'
         response = self.client.get(url)
@@ -274,7 +274,7 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_successful(self):
-        """Tests successfully calling the get Strike processor details view."""
+        """Tests successfully calling the get Strike process details view."""
 
         url = '/strikes/%d/' % self.strike.id
         response = self.client.get(url)

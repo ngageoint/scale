@@ -443,17 +443,17 @@ class StrikeManager(models.Manager):
         return JobType.objects.get(name='scale-strike', version='1.0')
 
     def get_strikes(self, started=None, ended=None, names=None, order=None):
-        """Returns a list of Strike processors within the given time range.
+        """Returns a list of Strike processes within the given time range.
 
-        :param started: Query Strike processors updated after this amount of time.
+        :param started: Query Strike processes updated after this amount of time.
         :type started: :class:`datetime.datetime`
-        :param ended: Query Strike processors updated before this amount of time.
+        :param ended: Query Strike processes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param names: Query Strike processors associated with the name.
+        :param names: Query Strike processes associated with the name.
         :type names: list[string]
         :param order: A list of fields to control the sort order.
         :type order: list[string]
-        :returns: The list of Strike processors that match the time range.
+        :returns: The list of Strike processes that match the time range.
         :rtype: list[:class:`ingest.models.Strike`]
         """
 
@@ -478,11 +478,11 @@ class StrikeManager(models.Manager):
         return strikes
 
     def get_details(self, strike_id):
-        """Returns the Strike processor for the given ID with all detail fields included.
+        """Returns the Strike process for the given ID with all detail fields included.
 
-        :param strike_id: The unique identifier of the Strike processor.
+        :param strike_id: The unique identifier of the Strike process.
         :type strike_id: int
-        :returns: The Strike processor with all detail fields included.
+        :returns: The Strike process with all detail fields included.
         :rtype: :class:`ingest.models.Strike`
         """
 
