@@ -100,70 +100,6 @@ class TestIngestDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestStrikeTypesView(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.strike1 = ingest_test_utils.create_strike(name='test-1', description='test A')
-        self.strike2 = ingest_test_utils.create_strike(name='test-2', description='test Z')
-
-    def test_successful(self):
-        """Tests successfully calling the get all strikes view."""
-
-        url = '/strikes/'
-        response = self.client.get(url)
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 2)
-        for entry in result['results']:
-            expected = None
-            if entry['id'] == self.strike1.id:
-                expected = self.strike1
-            elif entry['id'] == self.strike2.id:
-                expected = self.strike2
-            else:
-                self.fail('Found unexpected result: %s' % entry['id'])
-            self.assertEqual(entry['name'], expected.name)
-            self.assertEqual(entry['title'], expected.title)
-
-    def test_name(self):
-        """Tests successfully calling the strikes view filtered by Strike name."""
-
-        url = '/strikes/?name=%s' % self.strike1.name
-        response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['name'], self.strike1.name)
-
-    def test_sorting(self):
-        """Tests custom sorting."""
-
-        url = '/strikes/?order=description'
-        response = self.client.get(url)
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 2)
-        self.assertEqual(result['results'][0]['name'], self.strike1.name)
-        self.assertEqual(result['results'][1]['name'], self.strike2.name)
-
-    def test_reverse_sorting(self):
-        """Tests custom sorting in reverse."""
-
-        url = '/strikes/?order=-description'
-        response = self.client.get(url)
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 2)
-        self.assertEqual(result['results'][0]['name'], self.strike2.name)
-        self.assertEqual(result['results'][1]['name'], self.strike1.name)
-
-
 class TestIngestStatusView(TestCase):
 
     fixtures = ['ingest_job_types.json']
@@ -256,6 +192,100 @@ class TestIngestStatusView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 3)
+
+
+class TestStrikeTypesView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.strike1 = ingest_test_utils.create_strike(name='test-1', description='test A')
+        self.strike2 = ingest_test_utils.create_strike(name='test-2', description='test Z')
+
+    def test_successful(self):
+        """Tests successfully calling the get all strikes view."""
+
+        url = '/strikes/'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.strike1.id:
+                expected = self.strike1
+            elif entry['id'] == self.strike2.id:
+                expected = self.strike2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+
+    def test_name(self):
+        """Tests successfully calling the strikes view filtered by Strike name."""
+
+        url = '/strikes/?name=%s' % self.strike1.name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+
+    def test_sorting(self):
+        """Tests custom sorting."""
+
+        url = '/strikes/?order=description'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+        self.assertEqual(result['results'][1]['name'], self.strike2.name)
+
+    def test_reverse_sorting(self):
+        """Tests custom sorting in reverse."""
+
+        url = '/strikes/?order=-description'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike2.name)
+        self.assertEqual(result['results'][1]['name'], self.strike1.name)
+
+
+class TestStrikeDetailsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.strike = ingest_test_utils.create_strike()
+
+    def test_not_found(self):
+        """Tests successfully calling the get Strike processor details view with a model id that does not exist."""
+
+        url = '/strikes/100/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the get Strike processor details view."""
+
+        url = '/strikes/%d/' % self.strike.id
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['name'], self.strike.name)
+        self.assertIsNotNone(result['job'])
+        self.assertIsNotNone(result['configuration'])
 
 
 class TestCreateStrikeView(TestCase):

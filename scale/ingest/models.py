@@ -454,11 +454,11 @@ class StrikeManager(models.Manager):
         :param order: A list of fields to control the sort order.
         :type order: list[string]
         :returns: The list of Strike processors that match the time range.
-        :rtype: list[:class:`ingest.models.Ingest`]
+        :rtype: list[:class:`ingest.models.Strike`]
         """
 
         # Fetch a list of strikes
-        strikes = Strike.objects.all().defer('configuration')
+        strikes = Strike.objects.select_related('job', 'job__job_type').defer('configuration')
 
         # Apply time range filtering
         if started:
@@ -476,6 +476,17 @@ class StrikeManager(models.Manager):
         else:
             strikes = strikes.order_by('last_modified')
         return strikes
+
+    def get_details(self, strike_id):
+        """Returns the Strike processor for the given ID with all detail fields included.
+
+        :param strike_id: The unique identifier of the Strike processor.
+        :type strike_id: int
+        :returns: The Strike processor with all detail fields included.
+        :rtype: :class:`ingest.models.Strike`
+        """
+
+        return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
 
 
 class Strike(models.Model):

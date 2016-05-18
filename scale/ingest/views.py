@@ -12,7 +12,8 @@ from rest_framework.views import APIView
 
 import util.rest as rest_util
 from ingest.models import Ingest, Strike
-from ingest.serializers import IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer, StrikeSerializer
+from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
+                                StrikeDetailsSerializer, StrikeSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from util.rest import BadParameter
 
@@ -134,6 +135,30 @@ class StrikesView(ListAPIView):
         page = self.paginate_queryset(strikes)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class StrikeDetailsView(RetrieveAPIView):
+    """This view is the endpoint for retrieving/updating details of a Strike processor."""
+    queryset = Strike.objects.all()
+    serializer_class = StrikeDetailsSerializer
+
+    def retrieve(self, request, strike_id):
+        """Retrieves the details for a Strike processor and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The id of the Strike processor
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            strike = Strike.objects.get_details(strike_id)
+        except Strike.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(strike)
+        return Response(serializer.data)
 
 
 class CreateStrikeView(APIView):

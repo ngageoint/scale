@@ -173,3 +173,86 @@ These services allow a user to create, view, and manage Strike processes.
 +-----------------------------------------------------------------------------------------------------------------------+
 
 .. _rest_strike_details:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Strike Details**                                                                                                      |
++=========================================================================================================================+
+| Returns job type details                                                                                                |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /strikes/{id}/                                                                                                  |
+|         Where {id} is the unique identifier of an existing model.                                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
+|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| name               | String            | The identifying name of the Strike processor used for queries.                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| title              | String            | The human readable display name of the Strike processor.                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| description        | String            | A longer description of the Strike processor.                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| job                | JSON Object       | The job that is associated with the Strike processor.                          |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| configuration      | JSON Object       | JSON defining the Strike configuration.                                        |
+|                    |                   | (See :ref:`architecture_strike_spec`)                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "id": 1,                                                                                                         |
+|        "name": "my-strike-process",                                                                                     |
+|        "title": "My Strike Process",                                                                                    |
+|        "description": "This is my Strike process for detecting my favorite files!",                                     |
+|        "job": {                                                                                                         |
+|            "id": 7,                                                                                                     |
+|            "job_type": {                                                                                                |
+|                "id": 2,                                                                                                 |
+|                "name": "scale-strike",                                                                                  |
+|                "version": "1.0",                                                                                        |
+|                "title": "Scale Strike",                                                                                 |
+|                "description": "Monitors a directory for incoming source files to ingest",                               |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": true,                                                                                       |
+|                "is_long_running": true,                                                                                 |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f0e7"                                                                                      |
+|            },                                                                                                           |
+|            "job_type_rev": {                                                                                            |
+|                "id": 2                                                                                                  |
+|            },                                                                                                           |
+|            "event": {                                                                                                   |
+|                "id": 1                                                                                                  |
+|            },                                                                                                           |
+|            "status": "RUNNING",                                                                                         |
+|            "priority": 10,                                                                                              |
+|            "num_exes": 1                                                                                                |
+|        },                                                                                                               |
+|        "configuration": {                                                                                               |
+|            "version": "1.0",                                                                                            |
+|            "mount": "host:/my/path",                                                                                    |
+|            "transfer_suffix": "_tmp",                                                                                   |
+|            "files_to_ingest": [{                                                                                        |
+|                "filename_regex": ".*txt",                                                                               |
+|                "workspace_path": "/my/path",                                                                            |
+|                "workspace_name": "raw"                                                                                  |
+|            }]                                                                                                           |
+|        }                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
