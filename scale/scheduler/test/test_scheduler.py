@@ -37,7 +37,7 @@ class TestScheduler(TransactionTestCase):
         master_info.hostname = 'localhost'
         master_info.port = 1234
 
-        my_scheduler = scheduler.scale_scheduler.ScaleScheduler(None)
+        my_scheduler = scheduler.scale_scheduler.ScaleScheduler()
         my_scheduler.registered(driver,framework_id,master_info)
         return my_scheduler, driver, master_info
 
