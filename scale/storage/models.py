@@ -500,6 +500,47 @@ class WorkspaceManager(models.Manager):
         workspace.save()
         return workspace
 
+    @transaction.atomic
+    def edit_workspace(self, workspace_id, title=None, description=None, json_config=None, base_url=None,
+                       is_active=None):
+        """Edits the given Workspace and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param workspace_id: The unique identifier of the Workspace to edit
+        :type workspace_id: int
+        :param title: The human-readable name of this Workspace
+        :type title: string
+        :param description: A description of this Workspace
+        :type description: string
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :param base_url: The URL prefix used to download files stored in the Workspace.
+        :type base_url: string
+        :param is_active: Whether or not the Workspace is available for use.
+        :type is_active: bool
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
+        """
+
+        workspace = Workspace.objects.get(pk=workspace_id)
+
+        # Validate the configuration, no exception is success
+        if json_config:
+            config = WorkspaceConfiguration(json_config)
+            config.validate_broker()
+            workspace.json_config = config.get_dict()
+
+        # Update editable fields
+        if title:
+            workspace.title = title
+        if description:
+            workspace.description = description
+        if base_url:
+            workspace.base_url = base_url
+        if is_active:
+            workspace.is_active = is_active
+        workspace.save()
+
     def get_details(self, workspace_id):
         """Returns the workspace for the given ID with all detail fields included.
 
