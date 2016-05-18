@@ -4,6 +4,8 @@ set -e
 
 root=$(dirname $0)
 
-python $root/scale/manage.py test --noinput
-make -C $root/scale/docs code_docs html
-$root/scale/docs/push-docs.sh
+cd $root/scale
+python manage.py test --noinput
+cd docs
+make code_docs html
+./push-docs.sh
