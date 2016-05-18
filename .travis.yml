@@ -20,7 +20,7 @@ before_script:
 - python scale/manage.py migrate --noinput
 install:
 - pip install -q -r scale/pip/build_linux.txt
-script: travis-build.sh
+script: ./travis-build.sh
 
 branches:
   only:
