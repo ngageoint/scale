@@ -200,6 +200,7 @@ class TestWorkspaceDetailsView(TestCase):
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
+            'is_active': False,
         }
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         result = json.loads(response.content)
@@ -210,12 +211,12 @@ class TestWorkspaceDetailsView(TestCase):
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
         self.assertDictEqual(result['json_config'], self.workspace.json_config)
-        self.assertTrue(result['is_active'])
+        self.assertFalse(result['is_active'])
 
         workspace = Workspace.objects.get(pk=self.workspace.id)
         self.assertEqual(workspace.title, 'Title EDIT')
         self.assertEqual(workspace.description, 'Description EDIT')
-        self.assertTrue(result['is_active'])
+        self.assertFalse(result['is_active'])
 
     def test_edit_config(self):
         """Tests editing the configuration of a workspace"""

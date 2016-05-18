@@ -537,7 +537,7 @@ class WorkspaceManager(models.Manager):
             workspace.description = description
         if base_url:
             workspace.base_url = base_url
-        if is_active:
+        if is_active is not None:
             workspace.is_active = is_active
         workspace.save()
 
