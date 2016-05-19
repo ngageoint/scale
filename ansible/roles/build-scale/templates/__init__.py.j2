@@ -1,6 +1,6 @@
 """Django project root used for settings and deployment configuration."""
 from __future__ import absolute_import
-VERSION = ({{ scale_version | join(", ") }})
+VERSION = ({{ scale_version  }})
 __version__ = '.'.join(str(p) for p in VERSION[0:3]) + ''.join(VERSION[3:])
 __author__ = 'NGA'
 __contact__ = ''

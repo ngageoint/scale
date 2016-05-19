@@ -157,7 +157,8 @@
         };
 
         self.updateJobType = function (value) {
-            if (value != self.jobsParams.job_type_id) {
+            value = parseInt(value);
+            if (value !== self.jobsParams.job_type_id) {
                 self.jobsParams.page = 1;
             }
             self.jobsParams.job_type_id = value == 0 ? null : value;

@@ -9,7 +9,7 @@ users to define jobs, which can be any type of script or algorithm. These jobs r
 data and produce product files. The produced products can be disseminated to appropriate users and/or
 used to evaluate the producing algorithm in terms of performance and accuracy.
 
-Mesos and Nodes 
+Mesos and Nodes
 ---------------
 Scale runs across a cluster of networked machines (called nodes) that process the jobs. Scale utilizes
 Apache Mesos, a free and open source project, for managing the available resources on the nodes. Mesos
@@ -39,6 +39,31 @@ or used to analyze and improve the algorithms that produced them. Scale allows t
 workspaces. A workspace defines a separate location for storing source or product files. When a job is created,
 it is given a workspace to use for storing its results, allowing a user to control whether the job.s results
 are available to a wider audience or are restricted to a private workspace for the user's own use.
+
+Docker Images
+=============
+The scale and scale-web docker images support a number of environment variables which setup the local_settings file.
+Alternatively, your own local_settings.py can be volume mounted into `/opt/scale/scale/local_settings.py`
+
+| Env Var                  | Default Value               | Meaning                                  |
+| ------------------------ | --------------------------- | -----------------------------------------|
+| SCALE_SECRET_KEY         | 'this-key-is-insecure'      | A key to keep your instance secure.      |
+| SCALE_DEBUG              | ''                          | Change to '1' for debugging              |
+| SCALE_API_URL            | '/scale/api'                | URL prefix for the REST API              |
+| SCALE_ALLOWED_HOSTS      | '*'                         | , separated list of hosts for django     |
+| SCALE_STATIC_ROOT        | 'static/'                   | location of static data                  |
+| SCALE_STATIC_URL         | '/scale/static/'            | url for static data                      |
+
+| SCALE_DB_NAME            | 'scale'                     | database name for scale                  |
+| SCALE_DB_USER            | 'postgres'                  | database login name                      |
+| SCALE_DB_PASS            | 'postgres'                  | database login password                  |
+| SCALE_DB_HOST            | use link to `db`            | database host name                       |
+|                          | or 'localhost'              |                                          |
+| SCALE_DB_PORT            | use link to `db`            | database port                            |
+|                          | or '5432'                   |                                          |
+| MESOS_MASTER_URL         | 'zk://localhost:2181/scale' | Mesos master location                    |
+| SCALE_ZK_URL             | None                        | Scale master location                    |
+| SCALE_DOCKER_IMAGE       | 'geoint/scale'              | Scale docker image name                  |
 
 Quick Start
 ===========

@@ -1,0 +1,8 @@
+# This file lists all Python libraries required to build the docs on Linux
+# This also requires the prod_linux.txt requirements
+# Use command: pip install -r docs.txt
+
+# Doc build packages
+mock>=1.0.0,<1.1.0
+Sphinx>=1.2.0,<1.3.0
+sphinx_rtd_theme>=0.1.9,<1

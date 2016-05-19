@@ -156,7 +156,10 @@ These services provide access to information about ingested files processed by t
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /ingests/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /ingests/{file_name}/                                                                                           |
+|         Where {file_name} is the unique name of an ingest associated with an existing model.                            |
++-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -251,7 +254,7 @@ These services provide access to information about ingested files processed by t
 |                        "workspace_path": "/workspace",                                                                  |
 |                        "data_types": [],                                                                                |
 |                        "filename_regex": "*.txt",                                                                       |
-|                        "workspace_name": "rs"                                                                           |
+|                        "workspace_name": "raw"                                                                          |
 |                    }                                                                                                    |
 |                ]                                                                                                        |
 |            },                                                                                                           |

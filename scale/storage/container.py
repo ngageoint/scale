@@ -5,11 +5,12 @@ import os
 
 
 SCALE_ROOT_PATH = '/scale'
-SCALE_ROOT_WORKSPACE_MOUNT_PATH = os.path.join(SCALE_ROOT_PATH, 'workspace_mounts')
+SCALE_ROOT_WORKSPACE_VOLUME_PATH = os.path.join(SCALE_ROOT_PATH, 'workspace_mounts')
 
 
-def get_workspace_mount_path(name):
-    """Returns the absolute local path within the container for the remote mount for the workspace with the given name
+def get_workspace_volume_path(name):
+    """Returns the absolute local path within the container onto which this workspace broker's container volume is
+    mounted
 
     :param name: The name of the workspace
     :type name: string
@@ -17,4 +18,4 @@ def get_workspace_mount_path(name):
     :rtype: string
     """
 
-    return os.path.join(SCALE_ROOT_WORKSPACE_MOUNT_PATH, name)
+    return os.path.join(SCALE_ROOT_WORKSPACE_VOLUME_PATH, name)

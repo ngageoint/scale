@@ -3,7 +3,7 @@ version: "1.0.0"
 title: Topological Anomaly Detector
 description: Detects spectral anomalies using the tad anomaly detector. Stores result in a PostGIS database.
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
-docker_image: "geoint/tad_1.0"
+docker_image: "geoint/tad"
 priority: 250
 timeout: 300
 max_tries: 2

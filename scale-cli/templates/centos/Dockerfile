@@ -12,7 +12,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y gdal && yum clean all && rm /tmp/epel-release-7-5.noarch.rpm
 
 # This is important for permission issues
-RUN useradd --uid 1001 scale
+RUN useradd --uid 7498 scale
 USER scale
 
 COPY entryPoint.sh ./

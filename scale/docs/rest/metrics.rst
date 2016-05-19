@@ -38,7 +38,7 @@ These services provide access to information about processing counts and timings
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The stable name of the metrics type used for queries.                          |
+| .name              | String            | The identifying name of the metrics type used for queries.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .title             | String            | The human readable display name of the metrics type.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -46,14 +46,14 @@ These services provide access to information about processing counts and timings
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .filters           | Array             | The filter parameters that can be used to query the metrics type.              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..param            | String            | The stable name of the parameter used for queries.                             |
+| ..param            | String            | The identifying name of the parameter used for queries.                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..type             | String            | The data type of the parameter clients can use for validation.                 |
 |                    |                   | Example: bool, date, datetime, float, int, string, time, int                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .groups            | Array             | The group definitions that can be used to select the results returned.         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..name             | String            | The stable name of the metrics group used for queries.                         |
+| ..name             | String            | The identifying name of the metrics group used for queries.                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..title            | String            | The human readable display name of the metrics group.                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -61,7 +61,7 @@ These services provide access to information about processing counts and timings
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .columns           | Array             | The column definitions that can be used to select the results returned.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..name             | String            | The stable name of the metrics column used for queries.                        |
+| ..name             | String            | The identifying name of the metrics column used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..title            | String            | The human readable display name of the metrics column.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -136,7 +136,7 @@ These services provide access to information about processing counts and timings
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| name               | String            | The stable name of the metrics type used for queries.                          |
+| name               | String            | The identifying name of the metrics type used for queries.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | title              | String            | The human readable display name of the metrics type.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -144,14 +144,14 @@ These services provide access to information about processing counts and timings
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | filters            | Array             | The filter parameters that can be used to query the metrics type.              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .param             | String            | The stable name of the parameter used for queries.                             |
+| .param             | String            | The identifying name of the parameter used for queries.                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .type              | String            | The data type of the parameter clients can use for validation.                 |
 |                    |                   | Example: bool, date, datetime, float, int, string, time, int                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | columns            | Array             | The column definitions that can be used to select the results returned.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The stable name of the metrics column used for queries.                        |
+| .name              | String            | The identifying name of the metrics column used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .title             | String            | The human readable display name of the metrics column.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -276,7 +276,7 @@ These services provide access to information about processing counts and timings
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .column            | Array             | The column definition of the selected plot data values.                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ..name             | String            | The stable name of the metrics column used for queries.                        |
+| ..name             | String            | The identifying name of the metrics column used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..title            | String            | The human readable display name of the metrics column.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

@@ -120,6 +120,7 @@ class ErrorDetailsView(GenericAPIView):
         error.title = title or error.title
         error.description = description or error.description
         error.category = category or error.category
+        error.save()
 
         serializer = self.get_serializer(error)
         return Response(serializer.data)

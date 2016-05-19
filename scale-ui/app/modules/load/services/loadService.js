@@ -40,7 +40,7 @@
 
                 return queueStatusPoller.promise.then(null, null, function (result) {
                     if (result.$resolved) {
-                        result.queue_status = QueueStatus.transformer(result.queue_status);
+                        result.results = QueueStatus.transformer(result.results);
                     } else {
                         queueStatusPoller.stop();
                     }
@@ -51,8 +51,8 @@
                 var d = $q.defer();
 
                 $http.get(scaleConfig.urls.apiPrefix + 'queue/status/').success(function (data) {
-                    var returnData = QueueStatus.transformer(data.queue_status);
-                    d.resolve(returnData);
+                    data.results = QueueStatus.transformer(data.results);
+                    d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
                 });

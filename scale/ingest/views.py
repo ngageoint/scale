@@ -1,4 +1,4 @@
-'''Defines the views for the RESTful ingest and Strike services'''
+"""Defines the views for the RESTful ingest and Strike services"""
 from __future__ import unicode_literals
 
 import datetime
@@ -20,18 +20,18 @@ logger = logging.getLogger(__name__)
 
 
 class IngestsView(ListAPIView):
-    '''This view is the endpoint for retrieving the list of all ingests.'''
+    """This view is the endpoint for retrieving the list of all ingests."""
     queryset = Ingest.objects.all()
     serializer_class = IngestSerializer
 
     def list(self, request):
-        '''Retrieves the list of all ingests and returns it in JSON form
+        """Retrieves the list of all ingests and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -48,20 +48,30 @@ class IngestsView(ListAPIView):
 
 
 class IngestDetailsView(RetrieveAPIView):
-    '''This view is the endpoint for retrieving/updating details of an ingest.'''
+    """This view is the endpoint for retrieving/updating details of an ingest."""
     queryset = Ingest.objects.all()
     serializer_class = IngestDetailsSerializer
 
-    def retrieve(self, request, ingest_id):
-        '''Retrieves the details for an ingest and return them in JSON form
+    def retrieve(self, request, ingest_id=None, file_name=None):
+        """Retrieves the details for an ingest and return them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param ingest_id: The id of the ingest
         :type ingest_id: int encoded as a str
+        :param file_name: The name of the ingest
+        :type file_name: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
+
+        # Support retrieving by file name in addition to the usual identifier
+        if file_name:
+            ingests = Ingest.objects.filter(file_name=file_name).values('id').order_by('-created')
+            if not ingests:
+                raise Http404
+            ingest_id = ingests[0]['id']
+
         try:
             ingest = Ingest.objects.get_details(ingest_id)
         except Ingest.DoesNotExist:
@@ -72,18 +82,18 @@ class IngestDetailsView(RetrieveAPIView):
 
 
 class IngestsStatusView(ListAPIView):
-    '''This view is the endpoint for retrieving summarized ingest status.'''
+    """This view is the endpoint for retrieving summarized ingest status."""
     queryset = Ingest.objects.all()
     serializer_class = IngestStatusSerializer
 
     def list(self, request):
-        '''Retrieves the ingest status information and returns it in JSON form
+        """Retrieves the ingest status information and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         started = rest_util.parse_timestamp(request, 'started', rest_util.get_relative_days(7))
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -99,17 +109,17 @@ class IngestsStatusView(ListAPIView):
 
 
 class CreateStrikeView(APIView):
-    '''This view is the endpoint for creating a new Strike process.'''
+    """This view is the endpoint for creating a new Strike process."""
     parser_classes = (JSONParser,)
 
     def post(self, request):
-        '''Creates a new Strike process and returns its ID in JSON form
+        """Creates a new Strike process and returns its ID in JSON form
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
-        '''
+        """
 
         name = rest_util.parse_string(request, 'name')
         title = rest_util.parse_string(request, 'title', required=False)

@@ -88,7 +88,12 @@
         // Job details
         var jobDetailsOverrideUrl = 'test/data/jobDetails.json';
         var jobDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/.*/', 'i');
-        $httpBackend.whenGET(jobDetailsRegex).respond(function () {
+        $httpBackend.whenGET(jobDetailsRegex).respond(function (method, url) {
+            //return getSync(jobDetailsOverrideUrl);
+            // get the jobType.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            jobDetailsOverrideUrl = 'test/data/job-details/jobDetails' + id + '.json';
             return getSync(jobDetailsOverrideUrl);
         });
 
@@ -129,6 +134,13 @@
         var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
         $httpBackend.whenGET(jobTypesRegex).respond(function () {
             return getSync(jobTypesOverrideUrl);
+        });
+        
+        // Job execution logs
+        var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLog.json';
+        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-executions/.*/logs/', 'i');
+        $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
+            return getSync(jobExecutionLogsOverrideUrl);
         });
 
 
