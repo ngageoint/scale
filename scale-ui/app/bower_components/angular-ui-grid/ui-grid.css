@@ -1,6 +1,6 @@
 /*!
- * ui-grid - v3.0.7 - 2015-10-06
- * Copyright (c) 2015 ; License: MIT 
+ * ui-grid - v3.1.1 - 2016-02-09
+ * Copyright (c) 2016 ; License: MIT 
  */
 #ui-grid-twbs #ui-grid-twbs .form-horizontal .form-group:before,
 #ui-grid-twbs #ui-grid-twbs .form-horizontal .form-group:after,
@@ -557,7 +557,6 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid {
   overflow: scroll;
-  max-height: 300px;
   border: 1px solid #d4d4d4;
 }
 .ui-grid-menu {
@@ -681,9 +680,6 @@ fieldset[disabled] a.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button
 .open > .dropdown-toggle.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button {
   background-image: none;
 }
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.disabled,
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button[disabled],
-fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.disabled:hover,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button[disabled]:hover,
 fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:hover,
@@ -692,13 +688,7 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:
 fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:focus,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.disabled.focus,
 .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button[disabled].focus,
-fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.focus,
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.disabled:active,
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button[disabled]:active,
-fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button:active,
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.disabled.active,
-.ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button[disabled].active,
-fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.active {
+fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.focus {
   background-color: transparent;
   border-color: transparent;
 }
@@ -768,7 +758,7 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'ui-grid';
-    src: url('../font/ui-grid.svg?12312827#ui-grid') format('svg');
+    src: url('@{font-path}ui-grid.svg?12312827#ui-grid') format('svg');
   }
 }
 */
@@ -1271,6 +1261,7 @@ div.ui-grid-cell input.ng-valid {
   width: 100%;
   padding-top: 3px;
   padding-bottom: 3px;
+  box-sizing: content-box;
 }
 .ui-grid-pager-container {
   float: left;
@@ -1378,9 +1369,6 @@ fieldset[disabled] a.ui-grid-pager-control button {
 .open > .dropdown-toggle.ui-grid-pager-control button {
   background-image: none;
 }
-.ui-grid-pager-control button.disabled,
-.ui-grid-pager-control button[disabled],
-fieldset[disabled] .ui-grid-pager-control button,
 .ui-grid-pager-control button.disabled:hover,
 .ui-grid-pager-control button[disabled]:hover,
 fieldset[disabled] .ui-grid-pager-control button:hover,
@@ -1389,13 +1377,7 @@ fieldset[disabled] .ui-grid-pager-control button:hover,
 fieldset[disabled] .ui-grid-pager-control button:focus,
 .ui-grid-pager-control button.disabled.focus,
 .ui-grid-pager-control button[disabled].focus,
-fieldset[disabled] .ui-grid-pager-control button.focus,
-.ui-grid-pager-control button.disabled:active,
-.ui-grid-pager-control button[disabled]:active,
-fieldset[disabled] .ui-grid-pager-control button:active,
-.ui-grid-pager-control button.disabled.active,
-.ui-grid-pager-control button[disabled].active,
-fieldset[disabled] .ui-grid-pager-control button.active {
+fieldset[disabled] .ui-grid-pager-control button.focus {
   background-color: #f3f3f3;
   border-color: #cccccc;
 }
@@ -1446,6 +1428,10 @@ fieldset[disabled] .ui-grid-pager-control button.active {
 .ui-grid-pager-control input::-webkit-input-placeholder {
   color: #999999;
 }
+.ui-grid-pager-control input::-ms-expand {
+  border: 0;
+  background-color: transparent;
+}
 .ui-grid-pager-control input[disabled],
 .ui-grid-pager-control input[readonly],
 fieldset[disabled] .ui-grid-pager-control input {
@@ -1480,6 +1466,13 @@ select[multiple].ui-grid-pager-control input {
   height: 12px;
   margin-left: -3px;
 }
+.ui-grid-pager-control .first-bar-rtl {
+  width: 10px;
+  border-left: 2px solid #4d4d4d;
+  margin-top: -6px;
+  height: 12px;
+  margin-right: -7px;
+}
 .ui-grid-pager-control .first-triangle {
   width: 0;
   height: 0;
@@ -1508,6 +1501,13 @@ select[multiple].ui-grid-pager-control input {
   margin-top: -6px;
   height: 12px;
   margin-left: 1px;
+}
+.ui-grid-pager-control .last-bar-rtl {
+  width: 10px;
+  border-left: 2px solid #4d4d4d;
+  margin-top: -6px;
+  height: 12px;
+  margin-right: -11px;
 }
 .ui-grid-pager-row-count-picker {
   float: left;
@@ -1553,6 +1553,10 @@ select[multiple].ui-grid-pager-control input {
 }
 .ui-grid-pager-row-count-picker select::-webkit-input-placeholder {
   color: #999999;
+}
+.ui-grid-pager-row-count-picker select::-ms-expand {
+  border: 0;
+  background-color: transparent;
 }
 .ui-grid-pager-row-count-picker select[disabled],
 .ui-grid-pager-row-count-picker select[readonly],
@@ -1868,6 +1872,36 @@ select[multiple].ui-grid-pager-row-count-picker select {
 /*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .ui-grid-tree-header-row {
   font-weight: bold !important;
+}
+.ui-grid-tree-header-row .ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
+  pointer-events: all;
+}
+
+/* This file contains variable declarations (do not remove this line) */
+/*-- VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
+/**
+* @section Grid styles
+*/
+/**
+* @section Header styles
+*/
+/** @description Colors for header gradient */
+/**
+* @section Grid body styles
+*/
+/** @description Colors used for row alternation */
+/**
+* @section Sort arrow colors
+*/
+/**
+* @section Scrollbar styles
+*/
+/**
+* @section font library path
+*/
+/*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
+div.ui-grid-cell-contents.invalid {
+  border: 1px solid #fc8f8f;
 }
 
 .ui-grid-icon-plus-squared:before {

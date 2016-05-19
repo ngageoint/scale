@@ -144,9 +144,14 @@
                                 enableSorting: false,
                                 enableFiltering: false,
                                 cellTemplate: '<div class="ui-grid-cell-contents">' +
-                                '<span class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</span> ' +
-                                '<span class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</span> ' +
-                                '<span class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</span>' +
+                                '<div ng-show="COL_FIELD.system > 0 || COL_FIELD.data > 0 || COL_FIELD.algorithm > 0">' +
+                                '<div class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</div> ' +
+                                '<div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div> ' +
+                                '<div class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</div> ' +
+                                '<div class="label" ng-show="COL_FIELD.data === 0">&nbsp;</div> ' +
+                                '<div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</div>' +
+                                '<div class="label" ng-show="COL_FIELD.algorithm === 0">&nbsp;</div> ' +
+                                '</div>' +
                                 '<div class="text-center" ng-show="COL_FIELD.system === 0 && COL_FIELD.data === 0 && COL_FIELD.algorithm === 0"><strong>No Errors</strong></div>' +
                                 '</div>'
                             });
