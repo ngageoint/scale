@@ -4,15 +4,17 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
+import django.core.urlresolvers as urlresolvers
+import rest_framework.status as status
 from django.http.response import Http404
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.parsers import JSONParser
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import util.rest as rest_util
 from ingest.models import Ingest, Strike
-from ingest.serializers import IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer
+from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
+                                StrikeDetailsSerializer, StrikeSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from util.rest import BadParameter
 
@@ -108,12 +110,35 @@ class IngestsStatusView(ListAPIView):
         return self.get_paginated_response(serializer.data)
 
 
-class CreateStrikeView(APIView):
-    """This view is the endpoint for creating a new Strike process."""
-    parser_classes = (JSONParser,)
+class StrikesView(ListCreateAPIView):
+    """This view is the endpoint for retrieving the list of all Strike process."""
+    queryset = Strike.objects.all()
+    serializer_class = StrikeSerializer
 
-    def post(self, request):
-        """Creates a new Strike process and returns its ID in JSON form
+    def list(self, request):
+        """Retrieves the list of all Strike process and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        names = rest_util.parse_string_list(request, 'name', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        strikes = Strike.objects.get_strikes(started, ended, names, order)
+
+        page = self.paginate_queryset(strikes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def create(self, request):
+        """Creates a new Strike process and returns a link to the detail URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
@@ -127,7 +152,98 @@ class CreateStrikeView(APIView):
         configuration = rest_util.parse_dict(request, 'configuration')
 
         try:
-            strike = Strike.objects.create_strike_process(name, title, description, configuration)
-        except InvalidStrikeConfiguration:
-            raise BadParameter('Configuration failed to validate.')
-        return Response({'strike_id': strike.id})
+            strike = Strike.objects.create_strike(name, title, description, configuration)
+        except InvalidStrikeConfiguration as ex:
+            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+
+        # Fetch the full strike process with details
+        try:
+            strike = Strike.objects.get_details(strike.id)
+        except Strike.DoesNotExist:
+            raise Http404
+
+        serializer = StrikeDetailsSerializer(strike)
+        strike_url = urlresolvers.reverse('strike_details_view', args=[strike.id])
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
+
+
+class StrikeDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving/updating details of a Strike process."""
+    queryset = Strike.objects.all()
+    serializer_class = StrikeDetailsSerializer
+
+    def get(self, request, strike_id):
+        """Retrieves the details for a Strike process and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The ID of the Strike process
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            strike = Strike.objects.get_details(strike_id)
+        except Strike.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(strike)
+        return Response(serializer.data)
+
+    def patch(self, request, strike_id):
+        """Edits an existing Strike process and returns the updated details
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The ID of the Strike process
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration', required=False)
+
+        try:
+            Strike.objects.edit_strike(strike_id, title, description, configuration)
+
+            strike = Strike.objects.get_details(strike_id)
+        except Strike.DoesNotExist:
+            raise Http404
+        except InvalidStrikeConfiguration as ex:
+            logger.exception('Unable to edit Strike process: %s', strike_id)
+            raise BadParameter(unicode(ex))
+
+        serializer = self.get_serializer(strike)
+        return Response(serializer.data)
+
+
+class StrikesValidationView(APIView):
+    """This view is the endpoint for validating a new Strike process before attempting to actually create it"""
+    queryset = Strike.objects.all()
+
+    def post(self, request):
+        """Validates a new Strike process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        rest_util.parse_string(request, 'title', required=False)
+        rest_util.parse_string(request, 'description', required=False)
+
+        # Validate the Strike configuration
+        try:
+            warnings = Strike.objects.validate_strike(name, configuration)
+        except InvalidStrikeConfiguration as ex:
+            logger.exception('Unable to validate new Strike process: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})

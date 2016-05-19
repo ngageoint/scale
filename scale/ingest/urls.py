@@ -13,5 +13,7 @@ urlpatterns = patterns(
     url(r'^ingests/(?P<file_name>[\w.]{0,250})/$', views.IngestDetailsView.as_view(), name='ingest_details_view'),
 
     # Strike views
-    url(r'^strike/create/$', views.CreateStrikeView.as_view(), name='create_strike_view'),
+    url(r'^strikes/$', views.StrikesView.as_view(), name='strikes_view'),
+    url(r'^strikes/(\d+)/$', views.StrikeDetailsView.as_view(), name='strike_details_view'),
+    url(r'^strikes/validation/$', views.StrikesValidationView.as_view(), name='strikes_validation_view'),
 )

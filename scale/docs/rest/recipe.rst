@@ -138,7 +138,7 @@ These services provide access to information about recipes.
 | recipe_type        | JSON Object       | The recipe type that is associated with the recipe.                            |
 |                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe_type_rev   | JSON Object       | The recipe type revision that is associated with the recipe.                   |
+| recipe_type_rev    | JSON Object       | The recipe type revision that is associated with the recipe.                   |
 |                    |                   | This represents the definition at the time the recipe was scheduled.           |
 |                    |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
