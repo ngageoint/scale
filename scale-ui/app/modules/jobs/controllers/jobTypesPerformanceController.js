@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobTypesPerformanceController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, toastr, moment) {
+    angular.module('scaleApp').controller('jobTypesPerformanceController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
         var vm = this;
 
         vm.jobTypeParams = {
@@ -88,7 +88,7 @@
                 currValue = {},
                 format = d3.format(',');
 
-            currValue.job_type = jobType;
+            currValue.job_type = JobType.transformer(jobType);
             for (var i = 0; i <= numDays; i++) {
                 currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
                 currSystem = _.find(systemErrors.values, { date: currDate, id: jobType.id });
