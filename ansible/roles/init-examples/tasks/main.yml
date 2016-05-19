@@ -134,11 +134,15 @@
     DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
 
+- name: Configure parse-binary strike
+  tags: [ init-examples, example-database ]
+  template: src=parse-binary-strike.yml.j2 dest='/tmp/parse-binary-strike.yml'
+
 # currently no interface to see if a strike exists so in order to prevent a
 # playbook failure on the second execution, need to ingnore_errors: true
 - name: Deploy the parse-binary strike
   tags: [ init-examples, example-database ]
-  command: /scale/bin/goscale strike create -d strike.yml chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
+  command: /scale/bin/goscale strike create -d /tmp/parse-binary-strike.yml chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
   ignore_errors: yes
   become: true
   environment:
