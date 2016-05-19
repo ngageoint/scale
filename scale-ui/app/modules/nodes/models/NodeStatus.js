@@ -37,8 +37,8 @@
                 }
                 return color;
             },
-            getCellActivity: function () {
-                return '';
+            getRunning: function () {
+                return { count: 0 };
             },
             getCellError: function () {
                 return 'Failed: ' + this.getFailed();

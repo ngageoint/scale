@@ -60,6 +60,24 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 45,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "SYSTEM"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 56,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "DATA"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 2,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 875,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -182,6 +200,18 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 10,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "DATA"
+                },
+                {
+                    "status": "FAILED",
+                    "count": 12,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 322,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -246,6 +276,12 @@
                     "category": null
                 },
                 {
+                    "status": "FAILED",
+                    "count": 10,
+                    "most_recent": "2015-08-31T22:09:12.674Z",
+                    "category": "ALGORITHM"
+                },
+                {
                     "status": "COMPLETED",
                     "count": 30,
                     "most_recent": "2015-08-31T21:51:12.674Z",
@@ -306,6 +342,58 @@
                 {
                     "status": "COMPLETED",
                     "count": 189,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 11,
+                "name": "export-kml",
+                "version": "1.5",
+                "title": "Export KML",
+                "description": "Creates KML from data",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f0ac"
+            },
+            "job_counts": [
+                {
+                    "status": "COMPLETED",
+                    "count": 54,
+                    "most_recent": "2015-08-31T21:51:12.674Z",
+                    "category": null
+                }
+            ]
+        },
+        {
+            "job_type": {
+                "id": 12,
+                "name": "caffe-aircraft-detection",
+                "title": "Caffe Aircraft Detection",
+                "version": "1.0",
+                "description": "Caffe is a deep learning framework made with expression, speed, and modularity in mind. It is developed by the Berkeley Vision and Learning Center (BVLC) and by community contributors. Yangqing Jia created the project during his PhD at UC Berkeley.",
+                "category": "export",
+                "author_name": "Yangqing Jia ",
+                "author_url": "http://caffe.berkeleyvision.org/",
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f072"
+            },
+            "job_counts": [
+                {
+                    "status": "COMPLETED",
+                    "count": 12,
                     "most_recent": "2015-08-31T21:51:12.674Z",
                     "category": null
                 }

@@ -15,10 +15,10 @@
                 return 'JobTypeStatus';
             },
             getPerformance: function () {
-                var failedArr = _.where(this.job_counts, { 'status': 'FAILED' });
-
-                var completed = _.find(this.job_counts, 'status', 'COMPLETED') || { count: 0 },
+                var failedArr = _.sortByOrder(_.filter(this.job_counts, { status: 'FAILED' }), ['count'], ['desc']),
+                    completed = _.find(this.job_counts, 'status', 'COMPLETED') || { count: 0 },
                     failed = _.sum(failedArr, 'count'),
+                    failedCategory = failedArr.length > 0 ? failedArr[0].category : '',
                     total = failedArr.length > 0 ? failed + completed.count : completed.count,
                     successRate = total === 0 ? 0 : 100 - ((failed / total) * 100).toFixed(2),
                     successRateDescription = 'success';
@@ -35,6 +35,7 @@
                     rate: successRate,
                     rateDescription: successRateDescription,
                     failed: failed,
+                    failedCategory: failedCategory,
                     completed: completed.count,
                     total: total
                 };
@@ -43,39 +44,33 @@
                 return _.find(this.job_counts, 'status', 'RUNNING') || { count: 0 };
             },
             getFailures: function () {
-                var failed = _.where(this.job_counts, { 'status': 'FAILED' }),
-                    failedValues = _.values(_.groupBy(failed, 'category'));
+                var failed = _.where(this.job_counts, { 'status': 'FAILED' });
+
+                _.forEach(failed, function (f) {
+                    var category = _.find(scaleConfig.errorCategories, { name: f.category });
+                    f.order = category ? category.order : '';
+                });
+
+                var failedValues = _.values(_.groupBy(failed, 'order'));
 
                 var getFailureCounts = function (categories) {
                     var returnArr = [];
                     _.forEach(categories, function (category) {
                         _.forEach(category, function (val) {
-                            returnArr.push({ status: val.category, count: val.count });
+                            returnArr.push({ status: val.category, count: val.count, order: val.order });
                         });
                     });
-                    return returnArr;
+                    return _.sortByOrder(returnArr, ['order'], ['desc']);
                 };
 
                 return getFailureCounts(failedValues);
             },
             getCellFill: function () {
-                var status = this.getPerformance().rateDescription;
-                if (status === 'success') {
-                    return scaleConfig.colors.chart_green;
-                } else if (status === 'warning') {
-                    return scaleConfig.colors.chart_yellow;
-                } else if (status === 'error') {
-                    return scaleConfig.colors.chart_red;
-                } else if (status === 'z_inactive') {
+                var status = this.getPerformance();
+                if (status.rateDescription === 'z_inactive') {
                     return scaleConfig.colors.chart_gray_dark;
                 }
-            },
-            getCellActivity: function () {
-                var running = this.getRunning();
-                if (running.count > 0) {
-                    return '&#x' + scaleConfig.activityIconCode + ';';
-                }
-                return '';
+                return scaleConfig.colors.chart_green;
             },
             getCellActivityTotal: function () {
                 return this.getRunning().count > 0 ? this.getRunning().count : '';
@@ -86,7 +81,7 @@
             },
             getCellTotal: function () {
                 var performance = this.getPerformance();
-                return 'Completed: ' + performance.completed;
+                return performance.completed;
             },
             getCellPauseResume: function () {
                 return;
