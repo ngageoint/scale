@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration, ValidationWarning
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -489,6 +489,37 @@ class StrikeManager(models.Manager):
         """
 
         return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
+
+    def validate_strike(self, name, configuration):
+        """Validates a new Strike process prior to attempting a save
+
+        :param name: The identifying name of a Strike process to validate
+        :type name: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
+        """
+        warnings = []
+
+        # Validate the configuration, no exception is success
+        StrikeConfiguration(configuration)
+
+        # Check for issues when changing an existing Strike configuration
+        try:
+            strike = Strike.objects.get(name=name)
+
+            if (configuration['mount'] and strike.configuration['mount'] and
+                    configuration['mount'] != strike.configuration['mount']):
+                warnings.append(ValidationWarning('mount_change',
+                                                  'Changing the mount path may disrupt file monitoring.'))
+        except Strike.DoesNotExist:
+            pass
+
+        return warnings
 
 
 class Strike(models.Model):

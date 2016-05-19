@@ -130,12 +130,12 @@ These services allow a user to create, view, and manage Strike processes.
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | name               | String            | Required | The identifying name of the Strike process used for queries.        |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | The human readable display name of the Strike process.                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| description        | String            | A longer description of the Strike process.                                    |
+| title              | String            | Optional | The human readable display name of the Strike process.              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | JSON defining the Strike configuration.                                        |
-|                    |                   | (See :ref:`architecture_strike_spec`)                                          |
+| description        | String            | Optional | A longer description of the Strike process.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
+|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -296,5 +296,69 @@ These services allow a user to create, view, and manage Strike processes.
 |                "workspace_name": "raw"                                                                                  |
 |            }]                                                                                                           |
 |        }                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_strike_validate:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Validate Strike**                                                                                                     |
++=========================================================================================================================+
+| Validates a new Strike process configuration without actually saving it                                                 |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /strikes/validation/                                                                                           |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| name               | String            | Required | The identifying name of the Strike process used for queries.        |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| title              | String            | Optional | The human readable display name of the Strike process.              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| description        | String            | Optional | A longer description of the Strike process.                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
+|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "name": "my-strike-process",                                                                                     |
+|        "title": "My Strike Process",                                                                                    |
+|        "description": "This is my Strike process for detecting my favorite files!",                                     |
+|        "configuration": {                                                                                               |
+|            "version": "1.0",                                                                                            |
+|            "mount": "host:/my/path",                                                                                    |
+|            "transfer_suffix": "_tmp",                                                                                   |
+|            "files_to_ingest": [{                                                                                        |
+|                "filename_regex": ".*txt",                                                                               |
+|                "workspace_path": "my/path",                                                                             |
+|                "workspace_name": "raw"                                                                                  |
+|            }]                                                                                                           |
+|        }                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| warnings           | Array               | A list of warnings discovered during validation.                             |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| .id                | String              | An identifier for the warning.                                               |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| .details           | String              | A human-readable description of the problem.                                 |
++--------------------+---------------------+------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "warnings": [                                                                                                    |
+|            "id": "mount_change",                                                                                        |
+|            "details": "Changing the mount path may disrupt file monitoring."                                            |
+|        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+

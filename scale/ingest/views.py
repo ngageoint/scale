@@ -192,6 +192,36 @@ class StrikeDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
+class StrikesValidationView(APIView):
+    """This view is the endpoint for validating a new Strike process before attempting to actually create it"""
+    queryset = Strike.objects.all()
+
+    def post(self, request):
+        """Validates a new Strike process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        rest_util.parse_string(request, 'title', required=False)
+        rest_util.parse_string(request, 'description', required=False)
+
+        # Validate the Strike configuration
+        try:
+            warnings = Strike.objects.validate_strike(name, configuration)
+        except InvalidStrikeConfiguration as ex:
+            logger.exception('Unable to validate new Strike process: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})
+
+
 # TODO: Remove this once the UI migrates to POST /strikes/
 class CreateStrikeView(APIView):
     """This view is the endpoint for creating a new Strike process."""

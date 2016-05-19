@@ -15,6 +15,7 @@ urlpatterns = patterns(
     # Strike views
     url(r'^strikes/$', views.StrikesView.as_view(), name='strikes_view'),
     url(r'^strikes/(\d+)/$', views.StrikeDetailsView.as_view(), name='strike_details_view'),
+    url(r'^strikes/validation/$', views.StrikesValidationView.as_view(), name='strikes_validation_view'),
 
     # TODO: Remove this once the UI migrates to POST /strikes/
     url(r'^strike/create/$', views.CreateStrikeView.as_view(), name='create_strike_view'),

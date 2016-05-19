@@ -310,7 +310,7 @@ class TestStrikeCreateView(TestCase):
                     'workspace_path': 'my/path',
                     'workspace_name': 'BAD',
                 }],
-            }
+            },
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
@@ -375,3 +375,121 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(result['name'], self.strike.name)
         self.assertIsNotNone(result['job'])
         self.assertIsNotNone(result['configuration'])
+
+
+class TestStrikesValidationView(TestCase):
+    """Tests related to the Strike process validation endpoint"""
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+
+    def test_successful(self):
+        """Tests validating a new Strike process."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_missing_configuration(self):
+        """Tests validating a new Strike process with missing configuration."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests validating a new Strike process with configuration that is not a dict."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': 123,
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests validating a new Strike process with invalid configuration."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'BAD',
+                }],
+            },
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_warnings(self):
+        """Tests validating a new Strike process where the mount path is changed."""
+
+        configuration = {
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'workspace_path': 'my/path',
+                'workspace_name': 'raw',
+            }],
+        }
+        ingest_test_utils.create_strike(name='strike-test', configuration=configuration)
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-test',
+            'configuration': {
+                'mount': 'host:/my/new/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'mount_change')
