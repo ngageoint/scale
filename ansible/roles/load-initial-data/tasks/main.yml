@@ -15,5 +15,5 @@
       SCALE_DB_PASS: '{{ db_password }}'
       SCALE_DB_HOST: '{{ db_host }}'
       MESOS_MASTER_URL: 'zk://scalemaster:2181/mesos'
-      SCALE_DOCKER_IMAGE: '{{ docker_registry }}scale'
+      SCALE_DOCKER_IMAGE: '{{ docker_registry }}geoint/scale'
   become: true
