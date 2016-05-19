@@ -194,7 +194,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(len(result['results']), 3)
 
 
-class TestStrikeTypesView(TestCase):
+class TestStrikesView(TestCase):
 
     def setUp(self):
         django.setup()
@@ -258,6 +258,95 @@ class TestStrikeTypesView(TestCase):
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
 
 
+class TestStrikeCreateView(TestCase):
+
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+
+    def test_missing_configuration(self):
+        """Tests calling the create Strike view with missing configuration."""
+
+        url = '/strikes/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests calling the create Strike view with configuration that is not a dict."""
+
+        url = '/strikes/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': 123,
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests calling the create Strike view with invalid configuration."""
+
+        url = '/strikes/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'BAD',
+                }],
+            }
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_successful(self):
+        """Tests calling the create Strike view successfully."""
+
+        url = '/strikes/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        strikes = Strike.objects.filter(name='strike-name')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(len(strikes), 1)
+
+        self.assertEqual(result['title'], strikes[0].title)
+        self.assertEqual(result['description'], strikes[0].description)
+        self.assertDictEqual(result['configuration'], strikes[0].configuration)
+
+
 class TestStrikeDetailsView(TestCase):
 
     def setUp(self):
@@ -286,82 +375,3 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(result['name'], self.strike.name)
         self.assertIsNotNone(result['job'])
         self.assertIsNotNone(result['configuration'])
-
-
-class TestCreateStrikeView(TestCase):
-
-    fixtures = ['ingest_job_types.json']
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-    def test_missing_configuration(self):
-        """Tests calling the create Strike view with missing configuration."""
-
-        url = '/strike/create/'
-        json_data = {
-            'name': 'strike-name',
-            'title': 'Strike Title',
-            'description': 'Strike description',
-        }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_configuration_bad_type(self):
-        """Tests calling the create Strike view with configuration that is not a dict."""
-
-        url = '/strike/create/'
-        json_data = {
-            'name': 'strike-name',
-            'title': 'Strike Title',
-            'description': 'Strike description',
-            'configuration': 123,
-        }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_invalid_configuration(self):
-        """Tests calling the create Strike view with invalid configuration."""
-
-        url = '/strike/create/'
-        json_data = {
-            'name': 'strike-name',
-            'title': 'Strike Title',
-            'description': 'Strike description',
-            'configuration': {
-                'mount': 123,
-            }
-        }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_successful(self):
-        """Tests calling the create Strike view successfully."""
-
-        url = '/strike/create/'
-        json_data = {
-            'name': 'strike-name',
-            'title': 'Strike Title',
-            'description': 'Strike description',
-            'configuration': {
-                'mount': 'host:/my/path',
-                'transfer_suffix': '_tmp',
-                'files_to_ingest': [{
-                    'filename_regex': '.*',
-                    'workspace_path': 'my/path',
-                    'workspace_name': self.workspace.name,
-                }]
-            }
-        }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        strike = Strike.objects.all().first()
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        result = json.loads(response.content)
-        self.assertDictEqual(result, {'strike_id': strike.id}, 'JSON result was incorrect')

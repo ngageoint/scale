@@ -391,7 +391,7 @@ class StrikeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_strike_process(self, name, title, description, configuration):
+    def create_strike(self, name, title, description, configuration):
         """Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
         will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
         the database will occur in an atomic transaction.
@@ -406,7 +406,9 @@ class StrikeManager(models.Manager):
         :type configuration: dict
         :returns: The new Strike process
         :rtype: :class:`ingest.models.Strike`
-        :raises InvalidStrikeConfiguration: If the configuration is invalid
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
         """
 
         # Validate the configuration, no exception is success
