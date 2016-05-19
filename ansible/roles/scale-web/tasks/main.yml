@@ -1,6 +1,15 @@
 ---
-- name: static scale web server
+- name: Kill static scale web server
   tags: scale-web-static
+  docker:
+    name: scale-web-static
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}geoint/scale-web-static:{{ scale_docker_version }}'
+    state: killed
+  become: true
+
+- name: Start static scale web server
+  tags: [ scale-web-static, restart-scale ]
   docker:
     name: scale-web-static
     docker_api_version: '{{ docker_api_version }}'
