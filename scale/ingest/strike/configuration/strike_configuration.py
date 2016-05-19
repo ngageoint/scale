@@ -127,6 +127,15 @@ class StrikeConfiguration(object):
                            self._workspace_map[file_dict['workspace_name']])
             self.file_regex_entries.append(regex_tuple)
 
+    def get_dict(self):
+        """Returns the internal dictionary that represents this Strike process configuration.
+
+        :returns: The internal dictionary
+        :rtype: dict
+        """
+
+        return self._configuration
+
     def get_mount(self):
         """Returns the "mount" value
 
@@ -158,13 +167,13 @@ class StrikeConfiguration(object):
 
         for regex_entry in self.file_regex_entries:
             if regex_entry[0].match(file_name):
-                return (regex_entry[1], regex_entry[2], regex_entry[3])
+                return regex_entry[1], regex_entry[2], regex_entry[3]
         return None
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 
-        if not 'version' in self._configuration:
+        if 'version' not in self._configuration:
             self._configuration['version'] = DEFAULT_VERSION
 
         for file_dict in self._configuration['files_to_ingest']:

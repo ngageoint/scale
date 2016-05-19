@@ -352,6 +352,7 @@ class TestStrikeDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.workspace = storage_test_utils.create_workspace(name='raw')
         self.strike = ingest_test_utils.create_strike()
 
     def test_not_found(self):
@@ -375,6 +376,81 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(result['name'], self.strike.name)
         self.assertIsNotNone(result['job'])
         self.assertIsNotNone(result['configuration'])
+
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a Strike process"""
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['title'], 'Title EDIT')
+        self.assertEqual(result['description'], 'Description EDIT')
+        self.assertDictEqual(result['configuration'], self.strike.configuration)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertEqual(strike.title, 'Title EDIT')
+        self.assertEqual(strike.description, 'Description EDIT')
+
+    def test_edit_config(self):
+        """Tests editing the configuration of a Strike process"""
+
+        config = {
+            'version': '1.0',
+            'mount': 'host:/my/path/EDIT',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'data_types': ['test'],
+                'filename_regex': '.*txt',
+                'workspace_path': 'my_path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'configuration': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['title'], self.strike.title)
+        self.assertDictEqual(result['configuration'], config)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertEqual(strike.title, self.strike.title)
+        self.assertDictEqual(strike.configuration, config)
+
+    def test_edit_bad_config(self):
+        """Tests attempting to edit a Strike process using an invalid configuration"""
+
+        config = {
+            'version': 'BAD',
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'workspace_path': 'my/path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'configuration': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestStrikesValidationView(TestCase):

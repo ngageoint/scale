@@ -435,6 +435,38 @@ class StrikeManager(models.Manager):
 
         return strike
 
+    @transaction.atomic
+    def edit_strike(self, strike_id, title=None, description=None, configuration=None):
+        """Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param strike_id: The unique identifier of the Strike process to edit
+        :type strike_id: int
+        :param title: The human-readable name of this Strike process
+        :type title: string
+        :param description: A description of this Strike process
+        :type description: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
+        """
+
+        strike = Strike.objects.get(pk=strike_id)
+
+        # Validate the configuration, no exception is success
+        if configuration:
+            config = StrikeConfiguration(configuration)
+            strike.configuration = config.get_dict()
+
+        # Update editable fields
+        if title:
+            strike.title = title
+        if description:
+            strike.description = description
+        strike.save()
+
     def get_strike_job_type(self):
         """Returns the Scale Strike job type
 
