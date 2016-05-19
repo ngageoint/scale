@@ -22,7 +22,7 @@
                         statusStr = statusStr + ' <span class="label label-completed">Completed: ' + completed + '</span>';
                     }
 
-                    failures = _.sortByOrder(failures, ['status'], ['desc']);
+                    failures = _.sortByOrder(failures, ['order']);
 
                     _.forEach(failures, function (f) {
                         failStr = failStr + '<span class="label label-' + f.status.toLowerCase() + '">' + _.capitalize(f.status.toLowerCase()) + ': ' + f.count + '</span> ';
@@ -215,6 +215,12 @@
             }
         };
 
+        var getCellActivity = function (d) {
+            if (d && d.status) {
+                return d.status.getRunning();
+            }
+        };
+
         var getCellPauseResume = function (d) {
             if (d && d.status) {
                 return d.status.getCellPauseResume();
@@ -365,6 +371,13 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .transition()
                 .duration(750)
+                .attr('class', function (d) {
+                    var active = getCellActivity(d);
+                    if (active) {
+                        return active.count > 0 ? 'cell cell-activity' : 'cell';
+                    }
+                    return 'cell';
+                })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
                 })
@@ -513,7 +526,13 @@
                 });
 
             cellGroup.append('rect')
-                .attr('class', 'cell')
+                .attr('class', function (d) {
+                    var active = getCellActivity(d);
+                    if (active) {
+                        return active.count > 0 ? 'cell cell-activity' : 'cell';
+                    }
+                    return 'cell';
+                })
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
                 .style('fill', function (d) {

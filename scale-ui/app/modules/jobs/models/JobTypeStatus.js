@@ -44,17 +44,23 @@
                 return _.find(this.job_counts, 'status', 'RUNNING') || { count: 0 };
             },
             getFailures: function () {
-                var failed = _.where(this.job_counts, { 'status': 'FAILED' }),
-                    failedValues = _.values(_.groupBy(failed, 'category'));
+                var failed = _.where(this.job_counts, { 'status': 'FAILED' });
+
+                _.forEach(failed, function (f) {
+                    var category = _.find(scaleConfig.errorCategories, { name: f.category });
+                    f.order = category ? category.order : '';
+                });
+
+                var failedValues = _.values(_.groupBy(failed, 'order'));
 
                 var getFailureCounts = function (categories) {
                     var returnArr = [];
                     _.forEach(categories, function (category) {
                         _.forEach(category, function (val) {
-                            returnArr.push({ status: val.category, count: val.count });
+                            returnArr.push({ status: val.category, count: val.count, order: val.order });
                         });
                     });
-                    return _.sortByOrder(returnArr, ['status'], ['asc']);
+                    return _.sortByOrder(returnArr, ['order'], ['desc']);
                 };
 
                 return getFailureCounts(failedValues);
@@ -65,13 +71,6 @@
                     return scaleConfig.colors.chart_gray_dark;
                 }
                 return scaleConfig.colors.chart_green;
-            },
-            getCellActivity: function () {
-                var running = this.getRunning();
-                if (running.count > 0) {
-                    return '&#x' + scaleConfig.activityIconCode + ';';
-                }
-                return '';
             },
             getCellActivityTotal: function () {
                 return this.getRunning().count > 0 ? this.getRunning().count : '';

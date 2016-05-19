@@ -49,16 +49,16 @@
                                 count: systemFailures
                             });
                         }
-                        if (dataFailures > 0) {
-                            failureData.push({
-                                status: 'DATA',
-                                count: dataFailures
-                            });
-                        }
                         if (algorithmFailures > 0) {
                             failureData.push({
                                 status: 'ALGORITHM',
                                 count: algorithmFailures
+                            });
+                        }
+                        if (dataFailures > 0) {
+                            failureData.push({
+                                status: 'DATA',
+                                count: dataFailures
                             });
                         }
                     }

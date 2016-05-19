@@ -51,8 +51,8 @@
             "patternD320": ["#1f77bf","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"],
 
             "failure_system": "#67000d",
-            "failure_data": "#cb181d",
-            "failure_algorithm": "#fb6a4a"
+            "failure_algorithm": "#cb181d",
+            "failure_data": "#f16913"
         },
 
         "queueThresholds": {
@@ -151,7 +151,24 @@
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
         "axisTypes": ["linear", "time"],
         "executions": ["success","warning","error"],
-        "errorCategories": ["VIEW ALL","SYSTEM","DATA","ALGORITHM"],
+        "errorCategories": [
+            {
+                "order": 0,
+                "name": "VIEW ALL"
+            },
+            {
+                "order": 1,
+                "name": "SYSTEM"
+            },
+            {
+                "order": 2,
+                "name": "ALGORITHM"
+            },
+            {
+                "order": 3,
+                "name": "DATA"
+            }
+        ],
         "defaultIcon": "gear",
         "defaultIconCode": "f013",
         "activityIconCode": "f110",

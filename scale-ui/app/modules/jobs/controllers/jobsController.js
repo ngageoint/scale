@@ -29,7 +29,7 @@
         $scope.selectedJobType = self.jobsParams.job_type_id || 0;
         $scope.jobStatusValues = scaleConfig.jobStatus;
         $scope.selectedJobStatus = self.jobsParams.status || $scope.jobStatusValues[0];
-        $scope.errorCategoryValues = scaleConfig.errorCategories;
+        $scope.errorCategoryValues = _.map(scaleConfig.errorCategories, 'name');
         $scope.selectedErrorCategory = self.jobsParams.error_category || $scope.errorCategoryValues[0];
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
         $scope.actionClicked = false;
