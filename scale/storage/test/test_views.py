@@ -265,7 +265,7 @@ class TestWorkspaceDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestWorkspacesValidationView(TransactionTestCase):
+class TestWorkspacesValidationView(TestCase):
     """Tests related to the workspaces validation endpoint"""
 
     def setUp(self):

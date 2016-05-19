@@ -35,7 +35,7 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
 
 
 class ValidationWarning(object):
-    """Tracks workspace configuration warnings during validation that may not prevent the workspacefrom working."""
+    """Tracks workspace configuration warnings during validation that may not prevent the workspace from working."""
 
     def __init__(self, key, details):
         """Constructor sets basic attributes.
