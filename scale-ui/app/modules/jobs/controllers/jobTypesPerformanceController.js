@@ -125,30 +125,32 @@
                 };
 
                 metricsService.getPlotData(metricsParams).then(function (data) {
-                    var currDate = '',
-                        systemErrors = _.find(data.results, {column: {title: 'System Error Count'}}),
-                        dataErrors = _.find(data.results, {column: {title: 'Data Error Count'}}),
-                        algorithmErrors = _.find(data.results, {column: {title: 'Algorithm Error Count'}});
+                    if (data.results.length > 0) {
+                        var currDate = '',
+                            systemErrors = _.find(data.results, {column: {title: 'System Error Count'}}),
+                            dataErrors = _.find(data.results, {column: {title: 'Data Error Count'}}),
+                            algorithmErrors = _.find(data.results, {column: {title: 'Algorithm Error Count'}});
 
-                    _.forEach(jobTypes, function (jobType) {
-                        vm.performanceData.push(formatData(jobType, systemErrors, dataErrors, algorithmErrors));
-                    });
-
-                    vm.gridOptions.data = vm.performanceData;
-
-                    for (var i = 0; i <= numDays; i++) {
-                        currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
-                        vm.gridOptions.columnDefs.push({
-                            field: currDate,
-                            enableSorting: false,
-                            enableFiltering: false,
-                            cellTemplate: '<div class="ui-grid-cell-contents">' +
-                            '<span class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</span> ' +
-                            '<span class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</span> ' +
-                            '<span class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</span>' +
-                            '<div class="text-center" ng-show="COL_FIELD.system === 0 && COL_FIELD.data === 0 && COL_FIELD.algorithm === 0"><strong>No Errors</strong></div>' +
-                            '</div>'
+                        _.forEach(jobTypes, function (jobType) {
+                            vm.performanceData.push(formatData(jobType, systemErrors, dataErrors, algorithmErrors));
                         });
+
+                        vm.gridOptions.data = vm.performanceData;
+
+                        for (var i = 0; i <= numDays; i++) {
+                            currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
+                            vm.gridOptions.columnDefs.push({
+                                field: currDate,
+                                enableSorting: false,
+                                enableFiltering: false,
+                                cellTemplate: '<div class="ui-grid-cell-contents">' +
+                                '<span class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</span> ' +
+                                '<span class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</span> ' +
+                                '<span class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</span>' +
+                                '<div class="text-center" ng-show="COL_FIELD.system === 0 && COL_FIELD.data === 0 && COL_FIELD.algorithm === 0"><strong>No Errors</strong></div>' +
+                                '</div>'
+                            });
+                        }
                     }
 
                     vm.loading = false;
@@ -162,15 +164,17 @@
         
         initialize();
 
-        $scope.$watch('vm.selectedJobType', function (value) {
+        $scope.$watch('vm.selectedJobType', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
             if (vm.loading) {
                 if (filteredByJobType) {
-                    vm.updateJobType(value);
+                    vm.updateJobType(newValue);
                 }
             } else {
-                debugger;
-                filteredByJobType = value !== 'VIEW ALL';
-                vm.updateJobType(value);
+                filteredByJobType = newValue !== 'VIEW ALL';
+                vm.updateJobType(newValue);
             }
         });
 
