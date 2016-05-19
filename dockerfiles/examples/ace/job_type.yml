@@ -4,7 +4,7 @@ title: Adaptive Cosine Estimation
 description: Signature matching with ACE followed but clustering and centroid detection. Stores result in a PostGIS database.
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
 icon_code: f0fb
-docker_image: "geoint/ace_1.2"
+docker_image: "geoint/ace"
 priority: 250
 timeout: 300
 max_tries: 2

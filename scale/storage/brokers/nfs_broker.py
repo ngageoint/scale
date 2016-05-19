@@ -5,148 +5,96 @@ import logging
 import os
 import shutil
 
-from storage.brokers.broker import OldBroker
-from storage.nfs import nfs_umount, nfs_mount
+from storage.brokers.broker import Broker, BrokerVolume
+from storage.brokers.exceptions import InvalidBrokerConfiguration
 from util.command import execute_command_line
 
 
 logger = logging.getLogger(__name__)
 
 
-class NfsBroker(OldBroker):
-    """Broker that utilizes the NFS (Network File System) protocol
+class NfsBroker(Broker):
+    """Broker that utilizes the docker-volume-netshare plugin (https://github.com/gondor/docker-volume-netshare) to
+    mount an NFS volume into the task container
     """
-
-    broker_type = 'nfs'
 
     def __init__(self):
         """Constructor
         """
 
-        self.mount = None
+        super(NfsBroker, self).__init__('nfs')
 
-    def cleanup_download_dir(self, download_dir, work_dir):
-        """See :meth:`storage.brokers.broker.Broker.cleanup_download_dir`
-        """
-
-        nfs_umount(work_dir)
-
-    def cleanup_upload_dir(self, upload_dir, work_dir):
-        """See :meth:`storage.brokers.broker.Broker.cleanup_upload_dir`
-        """
-
-        nfs_umount(work_dir)
-
-    def delete_files(self, work_dir, workspace_paths):
+    def delete_files(self, volume_path, files):
         """See :meth:`storage.brokers.broker.Broker.delete_files`
         """
 
-        nfs_mount(self.mount, work_dir, False)
-        try:
-            for workspace_path in workspace_paths:
-                path_to_delete = os.path.join(work_dir, workspace_path)
-                if os.path.exists(path_to_delete):
-                    logger.info('Deleting %s', path_to_delete)
-                    os.remove(path_to_delete)
-        finally:
-            nfs_umount(work_dir)
+        for scale_file in files:
+            path_to_delete = os.path.join(volume_path, scale_file.file_path)
+            if os.path.exists(path_to_delete):
+                logger.info('Deleting %s', path_to_delete)
+                os.remove(path_to_delete)
 
-    def download_files(self, download_dir, work_dir, files_to_download):
+    def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`
         """
 
-        for file_to_download in files_to_download:
-            workspace_path = file_to_download[0]
-            dest_path = file_to_download[1]
+        for file_download in file_downloads:
+            path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
-            full_workspace_path = os.path.join(work_dir, workspace_path)
-            full_dest_path = os.path.join(download_dir, dest_path)
-            full_dest_dir = os.path.dirname(full_dest_path)
+            # Create symlink to the file in the host mount
+            logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
+            execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
 
-            if not os.path.exists(full_dest_dir):
-                logger.info('Creating %s', full_dest_dir)
-                os.makedirs(full_dest_dir, mode=0755)
-            execute_command_line(['ln', '-s', full_workspace_path, full_dest_path])
-
-    def is_config_valid(self, config):
-        """Validates the given configuration. There is no return value; an invalid configuration should just raise an
-        exception.
-
-        :param config: The configuration as a dictionary
-        :type config: dict
+    def load_configuration(self, config):
+        """See :meth:`storage.brokers.broker.Broker.load_configuration`
         """
 
-        if not config['type'] == self.broker_type:
-            raise Exception('Invalid broker type: %s' % config['type'])
+        # The docker-volume-netshare plugin requires the : separator between the NFS host and path to be removed
+        self._volume = BrokerVolume('nfs', config['nfs_path'].replace(':', ''))
 
-        self._validate_str_config_field('mount', config)
-
-    def load_config(self, config):
-        """Loads the given configuration
-
-        :param config: The configuration as a dictionary
-        :type config: dict
-        """
-
-        self.mount = config['mount']
-
-    def move_files(self, work_dir, files_to_move):
+    def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`
         """
 
-        nfs_mount(self.mount, work_dir, False)
-        try:
-            for file_to_move in files_to_move:
-                old_workspace_path = file_to_move[0]
-                new_workspace_path = file_to_move[1]
+        for file_move in file_moves:
+            full_old_path = os.path.join(volume_path, file_move.file.file_path)
+            full_new_path = os.path.join(volume_path, file_move.new_path)
+            full_new_path_dir = os.path.dirname(full_new_path)
 
-                full_old_workspace_path = os.path.join(work_dir, old_workspace_path)
-                full_new_workspace_path = os.path.join(work_dir, new_workspace_path)
-                full_new_workspace_dir = os.path.dirname(full_new_workspace_path)
+            if not os.path.exists(full_new_path_dir):
+                logger.info('Creating %s', full_new_path_dir)
+                os.makedirs(full_new_path_dir, mode=0755)
 
-                if not os.path.exists(full_new_workspace_dir):
-                    logger.info('Creating %s', full_new_workspace_dir)
-                    os.makedirs(full_new_workspace_dir, mode=0755)
+            logger.info('Moving %s to %s', full_old_path, full_new_path)
+            shutil.move(full_old_path, full_new_path)
+            logger.info('Setting file permissions for %s', full_new_path)
+            os.chmod(full_new_path, 0644)
+            file_move.file.file_path = file_move.new_path
 
-                logger.info('Moving %s to %s', full_old_workspace_path, full_new_workspace_path)
-                shutil.move(full_old_workspace_path, full_new_workspace_path)
-                os.chmod(full_new_workspace_path, 0644)
-        finally:
-            nfs_umount(work_dir)
-
-    def setup_download_dir(self, download_dir, work_dir):
-        """See :meth:`storage.brokers.broker.Broker.setup_download_dir`
+    def upload_files(self, volume_path, file_uploads):
+        """See :meth:`storage.brokers.broker.Broker.upload_files`
         """
 
-        nfs_mount(self.mount, work_dir, True)
+        for file_upload in file_uploads:
+            path_to_upload = os.path.join(volume_path, file_upload.file.file_path)
+            path_to_upload_dir = os.path.dirname(path_to_upload)
 
-    def setup_upload_dir(self, upload_dir, work_dir):
-        """See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
+            if not os.path.exists(path_to_upload_dir):
+                logger.info('Creating %s', path_to_upload_dir)
+                os.makedirs(path_to_upload_dir, mode=0755)
+
+            logger.info('Copying %s to %s', file_upload.local_path, path_to_upload)
+            self._copy_file(file_upload.local_path, path_to_upload)
+            logger.info('Setting file permissions for %s', path_to_upload)
+            os.chmod(path_to_upload, 0644)
+
+    def validate_configuration(self, config):
+        """See :meth:`storage.brokers.broker.Broker.validate_configuration`
         """
 
-        pass
-
-    def upload_files(self, upload_dir, work_dir, files_to_upload):
-        """See :meth:`storage.brokers.broker.Broker.setup_upload_dir`
-        """
-
-        nfs_mount(self.mount, work_dir, False)
-        try:
-            for file_to_upload in files_to_upload:
-                src_path = file_to_upload[0]
-                workspace_path = file_to_upload[1]
-
-                full_src_path = os.path.join(upload_dir, src_path)
-                full_workspace_path = os.path.join(work_dir, workspace_path)
-                full_workspace_dir = os.path.dirname(full_workspace_path)
-
-                if not os.path.exists(full_workspace_dir):
-                    logger.info('Creating %s', full_workspace_dir)
-                    os.makedirs(full_workspace_dir, mode=0755)
-                self._copy_file(full_src_path, full_workspace_path)
-                os.chmod(full_workspace_path, 0644)
-        finally:
-            nfs_umount(work_dir)
+        if 'nfs_path' not in config or not config['nfs_path']:
+            raise InvalidBrokerConfiguration('NFS broker requires "nfs_path" to be populated')
+        return []
 
     def _copy_file(self, src_path, dest_path):
         """Performs a copy from the src_path to the dest_path
@@ -161,10 +109,11 @@ class NfsBroker(OldBroker):
             real_path = os.path.realpath(src_path)
             logger.info('%s is a link to %s', src_path, real_path)
             src_path = real_path
-        logger.info('Copying %s to %s', src_path, dest_path)
-        # attempt bbcp copy first. If it fails, we'll fallback to cp
+            logger.info('Copying %s to %s', src_path, dest_path)
+        # Attempt bbcp copy first. If it fails, we'll fallback to cp
         try:
-            # TODO: detect bbcp location instead of assuming /usr/local and don't even try to execute if it isn't installed
+            # TODO: detect bbcp location instead of assuming /usr/local and don't even try to execute if it isn't
+            # installed
             # TODO: configuration options for the bbcp copy options such as window size
             srv_src_path, srv_dest_path = self._get_mount_info(src_path, dest_path)
             cmd_list = ['/usr/local/bin/bbcp',
@@ -173,11 +122,12 @@ class NfsBroker(OldBroker):
                         apply(os.path.join, srv_dest_path) if srv_dest_path[0] is not None else srv_dest_path[1]]
             execute_command_line(cmd_list)
             return
-        except OSError, e:
-            if e.errno != 2: # errno 2 is No such file or directory..bbcp not installed. We'll be quiet about it but fallback
-                logger.exception("NFS Broker bbcp copy_file") # ignore the error and attempt a regular cp
+        except OSError as e:
+            # errno 2 is No such file or directory..bbcp not installed. We'll be quiet about it but fallback
+            if e.errno != 2:
+                logger.exception("NFS Broker bbcp copy_file")  # Ignore the error and attempt a regular cp
         except:
-            logger.exception("NFS Broker bbcp copy_file") # ignore the error and attempt a regular cp
+            logger.exception("NFS Broker bbcp copy_file")  # Ignore the error and attempt a regular cp
         logger.info('Fall back to cp for %s', src_path)
         shutil.copy(src_path, dest_path)
 
@@ -205,7 +155,8 @@ class NfsBroker(OldBroker):
                         srv = l[0]
                         mnt_table.append((mntpnt, srv))
             except IndexError:
-                pass # the indices will be present for nfs and nfs4 entries so if we don't have all the items, we can ignore
+                # The indices will be present for nfs and nfs4 entries so if we don't have all the items, we can ignore
+                pass
         # sort by length of mount point. Longest mount points (number of nested directories) are first in case we have
         # items mounted within an nfs mount tree
         mnt_table.sort(cmp=lambda a, b: cmp(len(a[0].split(os.sep)), len(b[0].split(os.sep))), reverse=True)

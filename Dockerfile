@@ -82,10 +82,9 @@ RUN yum -y history undo last \
  && rm -rf /opt/scale-ui
 
 # setup ownership and permissions. create some needed directories
-RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data \
+RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/ingest_mount /scale/workspace_mounts \
  && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && touch /scale/output_data/.sentinel \
  && chmod a+x manage.py
 USER scale
 

@@ -16,11 +16,13 @@ class TestWorkspaceConfigurationInit(TestCase):
         """Tests calling WorkspaceConfiguration constructor with bare minimum JSON."""
 
         # No exception is success
-        WorkspaceConfiguration({
+        config = WorkspaceConfiguration({
             'broker': {
                 'type': 'host',
+                'host_path': '/the/path',
             },
         })
+        config.validate_broker()
 
     def test_bad_version(self):
         """Tests calling WorkspaceConfiguration constructor with bad version number."""
@@ -43,13 +45,24 @@ class TestWorkspaceConfigurationInit(TestCase):
         }
         self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
 
-    def test_successful(self):
-        """Tests calling WorkspaceConfiguration constructor successfully with all information."""
+    def test_bad_host_config(self):
+        """Tests calling WorkspaceConfiguration constructor with bad host broker configuration."""
 
-        config = {
+        config = WorkspaceConfiguration({
             'broker': {
                 'type': 'host',
             },
-        }
+        })
+        self.assertRaises(InvalidWorkspaceConfiguration, config.validate_broker)
+
+    def test_successful(self):
+        """Tests calling WorkspaceConfiguration constructor successfully with all information."""
+
         # No exception is success
-        WorkspaceConfiguration(config)
+        config = WorkspaceConfiguration({
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path',
+            },
+        })
+        config.validate_broker()

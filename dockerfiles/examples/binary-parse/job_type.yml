@@ -3,7 +3,7 @@ version: "1.0.0"
 title: Binary File Parse
 description: Parse arbitrary binary files extracting the date from the file metadata.
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
-docker_image: "geoint/parse-binary_1.0"
+docker_image: "geoint/parse-binary"
 priority: 200
 timeout: 300
 max_tries: 1

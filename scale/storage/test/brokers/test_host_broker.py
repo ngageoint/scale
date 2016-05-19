@@ -4,26 +4,26 @@ import os
 
 import django
 from django.test import TestCase
-from mock import call, patch, mock_open
+from mock import call, patch
 
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.brokers.exceptions import InvalidBrokerConfiguration
-from storage.brokers.nfs_broker import NfsBroker
+from storage.brokers.host_broker import HostBroker
 from storage.models import ScaleFile
 
 
-class TestNfsBrokerDeleteFiles(TestCase):
+class TestHostBrokerDeleteFiles(TestCase):
 
     def setUp(self):
         django.setup()
 
-        self.broker = NfsBroker()
-        self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
+        self.broker = HostBroker()
+        self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.nfs_broker.os.path.exists')
-    @patch('storage.brokers.nfs_broker.os.remove')
+    @patch('storage.brokers.host_broker.os.path.exists')
+    @patch('storage.brokers.host_broker.os.remove')
     def test_successfully(self, mock_remove, mock_exists):
-        """Tests calling NfsBroker.delete_files() successfully"""
+        """Tests calling HostBroker.delete_files() successfully"""
 
         def new_exists(path):
             return True
@@ -48,18 +48,18 @@ class TestNfsBrokerDeleteFiles(TestCase):
         mock_remove.assert_has_calls(two_calls)
 
 
-class TestNfsBrokerDownloadFiles(TestCase):
+class TestHostBrokerDownloadFiles(TestCase):
 
     def setUp(self):
         django.setup()
 
-        self.broker = NfsBroker()
-        self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
+        self.broker = HostBroker()
+        self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.nfs_broker.os.path.exists')
-    @patch('storage.brokers.nfs_broker.execute_command_line')
+    @patch('storage.brokers.host_broker.os.path.exists')
+    @patch('storage.brokers.host_broker.execute_command_line')
     def test_successfully(self, mock_execute, mock_exists):
-        """Tests calling NfsBroker.download_files() successfully"""
+        """Tests calling HostBroker.download_files() successfully"""
 
         def new_exists(path):
             return False
@@ -90,40 +90,40 @@ class TestNfsBrokerDownloadFiles(TestCase):
         mock_execute.assert_has_calls(two_calls)
 
 
-class TestNfsBrokerLoadConfiguration(TestCase):
+class TestHostBrokerLoadConfiguration(TestCase):
 
     def setUp(self):
         django.setup()
 
     def test_successfully(self):
-        """Tests calling NfsBroker.load_configuration() successfully"""
+        """Tests calling HostBroker.load_configuration() successfully"""
 
-        nfs_path = 'host:/dir'
+        host_path = '/host/path'
 
         # Call method to test
-        broker = NfsBroker()
-        broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': nfs_path})
+        broker = HostBroker()
+        broker.load_configuration({'type': HostBroker().broker_type, 'host_path': host_path})
 
         volume = broker.volume
-        self.assertEqual(volume.driver, 'nfs')
-        self.assertEqual(volume.host, False)
-        self.assertEqual(volume.remote_path, 'host/dir')  # No : character in path for Docker NFS volume
+        self.assertEqual(volume.driver, None)
+        self.assertEqual(volume.host, True)
+        self.assertEqual(volume.remote_path, host_path)
 
 
-class TestNfsBrokerMoveFiles(TestCase):
+class TestHostBrokerMoveFiles(TestCase):
 
     def setUp(self):
         django.setup()
 
-        self.broker = NfsBroker()
-        self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
+        self.broker = HostBroker()
+        self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.nfs_broker.os.makedirs')
-    @patch('storage.brokers.nfs_broker.os.path.exists')
-    @patch('storage.brokers.nfs_broker.os.chmod')
-    @patch('storage.brokers.nfs_broker.shutil.move')
+    @patch('storage.brokers.host_broker.os.makedirs')
+    @patch('storage.brokers.host_broker.os.path.exists')
+    @patch('storage.brokers.host_broker.os.chmod')
+    @patch('storage.brokers.host_broker.shutil.move')
     def test_successfully(self, mock_move, mock_chmod, mock_exists, mock_makedirs):
-        """Tests calling NfsBroker.move_files() successfully"""
+        """Tests calling HostBroker.move_files() successfully"""
 
         def new_exists(path):
             return False
@@ -161,20 +161,20 @@ class TestNfsBrokerMoveFiles(TestCase):
         mock_chmod.assert_has_calls(two_calls)
 
 
-class TestNfsBrokerUploadFiles(TestCase):
+class TestHostBrokerUploadFiles(TestCase):
 
     def setUp(self):
         django.setup()
 
-        self.broker = NfsBroker()
-        self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
+        self.broker = HostBroker()
+        self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.nfs_broker.os.makedirs')
-    @patch('storage.brokers.nfs_broker.os.path.exists')
-    @patch('storage.brokers.nfs_broker.os.chmod')
-    @patch('storage.brokers.nfs_broker.shutil.copy')
+    @patch('storage.brokers.host_broker.os.makedirs')
+    @patch('storage.brokers.host_broker.os.path.exists')
+    @patch('storage.brokers.host_broker.os.chmod')
+    @patch('storage.brokers.host_broker.shutil.copy')
     def test_successfully(self, mock_copy, mock_chmod, mock_exists, mock_makedirs):
-        """Tests calling NfsBroker.upload_files() successfully"""
+        """Tests calling HostBroker.upload_files() successfully"""
 
         def new_exists(path):
             return False
@@ -197,44 +197,7 @@ class TestNfsBrokerUploadFiles(TestCase):
         file_2_up = FileUpload(file_2, local_path_file_2)
 
         # Call method to test
-        mountstats_data = """16 36 0:3 / /proc rw,nosuid,nodev,noexec,relatime shared:5 - proc proc rw
-17 36 0:16 / /sys rw,nosuid,nodev,noexec,relatime shared:6 - sysfs sysfs rw
-18 36 0:5 / /dev rw,nosuid shared:2 - devtmpfs devtmpfs rw,size=32977500k,nr_inodes=8244375,mode=755
-19 17 0:15 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:7 - securityfs securityfs rw
-20 18 0:17 / /dev/shm rw,nosuid,nodev shared:3 - tmpfs tmpfs rw
-21 18 0:11 / /dev/pts rw,nosuid,noexec,relatime shared:4 - devpts devpts rw,gid=5,mode=620,ptmxmode=000
-22 36 0:18 / /run rw,nosuid,nodev shared:21 - tmpfs tmpfs rw,mode=755
-23 17 0:19 / /sys/fs/cgroup rw,nosuid,nodev,noexec shared:8 - tmpfs tmpfs rw,mode=755
-24 23 0:20 / /sys/fs/cgroup/systemd rw,nosuid,nodev,noexec,relatime shared:9 - cgroup cgroup rw,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd
-25 17 0:21 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:19 - pstore pstore rw
-26 23 0:22 / /sys/fs/cgroup/cpuset rw,nosuid,nodev,noexec,relatime shared:10 - cgroup cgroup rw,cpuset
-27 23 0:23 / /sys/fs/cgroup/cpu,cpuacct rw,nosuid,nodev,noexec,relatime shared:11 - cgroup cgroup rw,cpu,cpuacct
-28 23 0:24 / /sys/fs/cgroup/memory rw,nosuid,nodev,noexec,relatime shared:12 - cgroup cgroup rw,memory
-29 23 0:25 / /sys/fs/cgroup/devices rw,nosuid,nodev,noexec,relatime shared:13 - cgroup cgroup rw,devices
-30 23 0:26 / /sys/fs/cgroup/freezer rw,nosuid,nodev,noexec,relatime shared:14 - cgroup cgroup rw,freezer
-31 23 0:27 / /sys/fs/cgroup/net_cls,net_prio rw,nosuid,nodev,noexec,relatime shared:15 - cgroup cgroup rw,net_cls,net_prio
-32 23 0:28 / /sys/fs/cgroup/blkio rw,nosuid,nodev,noexec,relatime shared:16 - cgroup cgroup rw,blkio
-33 23 0:29 / /sys/fs/cgroup/perf_event rw,nosuid,nodev,noexec,relatime shared:17 - cgroup cgroup rw,perf_event
-34 23 0:30 / /sys/fs/cgroup/hugetlb rw,nosuid,nodev,noexec,relatime shared:18 - cgroup cgroup rw,hugetlb
-35 17 0:31 / /sys/kernel/config rw,relatime shared:20 - configfs configfs rw
-36 0 253:0 / / rw,relatime shared:1 - xfs /dev/mapper/vg_root-lv_root rw,attr2,inode64,noquota
-14 36 0:14 / /users rw,relatime shared:22 - autofs systemd-1 rw,fd=29,pgrp=1,timeout=300,minproto=5,maxproto=5,direct
-39 16 0:34 / /proc/sys/fs/binfmt_misc rw,relatime shared:25 - autofs systemd-1 rw,fd=37,pgrp=1,timeout=300,minproto=5,maxproto=5,direct
-41 18 0:13 / /dev/mqueue rw,relatime shared:26 - mqueue mqueue rw
-40 17 0:6 / /sys/kernel/debug rw,relatime shared:27 - debugfs debugfs rw
-42 18 0:35 / /dev/hugepages rw,relatime shared:28 - hugetlbfs hugetlbfs rw
-43 36 0:36 / /var/lib/nfs/rpc_pipefs rw,relatime shared:29 - rpc_pipefs sunrpc rw
-44 16 0:37 / /proc/fs/nfsd rw,relatime shared:30 - nfsd nfsd rw
-45 36 8:2 / /boot rw,relatime shared:31 - xfs /dev/sda2 rw,attr2,inode64,noquota
-46 14 0:40 / /users rw,relatime shared:32 - nfs4 users:/users rw,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,port=0,timeo=14,retrans=2,sec=sys,local_lock=none
-49 39 0:38 / /proc/sys/fs/binfmt_misc rw,relatime shared:35 - binfmt_misc binfmt_misc rw
-48 38 0:42 / %s rw,relatime shared:34 - nfs4 fserver:/exports/my_dir_1 rw,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,port=0,timeo=14,retrans=2,sec=sys,local_lock=none
-""" % (os.path.abspath(volume_path),)
-        mo = mock_open(read_data=mountstats_data)
-        # need to patch readlines() since only read() is patched in mock_open
-        mo.return_value.readlines.return_value = mo.return_value.read.return_value.split('\n')
-        with patch('__builtin__.open', mo, create=True) as pmo:
-            self.broker.upload_files(volume_path, [file_1_up, file_2_up])
+        self.broker.upload_files(volume_path, [file_1_up, file_2_up])
 
         # Check results
         two_calls = [call(os.path.dirname(full_workspace_path_file_1), mode=0755),
@@ -247,25 +210,25 @@ class TestNfsBrokerUploadFiles(TestCase):
         mock_chmod.assert_has_calls(two_calls)
 
 
-class TestNfsBrokerValidateConfiguration(TestCase):
+class TestHostBrokerValidateConfiguration(TestCase):
 
     def setUp(self):
         django.setup()
 
     def test_successfully(self):
-        """Tests calling NfsBroker.validate_configuration() successfully"""
+        """Tests calling HostBroker.validate_configuration() successfully"""
 
-        nfs_path = 'host:/dir'
+        host_path = 'host:/dir'
 
         # Call method to test
-        broker = NfsBroker()
+        broker = HostBroker()
         # No exception is success
-        broker.validate_configuration({'type': NfsBroker().broker_type, 'nfs_path': nfs_path})
+        broker.validate_configuration({'type': HostBroker().broker_type, 'host_path': host_path})
 
-    def test_missing_nfs_path(self):
-        """Tests calling NfsBroker.validate_configuration() with a missing nfs_path value"""
+    def test_missing_host_path(self):
+        """Tests calling HostBroker.validate_configuration() with a missing host_path value"""
 
         # Call method to test
-        broker = NfsBroker()
+        broker = HostBroker()
         self.assertRaises(InvalidBrokerConfiguration, broker.validate_configuration,
-                          {'type': NfsBroker().broker_type})
+                          {'type': HostBroker().broker_type})

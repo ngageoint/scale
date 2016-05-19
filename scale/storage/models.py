@@ -13,9 +13,9 @@ from django.db import transaction
 
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
-from storage.container import get_workspace_mount_path
-from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingRemoteMount
+from storage.configuration.workspace_configuration import ValidationWarning, WorkspaceConfiguration
+from storage.container import get_workspace_volume_path
+from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
 
 
@@ -161,6 +161,7 @@ class ScaleFileManager(models.Manager):
 
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
@@ -205,6 +206,7 @@ class ScaleFileManager(models.Manager):
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.DeletedFile`: If one of the files is deleted
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
@@ -243,6 +245,7 @@ class ScaleFileManager(models.Manager):
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
         :returns: The list of saved file models
         :rtype: [:class:`storage.models.ScaleFile`]
+
         :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
         :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
         """
@@ -460,34 +463,83 @@ class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
     @transaction.atomic
-    def create_workspace(self, name, title, description, configuration):
+    def create_workspace(self, name, title, description, json_config, base_url=None, is_active=True):
         """Creates a new Workspace with the given configuration and returns the new Workspace model.
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
 
-        :param name: The stable name of this Workspace
+        :param name: The identifying name of this Workspace
         :type name: string
         :param title: The human-readable name of this Workspace
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param configuration: The Workspace configuration
-        :type configuration: dict
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :param base_url: The URL prefix used to download files stored in the Workspace.
+        :type base_url: string
+        :param is_active: Whether or not the Workspace is available for use.
+        :type is_active: bool
         :returns: The new Workspace
         :rtype: :class:`storage.models.Workspace`
-        :raises InvalidWorkspaceConfiguration: If the configuration is invalid
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
         """
 
         # Validate the configuration, no exception is success
-        WorkspaceConfiguration(configuration)
+        config = WorkspaceConfiguration(json_config)
+        config.validate_broker()
 
         workspace = Workspace()
         workspace.name = name
         workspace.title = title
         workspace.description = description
-        workspace.configuration = configuration
+        workspace.json_config = config.get_dict()
+        workspace.base_url = base_url
+        workspace.is_active = is_active
         workspace.save()
         return workspace
+
+    @transaction.atomic
+    def edit_workspace(self, workspace_id, title=None, description=None, json_config=None, base_url=None,
+                       is_active=None):
+        """Edits the given Workspace and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param workspace_id: The unique identifier of the Workspace to edit
+        :type workspace_id: int
+        :param title: The human-readable name of this Workspace
+        :type title: string
+        :param description: A description of this Workspace
+        :type description: string
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :param base_url: The URL prefix used to download files stored in the Workspace.
+        :type base_url: string
+        :param is_active: Whether or not the Workspace is available for use.
+        :type is_active: bool
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
+        """
+
+        workspace = Workspace.objects.get(pk=workspace_id)
+
+        # Validate the configuration, no exception is success
+        if json_config:
+            config = WorkspaceConfiguration(json_config)
+            config.validate_broker()
+            workspace.json_config = config.get_dict()
+
+        # Update editable fields
+        if title:
+            workspace.title = title
+        if description:
+            workspace.description = description
+        if base_url:
+            workspace.base_url = base_url
+        if is_active is not None:
+            workspace.is_active = is_active
+        workspace.save()
 
     def get_details(self, workspace_id):
         """Returns the workspace for the given ID with all detail fields included.
@@ -540,12 +592,44 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
+    def validate_workspace(self, name, json_config):
+        """Validates a new workspace prior to attempting a save
+
+        :param name: The identifying name of a Workspace to validate
+        :type name: string
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`storage.configuration.workspace_configuration.ValidationWarning`]
+
+        :raises :class:`storage.configuration.exceptions.InvalidWorkspaceConfiguration`: If the configuration is invalid
+        """
+        warnings = []
+
+        # Validate the configuration, no exception is success
+        config = WorkspaceConfiguration(json_config)
+
+        # Check for issues when changing an existing workspace configuration
+        try:
+            workspace = Workspace.objects.get(name=name)
+
+            if (json_config['broker'] and workspace.json_config['broker'] and
+                    json_config['broker']['type'] != workspace.json_config['broker']['type']):
+                warnings.append(ValidationWarning('broker_type',
+                                                  'Changing the broker type may disrupt queued/running jobs.'))
+        except Workspace.DoesNotExist:
+            pass
+
+        # Add broker-specific warnings
+        warnings.extend(config.validate_broker())
+        return warnings
+
 
 class Workspace(models.Model):
     """Represents a storage location where files can be stored and retrieved
     for processing
 
-    :keyword name: The stable name of the workspace used by clients for queries
+    :keyword name: The identifying name of the workspace used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of the workspace
     :type title: :class:`django.db.models.CharField`
@@ -593,51 +677,53 @@ class Workspace(models.Model):
     objects = WorkspaceManager()
 
     @property
-    def mount(self):
-        """If this workspace's broker uses a mounted file system, this property returns the remote location that should
-        be mounted into the task container. If this workspace's broker does not use a mounted file system, this property
-        should be None.
+    def volume(self):
+        """If this workspace's broker uses a container volume, this property returns the information needed to set up a
+        volume that can be mounted into the task container. If this workspace's broker does not use a container volume,
+        this property should be None.
 
-        :returns: The remote file system location to mount, possibly None
-        :rtype: string
+        :returns: The container volume information needed for this workspace's broker, possibly None
+        :rtype: :class:`storage.brokers.broker.BrokerVolume`
         """
 
-        return self._get_broker().mount
+        return self._get_broker().volume
 
     @property
-    def workspace_mount_path(self):
-        """Returns the absolute local path within the container for the remote mount for this workspace
+    def workspace_volume_path(self):
+        """Returns the absolute local path within the container onto which the broker's container volume is mounted
 
-        :returns: The absolute local path within the container for the remote mount
+        :returns: The absolute local path within the container for the broker's volume
         :rtype: string
         """
 
-        return get_workspace_mount_path(self.name)
+        return get_workspace_volume_path(self.name)
 
     def delete_files(self, files):
-        """Deletes the given files using the workspace's broker. If this workspace's broker uses a mounted file system,
-        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
-        raised.
+        """Deletes the given files using the workspace's broker. If this workspace's broker uses a container volume,
+        the workspace expects this volume file system to already be mounted at workspace_volume_path or an exception
+        will be raised.
 
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
-        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
         """
 
-        mount_location = self._get_mount_location()
-        self._get_broker().delete_files(mount_location, files)
+        volume_path = self._get_volume_path()
+        self._get_broker().delete_files(volume_path, files)
 
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths using the workspace's broker. If this
-        workspace's broker uses a mounted file system, the workspace expects this file system to already be mounted at
-        workspace_mount_path or an exception will be raised.
+        workspace's broker uses a container volume, the workspace expects this volume file system to already be mounted
+        at workspace_volume_path or an exception will be raised.
 
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
-        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
         """
 
-        mount_location = self._get_mount_location()
+        volume_path = self._get_volume_path()
 
         # Create parent directories for the local download paths if necessary
         for file_download in file_downloads:
@@ -646,33 +732,35 @@ class Workspace(models.Model):
                 logger.info('Creating %s', file_download_dir)
                 os.makedirs(file_download_dir, mode=0755)
 
-        self._get_broker().download_files(mount_location, file_downloads)
+        self._get_broker().download_files(volume_path, file_downloads)
 
     def move_files(self, file_moves):
-        """Moves the given files to the new file system paths. If this workspace's broker uses a mounted file system,
-        the workspace expects this file system to already be mounted at workspace_mount_path or an exception will be
+        """Moves the given files to the new file system paths. If this workspace's broker uses a container volume, the
+        workspace expects this volume file system to already be mounted at workspace_volume_path or an exception will be
         raised.
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
-        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
         """
 
-        mount_location = self._get_mount_location()
-        self._get_broker().move_files(mount_location, file_moves)
+        volume_path = self._get_volume_path()
+        self._get_broker().move_files(volume_path, file_moves)
 
     def upload_files(self, file_uploads):
-        """Uploads the given files from the given local file system paths. If this workspace's broker uses a mounted
-        file system, the workspace expects this file system to already be mounted at workspace_mount_path or an
+        """Uploads the given files from the given local file system paths. If this workspace's broker uses a container
+        volume, the workspace expects this volume file system to already be mounted at workspace_volume_path or an
         exception will be raised.
 
         :param file_uploads: List of files to upload
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
-        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
         """
 
-        mount_location = self._get_mount_location()
-        self._get_broker().upload_files(mount_location, file_uploads)
+        volume_path = self._get_volume_path()
+        self._get_broker().upload_files(volume_path, file_uploads)
 
     def _get_broker(self):
         """Returns the configured broker for this workspace
@@ -689,21 +777,21 @@ class Workspace(models.Model):
             self._broker = broker
         return self._broker
 
-    def _get_mount_location(self):
-        """Returns the local mount location for this workspace's remote mount if it uses one, otherwise returns None. If
-        the workspace uses a remote mount and it is missing, an exception is raised.
+    def _get_volume_path(self):
+        """Returns the local container location for this workspace's container volume if it uses one, otherwise returns
+        None. If the workspace uses a container volume and it is missing, an exception is raised.
 
-        :returns: The absolute local path within the container for the remote mount, possibly None
+        :returns: The absolute local path within the container for the container volume, possibly None
         :rtype: string
-        :raises :class:`storage.exceptions.MissingRemoteMount`: If the required mount location is missing
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
         """
 
-        mount_location = None
-        if self.mount:
-            mount_location = self.workspace_mount_path
-            if not os.path.exists(mount_location):
-                raise MissingRemoteMount('Expected file system mounted at %s' % mount_location)
-        return mount_location
+        volume_path = None
+        if self.volume:
+            volume_path = self.workspace_volume_path
+            if not os.path.exists(volume_path):
+                raise MissingVolumeMount('Expected file system mounted at %s' % volume_path)
+        return volume_path
 
     class Meta(object):
         """meta information for the db"""

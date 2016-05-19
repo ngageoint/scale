@@ -1360,7 +1360,7 @@ class JobExecution(models.Model):
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(workspaces)
+        configuration.configure_workspace_docker_params(self.id, workspaces)
 
         # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
         # jobs no longer mount within the container.
@@ -1595,7 +1595,7 @@ class JobTypeManager(models.Manager):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
-        :param name: The stable name of the job type used by clients for queries
+        :param name: The identifying name of the job type used by clients for queries
         :type name: str
         :param version: The version of the job type
         :type version: str
@@ -2033,7 +2033,7 @@ class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
     lock on the model using select_for_update().
 
-    :keyword name: The stable name of the job type used by clients for queries
+    :keyword name: The identifying name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
