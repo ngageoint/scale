@@ -248,29 +248,3 @@ class StrikesValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
-
-
-# TODO: Remove this once the UI migrates to POST /strikes/
-class CreateStrikeView(APIView):
-    """This view is the endpoint for creating a new Strike process."""
-    parser_classes = (JSONParser,)
-
-    def post(self, request):
-        """Creates a new Strike process and returns its ID in JSON form
-
-        :param request: the HTTP POST request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        name = rest_util.parse_string(request, 'name')
-        title = rest_util.parse_string(request, 'title', required=False)
-        description = rest_util.parse_string(request, 'description', required=False)
-        configuration = rest_util.parse_dict(request, 'configuration')
-
-        try:
-            strike = Strike.objects.create_strike(name, title, description, configuration)
-        except InvalidStrikeConfiguration:
-            raise BadParameter('Configuration failed to validate.')
-        return Response({'strike_id': strike.id})
