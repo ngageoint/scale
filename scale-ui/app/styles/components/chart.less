@@ -43,7 +43,18 @@ rect.overlay {
 .grid-chart-container {
     position: relative;
     margin-bottom: 10px;
+
     .grid-chart {
+        @-webkit-keyframes flash-current {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes flash-current {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         text {
             fill: #fff;
         }
@@ -68,9 +79,9 @@ rect.overlay {
           font-size: 1.5em!important;
         }*/
         .cell-activity {
-            -webkit-animation: fa-spin-chart 1s infinite steps(8);
-            /*animation: fa-spin 1s infinite steps(8);*/
-            -webkit-transform-origin: 50% 50%;
+            -webkit-animation-name: flash-current;
+            -webkit-animation-duration: 3s;
+            animation: flash-current 3s infinite linear;
         }
         .cell-text {
             font-size: 22px;
@@ -217,13 +228,13 @@ rect.overlay {
 }
 
 .label-system {
-    background-color: #1F77B4;
-}
-
-.label-data {
-    background-color: #FF7F0E;
+    background-color: @failure_system;
 }
 
 .label-algorithm {
-    background-color: #2CA02C;
+    background-color: @failure_algorithm;
+}
+
+.label-data {
+    background-color: @failure_data;
 }

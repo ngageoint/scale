@@ -87,5 +87,5 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
             }]
         }
 
-        strike = Strike.objects.create_strike_process('my_name', 'my_title', 'my_description', config)
+        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')

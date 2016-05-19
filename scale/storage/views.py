@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import logging
 
+import django.core.urlresolvers as urlresolvers
+import rest_framework.status as status
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.response import Response
@@ -66,8 +68,15 @@ class WorkspacesView(ListCreateAPIView):
             logger.exception('Unable to create new workspace: %s', name)
             raise BadParameter(unicode(ex))
 
+        # Fetch the full workspace with details
+        try:
+            workspace = Workspace.objects.get_details(workspace.id)
+        except Workspace.DoesNotExist:
+            raise Http404
+
         serializer = WorkspaceDetailsSerializer(workspace)
-        return Response(serializer.data)
+        workspace_url = urlresolvers.reverse('workspace_details_view', args=[workspace.id])
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=workspace_url))
 
 
 class WorkspaceDetailsView(GenericAPIView):

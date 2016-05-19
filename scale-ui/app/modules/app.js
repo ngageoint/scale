@@ -110,10 +110,10 @@
                 controller: 'jobTypesController',
                 templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
             })
-            .when('/jobs/performance', {
-                controller: 'jobTypesPerformanceController',
+            .when('/jobs/errors', {
+                controller: 'jobTypesErrorRatesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/jobs/partials/jobTypesPerformanceTemplate.html',
+                templateUrl: 'modules/jobs/partials/jobTypesErrorRatesTemplate.html',
                 reloadOnSearch: false
             })
             .when('/jobs/executions', {

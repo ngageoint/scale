@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobTypesPerformanceController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
+    angular.module('scaleApp').controller('jobTypesErrorRatesController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
         var vm = this;
 
         vm.jobTypeParams = {
@@ -36,7 +36,7 @@
         vm.selectedJobType = vm.jobTypeParams.name || '';
         vm.gridStyle = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
-        subnavService.setCurrentPath('jobs/performance');
+        subnavService.setCurrentPath('jobs/errors');
 
         var defaultColumnDefs = [
             {

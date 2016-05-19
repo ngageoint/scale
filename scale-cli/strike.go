@@ -35,7 +35,7 @@ func CreateStrikeProcess(base_url string, strike_data StrikeData) (strike_id int
     resp, err := resty.R().SetHeaders(map[string]string{
             "Accept":"application/json",
             "Content-type":"application/json",
-        }).SetBody(json_data).Post(base_url + "/strike/create/")
+        }).SetBody(json_data).Post(base_url + "/strikes/")
     if resp == nil && err != nil {
         return
     } else if resp == nil {
@@ -50,7 +50,7 @@ func CreateStrikeProcess(base_url string, strike_data StrikeData) (strike_id int
     if err != nil {
         return
     }
-    tmp, ok := resp_data["strike_id"].(float64)
+    tmp, ok := resp_data["id"].(float64)
     if ok {
         strike_id = int(tmp)
     } else {

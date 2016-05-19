@@ -1,11 +1,20 @@
 ---
 # scale-scheduler/tasks/main.yml
-- name: Restart scheduler
+- name: Kill scheduler
   tags: scale-scheduler
   docker:
     name: scale-scheduler
     docker_api_version: '{{ docker_api_version }}'
-    image: '{{ docker_registry }}scale:{{ scale_docker_version }}'
+    image: '{{ docker_registry }}geoint/scale:{{ scale_docker_version }}'
+    state: killed
+  become: true
+
+- name: Start scheduler
+  tags: [ scale-scheduler, restart-scale ]
+  docker:
+    name: scale-scheduler
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_registry }}geoint/scale:{{ scale_docker_version }}'
     state: restarted
     restart_policy: always
     pull: always

@@ -48,7 +48,11 @@
             "patternEmo": ["#556270","#4ecdc4","#c7f464","#ff6b6b","#c44d58"],
             "patternVa": ["#f2385a","#f5a503","#e9f1df","#4ad9d9","#3681bf"],
             "patternDf": ["#566669","#bfe2ff","#0a131a","#122031","#00010d"],
-            "patternD320": ["#1f77bf","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"]
+            "patternD320": ["#1f77bf","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"],
+
+            "failure_system": "#67000d",
+            "failure_algorithm": "#cb181d",
+            "failure_data": "#f16913"
         },
 
         "queueThresholds": {
@@ -147,7 +151,24 @@
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
         "axisTypes": ["linear", "time"],
         "executions": ["success","warning","error"],
-        "errorCategories": ["VIEW ALL","SYSTEM","DATA","ALGORITHM"],
+        "errorCategories": [
+            {
+                "order": 0,
+                "name": "VIEW ALL"
+            },
+            {
+                "order": 1,
+                "name": "SYSTEM"
+            },
+            {
+                "order": 2,
+                "name": "ALGORITHM"
+            },
+            {
+                "order": 3,
+                "name": "DATA"
+            }
+        ],
         "defaultIcon": "gear",
         "defaultIconCode": "f013",
         "activityIconCode": "f110",
@@ -175,8 +196,8 @@
         "subnavLinks": {
             "jobs": [
                 { "path": "jobs/types", "label": "Job Types" },
-                { "path": "jobs/performance", "label": "Job Types Performance"},
-                { "path": "jobs", "label": "Jobs" }
+                { "path": "jobs", "label": "Jobs" },
+                { "path": "jobs/errors", "label": "Job Types Error Rates"}
             ],
             "load": [
                 { "path": "load", "label": "Queued" },
