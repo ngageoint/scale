@@ -68,6 +68,12 @@ class WorkspacesView(ListCreateAPIView):
             logger.exception('Unable to create new workspace: %s', name)
             raise BadParameter(unicode(ex))
 
+        # Fetch the full workspace with details
+        try:
+            workspace = Workspace.objects.get_details(workspace.id)
+        except Workspace.DoesNotExist:
+            raise Http404
+
         serializer = WorkspaceDetailsSerializer(workspace)
         workspace_url = urlresolvers.reverse('workspace_details_view', args=[workspace.id])
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=workspace_url))
