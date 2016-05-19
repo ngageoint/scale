@@ -113,7 +113,8 @@
             .when('/jobs/performance', {
                 controller: 'jobTypesPerformanceController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/jobs/partials/jobTypesPerformanceTemplate.html'
+                templateUrl: 'modules/jobs/partials/jobTypesPerformanceTemplate.html',
+                reloadOnSearch: false
             })
             .when('/jobs/executions', {
                 controller: 'jobExecutionsController',

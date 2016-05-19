@@ -1,18 +1,5 @@
 <ais-header name="'Job Type Performance'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loading"></ais-header>
 
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Error Type</th>
-            <th ng-repeat="date in vm.dates track by $index">{{ date }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="data in vm.performanceData">
-            <td>{{ data.id }}</td>
-            <td ng-repeat="value in data.values">{{ value.value }}</td>
-        </tr>
-        </tbody>
-    </table>
+<div class="grid-container" style="{{ vm.gridStyle }}">
+    <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-resize-columns style="{{ gridStyle }}" class="scale-grid"></div>
 </div>
