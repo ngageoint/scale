@@ -1,4 +1,4 @@
-'''Defines the serializers for ingests'''
+"""Defines the serializers for ingests"""
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
@@ -6,7 +6,7 @@ from util.rest import ModelIdSerializer
 
 
 class StrikeBaseSerializer(ModelIdSerializer):
-    '''Converts strike model fields to REST output'''
+    """Converts strike model fields to REST output"""
     name = serializers.CharField()
     title = serializers.CharField()
     description = serializers.CharField()
@@ -14,7 +14,7 @@ class StrikeBaseSerializer(ModelIdSerializer):
 
 
 class StrikeSerializer(StrikeBaseSerializer):
-    '''Converts strike model fields to REST output'''
+    """Converts strike model fields to REST output"""
     from job.serializers import JobBaseSerializer
 
     job = JobBaseSerializer()
@@ -24,12 +24,12 @@ class StrikeSerializer(StrikeBaseSerializer):
 
 
 class StrikeDetailsSerializer(StrikeSerializer):
-    '''Converts strike model fields to REST output'''
+    """Converts strike model fields to REST output"""
     configuration = serializers.JSONField()
 
 
 class IngestBaseSerializer(ModelIdSerializer):
-    '''Converts ingest model fields to REST output'''
+    """Converts ingest model fields to REST output"""
     from storage.serializers import DataTypeField
 
     file_name = serializers.CharField()
@@ -53,7 +53,7 @@ class IngestBaseSerializer(ModelIdSerializer):
 
 
 class IngestSerializer(IngestBaseSerializer):
-    '''Converts ingest model fields to REST output'''
+    """Converts ingest model fields to REST output"""
     from source.serializers import SourceFileBaseSerializer
 
     strike = StrikeBaseSerializer()
@@ -61,7 +61,7 @@ class IngestSerializer(IngestBaseSerializer):
 
 
 class IngestDetailsSerializer(IngestBaseSerializer):
-    '''Converts ingest model fields to REST output'''
+    """Converts ingest model fields to REST output"""
     from source.serializers import SourceFileSerializer
 
     transfer_path = serializers.CharField()
@@ -73,14 +73,14 @@ class IngestDetailsSerializer(IngestBaseSerializer):
 
 
 class IngestStatusValuesSerializer(serializers.Serializer):
-    '''Converts ingest model fields to REST output'''
+    """Converts ingest model fields to REST output"""
     time = serializers.DateTimeField()
     files = serializers.IntegerField()
     size = serializers.IntegerField()
 
 
 class IngestStatusSerializer(serializers.Serializer):
-    '''Converts ingest model fields to REST output'''
+    """Converts ingest model fields to REST output"""
     strike = StrikeSerializer()
     most_recent = serializers.DateTimeField()
     files = serializers.IntegerField()

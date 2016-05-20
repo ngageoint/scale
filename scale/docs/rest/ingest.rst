@@ -102,6 +102,9 @@ These services provide access to information about ingested files processed by t
 |                "file_name": "file_name.txt",                                                                            |
 |                "strike": {                                                                                              |
 |                    "id": 1,                                                                                             |
+|                    "name": "my-strike",                                                                                 |
+|                    "title": "My Strike Processor",                                                                      |
+|                    "description": "This Strike process handles the data feed",                                          |
 |                    "job": {                                                                                             |
 |                        "id": 2                                                                                          |
 |                    }                                                                                                    |
@@ -215,6 +218,9 @@ These services provide access to information about ingested files processed by t
 |        "file_name": "file_name.txt",                                                                                    |
 |        "strike": {                                                                                                      |
 |            "id": 1,                                                                                                     |
+|            "name": "my-strike",                                                                                         |
+|            "title": "My Strike Processor",                                                                              |
+|            "description": "This Strike process handles the data feed",                                                  |
 |            "job": {                                                                                                     |
 |                "id": 2,                                                                                                 |
 |                "job_type": {                                                                                            |
