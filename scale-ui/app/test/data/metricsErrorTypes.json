@@ -1,0 +1,45 @@
+{
+    "name": "error-types",
+    "title": "Error Types",
+    "description": "Metrics for error types.",
+    "filters": [
+        {
+            "param": "name",
+            "type": "string"
+        }
+    ],
+    "groups": [
+        {
+            "name": "overview",
+            "title": "Overview",
+            "description": "Overall counts based on error types."
+        }
+    ],
+    "columns": [
+        {
+            "name": "total_count",
+            "title": "Total Count",
+            "description": "Number of system, data, and algorithm errors.",
+            "units": "count",
+            "group": "overview",
+            "aggregate": "sum"
+        }
+    ],
+    "choices": [
+        {
+            "id": 1,
+            "name": "system",
+            "title": "System"
+        },
+        {
+            "id": 2,
+            "name": "data",
+            "title": "Data"
+        },
+        {
+            "id": 3,
+            "name": "algorithm",
+            "title": "Algorithm"
+        }
+    ]
+}

@@ -5,6 +5,8 @@
 
     .scale-grid {
         width: auto;
+        height: 100%;
+        box-sizing: border-box;
 
         .ui-grid-header {
             width: 100%;
@@ -20,6 +22,11 @@
 
             }
             .ui-grid-cell-contents {
+                .label {
+                    width: 32%;
+                    display: inline-block;
+                    padding: 5px 0;
+                }
                 &.status{
                     text-align: center;
                     font-size: 1.0em;
@@ -33,6 +40,11 @@
 
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
     background-color: inherit;
+}
+
+.ui-grid-viewport {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .label-running {
