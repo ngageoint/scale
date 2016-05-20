@@ -406,6 +406,34 @@
                     "aggregate": "avg"
                 }
             ]
+        },
+        {
+            "name": "error-types",
+            "title": "Error Types",
+            "description": "Metrics for jobs type errors.",
+            "filters": [
+                {
+                    "param": "name",
+                    "type": "string"
+                }
+            ],
+            "groups": [
+                {
+                    "name": "overview",
+                    "title": "Overview",
+                    "description": "Overall counts based on error types."
+                }
+            ],
+            "columns": [
+                {
+                    "name": "total_count",
+                    "title": "Total Count",
+                    "description": "Number of errors.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                }
+            ]
         }
     ]
 }

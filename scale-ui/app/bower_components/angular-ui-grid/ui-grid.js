@@ -1,6 +1,6 @@
 /*!
- * ui-grid - v3.0.7 - 2015-10-06
- * Copyright (c) 2015 ; License: MIT 
+ * ui-grid - v3.1.1 - 2016-02-09
+ * Copyright (c) 2016 ; License: MIT 
  */
 
 (function () {
@@ -285,7 +285,7 @@ function ( i18nService, uiGridConstants, gridUtil ) {
      *
      */
     setColMenuItemWatch: function ( $scope ){
-      var deregFunction = $scope.$watch('col.menuItems', function (n, o) {
+      var deregFunction = $scope.$watch('col.menuItems', function (n) {
         if (typeof(n) !== 'undefined' && n && angular.isArray(n)) {
           n.forEach(function (item) {
             if (typeof(item.context) === 'undefined' || !item.context) {
@@ -450,16 +450,6 @@ function ( i18nService, uiGridConstants, gridUtil ) {
             $event.stopPropagation();
             $scope.hideColumn();
           }
-        },
-        {
-          title: i18nService.getSafeText('columnMenu.close'),
-          screenReaderOnly: true,
-          shown: function(){
-            return true;
-          },
-          action: function($event){
-            $event.stopPropagation();
-          }
         }
       ];
     },
@@ -512,8 +502,6 @@ function ( i18nService, uiGridConstants, gridUtil ) {
      */
     repositionMenu: function( $scope, column, positionData, $elm, $columnElement ) {
       var menu = $elm[0].querySelectorAll('.ui-grid-menu');
-      var containerId = column.renderContainer ? column.renderContainer : 'body';
-      var renderContainer = column.grid.renderContainers[containerId];
 
       // It's possible that the render container of the column we're attaching to is
       // offset from the grid (i.e. pinned containers), we need to get the difference in the offsetLeft
@@ -573,8 +561,6 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
     templateUrl: 'ui-grid/uiGridColumnMenu',
     replace: true,
     link: function ($scope, $elm, $attrs, uiGridCtrl) {
-      var self = this;
-
       uiGridColumnMenuService.initialize( $scope, uiGridCtrl );
 
       $scope.defaultMenuItems = uiGridColumnMenuService.getDefaultMenuItems( $scope );
@@ -612,12 +598,13 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
 
           $scope.$broadcast('hide-menu', { originalEvent: event });
         } else {
-          self.shown = $scope.menuShown = true;
+          $scope.menuShown = true;
           uiGridColumnMenuService.repositionMenu( $scope, column, colElementPosition, $elm, $columnElement );
 
           $scope.colElement = $columnElement;
           $scope.colElementPosition = colElementPosition;
           $scope.$broadcast('show-menu', { originalEvent: event });
+
         }
       };
 
@@ -660,6 +647,8 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
       $scope.$on('menu-shown', function() {
         $timeout( function() {
           uiGridColumnMenuService.repositionMenu( $scope, $scope.col, $scope.colElementPosition, $elm, $scope.colElement );
+          //Focus on the first item
+          gridUtil.focus.bySelector($document, '.ui-grid-menu-items .ui-grid-menu-item', true);
           delete $scope.colElementPosition;
           delete $scope.columnElement;
         }, 200);
@@ -755,7 +744,7 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
     controller: ['$scope', function ($scope) {
       var self = this;
 
-      $scope.$watch('menuItems', function (n, o) {
+      $scope.$watch('menuItems', function (n) {
         self.menuItems = n;
       });
     }]
@@ -1058,14 +1047,20 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
               headerCell: i18nService.getSafeText('headerCell'),
               sort: i18nService.getSafeText('sort')
             };
+            $scope.isSortPriorityVisible = function() {
+              //show sort priority if column is sorted and there is at least one other sorted column
+              return angular.isNumber($scope.col.sort.priority) && $scope.grid.columns.some(function(element, index){
+                  return angular.isNumber(element.sort.priority) && element !== $scope.col;
+                });
+            };
             $scope.getSortDirectionAriaLabel = function(){
               var col = $scope.col;
               //Trying to recreate this sort of thing but it was getting messy having it in the template.
               //Sort direction {{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending':'none')}}. {{col.sort.priority ? {{columnPriorityText}} {{col.sort.priority}} : ''}
               var sortDirectionText = col.sort.direction === uiGridConstants.ASC ? $scope.i18n.sort.ascending : ( col.sort.direction === uiGridConstants.DESC ? $scope.i18n.sort.descending : $scope.i18n.sort.none);
               var label = sortDirectionText;
-              //Append the priority if it exists
-              if (col.sort.priority) {
+
+              if ($scope.isSortPriorityVisible()) {
                 label = label + '. ' + $scope.i18n.headerCell.priority + ' ' + col.sort.priority;
               }
               return label;
@@ -1250,8 +1245,10 @@ function ($timeout, gridUtil, uiGridConstants, uiGridColumnMenuService, $documen
               }
               contents.addClass(classAdded);
 
-              var rightMostContainer = $scope.grid.renderContainers['right'] ? $scope.grid.renderContainers['right'] : $scope.grid.renderContainers['body'];
-              $scope.isLastCol = ( $scope.col === rightMostContainer.visibleColumnCache[ rightMostContainer.visibleColumnCache.length - 1 ] );
+              $timeout(function (){
+                var rightMostContainer = $scope.grid.renderContainers['right'] ? $scope.grid.renderContainers['right'] : $scope.grid.renderContainers['body'];
+                $scope.isLastCol = ( $scope.col === rightMostContainer.visibleColumnCache[ rightMostContainer.visibleColumnCache.length - 1 ] );
+              });
 
               // Figure out whether this column is sortable or not
               if (uiGridCtrl.grid.options.enableSorting && $scope.col.enableSorting) {
@@ -1997,16 +1994,27 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
     templateUrl: 'ui-grid/uiGridMenu',
     replace: false,
     link: function ($scope, $elm, $attrs, uiGridCtrl) {
-      var self = this;
-      var menuMid;
-      var $animate;
+      var gridMenuMaxHeight;
+
+      $scope.dynamicStyles = '';
+
+      if (uiGridCtrl) {
+        // magic number of 30 because the grid menu displays somewhat below
+        // the top of the grid. It is approximately 30px.
+        gridMenuMaxHeight = uiGridCtrl.grid.gridHeight - 30;
+        $scope.dynamicStyles = [
+          '.grid' + uiGridCtrl.grid.id + ' .ui-grid-menu-mid {',
+            'max-height: ' + gridMenuMaxHeight + 'px;',
+          '}'
+        ].join(' ');
+      }
 
       $scope.i18n = {
         close: i18nService.getSafeText('columnMenu.close')
       };
 
     // *** Show/Hide functions ******
-      self.showMenu = $scope.showMenu = function(event, args) {
+      $scope.showMenu = function(event, args) {
         if ( !$scope.shown ){
 
           /*
@@ -2040,17 +2048,22 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
 
         // Turn off an existing document click handler
         angular.element(document).off('click touchstart', applyHideMenu);
+        $elm.off('keyup', checkKeyUp);
+        $elm.off('keydown', checkKeyDown);
 
         // Turn on the document click handler, but in a timeout so it doesn't apply to THIS click if there is one
         $timeout(function() {
           angular.element(document).on(docEventType, applyHideMenu);
+          $elm.on('keyup', checkKeyUp);
+          $elm.on('keydown', checkKeyDown);
+
         });
         //automatically set the focus to the first button element in the now open menu.
         gridUtil.focus.bySelector($elm, 'button[type=button]', true);
       };
 
 
-      self.hideMenu = $scope.hideMenu = function(event, args) {
+      $scope.hideMenu = function(event) {
         if ( $scope.shown ){
           /*
            * In order to animate cleanly we animate the addition of ng-hide, then use a $timeout to
@@ -2070,6 +2083,8 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
         }
 
         angular.element(document).off('click touchstart', applyHideMenu);
+        $elm.off('keyup', checkKeyUp);
+        $elm.off('keydown', checkKeyDown);
       };
 
       $scope.$on('hide-menu', function (event, args) {
@@ -2087,6 +2102,34 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
           $scope.$apply(function () {
             $scope.hideMenu();
           });
+        }
+      };
+
+      // close menu on ESC and keep tab cyclical
+      var checkKeyUp = function(event) {
+        if (event.keyCode === 27) {
+          $scope.hideMenu();
+        }
+      };
+
+      var checkKeyDown = function(event) {
+        var setFocus = function(elm) {
+          elm.focus();
+          event.preventDefault();
+          return false;
+        };
+        if (event.keyCode === 9) {
+          var firstMenuItem, lastMenuItem;
+          var menuItemButtons = $elm[0].querySelectorAll('button:not(.ng-hide)');
+          if (menuItemButtons.length > 0) {
+            firstMenuItem = menuItemButtons[0];
+            lastMenuItem = menuItemButtons[menuItemButtons.length - 1];
+            if (event.target === lastMenuItem && !event.shiftKey) {
+              setFocus(firstMenuItem);
+            } else if (event.target === firstMenuItem && event.shiftKey) {
+              setFocus(lastMenuItem);
+            }
+          }
         }
       };
 
@@ -2112,12 +2155,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
       }
 
       $scope.$on('$destroy', $scope.$on(uiGridConstants.events.ITEM_DRAGGING, applyHideMenu ));
-    },
-
-
-    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-      var self = this;
-    }]
+    }
   };
 
   return uiGridMenu;
@@ -2137,15 +2175,12 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
       leaveOpen: '=',
       screenReaderOnly: '='
     },
-    require: ['?^uiGrid', '^uiGridMenu'],
+    require: ['?^uiGrid'],
     templateUrl: 'ui-grid/uiGridMenuItem',
     replace: false,
-    compile: function($elm, $attrs) {
+    compile: function() {
       return {
-        pre: function ($scope, $elm, $attrs, controllers) {
-          var uiGridCtrl = controllers[0],
-              uiGridMenuCtrl = controllers[1];
-
+        pre: function ($scope, $elm) {
           if ($scope.templateUrl) {
             gridUtil.getTemplate($scope.templateUrl)
                 .then(function (contents) {
@@ -2157,8 +2192,7 @@ function ($compile, $timeout, $window, $document, gridUtil, uiGridConstants, i18
           }
         },
         post: function ($scope, $elm, $attrs, controllers) {
-          var uiGridCtrl = controllers[0],
-              uiGridMenuCtrl = controllers[1];
+          var uiGridCtrl = controllers[0];
 
           // TODO(c0bra): validate that shown and active are functions if they're defined. An exception is already thrown above this though
           // if (typeof($scope.shown) !== 'undefined' && $scope.shown && typeof($scope.shown) !== 'function') {
@@ -3115,17 +3149,17 @@ angular.module('ui.grid')
           deregFunctions.push( $scope.$parent.$watch($scope.uiGrid.data, dataWatchFunction) );
           deregFunctions.push( $scope.$parent.$watch(function() {
             if ( self.grid.appScope[$scope.uiGrid.data] ){
-              return self.grid.appScope[$scope.uiGrid.data].length; 
+              return self.grid.appScope[$scope.uiGrid.data].length;
             } else {
               return undefined;
-            } 
+            }
           }, dataWatchFunction) );
         } else {
           deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.data; }, dataWatchFunction) );
-          deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.data.length; }, dataWatchFunction) );
+          deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.data.length; }, function(){ dataWatchFunction($scope.uiGrid.data); }) );
         }
         deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.columnDefs; }, columnDefsWatchFunction) );
-        deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.columnDefs.length; }, columnDefsWatchFunction) );
+        deregFunctions.push( $scope.$parent.$watch(function() { return $scope.uiGrid.columnDefs.length; }, function(){ columnDefsWatchFunction($scope.uiGrid.columnDefs); }) );
       } else {
         if (angular.isString($scope.uiGrid.data)) {
           deregFunctions.push( $scope.$parent.$watchCollection($scope.uiGrid.data, dataWatchFunction) );
@@ -3134,11 +3168,11 @@ angular.module('ui.grid')
         }
         deregFunctions.push( $scope.$parent.$watchCollection(function() { return $scope.uiGrid.columnDefs; }, columnDefsWatchFunction) );
       }
-      
+
 
       function columnDefsWatchFunction(n, o) {
         if (n && n !== o) {
-          self.grid.options.columnDefs = n;
+          self.grid.options.columnDefs = $scope.uiGrid.columnDefs;
           self.grid.buildColumns({ orderByColumnDefs: true })
             .then(function(){
 
@@ -3149,10 +3183,12 @@ angular.module('ui.grid')
         }
       }
 
+      var mostRecentData;
+
       function dataWatchFunction(newData) {
         // gridUtil.logDebug('dataWatch fired');
         var promises = [];
-        
+
         if ( self.grid.options.fastWatch ){
           if (angular.isString($scope.uiGrid.data)) {
             newData = self.grid.appScope[$scope.uiGrid.data];
@@ -3160,7 +3196,9 @@ angular.module('ui.grid')
             newData = $scope.uiGrid.data;
           }
         }
-        
+
+        mostRecentData = newData;
+
         if (newData) {
           // columns length is greater than the number of row header columns, which don't count because they're created automatically
           var hasColumns = self.grid.columns.length > (self.grid.rowHeaderColumns ? self.grid.rowHeaderColumns.length : 0);
@@ -3189,7 +3227,8 @@ angular.module('ui.grid')
           }
 
           $q.all(promises).then(function() {
-            self.grid.modifyRows(newData)
+            // use most recent data, rather than the potentially outdated data passed into watcher handler
+            self.grid.modifyRows(mostRecentData)
               .then(function () {
                 // if (self.viewport) {
                   self.grid.redrawInPlace(true);
@@ -3348,7 +3387,7 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
             grid.gridHeight = $scope.gridHeight = gridUtil.elementHeight($elm);
 
             // If the grid isn't tall enough to fit a single row, it's kind of useless. Resize it to fit a minimum number of rows
-            if (grid.gridHeight < grid.options.rowHeight && grid.options.enableMinHeightCheck) {
+            if (grid.gridHeight <= grid.options.rowHeight && grid.options.enableMinHeightCheck) {
               autoAdjustHeight();
             }
 
@@ -3362,7 +3401,7 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
             var contentHeight = grid.options.minRowsToShow * grid.options.rowHeight;
             var headerHeight = grid.options.showHeader ? grid.options.headerRowHeight : 0;
             var footerHeight = grid.calcFooterHeight();
-            
+
             var scrollbarHeight = 0;
             if (grid.options.enableHorizontalScrollbar === uiGridConstants.scrollbars.ALWAYS) {
               scrollbarHeight = gridUtil.getScrollbarWidth();
@@ -3383,13 +3422,13 @@ function uiGridDirective($compile, $templateCache, $timeout, $window, gridUtil, 
               }
             });
 
-            if (grid.options.enableFiltering) {
-              var allColumnsHaveFilteringTurnedOff = grid.options.columnDefs.every(function(col) {
+            if (grid.options.enableFiltering  && !maxNumberOfFilters) {
+              var allColumnsHaveFilteringTurnedOff = grid.options.columnDefs.length && grid.options.columnDefs.every(function(col) {
                 return col.enableFiltering === false;
               });
 
               if (!allColumnsHaveFilteringTurnedOff) {
-                maxNumberOfFilters++;
+                maxNumberOfFilters = 1;
               }
             }
 
@@ -3899,12 +3938,12 @@ angular.module('ui.grid')
      * that have sorting on them, sorted in priority order.
      *
      * @param {$scope} scope The scope of the controller. This is used to deregister this event when the scope is destroyed.
-     * @param {Function} callBack Will be called when the event is emited. The function passes back an array of columns with
-     * sorts on them, in priority order.
+     * @param {Function} callBack Will be called when the event is emited. The function passes back the grid and an array of 
+     * columns with sorts on them, in priority order.
      *
      * @example
      * <pre>
-     *      gridApi.core.on.sortChanged( $scope, function(sortColumns){
+     *      gridApi.core.on.sortChanged( $scope, function(grid, sortColumns){
      *        // do something
      *      });
      * </pre>
@@ -3917,7 +3956,7 @@ angular.module('ui.grid')
      * @methodOf  ui.grid.core.api:PublicApi
      * @description The visibility of a column has changed,
      * the column itself is passed out as a parameter of the event.
-     * 
+     *
      * @param {$scope} scope The scope of the controller. This is used to deregister this event when the scope is destroyed.
      * @param {Function} callBack Will be called when the event is emited. The function passes back the GridCol that has changed.
      *
@@ -4607,17 +4646,17 @@ angular.module('ui.grid')
    *   append to the newRows and add to newHash
    *   run the processors
    * ```
-   * 
+   *
    * Rows are identified using the hashKey if configured.  If not configured, then rows
    * are identified using the gridOptions.rowEquality function
-   * 
+   *
    * This method is useful when trying to select rows immediately after loading data without
    * using a $timeout/$interval, e.g.:
-   * 
+   *
    *   $scope.gridOptions.data =  someData;
    *   $scope.gridApi.grid.modifyRows($scope.gridOptions.data);
    *   $scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);
-   * 
+   *
    * OR to persist row selection after data update (e.g. rows selected, new data loaded, want
    * originally selected rows to be re-selected))
    */
@@ -5023,6 +5062,7 @@ angular.module('ui.grid')
    * @name handleWindowResize
    * @methodOf ui.grid.class:Grid
    * @description Triggered when the browser window resizes; automatically resizes the grid
+   * @returns {Promise} A resolved promise once the window resize has completed.
    */
   Grid.prototype.handleWindowResize = function handleWindowResize($event) {
     var self = this;
@@ -5030,7 +5070,7 @@ angular.module('ui.grid')
     self.gridWidth = gridUtil.elementWidth(self.element);
     self.gridHeight = gridUtil.elementHeight(self.element);
 
-    self.queueRefresh();
+    return self.queueRefresh();
   };
 
   /**
@@ -5395,12 +5435,12 @@ angular.module('ui.grid')
         p = 0;
 
     self.columns.forEach(function (col) {
-      if (col.sort && col.sort.priority && col.sort.priority > p) {
-        p = col.sort.priority;
+      if (col.sort && col.sort.priority !== undefined && col.sort.priority >= p) {
+        p = col.sort.priority + 1;
       }
     });
 
-    return p + 1;
+    return p;
   };
 
   /**
@@ -5479,7 +5519,7 @@ angular.module('ui.grid')
 
     if (!add) {
       self.resetColumnSorting(column);
-      column.sort.priority = 0;
+      column.sort.priority = undefined;
       // Get the actual priority since there may be columns which have suppressRemoveSort set
       column.sort.priority = self.getNextColumnSortPriority();
     }
@@ -5851,7 +5891,7 @@ angular.module('ui.grid')
         //}
 
         // This is the minimum amount of pixels we need to scroll vertical in order to see this row.
-        var pixelsToSeeRow = ((seekRowIndex + 1) * self.options.rowHeight);
+        var pixelsToSeeRow = (seekRowIndex * self.options.rowHeight + self.headerHeight);
 
         // Don't let the pixels required to see the row be less than zero
         pixelsToSeeRow = (pixelsToSeeRow < 0) ? 0 : pixelsToSeeRow;
@@ -6528,16 +6568,6 @@ angular.module('ui.grid')
 
     self.updateColumnDef(colDef, true);
 
-    /**
-     * @ngdoc function
-     * @name hideColumn
-     * @methodOf ui.grid.class:GridColumn
-     * @description Hides the column by setting colDef.visible = false
-     */
-    GridColumn.prototype.hideColumn = function() {
-      this.colDef.visible = false;
-    };
-
     self.aggregationValue = undefined;
 
     // The footer cell registers to listen for the rowsRendered event, and calls this.  Needed to be
@@ -6626,6 +6656,16 @@ angular.module('ui.grid')
     };
   }
 
+  /**
+   * @ngdoc function
+   * @name hideColumn
+   * @methodOf ui.grid.class:GridColumn
+   * @description Hides the column by setting colDef.visible = false
+   */
+  GridColumn.prototype.hideColumn = function() {
+    this.colDef.visible = false;
+  };
+  
 
   /**
    * @ngdoc method
@@ -6982,7 +7022,7 @@ angular.module('ui.grid')
      * @name footerCellClass
      * @propertyOf ui.grid.class:GridOptions.columnDef
      * @description footerCellClass can be a string specifying the class to append to a cell
-     * or it can be a function(row,rowRenderIndex, col, colRenderIndex) that returns a class name
+     * or it can be a function(grid, row, col, rowRenderIndex, colRenderIndex) that returns a class name
      *
      */
     self.footerCellClass = colDef.footerCellClass;
@@ -6992,7 +7032,7 @@ angular.module('ui.grid')
      * @name cellClass
      * @propertyOf ui.grid.class:GridOptions.columnDef
      * @description cellClass can be a string specifying the class to append to a cell
-     * or it can be a function(row,rowRenderIndex, col, colRenderIndex) that returns a class name
+     * or it can be a function(grid, row, col, rowRenderIndex, colRenderIndex) that returns a class name
      *
      */
     self.cellClass = colDef.cellClass;
@@ -7002,7 +7042,7 @@ angular.module('ui.grid')
      * @name headerCellClass
      * @propertyOf ui.grid.class:GridOptions.columnDef
      * @description headerCellClass can be a string specifying the class to append to a cell
-     * or it can be a function(row,rowRenderIndex, col, colRenderIndex) that returns a class name
+     * or it can be a function(grid, row, col, rowRenderIndex, colRenderIndex) that returns a class name
      *
      */
     self.headerCellClass = colDef.headerCellClass;
@@ -7237,15 +7277,17 @@ angular.module('ui.grid')
         }
       });
     }
+  };
 
-    // Remove this column from the grid sorting, include inside build columns so has
-    // access to self - all seems a bit dodgy but doesn't work otherwise so have left
-    // as is
-    GridColumn.prototype.unsort = function () {
-      this.sort = {};
-      self.grid.api.core.raise.sortChanged( self.grid, self.grid.getColumnSorting() );
-    };
-
+  /**
+   * @ngdoc function
+   * @name unsort
+   * @methodOf ui.grid.class:GridColumn
+   * @description Removes column from the grid sorting
+   */
+  GridColumn.prototype.unsort = function () {
+    this.sort = {};
+    this.grid.api.core.raise.sortChanged( this.grid, this.grid.getColumnSorting() );
   };
 
 
@@ -9781,14 +9823,14 @@ var module = angular.module('ui.grid');
 /**
  * @ngdoc object
  * @name ui.grid.class:RowSorter
- * @description RowSorter provides the default sorting mechanisms, 
- * including guessing column types and applying appropriate sort 
+ * @description RowSorter provides the default sorting mechanisms,
+ * including guessing column types and applying appropriate sort
  * algorithms
- * 
- */ 
+ *
+ */
 
 module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGridConstants) {
-  var currencyRegexStr = 
+  var currencyRegexStr =
     '(' +
     uiGridConstants.CURRENCY_SYMBOLS
       .map(function (a) { return '\\' + a; }) // Escape all the currency symbols ($ at least will jack up this regex)
@@ -9871,7 +9913,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @methodOf ui.grid.class:RowSorter
    * @name basicSort
    * @description Sorts any values that provide the < method, including strings
-   * or numbers.  Handles nulls and undefined through calling handleNulls 
+   * or numbers.  Handles nulls and undefined through calling handleNulls
    * @param {object} a sort value a
    * @param {object} b sort value b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -9896,7 +9938,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name sortNumber
-   * @description Sorts numerical values.  Handles nulls and undefined through calling handleNulls 
+   * @description Sorts numerical values.  Handles nulls and undefined through calling handleNulls
    * @param {object} a sort value a
    * @param {object} b sort value b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -9915,8 +9957,8 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name sortNumberStr
-   * @description Sorts numerical values that are stored in a string (i.e. parses them to numbers first).  
-   * Handles nulls and undefined through calling handleNulls 
+   * @description Sorts numerical values that are stored in a string (i.e. parses them to numbers first).
+   * Handles nulls and undefined through calling handleNulls
    * @param {object} a sort value a
    * @param {object} b sort value b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -9930,36 +9972,36 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
           numB, // The parsed number form of 'b'
           badA = false,
           badB = false;
-  
+
       // Try to parse 'a' to a float
       numA = parseFloat(a.replace(/[^0-9.-]/g, ''));
-  
+
       // If 'a' couldn't be parsed to float, flag it as bad
       if (isNaN(numA)) {
           badA = true;
       }
-  
+
       // Try to parse 'b' to a float
       numB = parseFloat(b.replace(/[^0-9.-]/g, ''));
-  
+
       // If 'b' couldn't be parsed to float, flag it as bad
       if (isNaN(numB)) {
           badB = true;
       }
-  
+
       // We want bad ones to get pushed to the bottom... which effectively is "greater than"
       if (badA && badB) {
           return 0;
       }
-  
+
       if (badA) {
           return 1;
       }
-  
+
       if (badB) {
           return -1;
       }
-  
+
       return numA - numB;
     }
   };
@@ -9969,7 +10011,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name sortAlpha
-   * @description Sorts string values. Handles nulls and undefined through calling handleNulls 
+   * @description Sorts string values. Handles nulls and undefined through calling handleNulls
    * @param {object} a sort value a
    * @param {object} b sort value b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -9981,8 +10023,8 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
     } else {
       var strA = a.toString().toLowerCase(),
           strB = b.toString().toLowerCase();
-  
-      return strA === strB ? 0 : (strA < strB ? -1 : 1);
+
+      return strA === strB ? 0 : strA.localeCompare(strB);
     }
   };
 
@@ -10010,7 +10052,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
       }
       var timeA = a.getTime(),
           timeB = b.getTime();
-  
+
       return timeA === timeB ? 0 : (timeA < timeB ? -1 : 1);
     }
   };
@@ -10020,8 +10062,8 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name sortBool
-   * @description Sorts boolean values, true is considered larger than false. 
-   * Handles nulls and undefined through calling handleNulls 
+   * @description Sorts boolean values, true is considered larger than false.
+   * Handles nulls and undefined through calling handleNulls
    * @param {object} a sort value a
    * @param {object} b sort value b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -10034,7 +10076,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
       if (a && b) {
         return 0;
       }
-  
+
       if (!a && !b) {
         return 0;
       }
@@ -10049,17 +10091,17 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name getSortFn
-   * @description Get the sort function for the column.  Looks first in 
+   * @description Get the sort function for the column.  Looks first in
    * rowSorter.colSortFnCache using the column name, failing that it
    * looks at col.sortingAlgorithm (and puts it in the cache), failing that
    * it guesses the sort algorithm based on the data type.
-   * 
+   *
    * The cache currently seems a bit pointless, as none of the work we do is
    * processor intensive enough to need caching.  Presumably in future we might
    * inspect the row data itself to guess the sort function, and in that case
    * it would make sense to have a cache, the infrastructure is in place to allow
    * that.
-   * 
+   *
    * @param {Grid} grid the grid to consider
    * @param {GridCol} col the column to find a function for
    * @param {array} rows an array of grid rows.  Currently unused, but presumably in future
@@ -10112,7 +10154,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @description Used where multiple columns are present in the sort criteria,
    * we determine which column should take precedence in the sort by sorting
    * the columns based on their sort.priority
-   * 
+   *
    * @param {gridColumn} a column a
    * @param {gridColumn} b column b
    * @returns {number} normal sort function, returns -ve, 0, +ve
@@ -10134,11 +10176,11 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
       }
     }
     // Only A has a priority
-    else if (a.sort.priority || a.sort.priority === 0) {
+    else if (a.sort.priority || a.sort.priority === undefined) {
       return -1;
     }
     // Only B has a priority
-    else if (b.sort.priority || b.sort.priority === 0) {
+    else if (b.sort.priority || b.sort.priority === undefined) {
       return 1;
     }
     // Neither has a priority
@@ -10155,14 +10197,14 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
    * @description Prevents the internal sorting from executing.  Events will
    * still be fired when the sort changes, and the sort information on
    * the columns will be updated, allowing an external sorter (for example,
-   * server sorting) to be implemented.  Defaults to false. 
-   * 
+   * server sorting) to be implemented.  Defaults to false.
+   *
    */
   /**
    * @ngdoc method
    * @methodOf ui.grid.class:RowSorter
    * @name sort
-   * @description sorts the grid 
+   * @description sorts the grid
    * @param {Object} grid the grid itself
    * @param {array} rows the rows to be sorted
    * @param {array} columns the columns in which to look
@@ -10174,7 +10216,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
     if (!rows) {
       return;
     }
-    
+
     if (grid.options.useExternalSorting){
       return rows;
     }
@@ -10236,7 +10278,7 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
         idx++;
       }
 
-      // Chrome doesn't implement a stable sort function.  If our sort returns 0 
+      // Chrome doesn't implement a stable sort function.  If our sort returns 0
       // (i.e. the items are equal), and we're at the last sort column in the list,
       // then return the previous order using our custom
       // index variable
@@ -10253,13 +10295,13 @@ module.service('rowSorter', ['$parse', 'uiGridConstants', function ($parse, uiGr
     };
 
     var newRows = rows.sort(rowSortFn);
-    
+
     // remove the custom index field on each row, used to make a stable sort out of unstable sorts (e.g. Chrome)
     var clearIndex = function( row, idx ){
        delete row.entity.$$uiGridIndex;
     };
     rows.forEach(clearIndex);
-    
+
     return newRows;
   };
 
@@ -10291,7 +10333,7 @@ if (typeof Function.prototype.bind !== "function") {
   };
 }
 
-function getStyles (elem) {
+function  getStyles (elem) {
   var e = elem;
   if (typeof(e.length) !== 'undefined' && e.length) {
     e = elem[0];
@@ -11445,7 +11487,7 @@ module.service('gridUtil', ['$log', '$window', '$document', '$http', '$templateC
       if (timeout) {
         $timeout.cancel(timeout);
       }
-      timeout = $timeout(later, wait);
+      timeout = $timeout(later, wait, false);
       if (callNow) {
         result = func.apply(context, args);
       }
@@ -11495,7 +11537,7 @@ module.service('gridUtil', ['$log', '$window', '$document', '$http', '$templateC
     function runFunc(endDate){
       lastCall = +new Date();
       func.apply(context, args);
-      $interval(function(){ queued = null; }, 0, 1);
+      $interval(function(){ queued = null; }, 0, 1, false);
     }
 
     return function(){
@@ -11508,7 +11550,7 @@ module.service('gridUtil', ['$log', '$window', '$document', '$http', '$templateC
           runFunc();
         }
         else if (options.trailing){
-          queued = $interval(runFunc, wait - sinceLast, 1);
+          queued = $interval(runFunc, wait - sinceLast, 1, false);
         }
       }
     };
@@ -11821,12 +11863,18 @@ module.filter('px', function() {
         menu:{
           text: 'Vælg kolonner:'
         },
+        sort: {
+          ascending: 'Sorter stigende',
+          descending: 'Sorter faldende',
+          none: 'Sorter ingen',
+          remove: 'Fjern sortering'
+        },
         column: {
           hide: 'Skjul kolonne'
         },
         aggregation: {
-          count: 'samlede rækker: ',
-          sum: 'smalede: ',
+          count: 'antal rækker: ',
+          sum: 'sum: ',
           avg: 'gns: ',
           min: 'min: ',
           max: 'max: '
@@ -11859,6 +11907,15 @@ module.filter('px', function() {
   angular.module('ui.grid').config(['$provide', function ($provide) {
     $provide.decorator('i18nService', ['$delegate', function ($delegate) {
       $delegate.add('de', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Filter für Spalte',
+            removeFilter: 'Filter löschen',
+            columnMenuButtonLabel: 'Spaltenmenü'
+          },
+          priority: 'Priorität:',
+          filterLabel: "Filter für Spalte: "
+        },
         aggregate: {
           label: 'Eintrag'
         },
@@ -11882,6 +11939,7 @@ module.filter('px', function() {
         sort: {
           ascending: 'aufsteigend sortieren',
           descending: 'absteigend sortieren',
+          none: 'keine Sortierung',
           remove: 'Sortierung zurücksetzen'
         },
         column: {
@@ -11899,7 +11957,13 @@ module.filter('px', function() {
             pinRight: 'Rechts anheften',
             unpin: 'Lösen'
         },
+        columnMenu: {
+          close: 'Schließen'
+        },
         gridMenu: {
+          aria: {
+            buttonLabel: 'Tabellenmenü'
+          },
           columns: 'Spalten:',
           importerTitle: 'Datei importieren',
           exporterAllAsCsv: 'Alle Daten als CSV exportieren',
@@ -11908,7 +11972,7 @@ module.filter('px', function() {
           exporterAllAsPdf: 'Alle Daten als PDF exportieren',
           exporterVisibleAsPdf: 'sichtbare Daten als PDF exportieren',
           exporterSelectedAsPdf: 'markierte Daten als CSV exportieren',
-          clearAllFilters: 'Alle filter reinigen'
+          clearAllFilters: 'Alle Filter zurücksetzen'
         },
         importer: {
           noHeaders: 'Es konnten keine Spaltennamen ermittelt werden. Sind in der Datei Spaltendefinitionen enthalten?',
@@ -11918,8 +11982,17 @@ module.filter('px', function() {
           jsonNotArray: 'Die importierte JSON-Datei muß ein Array enthalten. Breche Import ab.'
         },
         pagination: {
-            sizes: 'Einträge pro Seite',
-            totalItems: 'Einträge'
+          aria: {
+            pageToFirst: 'Zum Anfang',
+            pageBack: 'Seite zurück',
+            pageSelected: 'Ausgwählte Seite',
+            pageForward: 'Seite vor',
+            pageToLast: 'Zum Ende'
+          },
+          sizes: 'Einträge pro Seite',
+          totalItems: 'Einträge',
+          through: 'bis',
+          of: 'von'
         },
         grouping: {
             group: 'Gruppieren',
@@ -12037,6 +12110,12 @@ module.filter('px', function() {
           aggregate_min: 'Agg: Min',
           aggregate_avg: 'Agg: Avg',
           aggregate_remove: 'Agg: Remove'
+        },
+        validate: {
+          error: 'Error:',
+          minLength: 'Value should be at least THRESHOLD characters long.',
+          maxLength: 'Value should be at most THRESHOLD characters long.',
+          required: 'A value is needed.'
         }
       });
       return $delegate;
@@ -12568,6 +12647,12 @@ module.filter('px', function() {
           aggregate_min: 'Agg: Minimo',
           aggregate_avg: 'Agg: Media',
           aggregate_remove: 'Agg: Rimuovi'
+        },
+        validate: {
+          error: 'Errore:',
+          minLength: 'Lunghezza minima pari a THRESHOLD caratteri.',
+          maxLength: 'Lunghezza massima pari a THRESHOLD caratteri.',
+          required: 'Necessario inserire un valore.'
         }
       });
       return $delegate;
@@ -12638,8 +12723,17 @@ module.filter('px', function() {
           jsonNotArray: 'インポートしたJSONファイルには配列が含まれている必要があります。処理を中止します。'
         },
         pagination: {
+          aria: {
+            pageToFirst: '最初のページ',
+            pageBack: '前のページ',
+            pageSelected: '現在のページ',
+            pageForward: '次のページ',
+            pageToLast: '最後のページ'
+          },
           sizes: '項目/ページ',
-          totalItems: '項目'
+          totalItems: '項目',
+          through: 'から',
+          of: '項目/全'
         }
       });
       return $delegate;
@@ -12805,7 +12899,123 @@ module.filter('px', function() {
 (function () {
   angular.module('ui.grid').config(['$provide', function($provide) {
     $provide.decorator('i18nService', ['$delegate', function($delegate) {
+      $delegate.add('pl', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Filter dla kolumny',
+            removeFilter: 'Usuń filter',
+            columnMenuButtonLabel: 'Menu kolumny'
+          },
+          priority: 'Prioritet:',
+          filterLabel: "Filtr dla kolumny: "
+        },
+        aggregate: {
+          label: 'pozycji'
+        },
+        groupPanel: {
+          description: 'Przeciągnij nagłówek kolumny tutaj, aby pogrupować według niej.'
+        },
+        search: {
+          placeholder: 'Szukaj...',
+          showingItems: 'Widoczne pozycje:',
+          selectedItems: 'Zaznaczone pozycje:',
+          totalItems: 'Wszystkich pozycji:',
+          size: 'Rozmiar strony:',
+          first: 'Pierwsza strona',
+          next: 'Następna strona',
+          previous: 'Poprzednia strona',
+          last: 'Ostatnia strona'
+        },
+        menu: {
+          text: 'Wybierz kolumny:'
+        },
+        sort: {
+          ascending: 'Sortuj rosnąco',
+          descending: 'Sortuj malejąco',
+          none: 'Brak sortowania',
+          remove: 'Wyłącz sortowanie'
+        },
+        column: {
+          hide: 'Ukryj kolumne'
+        },
+        aggregation: {
+          count: 'Razem pozycji: ',
+            sum: 'Razem: ',
+            avg: 'Średnia: ',
+            min: 'Min: ',
+            max: 'Max: '
+        },
+        pinning: {
+          pinLeft: 'Przypnij do lewej',
+          pinRight: 'Przypnij do prawej',
+          unpin: 'Odepnij'
+        },
+        columnMenu: {
+          close: 'Zamknij'
+        },
+        gridMenu: {
+          aria: {
+            buttonLabel: 'Menu Grida'
+          },
+          columns: 'Kolumny:',
+          importerTitle: 'Importuj plik',
+          exporterAllAsCsv: 'Eksportuj wszystkie dane do csv',
+          exporterVisibleAsCsv: 'Eksportuj widoczne dane do csv',
+          exporterSelectedAsCsv: 'Eksportuj zaznaczone dane do csv',
+          exporterAllAsPdf: 'Eksportuj wszystkie dane do pdf',
+          exporterVisibleAsPdf: 'Eksportuj widoczne dane do pdf',
+          exporterSelectedAsPdf: 'Eksportuj zaznaczone dane do pdf',
+          clearAllFilters: 'Wyczyść filtry'
+        },
+        importer: {
+          noHeaders: 'Nie udało się wczytać nazw kolumn. Czy plik posiada nagłówek?',
+          noObjects: 'Nie udalo się wczytać pozycji. Czy plik zawiera dane??',
+          invalidCsv: 'Nie udało się przetworzyć pliku, jest to prawidlowy plik CSV??',
+          invalidJson: 'Nie udało się przetworzyć pliku, jest to prawidlowy plik Json?',
+          jsonNotArray: 'Importowany plik json musi zawierać tablicę, importowanie przerwane.'
+        },
+        pagination: {
+          aria: {
+            pageToFirst: 'Pierwsza strona',
+            pageBack: 'Poprzednia strona',
+            pageSelected: 'Wybrana strona',
+            pageForward: 'Następna strona',
+            pageToLast: 'Ostatnia strona'
+          },
+          sizes: 'pozycji na stronę',
+          totalItems: 'pozycji',
+          through: 'do',
+          of: 'z'
+        },
+        grouping: {
+          group: 'Grupuj',
+          ungroup: 'Rozgrupuj',
+          aggregate_count: 'Zbiorczo: Razem',
+          aggregate_sum: 'Zbiorczo: Suma',
+          aggregate_max: 'Zbiorczo: Max',
+          aggregate_min: 'Zbiorczo: Min',
+          aggregate_avg: 'Zbiorczo: Średnia',
+          aggregate_remove: 'Zbiorczo: Usuń'
+        }
+      });
+      return $delegate;
+    }]);
+  }]);
+})();
+
+(function () {
+  angular.module('ui.grid').config(['$provide', function($provide) {
+    $provide.decorator('i18nService', ['$delegate', function($delegate) {
       $delegate.add('pt-br', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Filtro por coluna',
+            removeFilter: 'Remover filtro',
+            columnMenuButtonLabel: 'Menu coluna'
+          },
+          priority: 'Prioridade:',
+          filterLabel: "Filtro por coluna: "
+        },
         aggregate: {
           label: 'itens'
         },
@@ -12829,6 +13039,7 @@ module.filter('px', function() {
         sort: {
           ascending: 'Ordenar Ascendente',
           descending: 'Ordenar Descendente',
+          none: 'Nenhuma Ordem',
           remove: 'Remover Ordenação'
         },
         column: {
@@ -12846,7 +13057,13 @@ module.filter('px', function() {
           pinRight: 'Fixar Direita',
           unpin: 'Desprender'
         },
+        columnMenu: {
+          close: 'Fechar'
+        },
         gridMenu: {
+          aria: {
+            buttonLabel: 'Menu Grid'
+          },
           columns: 'Colunas:',
           importerTitle: 'Importar arquivo',
           exporterAllAsCsv: 'Exportar todos os dados como csv',
@@ -12865,8 +13082,17 @@ module.filter('px', function() {
           jsonNotArray: 'Arquivo json importado tem que conter um array. Abortando.'
         },
         pagination: {
+          aria: {
+            pageToFirst: 'Primeira página',
+            pageBack: 'Página anterior',
+            pageSelected: 'Página Selecionada',
+            pageForward: 'Proxima',
+            pageToLast: 'Anterior'
+          },
           sizes: 'itens por página',
-          totalItems: 'itens'
+          totalItems: 'itens',
+          through: 'através dos',
+          of: 'de'
         },
         grouping: {
           group: 'Agrupar',
@@ -12888,6 +13114,15 @@ module.filter('px', function() {
   angular.module('ui.grid').config(['$provide', function($provide) {
     $provide.decorator('i18nService', ['$delegate', function($delegate) {
       $delegate.add('pt', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Filtro por coluna',
+            removeFilter: 'Remover filtro',
+            columnMenuButtonLabel: 'Menu coluna'
+          },
+          priority: 'Prioridade:',
+          filterLabel: "Filtro por coluna: "
+        },
         aggregate: {
           label: 'itens'
         },
@@ -12911,6 +13146,7 @@ module.filter('px', function() {
         sort: {
           ascending: 'Ordenar Ascendente',
           descending: 'Ordenar Descendente',
+          none: 'Nenhuma Ordem',
           remove: 'Remover Ordenação'
         },
         column: {
@@ -12928,7 +13164,13 @@ module.filter('px', function() {
           pinRight: 'Fixar Direita',
           unpin: 'Desprender'
         },
+        columnMenu: {
+          close: 'Fechar'
+        },
         gridMenu: {
+          aria: {
+            buttonLabel: 'Menu Grid'
+          },
           columns: 'Colunas:',
           importerTitle: 'Importar ficheiro',
           exporterAllAsCsv: 'Exportar todos os dados como csv',
@@ -12947,8 +13189,16 @@ module.filter('px', function() {
           jsonNotArray: 'Ficheiro json importado tem que conter um array. Interrompendo.'
         },
         pagination: {
+          aria: {
+            pageToFirst: 'Primeira página',
+            pageBack: 'Página anterior',
+            pageSelected: 'Página Selecionada',
+            pageForward: 'Próxima',
+            pageToLast: 'Anterior'
+          },
           sizes: 'itens por página',
           totalItems: 'itens',
+          through: 'através dos',
           of: 'de'
         },
         grouping: {
@@ -12970,7 +13220,123 @@ module.filter('px', function() {
 (function () {
   angular.module('ui.grid').config(['$provide', function($provide) {
     $provide.decorator('i18nService', ['$delegate', function($delegate) {
+      $delegate.add('ro', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Filtru pentru coloana',
+            removeFilter: 'Sterge filtru',
+            columnMenuButtonLabel: 'Column Menu'
+          },
+          priority: 'Prioritate:',
+          filterLabel: "Filtru pentru coloana:"
+        },
+        aggregate: {
+          label: 'Elemente'
+        },
+        groupPanel: {
+          description: 'Trage un cap de coloana aici pentru a grupa elementele dupa coloana respectiva'
+        },
+        search: {
+          placeholder: 'Cauta...',
+          showingItems: 'Arata elementele:',
+          selectedItems: 'Elementele selectate:',
+          totalItems: 'Total elemente:',
+          size: 'Marime pagina:',
+          first: 'Prima pagina',
+          next: 'Pagina urmatoare',
+          previous: 'Pagina anterioara',
+          last: 'Ultima pagina'
+        },
+        menu: {
+          text: 'Alege coloane:'
+        },
+        sort: {
+          ascending: 'Ordoneaza crescator',
+          descending: 'Ordoneaza descrescator',
+          none: 'Fara ordonare',
+          remove: 'Sterge ordonarea'
+        },
+        column: {
+          hide: 'Ascunde coloana'
+        },
+        aggregation: {
+          count: 'total linii: ',
+          sum: 'total: ',
+          avg: 'medie: ',
+          min: 'min: ',
+          max: 'max: '
+        },
+        pinning: {
+          pinLeft: 'Pin la stanga',
+          pinRight: 'Pin la dreapta',
+          unpin: 'Sterge pinul'
+        },
+        columnMenu: {
+          close: 'Inchide'
+        },
+        gridMenu: {
+          aria: {
+            buttonLabel: 'Grid Menu'
+          },
+          columns: 'Coloane:',
+          importerTitle: 'Incarca fisier',
+          exporterAllAsCsv: 'Exporta toate datele ca csv',
+          exporterVisibleAsCsv: 'Exporta datele vizibile ca csv',
+          exporterSelectedAsCsv: 'Exporta datele selectate ca csv',
+          exporterAllAsPdf: 'Exporta toate datele ca pdf',
+          exporterVisibleAsPdf: 'Exporta datele vizibile ca pdf',
+          exporterSelectedAsPdf: 'Exporta datele selectate ca csv pdf',
+          clearAllFilters: 'Sterge toate filtrele'
+        },
+        importer: {
+          noHeaders: 'Numele coloanelor nu a putut fi incarcat, acest fisier are un header?',
+          noObjects: 'Datele nu au putut fi incarcate, exista date in fisier in afara numelor de coloane?',
+          invalidCsv: 'Fisierul nu a putut fi procesat, ati incarcat un CSV valid ?',
+          invalidJson: 'Fisierul nu a putut fi procesat, ati incarcat un Json valid?',
+          jsonNotArray: 'Json-ul incarcat trebuie sa contina un array, inchidere.'
+        },
+        pagination: {
+          aria: {
+            pageToFirst: 'Prima pagina',
+            pageBack: 'O pagina inapoi',
+            pageSelected: 'Pagina selectata',
+            pageForward: 'O pagina inainte',
+            pageToLast: 'Ultima pagina'
+          },
+          sizes: 'Elemente per pagina',
+          totalItems: 'elemente',
+          through: 'prin',
+          of: 'of'
+        },
+        grouping: {
+          group: 'Grupeaza',
+          ungroup: 'Opreste gruparea',
+          aggregate_count: 'Agg: Count',
+          aggregate_sum: 'Agg: Sum',
+          aggregate_max: 'Agg: Max',
+          aggregate_min: 'Agg: Min',
+          aggregate_avg: 'Agg: Avg',
+          aggregate_remove: 'Agg: Remove'
+        }
+      });
+      return $delegate;
+    }]);
+  }]);
+})();
+
+(function () {
+  angular.module('ui.grid').config(['$provide', function($provide) {
+    $provide.decorator('i18nService', ['$delegate', function($delegate) {
       $delegate.add('ru', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Фильтр столбца',
+            removeFilter: 'Удалить фильтр',
+            columnMenuButtonLabel: 'Меню столбца'
+          },
+          priority: 'Приоритет:',
+          filterLabel: "Фильтр столбца: "
+        },
         aggregate: {
           label: 'элементы'
         },
@@ -12994,6 +13360,7 @@ module.filter('px', function() {
         sort: {
           ascending: 'По возрастанию',
           descending: 'По убыванию',
+          none: 'Без сортировки',
           remove: 'Убрать сортировку'
         },
         column: {
@@ -13011,9 +13378,15 @@ module.filter('px', function() {
 					pinRight: 'Закрепить справа',
 					unpin: 'Открепить'
 				},
+        columnMenu: {
+          close: 'Закрыть'
+        },
         gridMenu: {
+          aria: {
+            buttonLabel: 'Меню'
+          },
           columns: 'Столбцы:',
-          importerTitle: 'Import file',
+          importerTitle: 'Импортировать файл',
           exporterAllAsCsv: 'Экспортировать всё в CSV',
           exporterVisibleAsCsv: 'Экспортировать видимые данные в CSV',
           exporterSelectedAsCsv: 'Экспортировать выбранные данные в CSV',
@@ -13023,11 +13396,34 @@ module.filter('px', function() {
           clearAllFilters: 'Очистите все фильтры'
         },
         importer: {
-          noHeaders: 'Column names were unable to be derived, does the file have a header?',
-          noObjects: 'Objects were not able to be derived, was there data in the file other than headers?',
-          invalidCsv: 'File was unable to be processed, is it valid CSV?',
-          invalidJson: 'File was unable to be processed, is it valid Json?',
-          jsonNotArray: 'Imported json file must contain an array, aborting.'
+          noHeaders: 'Не удалось получить названия столбцов, есть ли в файле заголовок?',
+          noObjects: 'Не удалось получить данные, есть ли в файле строки кроме заголовка?',
+          invalidCsv: 'Не удалось обработать файл, это правильный CSV-файл?',
+          invalidJson: 'Не удалось обработать файл, это правильный JSON?',
+          jsonNotArray: 'Импортируемый JSON-файл должен содержать массив, операция отменена.'
+        },
+        pagination: {
+          aria: {
+            pageToFirst: 'Первая страница',
+            pageBack: 'Предыдущая страница',
+            pageSelected: 'Выбранная страница',
+            pageForward: 'Следующая страница',
+            pageToLast: 'Последняя страница'
+          },
+          sizes: 'строк на страницу',
+          totalItems: 'строк',
+          through: 'по',
+          of: 'из'
+        },
+        grouping: {
+          group: 'Группировать',
+          ungroup: 'Разгруппировать',
+          aggregate_count: 'Группировать: Count',
+          aggregate_sum: 'Для группы: Сумма',
+          aggregate_max: 'Для группы: Максимум',
+          aggregate_min: 'Для группы: Минимум',
+          aggregate_avg: 'Для группы: Среднее',
+          aggregate_remove: 'Для группы: Пусто'
         }
       });
       return $delegate;
@@ -13249,6 +13645,112 @@ module.filter('px', function() {
   }]);
 })();
 
+(function () {
+  angular.module('ui.grid').config(['$provide', function($provide) {
+    $provide.decorator('i18nService', ['$delegate', function($delegate) {
+      $delegate.add('tr', {
+        headerCell: {
+          aria: {
+            defaultFilterLabel: 'Sütun için filtre',
+            removeFilter: 'Filtreyi Kaldır',
+            columnMenuButtonLabel: 'Sütun Menüsü'
+          },
+          priority: 'Öncelik:',
+          filterLabel: "Sütun için filtre: "
+        },
+        aggregate: {
+          label: 'kayıtlar'
+        },
+        groupPanel: {
+          description: 'Sütuna göre gruplamak için sütun başlığını buraya sürükleyin ve bırakın.'
+        },
+        search: {
+          placeholder: 'Arama...',
+          showingItems: 'Gösterilen Kayıt:',
+          selectedItems: 'Seçili Kayıt:',
+          totalItems: 'Toplam Kayıt:',
+          size: 'Sayfa Boyutu:',
+          first: 'İlk Sayfa',
+          next: 'Sonraki Sayfa',
+          previous: 'Önceki Sayfa',
+          last: 'Son Sayfa'
+        },
+        menu: {
+          text: 'Sütunları Seç:'
+        },
+        sort: {
+          ascending: 'Artan Sırada Sırala',
+          descending: 'Azalan Sırada Sırala',
+          none: 'Sıralama Yapma',
+          remove: 'Sıralamayı Kaldır'
+        },
+        column: {
+          hide: 'Sütunu Gizle'
+        },
+        aggregation: {
+          count: 'toplam satır: ',
+          sum: 'toplam: ',
+          avg: 'ort: ',
+          min: 'min: ',
+          max: 'maks: '
+        },
+        pinning: {
+          pinLeft: 'Sola Sabitle',
+          pinRight: 'Sağa Sabitle',
+          unpin: 'Sabitlemeyi Kaldır'
+        },
+        columnMenu: {
+          close: 'Kapat'
+        },
+        gridMenu: {
+          aria: {
+            buttonLabel: 'Tablo Menü'
+          },
+          columns: 'Sütunlar:',
+          importerTitle: 'Dosya içeri aktar',
+          exporterAllAsCsv: 'Bütün veriyi CSV olarak dışarı aktar',
+          exporterVisibleAsCsv: 'Görünen veriyi CSV olarak dışarı aktar',
+          exporterSelectedAsCsv: 'Seçili veriyi CSV olarak dışarı aktar',
+          exporterAllAsPdf: 'Bütün veriyi PDF olarak dışarı aktar',
+          exporterVisibleAsPdf: 'Görünen veriyi PDF olarak dışarı aktar',
+          exporterSelectedAsPdf: 'Seçili veriyi PDF olarak dışarı aktar',
+          clearAllFilters: 'Bütün filtreleri kaldır'
+        },
+        importer: {
+          noHeaders: 'Sütun isimleri üretilemiyor, dosyanın bir başlığı var mı?',
+          noObjects: 'Nesneler üretilemiyor, dosyada başlıktan başka bir veri var mı?',
+          invalidCsv: 'Dosya işlenemedi, geçerli bir CSV dosyası mı?',
+          invalidJson: 'Dosya işlenemedi, geçerli bir Json dosyası mı?',
+          jsonNotArray: 'Alınan Json dosyasında bir dizi bulunmalıdır, işlem iptal ediliyor.'
+        },
+        pagination: {
+          aria: {
+            pageToFirst: 'İlk sayfaya',
+            pageBack: 'Geri git',
+            pageSelected: 'Seçili sayfa',
+            pageForward: 'İleri git',
+            pageToLast: 'Sona git'
+          },
+          sizes: 'Sayfadaki nesne sayısı',
+          totalItems: 'kayıtlar',
+          through: '', //note(fsw) : turkish dont have this preposition 
+          of: '' //note(fsw) : turkish dont have this preposition
+        },
+        grouping: {
+          group: 'Grupla',
+          ungroup: 'Gruplama',
+          aggregate_count: 'Yekun: Sayı',
+          aggregate_sum: 'Yekun: Toplam',
+          aggregate_max: 'Yekun: Maks',
+          aggregate_min: 'Yekun: Min',
+          aggregate_avg: 'Yekun: Ort',
+          aggregate_remove: 'Yekun: Sil'
+        }
+      });
+      return $delegate;
+    }]);
+  }]);
+})();
 /**
  * @ngdoc overview
  * @name ui.grid.i18n
@@ -14478,8 +14980,10 @@ module.filter('px', function() {
                 if (grid.cellNav.lastRowCol === null || rowColSelectIndex === -1) {
                   var newRowCol = new GridRowColumn(row, col);
 
-                  grid.api.cellNav.raise.navigate(newRowCol, grid.cellNav.lastRowCol);
-                  grid.cellNav.lastRowCol = newRowCol;
+                  if (grid.cellNav.lastRowCol === null || grid.cellNav.lastRowCol.row !== newRowCol.row || grid.cellNav.lastRowCol.col !== newRowCol.col){
+                    grid.api.cellNav.raise.navigate(newRowCol, grid.cellNav.lastRowCol);
+                    grid.cellNav.lastRowCol = newRowCol;  
+                  }
                   if (uiGridCtrl.grid.options.modifierKeysToMultiSelectCells && modifierDown) {
                     grid.cellNav.focusedCells.push(rowCol);
                   } else {
@@ -15379,8 +15883,8 @@ module.filter('px', function() {
    */
 
   module.directive('uiGridCell',
-    ['$compile', '$injector', '$timeout', 'uiGridConstants', 'uiGridEditConstants', 'gridUtil', '$parse', 'uiGridEditService', '$rootScope',
-      function ($compile, $injector, $timeout, uiGridConstants, uiGridEditConstants, gridUtil, $parse, uiGridEditService, $rootScope) {
+    ['$compile', '$injector', '$timeout', 'uiGridConstants', 'uiGridEditConstants', 'gridUtil', '$parse', 'uiGridEditService', '$rootScope', '$q',
+      function ($compile, $injector, $timeout, uiGridConstants, uiGridEditConstants, gridUtil, $parse, uiGridEditService, $rootScope, $q) {
         var touchstartTimeout = 500;
         if ($injector.has('uiGridCellNavService')) {
           var uiGridCellNavService = $injector.get('uiGridCellNavService');
@@ -15575,6 +16079,40 @@ module.filter('px', function() {
              *
              */
             /**
+             *  @ngdoc service
+             *  @name editDropdownOptionsFunction
+             *  @methodOf ui.grid.edit.api:ColumnDef
+             *  @description a function returning an array of values in the format
+             *  [ {id: xxx, value: xxx} ], which will be used to populate
+             *  the edit dropdown.  This can be used when the dropdown values are dependent on
+             *  the backing row entity with some kind of algorithm.
+             *  If this property is set then both editDropdownOptionsArray and 
+             *  editDropdownRowEntityOptionsArrayPath will be ignored.
+             *  @param {object} rowEntity the options.data element that the returned array refers to
+             *  @param {object} colDef the column that implements this dropdown
+             *  @returns {object} an array of values in the format
+             *  [ {id: xxx, value: xxx} ] used to populate the edit dropdown
+             *  @example
+             *  <pre>
+             *    $scope.gridOptions = {
+             *      columnDefs: [
+             *        {name: 'status', editableCellTemplate: 'ui-grid/dropdownEditor',
+             *          editDropdownOptionsFunction: function(rowEntity, colDef) {
+             *            if (rowEntity.foo === 'bar') {
+             *              return [{id: 'bar1', value: 'BAR 1'},
+             *                      {id: 'bar2', value: 'BAR 2'},
+             *                      {id: 'bar3', value: 'BAR 3'}];
+             *            } else {
+             *              return [{id: 'foo1', value: 'FOO 1'},
+             *                      {id: 'foo2', value: 'FOO 2'}];
+             *            }
+             *          },
+             *          editDropdownIdLabel: 'code', editDropdownValueLabel: 'status' }
+             *      ],
+             *  </pre>
+             *
+             */
+            /**
              *  @ngdoc property
              *  @name editDropdownValueLabel
              *  @propertyOf ui.grid.edit.api:ColumnDef
@@ -15653,12 +16191,24 @@ module.filter('px', function() {
               }
               html = html.replace('INPUT_TYPE', inputType);
 
-              var editDropdownRowEntityOptionsArrayPath = $scope.col.colDef.editDropdownRowEntityOptionsArrayPath;
-              if (editDropdownRowEntityOptionsArrayPath) {
-                $scope.editDropdownOptionsArray =  resolveObjectFromPath($scope.row.entity, editDropdownRowEntityOptionsArrayPath);
-              }
-              else {
-                $scope.editDropdownOptionsArray = $scope.col.colDef.editDropdownOptionsArray;
+              // In order to fill dropdown options we use:
+              // - A function/promise or
+              // - An array inside of row entity if no function exists or
+              // - A single array for the whole column if none of the previous exists.
+              var editDropdownOptionsFunction = $scope.col.colDef.editDropdownOptionsFunction;
+              if (editDropdownOptionsFunction) {
+                $q.when(editDropdownOptionsFunction($scope.row.entity, $scope.col.colDef))
+                        .then(function(result) {
+                  $scope.editDropdownOptionsArray = result;
+                });
+              } else {
+                var editDropdownRowEntityOptionsArrayPath = $scope.col.colDef.editDropdownRowEntityOptionsArrayPath;
+                if (editDropdownRowEntityOptionsArrayPath) {
+                  $scope.editDropdownOptionsArray =  resolveObjectFromPath($scope.row.entity, editDropdownRowEntityOptionsArrayPath);
+                }
+                else {
+                  $scope.editDropdownOptionsArray = $scope.col.colDef.editDropdownOptionsArray;
+                }
               }
               $scope.editDropdownIdLabel = $scope.col.colDef.editDropdownIdLabel ? $scope.col.colDef.editDropdownIdLabel : 'id';
               $scope.editDropdownValueLabel = $scope.col.colDef.editDropdownValueLabel ? $scope.col.colDef.editDropdownValueLabel : 'value';
@@ -15811,7 +16361,7 @@ module.filter('px', function() {
                   $timeout(function () {
                     $elm[0].focus();
                     //only select text if it is not being replaced below in the cellNav viewPortKeyPress
-                    if ($scope.col.colDef.enableCellEditOnFocus || !(uiGridCtrl && uiGridCtrl.grid.api.cellNav)) {
+                    if ($elm[0].select && $scope.col.colDef.enableCellEditOnFocus || !(uiGridCtrl && uiGridCtrl.grid.api.cellNav)) {
                       $elm[0].select();
                     }
                     else {
@@ -15834,7 +16384,7 @@ module.filter('px', function() {
                   if (uiGridCtrl && uiGridCtrl.grid.api.cellNav) {
                     var viewPortKeyDownUnregister = uiGridCtrl.grid.api.cellNav.on.viewPortKeyPress($scope, function (evt, rowCol) {
                       if (uiGridEditService.isStartEditKey(evt)) {
-                        ngModel.$setViewValue(String.fromCharCode(evt.keyCode), evt);
+                        ngModel.$setViewValue(String.fromCharCode( typeof evt.which === 'number' ? evt.which : evt.keyCode), evt);
                         ngModel.$render();
                       }
                       viewPortKeyDownUnregister();
@@ -16258,6 +16808,12 @@ module.filter('px', function() {
          */
         /**
          *  @ngdoc object
+         *  @name ui.grid.expandable.api:GridRow
+         *
+         *  @description Additional properties added to GridRow when using the expandable module
+         */
+        /**
+         *  @ngdoc object
          *  @name ui.grid.expandable.api:GridOptions
          *
          *  @description Options for configuring the expandable feature, these are available to be
@@ -16339,6 +16895,43 @@ module.filter('px', function() {
                */
               toggleAllRows: function() {
                 service.toggleAllRows(grid);
+              },
+              /**
+               * @ngdoc function
+               * @name expandRow
+               * @methodOf  ui.grid.expandable.api:PublicApi
+               * @description Expand the data row
+               * @param {object} rowEntity gridOptions.data[] array instance
+               */
+              expandRow: function (rowEntity) {
+                var row = grid.getRow(rowEntity);
+                if (row !== null && !row.isExpanded) {
+                  service.toggleRowExpansion(grid, row);
+                }
+              },
+              /**
+               * @ngdoc function
+               * @name collapseRow
+               * @methodOf  ui.grid.expandable.api:PublicApi
+               * @description Collapse the data row
+               * @param {object} rowEntity gridOptions.data[] array instance
+               */
+              collapseRow: function (rowEntity) {
+                var row = grid.getRow(rowEntity);
+                if (row !== null && row.isExpanded) {
+                  service.toggleRowExpansion(grid, row);
+                }
+              },
+              /**
+               * @ngdoc function
+               * @name getExpandedRows
+               * @methodOf  ui.grid.expandable.api:PublicApi
+               * @description returns all expandedRow's entity references
+               */
+              getExpandedRows: function () {
+                return service.getExpandedRows(grid).map(function (gridRow) {
+                  return gridRow.entity;
+                });
               }
             }
           }
@@ -16350,11 +16943,25 @@ module.filter('px', function() {
       toggleRowExpansion: function (grid, row) {
         // trigger the "before change" event. Can change row height dynamically this way.
         grid.api.expandable.raise.rowExpandedBeforeStateChanged(row);
+        /**
+         *  @ngdoc object
+         *  @name isExpanded
+         *  @propertyOf  ui.grid.expandable.api:GridRow
+         *  @description Whether or not the row is currently expanded.
+         *  @example
+         *  <pre>
+         *    $scope.api.expandable.on.rowExpandedStateChanged($scope, function (row) {
+         *      if (row.isExpanded) {
+         *        //...
+         *      }
+         *    });
+         *  </pre>
+         */
         row.isExpanded = !row.isExpanded;
         if (angular.isUndefined(row.expandedRowHeight)){
           row.expandedRowHeight = grid.options.expandableRowHeight;
         }
-              
+
         if (row.isExpanded) {
           row.height = row.grid.options.rowHeight + row.expandedRowHeight;
         }
@@ -16392,6 +16999,12 @@ module.filter('px', function() {
         else {
           service.expandAllRows(grid);
         }
+      },
+
+      getExpandedRows: function (grid) {
+        return grid.rows.filter(function (row) {
+          return row.isExpanded;
+        });
       }
     };
     return service;
@@ -16639,7 +17252,7 @@ module.filter('px', function() {
    *
    * <div class="alert alert-success" role="alert"><strong>Stable</strong> This feature is stable. There should no longer be breaking api changes without a deprecation warning.</div>
    *
-   * This module provides the ability to exporter data from the grid.
+   * This module provides the ability to export data from the grid.
    *
    * Data can be exported in a range of formats, and all data, visible
    * data, or selected rows can be exported, with all columns or visible
@@ -16999,6 +17612,22 @@ module.filter('px', function() {
 
           /**
            * @ngdoc object
+           * @name exporterMenuVisibleData
+           * @porpertyOf  ui.grid.exporter.api:GridOptions
+           * @description Add export visible data as cvs/pdf menu items to the ui-grid grid menu, if it's present.  Defaults to true.
+           */
+          gridOptions.exporterMenuVisibleData = gridOptions.exporterMenuVisibleData !== undefined ? gridOptions.exporterMenuVisibleData : true;
+
+          /**
+           * @ngdoc object
+           * @name exporterMenuSelectedData
+           * @porpertyOf  ui.grid.exporter.api:GridOptions
+           * @description Add export selected data as cvs/pdf menu items to the ui-grid grid menu, if it's present.  Defaults to true.
+           */
+          gridOptions.exporterMenuSelectedData = gridOptions.exporterMenuSelectedData !== undefined ? gridOptions.exporterMenuSelectedData : true;
+
+          /**
+           * @ngdoc object
            * @name exporterMenuCsv
            * @propertyOf  ui.grid.exporter.api:GridOptions
            * @description Add csv export menu items to the ui-grid grid menu, if it's present.  Defaults to true.
@@ -17165,7 +17794,7 @@ module.filter('px', function() {
                 this.grid.api.exporter.csvExport( uiGridExporterConstants.VISIBLE, uiGridExporterConstants.VISIBLE );
               },
               shown: function() {
-                return this.grid.options.exporterMenuCsv;
+                return this.grid.options.exporterMenuCsv && this.grid.options.exporterMenuVisibleData;
               },
               order: 201
             },
@@ -17175,7 +17804,7 @@ module.filter('px', function() {
                 this.grid.api.exporter.csvExport( uiGridExporterConstants.SELECTED, uiGridExporterConstants.VISIBLE );
               },
               shown: function() {
-                return this.grid.options.exporterMenuCsv &&
+                return this.grid.options.exporterMenuCsv && this.grid.options.exporterMenuSelectedData &&
                        ( this.grid.api.selection && this.grid.api.selection.getSelectedRows().length > 0 );
               },
               order: 202
@@ -17196,7 +17825,7 @@ module.filter('px', function() {
                 this.grid.api.exporter.pdfExport( uiGridExporterConstants.VISIBLE, uiGridExporterConstants.VISIBLE );
               },
               shown: function() {
-                return this.grid.options.exporterMenuPdf;
+                return this.grid.options.exporterMenuPdf && this.grid.options.exporterMenuVisibleData;
               },
               order: 204
             },
@@ -17206,7 +17835,7 @@ module.filter('px', function() {
                 this.grid.api.exporter.pdfExport( uiGridExporterConstants.SELECTED, uiGridExporterConstants.VISIBLE );
               },
               shown: function() {
-                return this.grid.options.exporterMenuPdf &&
+                return this.grid.options.exporterMenuPdf && this.grid.options.exporterMenuSelectedData &&
                        ( this.grid.api.selection && this.grid.api.selection.getSelectedRows().length > 0 );
               },
               order: 205
@@ -17361,8 +17990,9 @@ module.filter('px', function() {
          * @param {string} colTypes which columns to export, valid values are
          * uiGridExporterConstants.ALL, uiGridExporterConstants.VISIBLE,
          * uiGridExporterConstants.SELECTED
+         * @param {boolean} applyCellFilters whether or not to get the display value or the raw value of the data
          */
-        getData: function (grid, rowTypes, colTypes) {
+        getData: function (grid, rowTypes, colTypes, applyCellFilters) {
           var data = [];
           var rows;
           var columns;
@@ -17403,7 +18033,8 @@ module.filter('px', function() {
               if ( (gridCol.visible || colTypes === uiGridExporterConstants.ALL ) &&
                    gridCol.colDef.exporterSuppressExport !== true &&
                    grid.options.exporterSuppressColumns.indexOf( gridCol.name ) === -1 ){
-                  var extractedField = { value: grid.options.exporterFieldCallback( grid, row, gridCol, grid.getCellValue( row, gridCol ) ) };
+                  var cellValue = applyCellFilters ? grid.getCellDisplayValue( row, gridCol ) : grid.getCellValue( row, gridCol );
+                  var extractedField = { value: grid.options.exporterFieldCallback( grid, row, gridCol, cellValue ) };
                   if ( gridCol.colDef.exporterPdfAlign ) {
                     extractedField.alignment = gridCol.colDef.exporterPdfAlign;
                   }
@@ -17494,8 +18125,14 @@ module.filter('px', function() {
          * @description Checks whether current browser is IE and returns it's version if it is
         */
         isIE: function () {
-          var match = navigator.userAgent.match(/(?:MSIE |Trident\/.*; rv:)(\d+)/);
-          return match ? parseInt(match[1]) : false;
+          var match = navigator.userAgent.search(/(?:Edge|MSIE|Trident\/.*; rv:)/);
+          var isIE = false;
+
+          if (match !== -1) {
+            isIE = true;
+          }
+
+          return isIE;
         },
 
 
@@ -17597,7 +18234,7 @@ module.filter('px', function() {
             var exportData = self.getData(grid, rowTypes, colTypes);
             var docDefinition = self.prepareAsPdf(grid, exportColumnHeaders, exportData);
 
-            if (self.isIE()) {
+            if (self.isIE() || navigator.appVersion.indexOf("Edge") !== -1) {
               self.downloadPDF(grid.options.exporterPdfFilename, docDefinition);
             } else {
               pdfMake.createPdf(docDefinition).open();
@@ -17625,14 +18262,24 @@ module.filter('px', function() {
           var rawFile;
           var ieVersion;
 
-          ieVersion = this.isIE();
+          ieVersion = this.isIE(); // This is now a boolean value
           var doc = pdfMake.createPdf(docDefinition);
           var blob;
 
           doc.getBuffer( function (buffer) {
             blob = new Blob([buffer]);
 
-            if (ieVersion && ieVersion < 10) {
+            // IE10+
+            if (navigator.msSaveBlob) {
+              return navigator.msSaveBlob(
+                blob, fileName
+              );
+            }
+
+            // Previously:  && ieVersion < 10
+            // ieVersion now returns a boolean for the
+            // sake of sanity. We just check `msSaveBlob` first.
+            if (ieVersion) {
               var frame = D.createElement('iframe');
               document.body.appendChild(frame);
 
@@ -17644,13 +18291,6 @@ module.filter('px', function() {
 
               document.body.removeChild(frame);
               return true;
-            }
-
-            // IE10+
-            if (navigator.msSaveBlob) {
-              return navigator.msSaveBlob(
-                blob, fileName
-              );
             }
           });
         },
@@ -18929,16 +19569,24 @@ module.filter('px', function() {
           newDisplayValue = grid.options.groupingNullLabel;
         }
 
+        var getKeyAsValueForCacheMap = function(key) {
+          if (angular.isObject(key)) {
+              return JSON.stringify(key);
+          } else {
+              return key;
+          }
+        };
+
         var cacheItem = grid.grouping.oldGroupingHeaderCache;
         for ( var i = 0; i < stateIndex; i++ ){
-          if ( cacheItem && cacheItem[processingState[i].currentValue] ){
-            cacheItem = cacheItem[processingState[i].currentValue].children;
+          if ( cacheItem && cacheItem[getKeyAsValueForCacheMap(processingState[i].currentValue)] ){
+            cacheItem = cacheItem[getKeyAsValueForCacheMap(processingState[i].currentValue)].children;
           }
         }
 
         var headerRow;
-        if ( cacheItem && cacheItem[newValue]){
-          headerRow = cacheItem[newValue].row;
+        if ( cacheItem && cacheItem[getKeyAsValueForCacheMap(newValue)]){
+          headerRow = cacheItem[getKeyAsValueForCacheMap(newValue)].row;
           headerRow.entity = {};
         } else {
           headerRow = new GridRow( {}, null, grid );
@@ -18965,9 +19613,9 @@ module.filter('px', function() {
         // add our new header row to the cache
         cacheItem = grid.grouping.groupingHeaderCache;
         for ( i = 0; i < stateIndex; i++ ){
-          cacheItem = cacheItem[processingState[i].currentValue].children;
+          cacheItem = cacheItem[getKeyAsValueForCacheMap(processingState[i].currentValue)].children;
         }
-        cacheItem[newValue] = { row: headerRow, children: {} };
+        cacheItem[getKeyAsValueForCacheMap(newValue)] = { row: headerRow, children: {} };
       },
 
 
@@ -20592,6 +21240,9 @@ module.filter('px', function() {
         });
       },
       redrawColumnAtPosition: function (grid, originalPosition, newPosition) {
+        if (originalPosition === newPosition) {
+          return;
+        }
 
         var columns = grid.columns;
 
@@ -20790,45 +21441,91 @@ module.filter('px', function() {
                     }
                   }
 
+                  var targetIndex;
+
                   //Case where column should be moved to a position on its left
                   if (totalMouseMovement < 0) {
                     var totalColumnsLeftWidth = 0;
-                    for (var il = columnIndex - 1; il >= 0; il--) {
-                      if (angular.isUndefined(columns[il].colDef.visible) || columns[il].colDef.visible === true) {
-                        totalColumnsLeftWidth += columns[il].drawnWidth || columns[il].width || columns[il].colDef.width;
-                        if (totalColumnsLeftWidth > Math.abs(totalMouseMovement)) {
-                          uiGridMoveColumnService.redrawColumnAtPosition
-                          ($scope.grid, columnIndex, il + 1);
-                          break;
+                    var il;
+                    if ( $scope.grid.isRTL() ){
+                      for (il = columnIndex + 1; il < columns.length; il++) {
+                        if (angular.isUndefined(columns[il].colDef.visible) || columns[il].colDef.visible === true) {
+                          totalColumnsLeftWidth += columns[il].drawnWidth || columns[il].width || columns[il].colDef.width;
+                          if (totalColumnsLeftWidth > Math.abs(totalMouseMovement)) {
+                            uiGridMoveColumnService.redrawColumnAtPosition
+                            ($scope.grid, columnIndex, il - 1);
+                            break;
+                          }
                         }
                       }
                     }
-                    //Case where column should be moved to beginning of the grid.
+                    else {
+                      for (il = columnIndex - 1; il >= 0; il--) {
+                        if (angular.isUndefined(columns[il].colDef.visible) || columns[il].colDef.visible === true) {
+                          totalColumnsLeftWidth += columns[il].drawnWidth || columns[il].width || columns[il].colDef.width;
+                          if (totalColumnsLeftWidth > Math.abs(totalMouseMovement)) {
+                            uiGridMoveColumnService.redrawColumnAtPosition
+                            ($scope.grid, columnIndex, il + 1);
+                            break;
+                          }
+                        }
+                      }
+                    }
+
+                    //Case where column should be moved to beginning (or end in RTL) of the grid.
                     if (totalColumnsLeftWidth < Math.abs(totalMouseMovement)) {
+                      targetIndex = 0;
+                      if ( $scope.grid.isRTL() ){
+                        targetIndex = columns.length - 1;
+                      }
                       uiGridMoveColumnService.redrawColumnAtPosition
-                      ($scope.grid, columnIndex, 0);
+                      ($scope.grid, columnIndex, targetIndex);
                     }
                   }
 
                   //Case where column should be moved to a position on its right
                   else if (totalMouseMovement > 0) {
                     var totalColumnsRightWidth = 0;
-                    for (var ir = columnIndex + 1; ir < columns.length; ir++) {
-                      if (angular.isUndefined(columns[ir].colDef.visible) || columns[ir].colDef.visible === true) {
-                        totalColumnsRightWidth += columns[ir].drawnWidth || columns[ir].width || columns[ir].colDef.width;
-                        if (totalColumnsRightWidth > totalMouseMovement) {
-                          uiGridMoveColumnService.redrawColumnAtPosition
-                          ($scope.grid, columnIndex, ir - 1);
-                          break;
+                    var ir;
+                    if ( $scope.grid.isRTL() ){
+                      for (ir = columnIndex - 1; ir > 0; ir--) {
+                        if (angular.isUndefined(columns[ir].colDef.visible) || columns[ir].colDef.visible === true) {
+                          totalColumnsRightWidth += columns[ir].drawnWidth || columns[ir].width || columns[ir].colDef.width;
+                          if (totalColumnsRightWidth > totalMouseMovement) {
+                            uiGridMoveColumnService.redrawColumnAtPosition
+                            ($scope.grid, columnIndex, ir);
+                            break;
+                          }
                         }
                       }
                     }
-                    //Case where column should be moved to end of the grid.
+                    else {
+                      for (ir = columnIndex + 1; ir < columns.length; ir++) {
+                        if (angular.isUndefined(columns[ir].colDef.visible) || columns[ir].colDef.visible === true) {
+                          totalColumnsRightWidth += columns[ir].drawnWidth || columns[ir].width || columns[ir].colDef.width;
+                          if (totalColumnsRightWidth > totalMouseMovement) {
+                            uiGridMoveColumnService.redrawColumnAtPosition
+                            ($scope.grid, columnIndex, ir - 1);
+                            break;
+                          }
+                        }
+                      }
+                    }
+
+
+                    //Case where column should be moved to end (or beginning in RTL) of the grid.
                     if (totalColumnsRightWidth < totalMouseMovement) {
+                      targetIndex = columns.length - 1;
+                      if ( $scope.grid.isRTL() ){
+                        targetIndex = 0;
+                      }
                       uiGridMoveColumnService.redrawColumnAtPosition
-                      ($scope.grid, columnIndex, columns.length - 1);
+                      ($scope.grid, columnIndex, targetIndex);
                     }
                   }
+
+
+
                 };
 
                 var onDownEvents = function(){
@@ -20860,16 +21557,7 @@ module.filter('px', function() {
                   //Left of cloned element should be aligned to original header cell.
                   movingElm.addClass('movingColumn');
                   var movingElementStyles = {};
-                  var elmLeft;
-                  if (gridUtil.detectBrowser() === 'safari') {
-                    //Correction for Safari getBoundingClientRect,
-                    //which does not correctly compute when there is an horizontal scroll
-                    elmLeft = $elm[0].offsetLeft + $elm[0].offsetWidth - $elm[0].getBoundingClientRect().width;
-                  }
-                  else {
-                    elmLeft = $elm[0].getBoundingClientRect().left;
-                  }
-                  movingElementStyles.left = (elmLeft - gridLeft) + 'px';
+                  movingElementStyles.left = $elm[0].offsetLeft + 'px';
                   var gridRight = $scope.grid.element[0].getBoundingClientRect().right;
                   var elmRight = $elm[0].getBoundingClientRect().right;
                   if (elmRight > gridRight) {
@@ -20899,7 +21587,8 @@ module.filter('px', function() {
 
                   //Update css of moving column to adjust to new left value or fire scroll in case column has reached edge of grid
                   if ((currentElmLeft >= gridLeft || changeValue > 0) && (currentElmRight <= rightMoveLimit || changeValue < 0)) {
-                    movingElm.css({visibility: 'visible', 'left': newElementLeft + 'px'});
+                    movingElm.css({visibility: 'visible', 'left': (movingElm[0].offsetLeft +
+                    (newElementLeft < rightMoveLimit ? changeValue : (rightMoveLimit - currentElmLeft))) + 'px'});
                   }
                   else if (totalColumnWidth > Math.ceil(uiGridCtrl.grid.gridWidth)) {
                     changeValue *= 8;
@@ -21114,14 +21803,14 @@ module.filter('px', function() {
            * @ngdoc property
            * @name enablePagination
            * @propertyOf ui.grid.pagination.api:GridOptions
-           * @description Enables pagination, defaults to true
+           * @description Enables pagination.  Defaults to true.
            */
           gridOptions.enablePagination = gridOptions.enablePagination !== false;
           /**
            * @ngdoc property
            * @name enablePaginationControls
            * @propertyOf ui.grid.pagination.api:GridOptions
-           * @description Enables the paginator at the bottom of the grid. Turn this off, if you want to implement your
+           * @description Enables the paginator at the bottom of the grid. Turn this off if you want to implement your
            *              own controls outside the grid.
            */
           gridOptions.enablePaginationControls = gridOptions.enablePaginationControls !== false;
@@ -21130,14 +21819,14 @@ module.filter('px', function() {
            * @name useExternalPagination
            * @propertyOf ui.grid.pagination.api:GridOptions
            * @description Disables client side pagination. When true, handle the paginationChanged event and set data
-           *              and totalItems, defaults to `false`
+           *              and totalItems.  Defaults to `false`
            */
           gridOptions.useExternalPagination = gridOptions.useExternalPagination === true;
           /**
            * @ngdoc property
            * @name totalItems
            * @propertyOf ui.grid.pagination.api:GridOptions
-           * @description Total number of items, set automatically when client side pagination, needs set by user
+           * @description Total number of items, set automatically when using client side pagination, but needs set by user
            *              for server side pagination
            */
           if (gridUtil.isNullOrUndefined(gridOptions.totalItems)) {
@@ -21299,7 +21988,7 @@ module.filter('px', function() {
           var options = uiGridCtrl.grid.options;
 
           uiGridCtrl.grid.renderContainers.body.registerViewportAdjuster(function (adjustment) {
-            adjustment.height = adjustment.height - gridUtil.elementHeight($elm);
+            adjustment.height = adjustment.height - gridUtil.elementHeight($elm, "padding");
             return adjustment;
           });
 
@@ -21583,7 +22272,7 @@ module.filter('px', function() {
             return typeof(this.context.col.renderContainer) !== 'undefined' && this.context.col.renderContainer !== null && this.context.col.renderContainer !== 'body';
           },
           action: function () {
-            service.pinColumn(this.context.col.grid, this.context.col, uiGridPinningConstants.container.UNPIN);
+            service.pinColumn(this.context.col.grid, this.context.col, uiGridPinningConstants.container.NONE);
           }
         };
 
@@ -21601,6 +22290,7 @@ module.filter('px', function() {
       pinColumn: function(grid, col, container) {
         if (container === uiGridPinningConstants.container.NONE) {
           col.renderContainer = null;
+          col.colDef.pinnedLeft = col.colDef.pinnedRight = false;
         }
         else {
           col.renderContainer = container;
@@ -23205,6 +23895,7 @@ module.filter('px', function() {
           savedState.selection = service.saveSelection( grid );
           savedState.grouping = service.saveGrouping( grid );
           savedState.treeView = service.saveTreeView( grid );
+          savedState.pagination = service.savePagination( grid );
 
           return savedState;
         },
@@ -23239,6 +23930,10 @@ module.filter('px', function() {
 
           if ( state.treeView ){
             service.restoreTreeView( grid, state.treeView );
+          }
+
+          if ( state.pagination ){
+            service.restorePagination( grid, state.pagination );
           }
 
           grid.refresh();
@@ -23394,6 +24089,26 @@ module.filter('px', function() {
 
         /**
          * @ngdoc function
+         * @name savePagination
+         * @methodOf  ui.grid.saveState.service:uiGridSaveStateService
+         * @description Saves the pagination state, if the pagination feature is enabled
+         * @param {Grid} grid the grid whose state we'd like to save
+         * @returns {object} the pagination state ready to be saved
+         */
+        savePagination: function( grid ) {
+          if ( !grid.api.pagination || !grid.options.paginationPageSize ){
+            return {};
+          }
+
+          return {
+            paginationCurrentPage: grid.options.paginationCurrentPage,
+            paginationPageSize: grid.options.paginationPageSize
+          };
+        },
+
+
+        /**
+         * @ngdoc function
          * @name saveTreeView
          * @methodOf  ui.grid.saveState.service:uiGridSaveStateService
          * @description Saves the tree view state, if the tree feature is enabled
@@ -23462,8 +24177,9 @@ module.filter('px', function() {
                 grid.api.core.raise.columnVisibilityChanged(currentCol);
               }
 
-              if ( grid.options.saveWidths ){
+              if ( grid.options.saveWidths && currentCol.width !== columnState.width){
                 currentCol.width = columnState.width;
+                currentCol.hasCustomWidth = true;
               }
 
               if ( grid.options.saveSort &&
@@ -23613,6 +24329,25 @@ module.filter('px', function() {
           }
 
           grid.api.treeView.setTreeView( treeViewState );
+        },
+
+        /**
+         * @ngdoc function
+         * @name restorePagination
+         * @methodOf  ui.grid.saveState.service:uiGridSaveStateService
+         * @description Restores the pagination information, if pagination is enabled.
+         * @param {Grid} grid the grid whose state we'd like to restore
+         * @param {object} pagination the pagination object to be restored
+         * @param {number} pagination.paginationCurrentPage the page number to restore
+         * @param {number} pagination.paginationPageSize the number of items displayed per page
+         */
+        restorePagination: function( grid, pagination ){
+          if ( !grid.api.pagination || !grid.options.paginationPageSize ){
+            return;
+          }
+
+          grid.options.paginationCurrentPage = pagination.paginationCurrentPage;
+          grid.options.paginationPageSize = pagination.paginationPageSize;
         },
 
         /**
@@ -23994,6 +24729,15 @@ module.filter('px', function() {
                  */
                 getSelectedGridRows: function () {
                   return service.getSelectedRows(grid);
+                },
+                /**
+                 * @ngdoc function
+                 * @name getSelectedCount
+                 * @methodOf  ui.grid.selection.api:PublicApi
+                 * @description returns the number of rows selected
+                 */
+                getSelectedCount: function () {
+                  return grid.selection.selectedCount;
                 },
                 /**
                  * @ngdoc function
@@ -24910,7 +25654,7 @@ module.filter('px', function() {
          *  all transient information on the tree (children, childCount) and recalculate it
          *
          */
-        grid.treeBase.tree = {};
+        grid.treeBase.tree = [];
 
         service.defaultGridOptions(grid.options);
 
@@ -25198,6 +25942,16 @@ module.filter('px', function() {
          *  <br/>Defaults to {}
          */
         gridOptions.treeCustomAggregations = gridOptions.treeCustomAggregations || {};
+
+        /**
+         *  @ngdoc object
+         *  @name enableExpandAll
+         *  @propertyOf  ui.grid.treeBase.api:GridOptions
+         *  @description Enable the expand all button at the top of the row header
+         *
+         *  <br/>Defaults to true
+         */
+        gridOptions.enableExpandAll = gridOptions.enableExpandAll !== false;
       },
 
 
@@ -26509,6 +27263,585 @@ module.filter('px', function() {
   }]);
 })();
 
+(function () {
+  'use strict';
+  
+  /**
+   * @ngdoc overview
+   * @name ui.grid.validate
+   * @description
+   *
+   * # ui.grid.validate
+   *
+   * <div class="alert alert-warning" role="alert"><strong>Alpha</strong> This feature is in development. There will almost certainly be breaking api changes, or there are major outstanding bugs.</div>
+   *
+   * This module provides the ability to validate cells upon change.
+   *
+   * Design information:
+   * -------------------
+   *
+   * Validation is not based on angularjs validation, since it would work only when editing the field.
+   * 
+   * Instead it adds custom properties to any field considered as invalid.
+   *
+   * <br/>
+   * <br/>
+   *
+   * <div doc-module-components="ui.grid.expandable"></div>
+   */
+
+  var module = angular.module('ui.grid.validate', ['ui.grid']);
+  
+  
+  /**
+   *  @ngdoc service
+   *  @name ui.grid.validate.service:uiGridValidateService
+   *
+   *  @description Services for validation features
+   */
+  module.service('uiGridValidateService', ['$sce', '$q', '$http', 'i18nService', 'uiGridConstants', function ($sce, $q, $http, i18nService, uiGridConstants) {
+
+    var service = {
+      
+      /**
+       *  @ngdoc object
+       *  @name validatorFactories
+       *  @propertyOf ui.grid.validate.service:uiGridValidateService
+       *  @description object containing all the factories used to validate data.<br/>
+       *  These factories will be in the form <br/>
+       *  ```
+       *  {
+       *    validatorFactory: function(argument) {
+       *                        return function(newValue, oldValue, rowEntity, colDef) {
+       *                          return true || false || promise
+       *                        }
+       *                      },
+       *    messageFunction: function(argument) {
+       *                       return string
+       *                     }
+       *  }
+       *  ```
+       *
+       * Promises should return true or false as result according to the result of validation.
+       */
+      validatorFactories: {},
+
+      
+      /**
+       * @ngdoc service
+       * @name setExternalFactoryFunction
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Adds a way to retrieve validators from an external service
+       * <p>Validators from this external service have a higher priority than default
+       * ones
+       * @param {function} externalFactoryFunction a function that accepts name and argument to pass to a
+       * validator factory and that returns an object with the same properties as 
+       * you can see in {@link ui.grid.validate.service:uiGridValidateService#properties_validatorFactories validatorFactories}
+       */
+      setExternalFactoryFunction: function(externalFactoryFunction) {
+        service.externalFactoryFunction = externalFactoryFunction;
+      },
+      
+      /**
+       * @ngdoc service
+       * @name clearExternalFactory
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Removes any link to external factory from this service
+       */
+      clearExternalFactory: function() {
+        delete service.externalFactoryFunction;
+      },
+
+      /**
+       * @ngdoc service
+       * @name getValidatorFromExternalFactory
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Retrieves a validator by executing a validatorFactory
+       * stored in an external service.
+       * @param {string} name the name of the validator to retrieve
+       * @param {object} argument an argument to pass to the validator factory
+       */
+      getValidatorFromExternalFactory: function(name, argument) {
+        return service.externalFactoryFunction(name, argument).validatorFactory(argument);
+      },
+      
+      /**
+       * @ngdoc service
+       * @name getMessageFromExternalFactory
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Retrieves a message stored in an external service.
+       * @param {string} name the name of the validator
+       * @param {object} argument an argument to pass to the message function
+       */
+      getMessageFromExternalFactory: function(name, argument) {
+        return service.externalFactoryFunction(name, argument).messageFunction(argument);
+      },
+      
+      /**
+       * @ngdoc service
+       * @name setValidator
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description  Adds a new validator to the service
+       * @param {string} name the name of the validator, must be unique
+       * @param {function} validatorFactory a factory that return a validatorFunction
+       * @param {function} messageFunction a function that return the error message
+       */
+      setValidator: function(name, validatorFactory, messageFunction) {
+        service.validatorFactories[name] = {
+          validatorFactory: validatorFactory,
+          messageFunction: messageFunction
+        };
+      },
+
+      /**
+       * @ngdoc service
+       * @name getValidator
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Returns a validator registered to the service
+       * or retrieved from the external factory
+       * @param {string} name the name of the validator to retrieve
+       * @param {object} argument an argument to pass to the validator factory
+       * @returns {object} the validator function
+       */
+      getValidator: function(name, argument) {
+        if (service.externalFactoryFunction) {
+          var validator = service.getValidatorFromExternalFactory(name, argument);
+          if (validator) {
+            return validator;
+          }
+        }
+        if (!service.validatorFactories[name]) {
+          throw ("Invalid validator name: " + name);
+        }
+        return service.validatorFactories[name].validatorFactory(argument);
+      },
+
+      /**
+       * @ngdoc service
+       * @name getMessage
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Returns the error message related to the validator 
+       * @param {string} name the name of the validator
+       * @param {object} argument an argument to pass to the message function
+       * @returns {string} the error message related to the validator
+       */
+      getMessage: function(name, argument) {
+        if (service.externalFactoryFunction) {
+          var message = service.getMessageFromExternalFactory(name, argument);
+          if (message) {
+            return message;
+          }
+        }
+        return service.validatorFactories[name].messageFunction(argument);
+      },
+
+      /**
+       * @ngdoc service
+       * @name isInvalid
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Returns true if the cell (identified by rowEntity, colDef) is invalid 
+       * @param {object} rowEntity the row entity of the cell
+       * @param {object} colDef the colDef of the cell
+       * @returns {boolean} true if the cell is invalid
+       */
+      isInvalid: function (rowEntity, colDef) {
+        return rowEntity['$$invalid'+colDef.name];
+      },
+
+      /**
+       * @ngdoc service
+       * @name setInvalid
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Makes the cell invalid by adding the proper field to the entity
+       * @param {object} rowEntity the row entity of the cell
+       * @param {object} colDef the colDef of the cell
+       */
+      setInvalid: function (rowEntity, colDef) {
+        rowEntity['$$invalid'+colDef.name] = true;
+      },
+    
+      /**
+       * @ngdoc service
+       * @name setValid
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Makes the cell valid by removing the proper error field from the entity
+       * @param {object} rowEntity the row entity of the cell
+       * @param {object} colDef the colDef of the cell
+       */
+      setValid: function (rowEntity, colDef) {
+        delete rowEntity['$$invalid'+colDef.name];
+      },
+
+      /**
+       * @ngdoc service
+       * @name setError
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Adds the proper error to the entity errors field
+       * @param {object} rowEntity the row entity of the cell
+       * @param {object} colDef the colDef of the cell
+       * @param {string} validatorName the name of the validator that is failing
+       */
+      setError: function(rowEntity, colDef, validatorName) {
+        if (!rowEntity['$$errors'+colDef.name]) {
+          rowEntity['$$errors'+colDef.name] = {};
+        }
+        rowEntity['$$errors'+colDef.name][validatorName] = true;
+      },
+
+      /**
+       * @ngdoc service
+       * @name clearError
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Removes the proper error from the entity errors field
+       * @param {object} rowEntity the row entity of the cell
+       * @param {object} colDef the colDef of the cell
+       * @param {string} validatorName the name of the validator that is failing
+       */
+      clearError: function(rowEntity, colDef, validatorName) {
+        if (!rowEntity['$$errors'+colDef.name]) {
+          return;
+        }
+        if (validatorName in rowEntity['$$errors'+colDef.name]) {
+            delete rowEntity['$$errors'+colDef.name][validatorName];
+        }
+      },
+      
+      /**
+       * @ngdoc function
+       * @name getErrorMessages
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description returns an array of i18n-ed error messages.
+       * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+       * @param {object} colDef the column whose errors we are looking for
+       * @returns {array} An array of strings containing all the error messages for the cell
+       */
+      getErrorMessages: function(rowEntity, colDef) {
+        var errors = [];
+
+        if (!rowEntity['$$errors'+colDef.name] || Object.keys(rowEntity['$$errors'+colDef.name]).length === 0) {
+          return errors;
+        }
+
+        Object.keys(rowEntity['$$errors'+colDef.name]).sort().forEach(function(validatorName) {
+          errors.push(service.getMessage(validatorName, colDef.validators[validatorName]));
+        });
+        
+        return errors;
+      },
+      
+      /**
+       * @ngdoc function
+       * @name getFormattedErrors
+       * @methodOf  ui.grid.validate.service:uiGridValidateService
+       * @description returns the error i18n-ed and formatted in html to be shown inside the page.
+       * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+       * @param {object} colDef the column whose errors we are looking for
+       * @returns {object} An object that can be used in a template (like a cellTemplate) to display the
+       * message inside the page (i.e. inside a div)
+       */
+      getFormattedErrors: function(rowEntity, colDef) {
+
+        var msgString = "";
+
+        var errors = service.getErrorMessages(rowEntity, colDef);
+        
+        if (!errors.length) {
+          return;
+        }
+        
+        errors.forEach(function(errorMsg) {
+          msgString += errorMsg + "<br/>";
+        });
+
+        return $sce.trustAsHtml('<p><b>' + i18nService.getSafeText('validate.error') + '</b></p>' + msgString );
+      },
+
+      /**
+       * @ngdoc function
+       * @name getTitleFormattedErrors
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description returns the error i18n-ed and formatted in javaScript to be shown inside an html 
+       * title attribute.
+       * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+       * @param {object} colDef the column whose errors we are looking for
+       * @returns {object} An object that can be used in a template (like a cellTemplate) to display the
+       * message inside an html title attribute
+       */
+      getTitleFormattedErrors: function(rowEntity, colDef) {
+
+        var newLine = "\n";
+
+        var msgString = "";
+        
+        var errors = service.getErrorMessages(rowEntity, colDef);
+        
+        if (!errors.length) {
+          return;
+        }
+        
+        errors.forEach(function(errorMsg) {
+          msgString += errorMsg + newLine;
+        });
+
+        return $sce.trustAsHtml(i18nService.getSafeText('validate.error') + newLine + msgString);
+      },
+
+      /**
+       * @ngdoc function
+       * @name getTitleFormattedErrors
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description Executes all validators on a cell (identified by row entity and column definition) and sets or clears errors
+       * @param {object} rowEntity the row entity of the cell we want to run the validators on
+       * @param {object} colDef the column definition of the cell we want to run the validators on
+       * @param {object} newValue the value the user just entered
+       * @param {object} oldValue the value the field had before
+       */
+      runValidators: function(rowEntity, colDef, newValue, oldValue, grid) {
+        
+        if (newValue === oldValue) {
+          // If the value has not changed we perform no validation
+          return;
+        }
+        
+        if (typeof(colDef.name) === 'undefined' || !colDef.name) {
+          throw new Error('colDef.name is required to perform validation');
+        }
+        
+        service.setValid(rowEntity, colDef);
+        
+        var validateClosureFactory = function(rowEntity, colDef, validatorName) {
+          return function(value) {
+            if (!value) {
+              service.setInvalid(rowEntity, colDef);
+              service.setError(rowEntity, colDef, validatorName);
+              if (grid) {
+                grid.api.validate.raise.validationFailed(rowEntity, colDef, newValue, oldValue);
+              }
+            }
+          };
+        };
+
+        for (var validatorName in colDef.validators) {
+          service.clearError(rowEntity, colDef, validatorName);
+          var msg;
+          var validatorFunction = service.getValidator(validatorName, colDef.validators[validatorName]);
+          // We pass the arguments as oldValue, newValue so they are in the same order 
+          // as ng-model validators (modelValue, viewValue)
+          $q.when(validatorFunction(oldValue, newValue, rowEntity, colDef))
+            .then(validateClosureFactory(rowEntity, colDef, validatorName)
+          );
+        }
+      },
+
+      /**
+       * @ngdoc function
+       * @name createDefaultValidators
+       * @methodOf ui.grid.validate.service:uiGridValidateService
+       * @description adds the basic validators to the list of service validators
+       */
+      createDefaultValidators: function() {
+        service.setValidator('minLength',
+                             function (argument) {
+                               return function (oldValue, newValue, rowEntity, colDef) {
+                                 if (newValue === undefined || newValue === null || newValue === '') {
+                                   return true;
+                                 }
+                                 return newValue.length >= argument;
+                               };
+                             },
+                               function(argument) {
+                                 return i18nService.getSafeText('validate.minLength').replace('THRESHOLD', argument);
+                               });
+        
+        service.setValidator('maxLength',
+                             function (argument) {
+                               return function (oldValue, newValue, rowEntity, colDef) {
+                                 if (newValue === undefined || newValue === null || newValue === '') {
+                                   return true;
+                                 }
+                                 return newValue.length <= argument;
+                               };
+                             },
+                             function(threshold) {
+                               return i18nService.getSafeText('validate.maxLength').replace('THRESHOLD', threshold);
+                             });
+        
+        service.setValidator('required',
+                             function (argument) {
+                               return function (oldValue, newValue, rowEntity, colDef) {
+                                 if (argument) {
+                                   return !(newValue === undefined || newValue === null || newValue === '');
+                                 }
+                                 return true;
+                               };
+                             },
+                             function(argument) {
+                               return i18nService.getSafeText('validate.required');
+                             });
+      },
+
+      initializeGrid: function (scope, grid) {
+        grid.validate = {
+        
+          isInvalid: service.isInvalid,
+
+          getFormattedErrors: service.getFormattedErrors,
+         
+          getTitleFormattedErrors: service.getTitleFormattedErrors,
+
+          runValidators: service.runValidators
+        };
+        
+        /**
+         *  @ngdoc object
+         *  @name ui.grid.validate.api:PublicApi
+         *
+         *  @description Public Api for validation feature
+         */
+        var publicApi = {
+          events: {
+            validate: {
+              /**
+               * @ngdoc event
+               * @name validationFailed
+               * @eventOf  ui.grid.validate.api:PublicApi
+               * @description raised when one or more failure happened during validation 
+               * <pre>
+               *      gridApi.validate.on.validationFailed(scope, function(rowEntity, colDef, newValue, oldValue){...})
+               * </pre>
+               * @param {object} rowEntity the options.data element whose validation failed
+               * @param {object} colDef the column whose validation failed
+               * @param {object} newValue new value
+               * @param {object} oldValue old value
+               */
+              validationFailed: function (rowEntity, colDef, newValue, oldValue) {
+              }
+            }
+          },
+          methods: {
+            validate: {
+              /**
+               * @ngdoc function
+               * @name isInvalid
+               * @methodOf  ui.grid.validate.api:PublicApi
+               * @description checks if a cell (identified by rowEntity, colDef) is invalid
+               * @param {object} rowEntity gridOptions.data[] array instance we want to check
+               * @param {object} colDef the column whose errors we want to check
+               * @returns {boolean} true if the cell value is not valid
+               */
+              isInvalid: function(rowEntity, colDef) {
+                return grid.validate.isInvalid(rowEntity, colDef);
+              },
+              /**
+               * @ngdoc function
+               * @name getErrorMessages
+               * @methodOf  ui.grid.validate.api:PublicApi
+               * @description returns an array of i18n-ed error messages.
+               * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+               * @param {object} colDef the column whose errors we are looking for
+               * @returns {array} An array of strings containing all the error messages for the cell
+               */
+              getErrorMessages: function (rowEntity, colDef) {
+                return grid.validate.getErrorMessages(rowEntity, colDef);
+              },
+              /**
+               * @ngdoc function
+               * @name getFormattedErrors
+               * @methodOf  ui.grid.validate.api:PublicApi
+               * @description returns the error i18n-ed and formatted in html to be shown inside the page.
+               * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+               * @param {object} colDef the column whose errors we are looking for
+               * @returns {object} An object that can be used in a template (like a cellTemplate) to display the
+               * message inside the page (i.e. inside a div)
+               */
+              getFormattedErrors: function (rowEntity, colDef) {
+                return grid.validate.getFormattedErrors(rowEntity, colDef);
+              },
+              /**
+               * @ngdoc function
+               * @name getTitleFormattedErrors
+               * @methodOf  ui.grid.validate.api:PublicApi
+               * @description returns the error i18n-ed and formatted in javaScript to be shown inside an html 
+               * title attribute.
+               * @param {object} rowEntity gridOptions.data[] array instance whose errors we are looking for
+               * @param {object} colDef the column whose errors we are looking for
+               * @returns {object} An object that can be used in a template (like a cellTemplate) to display the
+               * message inside an html title attribute
+               */
+              getTitleFormattedErrors: function (rowEntity, colDef) {
+                return grid.validate.getTitleFormattedErrors(rowEntity, colDef);
+              }
+            } 
+          }
+        };
+        
+        grid.api.registerEventsFromObject(publicApi.events);
+        grid.api.registerMethodsFromObject(publicApi.methods);
+
+        if (grid.edit) {
+          grid.api.edit.on.afterCellEdit(scope, function(rowEntity, colDef, newValue, oldValue) {
+            grid.validate.runValidators(rowEntity, colDef, newValue, oldValue, grid);
+          });
+        }
+
+        service.createDefaultValidators();
+      }
+      
+    };
+  
+    return service;
+  }]);
+  
+  
+  /**
+   *  @ngdoc directive
+   *  @name ui.grid.validate.directive:uiGridValidate
+   *  @element div
+   *  @restrict A
+   *  @description Adds validating features to the ui-grid directive.
+   *  @example
+   <example module="app">
+   <file name="app.js">
+   var app = angular.module('app', ['ui.grid', 'ui.grid.edit', 'ui.grid.validate']);
+
+   app.controller('MainCtrl', ['$scope', function ($scope) {
+      $scope.data = [
+        { name: 'Bob', title: 'CEO' },
+            { name: 'Frank', title: 'Lowly Developer' }
+      ];
+
+      $scope.columnDefs = [
+        {name: 'name', enableCellEdit: true, validators: {minLength: 3, maxLength: 9}, cellTemplate: 'ui-grid/cellTitleValidator'},
+        {name: 'title', enableCellEdit: true, validators: {required: true}, cellTemplate: 'ui-grid/cellTitleValidator'}
+      ];
+    }]);
+   </file>
+   <file name="index.html">
+   <div ng-controller="MainCtrl">
+   <div ui-grid="{ data: data, columnDefs: columnDefs }" ui-grid-edit ui-grid-validate></div>
+   </div>
+   </file>
+   </example>
+   */
+
+  module.directive('uiGridValidate', ['gridUtil', 'uiGridValidateService', function (gridUtil, uiGridValidateService) {
+    return {
+      priority: 0,
+      replace: true,
+      require: '^uiGrid',
+      scope: false,
+      compile: function () {
+        return {
+          pre: function ($scope, $elm, $attrs, uiGridCtrl) {
+            uiGridValidateService.initializeGrid($scope, uiGridCtrl.grid);
+          },
+          post: function ($scope, $elm, $attrs, uiGridCtrl) {
+          }
+        };
+      }
+    };
+  }]);
+})();
 angular.module('ui.grid').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -26604,12 +27937,12 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/uiGridHeaderCell',
-    "<div role=\"columnheader\" ng-class=\"{ 'sortable': sortable }\" ui-grid-one-bind-aria-labelledby-grid=\"col.uid + '-header-text ' + col.uid + '-sortdir-text'\" aria-sort=\"{{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}\"><div role=\"button\" tabindex=\"0\" class=\"ui-grid-cell-contents ui-grid-header-cell-primary-focus\" col-index=\"renderIndex\" title=\"TOOLTIP\"><span class=\"ui-grid-header-cell-label\" ui-grid-one-bind-id-grid=\"col.uid + '-header-text'\">{{ col.displayName CUSTOM_FILTERS }}</span> <span ui-grid-one-bind-id-grid=\"col.uid + '-sortdir-text'\" ui-grid-visible=\"col.sort.direction\" aria-label=\"{{getSortDirectionAriaLabel()}}\"><i ng-class=\"{ 'ui-grid-icon-up-dir': col.sort.direction == asc, 'ui-grid-icon-down-dir': col.sort.direction == desc, 'ui-grid-icon-blank': !col.sort.direction }\" title=\"{{col.sort.priority ? i18n.headerCell.priority + ' ' + col.sort.priority : null}}\" aria-hidden=\"true\"></i> <sub class=\"ui-grid-sort-priority-number\">{{col.sort.priority}}</sub></span></div><div role=\"button\" tabindex=\"0\" ui-grid-one-bind-id-grid=\"col.uid + '-menu-button'\" class=\"ui-grid-column-menu-button\" ng-if=\"grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false\" ng-click=\"toggleMenu($event)\" ng-class=\"{'ui-grid-column-menu-button-last-col': isLastCol}\" ui-grid-one-bind-aria-label=\"i18n.headerCell.aria.columnMenuButtonLabel\" aria-haspopup=\"true\"><i class=\"ui-grid-icon-angle-down\" aria-hidden=\"true\">&nbsp;</i></div><div ui-grid-filter></div></div>"
+    "<div role=\"columnheader\" ng-class=\"{ 'sortable': sortable }\" ui-grid-one-bind-aria-labelledby-grid=\"col.uid + '-header-text ' + col.uid + '-sortdir-text'\" aria-sort=\"{{col.sort.direction == asc ? 'ascending' : ( col.sort.direction == desc ? 'descending' : (!col.sort.direction ? 'none' : 'other'))}}\"><div role=\"button\" tabindex=\"0\" class=\"ui-grid-cell-contents ui-grid-header-cell-primary-focus\" col-index=\"renderIndex\" title=\"TOOLTIP\"><span class=\"ui-grid-header-cell-label\" ui-grid-one-bind-id-grid=\"col.uid + '-header-text'\">{{ col.displayName CUSTOM_FILTERS }}</span> <span ui-grid-one-bind-id-grid=\"col.uid + '-sortdir-text'\" ui-grid-visible=\"col.sort.direction\" aria-label=\"{{getSortDirectionAriaLabel()}}\"><i ng-class=\"{ 'ui-grid-icon-up-dir': col.sort.direction == asc, 'ui-grid-icon-down-dir': col.sort.direction == desc, 'ui-grid-icon-blank': !col.sort.direction }\" title=\"{{isSortPriorityVisible() ? i18n.headerCell.priority + ' ' + ( col.sort.priority + 1 )  : null}}\" aria-hidden=\"true\"></i> <sub ui-grid-visible=\"isSortPriorityVisible()\" class=\"ui-grid-sort-priority-number\">{{col.sort.priority + 1}}</sub></span></div><div role=\"button\" tabindex=\"0\" ui-grid-one-bind-id-grid=\"col.uid + '-menu-button'\" class=\"ui-grid-column-menu-button\" ng-if=\"grid.options.enableColumnMenus && !col.isRowHeader  && col.colDef.enableColumnMenu !== false\" ng-click=\"toggleMenu($event)\" ng-class=\"{'ui-grid-column-menu-button-last-col': isLastCol}\" ui-grid-one-bind-aria-label=\"i18n.headerCell.aria.columnMenuButtonLabel\" aria-haspopup=\"true\"><i class=\"ui-grid-icon-angle-down\" aria-hidden=\"true\">&nbsp;</i></div><div ui-grid-filter></div></div>"
   );
 
 
   $templateCache.put('ui-grid/uiGridMenu',
-    "<div class=\"ui-grid-menu\" ng-if=\"shown\"><div class=\"ui-grid-menu-mid\" ng-show=\"shownMid\"><div class=\"ui-grid-menu-inner\"><button type=\"button\" ng-focus=\"focus=true\" ng-blur=\"focus=false\" class=\"ui-grid-menu-close-button\" ng-class=\"{'ui-grid-sr-only': (!focus)}\"><i class=\"ui-grid-icon-cancel\" ui-grid-one-bind-aria-label=\"i18n.close\"></i></button><ul role=\"menu\" class=\"ui-grid-menu-items\"><li ng-repeat=\"item in menuItems\" role=\"menuitem\" ui-grid-menu-item ui-grid-one-bind-id=\"'menuitem-'+$index\" action=\"item.action\" name=\"item.title\" active=\"item.active\" icon=\"item.icon\" shown=\"item.shown\" context=\"item.context\" template-url=\"item.templateUrl\" leave-open=\"item.leaveOpen\" screen-reader-only=\"item.screenReaderOnly\"></li></ul></div></div></div>"
+    "<div class=\"ui-grid-menu\" ng-if=\"shown\"><style ui-grid-style>{{dynamicStyles}}</style><div class=\"ui-grid-menu-mid\" ng-show=\"shownMid\"><div class=\"ui-grid-menu-inner\"><ul role=\"menu\" class=\"ui-grid-menu-items\"><li ng-repeat=\"item in menuItems\" role=\"menuitem\" ui-grid-menu-item ui-grid-one-bind-id=\"'menuitem-'+$index\" action=\"item.action\" name=\"item.title\" active=\"item.active\" icon=\"item.icon\" shown=\"item.shown\" context=\"item.context\" template-url=\"item.templateUrl\" leave-open=\"item.leaveOpen\" screen-reader-only=\"item.screenReaderOnly\"></li></ul></div></div></div>"
   );
 
 
@@ -26679,7 +28012,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/pagination',
-    "<div role=\"contentinfo\" class=\"ui-grid-pager-panel\" ui-grid-pager ng-show=\"grid.options.enablePaginationControls\"><div role=\"navigation\" class=\"ui-grid-pager-container\"><div role=\"menubar\" class=\"ui-grid-pager-control\"><button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-first\" ui-grid-one-bind-title=\"aria.pageToFirst\" ui-grid-one-bind-aria-label=\"aria.pageToFirst\" ng-click=\"pageFirstPageClick()\" ng-disabled=\"cantPageBackward()\"><div class=\"first-triangle\"><div class=\"first-bar\"></div></div></button> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-previous\" ui-grid-one-bind-title=\"aria.pageBack\" ui-grid-one-bind-aria-label=\"aria.pageBack\" ng-click=\"pagePreviousPageClick()\" ng-disabled=\"cantPageBackward()\"><div class=\"first-triangle prev-triangle\"></div></button> <input type=\"number\" ui-grid-one-bind-title=\"aria.pageSelected\" ui-grid-one-bind-aria-label=\"aria.pageSelected\" class=\"ui-grid-pager-control-input\" ng-model=\"grid.options.paginationCurrentPage\" min=\"1\" max=\"{{ paginationApi.getTotalPages() }}\" required> <span class=\"ui-grid-pager-max-pages-number\" ng-show=\"paginationApi.getTotalPages() > 0\"><abbr ui-grid-one-bind-title=\"paginationOf\">/</abbr> {{ paginationApi.getTotalPages() }}</span> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-next\" ui-grid-one-bind-title=\"aria.pageForward\" ui-grid-one-bind-aria-label=\"aria.pageForward\" ng-click=\"pageNextPageClick()\" ng-disabled=\"cantPageForward()\"><div class=\"last-triangle next-triangle\"></div></button> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-last\" ui-grid-one-bind-title=\"aria.pageToLast\" ui-grid-one-bind-aria-label=\"aria.pageToLast\" ng-click=\"pageLastPageClick()\" ng-disabled=\"cantPageToLast()\"><div class=\"last-triangle\"><div class=\"last-bar\"></div></div></button></div><div class=\"ui-grid-pager-row-count-picker\" ng-if=\"grid.options.paginationPageSizes.length > 1\"><select ui-grid-one-bind-aria-labelledby-grid=\"'items-per-page-label'\" ng-model=\"grid.options.paginationPageSize\" ng-options=\"o as o for o in grid.options.paginationPageSizes\"></select><span ui-grid-one-bind-id-grid=\"'items-per-page-label'\" class=\"ui-grid-pager-row-count-label\">&nbsp;{{sizesLabel}}</span></div><span ng-if=\"grid.options.paginationPageSizes.length <= 1\" class=\"ui-grid-pager-row-count-label\">{{grid.options.paginationPageSize}}&nbsp;{{sizesLabel}}</span></div><div class=\"ui-grid-pager-count-container\"><div class=\"ui-grid-pager-count\"><span ng-show=\"grid.options.totalItems > 0\">{{showingLow}} <abbr ui-grid-one-bind-title=\"paginationThrough\">-</abbr> {{showingHigh}} {{paginationOf}} {{grid.options.totalItems}} {{totalItemsLabel}}</span></div></div></div>"
+    "<div role=\"contentinfo\" class=\"ui-grid-pager-panel\" ui-grid-pager ng-show=\"grid.options.enablePaginationControls\"><div role=\"navigation\" class=\"ui-grid-pager-container\"><div role=\"menubar\" class=\"ui-grid-pager-control\"><button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-first\" ui-grid-one-bind-title=\"aria.pageToFirst\" ui-grid-one-bind-aria-label=\"aria.pageToFirst\" ng-click=\"pageFirstPageClick()\" ng-disabled=\"cantPageBackward()\"><div ng-class=\"grid.isRTL() ? 'last-triangle' : 'first-triangle'\"><div ng-class=\"grid.isRTL() ? 'last-bar-rtl' : 'first-bar'\"></div></div></button> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-previous\" ui-grid-one-bind-title=\"aria.pageBack\" ui-grid-one-bind-aria-label=\"aria.pageBack\" ng-click=\"pagePreviousPageClick()\" ng-disabled=\"cantPageBackward()\"><div ng-class=\"grid.isRTL() ? 'last-triangle prev-triangle' : 'first-triangle prev-triangle'\"></div></button> <input type=\"number\" ui-grid-one-bind-title=\"aria.pageSelected\" ui-grid-one-bind-aria-label=\"aria.pageSelected\" class=\"ui-grid-pager-control-input\" ng-model=\"grid.options.paginationCurrentPage\" min=\"1\" max=\"{{ paginationApi.getTotalPages() }}\" required> <span class=\"ui-grid-pager-max-pages-number\" ng-show=\"paginationApi.getTotalPages() > 0\"><abbr ui-grid-one-bind-title=\"paginationOf\">/</abbr> {{ paginationApi.getTotalPages() }}</span> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-next\" ui-grid-one-bind-title=\"aria.pageForward\" ui-grid-one-bind-aria-label=\"aria.pageForward\" ng-click=\"pageNextPageClick()\" ng-disabled=\"cantPageForward()\"><div ng-class=\"grid.isRTL() ? 'first-triangle next-triangle' : 'last-triangle next-triangle'\"></div></button> <button type=\"button\" role=\"menuitem\" class=\"ui-grid-pager-last\" ui-grid-one-bind-title=\"aria.pageToLast\" ui-grid-one-bind-aria-label=\"aria.pageToLast\" ng-click=\"pageLastPageClick()\" ng-disabled=\"cantPageToLast()\"><div ng-class=\"grid.isRTL() ? 'first-triangle' : 'last-triangle'\"><div ng-class=\"grid.isRTL() ? 'first-bar-rtl' : 'last-bar'\"></div></div></button></div><div class=\"ui-grid-pager-row-count-picker\" ng-if=\"grid.options.paginationPageSizes.length > 1\"><select ui-grid-one-bind-aria-labelledby-grid=\"'items-per-page-label'\" ng-model=\"grid.options.paginationPageSize\" ng-options=\"o as o for o in grid.options.paginationPageSizes\"></select><span ui-grid-one-bind-id-grid=\"'items-per-page-label'\" class=\"ui-grid-pager-row-count-label\">&nbsp;{{sizesLabel}}</span></div><span ng-if=\"grid.options.paginationPageSizes.length <= 1\" class=\"ui-grid-pager-row-count-label\">{{grid.options.paginationPageSize}}&nbsp;{{sizesLabel}}</span></div><div class=\"ui-grid-pager-count-container\"><div class=\"ui-grid-pager-count\"><span ng-show=\"grid.options.totalItems > 0\">{{showingLow}} <abbr ui-grid-one-bind-title=\"paginationThrough\">-</abbr> {{showingHigh}} {{paginationOf}} {{grid.options.totalItems}} {{totalItemsLabel}}</span></div></div></div>"
   );
 
 
@@ -26719,7 +28052,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/treeBaseHeaderCell',
-    "<div><div class=\"ui-grid-cell-contents\" col-index=\"renderIndex\"><ui-grid-tree-base-expand-all-buttons></ui-grid-tree-base-expand-all-buttons></div></div>"
+    "<div><div class=\"ui-grid-cell-contents\" col-index=\"renderIndex\"><ui-grid-tree-base-expand-all-buttons ng-if=\"grid.options.enableExpandAll\"></ui-grid-tree-base-expand-all-buttons></div></div>"
   );
 
 
@@ -26730,6 +28063,16 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('ui-grid/treeBaseRowHeaderButtons',
     "<div class=\"ui-grid-tree-base-row-header-buttons\" ng-class=\"{'ui-grid-tree-base-header': row.treeLevel > -1 }\" ng-click=\"treeButtonClick(row, $event)\"><i ng-class=\"{'ui-grid-icon-minus-squared': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'expanded', 'ui-grid-icon-plus-squared': ( ( grid.options.showTreeExpandNoChildren && row.treeLevel > -1 ) || ( row.treeNode.children && row.treeNode.children.length > 0 ) ) && row.treeNode.state === 'collapsed'}\" ng-style=\"{'padding-left': grid.options.treeIndent * row.treeLevel + 'px'}\"></i> &nbsp;</div>"
+  );
+
+
+  $templateCache.put('ui-grid/cellTitleValidator',
+    "<div class=\"ui-grid-cell-contents\" ng-class=\"{invalid:grid.validate.isInvalid(row.entity,col.colDef)}\" title=\"{{grid.validate.getTitleFormattedErrors(row.entity,col.colDef)}}\">{{COL_FIELD CUSTOM_FILTERS}}</div>"
+  );
+
+
+  $templateCache.put('ui-grid/cellTooltipValidator',
+    "<div class=\"ui-grid-cell-contents\" ng-class=\"{invalid:grid.validate.isInvalid(row.entity,col.colDef)}\" tooltip-html-unsafe=\"{{grid.validate.getFormattedErrors(row.entity,col.colDef)}}\" tooltip-enable=\"grid.validate.isInvalid(row.entity,col.colDef)\" tooltip-append-to-body=\"true\" tooltip-placement=\"top\" title=\"TOOLTIP\">{{COL_FIELD CUSTOM_FILTERS}}</div>"
   );
 
 }]);

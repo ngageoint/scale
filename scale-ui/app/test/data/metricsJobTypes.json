@@ -19,6 +19,11 @@
             "description": "Overall counts based on job status."
         },
         {
+            "name": "errors",
+            "title": "Errors",
+            "description": "Error categories for job types."
+        },
+        {
             "name": "queue_time",
             "title": "Queue Time",
             "description": "When jobs were in the queue."
@@ -56,6 +61,30 @@
             "description": "Number of successfully completed jobs.",
             "units": "count",
             "group": "overview",
+            "aggregate": "sum"
+        },
+        {
+            "name": "error_system_count",
+            "title": "Error System Count",
+            "description": "Number of system errors.",
+            "units": "count",
+            "group": "errors",
+            "aggregate": "sum"
+        },
+        {
+            "name": "error_data_count",
+            "title": "Error Data Count",
+            "description": "Number of data errors.",
+            "units": "count",
+            "group": "errors",
+            "aggregate": "sum"
+        },
+        {
+            "name": "error_algorithm_count",
+            "title": "Error Algorithm Count",
+            "description": "Number of algorithm errors.",
+            "units": "count",
+            "group": "errors",
             "aggregate": "sum"
         },
         {

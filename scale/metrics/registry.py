@@ -191,11 +191,17 @@ class MetricsPlotValue(object):
     :type date: datetime.date
     :keyword value: The actual plot value that was recorded.
     :type value: int
+    :keyword count: The number of records contributing to this plot value.
+    :type count: int
+    :keyword total: The total values of all records contributing to this plot value.
+    :type total: int
     """
-    def __init__(self, choice_id, date, value):
+    def __init__(self, choice_id, date, value=0, count=0, total=0):
         self.id = choice_id
         self.date = date
         self.value = value
+        self.count = count
+        self.total = total
 
 
 class MetricsPlotData(object):
@@ -242,7 +248,7 @@ class MetricsPlotData(object):
         results = {column.name: MetricsPlotData(column=column, values=[]) for column in columns}
         for entry in query_set.iterator():
             for column in columns:
-                if not column.name in results:
+                if column.name not in results:
                     results[column.name] = MetricsPlotData(column=column, values=[])
                 MetricsPlotData._add_plot_value(results[column.name], entry, date_field, choice_field, choice_ids)
         return results.values()
@@ -285,9 +291,23 @@ class MetricsPlotData(object):
 
         # Aggregate values across entries when no choice filters are used
         if not plot_data.values or plot_data.values[-1].date != entry_date:
-            plot_data.values.append(MetricsPlotValue(choice_id=None, date=entry_date, value=0))
+            plot_data.values.append(MetricsPlotValue(choice_id=None, date=entry_date))
         plot_value = plot_data.values[-1]
-        plot_value.value += entry_val
+        plot_value.count += 1
+        plot_value.total += entry_val
+
+        # Update the running result based on the aggregate type
+        if plot_data.column.aggregate == 'sum':
+            plot_value.value = plot_value.total
+        elif plot_data.column.aggregate == 'min':
+            plot_value.value = min(plot_value.value or sys.maxint, entry_val)
+        elif plot_data.column.aggregate == 'max':
+            plot_value.value = max(plot_value.value or 0, entry_val)
+        elif plot_data.column.aggregate == 'avg':
+            plot_value.value = plot_value.total / plot_value.count
+        else:
+            logger.warning('Unknown metrics aggregate type: %s', plot_data.column.aggregate)
+
         return plot_value
 
 
@@ -330,7 +350,7 @@ class MetricsTypeProvider(object):
         :param choice_ids: A list of related model identifiers to query.
         :type choice_ids: list[string]
         :param columns: A list of metric columns to include from the metric type.
-        :type columns: list[string]
+        :type columns: {:class:`metrics.registry.MetricsTypeColumn`}
         :returns: A series of plot values that match the query.
         :rtype: list[:class:`metrics.registry.MetricsPlotData`]
         """
