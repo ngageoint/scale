@@ -1,3 +1,5 @@
+[![Join the chat at https://gitter.im/ngageoint/scale](https://badges.gitter.im/ngageoint/scale.svg)](https://gitter.im/ngageoint/scale?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Master [![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=master)](https://travis-ci.org/ngageoint/scale)
 
 Develop [![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=develop)](https://travis-ci.org/ngageoint/scale)
