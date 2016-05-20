@@ -3,7 +3,7 @@ version: "1.0.0"
 title: Visual hash
 description: Generate a Visual Hash (vash) of the data.
 author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
-docker_image: "geoint/vash.0"
+docker_image: "geoint/vash"
 priority: 250
 timeout: 300
 max_tries: 1

@@ -8,7 +8,7 @@ import trigger.models
 import trigger.handler as trigger_handler
 
 nfs_server="{{ nfs_server }}"
-registry="{{ docker_registry }}"
+registry="{{ example_docker_registry }}"
 docker_tag="{{ example_image_tag }}"
 
 # Workspaces
@@ -53,7 +53,7 @@ if not job.models.JobType.objects.filter(name="landsat-parse").exists():
                                                             {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
                                                         "version": "1.0", "command": "./parse_landsat.sh"}),
                                                     description="Parse landsat multi-tif files in tar.gz archives",
-                                                    docker_image="%slandsat-parse_1.0:%s" % (registry, docker_tag),
+                                                    docker_image="%sgeoint/landsat-parse:%s" % (registry, docker_tag),
                                                     priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
     jt.title = "Landsat Parse"
     jt.save()
@@ -67,7 +67,7 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
                 {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "msi"}],
             "version": "1.0", "command": "python landsat_ndwi.py"}),
         description="Perform NDWI on landsat 8 data.",
-        docker_image="%slandsat-ndwi_1.0:%s" % (registry, docker_tag),
+        docker_image="%sgeoint/landsat-ndwi:%s" % (registry, docker_tag),
         priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat NDWI"
     jt.save()
@@ -81,7 +81,7 @@ if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
                                                             {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
                                                         "version": "1.0", "command": "./landsat_tiles.sh"}),
                                                     description="Generate map tiles for a landsat 8 product.",
-                                                    docker_image="%slandsat-tiles_1.0:%s" % (registry, docker_tag),
+                                                    docker_image="%sgeoint/landsat-tiles:%s" % (registry, docker_tag),
                                                     priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat Tiles"
     jt.save()
