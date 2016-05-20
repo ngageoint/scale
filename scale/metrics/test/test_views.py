@@ -62,8 +62,12 @@ class TestMetricPlotView(TestCase):
         metrics_test_utils.create_job_type(job_type=self.job_type1, completed_count=8, failed_count=2, total_count=10)
 
         self.job_type2 = job_test_utils.create_job_type()
-        metrics_test_utils.create_job_type(job_type=self.job_type2, job_time_sum=110, job_time_min=10, job_time_max=100,
-                                           job_time_avg=55)
+        metrics_test_utils.create_job_type(job_type=self.job_type2, job_time_sum=220, job_time_min=20, job_time_max=200,
+                                           job_time_avg=110)
+
+        self.job_type3 = job_test_utils.create_job_type()
+        metrics_test_utils.create_job_type(job_type=self.job_type3, job_time_sum=1100, job_time_min=100,
+                                           job_time_max=1000, job_time_avg=550)
 
     def test_successful(self):
         """Tests successfully calling the metric plot view."""
@@ -125,3 +129,51 @@ class TestMetricPlotView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 4)
+
+    def test_aggregate_sum(self):
+        """Tests successfully calling the metric plot view using a sum aggregate."""
+
+        url = '/metrics/job-types/plot-data/?column=job_time_sum'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        self.assertEqual(result['results'][0]['values'][0]['value'], 1320)
+
+    def test_aggregate_min(self):
+        """Tests successfully calling the metric plot view using a minimum aggregate."""
+
+        url = '/metrics/job-types/plot-data/?column=job_time_min'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        self.assertEqual(result['results'][0]['values'][0]['value'], 20)
+
+    def test_aggregate_max(self):
+        """Tests successfully calling the metric plot view using a maximum aggregate."""
+
+        url = '/metrics/job-types/plot-data/?column=job_time_max'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        self.assertEqual(result['results'][0]['values'][0]['value'], 1000)
+
+    def test_aggregate_avg(self):
+        """Tests successfully calling the metric plot view using an average aggregate."""
+
+        url = '/metrics/job-types/plot-data/?column=job_time_avg'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        self.assertEqual(result['results'][0]['values'][0]['value'], 330)
