@@ -168,6 +168,7 @@
             var numDays = moment.utc(obj.ended[0]).diff(moment.utc(obj.started[0]), 'd') + 1;
 
             _.forEach(obj.column, function (metric) {
+                var maxRandom = metric === 'total_count' ? 1000 : 50;
                 var returnResult = {
                     column: { title: _.startCase(metric) },
                     min_x: moment.utc(obj.started[0]).format('YYYY-MM-DD'),
@@ -182,7 +183,7 @@
                         _.forEach(obj.choice_id, function (id) {
                             random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                             if (random % 2 == 0) {
-                                var value = Math.floor(Math.random() * (100 - 5 + 1)) + 5;
+                                var value = Math.floor(Math.random() * (maxRandom - 5 + 1)) + 5;
                                 returnResult.values.push({
                                     date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
                                     value: value,
@@ -195,7 +196,7 @@
                         if (random % 2 == 0) {
                             returnResult.values.push({
                                 date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                                value: Math.floor(Math.random() * (maxRandom - 5 + 1)) + 5
                             });
                         }
                     }

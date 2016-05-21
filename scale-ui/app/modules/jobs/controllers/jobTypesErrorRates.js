@@ -22,7 +22,7 @@
             }
         });
 
-        var started = moment.utc().subtract(3, 'd').toISOString(),
+        var started = moment.utc().subtract(30, 'd').toISOString(),
             ended = moment.utc().toISOString(),
             jobTypes = [],
             numDays = moment.utc(ended).diff(moment.utc(started), 'd'),
@@ -45,6 +45,27 @@
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType"><option ng-if="grid.appScope.vm.jobTypeValues[$index]" ng-selected="{{ grid.appScope.vm.jobTypeValues[$index].name == grid.appScope.vm.selectedJobType }}" value="{{ grid.appScope.vm.jobTypeValues[$index].name }}" ng-repeat="jobType in grid.appScope.vm.jobTypeValues track by $index">{{ grid.appScope.vm.jobTypeValues[$index].title }} {{ grid.appScope.vm.jobTypeValues[$index].version }}</option></select></div>',
                 enableSorting: false
+            },
+            {
+                field: 'twentyfour_hours',
+                displayName: '24 Hours',
+                enableSorting: false,
+                enableFiltering: false,
+                cellTemplate: 'gridRow.html'
+            },
+            {
+                field: 'fortyeight_hours',
+                displayName: '48 Hours',
+                enableSorting: false,
+                enableFiltering: false,
+                cellTemplate: 'gridRow.html'
+            },
+            {
+                field: 'thirty_days',
+                displayName: '30 Days',
+                enableSorting: false,
+                enableFiltering: false,
+                cellTemplate: 'gridRow.html'
             }
         ];
 
@@ -80,30 +101,35 @@
             }
         };
 
-        var formatData = function (jobType, systemErrors, dataErrors, algorithmErrors) {
-            var currDate = '',
-                currSystem = 0,
-                currData = 0,
-                currAlgorithm = 0,
-                currValue = {},
-                format = d3.format(',');
+        var formatData = function (data, numDays) {
+            var dataArr = [];
+            _.forEach(data, function (result) {
+                var filteredResult = _.filter(result, function (d) {
+                    var date = moment.utc(d.date, 'YYYY-MM-DD');
+                    if (moment.utc().diff(moment.utc(date), 'd') <= numDays) {
+                        return d;
+                    }
+                });
+                dataArr.push(filteredResult);
+            });
+            return dataArr;
+        };
 
-            currValue.job_type = JobType.transformer(jobType);
-            for (var i = 0; i <= numDays; i++) {
-                currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
-                currSystem = _.find(systemErrors.values, { date: currDate, id: jobType.id });
-                currData = _.find(dataErrors.values, { date: currDate, id: jobType.id });
-                currAlgorithm = _.find(algorithmErrors.values, { date: currDate, id: jobType.id });
-                currValue[currDate] = {
-                    date: currDate,
-                    system: currSystem ? currSystem.value : 0,
-                    data: currData ? currData.value : 0,
-                    algorithm: currAlgorithm ? currAlgorithm.value : 0
-                };
-                currValue[currDate].total = parseInt(format(currValue[currDate].system + currValue[currDate].data + currValue[currDate].algorithm));
-            }
+        var formatColumn = function (cData, id) {
+            var systemErrors = cData[0],
+                algorithmErrors = cData[1],
+                dataErrors = cData[2],
+                totalCount = cData[3];
 
-            return currValue;
+            var obj = {
+                system: _.sum(_.map(_.filter(systemErrors, { id: id }), 'value')),
+                algorithm: _.sum(_.map(_.filter(algorithmErrors, { id: id }), 'value')),
+                data: _.sum(_.map(_.filter(dataErrors, { id: id }), 'value')),
+                total: _.sum(_.map(_.filter(totalCount, { id: id }), 'value'))
+            };
+            obj.errorTotal = obj.system + obj.algorithm + obj.data;
+
+            return obj;
         };
 
         var initialize = function () {
@@ -119,43 +145,27 @@
                     started: started,
                     ended: ended,
                     choice_id: _.map(jobTypes, 'id'),
-                    column: ['system_error_count', 'data_error_count', 'algorithm_error_count'],
+                    column: ['system_error_count', 'algorithm_error_count', 'data_error_count', 'total_count'],
                     group: null,
                     dataType: 'job-types'
                 };
 
                 metricsService.getPlotData(metricsParams).then(function (data) {
                     if (data.results.length > 0) {
-                        var currDate = '',
-                            systemErrors = _.find(data.results, {column: {title: 'System Error Count'}}),
-                            dataErrors = _.find(data.results, {column: {title: 'Data Error Count'}}),
-                            algorithmErrors = _.find(data.results, {column: {title: 'Algorithm Error Count'}});
+                        var data30Days = _.map(data.results, 'values'),
+                            data48Hours = formatData(data30Days, 2),
+                            data24Hours = formatData(data48Hours, 1);
 
                         _.forEach(jobTypes, function (jobType) {
-                            vm.performanceData.push(formatData(jobType, systemErrors, dataErrors, algorithmErrors));
+                            vm.performanceData.push({
+                                job_type: JobType.transformer(jobType),
+                                twentyfour_hours: formatColumn(data24Hours, jobType.id),
+                                fortyeight_hours: formatColumn(data48Hours, jobType.id),
+                                thirty_days: formatColumn(data30Days, jobType.id)
+                            });
                         });
 
                         vm.gridOptions.data = vm.performanceData;
-
-                        for (var i = 0; i <= numDays; i++) {
-                            currDate = moment.utc(started).add(i, 'd').format('YYYY-MM-DD');
-                            vm.gridOptions.columnDefs.push({
-                                field: currDate,
-                                enableSorting: false,
-                                enableFiltering: false,
-                                cellTemplate: '<div class="ui-grid-cell-contents">' +
-                                '<div ng-show="COL_FIELD.system > 0 || COL_FIELD.data > 0 || COL_FIELD.algorithm > 0">' +
-                                '<div class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</div> ' +
-                                '<div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div> ' +
-                                '<div class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</div> ' +
-                                '<div class="label" ng-show="COL_FIELD.data === 0">&nbsp;</div> ' +
-                                '<div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</div>' +
-                                '<div class="label" ng-show="COL_FIELD.algorithm === 0">&nbsp;</div> ' +
-                                '</div>' +
-                                '<div class="text-center" ng-show="COL_FIELD.system === 0 && COL_FIELD.data === 0 && COL_FIELD.algorithm === 0"><strong>No Errors</strong></div>' +
-                                '</div>'
-                            });
-                        }
                     }
 
                     vm.loading = false;

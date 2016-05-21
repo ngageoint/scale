@@ -197,7 +197,7 @@
             "jobs": [
                 { "path": "jobs/types", "label": "Job Types" },
                 { "path": "jobs", "label": "Jobs" },
-                { "path": "jobs/errors", "label": "Job Types Error Rates"}
+                { "path": "jobs/errors", "label": "Job Type Error Rates"}
             ],
             "load": [
                 { "path": "load", "label": "Queued" },

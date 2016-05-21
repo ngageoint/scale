@@ -1,0 +1,19 @@
+@import '../components/colors';
+
+.fail-rate-container {
+    width: 100px;
+    min-height: 20px;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+
+    .fail-rate {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: @chart_blue;
+        padding: 3px;
+        font-size: 11px;
+    }
+}

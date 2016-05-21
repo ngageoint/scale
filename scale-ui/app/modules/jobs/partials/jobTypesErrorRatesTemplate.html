@@ -2,7 +2,7 @@
 <div class="page-header">
     <h1>
         Job Type Error Rates
-        <small><span class="label label-system">System Errors</span> <span class="label label-data">Data Errors</span> <span class="label label-algorithm">Algorithm Errors</span></small>
+        <small><span class="label label-completed">Total Completed</span> <span class="label label-system">System Errors</span> <span class="label label-algorithm">Algorithm Errors</span> <span class="label label-data">Data Errors</span></small>
     </h1>
     <hr />
 </div>
@@ -10,3 +10,28 @@
 <div class="grid-container" style="{{ vm.gridStyle }}">
     <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-resize-columns style="{{ gridStyle }}" class="scale-grid"></div>
 </div>
+
+<script type="text/ng-template" id="gridRow.html">
+    <div class="ui-grid-cell-contents">
+        <div ng-show="COL_FIELD.system > 0 || COL_FIELD.data > 0 || COL_FIELD.algorithm > 0">
+            <div class="row">
+                <div class="col-xs-4" ng-show="COL_FIELD.total > 0">
+                    <div ng-show="COL_FIELD.total > 0" class="fail-rate-container">
+                        <div class="fail-rate" style="width: {{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}px"></div>
+                    </div>
+                </div>
+                <div ng-show="COL_FIELD.total > 0" class="col-xs-2">{{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%</div>
+                <div class="col-xs-6 text-right" ng-class="{'col-xs-offset-6': COL_FIELD.total === 0 }">
+                    <div class="label label-completed">{{ COL_FIELD.total }}</div>
+                    <div class="label label-system" ng-show="COL_FIELD.system > 0">{{ COL_FIELD.system }}</div>
+                    <div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div>
+                    <div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0">{{ COL_FIELD.algorithm }}</div>
+                    <div class="label" ng-show="COL_FIELD.algorithm === 0">&nbsp;</div>
+                    <div class="label label-data" ng-show="COL_FIELD.data > 0">{{ COL_FIELD.data }}</div>
+                    <div class="label" ng-show="COL_FIELD.data === 0">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" ng-show="COL_FIELD.system === 0 && COL_FIELD.data === 0 && COL_FIELD.algorithm === 0"><strong>No Errors</strong></div>
+    </div>
+</script>
