@@ -165,6 +165,13 @@
                             });
                         });
 
+                        vm.performanceData = _.sortByOrder(vm.performanceData, function (d) {
+                            if (d.twentyfour_hours.total > 0) {
+                                return d.twentyfour_hours.errorTotal / d.twentyfour_hours.total;
+                            }
+                            return 0;
+                        }, ['desc']);
+
                         vm.gridOptions.data = vm.performanceData;
                     }
 
