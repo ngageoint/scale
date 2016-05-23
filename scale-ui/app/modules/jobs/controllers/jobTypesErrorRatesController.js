@@ -51,6 +51,7 @@
                 displayName: '24 Hours',
                 enableSorting: false,
                 enableFiltering: false,
+                headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             },
             {
@@ -58,6 +59,7 @@
                 displayName: '48 Hours',
                 enableSorting: false,
                 enableFiltering: false,
+                headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             },
             {
@@ -65,6 +67,7 @@
                 displayName: '30 Days',
                 enableSorting: false,
                 enableFiltering: false,
+                headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             }
         ];
@@ -84,6 +87,20 @@
                     });
                 }
             });
+        };
+        
+        vm.setStyle = function (colField, errorType) {
+            var errorValue = (colField[errorType] / colField.total).toFixed(2);
+            var textColor = errorValue >= 0.5 ? '#fff' : '#000';
+            var rgb = errorType === 'system' ? '103, 0, 13' : errorType === 'algorithm' ? '203, 24, 29' : '241, 105, 19';
+            return 'background: rgba(' + rgb + ', ' + errorValue + '); color: ' + textColor;
+        };
+        
+        vm.getPercentageOfTotal = function (errorTotal, total) {
+            if (total === 0) {
+                return '100%';
+            }
+            return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
 
         vm.filterResults = function () {
@@ -169,7 +186,7 @@
                             if (d.twentyfour_hours.total > 0) {
                                 return d.twentyfour_hours.errorTotal / d.twentyfour_hours.total;
                             }
-                            return 0;
+                            return 1;
                         }, ['desc']);
 
                         vm.gridOptions.data = vm.performanceData;
