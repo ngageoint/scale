@@ -40,7 +40,7 @@
 
         .header-label {
             font-size: 13px;
-            color: @accent_blue;
+            color: #555;
         }
 
         .ui-grid-row {
@@ -60,7 +60,7 @@
     }
 
     .fail-rate-container {
-        width: 100px;
+        width: 80%;
         min-height: 20px;
         border: 1px solid #ccc;
         position: relative;
@@ -72,9 +72,18 @@
             top: 0;
             left: 0;
             height: 100%;
-            background-color: @chart_blue;
             padding: 3px;
             font-size: 11px;
+
+            &.system {
+                background-color: @failure_system;
+            }
+            &.algorithm {
+                background-color: @failure_algorithm;
+            }
+            &.data {
+                background-color: @failure_data;
+            }
         }
     }
 }

@@ -95,6 +95,10 @@
             var rgb = errorType === 'system' ? '103, 0, 13' : errorType === 'algorithm' ? '203, 24, 29' : '241, 105, 19';
             return 'background: rgba(' + rgb + ', ' + errorValue + '); color: ' + textColor;
         };
+
+        vm.setFailRateClass = function (failArr) {
+            return 'fail-rate ' + _.sortByOrder(failArr, ['value'], ['desc'])[0].name;
+        };
         
         vm.getPercentageOfTotal = function (errorTotal, total) {
             if (total === 0) {
