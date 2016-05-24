@@ -7,7 +7,7 @@
     <!--<hr />-->
 <!--</div>-->
 
-<div class="grid-container" style="{{ vm.gridStyle }}">
+<div class="grid-container job-type-error-rates-grid" style="{{ vm.gridStyle }}">
     <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-resize-columns style="{{ gridStyle }}" class="scale-grid"></div>
 </div>
 
@@ -26,7 +26,7 @@
                     <div class="pull-left" ng-show="COL_FIELD.total === 0">100%</div>
                 </div>
                 <div class="col-xs-6 text-right">
-                    <div class="label label-completed" uib-tooltip="{{ COL_FIELD.total }} Completed Jobs" tooltip-append-to-body="true">{{ COL_FIELD.total }}</div>
+                    <div class="label label-completed" uib-tooltip="{{ COL_FIELD.total }} Total Jobs" tooltip-append-to-body="true">{{ COL_FIELD.total }}</div>
                     <div class="label label-system" ng-show="COL_FIELD.system > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'system') }}" uib-tooltip="{{ COL_FIELD.system }} System Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.system, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.system }}</div>
                     <div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div>
                     <div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'algorithm') }}" uib-tooltip="{{ COL_FIELD.algorithm }} Algorithm Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.algorithm, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.algorithm }}</div>
@@ -46,7 +46,7 @@
         <div class="row margin-top-md">
             <div class="col-xs-6"><span class="header-label">Failure Rate</span></div>
             <div class="col-xs-6 text-right">
-                <span class="label label-completed" uib-tooltip="Total Completed" tooltip-append-to-body="true">Total</span> <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys</span> <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg</span> <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data</span>
+                <span class="label label-completed" uib-tooltip="Total Jobs" tooltip-append-to-body="true">Total</span> <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys</span> <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg</span> <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data</span>
             </div>
         </div>
     </div>
