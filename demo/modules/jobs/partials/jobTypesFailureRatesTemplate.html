@@ -7,17 +7,17 @@
     <div class="ui-grid-cell-contents">
         <div ng-show="COL_FIELD.system > 0 || COL_FIELD.data > 0 || COL_FIELD.algorithm > 0">
             <div class="row">
-                <div class="col-xs-6">
-                    <div ng-show="COL_FIELD.total > 0" class="fail-rate-container pull-left">
-                        <div ng-class="grid.appScope.vm.setFailRateClass([{name: 'system', value: COL_FIELD.system}, {name: 'algorithm', value: COL_FIELD.algorithm}, {name: 'data', value: COL_FIELD.data}])" style="width: {{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%"></div>
-                    </div>
-                    <div class="pull-left" ng-show="COL_FIELD.total > 0">{{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%</div>
-                    <div ng-show="COL_FIELD.total === 0" class="fail-rate-container pull-left">
-                        <div class="grid.appScope.vm.setFailRateClass([{name: 'system', value: COL_FIELD.system}, {name: 'algorithm', value: COL_FIELD.algorithm}, {name: 'data', value: COL_FIELD.data}])"></div>
-                    </div>
-                    <div class="pull-left" ng-show="COL_FIELD.total === 0">100%</div>
+                <div class="col-xs-4 col-md-6">
+                    <span ng-show="COL_FIELD.total > 0" class="fail-rate-container">
+                        <span class="fail-rate" style="width: {{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%"></span>
+                    </span>
+                    <span ng-show="COL_FIELD.total > 0">{{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%</span>
+                    <span ng-show="COL_FIELD.total === 0" class="fail-rate-container">
+                        <span class="fail-rate"></span>
+                    </span>
+                    <span ng-show="COL_FIELD.total === 0">100%</span>
                 </div>
-                <div class="col-xs-6 text-right">
+                <div class="col-xs-8 col-md-6 text-right">
                     <div class="label label-system" ng-show="COL_FIELD.system > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'system') }}" uib-tooltip="{{ COL_FIELD.system }} System Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.system, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.system }}</div>
                     <div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div>
                     <div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'algorithm') }}" uib-tooltip="{{ COL_FIELD.algorithm }} Algorithm Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.algorithm, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.algorithm }}</div>
@@ -36,8 +36,8 @@
     <div class="ui-grid-cell-contents">
         {{ col.displayName }}
         <div class="row margin-top-md">
-            <div class="col-xs-6"><span class="header-label">Failure Rate</span></div>
-            <div class="col-xs-6 text-right">
+            <div class="col-xs-4 col-md-6"><span class="header-label">Failure %</span></div>
+            <div class="col-xs-8 col-md-6 text-right">
                 <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys</span>
                 <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg</span>
                 <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data</span>
