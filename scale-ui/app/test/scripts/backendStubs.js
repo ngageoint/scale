@@ -168,6 +168,8 @@
             var numDays = moment.utc(obj.ended[0]).diff(moment.utc(obj.started[0]), 'd') + 1;
 
             _.forEach(obj.column, function (metric) {
+                var maxRandom = metric === 'total_count' ? 1000 : 200;
+                var minRandom = metric === 'total_count' ? 800 : 10;
                 var returnResult = {
                     column: { title: _.startCase(metric) },
                     min_x: moment.utc(obj.started[0]).format('YYYY-MM-DD'),
@@ -180,9 +182,9 @@
                 for (var i = 0; i < numDays; i++) {
                     if (obj.choice_id && obj.choice_id.length > 1) {
                         _.forEach(obj.choice_id, function (id) {
-                            random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                            if (random % 2 == 0) {
-                                var value = Math.floor(Math.random() * (100 - 5 + 1)) + 5;
+                            random = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+                            if (random <= 4) {
+                                var value = Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom;
                                 returnResult.values.push({
                                     date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
                                     value: value,
@@ -191,11 +193,11 @@
                             }
                         });
                     } else {
-                        random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                        if (random % 2 == 0) {
+                        random = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+                        if (random <= 4) {
                             returnResult.values.push({
                                 date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                                value: Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom
                             });
                         }
                     }
