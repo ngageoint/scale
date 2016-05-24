@@ -61,6 +61,7 @@
 
     .fail-rate-container {
         width: 80%;
+        display: inline-block;
         min-height: 20px;
         border: 1px solid #ccc;
         position: relative;
@@ -71,19 +72,12 @@
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            display: inline-block;
             height: 100%;
             padding: 3px;
             font-size: 11px;
-
-            &.system {
-                background-color: @failure_system;
-            }
-            &.algorithm {
-                background-color: @failure_algorithm;
-            }
-            &.data {
-                background-color: @failure_data;
-            }
+            background-color: #aaa;
         }
     }
 }

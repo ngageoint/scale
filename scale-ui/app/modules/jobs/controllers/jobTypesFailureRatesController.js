@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobTypesErrorRatesController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
+    angular.module('scaleApp').controller('jobTypesFailureRatesController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
         var vm = this;
 
         vm.jobTypeParams = {
@@ -36,7 +36,7 @@
         vm.selectedJobType = vm.jobTypeParams.name || '';
         vm.gridStyle = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
-        subnavService.setCurrentPath('jobs/errors');
+        subnavService.setCurrentPath('jobs/failure-rates');
 
         var defaultColumnDefs = [
             {
@@ -94,10 +94,6 @@
             var textColor = errorValue >= 0.5 ? '#fff' : '#000';
             var rgb = errorType === 'system' ? '103, 0, 13' : errorType === 'algorithm' ? '203, 24, 29' : '241, 105, 19';
             return 'background: rgba(' + rgb + ', ' + errorValue + '); color: ' + textColor;
-        };
-
-        vm.setFailRateClass = function (failArr) {
-            return 'fail-rate ' + _.sortByOrder(failArr, ['value'], ['desc'])[0].name;
         };
         
         vm.getPercentageOfTotal = function (errorTotal, total) {
