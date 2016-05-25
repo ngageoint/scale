@@ -14,18 +14,20 @@
             <div class="row overview-alert">
                 <div class="col-xs-6 text-center">
                     <div class="alert" ng-class="masterStatusClass">
-                        <h4>Master is {{ masterStatus }}</h4>
-                        {{ status.master.hostname }}
+                        <h4>{{ masterStatus }}</h4>
+                        <div ng-show="!statusError">{{ status.master.hostname }}</div>
+                        <div ng-show="statusError">{{ statusError }}</div>
                     </div>
                 </div>
                 <div class="col-xs-6 text-center">
                     <div class="alert" ng-class="schedulerStatusClass">
                         <div class="row">
                             <div ng-class="schedulerContainerClass">
-                                <h4>Scheduler is {{ schedulerStatus }}</h4>
-                                {{ status.scheduler.hostname }}
+                                <h4>{{ schedulerStatus }}</h4>
+                                <div ng-show="!statusError">{{ status.scheduler.hostname }}</div>
+                                <div ng-show="statusError">{{ statusError }}</div>
                             </div>
-                            <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="user.is_admin">
+                            <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="user.is_admin && !statusError">
                                 <button class="btn btn-default margin-top-sm" ng-click="toggleScheduler()"><i class="fa" ng-class="schedulerBtnClass"></i></button>
                             </div>
                         </div>
@@ -35,16 +37,19 @@
             <div class="row">
                 <div class="col-xs-4 text-center">
                     <span id="cpuGaugeContainer"></span>
-                    <div><strong>{{ status.resources.scheduled.cpus }} / {{ status.resources.total.cpus }}</strong></div>
+                    <div ng-show="!statusError"><strong>{{ status.resources.scheduled.cpus }} / {{ status.resources.total.cpus }}</strong></div>
                 </div>
                 <div class="col-xs-4 text-center">
                     <span id="memoryGaugeContainer"></span>
-                    <div><strong>{{ memCalc }}</strong></div>
+                    <div ng-show="!statusError"><strong>{{ memCalc }}</strong></div>
                 </div>
                 <div class="col-xs-4 text-center">
                     <span id="diskGaugeContainer"></span>
-                    <div><strong>{{ diskCalc }}</strong></div>
+                    <div ng-show="!statusError"><strong>{{ diskCalc }}</strong></div>
                 </div>
+            </div>
+            <div class="text-center" ng-show="statusError">
+                <strong>{{ statusError }}</strong>
             </div>
         </div>
     </div>
