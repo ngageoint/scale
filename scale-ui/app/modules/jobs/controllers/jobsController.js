@@ -5,7 +5,7 @@
         var self = this;
 
         self.jobsParams = {
-            page: null, page_size: null, started: null, ended: null, order: $rootScope.jobsControllerOrder || '-last_modified', status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
+            page: null, page_size: null, started: null, ended: null, order: null, status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
         };
 
         // check for jobsParams in query string, and update as necessary
@@ -359,6 +359,19 @@
                     self.jobsParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
                     $location.search('ended', self.jobsParams.ended).replace();
                 }
+            } else {
+                var desc = _.filter($rootScope.colDefs, { sort: { direction: 'desc' } }),
+                    asc = _.filter($rootScope.colDefs, { sort: { direction: 'asc' } });
+
+                if (desc && desc.length > 0) {
+                    self.jobsParams.order = desc[0].field;
+                } else if (asc && asc.length > 0) {
+                    self.jobsParams.order = asc[0].field;
+                } else {
+                    self.jobsParams.order = null;
+                }
+
+                $location.search('order', self.jobsParams.order).replace();
             }
             self.getJobTypes();
             $rootScope.user = userService.getUserCreds();
