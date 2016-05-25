@@ -14,9 +14,8 @@
         };
         $scope.jobErrorBreakdown = [];
         $scope.status = null;
-        $scope.loadingStatus = true;
         $scope.statusError = null;
-        $scope.statusErrorStatus = null;
+        $scope.loadingStatus = true;
         $scope.masterStatus = '';
         $scope.masterStatusClass = 'alert-success';
         $scope.schedulerStatus = '';
@@ -74,15 +73,15 @@
                     cpuGauge.redraw(result.getCpuUsage());
                     memGauge.redraw(result.getMemUsage());
                     diskGauge.redraw(result.getDiskUsage());
-                    $scope.masterStatus = result.master.is_online ? 'Online' : 'Offline';
+                    $scope.masterStatus = result.master.is_online ? 'Master is Online' : 'Master is Offline';
                     $scope.masterStatusClass = result.master.is_online ? 'alert-success' : 'alert-danger';
                     if (result.scheduler.is_online) {
-                        $scope.schedulerStatus = result.scheduler.is_paused ? 'Paused' : 'Running';
+                        $scope.schedulerStatus = result.scheduler.is_paused ? 'Scheduler is Paused' : 'Scheduler is Running';
                         $scope.schedulerStatusClass = result.scheduler.is_paused ? 'alert-warning' : 'alert-success';
                         $scope.schedulerIsPaused = result.scheduler.is_paused;
                         $scope.schedulerBtnClass = result.scheduler.is_paused ? 'fa-play' : 'fa-pause';
                     } else {
-                        $scope.schedulerStatus = result.scheduler.is_paused ? 'Offline; Paused' : 'Offline';
+                        $scope.schedulerStatus = result.scheduler.is_paused ? 'Scheduler is Offline; Paused' : 'Scheduler is Offline';
                         $scope.schedulerStatusClass = 'alert-danger';
                         $scope.schedulerIsPaused = result.scheduler.is_paused;
                         $scope.schedulerBtnClass = result.scheduler.is_paused ? 'fa-play' : 'fa-pause';
@@ -94,10 +93,15 @@
                         $scope.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.scheduled.disk) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.total.disk);
                     }
                 } else {
-                    if (result.statusText && result.statusText !== '') {
-                        $scope.statusErrorStatus = result.statusText;
-                    }
-                    $scope.statusError = 'Unable to retrieve cluster status.';
+                    $scope.statusError = result.statusText && result.statusText !== '' ? result.statusText : 'Unable to retrieve cluster status.';
+                    cpuGauge.redraw(-1);
+                    memGauge.redraw(-1);
+                    diskGauge.redraw(-1);
+                    $scope.masterStatus = 'Master Status is Unknown';
+                    $scope.masterStatusClass = 'alert-unknown';
+                    $scope.schedulerContainerClass = 'col-xs-12';
+                    $scope.schedulerStatus = 'Scheduler Status is Unknown';
+                    $scope.schedulerStatusClass = 'alert-unknown';
                 }
                 $scope.loadingStatus = false;
             });
