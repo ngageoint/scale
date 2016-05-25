@@ -98,10 +98,10 @@
                     memGauge.redraw(-1);
                     diskGauge.redraw(-1);
                     $scope.masterStatus = 'Master Status is Unknown';
-                    $scope.masterStatusClass = 'alert-unknown';
+                    $scope.masterStatusClass = 'alert-danger';
                     $scope.schedulerContainerClass = 'col-xs-12';
                     $scope.schedulerStatus = 'Scheduler Status is Unknown';
-                    $scope.schedulerStatusClass = 'alert-unknown';
+                    $scope.schedulerStatusClass = 'alert-danger';
                 }
                 $scope.loadingStatus = false;
             });

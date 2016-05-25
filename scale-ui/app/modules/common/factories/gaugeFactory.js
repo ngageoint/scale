@@ -258,7 +258,7 @@
                         } else if (i >= 75 && i < 90 && !isDisabled) {
                             return self.config.yellowColor;
                         } else if (i === 0 && isDisabled) {
-                            return self.config.grayColor;
+                            return self.config.redColor;
                         } else {
                             return self.config.redColor;
                         }
