@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, scaleService, toastr) {
+    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, stateService, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, scaleService, toastr) {
         $scope.job = {};
         $scope.jobId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -119,12 +119,8 @@
 
         var initialize = function () {
             navService.updateLocation('jobs');
-
-            $rootScope.user = userService.getUserCreds();
-            if($rootScope.user){
-                $scope.readonly = false;
-            }
-
+            var user = stateService.getUser();
+            $scope.readonly = !(user && user.is_admin);
             getJobDetail($scope.jobId);
         };
 

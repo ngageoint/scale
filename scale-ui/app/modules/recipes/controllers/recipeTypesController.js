@@ -34,7 +34,7 @@
 
         var initialize = function () {
             navService.updateLocation('recipes');
-            $rootScope.user = userService.getUserCreds();
+            $scope.user = userService.getUserCreds();
             getRecipeTypes();
             //getJobTypes();
         };
