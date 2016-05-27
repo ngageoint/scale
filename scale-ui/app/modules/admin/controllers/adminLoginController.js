@@ -1,19 +1,18 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('adminLoginController', function ($timeout, $rootScope, $location, userService) {
+    angular.module('scaleApp').controller('adminLoginController', function ($timeout, $location, stateService, userService) {
 
         var initialize = function () {
-            $rootScope.user = userService.getUserCreds();
-            if(!$rootScope.user){
-                $rootScope.user = userService.login('admin');
+            var user = userService.getUserCreds();
+            
+            if (!user) {
+                stateService.setUser(userService.login('admin'));
             }
 
-            console.log($rootScope.user);
-
-            $timeout(function(){
+            $timeout(function () {
                 // Any code in here will automatically have an $scope.apply() run afterwards
-                $location.path("/");
+                $location.path('/');
             });
         };
 

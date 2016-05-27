@@ -756,7 +756,7 @@
                 getIoMappings();
                 drawGraph();
             });
-            if ($rootScope.user) {
+            if ($scope.$parent.user) {
                 $scope.readonly = false;
             }
         };

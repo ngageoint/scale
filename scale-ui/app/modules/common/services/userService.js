@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('userService', function ($rootScope) {
+    angular.module('scaleApp').service('userService', function (stateService) {
         return {
             getUserCreds: function(){
                 var creds = localStorage.getItem('userCreds');
@@ -12,11 +12,11 @@
                     return creds;
                 }
             },
-            setUserCreds: function(user){
+            setUserCreds: function (user) {
+                stateService.setUser(user);
                 if (user !== null) {
                     localStorage.setItem('userCreds', JSON.stringify(user));
                 } else {
-                    $rootScope.user = null;
                     localStorage.removeItem('userCreds');
                 }
 
@@ -29,7 +29,7 @@
                 this.setUserCreds(user);
                 return user;
             },
-            logout: function() {
+            logout: function () {
                 this.setUserCreds(null);
             }
         }
