@@ -29,6 +29,15 @@
                 type_id: queryString.type_id ? parseInt(queryString.type_id) : null,
                 type_name: queryString.type_name ? queryString.type_name : null,
                 url: null
+            },
+            ingestsColDefs = [],
+            ingestsParams = {
+                page: queryString.page ? parseInt(queryString.page) : 1,
+                page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
+                started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
+                status: queryString.status ? queryString.status : null
             };
         
         var updateQuerystring = function (data) {
@@ -76,6 +85,19 @@
             setRecipesParams: function (data) {
                 updateQuerystring(data);
                 recipesParams = data;
+            },
+            getIngestsColDefs: function () {
+                return ingestsColDefs;
+            },
+            setIngestsColDefs: function (data) {
+                ingestsColDefs = data;
+            },
+            getIngestsParams: function () {
+                return ingestsParams;
+            },
+            setIngestsParams: function (data) {
+                updateQuerystring(data);
+                ingestsParams = data;
             }
         };
     });

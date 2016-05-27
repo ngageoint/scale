@@ -142,7 +142,7 @@
                 _.forEach($scope.gridApi.grid.columns, function (col) {
                     col.colDef.sort = col.sort;
                 });
-                stateService.setJobsColDefs($scope.gridApi.grid.options.columnDefs);
+                stateService.setRecipesColDefs($scope.gridApi.grid.options.columnDefs);
                 var sortArr = [];
                 _.forEach(sortColumns, function (col) {
                     sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
