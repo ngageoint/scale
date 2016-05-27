@@ -11,7 +11,7 @@
 
         $scope.stateService = stateService;
         $scope.loading = true;
-        $scope.readOnly = true;
+        $scope.readonly = true;
         $scope.jobTypeValues = [jobTypeViewAll];
         $scope.jobExecution = null;
         $scope.selectedJobType = self.jobsParams.job_type_id ? self.jobsParams.job_type_id : jobTypeViewAll;
@@ -128,12 +128,6 @@
             });
         };
 
-        $scope.filterResults = function () {
-            stateService.setJobsParams(self.jobsParams);
-            $scope.loading = true;
-            self.getJobs();
-        };
-
         $scope.showLog = function (jobId) {
             // show log modal
             $scope.actionClicked = true;
@@ -180,6 +174,12 @@
             });
         };
 
+        self.filterResults = function () {
+            stateService.setJobsParams(self.jobsParams);
+            $scope.loading = true;
+            self.getJobs();
+        };
+
         self.updateColDefs = function () {
             $scope.gridOptions.columnDefs = gridFactory.applySortConfig(self.colDefs, self.jobsParams);
         };
@@ -187,7 +187,7 @@
         self.updateJobOrder = function (sortArr) {
             self.jobsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
-            $scope.filterResults();
+            self.filterResults();
         };
 
         self.updateJobType = function (value) {
@@ -197,7 +197,7 @@
             self.jobsParams.job_type_id = value.id === 0 ? null : value.id;
             self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
             if (!$scope.loading) {
-                $scope.filterResults();
+                self.filterResults();
             }
         };
 
@@ -208,7 +208,7 @@
             self.jobsParams.status = value === 'VIEW ALL' ? null : value;
             self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
             if (!$scope.loading) {
-                $scope.filterResults();
+                self.filterResults();
             }
         };
 
@@ -219,7 +219,7 @@
             self.jobsParams.error_category = value === 'VIEW ALL' ? null : value;
             self.jobsParams.page_size = $scope.gridOptions.paginationPageSize;
             if (!$scope.loading) {
-                $scope.filterResults();
+                self.filterResults();
             }
         };
 
@@ -238,7 +238,7 @@
             $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                 self.jobsParams.page = currentPage;
                 self.jobsParams.page_size = pageSize;
-                $scope.filterResults();
+                self.filterResults();
             });
             $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach($scope.gridApi.grid.columns, function (col) {
@@ -314,14 +314,14 @@
         $scope.$watch('lastModifiedStart', function (value) {
             if (!$scope.loading) {
                 self.jobsParams.started = value.toISOString();
-                $scope.filterResults();
+                self.filterResults();
             }
         });
 
         $scope.$watch('lastModifiedStop', function (value) {
             if (!$scope.loading) {
                 self.jobsParams.ended = value.toISOString();
-                $scope.filterResults();
+                self.filterResults();
             }
         });
 

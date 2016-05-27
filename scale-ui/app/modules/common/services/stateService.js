@@ -18,7 +18,25 @@
                 job_type_name: queryString.job_type_name ? queryString.job_type_name : null,
                 job_type_category: queryString.job_type_category ? queryString.job_type_category : null,
                 url: null
+            },
+            recipesColDefs = [],
+            recipesParams = {
+                page: queryString.page ? parseInt(queryString.page) : 1,
+                page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
+                started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
+                type_id: queryString.type_id ? parseInt(queryString.type_id) : null,
+                type_name: queryString.type_name ? queryString.type_name : null,
+                url: null
             };
+        
+        var updateQuerystring = function (data) {
+            // check for params in querystring, and update as necessary
+            _.forEach(_.pairs(data), function (param) {
+                $location.search(param[0], param[1]);
+            });
+        };
 
         return {
             getUser: function () {
@@ -43,11 +61,21 @@
                 return jobsParams;
             },
             setJobsParams: function (data) {
-                // check for jobsParams in query string, and update as necessary
-                _.forEach(_.pairs(data), function (param) {
-                    $location.search(param[0], param[1]);
-                });
+                updateQuerystring(data);
                 jobsParams = data;
+            },
+            getRecipesColDefs: function () {
+                return recipesColDefs;
+            },
+            setRecipesColDefs: function (data) {
+                recipesColDefs = data;
+            },
+            getRecipesParams: function () {
+                return recipesParams;
+            },
+            setRecipesParams: function (data) {
+                updateQuerystring(data);
+                recipesParams = data;
             }
         };
     });

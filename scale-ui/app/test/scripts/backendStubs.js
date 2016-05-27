@@ -302,8 +302,32 @@
         // Recipes service
         var recipesOverrideUrl = 'test/data/recipes.json';
         var recipesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/', 'i');
-        $httpBackend.whenGET(recipesRegex).respond(function () {
-            return getSync(recipesOverrideUrl);
+        $httpBackend.whenGET(recipesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(recipesOverrideUrl),
+                recipes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    if (field === 'recipe_type') {
+                        field = 'recipe_type.name';
+                    }
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                recipes.results = _.sortByOrder(recipes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(recipes);
+
+            return returnObj;
         });
 
         // Recipe type validation service
