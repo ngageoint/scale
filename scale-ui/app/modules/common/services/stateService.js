@@ -20,6 +20,15 @@
                 url: null
             },
             recipesColDefs = [],
+            jobTypesParams = {
+                page: queryString.page ? parseInt(queryString.page) : null,
+                page_size: queryString.page_size ? parseInt(queryString.page_size) : null,
+                started: queryString.started ? queryString.started : null,
+                ended: queryString.ended ? queryString.ended : null,
+                name: queryString.name ? queryString.name : null,
+                category: queryString.category ? queryString.category : null,
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : null
+            },
             recipesParams = {
                 page: queryString.page ? parseInt(queryString.page) : 1,
                 page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
@@ -72,6 +81,13 @@
             setJobsParams: function (data) {
                 updateQuerystring(data);
                 jobsParams = data;
+            },
+            getJobTypesParams: function () {
+                return jobTypesParams;
+            },
+            setJobTypesParams: function (data) {
+                updateQuerystring(data);
+                jobTypesParams = data;
             },
             getRecipesColDefs: function () {
                 return recipesColDefs;

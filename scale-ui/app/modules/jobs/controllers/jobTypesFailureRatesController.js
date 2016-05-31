@@ -1,39 +1,24 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobTypesFailureRatesController', function ($scope, $location, scaleConfig, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
-        var vm = this;
+    angular.module('scaleApp').controller('jobTypesFailureRatesController', function ($scope, $location, scaleConfig, stateService, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
+        var vm = this,
+            jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
-        vm.jobTypeParams = {
-            page: null,
-            page_size: null,
-            started: null,
-            ended: null,
-            name: null,
-            category: null,
-            order: null
-        };
+        vm.jobTypesParams = stateService.getJobTypesParams();
 
-        // check for jobTypeParams in query string, and update as necessary
-        _.forEach(_.pairs(vm.jobTypeParams), function (param) {
-            var value = _.at($location.search(), param[0]);
-            if (value.length > 0) {
-                vm.jobTypeParams[param[0]] = value.length > 1 ? value : value[0];
-            }
-        });
+        var jobTypes = [],
+            started = moment.utc().subtract(30, 'days').startOf('d').toISOString(),
+            ended = moment.utc().endOf('d').toISOString(),
+            filteredByJobType = vm.jobTypesParams.name ? true : false;
 
-        var started = moment.utc().subtract(30, 'd').toISOString(),
-            ended = moment.utc().toISOString(),
-            jobTypes = [],
-            numDays = moment.utc(ended).diff(moment.utc(started), 'd'),
-            filteredByJobType = vm.jobTypeParams.name ? true : false;
-
+        vm.stateService = stateService;
         vm.scaleService = scaleService;
         vm.loading = true;
         vm.dates = [];
         vm.performanceData = [];
-        vm.jobTypeValues = [];
-        vm.selectedJobType = vm.jobTypeParams.name || '';
+        vm.jobTypeValues = [jobTypeViewAll];
+        vm.selectedJobType = vm.jobTypesParams.name ? vm.jobTypesParams.name : jobTypeViewAll;
         vm.gridStyle = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/failure-rates');
@@ -43,7 +28,7 @@
                 field: 'job_type',
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType"><option ng-if="grid.appScope.vm.jobTypeValues[$index]" ng-selected="{{ grid.appScope.vm.jobTypeValues[$index].name == grid.appScope.vm.selectedJobType }}" value="{{ grid.appScope.vm.jobTypeValues[$index].name }}" ng-repeat="jobType in grid.appScope.vm.jobTypeValues track by $index">{{ grid.appScope.vm.jobTypeValues[$index].title }} {{ grid.appScope.vm.jobTypeValues[$index].version }}</option></select></div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title + \' \' + jobType.version) for jobType in grid.appScope.vm.jobTypeValues"></select></div>',
                 enableSorting: false
             },
             {
@@ -104,7 +89,8 @@
         };
 
         vm.filterResults = function () {
-            _.forEach(_.pairs(vm.jobTypeParams), function (param) {
+            stateService.setJobTypesParams(vm.jobTypesParams);
+            _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
             vm.loading = true;
@@ -112,7 +98,7 @@
         };
 
         vm.updateJobType = function (value) {
-            vm.jobTypeParams.name = value === 'VIEW ALL' ? null : value;
+            vm.jobTypesParams.name = value.name === 'VIEW ALL' ? null : value.name;
             if (!vm.loading) {
                 vm.filterResults();
             }
@@ -150,10 +136,12 @@
         };
 
         var initialize = function () {
+            stateService.setJobTypesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
-                jobTypes = _.cloneDeep(jobTypesData.results);
-                vm.jobTypeValues = _.cloneDeep(jobTypesData.results);
-                vm.jobTypeValues.unshift({ name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 });
+                jobTypes = _.cloneDeep(_.sortByOrder(jobTypesData.results, ['name', 'version'], ['asc', 'asc']));
+                vm.jobTypeValues.push(_.sortByOrder(jobTypesData.results, ['name', 'version'], ['asc', 'asc']));
+                vm.jobTypeValues = _.flatten(vm.jobTypeValues);
+                vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobTypesParams.name }) || jobTypeViewAll;
                 vm.gridOptions.totalItems = jobTypesData.count;
 
                 var metricsParams = {

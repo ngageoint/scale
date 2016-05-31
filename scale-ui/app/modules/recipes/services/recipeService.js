@@ -22,7 +22,8 @@
             getRecipeTypes: function () {
                 var d = $q.defer();
                 $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/').success(function (data) {
-                    d.resolve(RecipeType.transformer(data.results));
+                    data.results = RecipeType.transformer(data.results);
+                    d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
                 });
