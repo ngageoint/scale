@@ -155,6 +155,37 @@ class ScaleFileManager(models.Manager):
     """Provides additional methods for handling Scale files
     """
 
+    def delete_files(self, files):
+        """Deletes the given files from the remove storage system. Each ScaleFile model should have its related
+        workspace field populated. This method will update the is_deleted field in each ScaleFile model, but the caller
+        is responsible for performing the model save.
+
+        :param files: List of files to delete
+        :type files: [:class:`storage.models.ScaleFile`]
+
+        :raises :class:`storage.exceptions.ArchivedWorkspace`: If one of the files has a workspace that is archived
+        :raises :class:`storage.exceptions.MissingRemoteMount`: If a required mount location is missing
+        """
+
+        wp_dict = {}  # {Workspace ID: (workspace, [file])}
+        # Organize files by workspace
+        for scale_file in files:
+            workspace = scale_file.workspace
+            if not workspace.is_active:
+                raise ArchivedWorkspace('%s is no longer active' % workspace.name)
+            if workspace.id in wp_dict:
+                wp_list = wp_dict[workspace.id][1]
+            else:
+                wp_list = []
+                wp_dict[workspace.id] = (workspace, wp_list)
+            wp_list.append(scale_file)
+
+        # Delete files for each workspace
+        for wp_id in wp_dict:
+            workspace = wp_dict[wp_id][0]
+            wp_file_deletes = wp_dict[wp_id][1]
+            workspace.delete_files(wp_file_deletes)
+
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths. Each ScaleFile model should have its related
         workspace field populated.
@@ -770,6 +801,9 @@ class Workspace(models.Model):
         """
 
         if not hasattr(self, '_broker'):
+            ws_config = WorkspaceConfiguration(self.json_config)
+            ws_config.validate_broker()
+
             broker_config = self.json_config['broker']
             broker_type = broker_config['type']
             broker = get_broker(broker_type)
