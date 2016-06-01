@@ -7,7 +7,7 @@
             var user = userService.getUserCreds();
             
             if (!user) {
-                stateService.setUser(userService.login('admin'));
+                userService.login('admin');
             }
 
             $timeout(function () {

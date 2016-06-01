@@ -12,7 +12,7 @@ except ImportError:
 
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
-EXIT_CODE_PATTERN = re.compile(r'Command exited with status ([\-0-9]+)')
+EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
 
 
 def get_status_timestamp(status):

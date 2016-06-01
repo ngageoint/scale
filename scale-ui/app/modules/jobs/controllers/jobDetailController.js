@@ -119,7 +119,7 @@
 
         var initialize = function () {
             navService.updateLocation('jobs');
-            var user = stateService.getUser();
+            var user = userService.getUserCreds();
             $scope.readonly = !(user && user.is_admin);
             getJobDetail($scope.jobId);
         };
