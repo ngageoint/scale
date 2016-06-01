@@ -5,6 +5,8 @@ import logging
 import os
 import shutil
 
+import django.utils.timezone as timezone
+
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from util.command import execute_command_line
@@ -32,6 +34,9 @@ class HostBroker(Broker):
             if os.path.exists(path_to_delete):
                 logger.info('Deleting %s', path_to_delete)
                 os.remove(path_to_delete)
+
+                scale_file.is_deleted = True
+                scale_file.deleted = timezone.now()
 
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`
