@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, jobService, jobTypeService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobTypeService, gridFactory, toastr) {
         subnavService.setCurrentPath('jobs');
 
         var self = this,
@@ -256,7 +256,7 @@
         self.initialize = function () {
             stateService.setJobsParams(self.jobsParams);
             self.updateColDefs();
-            var user = stateService.getUser();
+            var user = userService.getUserCreds();
             $scope.readonly = !(user && user.is_admin);
             self.getJobTypes();
             navService.updateLocation('jobs');
