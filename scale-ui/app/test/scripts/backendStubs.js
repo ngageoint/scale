@@ -72,8 +72,28 @@
         // Ingests
         var ingestsOverrideUrl = 'test/data/ingests.json';
         var ingestsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/', 'i');
-        $httpBackend.whenGET(ingestsRegex).respond(function () {
-            return getSync(ingestsOverrideUrl);
+        $httpBackend.whenGET(ingestsRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(ingestsOverrideUrl),
+                ingests = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                ingests.results = _.sortByOrder(ingests.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(ingests);
+
+            return returnObj;
         });
 
         // Job load
