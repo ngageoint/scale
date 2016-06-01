@@ -41,7 +41,7 @@
         
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
-                $scope.recipeTypes = _.sortByOrder(data.results, ['name', 'version'], ['asc', 'asc']);
+                $scope.recipeTypes = data.results;
                 if (scaleConfig.static) {
                     var i = 0,
                         oJson = {},

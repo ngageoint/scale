@@ -119,7 +119,7 @@
 
         self.getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
-                $scope.jobTypeValues.push(_.sortByOrder(data.results, ['name', 'version'], ['asc', 'asc']));
+                $scope.jobTypeValues.push(data.results);
                 $scope.jobTypeValues = _.flatten($scope.jobTypeValues);
                 $scope.selectedJobType = _.find($scope.jobTypeValues, { id: self.jobsParams.job_type_id }) || jobTypeViewAll;
                 self.getJobs();

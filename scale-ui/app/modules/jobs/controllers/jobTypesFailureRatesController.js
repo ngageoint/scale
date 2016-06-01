@@ -5,7 +5,7 @@
         var vm = this,
             jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
-        vm.jobTypesParams = stateService.getJobTypesParams();
+        vm.jobTypesParams = stateService.getJobTypesFailureRatesParams();
 
         var jobTypes = [],
             started = moment.utc().subtract(30, 'days').startOf('d').toISOString(),
@@ -89,7 +89,7 @@
         };
 
         vm.filterResults = function () {
-            stateService.setJobTypesParams(vm.jobTypesParams);
+            stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
@@ -136,10 +136,10 @@
         };
 
         var initialize = function () {
-            stateService.setJobTypesParams(vm.jobTypesParams);
+            stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
-                jobTypes = _.cloneDeep(_.sortByOrder(jobTypesData.results, ['name', 'version'], ['asc', 'asc']));
-                vm.jobTypeValues.push(_.sortByOrder(jobTypesData.results, ['name', 'version'], ['asc', 'asc']));
+                jobTypes = _.cloneDeep(jobTypesData.results);
+                vm.jobTypeValues.push(jobTypesData.results);
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
                 vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobTypesParams.name }) || jobTypeViewAll;
                 vm.gridOptions.totalItems = jobTypesData.count;

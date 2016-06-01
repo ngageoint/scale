@@ -69,7 +69,7 @@
 
         var getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
-                $scope.jobTypes = _.sortByOrder(data.results, ['name', 'version'], ['asc', 'asc']);
+                $scope.jobTypes = data.results;
                 $scope.jobTypeIds = _.pluck($scope.jobTypes, 'id');
                 $scope.jobTypeCount = data.count;
                 if ($scope.requestedJobTypeId) {

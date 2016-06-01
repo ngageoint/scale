@@ -20,7 +20,7 @@
                 url: null
             },
             recipesColDefs = [],
-            jobTypesParams = {
+            jobTypesFailureRatesParams = {
                 page: queryString.page ? parseInt(queryString.page) : null,
                 page_size: queryString.page_size ? parseInt(queryString.page_size) : null,
                 started: queryString.started ? queryString.started : null,
@@ -82,12 +82,12 @@
                 updateQuerystring(data);
                 jobsParams = data;
             },
-            getJobTypesParams: function () {
-                return jobTypesParams;
+            getJobTypesFailureRatesParams: function () {
+                return jobTypesFailureRatesParams;
             },
-            setJobTypesParams: function (data) {
+            setJobTypesFailureRatesParams: function (data) {
                 updateQuerystring(data);
-                jobTypesParams = data;
+                jobTypesFailureRatesParams = data;
             },
             getRecipesColDefs: function () {
                 return recipesColDefs;

@@ -89,7 +89,7 @@
 
         self.getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
-                $scope.recipeTypeValues.push(_.sortByOrder(data.results, ['name', 'version'], ['asc', 'asc']));
+                $scope.recipeTypeValues.push(data.results);
                 $scope.recipeTypeValues = _.flatten($scope.recipeTypeValues);
                 $scope.selectedRecipeType = _.find($scope.recipeTypeValues, { id: self.recipesParams.type_id }) || recipeTypeViewAll;
                 self.getRecipes();
