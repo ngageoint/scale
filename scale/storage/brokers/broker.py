@@ -3,9 +3,9 @@ from abc import ABCMeta
 from collections import namedtuple
 
 
-FileDownload = namedtuple('FileDownload', 'file local_path')
-FileMove = namedtuple('FileMove', 'file new_path')
-FileUpload = namedtuple('FileUpload', 'file local_path')
+FileDownload = namedtuple('FileDownload', ['file', 'local_path'])
+FileMove = namedtuple('FileMove', ['file', 'new_path'])
+FileUpload = namedtuple('FileUpload', ['file', 'local_path'])
 
 
 class Broker(object):
