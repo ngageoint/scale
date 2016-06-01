@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('userService', function (stateService) {
+    angular.module('scaleApp').service('userService', function () {
         return {
-            getUserCreds: function(){
+            getUserCreds: function () {
                 var creds = localStorage.getItem('userCreds');
                 try {
                     return JSON.parse(creds);
@@ -13,7 +13,6 @@
                 }
             },
             setUserCreds: function (user) {
-                stateService.setUser(user);
                 if (user !== null) {
                     localStorage.setItem('userCreds', JSON.stringify(user));
                 } else {

@@ -3,7 +3,6 @@
 
     angular.module('scaleApp').service('stateService', function ($location) {
         var queryString = $location.search(),
-            user = {},
             version = '',
             jobsColDefs = [],
             jobsParams = {
@@ -48,12 +47,6 @@
         };
 
         return {
-            getUser: function () {
-                return user;
-            },
-            setUser: function (data) {
-                user = data;
-            },
             getVersion: function () {
                 return version;
             },
