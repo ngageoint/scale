@@ -91,6 +91,24 @@
                 ingests.results = _.sortByOrder(ingests.results, fields, orders);
             }
 
+            if (urlParams.page && urlParams.page.length > 0) {
+                var page = parseInt(urlParams.page[0]),
+                    pageSize = parseInt(urlParams.page_size[0]);
+
+                if (page === 1) {
+                    ingests.results = _.take(ingests.results, pageSize);
+                } else {
+                    var startIdx = (page - 1) * pageSize,
+                        idxArray = [];
+
+                    for (var i = startIdx; i < ingests.results.length - 1; i++) {
+                        idxArray.push(i);
+                    }
+
+                    ingests.results = _.at(ingests.results, idxArray);
+                }
+            }
+
             returnObj[1] = JSON.stringify(ingests);
 
             return returnObj;
