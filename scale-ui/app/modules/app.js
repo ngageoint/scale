@@ -124,6 +124,10 @@
                 controller: 'jobExecutionDetailController',
                 templateUrl: 'modules/jobs/partials/jobExecutionDetailTemplate.html'
             })
+            .when('/workspaces', {
+                controller: 'workspacesController',
+                templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
+            })
             .otherwise({
                 redirectTo: '/'
             });
