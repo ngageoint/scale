@@ -208,8 +208,28 @@
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
         var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
-        $httpBackend.whenGET(jobTypesRegex).respond(function () {
-            return getSync(jobTypesOverrideUrl);
+        $httpBackend.whenGET(jobTypesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(jobTypesOverrideUrl),
+                jobTypes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                jobTypes.results = _.sortByOrder(jobTypes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(jobTypes);
+
+            return returnObj;
         });
         
         // Job execution logs
@@ -395,8 +415,28 @@
         // Recipe Types service
         var recipeTypesOverrideUrl = 'test/data/recipeTypes.json';
         var recipeTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
-        $httpBackend.whenGET(recipeTypesRegex).respond(function () {
-            return getSync(recipeTypesOverrideUrl);
+        $httpBackend.whenGET(recipeTypesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(recipeTypesOverrideUrl),
+                recipeTypes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                recipeTypes.results = _.sortByOrder(recipeTypes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(recipeTypes);
+
+            return returnObj;
         });
 
         // Save Recipe Type

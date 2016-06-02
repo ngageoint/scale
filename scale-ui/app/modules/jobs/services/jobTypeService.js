@@ -24,7 +24,7 @@
                 ended: ended,
                 name: name,
                 category: category,
-                order: order ? order : ['name', 'version']
+                order: order ? order : ['title', 'version']
             };
         };
 
