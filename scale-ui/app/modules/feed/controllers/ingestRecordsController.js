@@ -81,11 +81,23 @@
             }
         ];
 
+        self.updateGridHeight = function () {
+            angular.element(document).ready(function () {
+                // set container heights equal to available page height
+                var viewport = scaleService.getViewportSize(),
+                    offset = $scope.gridOptions.totalItems > $scope.gridOptions.paginationPageSize ? scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset : scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
+                    gridMaxHeight = viewport.height - offset;
+
+                $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
+            });
+        };
+
         self.getIngests = function () {
             $scope.loading = true;
             feedService.getIngestsOnce(self.ingestsParams).then(function (data) {
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
+                self.updateGridHeight();
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
@@ -146,18 +158,10 @@
             self.updateColDefs();
             self.getIngests();
             navService.updateLocation('feed');
+            self.updateGridHeight();
         };
 
         self.initialize();
-
-        angular.element(document).ready(function () {
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
-                gridMaxHeight = viewport.height - offset;
-
-            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
-        });
 
         $scope.$watch('selectedIngestStatus', function (value) {
             if ($scope.loading) {
