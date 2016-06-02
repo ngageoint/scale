@@ -2,9 +2,16 @@
 FROM centos:centos7
 MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 
+EXPOSE 80
+EXPOSE 8000
+EXPOSE 5051
+
 # allowed environment variables
 # ENABLE_NFS=1 to turn on NFS client locking
 # ENABLE_GUNICORN to start the RESTful API server
+# ENABLE_HTTPD to start the Apache HTTP server
+# DEPLOY_DB to start the database container (for DC/OS use)
+# INIT_DB to initialize the database (migrate, load, etc.)
 # SCALE_SECRET_KEY
 # SCALE_DEBUG
 # SCALE_API_URL
@@ -19,6 +26,8 @@ MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
 # MESOS_MASTER_URL
 # SCALE_ZK_URL
 # SCALE_DOCKER_IMAGE
+# DCOS_PACKAGE_FRAMEWORK_NAME
+# PORT0
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -31,13 +40,14 @@ COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
-COPY dockerfiles/framework/scale/mesos-0.24.1-py2.7-linux-x86_64.egg /tmp/
+COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
          systemd-container-EOL \
          gdal-python \
          geos \
+         httpd \
          nfs-utils \
          postgresql \
          protobuf \
@@ -49,10 +59,13 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          unzip \
  && pip install 'protobuf<3.0.0b1.post1' \
  && easy_install /tmp/*.egg \
- && pip install -r /tmp/prod_linux.txt
+ && pip install -r /tmp/prod_linux.txt \
+ && rm -f /etc/httpd/conf.d/welcome.conf
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
+COPY dockerfiles/framework/scale/deployDb.py /opt/scale/
+COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale
 
@@ -90,13 +103,5 @@ USER scale
 
 # finish the build
 RUN ./manage.py collectstatic --noinput --settings=
-
-# setup volumes
-VOLUME /opt/scale/static
-VOLUME /opt/scale/docs
-VOLUME /opt/scale/ui
-
-# expose the gunicorn port
-EXPOSE 8000
 
 ENTRYPOINT ["./entryPoint.sh"]
