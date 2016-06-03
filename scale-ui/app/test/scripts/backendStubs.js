@@ -72,8 +72,46 @@
         // Ingests
         var ingestsOverrideUrl = 'test/data/ingests.json';
         var ingestsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/', 'i');
-        $httpBackend.whenGET(ingestsRegex).respond(function () {
-            return getSync(ingestsOverrideUrl);
+        $httpBackend.whenGET(ingestsRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(ingestsOverrideUrl),
+                ingests = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                ingests.results = _.sortByOrder(ingests.results, fields, orders);
+            }
+
+            if (urlParams.page && urlParams.page.length > 0) {
+                var page = parseInt(urlParams.page[0]),
+                    pageSize = parseInt(urlParams.page_size[0]);
+
+                if (page === 1) {
+                    ingests.results = _.take(ingests.results, pageSize);
+                } else {
+                    var startIdx = (page - 1) * pageSize,
+                        idxArray = [];
+
+                    for (var i = startIdx; i < ingests.results.length - 1; i++) {
+                        idxArray.push(i);
+                    }
+
+                    ingests.results = _.at(ingests.results, idxArray);
+                }
+            }
+
+            returnObj[1] = JSON.stringify(ingests);
+
+            return returnObj;
         });
 
         // Job load

@@ -44,7 +44,7 @@
                 page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
                 started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
                 ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-ingest_started'],
                 status: queryString.status ? queryString.status : null
             };
         

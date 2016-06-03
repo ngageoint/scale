@@ -37,7 +37,9 @@
                     minRowsToShow: 17,
                     paginationPageSizes: [25, 50, 75, 100],
                     paginationPageSize: 25,
-                    useExternalPagination: true
+                    useExternalPagination: true,
+                    enablePaginationControls: false,
+                    paginationCurrentPage: 1
                 }
             },
             applySortConfig: function (columnDefs, gridParams) {

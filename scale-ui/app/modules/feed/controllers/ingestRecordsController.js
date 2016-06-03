@@ -6,15 +6,15 @@
 
         var self = this;
 
-        self.ingestsParams = stateService.getIngestsParams();
+        $scope.ingestsParams = stateService.getIngestsParams();
 
         $scope.stateService = stateService;
         $scope.loading = true;
         $scope.subnavLinks = scaleConfig.subnavLinks.feed;
         $scope.ingestStatusValues = scaleConfig.ingestStatus;
-        $scope.selectedIngestStatus = self.ingestsParams.status || $scope.ingestStatusValues[0];
+        $scope.selectedIngestStatus = $scope.ingestsParams.status || $scope.ingestStatusValues[0];
         $scope.gridStyle = '';
-        $scope.lastModifiedStart = moment.utc(self.ingestsParams.started).toDate();
+        $scope.lastModifiedStart = moment.utc($scope.ingestsParams.started).toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -22,7 +22,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc(self.ingestsParams.ended).toDate();
+        $scope.lastModifiedStop = moment.utc($scope.ingestsParams.ended).toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
@@ -33,16 +33,29 @@
         $scope.dateModelOptions = {
             timezone: '+000'
         };
+        $scope.ingestData = [];
+        $scope.searchText = '';
         $scope.gridOptions = gridFactory.defaultGridOptions();
-        $scope.gridOptions.paginationCurrentPage = self.ingestsParams.page || 1;
-        $scope.gridOptions.paginationPageSize = self.ingestsParams.page_size || $scope.gridOptions.paginationPageSize;
+        $scope.gridOptions.paginationCurrentPage = $scope.ingestsParams.page || 1;
+        $scope.gridOptions.paginationPageSize = $scope.ingestsParams.page_size || $scope.gridOptions.paginationPageSize;
         $scope.gridOptions.data = [];
 
-        var filteredByStatus = self.ingestsParams.status ? true : false,
-            filteredByOrder = self.ingestsParams.order ? true : false;
+        $scope.refreshData = function () {
+            //$scope.gridOptions.data = $filter('filter')($scope.ingestData, $scope.searchText, undefined);
+            $scope.gridOptions.data = _.filter($scope.ingestData, function (d) {
+                return d.file_name.toLowerCase().includes($scope.searchText.toLowerCase());
+            });
+        };
+
+        var filteredByStatus = $scope.ingestsParams.status ? true : false,
+            filteredByOrder = $scope.ingestsParams.order ? true : false;
 
         self.colDefs = [
-            { field: 'file_name', displayName: 'File Name', enableFiltering: false },
+            {
+                field: 'file_name',
+                displayName: 'File Name',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><input ng-model="grid.appScope.searchText" ng-change="grid.appScope.refreshData()" class="form-control" placeholder="Search"></div>'
+            },
             {
                 field: 'file_size',
                 displayName: 'File Size',
@@ -57,7 +70,7 @@
             },
             {
                 field: 'status',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedIngestStatus"><option ng-selected="{{ grid.appScope.ingestStatusValues[$index] == grid.appScope.selectedIngestStatus }}" value="{{ grid.appScope.ingestStatusValues[$index] }}" ng-repeat="status in grid.appScope.ingestStatusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedIngestStatus" ng-options="status.toUpperCase() for status in grid.appScope.ingestStatusValues"></select></div>'
             },
             {
                 field: 'transfer_started',
@@ -83,7 +96,8 @@
 
         self.getIngests = function () {
             $scope.loading = true;
-            feedService.getIngestsOnce(self.ingestsParams).then(function (data) {
+            feedService.getIngestsOnce($scope.ingestsParams).then(function (data) {
+                $scope.ingestData = data.results;
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
             }).catch(function (error) {
@@ -94,27 +108,27 @@
         };
 
         self.filterResults = function () {
-            stateService.setIngestsParams(self.ingestsParams);
+            stateService.setIngestsParams($scope.ingestsParams);
             $scope.loading = true;
             self.getIngests();
         };
 
         self.updateColDefs = function () {
-            $scope.gridOptions.columnDefs = gridFactory.applySortConfig(self.colDefs, self.ingestsParams);
+            $scope.gridOptions.columnDefs = gridFactory.applySortConfig(self.colDefs, $scope.ingestsParams);
         };
 
         self.updateIngestOrder = function (sortArr) {
-            self.ingestsParams.order = sortArr.length > 0 ? sortArr : null;
+            $scope.ingestsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
             self.filterResults();
         };
 
         self.updateIngestStatus = function (value) {
-            if (value != self.ingestsParams.status) {
-                self.ingestsParams.page = 1;
+            if (value != $scope.ingestsParams.status) {
+                $scope.ingestsParams.page = 1;
             }
-            self.ingestsParams.status = value === 'VIEW ALL' ? null : value;
-            self.ingestsParams.page_size = $scope.gridOptions.paginationPageSize;
+            $scope.ingestsParams.status = value === 'VIEW ALL' ? null : value;
+            $scope.ingestsParams.page_size = $scope.gridOptions.paginationPageSize;
             if (!$scope.loading) {
                 self.filterResults();
             }
@@ -124,8 +138,8 @@
             //set gridApi on scope
             $scope.gridApi = gridApi;
             $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                self.ingestsParams.page = currentPage;
-                self.ingestsParams.page_size = pageSize;
+                $scope.ingestsParams.page = currentPage;
+                $scope.ingestsParams.page_size = pageSize;
                 self.filterResults();
             });
             $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
@@ -142,22 +156,22 @@
         };
 
         self.initialize = function () {
-            stateService.setIngestsParams(self.ingestsParams);
+            stateService.setIngestsParams($scope.ingestsParams);
             self.updateColDefs();
             self.getIngests();
             navService.updateLocation('feed');
+
+            angular.element(document).ready(function () {
+                // set container heights equal to available page height
+                var viewport = scaleService.getViewportSize(),
+                    offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset,
+                    gridMaxHeight = viewport.height - offset;
+
+                $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
+            });
         };
 
         self.initialize();
-
-        angular.element(document).ready(function () {
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset,
-                gridMaxHeight = viewport.height - offset;
-
-            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
-        });
 
         $scope.$watch('selectedIngestStatus', function (value) {
             if ($scope.loading) {
@@ -172,14 +186,14 @@
 
         $scope.$watch('lastModifiedStart', function (value) {
             if (!$scope.loading) {
-                self.ingestsParams.started = value.toISOString();
+                $scope.ingestsParams.started = value.toISOString();
                 self.filterResults();
             }
         });
 
         $scope.$watch('lastModifiedStop', function (value) {
             if (!$scope.loading) {
-                self.ingestsParams.ended = value.toISOString();
+                $scope.ingestsParams.ended = value.toISOString();
                 self.filterResults();
             }
         });
@@ -196,7 +210,7 @@
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            self.ingestsParams = newValue;
+            $scope.ingestsParams = newValue;
             self.updateColDefs();
         });
     });
