@@ -22,9 +22,18 @@
             <h2>Select a Workspace to view its details.</h2>
         </div>
         <div class="detail-content no-tabs" ng-if="activeWorkspace">
-            <div ng-if="mode==='edit' || mode==='add'">
-                <div class="row">
-                    <div class="col-xs-12 col-md-9">
+            <div class="row">
+                <div class="col-xs-12 col-md-9">
+                    <div ng-if="mode==='view'">
+                        <h3>{{ activeWorkspace.title }}</h3>
+                        <div>
+                            <strong>Description:</strong> {{ activeWorkspace.description }}
+                        </div>
+                        <div>
+                            <strong>Type:</strong> {{ activeWorkspace.json_config.type }}
+                        </div>
+                    </div>
+                    <div ng-if="mode==='edit' || mode==='add'">
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
@@ -58,6 +67,19 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="wsType" class="sr-only">Type</label>
+                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config.type" ng-options="t.type as t.type for t in availableWorkspaceTypes">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    otherfields
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-12 col-md-12">
                                 <!--<div class="form-group">-->
                                     <div class="checkbox">
@@ -70,23 +92,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-3 text-right">
-                        <div class="btn-group btn-group-sm" ng-show="!readonly">
-                            <!--<button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>-->
-                            <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
-                            <button class="btn btn-default" ng-click="cancelCreate()" ng-if="mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-ban"></i></button>
-                            <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
-                        </div>
+                </div>
+                <div class="col-xs-12 col-md-3 text-right">
+                    <div class="btn-group btn-group-sm" ng-show="!readonly">
+                        <!--<button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>-->
+                        <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                        <button class="btn btn-default" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-ban"></i></button>
+                        <button class="btn btn-default" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
                     </div>
                 </div>
-            </div>
-            <div ng-if="mode==='view'">
-                    <h3>{{ activeWorkspace.title }}</h3>
-                    <div>
-                        <strong>Description:</strong> {{ activeWorkspace.description }}
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

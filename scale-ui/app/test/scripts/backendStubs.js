@@ -364,6 +364,9 @@
             workspaceDetailsOverrideUrl = 'test/data/workspaces/workspace' + id + '.json';
             return getSync(workspaceDetailsOverrideUrl);
         });
+        $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
+            return data;
+        });
 
 
         // Workspaces
@@ -372,9 +375,11 @@
         $httpBackend.whenGET(workspacesRegex).respond(function () {
             return getSync(workspacesOverrideUrl);
         });
-
-
-
+        $httpBackend.whenPOST(workspacesRegex).respond(function (method, url, data) {
+            var result = JSON.parse(data);
+            result.id = 9999;
+            return result;
+        });
 
 
         // For everything else, don't mock

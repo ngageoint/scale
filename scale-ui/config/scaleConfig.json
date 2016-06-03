@@ -149,6 +149,25 @@
 
         "jobStatus": ["VIEW ALL","COMPLETED","BLOCKED","QUEUED","RUNNING","FAILED","CANCELED","PENDING"],
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
+        "workspaceTypes": [
+            {
+                "type": "nfs",
+                "fields": [
+                    "mount"
+                ]
+            },{
+                "type": "host",
+                "fields": [
+                    "host_mount"
+                ]
+            },{
+                "type": "s3",
+                "fields": [
+                    "mount",
+                    "key"
+                ]
+            }
+        ],
         "axisTypes": ["linear", "time"],
         "executions": ["success","warning","error"],
         "errorCategories": [

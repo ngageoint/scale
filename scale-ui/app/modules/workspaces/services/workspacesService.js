@@ -35,7 +35,6 @@
             },
             saveWorkspace: function (workspace) {
             var d = $q.defer();
-
             if (!workspace.id) {
                 $http.post(scaleConfig.urls.apiPrefix + 'workspaces/', workspace).success(function (result) {
                     d.resolve(result);

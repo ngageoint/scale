@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('workspacesController', function($rootScope, $scope, $location, $uibModal, $routeParams, navService, workspacesService, scaleService, userService, gridFactory, Workspace) {
+    angular.module('scaleApp').controller('workspacesController', function($rootScope, $scope, $location, $uibModal, $routeParams, scaleConfig, navService, workspacesService, scaleService, userService, gridFactory, Workspace, toastr) {
         var self = this;
         $scope.workspaces = [];
         $scope.addBtnClass = 'btn-primary';
@@ -10,6 +10,8 @@
         $scope.detailClass = 'col-xs-9';
         $scope.mode = "view";
         $scope.readonly = true;
+
+        $scope.availableWorkspaceTypes = scaleConfig.workspaceTypes;
 
         self.wsParams = {
             page: null, page_size: null, started: null, ended: null, order: $rootScope.workspacesControllerOrder || '-last_modified', status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
@@ -84,14 +86,17 @@
             $location.path('workspaces');
         };
 
-        $scope.saveWorkspace = function(){
+        $scope.editWorkspace = function(){
+            $scope.mode = 'edit';
+        }
 
-            if($scope.activeWorkspace.id > 0){
-                console.log('save existing workspace');
-            } else {
-                console.log('save new workspace');
-                // save workspace and redirect to workspaces/newWorkspace.id
-            }
+        $scope.saveWorkspace = function(){
+            workspacesService.saveWorkspace($scope.activeWorkspace).then(function(workspace){
+                debugger;
+                $scope.loadWorkspace(workspace.id);
+            }).fail(function(){
+
+            });
         };
 
         $scope.newWorkspace = function(){
