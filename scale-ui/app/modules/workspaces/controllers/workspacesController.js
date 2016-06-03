@@ -88,7 +88,7 @@
 
         $scope.editWorkspace = function(){
             $scope.mode = 'edit';
-        }
+        };
 
         $scope.saveWorkspace = function(){
             workspacesService.saveWorkspace($scope.activeWorkspace).then(function(workspace){

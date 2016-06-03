@@ -38,7 +38,7 @@
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
                                     <label for="wsName" class="sr-only">Name</label>
-                                    <input id="wsName" type="text" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
+                                    <input id="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
                                     </input>
                                 </div>
                             </div>
@@ -70,12 +70,12 @@
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
                                     <label for="wsType" class="sr-only">Type</label>
-                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config.type" ng-options="t.type as t.type for t in availableWorkspaceTypes">
+                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config.type" ng-options="t.type as t.type for t in availableWorkspaceTypes"></select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
-                                    otherfields
+                                    <span ng-if="activeWorkspace.json_config.type">fields for {{activeWorkspace.json_config.type}} should be here</span>
                                 </div>
                             </div>
                         </div>

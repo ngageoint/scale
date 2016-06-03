@@ -365,7 +365,7 @@
             return getSync(workspaceDetailsOverrideUrl);
         });
         $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
-            return data;
+            return [200, data, {}];
         });
 
 
