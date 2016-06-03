@@ -22,61 +22,71 @@
             <h2>Select a Workspace to view its details.</h2>
         </div>
         <div class="detail-content no-tabs" ng-if="activeWorkspace">
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="wsName" class="sr-only">Name</label>
-                                <input id="wsName" type="text" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
-                                </input>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="wsTitle" class="sr-only">Title</label>
-                                <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label for="wsDescription" class="sr-only">Description</label>
-                                <input id="wsDescription" type="text" class="form-control" ng-model="activeWorkspace.description" placeholder="Description">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label for="wsBaseUrl" class="sr-only">Base URL</label>
-                                <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12">
-                            <!--<div class="form-group">-->
-                                <div class="checkbox">
-                                    <label for="wsActive">
-                                        <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
-                                        Active
-                                    </label>
+            <div ng-if="mode==='edit' || mode==='add'">
+                <div class="row">
+                    <div class="col-xs-12 col-md-9">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="wsName" class="sr-only">Name</label>
+                                    <input id="wsName" type="text" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
+                                    </input>
                                 </div>
-                            <!--</div>-->
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="wsTitle" class="sr-only">Title</label>
+                                    <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="wsDescription" class="sr-only">Description</label>
+                                    <input id="wsDescription" type="text" class="form-control" ng-model="activeWorkspace.description" placeholder="Description">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="wsBaseUrl" class="sr-only">Base URL</label>
+                                    <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <!--<div class="form-group">-->
+                                    <div class="checkbox">
+                                        <label for="wsActive">
+                                            <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
+                                            Active
+                                        </label>
+                                    </div>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3 text-right">
+                        <div class="btn-group btn-group-sm" ng-show="!readonly">
+                            <!--<button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>-->
+                            <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-default" ng-click="cancelCreate()" ng-if="mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-ban"></i></button>
+                            <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-3 text-right">
-                    <div class="btn-group btn-group-sm" ng-show="!readonly">
-                        <button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                        <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
-                        <button class="btn btn-default" ng-click="cancelCreate()" ng-if="mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-ban"></i></button>
-                        <button class="btn" ng-class="editBtnClass" ng-click="toggleEditMode()" ng-if="mode !== 'add'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa" ng-class="editBtnIcon"></i></button>
+            </div>
+            <div ng-if="mode==='view'">
+                    <h3>{{ activeWorkspace.title }}</h3>
+                    <div>
+                        <strong>Description:</strong> {{ activeWorkspace.description }}
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

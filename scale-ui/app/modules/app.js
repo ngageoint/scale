@@ -124,7 +124,7 @@
                 controller: 'jobExecutionDetailController',
                 templateUrl: 'modules/jobs/partials/jobExecutionDetailTemplate.html'
             })
-            .when('/workspaces', {
+            .when('/workspaces/:id?', {
                 controller: 'workspacesController',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })

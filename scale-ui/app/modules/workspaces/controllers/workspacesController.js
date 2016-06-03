@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('workspacesController', function($rootScope, $scope, $location, $uibModal, navService, workspacesService, scaleService, userService, gridFactory, moment, toastr) {
+    angular.module('scaleApp').controller('workspacesController', function($rootScope, $scope, $location, $uibModal, $routeParams, navService, workspacesService, scaleService, userService, gridFactory, Workspace) {
         var self = this;
         $scope.workspaces = [];
         $scope.addBtnClass = 'btn-primary';
@@ -80,28 +80,36 @@
         };
 
         $scope.cancelCreate = function(){
-            $scope.mode = "view";
-            $scope.activeWorkspace = null;
+            //disableSaveWorkspace();
+            $location.path('workspaces');
+        };
+
+        $scope.saveWorkspace = function(){
+
+            if($scope.activeWorkspace.id > 0){
+                console.log('save existing workspace');
+            } else {
+                console.log('save new workspace');
+                // save workspace and redirect to workspaces/newWorkspace.id
+            }
         };
 
         $scope.newWorkspace = function(){
-            console.log('create new workspace');
             $scope.mode = "add";
-          $scope.activeWorkspace =  {
-              name: "",
-              title: "",
-              description: "",
-              base_url: "",
-              is_active: true,
-              created: null,
-              archived: null,
-              last_modified: null
-          }
+            $scope.loadWorkspace('new');
+            //$scope.activeWorkspace =  new Workspace();
         };
 
+        $scope.loadWorkspace = function(id){
+            $location.path('workspaces/' + id);
+
+        }
+
         var enableSaveWorkspace = function () {
-            $scope.activeWorkspace.modified = true;
-            $scope.saveBtnClass = 'btn-primary';
+            if($scope.activeWorkspace){
+                $scope.activeWorkspace.modified = true;
+                $scope.saveBtnClass = 'btn-primary';
+            }
         };
 
         var disableSaveWorkspace = function () {
@@ -130,10 +138,26 @@
 
         self.initialize = function () {
             self.getWorkspaces();
+            $scope.activeWorkspace = null;
+            $scope.mode = 'view';
             $rootScope.user = userService.getUserCreds();
 
             if ($rootScope.user) {
                 $scope.readonly = false;
+            }
+            if($routeParams.id){
+                var id = $routeParams.id;
+                console.log(id);
+                if(id === 'new'){
+                    $scope.mode = 'add';
+                    $scope.activeWorkspace = new Workspace();
+                }
+                else {
+                    // set activeWorkspace = workspace details for id
+                    workspacesService.getWorkspaceDetails(id).then(function(data){
+                        $scope.activeWorkspace = data;
+                    });
+                }
             }
             navService.updateLocation('workspaces');
         };

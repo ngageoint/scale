@@ -354,6 +354,18 @@
             return getSync(versionOverrideUrl);
         });
 
+        // Workspace Details
+        var workspaceDetailsOverrideUrl = 'test/data/workspaces/workspace1.json';
+        var workspaceDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/.*/', 'i');
+        $httpBackend.whenGET(workspaceDetailsRegex).respond(function (method, url) {
+            // get the workspace.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            workspaceDetailsOverrideUrl = 'test/data/workspaces/workspace' + id + '.json';
+            return getSync(workspaceDetailsOverrideUrl);
+        });
+
+
         // Workspaces
         var workspacesOverrideUrl = 'test/data/workspaces.json';
         var workspacesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');
