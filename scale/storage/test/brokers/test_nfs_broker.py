@@ -47,6 +47,11 @@ class TestNfsBrokerDeleteFiles(TestCase):
         two_calls = [call(full_path_file_1), call(full_path_file_2)]
         mock_remove.assert_has_calls(two_calls)
 
+        self.assertTrue(file_1.is_deleted)
+        self.assertIsNotNone(file_1.deleted)
+        self.assertTrue(file_2.is_deleted)
+        self.assertIsNotNone(file_2.deleted)
+
 
 class TestNfsBrokerDownloadFiles(TestCase):
 
@@ -159,6 +164,9 @@ class TestNfsBrokerMoveFiles(TestCase):
         mock_move.assert_has_calls(two_calls)
         two_calls = [call(full_new_workspace_path_1, 0644), call(full_new_workspace_path_2, 0644)]
         mock_chmod.assert_has_calls(two_calls)
+
+        self.assertEqual(file_1.file_path, new_workspace_path_1)
+        self.assertEqual(file_2.file_path, new_workspace_path_2)
 
 
 class TestNfsBrokerUploadFiles(TestCase):
