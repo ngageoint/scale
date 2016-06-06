@@ -723,7 +723,6 @@
             });
 
             $scope.$watch('recipeType', function (newValue, oldValue) {
-                $scope.mode = null;
                 if (!$scope.recipeType) {
                     $scope.recipeType = new RecipeType();
                 }
@@ -731,7 +730,9 @@
                 if (typeof $scope.recipeType.id === 'undefined' || $scope.recipeType.id === null || $scope.recipeType.id === 0) {
                     $scope.mode = 'add';
                 } else {
-                    $scope.mode = $scope.mode || 'view';
+                    if ($scope.mode !== 'edit') {
+                        $scope.mode = 'view'
+                    }
                 }
                 _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
                     if (!job.job_type.job_type_interface && $scope.recipeType.job_types) {
