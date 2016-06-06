@@ -150,7 +150,7 @@
                     started: started,
                     ended: ended,
                     choice_id: _.map(jobTypes, 'id'),
-                    column: ['system_error_count', 'algorithm_error_count', 'data_error_count', 'total_count'],
+                    column: ['error_system_count', 'error_algorithm_count', 'error_data_count', 'total_count'],
                     group: null,
                     dataType: 'job-types'
                 };
