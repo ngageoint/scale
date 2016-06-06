@@ -15,6 +15,7 @@ import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
 from storage.models import CountryData, ScaleFile, Workspace
+from storage.brokers.exceptions import InvalidBrokerConfiguration
 
 
 class TestScaleFileUpdateUUID(TestCase):
@@ -120,6 +121,60 @@ class TestScaleFileGetDataTypeTags(TestCase):
         tags = the_file.get_data_type_tags()
 
         self.assertSetEqual(tags, set())
+
+
+class TestScaleFileManagerDeleteFiles(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_success(self):
+        """Tests deleting files successfully"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_1.delete_files = MagicMock()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+
+        workspace_2 = storage_test_utils.create_workspace()
+        workspace_2.delete_files = MagicMock()
+        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+
+        files = [file_1, file_2]
+        ScaleFile.objects.delete_files(files)
+
+        workspace_1.delete_files.assert_called_once_with([file_1])
+        workspace_2.delete_files.assert_called_once_with([file_2])
+
+    def test_inactive_workspace(self):
+        """Tests calling deleting files from an inactive workspace"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_1.download_files = MagicMock()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+
+        workspace_2 = storage_test_utils.create_workspace(is_active=False)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+
+        files = [file_1, file_2]
+        self.assertRaises(ArchivedWorkspace, ScaleFile.objects.delete_files, files)
+
+    def test_deleted_file(self):
+        """Tests attempting to delete a file that is already deleted"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_1.delete_files = MagicMock()
+        file_1a = storage_test_utils.create_file(workspace=workspace_1)
+        file_1b = storage_test_utils.create_file(workspace=workspace_1, is_deleted=True)
+
+        workspace_2 = storage_test_utils.create_workspace()
+        workspace_2.delete_files = MagicMock()
+        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+
+        files = [file_1a, file_1b, file_2]
+        ScaleFile.objects.delete_files(files)
+
+        workspace_1.delete_files.assert_called_once_with([file_1a, file_1b])
+        workspace_2.delete_files.assert_called_once_with([file_2])
 
 
 class TestScaleFileManagerDownloadFiles(TestCase):
@@ -455,7 +510,7 @@ class TestCountryData(TestCase):
         self.assertRaises(CountryData.DoesNotExist, CountryData.objects.update_border, 'Kerblekistan', newborder)
 
 
-class TestWorkspaceManagerCreate(TransactionTestCase):
+class TestWorkspaceManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -477,3 +532,32 @@ class TestWorkspaceManagerCreate(TransactionTestCase):
         self.assertEqual(workspace.description, 'my_description')
         self.assertEqual(workspace.json_config['broker']['type'], 'host')
         self.assertTrue(workspace.is_active)
+
+    def test_broker_validation(self):
+        """Tests that getting the broker instance performs validation."""
+
+        config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path'
+            },
+        }
+        workspace = storage_test_utils.create_workspace(json_config=config)
+
+        # No exceptions indicates success
+        workspace._get_broker()
+
+    def test_broker_validation_error(self):
+        """Tests that attempting to get a bad broker instance raises an error."""
+
+        config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'host',
+            },
+        }
+        workspace = storage_test_utils.create_workspace(json_config=config)
+
+        # No exceptions indicates success
+        self.assertRaises(InvalidBrokerConfiguration, workspace._get_broker)
