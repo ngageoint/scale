@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.test package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.test package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job package" href="job.html"/>
         <link rel="next" title="job.test.configuration package" href="job.test.configuration.html"/>
         <link rel="prev" title="job.migrations package" href="job.migrations.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -196,6 +195,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job.test.configuration.html">job.test.configuration package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="job.test.configuration.configuration.html">job.test.configuration.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.configuration.html#module-job.test.configuration.configuration.test_job_configuration">job.test.configuration.configuration.test_job_configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.configuration.html#module-job.test.configuration.configuration">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="job.test.configuration.data.html">job.test.configuration.data package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.data.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.data.html#module-job.test.configuration.data.test_job_connection">job.test.configuration.data.test_job_connection module</a></li>
@@ -513,6 +518,11 @@
 <em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobExecutionManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests for the job execution model manager</p>
+<dl class="attribute">
+<dt id="job.test.test_models.TestJobExecutionManager.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="job.test.test_models.TestJobExecutionManager.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.setUp" title="Permalink to this definition">¶</a></dt>
@@ -533,6 +543,26 @@
 <code class="descname">test_schedule_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_ingest_docker_params">
+<code class="descname">test_schedule_job_executions_ingest_docker_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_ingest_docker_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing scheduling a job execution and checking Docker params for an ingest job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_host_broker">
+<code class="descname">test_schedule_job_executions_non_system_docker_params_host_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_host_broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing scheduling a job execution and checking Docker params for a non-system job that only uses a host
+broker for input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_nfs_broker">
+<code class="descname">test_schedule_job_executions_non_system_docker_params_nfs_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_nfs_broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing scheduling a job execution and checking Docker params for a non-system job that uses an NFS broker
+for input and output</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -543,6 +573,12 @@
 <dt id="job.test.test_models.TestJobManager.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobManager.test_populate_job_data">
+<code class="descname">test_populate_job_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobManager.test_populate_job_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobManager.populate_job_data()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobManager.test_queue_job_timestamps">
@@ -1433,7 +1469,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_job_exe">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>configuration=None</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job execution model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1510,7 +1546,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

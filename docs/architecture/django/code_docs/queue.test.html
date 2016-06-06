@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>queue.test package &mdash; Scale 3.0.0 documentation</title>
+  <title>queue.test package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="queue package" href="queue.html"/>
         <link rel="next" title="recipe package" href="recipe.html"/>
         <link rel="prev" title="queue.migrations package" href="queue.migrations.html"/> 
@@ -336,29 +336,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob">
-<em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerRequeueExistingJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.test_invalid_status">
-<code class="descname">test_invalid_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.test_invalid_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests rejecting requeue of existing job with an incorrect status.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerRequeueExistingJob.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueExistingJob.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.requeue_existing_job() successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="queue.test.test_models.TestQueueManagerRequeueJobs">
 <em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerRequeueJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueJobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -520,41 +497,6 @@
 <dt id="queue.test.test_views.TestQueueStatusView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the queue status view.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.test.test_views.TestRequeueExistingJobView">
-<em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestRequeueExistingJobView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueExistingJobView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueExistingJobView.test_bad_job_id">
-<code class="descname">test_bad_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_bad_job_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view with an invalid job type ID.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueExistingJobView.test_requeue_canceled">
-<code class="descname">test_requeue_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_requeue_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view successfully for a job that was never queued.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueExistingJobView.test_requeue_failed">
-<code class="descname">test_requeue_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_requeue_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view successfully for a job that was previously queued.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_views.TestRequeueExistingJobView.test_wrong_status">
-<code class="descname">test_wrong_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueExistingJobView.test_wrong_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view when the job hasn&#8217;t failed.</p>
 </dd></dl>
 
 </dd></dl>
@@ -726,7 +668,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

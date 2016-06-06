@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    job.configuration.configuration
     job.configuration.data
     job.configuration.environment
     job.configuration.interface

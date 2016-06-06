@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job package &mdash; Scale 3.0.0 documentation</title>
+  <title>job package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="job.configuration package" href="job.configuration.html"/>
         <link rel="prev" title="ingest.triggers.configuration package" href="ingest.triggers.configuration.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job">Module contents</a></li>
@@ -194,6 +193,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="job.configuration.html">job.configuration package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="job.configuration.configuration.html">job.configuration.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.configuration.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.configuration.configuration.html#module-job.configuration.configuration.exceptions">job.configuration.configuration.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.configuration.configuration.html#module-job.configuration.configuration.job_configuration">job.configuration.configuration.job_configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.configuration.configuration.html#module-job.configuration.configuration">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="job.configuration.data.html">job.configuration.data package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.data.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.data.html#module-job.configuration.data.data_file">job.configuration.data.data_file module</a></li>
@@ -266,7 +272,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.cleanup">job.execution.cleanup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.file_system">job.execution.file_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.container">job.execution.container module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.job_exe_cleaner">job.execution.job_exe_cleaner module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.metrics">job.execution.metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution">Module contents</a></li>
@@ -308,6 +314,9 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0012_auto_20160310_1318">job.migrations.0012_auto_20160310_1318 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0013_auto_20160316_1805">job.migrations.0013_auto_20160316_1805 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0014_auto_20160317_1208">job.migrations.0014_auto_20160317_1208 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0015_auto_20160420_1345">job.migrations.0015_auto_20160420_1345 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0016_auto_20160421_1553">job.migrations.0016_auto_20160421_1553 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0017_auto_20160426_1556">job.migrations.0017_auto_20160426_1556 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -315,6 +324,12 @@
 <li class="toctree-l2"><a class="reference internal" href="job.test.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="job.test.configuration.html">job.test.configuration package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="job.test.configuration.configuration.html">job.test.configuration.configuration package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.configuration.html#module-job.test.configuration.configuration.test_job_configuration">job.test.configuration.configuration.test_job_configuration module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.configuration.html#module-job.test.configuration.configuration">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l5"><a class="reference internal" href="job.test.configuration.data.html">job.test.configuration.data package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="job.test.configuration.data.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="job.test.configuration.data.html#module-job.test.configuration.data.test_job_connection">job.test.configuration.data.test_job_connection module</a></li>
@@ -524,10 +539,9 @@ obtained BEFORE obtaining the lock for the job model.</p>
 <li><strong>error</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The error that caused the failure (should only be set when status is FAILED)</li>
 <li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description defining the data for this job. This field must be populated when the job is first
 queued.</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job should be run</li>
 <li><strong>results</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description defining the results for this job. This field is populated when the job is
 successfully completed.</li>
-<li><strong>docker_params</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-See the mesos prototype file for further information.</li>
 <li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job (lower number is higher priority)</li>
 <li><strong>timeout</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum amount of time to allow this job to run before being killed (in seconds)</li>
 <li><strong>max_tries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum number of times to try executing this job in case of errors (minimum one)</li>
@@ -538,8 +552,8 @@ See the mesos prototype file for further information.</li>
 <li><strong>disk_out_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
 job</li>
 <li><strong>is_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this job has been superseded and is obsolete. This may be true while
-superseded_by_job (the reverse relationship of superded_job) is null, indicating that this job is obsolete (its
-recipe has been superseded), but there is no new job that has directly taken its place.</li>
+superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
+(its recipe has been superseded), but there is no new job that has directly taken its place.</li>
 <li><strong>root_superseded_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The first job in the chain of superseded jobs. This field will be null for the first
 job in the chain (i.e. jobs that have a null superseded_job field).</li>
 <li><strong>superseded_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that was directly superseded by this job. The reverse relationship can be accessed
@@ -606,14 +620,14 @@ using &#8216;superseded_by_job&#8217;.</li>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.data">
-<code class="descclassname">Job.</code><code class="descname">data</code><a class="headerlink" href="#job.models.Job.data" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.Job.configuration">
+<code class="descclassname">Job.</code><code class="descname">configuration</code><a class="headerlink" href="#job.models.Job.configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.docker_params">
-<code class="descclassname">Job.</code><code class="descname">docker_params</code><a class="headerlink" href="#job.models.Job.docker_params" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.Job.data">
+<code class="descclassname">Job.</code><code class="descname">data</code><a class="headerlink" href="#job.models.Job.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
@@ -631,6 +645,22 @@ using &#8216;superseded_by_job&#8217;.</li>
 <dt id="job.models.Job.file_links">
 <code class="descclassname">Job.</code><code class="descname">file_links</code><a class="headerlink" href="#job.models.Job.file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.get_job_configuration">
+<code class="descclassname">Job.</code><code class="descname">get_job_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_job_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration for this job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.Job.get_job_data">
@@ -775,6 +805,11 @@ Callers must save the model to persist the change.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="job.models.Job.queue_set">
+<code class="descclassname">Job.</code><code class="descname">queue_set</code><a class="headerlink" href="#job.models.Job.queue_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="job.models.Job.recipejob">
 <code class="descclassname">Job.</code><code class="descname">recipejob</code><a class="headerlink" href="#job.models.Job.recipejob" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -830,8 +865,7 @@ execution model requires obtaining a lock on the model using select_for_update()
 populated when the job execution is scheduled to run on a node and is updated when any needed pre-job steps are
 run.</li>
 <li><strong>timeout</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum amount of time to allow this job to run before being killed (in seconds)</li>
-<li><strong>docker_params</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-See the mesos prototype file for further information.</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job execution should be run</li>
 <li><strong>node</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The node on which the job execution is being run</li>
 <li><strong>environment</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description defining the environment data for this job execution. This field is populated
 when the job execution is scheduled to run on a node.</li>
@@ -842,15 +876,12 @@ when the job execution is scheduled to run on a node.</li>
 job execution</li>
 <li><strong>disk_total_scheduled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of disk space in MiB scheduled for this job execution</li>
 <li><strong>requires_cleanup</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this job execution still requires cleanup on the node</li>
-<li><strong>pre_task_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The unique ID of the pre-task</li>
 <li><strong>pre_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the pre-task was started</li>
 <li><strong>pre_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the pre-task was completed</li>
 <li><strong>pre_exit_code</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The exit code of the pre-task</li>
-<li><strong>job_task_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The unique ID of the task running the job</li>
 <li><strong>job_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the main job task started running</li>
 <li><strong>job_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the main job task was completed</li>
 <li><strong>job_exit_code</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The exit code of the main job task</li>
-<li><strong>post_task_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The unique ID of the post-task</li>
 <li><strong>post_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the post-task was started</li>
 <li><strong>post_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the post-task was completed</li>
 <li><strong>post_exit_code</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The exit code of the post-task</li>
@@ -943,9 +974,24 @@ post-job steps are successfully completed.</li>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.docker_params">
-<code class="descclassname">JobExecution.</code><code class="descname">docker_params</code><a class="headerlink" href="#job.models.JobExecution.docker_params" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.JobExecution.configuration">
+<code class="descclassname">JobExecution.</code><code class="descname">configuration</code><a class="headerlink" href="#job.models.JobExecution.configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobExecution.configure_docker_params">
+<code class="descclassname">JobExecution.</code><code class="descname">configure_docker_params</code><span class="sig-paren">(</span><em>workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.configure_docker_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the Docker parameters needed for each task in the execution. Requires workspace information to
+determine any Docker parameters that might be required by this job execution&#8217;s workspaces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -981,22 +1027,6 @@ post-job steps are successfully completed.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobExecution.get_docker_params">
-<code class="descclassname">JobExecution.</code><code class="descname">get_docker_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_docker_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the Docker params as a list of lists. Performs some basic validation.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Docker params as a list of lists</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobExecution.get_error_interface">
 <code class="descclassname">JobExecution.</code><code class="descname">get_error_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_error_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the error interface for this job execution</p>
@@ -1007,6 +1037,22 @@ post-job steps are successfully completed.</li>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error interface for this job execution</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.ErrorInterface</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobExecution.get_job_configuration">
+<code class="descclassname">JobExecution.</code><code class="descname">get_job_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_job_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration for this job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1491,32 +1537,18 @@ related job, job_type, job_type_rev and node models populated.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_executions</strong> (list[(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, <a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>,
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_executions</strong> (list[(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, <a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>,
 <a class="reference internal" href="#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a>)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node to
-schedule it on, and the resources it will be given</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scheduled job_exe models with related job, job_type, job_type_rev and node models populated</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobExecutionManager.set_task_ids">
-<code class="descname">set_task_ids</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.set_task_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-<li><strong>pre_task_id</strong> (<em>str</em>) &#8211; The pre-task ID, possibly None</li>
-<li><strong>job_task_id</strong> (<em>str</em>) &#8211; The job-task ID, possibly None</li>
-<li><strong>post_task_id</strong> (<em>str</em>) &#8211; The post-task ID, possibly None</li>
+schedule it on, and the resources it will be given</li>
+<li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The scheduled job_exe models with related job, job_type, job_type_rev and node models populated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1899,7 +1931,7 @@ lock on the model using select_for_update().</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The stable name of the job type used by clients for queries</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the job type used by clients for queries</li>
 <li><strong>version</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The version of the job type</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the job type</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of the job type</li>
@@ -2127,7 +2159,7 @@ transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The stable name of the job type used by clients for queries</li>
+<li><strong>name</strong> (<em>str</em>) &#8211; The identifying name of the job type used by clients for queries</li>
 <li><strong>version</strong> (<em>str</em>) &#8211; The version of the job type</li>
 <li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
 <li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
@@ -2959,10 +2991,6 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.settings">
-<span id="job-settings-module"></span><h2>job.settings module<a class="headerlink" href="#module-job.settings" title="Permalink to this headline">¶</a></h2>
-<p>Defines settings for running jobs on nodes</p>
-</div>
 <div class="section" id="module-job.urls">
 <span id="job-urls-module"></span><h2>job.urls module<a class="headerlink" href="#module-job.urls" title="Permalink to this headline">¶</a></h2>
 <p>Defines the URLs for the RESTful job services</p>
@@ -3568,7 +3596,7 @@ populated for types of ERROR status values.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>metrics package &mdash; Scale 3.0.0 documentation</title>
+  <title>metrics package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="metrics.fixtures package" href="metrics.fixtures.html"/>
         <link rel="prev" title="mesos_api package" href="mesos_api.html"/> 
@@ -346,7 +346,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsError.GROUPS">
-<code class="descclassname">MetricsError.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b67ab90&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsError.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f326bf50&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -454,7 +454,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.GROUPS">
-<code class="descclassname">MetricsIngest.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b67afd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687150&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b6870d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687110&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsIngest.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281510&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f32813d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281490&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f32814d0&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -577,7 +577,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.GROUPS">
-<code class="descclassname">MetricsJobType.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687c50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687b10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687bd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687c10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687c90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687cd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687d10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b2e1b687d50&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsJobType.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281fd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281e90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281f50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f3281f90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f328e050&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f328e090&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f328e0d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ac1f328e110&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -745,7 +745,7 @@ aggregate variations that all reference the same base attribute.</li>
 
 <dl class="class">
 <dt id="metrics.registry.MetricsPlotValue">
-<em class="property">class </em><code class="descclassname">metrics.registry.</code><code class="descname">MetricsPlotValue</code><span class="sig-paren">(</span><em>choice_id</em>, <em>date</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.registry.MetricsPlotValue" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">metrics.registry.</code><code class="descname">MetricsPlotValue</code><span class="sig-paren">(</span><em>choice_id</em>, <em>date</em>, <em>value=0</em>, <em>count=0</em>, <em>total=0</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.registry.MetricsPlotValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a single value within a series of values for a metrics type column.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -756,6 +756,8 @@ aggregate variations that all reference the same base attribute.</li>
 <li><strong>choice_id</strong> (<em>string</em>) &#8211; The unique identifier of the choice model associated with the value.</li>
 <li><strong>date</strong> (<em>datetime.date</em>) &#8211; The date when the plot value occurred.</li>
 <li><strong>value</strong> (<em>int</em>) &#8211; The actual plot value that was recorded.</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of records contributing to this plot value.</li>
+<li><strong>total</strong> (<em>int</em>) &#8211; The total values of all records contributing to this plot value.</li>
 </ul>
 </td>
 </tr>
@@ -1013,7 +1015,7 @@ queries they are not included by default.</td>
 <li><strong>started</strong> (<em>datetime.date</em>) &#8211; The start of the time range to query.</li>
 <li><strong>ended</strong> (<em>datetime.date</em>) &#8211; The end of the time range to query.</li>
 <li><strong>choice_ids</strong> (<em>list[string]</em>) &#8211; A list of related model identifiers to query.</li>
-<li><strong>columns</strong> (<em>list[string]</em>) &#8211; A list of metric columns to include from the metric type.</li>
+<li><strong>columns</strong> ({<a class="reference internal" href="#metrics.registry.MetricsTypeColumn" title="metrics.registry.MetricsTypeColumn"><code class="xref py py-class docutils literal"><span class="pre">metrics.registry.MetricsTypeColumn</span></code></a>}) &#8211; A list of metric columns to include from the metric type.</li>
 </ul>
 </td>
 </tr>
@@ -1358,7 +1360,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.views.MetricsView.queryset">
-<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object at 0x2b2e20ba8b50&gt;, &lt;metrics.registry.MetricsType object at 0x2b2e20ae91d0&gt;, &lt;metrics.registry.MetricsType object at 0x2b2e20b6bc50&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object at 0x2ac1f72d9890&gt;, &lt;metrics.registry.MetricsType object at 0x2ac1f72d9950&gt;, &lt;metrics.registry.MetricsType object at 0x2ac1f72ed210&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1416,7 +1418,7 @@ are not included by default.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

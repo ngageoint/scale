@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.migrations package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.migrations package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job package" href="job.html"/>
         <link rel="next" title="job.test package" href="job.test.html"/>
         <link rel="prev" title="job.management.commands package" href="job.management.commands.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -459,6 +458,68 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0015_auto_20160420_1345">
+<span id="job-migrations-0015-auto-20160420-1345-module"></span><h2>job.migrations.0015_auto_20160420_1345 module<a class="headerlink" href="#module-job.migrations.0015_auto_20160420_1345" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0015_auto_20160420_1345.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0015_auto_20160420_1345.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0015_auto_20160420_1345.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0015_auto_20160420_1345.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0014_auto_20160317_1208')]</em><a class="headerlink" href="#job.migrations.0015_auto_20160420_1345.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0015_auto_20160420_1345.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'docker_params', model_name=u'job'&gt;, &lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'configuration', model_name=u'job'&gt;]</em><a class="headerlink" href="#job.migrations.0015_auto_20160420_1345.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0016_auto_20160421_1553">
+<span id="job-migrations-0016-auto-20160421-1553-module"></span><h2>job.migrations.0016_auto_20160421_1553 module<a class="headerlink" href="#module-job.migrations.0016_auto_20160421_1553" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0016_auto_20160421_1553.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0016_auto_20160421_1553.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0016_auto_20160421_1553.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0015_auto_20160420_1345'), (u'storage', u'0002_workspace_is_move_enabled')]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0016_auto_20160421_1553.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_configuration at 0x2ac1f52c90c8&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.migrations.0016_auto_20160421_1553.Migration.populate_job_configuration">
+<code class="descname">populate_job_configuration</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.populate_job_configuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0017_auto_20160426_1556">
+<span id="job-migrations-0017-auto-20160426-1556-module"></span><h2>job.migrations.0017_auto_20160426_1556 module<a class="headerlink" href="#module-job.migrations.0017_auto_20160426_1556" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0017_auto_20160426_1556.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0017_auto_20160426_1556.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0017_auto_20160426_1556.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0017_auto_20160426_1556.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0016_auto_20160421_1553'), (u'queue', u'0008_auto_20160421_1648')]</em><a class="headerlink" href="#job.migrations.0017_auto_20160426_1556.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0017_auto_20160426_1556.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'docker_params', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'job_task_id', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'post_task_id', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'pre_task_id', model_name=u'jobexecution'&gt;, &lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'configuration', model_name=u'jobexecution'&gt;]</em><a class="headerlink" href="#job.migrations.0017_auto_20160426_1556.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -505,7 +566,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

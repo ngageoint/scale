@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.strike package &mdash; Scale 3.0.0 documentation</title>
+  <title>ingest.strike package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
         <link rel="next" title="ingest.strike.configuration package" href="ingest.strike.configuration.html"/>
         <link rel="prev" title="ingest.migrations package" href="ingest.migrations.html"/> 
@@ -105,8 +105,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.cleanup">ingest.cleanup module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.file_system">ingest.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -206,23 +205,6 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ingest.strike.cleanup">
-<span id="ingest-strike-cleanup-module"></span><h2>ingest.strike.cleanup module<a class="headerlink" href="#module-ingest.strike.cleanup" title="Permalink to this headline">¶</a></h2>
-<p>Defines the abstract base class used for cleaning up job executions</p>
-<dl class="class">
-<dt id="ingest.strike.cleanup.StrikeJobExecutionCleaner">
-<em class="property">class </em><code class="descclassname">ingest.strike.cleanup.</code><code class="descname">StrikeJobExecutionCleaner</code><a class="headerlink" href="#ingest.strike.cleanup.StrikeJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner" title="job.execution.job_exe_cleaner.JobExecutionCleaner"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner</span></code></a></p>
-<p>Cleaner for the execution of Strike jobs</p>
-<dl class="method">
-<dt id="ingest.strike.cleanup.StrikeJobExecutionCleaner.cleanup_job_execution">
-<code class="descname">cleanup_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.cleanup.StrikeJobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution()</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-ingest.strike.strike_processor">
 <span id="ingest-strike-strike-processor-module"></span><h2>ingest.strike.strike_processor module<a class="headerlink" href="#module-ingest.strike.strike_processor" title="Permalink to this headline">¶</a></h2>
 <p>Defines the Strike Processor which watches a directory for incoming files and prepares them to be ingested after they
@@ -305,7 +287,7 @@ evaluation.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

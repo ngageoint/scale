@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>source package &mdash; Scale 3.0.0 documentation</title>
+  <title>source package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="source.configuration package" href="source.configuration.html"/>
         <link rel="prev" title="shared_resource.test package" href="shared_resource.test.html"/> 
@@ -406,8 +406,6 @@ transaction.</p>
 <li><strong>data_types</strong> (<em>[string]</em>) &#8211; List of strings containing the data types tags for this source file.</li>
 <li><strong>new_workspace_path</strong> (<em>str</em>) &#8211; New workspace path to move the source file to now that parse data is available. If
 None, the source file should not be moved.</li>
-<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in moving the source file. Only
-needed if new_workspace_path is not None.</li>
 </ul>
 </td>
 </tr>
@@ -417,14 +415,13 @@ needed if new_workspace_path is not None.</li>
 
 <dl class="method">
 <dt id="source.models.SourceFileManager.store_file">
-<code class="descname">store_file</code><span class="sig-paren">(</span><em>work_dir</em>, <em>local_path</em>, <em>data_types</em>, <em>workspace</em>, <em>remote_path</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.store_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">store_file</code><span class="sig-paren">(</span><em>local_path</em>, <em>data_types</em>, <em>workspace</em>, <em>remote_path</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.store_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the given local source file in the workspace</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in storing the source file</li>
 <li><strong>local_path</strong> (<em>str</em>) &#8211; The absolute local path of the source file to store</li>
 <li><strong>data_types</strong> (<em>list of str</em>) &#8211; The data type tags of the source file</li>
 <li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>) &#8211; The workspace to use for storing the source file</li>
@@ -741,7 +738,7 @@ needed if new_workspace_path is not None.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

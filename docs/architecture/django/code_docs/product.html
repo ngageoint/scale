@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>product package &mdash; Scale 3.0.0 documentation</title>
+  <title>product package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="product.configuration package" href="product.configuration.html"/>
         <link rel="prev" title="port.test package" href="port.test.html"/> 
@@ -531,7 +531,7 @@ complete successfully and has not been unpublished.</li>
 <dl class="method">
 <dt id="product.models.ProductFileManager.populate_source_ancestors">
 <code class="descname">populate_source_ancestors</code><span class="sig-paren">(</span><em>products</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.populate_source_ancestors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Populates ancestors of the given products with its source file ancestors in a field called &#8220;source_files&#8221;</p>
+<dd><p>Populates each of the given products with its source file ancestors in a field called &#8220;source_files&#8221;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -563,19 +563,16 @@ atomic transaction.</p>
 
 <dl class="method">
 <dt id="product.models.ProductFileManager.upload_files">
-<code class="descname">upload_files</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em>, <em>file_entries</em>, <em>input_file_ids</em>, <em>job_exe</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.upload_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>file_entries</em>, <em>input_file_ids</em>, <em>job_exe</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.upload_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the given local product files into the workspace. All database changes will be made in an atomic
-transaction. This method assumes that ScaleFileManager.setup_upload_dir() has already been called with the same
-upload and work directories.</p>
+transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
-<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading</li>
-<li><strong>file_entries</strong> (<em>list of tuple(str, str, str)</em>) &#8211; List of files where each file is a tuple of (source path relative to upload directory,
-workspace path for storing the file, media_type)</li>
+<li><strong>file_entries</strong> (<em>list of tuple(str, str, str)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
+storing the file, media_type)</li>
 <li><strong>input_file_ids</strong> (<em>list of int</em>) &#8211; List of identifiers for files used to produce the given file entries</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job_exe model with the related job and job_type fields</li>
 <li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>) &#8211; The workspace to use for storing the product files</li>
@@ -884,7 +881,7 @@ workspace path for storing the file, media_type)</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Workspaces &mdash; Scale 3.0.0 documentation</title>
+  <title>Workspaces &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Architecture" href="index.html"/>
         <link rel="next" title="Django/Code Base" href="django/index.html"/>
         <link rel="prev" title="Triggers" href="triggers.html"/> 
@@ -99,6 +99,8 @@
 <li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Workspaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#workspace-configuration-specification-version-1-0">Workspace Configuration Specification Version 1.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#host-broker">Host Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nfs-broker">NFS Broker</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="django/index.html">Django/Code Base</a></li>
@@ -157,19 +159,19 @@
 <span id="architecture-workspaces"></span><h1>Workspaces<a class="headerlink" href="#workspaces" title="Permalink to this headline">¶</a></h1>
 <p>A workspace in the Scale system is a location where files are stored (source files, product files, etc). A workspace
 contains configuration specifying how files are stored into and retrieved from the workspace. Workspaces are configured
-to use various <em>brokers</em>, which know how to store/retrieve files in different storage systems (e.g. NFS, FTP).</p>
+to use various <em>brokers</em>, which know how to store/retrieve files in different storage systems (e.g. NFS).</p>
 <p><strong>Example workspace configuration:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
    <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span>
+      <span class="s2">&quot;nfs_path&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span>
    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The <em>broker</em> value is a JSON object providing the configuration for this workspace&#8217;s broker. The <em>type</em> value indicates
-that the NFS (Network File System) broker should be used for this workspace. The <em>mount</em> field specifies the NFS host
+that the NFS (Network File System) broker should be used for this workspace. The <em>nfs_path</em> field specifies the NFS host
 and path that should be mounted in order to access the files. To see all of the options for a workspace&#8217;s configuration,
 please refer to the Workspace Configuration Specification below.</p>
 <div class="section" id="workspace-configuration-specification-version-1-0">
@@ -178,8 +180,7 @@ please refer to the Workspace Configuration Specification below.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
    <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -194,22 +195,74 @@ future changes to the specification will still accept your workspace configurati
 <p><strong>broker</strong>: JSON object</p>
 <blockquote>
 <div><p>The <em>broker</em> is a JSON object that defines the broker that the workspace should use for retrieving and storing
-files. The <em>broker</em> JSON object has the following fields:</p>
+files. The <em>broker</em> JSON object always has the following field:</p>
 <p><strong>type</strong>: JSON string</p>
 <blockquote>
 <div><p>The <em>type</em> is a required string that specifies the type of the broker to use. The other fields that configure
 the broker are based upon the type of the broker in the <em>type</em> field. The valid broker types are:</p>
+<p><strong>host</strong></p>
+<blockquote>
+<div>A &#8220;host&#8221; broker mounts a local directory from the host into the job&#8217;s container. Usually this local
+directory is a shared file system that has been mounted onto the host.</div></blockquote>
 <p><strong>nfs</strong></p>
 <blockquote>
-<div><p>An &#8220;nfs&#8221; broker utilizes an NFS (Network File System) for file storage. An NFS broker has the following
-additional field:</p>
-<p><strong>mount</strong>: JSON string</p>
+<div>An &#8220;nfs&#8221; broker utilizes an NFS (Network File System) for file storage</div></blockquote>
+<p>Additional <em>broker</em> fields may be required depending on the type of broker selected. See below for more
+information on each broker type.</p>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="host-broker">
+<h2>Host Broker<a class="headerlink" href="#host-broker" title="Permalink to this headline">¶</a></h2>
+<p>The host broker mounts a local directory from the host into the job&#8217;s container. This local directory should be a shared
+file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted
+at the same location for this broker to work properly.</p>
+<p><strong>Permissions</strong></p>
+<p>The Scale Docker containers run with a UID and GID of 7498. To ensure that permissions are appropriately handled within
+Docker, make sure that your host&#8217;s local directory is owned by a user/group with UID/GID of 7498/7498.</p>
+<p><strong>Security</strong></p>
+<p>There are potential security risks involved with mounting a host directory into a Docker container. It is recommended
+that you use another broker type if possible.</p>
+<p>Example host broker configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/absolute/host/path&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The host broker requires one additional field in its configuration:</p>
+<p><strong>host_path</strong>: JSON string</p>
 <blockquote>
-<div>The <em>mount</em> is a required string that specifies the NFS host and path that should be mounted in order to
-access the files (format is <em>host:/file/path</em>).</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
+<div>The <em>host_path</em> is a required string that specifies the absolute path of the host&#8217;s local directory that should be
+mounted into a job&#8217;s container in order to access the workspace&#8217;s files.</div></blockquote>
+</div>
+<div class="section" id="nfs-broker">
+<h2>NFS Broker<a class="headerlink" href="#nfs-broker" title="Permalink to this headline">¶</a></h2>
+<p>The NFS broker mounts a remote network file system volume into the job&#8217;s container.</p>
+<p><strong>Plugin Required</strong></p>
+<p>In order to use Scale&#8217;s NFS broker, you must install and run the Netshare Docker plugin. Please see
+<a class="reference external" href="http://netshare.containx.io/">http://netshare.containx.io/</a> for more information.</p>
+<p><strong>Permissions</strong></p>
+<p>The Scale Docker containers run with a UID and GID of 7498. To ensure that permissions are appropriately handled within
+Docker, make sure that the directories in your NFS file volume are owned by a user/group with UID/GID of 7498/7498.</p>
+<p>Example NFS broker configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;nfs_path&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The NFS broker requires one additional field in its configuration:</p>
+<p><strong>nfs_path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>nfs_path</em> is a required string that specifies the remote NFS path to use for storing and retrieving the
+workspace files. It should be in the format <em>host:/path</em>.</div></blockquote>
 </div>
 </div>
 
@@ -254,7 +307,7 @@ access the files (format is <em>host:/file/path</em>).</div></blockquote>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

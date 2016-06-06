@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.configuration.interface package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.configuration.interface package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.configuration package" href="job.configuration.html"/>
         <link rel="next" title="job.configuration.results package" href="job.configuration.results.html"/>
         <link rel="prev" title="job.configuration.environment package" href="job.configuration.environment.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -430,15 +429,13 @@ pre-steps have not been performed</p>
 
 <dl class="method">
 <dt id="job.configuration.interface.job_interface.JobInterface.perform_pre_steps">
-<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
 This returns the command that should be executed for these parameters.
 :param job_data: The job data
 :type job_data: <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>
 :param job_environment: The job environment
-:type job_environment: <a class="reference internal" href="job.configuration.environment.html#job.configuration.environment.job_environment.JobEnvironment" title="job.configuration.environment.job_environment.JobEnvironment"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.job_environment.JobEnvironment</span></code></a>
-:param job_exe_id: The job execution ID
-:type job_exe_id: int</p>
+:type job_environment: <a class="reference internal" href="job.configuration.environment.html#job.configuration.environment.job_environment.JobEnvironment" title="job.configuration.environment.job_environment.JobEnvironment"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.job_environment.JobEnvironment</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -591,7 +588,7 @@ with this interface</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

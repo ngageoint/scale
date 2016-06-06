@@ -28,6 +28,14 @@ scheduler.sync.scheduler_manager module
     :undoc-members:
     :show-inheritance:
 
+scheduler.sync.workspace_manager module
+---------------------------------------
+
+.. automodule:: scheduler.sync.workspace_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

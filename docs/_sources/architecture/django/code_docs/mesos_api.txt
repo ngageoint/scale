@@ -20,22 +20,6 @@ mesos_api.apps module
     :undoc-members:
     :show-inheritance:
 
-mesos_api.mesos module
-----------------------
-
-.. automodule:: mesos_api.mesos
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-mesos_api.mesos_pb2 module
---------------------------
-
-.. automodule:: mesos_api.mesos_pb2
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 mesos_api.tasks module
 ----------------------
 

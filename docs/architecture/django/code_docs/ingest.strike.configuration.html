@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.strike.configuration package &mdash; Scale 3.0.0 documentation</title>
+  <title>ingest.strike.configuration package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest.strike package" href="ingest.strike.html"/>
         <link rel="next" title="ingest.test package" href="ingest.test.html"/>
         <link rel="prev" title="ingest.strike package" href="ingest.strike.html"/> 
@@ -105,8 +105,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.cleanup">ingest.cleanup module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.file_system">ingest.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -216,6 +215,22 @@
 transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
 identify files to ingest and how to store them.</p>
 <dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount">
 <code class="descname">get_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the &#8220;mount&#8221; value</p>
@@ -269,6 +284,13 @@ workspace, and the workspace, or None if no file name match is found</td>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="ingest.strike.configuration.strike_configuration.ValidationWarning">
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks Strike configuration warnings during validation that may not prevent the process from working.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ingest.strike.configuration">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.strike.configuration" title="Permalink to this headline">¶</a></h2>
@@ -316,7 +338,7 @@ workspace, and the workspace, or None if no file name match is found</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

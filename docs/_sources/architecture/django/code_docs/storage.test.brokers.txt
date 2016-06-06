@@ -4,6 +4,14 @@ storage.test.brokers package
 Submodules
 ----------
 
+storage.test.brokers.test_host_broker module
+--------------------------------------------
+
+.. automodule:: storage.test.brokers.test_host_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 storage.test.brokers.test_nfs_broker module
 -------------------------------------------
 

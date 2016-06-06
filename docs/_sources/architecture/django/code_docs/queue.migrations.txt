@@ -52,6 +52,22 @@ queue.migrations.0006_auto_20160316_1625 module
     :undoc-members:
     :show-inheritance:
 
+queue.migrations.0007_auto_20160421_1643 module
+-----------------------------------------------
+
+.. automodule:: queue.migrations.0007_auto_20160421_1643
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue.migrations.0008_auto_20160421_1648 module
+-----------------------------------------------
+
+.. automodule:: queue.migrations.0008_auto_20160421_1648
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

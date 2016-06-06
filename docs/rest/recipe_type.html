@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Recipe Types Services &mdash; Scale 3.0.0 documentation</title>
+  <title>Recipe Types Services &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Scale File Services" href="scale_file.html"/>
         <link rel="prev" title="Recipe Services" href="recipe.html"/> 
@@ -251,7 +251,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
-<td colspan="2">The stable name of recipe job type used for queries.</td>
+<td colspan="2">The identifying name of recipe job type used for queries.</td>
 </tr>
 <tr class="row-even"><td>.version</td>
 <td>String</td>
@@ -374,7 +374,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td>name</td>
 <td>String</td>
 <td>Required</td>
-<td>The stable name of recipe type used for queries.</td>
+<td>The identifying name of recipe type used for queries.</td>
 </tr>
 <tr class="row-odd"><td>version</td>
 <td>String</td>
@@ -457,7 +457,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
             <span class="p">},</span>
             <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -610,7 +610,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tr class="row-even"><td>name</td>
 <td>String</td>
 <td colspan="2">Required</td>
-<td>The stable name of recipe job type used for queries.</td>
+<td>The identifying name of recipe job type used for queries.</td>
 </tr>
 <tr class="row-odd"><td>version</td>
 <td>String</td>
@@ -691,7 +691,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
             <span class="p">},</span>
             <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -1017,7 +1017,7 @@ Set this field to null to remove the existing trigger rule.</td>
             <span class="p">},</span>
             <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+                <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -1188,7 +1188,7 @@ Set this field to null to remove the existing trigger rule.</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

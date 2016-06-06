@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ingest Services &mdash; Scale 3.0.0 documentation</title>
+  <title>Ingest Services &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Job Services" href="job.html"/>
         <link rel="prev" title="Error Services" href="error.html"/> 
@@ -327,6 +327,9 @@ DUPLICATE].</td>
             <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
             <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Processor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This Strike process handles the data feed&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
                     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
                 <span class="p">}</span>
@@ -395,97 +398,106 @@ DUPLICATE].</td>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /ingests/{file_name}/</dt>
+<dd>Where {file_name} is the unique name of an ingest associated with an existing model.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="2">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>id</td>
+<tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model.</td>
 </tr>
-<tr class="row-odd"><td>file_name</td>
+<tr class="row-even"><td>file_name</td>
 <td>String</td>
 <td>The name of the file being ingested.</td>
 </tr>
-<tr class="row-even"><td>strike</td>
+<tr class="row-odd"><td>strike</td>
 <td>JSON Object</td>
 <td>The strike process that triggered the ingest.
 (See <a class="reference internal" href="strike.html#rest-strike-details"><span>Strike Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>status</td>
+<tr class="row-even"><td>status</td>
 <td>String</td>
 <td>The current status of the ingest.
 Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
 DUPLICATE].</td>
 </tr>
-<tr class="row-even"><td>bytes_transferred</td>
+<tr class="row-odd"><td>bytes_transferred</td>
 <td>Integer</td>
 <td>The total number of bytes transferred so far.</td>
 </tr>
-<tr class="row-odd"><td>transfer_started</td>
+<tr class="row-even"><td>transfer_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the transfer was started.</td>
 </tr>
-<tr class="row-even"><td>transfer_ended</td>
+<tr class="row-odd"><td>transfer_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the transfer ended.</td>
 </tr>
-<tr class="row-odd"><td>media_type</td>
+<tr class="row-even"><td>media_type</td>
 <td>String</td>
 <td>The IANA media type of the file.</td>
 </tr>
-<tr class="row-even"><td>file_size</td>
+<tr class="row-odd"><td>file_size</td>
 <td>Integer</td>
 <td>The size of the file in bytes.</td>
 </tr>
-<tr class="row-odd"><td>data_type</td>
+<tr class="row-even"><td>data_type</td>
 <td>Array</td>
 <td>A list of string data type &#8220;tags&#8221; for the file.</td>
 </tr>
-<tr class="row-even"><td>ingest_started</td>
+<tr class="row-odd"><td>ingest_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the ingest was started.</td>
 </tr>
-<tr class="row-odd"><td>ingest_ended</td>
+<tr class="row-even"><td>ingest_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the ingest ended.</td>
 </tr>
-<tr class="row-even"><td>source_file</td>
+<tr class="row-odd"><td>source_file</td>
 <td>JSON Object</td>
 <td>A reference to the source file that was stored by this ingest.
 (See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>transfer_path</td>
+<tr class="row-even"><td>transfer_path</td>
 <td>String</td>
 <td>The absolute path of the destination where the file is being transferred.</td>
 </tr>
-<tr class="row-even"><td>file_path</td>
+<tr class="row-odd"><td>file_path</td>
 <td>String</td>
 <td>The relative path for where the file will be stored in the workspace.</td>
 </tr>
-<tr class="row-odd"><td>ingest_path</td>
+<tr class="row-even"><td>ingest_path</td>
 <td>String</td>
 <td>The absolute path of the file when it is ready to be ingested.</td>
 </tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Processor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This Strike process handles the data feed&quot;</span><span class="p">,</span>
         <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
             <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -525,7 +537,7 @@ DUPLICATE].</td>
                     <span class="s2">&quot;workspace_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/workspace&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[],</span>
                     <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.txt&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span>
+                    <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
                 <span class="p">}</span>
             <span class="p">]</span>
         <span class="p">},</span>
@@ -792,7 +804,7 @@ Defaults to False (data time).</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

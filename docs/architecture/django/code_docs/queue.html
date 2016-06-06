@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>queue package &mdash; Scale 3.0.0 documentation</title>
+  <title>queue package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="queue.fixtures package" href="queue.fixtures.html"/>
         <link rel="prev" title="product.test.configuration package" href="product.test.configuration.html"/> 
@@ -202,6 +202,8 @@
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0004_remove_queue_is_job_type_paused">queue.migrations.0004_remove_queue_is_job_type_paused module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0005_queue_node_required">queue.migrations.0005_queue_node_required module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0006_auto_20160316_1625">queue.migrations.0006_auto_20160316_1625 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0007_auto_20160421_1643">queue.migrations.0007_auto_20160421_1643 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0008_auto_20160421_1648">queue.migrations.0008_auto_20160421_1648 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -548,6 +550,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that has been queued</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that has been queued</li>
 <li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this job execution</li>
 <li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job (lower number is higher priority)</li>
 <li><strong>node_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The specific node on which this job is required to run</li>
@@ -557,6 +560,7 @@ provided</p>
 <li><strong>disk_out_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
 job</li>
 <li><strong>disk_total_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of disk space in MiB required for this job</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job should be run</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was created</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was placed onto the queue</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was last modified</li>
@@ -575,6 +579,12 @@ job</li>
 <dt id="queue.models.Queue.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descclassname">Queue.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.Queue.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.configuration">
+<code class="descclassname">Queue.</code><code class="descname">configuration</code><a class="headerlink" href="#queue.models.Queue.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
 <dl class="method">
@@ -605,6 +615,11 @@ job</li>
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_queued">
 <code class="descclassname">Queue.</code><code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.job">
+<code class="descclassname">Queue.</code><code class="descname">job</code><a class="headerlink" href="#queue.models.Queue.job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -794,10 +809,10 @@ in the database in an atomic transaction. If the data is invalid, a
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ID of the new job and the ID of the job execution</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new queued job</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><strong>job.configuration.data.exceptions.InvalidData</strong></a> &#8211; If the job data is invalid</p>
@@ -911,35 +926,6 @@ atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.requeue_existing_job">
-<code class="descname">requeue_existing_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.requeue_existing_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
-correspond to an existing model previously saved in the database and the job must have its related job_type
-model. The new job_exe and queue models are saved in the database in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>job_id</strong> (<em>int</em>) &#8211; The ID of the job to update</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job execution id or None if one was not created.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>InvalidData</strong> &#8211; If the job data is invalid</li>
-<li><strong>StatusError</strong> &#8211; If the job is not in a valid state to be queued.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.requeue_jobs">
 <code class="descname">requeue_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.requeue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
@@ -967,12 +953,18 @@ be deleted from the database. All database changes occur in an atomic transactio
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>]) &#8211; A list of queued job executions that have been provided nodes and resources on which to
-run</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>]) &#8211; A list of queued job executions that have been provided nodes and resources on which to
+run</li>
+<li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scheduled job executions</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The scheduled job executions</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>]</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1179,48 +1171,6 @@ run</td>
 </dd></dl>
 
 <dl class="class">
-<dt id="queue.views.RequeueExistingJobView">
-<em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">RequeueExistingJobView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueExistingJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
-<p>This view is the endpoint for requeuing jobs which have already been executed for the maximum number of tries</p>
-<dl class="attribute">
-<dt id="queue.views.RequeueExistingJobView.parser_classes">
-<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#queue.views.RequeueExistingJobView.parser_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.views.RequeueExistingJobView.post">
-<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueExistingJobView.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increase max_tries, place it on the queue, and returns the new job information in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_id</strong> &#8211; The ID of the job to requeue. This job must exist and must be in a FAILED or CANCELED state.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.views.RequeueExistingJobView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueExistingJobView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="queue.views.RequeueJobsView">
 <em class="property">class </em><code class="descclassname">queue.views.</code><code class="descname">RequeueJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
@@ -1301,7 +1251,7 @@ run</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

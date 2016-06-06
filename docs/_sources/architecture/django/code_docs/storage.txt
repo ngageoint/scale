@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     storage.brokers
+    storage.configuration
     storage.migrations
     storage.test
 
@@ -17,6 +18,14 @@ storage.apps module
 -------------------
 
 .. automodule:: storage.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.container module
+------------------------
+
+.. automodule:: storage.container
     :members:
     :undoc-members:
     :show-inheritance:

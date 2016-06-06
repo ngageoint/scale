@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.test.brokers package &mdash; Scale 3.0.0 documentation</title>
+  <title>storage.test.brokers package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,9 +32,9 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="storage.test package" href="storage.test.html"/>
-        <link rel="next" title="trigger package" href="trigger.html"/>
+        <link rel="next" title="storage.test.configuration package" href="storage.test.configuration.html"/>
         <link rel="prev" title="storage.test package" href="storage.test.html"/> 
 
   
@@ -117,6 +117,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="storage.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.apps">storage.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.container">storage.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.exceptions">storage.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
@@ -195,42 +196,119 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-storage.test.brokers.test_host_broker">
+<span id="storage-test-brokers-test-host-broker-module"></span><h2>storage.test.brokers.test_host_broker module<a class="headerlink" href="#module-storage.test.brokers.test_host_broker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerDeleteFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.delete_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerDownloadFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.download_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerLoadConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.load_configuration() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerMoveFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerMoveFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.move_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerUploadFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerUploadFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.upload_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerValidateConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.test_missing_host_path">
+<code class="descname">test_missing_host_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.test_missing_host_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.validate_configuration() with a missing host_path value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerValidateConfiguration.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.validate_configuration() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-storage.test.brokers.test_nfs_broker">
 <span id="storage-test-brokers-test-nfs-broker-module"></span><h2>storage.test.brokers.test_nfs_broker module<a class="headerlink" href="#module-storage.test.brokers.test_nfs_broker" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerCleanupDownloadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupDownloadDir.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.cleanup_download_dir() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerCleanupUploadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerCleanupUploadDir.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.cleanup_upload_dir() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles">
 <em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerDeleteFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles" title="Permalink to this definition">¶</a></dt>
@@ -239,12 +317,6 @@
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles.test_error">
-<code class="descname">test_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles.test_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.delete_files() where there is an error deleting a file</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerDeleteFiles.test_successfully">
@@ -272,53 +344,18 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerIsConfigValid</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerLoadConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_bad_broker">
-<code class="descname">test_bad_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_bad_broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.is_config_valid() with a bad broker value</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_bad_mount">
-<code class="descname">test_bad_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_bad_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.is_config_valid() with a bad mount value</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_missing_mount">
-<code class="descname">test_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_missing_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.is_config_valid() with a missing mount value</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerIsConfigValid.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.is_config_valid() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerLoadConfig</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfig.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.load_config() successfully</p>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerLoadConfiguration.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling NfsBroker.load_configuration() successfully</p>
 </dd></dl>
 
 </dd></dl>
@@ -333,49 +370,9 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerMoveFiles.test_error">
-<code class="descname">test_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerMoveFiles.test_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.move_files() where there is an error moving a file</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerMoveFiles.test_successfully">
 <code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerMoveFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling NfsBroker.move_files() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerSetupDownloadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupDownloadDir.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.setup_download_dir() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerSetupUploadDir</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir.test_successfully">
-<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerSetupUploadDir.test_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.setup_upload_dir() successfully</p>
 </dd></dl>
 
 </dd></dl>
@@ -390,12 +387,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerUploadFiles.test_error">
-<code class="descname">test_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerUploadFiles.test_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling NfsBroker.upload_files() where there is an error copying a file</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerUploadFiles.test_successfully">
 <code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerUploadFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling NfsBroker.upload_files() successfully</p>
@@ -404,23 +395,24 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsUmount">
-<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsUmount</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsUmount" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_nfs_broker.</code><code class="descname">TestNfsBrokerValidateConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsUmount.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsUmount.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsUmount.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsUmount.tearDown" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_missing_nfs_path">
+<code class="descname">test_missing_nfs_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_missing_nfs_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling NfsBroker.validate_configuration() with a missing nfs_path value</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="storage.test.brokers.test_nfs_broker.TestNfsUmount.test_umount_if_not_mounted">
-<code class="descname">test_umount_if_not_mounted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsUmount.test_umount_if_not_mounted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests unmounting a location that isn&#8217;t currently mounted to ensure there isn&#8217;t an error.</p>
+<dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_successfully">
+<code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling NfsBroker.validate_configuration() successfully</p>
 </dd></dl>
 
 </dd></dl>
@@ -438,7 +430,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="trigger.html" class="btn btn-neutral float-right" title="trigger package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="storage.test.configuration.html" class="btn btn-neutral float-right" title="storage.test.configuration package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="storage.test.html" class="btn btn-neutral" title="storage.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -472,7 +464,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

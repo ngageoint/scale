@@ -65,14 +65,6 @@ job.serializers module
     :undoc-members:
     :show-inheritance:
 
-job.settings module
--------------------
-
-.. automodule:: job.settings
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job.urls module
 ---------------
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest package &mdash; Scale 3.0.0 documentation</title>
+  <title>ingest package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="ingest.fixtures package" href="ingest.fixtures.html"/>
         <link rel="prev" title="error.test package" href="error.test.html"/> 
@@ -105,8 +105,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ingest.cleanup">ingest.cleanup module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ingest.file_system">ingest.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.serializers">ingest.serializers module</a></li>
@@ -228,7 +227,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.cleanup">ingest.strike.cleanup module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike.strike_processor">ingest.strike.strike_processor module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#module-ingest.strike">Module contents</a></li>
 </ul>
@@ -300,7 +298,7 @@
 </div>
 <div class="section" id="module-ingest.apps">
 <span id="ingest-apps-module"></span><h2>ingest.apps module<a class="headerlink" href="#module-ingest.apps" title="Permalink to this headline">¶</a></h2>
-<p>The scale ingest application</p>
+<p>The Scale ingest application</p>
 <dl class="class">
 <dt id="ingest.apps.IngestConfig">
 <em class="property">class </em><code class="descclassname">ingest.apps.</code><code class="descname">IngestConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.apps.IngestConfig" title="Permalink to this definition">¶</a></dt>
@@ -330,44 +328,9 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.cleanup">
-<span id="ingest-cleanup-module"></span><h2>ingest.cleanup module<a class="headerlink" href="#module-ingest.cleanup" title="Permalink to this headline">¶</a></h2>
-<p>Defines the abstract base class used for cleaning up job executions</p>
-<dl class="class">
-<dt id="ingest.cleanup.IngestJobExecutionCleaner">
-<em class="property">class </em><code class="descclassname">ingest.cleanup.</code><code class="descname">IngestJobExecutionCleaner</code><a class="headerlink" href="#ingest.cleanup.IngestJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner" title="job.execution.job_exe_cleaner.JobExecutionCleaner"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner</span></code></a></p>
-<p>Cleaner for the execution of ingest jobs</p>
-<dl class="method">
-<dt id="ingest.cleanup.IngestJobExecutionCleaner.cleanup_job_execution">
-<code class="descname">cleanup_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.cleanup.IngestJobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.execution.html#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution()</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.file_system">
-<span id="ingest-file-system-module"></span><h2>ingest.file_system module<a class="headerlink" href="#module-ingest.file_system" title="Permalink to this headline">¶</a></h2>
-<p>Defines methods for necessary file system interactions to perform file ingests</p>
-<dl class="function">
-<dt id="ingest.file_system.get_ingest_work_dir">
-<code class="descclassname">ingest.file_system.</code><code class="descname">get_ingest_work_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.file_system.get_ingest_work_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the work directory that a job execution can use to perform an ingest</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the ingest work directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<div class="section" id="module-ingest.container">
+<span id="ingest-container-module"></span><h2>ingest.container module<a class="headerlink" href="#module-ingest.container" title="Permalink to this headline">¶</a></h2>
+<p>Defines the fields for handling file systems in the local container volumes for ingest and Strike jobs</p>
 </div>
 <div class="section" id="module-ingest.ingest_job">
 <span id="ingest-ingest-job-module"></span><h2>ingest.ingest_job module<a class="headerlink" href="#module-ingest.ingest_job" title="Permalink to this headline">¶</a></h2>
@@ -381,8 +344,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ingest_id</strong> (<em>long</em>) &#8211; The ID of the ingest to perform</li>
-<li><strong>mount</strong> (<em>str</em>) &#8211; The file system to mount in the form of host:/dir/path</li>
+<li><strong>ingest_id</strong> (<em>int</em>) &#8211; The ID of the ingest to perform</li>
+<li><strong>mount</strong> (<em>string</em>) &#8211; The file system to mount in the form of host:/dir/path</li>
 </ul>
 </td>
 </tr>
@@ -454,7 +417,7 @@ spaces.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>str</em>) &#8211; The data type tag to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>string</em>) &#8211; The data type tag to add</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>InvalidDataTypeTag</strong> &#8211; If the given tag is invalid</td>
 </tr>
@@ -472,7 +435,7 @@ spaces.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The set of data type tags</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set of str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set of string</td>
 </tr>
 </tbody>
 </table>
@@ -610,8 +573,8 @@ spaces.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; Query ingests with the a specific process status.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -684,7 +647,7 @@ spaces.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The stable name of this Strike process</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Strike process</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Strike process</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of this Strike process</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Strike process</li>
@@ -778,8 +741,8 @@ spaces.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling Strike processes</p>
 <dl class="method">
-<dt id="ingest.models.StrikeManager.create_strike_process">
-<code class="descname">create_strike_process</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.create_strike_process" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.models.StrikeManager.create_strike">
+<code class="descname">create_strike</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.create_strike" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
 will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
 the database will occur in an atomic transaction.</p>
@@ -788,9 +751,9 @@ the database will occur in an atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The stable name of this Strike process</li>
-<li><strong>title</strong> (<em>str</em>) &#8211; The human-readable name of this Strike process</li>
-<li><strong>description</strong> (<em>str</em>) &#8211; A description of this Strike process</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Strike process</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
 <li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike configuration</li>
 </ul>
 </td>
@@ -798,11 +761,55 @@ the database will occur in an atomic transaction.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Strike process</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>InvalidStrikeConfiguration</strong> &#8211; If the configuration is invalid</p>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.edit_strike">
+<code class="descname">edit_strike</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.edit_strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
+transaction. An argument of None for a field indicates that the field should not change.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; The unique identifier of the Strike process to edit</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+</ul>
 </td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.get_details">
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Strike process for the given ID with all detail fields included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>strike_id</strong> (<em>int</em>) &#8211; The unique identifier of the Strike process.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Strike process with all detail fields included.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -822,6 +829,60 @@ the database will occur in an atomic transaction.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.get_strikes">
+<code class="descname">get_strikes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.get_strikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Strike processes within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated before this amount of time.</li>
+<li><strong>names</strong> (<em>list[string]</em>) &#8211; Query Strike processes associated with the name.</li>
+<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of Strike processes that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.validate_strike">
+<code class="descname">validate_strike</code><span class="sig-paren">(</span><em>name</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.validate_strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new Strike process prior to attempting a save</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of a Strike process to validate</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.ValidationWarning" title="ingest.strike.configuration.strike_configuration.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.ValidationWarning</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -951,36 +1012,6 @@ the database will occur in an atomic transaction.</p>
 <span id="ingest-views-module"></span><h2>ingest.views module<a class="headerlink" href="#module-ingest.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful ingest and Strike services</p>
 <dl class="class">
-<dt id="ingest.views.CreateStrikeView">
-<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">CreateStrikeView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.CreateStrikeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
-<p>This view is the endpoint for creating a new Strike process.</p>
-<dl class="attribute">
-<dt id="ingest.views.CreateStrikeView.parser_classes">
-<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#ingest.views.CreateStrikeView.parser_classes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.views.CreateStrikeView.post">
-<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.CreateStrikeView.post" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new Strike process and returns its ID in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="ingest.views.IngestDetailsView">
 <em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">IngestDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
@@ -992,7 +1023,7 @@ the database will occur in an atomic transaction.</p>
 
 <dl class="method">
 <dt id="ingest.views.IngestDetailsView.retrieve">
-<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>ingest_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>ingest_id=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for an ingest and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1001,6 +1032,7 @@ the database will occur in an atomic transaction.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>ingest_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the ingest</li>
+<li><strong>file_name</strong> (<em>string</em>) &#8211; The name of the ingest</li>
 </ul>
 </td>
 </tr>
@@ -1094,6 +1126,156 @@ the database will occur in an atomic transaction.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="ingest.views.StrikeDetailsView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">StrikeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for retrieving/updating details of a Strike process.</p>
+<dl class="method">
+<dt id="ingest.views.StrikeDetailsView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a Strike process and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>strike_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Strike process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikeDetailsView.patch">
+<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits an existing Strike process and returns the updated details</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>strike_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Strike process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.StrikeDetailsView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.StrikeDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.StrikeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">StrikeDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.StrikesValidationView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">StrikesValidationView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
+<p>This view is the endpoint for validating a new Strike process before attempting to actually create it</p>
+<dl class="method">
+<dt id="ingest.views.StrikesValidationView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesValidationView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new Strike process and returns any warnings discovered</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.StrikesValidationView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.StrikesView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">StrikesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListCreateAPIView</span></code></p>
+<p>This view is the endpoint for retrieving the list of all Strike process.</p>
+<dl class="method">
+<dt id="ingest.views.StrikesView.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Strike process and returns a link to the detail URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of all Strike process and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.StrikesView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikesView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.StrikesView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.StrikesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">StrikeSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-ingest">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest" title="Permalink to this headline">¶</a></h2>
@@ -1142,7 +1324,7 @@ the database will occur in an atomic transaction.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

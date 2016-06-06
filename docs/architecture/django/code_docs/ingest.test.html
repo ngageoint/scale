@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.test package &mdash; Scale 3.0.0 documentation</title>
+  <title>ingest.test package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
         <link rel="next" title="ingest.test.strike package" href="ingest.test.strike.html"/>
         <link rel="prev" title="ingest.strike.configuration package" href="ingest.strike.configuration.html"/> 
@@ -105,8 +105,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.cleanup">ingest.cleanup module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.file_system">ingest.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -238,7 +237,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="attribute">
 <dt id="ingest.test.test_ingest_job.TestPerformIngest.fixtures">
-<code class="descname">fixtures</code><em class="property"> = ['ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_ingest_job.TestPerformIngest.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -329,46 +328,6 @@
 <div class="section" id="module-ingest.test.test_views">
 <span id="ingest-test-test-views-module"></span><h2>ingest.test.test_views module<a class="headerlink" href="#module-ingest.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ingest.test.test_views.TestCreateStrikeView">
-<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestCreateStrikeView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="ingest.test.test_views.TestCreateStrikeView.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.test_views.TestCreateStrikeView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type">
-<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Strike view with configuration that is not a dict.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration">
-<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Strike view with invalid configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.test_views.TestCreateStrikeView.test_missing_configuration">
-<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Strike view with missing configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.test_views.TestCreateStrikeView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestCreateStrikeView.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the create Strike view successfully.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="ingest.test.test_views.TestIngestDetailsView">
 <em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestIngestDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -383,15 +342,21 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.test_views.TestIngestDetailsView.test_not_found">
-<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the ingest details view with an id that does not exist.</p>
+<dt id="ingest.test.test_views.TestIngestDetailsView.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingests view by file name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.test_views.TestIngestDetailsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the ingest details view.</p>
+<dt id="ingest.test.test_views.TestIngestDetailsView.test_id">
+<code class="descname">test_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the ingests view by id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestIngestDetailsView.test_missing">
+<code class="descname">test_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestIngestDetailsView.test_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the ingests view with an invalid id or file name.</p>
 </dd></dl>
 
 </dd></dl>
@@ -470,6 +435,164 @@
 
 </dd></dl>
 
+<dl class="class">
+<dt id="ingest.test.test_views.TestStrikeCreateView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikeCreateView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestStrikeCreateView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateView.test_configuration_bad_type">
+<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with configuration that is not a dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateView.test_invalid_configuration">
+<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with invalid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateView.test_missing_configuration">
+<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view with missing configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeCreateView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Strike view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestStrikeDetailsView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.test_edit_bad_config">
+<code class="descname">test_edit_bad_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.test_edit_bad_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a Strike process using an invalid configuration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.test_edit_config">
+<code class="descname">test_edit_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.test_edit_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a Strike process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.test_edit_simple">
+<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing only the basic attributes of a Strike process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.test_not_found">
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Strike process details view with a model id that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Strike process details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestStrikesValidationView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikesValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests related to the Strike process validation endpoint</p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.test_configuration_bad_type">
+<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Strike process with configuration that is not a dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.test_invalid_configuration">
+<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Strike process with invalid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.test_missing_configuration">
+<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Strike process with missing configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Strike process.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesValidationView.test_warnings">
+<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Strike process where the mount path is changed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestStrikesView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesView.test_name">
+<code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.test_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the strikes view filtered by Strike name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesView.test_reverse_sorting">
+<code class="descname">test_reverse_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests custom sorting in reverse.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesView.test_sorting">
+<code class="descname">test_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.test_sorting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests custom sorting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestStrikesView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get all strikes view.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-ingest.test.utils">
 <span id="ingest-test-utils-module"></span><h2>ingest.test.utils module<a class="headerlink" href="#module-ingest.test.utils" title="Permalink to this headline">¶</a></h2>
@@ -531,7 +654,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

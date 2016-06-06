@@ -1,0 +1,30 @@
+job.configuration.configuration package
+=======================================
+
+Submodules
+----------
+
+job.configuration.configuration.exceptions module
+-------------------------------------------------
+
+.. automodule:: job.configuration.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.configuration.configuration.job_configuration module
+--------------------------------------------------------
+
+.. automodule:: job.configuration.configuration.job_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

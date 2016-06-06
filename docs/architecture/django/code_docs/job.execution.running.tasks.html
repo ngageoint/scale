@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.execution.running.tasks package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.execution.running.tasks package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.execution.running package" href="job.execution.running.html"/>
         <link rel="next" title="job.fixtures package" href="job.fixtures.html"/>
         <link rel="prev" title="job.execution.running package" href="job.execution.running.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -291,6 +290,22 @@ this method cannot determine an error cause, None will be returned.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.execution.running.tasks.base_task.Task.create_scale_image_name">
+<code class="descname">create_scale_image_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.create_scale_image_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the full image name to use for running the Scale Docker image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The full Scale Docker image name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.execution.running.tasks.base_task.Task.docker_image">
 <code class="descname">docker_image</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.docker_image" title="Permalink to this definition">¶</a></dt>
@@ -310,14 +325,14 @@ this method cannot determine an error cause, None will be returned.</p>
 <dl class="attribute">
 <dt id="job.execution.running.tasks.base_task.Task.docker_params">
 <code class="descname">docker_params</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.docker_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Docker parameters used to run this task.</p>
+<dd><p>Returns the Docker parameters used to run this task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Docker parameters</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[[str, str]]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.DockerParam" title="job.configuration.configuration.job_configuration.DockerParam"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.DockerParam</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -751,7 +766,7 @@ this method cannot determine an error cause, None will be returned.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

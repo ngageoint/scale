@@ -11,14 +11,6 @@ Subpackages
 Submodules
 ----------
 
-ingest.strike.cleanup module
-----------------------------
-
-.. automodule:: ingest.strike.cleanup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ingest.strike.strike_processor module
 -------------------------------------
 

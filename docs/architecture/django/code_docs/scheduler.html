@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler package &mdash; Scale 3.0.0 documentation</title>
+  <title>scheduler package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="scheduler.fixtures package" href="scheduler.fixtures.html"/>
         <link rel="prev" title="recipe.triggers.configuration package" href="recipe.triggers.configuration.html"/> 
@@ -201,7 +201,7 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.management.commands.html">scheduler.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.load_all_data">scheduler.management.commands.load_all_data module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler">scheduler.management.commands.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#scheduler-management-commands-scale-scheduler-module">scheduler.management.commands.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.management.commands.html#module-scheduler.management.commands">Module contents</a></li>
 </ul>
 </li>
@@ -231,6 +231,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.job_type_manager">scheduler.sync.job_type_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.node_manager">scheduler.sync.node_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.scheduler_manager">scheduler.sync.scheduler_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.workspace_manager">scheduler.sync.workspace_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync">Module contents</a></li>
 </ul>
 </li>
@@ -248,6 +249,7 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_job_type_manager">scheduler.test.sync.test_job_type_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_node_manager">scheduler.test.sync.test_node_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_scheduler_manager">scheduler.test.sync.test_scheduler_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_workspace_manager">scheduler.test.sync.test_workspace_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync">Module contents</a></li>
 </ul>
 </li>
@@ -357,10 +359,12 @@ storing cluster-wide state related to scheduling in mesos.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the entire cluster is currently paused and should not accept new jobs</li>
-<li><strong>node_error_period</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of minutes sampled when deciding if a node should be paused due to excessive errors.</li>
-<li><strong>max_node_errors</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The maximum number of system errors which can occur in node_error_period before a node is paused</li>
-<li><strong>master_hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the mesos master</li>
-<li><strong>port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the mesos master REST API</li>
+<li><strong>node_error_period</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of minutes sampled when deciding if a node should be paused due to excessive
+errors.</li>
+<li><strong>max_node_errors</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The maximum number of system errors which can occur in node_error_period before a node is
+paused</li>
+<li><strong>master_hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the Mesos master</li>
+<li><strong>master_port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the Mesos master REST API</li>
 </ul>
 </td>
 </tr>
@@ -423,6 +427,12 @@ storing cluster-wide state related to scheduling in mesos.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.models.SchedulerManager.initialize_scheduler">
+<code class="descname">initialize_scheduler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.initialize_scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the scheduler table by creating a model if one does not already exist</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.models.SchedulerManager.is_master_active">
 <code class="descname">is_master_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.is_master_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the current master scheduler is ready to schedule.</p>
@@ -478,7 +488,7 @@ storing cluster-wide state related to scheduling in mesos.</p>
 <p>The Scale Mesos scheduler</p>
 <dl class="class">
 <dt id="scheduler.scale_scheduler.ScaleScheduler">
-<em class="property">class </em><code class="descclassname">scheduler.scale_scheduler.</code><code class="descname">ScaleScheduler</code><span class="sig-paren">(</span><em>executor</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.scale_scheduler.</code><code class="descname">ScaleScheduler</code><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">mesos.interface.Scheduler</span></code></p>
 <p>Mesos scheduler for the Scale framework</p>
 <dl class="attribute">
@@ -496,7 +506,7 @@ storing cluster-wide state related to scheduling in mesos.</p>
 <code class="descname">disconnected</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.disconnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when the scheduler becomes disconnected from the master, e.g.
 the master fails and another is taking over.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.disconnected" title="mesos_api.mesos.Scheduler.disconnected"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.disconnected()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -505,7 +515,7 @@ the master fails and another is taking over.</p>
 <dd><p>Invoked when there is an unrecoverable error in the scheduler or
 scheduler driver.  The driver will be aborted BEFORE invoking this
 callback.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.error" title="mesos_api.mesos.Scheduler.error"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.error()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -513,7 +523,7 @@ callback.</p>
 <code class="descname">executorLost</code><span class="sig-paren">(</span><em>driver</em>, <em>executorId</em>, <em>slaveId</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.executorLost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when an executor has exited/terminated. Note that any tasks
 running will have TASK_LOST status updates automatically generated.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.executorLost" title="mesos_api.mesos.Scheduler.executorLost"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.executorLost()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -522,7 +532,7 @@ running will have TASK_LOST status updates automatically generated.</p>
 <dd><p>Invoked when an executor sends a message. These messages are best
 effort; do not expect a framework message to be retransmitted in any
 reliable fashion.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.frameworkMessage" title="mesos_api.mesos.Scheduler.frameworkMessage"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.frameworkMessage()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -533,7 +543,7 @@ another framework used resources in the offer.) If for whatever reason
 an offer is never rescinded (e.g., dropped message, failing over
 framework, etc.), a framwork that attempts to launch tasks using an
 invalid offer will receive TASK_LOST status updats for those tasks.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.offerRescinded" title="mesos_api.mesos.Scheduler.offerRescinded"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.offerRescinded()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -543,7 +553,7 @@ invalid offer will receive TASK_LOST status updats for those tasks.</p>
 It is called with the frameworkId, a unique ID generated by the
 master, and the masterInfo which is information about the master
 itself.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.registered" title="mesos_api.mesos.Scheduler.registered"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.registered()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -553,7 +563,7 @@ itself.</p>
 master.  This is only called when the scheduler has previously been
 registered.  masterInfo contains information about the newly elected
 master.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.reregistered" title="mesos_api.mesos.Scheduler.reregistered"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.reregistered()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -571,7 +581,7 @@ launch tasks using those resources will be able to use them while the
 other frameworks will have those resources rescinded (or if a
 framework has already launched tasks with those resources then those
 tasks will fail with a TASK_LOST status and a message saying as much).</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.resourceOffers" title="mesos_api.mesos.Scheduler.resourceOffers"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.resourceOffers()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -587,7 +597,7 @@ tasks will fail with a TASK_LOST status and a message saying as much).</p>
 <dd><p>Invoked when a slave has been determined unreachable (e.g., machine
 failure, network partition.) Most frameworks will need to reschedule
 any tasks launched on this slave on a new slave.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.slaveLost" title="mesos_api.mesos.Scheduler.slaveLost"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.slaveLost()</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -601,7 +611,7 @@ the scheduler aborts during this callback (or the process exits)
 another status update will be delivered.  Note, however, that this is
 currently not true if the slave sending the status update is lost or
 fails during that time.</p>
-<p>See documentation for <a class="reference internal" href="mesos_api.html#mesos_api.mesos.Scheduler.statusUpdate" title="mesos_api.mesos.Scheduler.statusUpdate"><code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></code></a>.</p>
+<p>See documentation for <code class="xref py py-meth docutils literal"><span class="pre">mesos_api.mesos.Scheduler.statusUpdate()</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -799,7 +809,7 @@ fails during that time.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -53,7 +53,7 @@ These services provide access to information about registered errors and error m
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.          |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                     |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| .name              | String            | The stable name of the error used for queries.                                      |
+| .name              | String            | The identifying name of the error used for queries.                                 |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .title             | String            | The human readable display name of the error.                                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -102,7 +102,7 @@ These services provide access to information about registered errors and error m
 +--------------------+---------------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                              |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| name               | String            | The stable name of the error used for queries.                                      |
+| name               | String            | The identifying name of the error used for queries.                                 |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | title              | String            | The human readable display name of the error.                                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
@@ -166,7 +166,7 @@ These services provide access to information about registered errors and error m
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model.                                                 |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
-| name               | String            | The stable name of the error used for queries.                                      |
+| name               | String            | The identifying name of the error used for queries.                                 |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | title              | String            | The human readable display name of the error.                                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+

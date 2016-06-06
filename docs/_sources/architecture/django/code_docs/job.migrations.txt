@@ -116,6 +116,30 @@ job.migrations.0014_auto_20160317_1208 module
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0015_auto_20160420_1345 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0015_auto_20160420_1345
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.migrations.0016_auto_20160421_1553 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0016_auto_20160421_1553
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.migrations.0017_auto_20160426_1556 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0017_auto_20160426_1556
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

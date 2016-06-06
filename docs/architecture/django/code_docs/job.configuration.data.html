@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.configuration.data package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.configuration.data package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,10 +32,10 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.configuration package" href="job.configuration.html"/>
         <link rel="next" title="job.configuration.environment package" href="job.configuration.environment.html"/>
-        <link rel="prev" title="job.configuration package" href="job.configuration.html"/> 
+        <link rel="prev" title="job.configuration.configuration package" href="job.configuration.configuration.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -216,8 +215,8 @@ input data files.</p>
 <li><strong>parse_results</strong> (dict of str -&gt; tuple(str, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, list,
 str, str)) &#8211; Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
 (optionally None), the start time of the data contained in the file (optionally None), the end time of the
-data contained in the file (optionally None), the list of data types, the new workspace path (optionally
-None), and the work directory (optionally None)</li>
+data contained in the file (optionally None), the list of data types, and the new workspace path (optionally
+None)</li>
 <li><strong>input_file_ids</strong> (<em>list of long</em>) &#8211; List of IDs for all input files</li>
 </ul>
 </td>
@@ -254,17 +253,15 @@ configuration and store output data files.</p>
 
 <dl class="method">
 <dt id="job.configuration.data.data_file.AbstractDataFileStore.store_files">
-<code class="descname">store_files</code><span class="sig-paren">(</span><em>upload_dir</em>, <em>work_dir</em>, <em>data_files</em>, <em>input_file_ids</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">store_files</code><span class="sig-paren">(</span><em>data_files</em>, <em>input_file_ids</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.data_file.AbstractDataFileStore.store_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the given data files and writes them to the given workspaces.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>upload_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory of the files to upload</li>
-<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in uploading</li>
-<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple(str, str)</em>) &#8211; Dict with workspace ID mapping to a list of tuples with file paths relative to the upload
-directory and media type (media type is optionally None)</li>
+<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple(str, str)</em>) &#8211; Dict with workspace ID mapping to a list of tuples with absolute local file paths and media
+type (media type is optionally None)</li>
 <li><strong>input_file_ids</strong> (<em>set of long</em>) &#8211; Set of input file IDs</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the files</li>
 </ul>
@@ -567,26 +564,19 @@ property name, it will not be included in the returned dict.</p>
 
 <dl class="method">
 <dt id="job.configuration.data.job_data.JobData.retrieve_input_data_files">
-<code class="descname">retrieve_input_data_files</code><span class="sig-paren">(</span><em>download_dir</em>, <em>work_dir</em>, <em>data_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.retrieve_input_data_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">retrieve_input_data_files</code><span class="sig-paren">(</span><em>data_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.retrieve_input_data_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the given data input files and writes them to the given local directories. Any given file
 parameters that do not appear in the data will not be returned in the results.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>download_dir</strong> (<em>str</em>) &#8211; Absolute path to the local directory for the files to download</li>
-<li><strong>work_dir</strong> (<em>str</em>) &#8211; Absolute path to a local work directory available to assist in downloading</li>
-<li><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
-multiple files (True) and a directory path relative to the download directory</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+multiple files (True) and an absolute directory path</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict with each file parameter name mapping to a list of absolute file paths of the written files</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each file parameter name mapping to a list of absolute file paths of the written files</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of str -&gt; list of str</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; list of str</td>
 </tr>
 </tbody>
 </table>
@@ -603,8 +593,8 @@ multiple files (True) and a directory path relative to the download directory</l
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parse_results</strong> (dict of str -&gt; tuple(str, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>, list,
 str, str)) &#8211; Dict with each input file name mapping to a tuple of GeoJSON containing GIS meta-data
 (optionally None), the start time of the data contained in the file (optionally None), the end time of the
-data contained in the file (optionally None), the list of data types, the new workspace path (optionally
-None), and the work directory (optionally None)</td>
+data contained in the file (optionally None), the list of data types, and the new workspace path (optionally
+None)</td>
 </tr>
 </tbody>
 </table>
@@ -612,24 +602,18 @@ None), and the work directory (optionally None)</td>
 
 <dl class="method">
 <dt id="job.configuration.data.job_data.JobData.setup_job_dir">
-<code class="descname">setup_job_dir</code><span class="sig-paren">(</span><em>data_files</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.setup_job_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setup_job_dir</code><span class="sig-paren">(</span><em>data_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.setup_job_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up the directory structure for a job execution and downloads the given files</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
-multiple files (True) and a relative directory path</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+multiple files (True) and an absolute directory path</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict with each file parameter name mapping to a list of absolute file paths of the written files</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each file parameter name mapping to a list of absolute file paths of the written files</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of str -&gt; list of str</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; list of str</td>
 </tr>
 </tbody>
 </table>
@@ -746,7 +730,7 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
         <a href="job.configuration.environment.html" class="btn btn-neutral float-right" title="job.configuration.environment package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.configuration.html" class="btn btn-neutral" title="job.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.configuration.configuration.html" class="btn btn-neutral" title="job.configuration.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -777,7 +761,7 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.execution package &mdash; Scale 3.0.0 documentation</title>
+  <title>job.execution package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job package" href="job.html"/>
         <link rel="next" title="job.execution.running package" href="job.execution.running.html"/>
         <link rel="prev" title="job.configuration.results.results_manifest package" href="job.configuration.results.results_manifest.html"/> 
@@ -111,7 +111,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.settings">job.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
@@ -238,187 +237,64 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.execution.file_system">
-<span id="job-execution-file-system-module"></span><h2>job.execution.file_system module<a class="headerlink" href="#module-job.execution.file_system" title="Permalink to this headline">¶</a></h2>
-<p>Defines methods for necessary file system interactions to perform job executions</p>
+<div class="section" id="module-job.execution.container">
+<span id="job-execution-container-module"></span><h2>job.execution.container module<a class="headerlink" href="#module-job.execution.container" title="Permalink to this headline">¶</a></h2>
+<p>Defines the methods for handling file systems in the job execution&#8217;s local container volume</p>
 <dl class="function">
-<dt id="job.execution.file_system.create_job_exe_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">create_job_exe_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.create_job_exe_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the top level directory for a job execution</p>
+<dt id="job.execution.container.get_job_exe_input_vol_name">
+<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_input_vol_name</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_input_vol_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the container input volume name for the given job execution ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The container input volume name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="function">
-<dt id="job.execution.file_system.create_normal_job_exe_dir_tree">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">create_normal_job_exe_dir_tree</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.create_normal_job_exe_dir_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the directory tree structure for a non-system job execution (job with pre and post tasks). This method
-expects the top level job execution directory to have already been created.</p>
+<dt id="job.execution.container.get_job_exe_output_vol_name">
+<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_output_vol_name</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_output_vol_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the container output volume name for the given job execution ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The container output volume name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="function">
-<dt id="job.execution.file_system.delete_job_exe_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">delete_job_exe_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.delete_job_exe_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the top level directory for a job execution</p>
+<dt id="job.execution.container.get_workspace_volume_name">
+<code class="descclassname">job.execution.container.</code><code class="descname">get_workspace_volume_name</code><span class="sig-paren">(</span><em>job_exe_id</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_workspace_volume_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the workspace&#8217;s container volume for the given job execution ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
+<li><strong>workspace</strong> (<em>string</em>) &#8211; The name of the workspace</li>
+</ul>
+</td>
 </tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.delete_normal_job_exe_dir_tree">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">delete_normal_job_exe_dir_tree</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.delete_normal_job_exe_dir_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the directory tree structure for a non-system job execution (job with pre and post tasks)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The workspace&#8217;s container volume name</p>
+</td>
 </tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the work directory for a job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the work directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_input_data_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_input_data_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_data_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the directory for a job execution where input data should be written</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input data directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_input_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_input_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the input directory for a job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_input_work_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_input_work_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_input_work_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the directory for a job execution that the input workspaces can use as a work directory</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the input work directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_output_data_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_output_data_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_data_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the directory for a job execution where output data should be written</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output data directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_output_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_output_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the output directory for a job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="job.execution.file_system.get_job_exe_output_work_dir">
-<code class="descclassname">job.execution.file_system.</code><code class="descname">get_job_exe_output_work_dir</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.file_system.get_job_exe_output_work_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the directory for a job execution that the output workspace can use as a work directory</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path of the output work directory</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -528,7 +404,7 @@ related job and job_type fields populated.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>trigger package &mdash; Scale 3.0.0 documentation</title>
+  <title>trigger package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,10 +32,10 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="trigger.configuration package" href="trigger.configuration.html"/>
-        <link rel="prev" title="storage.test.brokers package" href="storage.test.brokers.html"/> 
+        <link rel="prev" title="storage.test.configuration package" href="storage.test.configuration.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -451,7 +451,7 @@ been saved in the database (it must have an ID). The returned trigger event mode
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of the trigger for the rule</li>
-<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The stable name of the trigger rule used by clients for queries</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the trigger rule used by clients for queries</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for the rule. This will contain fields specific to the type of the
 trigger.</li>
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the rule is still active (false once rule is archived)</li>
@@ -688,7 +688,7 @@ unique. This is implemented to allow the loading of defined system trigger rules
         <a href="trigger.configuration.html" class="btn btn-neutral float-right" title="trigger.configuration package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="storage.test.brokers.html" class="btn btn-neutral" title="storage.test.brokers package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="storage.test.configuration.html" class="btn btn-neutral" title="storage.test.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -719,7 +719,7 @@ unique. This is implemented to allow the loading of defined system trigger rules
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

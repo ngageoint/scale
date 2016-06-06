@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Workspace Services &mdash; Scale 3.0.0 documentation</title>
+  <title>Workspace Services &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="Scale 3.0.0 documentation" href="../index.html"/>
+    <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Install" href="../install/index.html"/>
         <link rel="prev" title="System Services" href="system.html"/> 
@@ -170,12 +170,12 @@
 <p>These services provide access to information about workspaces that Scale uses to manage files.</p>
 <table border="1" class="docutils" id="rest-workspace-list">
 <colgroup>
-<col width="16%" />
+<col width="17%" />
 <col width="4%" />
 <col width="11%" />
 <col width="4%" />
 <col width="3%" />
-<col width="61%" />
+<col width="59%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head" colspan="6"><strong>Workspace List</strong></th>
@@ -254,12 +254,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
-<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+<td colspan="2">The unique identifier of the model. Can be passed to the details API.
 (See <a class="reference internal" href="#rest-workspace-details"><span>Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.name</td>
 <td colspan="2">String</td>
-<td colspan="2">The stable name of the workspace used for queries.</td>
+<td colspan="2">The identifying name of the workspace used for queries.</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.title</td>
 <td colspan="2">String</td>
@@ -320,7 +320,7 @@ This field can be null if the disk space is unknown.</td>
         <span class="p">},</span>
         <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
             <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
             <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
@@ -340,11 +340,124 @@ This field can be null if the disk space is unknown.</td>
 </tr>
 </tbody>
 </table>
+<table border="1" class="docutils" id="rest-workspace-create">
+<colgroup>
+<col width="17%" />
+<col width="3%" />
+<col width="12%" />
+<col width="3%" />
+<col width="9%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Create Workspace</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Creates a new workspace with associated configuration</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /workspaces/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">name</td>
+<td colspan="2">String</td>
+<td>Required</td>
+<td>The identifying name of the workspace used for queries.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the workspace.</td>
+</tr>
+<tr class="row-even"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the workspace.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">base_url</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The URL prefix used to access all files within the workspace.
+This field can be null if the workspace is not web-accessible.</td>
+</tr>
+<tr class="row-even"><td colspan="2">is_active</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether the workspace is available for use. Defaults to true.
+Becomes false once a workspace is archived.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">json_config</td>
+<td colspan="2">JSON Object</td>
+<td>Required</td>
+<td>JSON description of the configuration for the workspace.
+(See <a class="reference internal" href="../architecture/workspaces.html#architecture-workspaces-spec"><span>Workspace Configuration Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="5">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">All fields are the same as the workspace details model.
+(See <a class="reference internal" href="#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 <table border="1" class="docutils" id="rest-workspace-details">
 <colgroup>
-<col width="21%" />
-<col width="15%" />
-<col width="64%" />
+<col width="22%" />
+<col width="16%" />
+<col width="62%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head" colspan="3"><strong>Workspace Details</strong></th>
@@ -375,7 +488,7 @@ This field can be null if the disk space is unknown.</td>
 </tr>
 <tr class="row-odd"><td>name</td>
 <td>String</td>
-<td>The stable name of the workspace used for queries.</td>
+<td>The identifying name of the workspace used for queries.</td>
 </tr>
 <tr class="row-even"><td>title</td>
 <td>String</td>
@@ -423,7 +536,7 @@ This field can be null if the disk space is unknown.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
     <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
@@ -433,7 +546,230 @@ This field can be null if the disk space is unknown.</td>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
-    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-workspace-validate">
+<colgroup>
+<col width="17%" />
+<col width="3%" />
+<col width="14%" />
+<col width="2%" />
+<col width="9%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Validate Workspace</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Validates a new workspace configuration without actually saving it</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /workspaces/validation/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">name</td>
+<td colspan="2">String</td>
+<td>Required</td>
+<td>The identifying name of the workspace used for queries.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the workspace.</td>
+</tr>
+<tr class="row-even"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the workspace.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">base_url</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The URL prefix used to access all files within the workspace.
+This field can be null if the workspace is not web-accessible.</td>
+</tr>
+<tr class="row-even"><td colspan="2">is_active</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether the workspace is available for use. Defaults to true.
+Becomes false once a workspace is archived.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">json_config</td>
+<td colspan="2">JSON Object</td>
+<td>Required</td>
+<td>JSON description of the configuration for the workspace.
+(See <a class="reference internal" href="../architecture/workspaces.html#architecture-workspaces-spec"><span>Workspace Configuration Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>warnings</td>
+<td colspan="2">Array</td>
+<td colspan="3">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td colspan="2">String</td>
+<td colspan="3">An identifier for the warning.</td>
+</tr>
+<tr class="row-odd"><td>.details</td>
+<td colspan="2">String</td>
+<td colspan="3">A human-readable description of the problem.</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;broker_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Changing the broker type may disrupt queued/running jobs.&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-workspace-edit">
+<colgroup>
+<col width="17%" />
+<col width="3%" />
+<col width="12%" />
+<col width="3%" />
+<col width="9%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Edit Workspace</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Edits an existing workspace with associated configuration</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><dl class="first last docutils">
+<dt><strong>PATCH</strong> /workspaces/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the workspace.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the workspace.</td>
+</tr>
+<tr class="row-even"><td colspan="2">base_url</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The URL prefix used to access all files within the workspace.
+This field can be null if the workspace is not web-accessible.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">is_active</td>
+<td colspan="2">Boolean</td>
+<td>Optional</td>
+<td>Whether the workspace is available for use. Defaults to true.
+Becomes false once a workspace is archived.</td>
+</tr>
+<tr class="row-even"><td colspan="2">json_config</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description of the configuration for the workspace.
+(See <a class="reference internal" href="../architecture/workspaces.html#architecture-workspaces-spec"><span>Workspace Configuration Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">All fields are the same as the workspace details model.
+(See <a class="reference internal" href="#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source Workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/rs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+    <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -484,7 +820,7 @@ This field can be null if the disk space is unknown.</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'3.0.0',
+            VERSION:'3.0.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

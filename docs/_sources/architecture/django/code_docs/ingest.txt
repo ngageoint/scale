@@ -24,18 +24,10 @@ ingest.apps module
     :undoc-members:
     :show-inheritance:
 
-ingest.cleanup module
----------------------
+ingest.container module
+-----------------------
 
-.. automodule:: ingest.cleanup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ingest.file_system module
--------------------------
-
-.. automodule:: ingest.file_system
+.. automodule:: ingest.container
     :members:
     :undoc-members:
     :show-inheritance:
