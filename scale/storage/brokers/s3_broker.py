@@ -80,9 +80,7 @@ class S3Broker(Broker):
 
         with BrokerConnection(self._credentials) as conn:
             for file_upload in file_uploads:
-                bucket = conn.get_bucket(self._bucket_name)
-
-                s3_key = Key(bucket)
+                s3_key = conn.get_key(self._bucket_name)
                 s3_key.key = file_upload.file.file_path
                 s3_key.storage_class = settings.S3_STORAGE_CLASS
                 s3_key.encrypted = settings.S3_ENCRYPTED
@@ -282,12 +280,13 @@ class BrokerConnection(object):
         logger.debug('Accessing S3 bucket: %s', bucket_name)
         return self._connection.get_bucket(bucket_name, validate=validate)
 
-    def get_key(self, bucket_name, key_name):
+    def get_key(self, bucket_name, key_name=None):
         """Gets a reference to an S3 key with the given identifier.
 
         :param bucket_name: The unique name of the bucket to retrieve.
         :type bucket_name: string
-        :param key_name: The unique name of the key to retrieve that is associated with a file.
+        :param key_name: The unique name of the key to retrieve that is associated with a file. None indicates a new
+            key should be created within the given bucket.
         :type key_name: string
         :returns: The key object for the given name.
         :rtype: :class:`boto.s3.key.Key`
@@ -298,7 +297,7 @@ class BrokerConnection(object):
 
         bucket = self.get_bucket(bucket_name)
 
-        s3_key = bucket.get_key(key_name)
+        s3_key = bucket.get_key(key_name) if key_name else Key(bucket)
         if not s3_key:
             raise FileDoesNotExist('Unable to access remote file: %s %s' % (bucket_name, key_name))
         return s3_key
