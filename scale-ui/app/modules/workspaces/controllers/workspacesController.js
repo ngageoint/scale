@@ -1,139 +1,78 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('workspacesController', function($rootScope, $scope, $location, $uibModal, $routeParams, scaleConfig, navService, workspacesService, scaleService, userService, gridFactory, Workspace, toastr) {
-        var self = this;
+    angular.module('scaleApp').controller('workspacesController', function($scope, $location, $uibModal, $routeParams, scaleConfig, navService, workspacesService, scaleService, userService, gridFactory, Workspace, toastr) {
+        $scope.loading = true;
         $scope.workspaces = [];
         $scope.addBtnClass = 'btn-primary';
         $scope.addBtnIcon = 'fa-plus-circle';
-        $scope.masterClass = 'col-xs-3';
-        $scope.detailClass = 'col-xs-9';
-        $scope.mode = "view";
-        $scope.readonly = true;
+        $scope.saveBtnClass = 'btn-default';
+        $scope.mode = 'view';
+        $scope.user = userService.getUserCreds();
+        $scope.readonly = !($scope.user && $scope.user.is_admin);
 
         $scope.availableWorkspaceTypes = scaleConfig.workspaceTypes;
 
-        self.wsParams = {
-            page: null, page_size: null, started: null, ended: null, order: $rootScope.workspacesControllerOrder || '-last_modified', status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
+        var wsParams = {
+            page: null, page_size: null, started: null, ended: null, order: null, status: null, error_category: null, job_type_id: null, job_type_name: null, job_type_category: null, url: null
         };
-
-        var defaultColumnDefs = [
-            {
-                field: 'id',
-                displayName: 'id',
-                enableFiltering: false,
-                sortable: false,
-                width: 60,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.id }}</div>'
-
-            },{
-                field: 'name',
-                displayName: 'Name',
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.name }}</div>'
-            },{
-                field: 'created',
-                displayName: 'Created (Z)',
-                enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.created }}</div>'
-            },{
-                field: 'last_modified',
-                displayName: 'Last Modified (Z)',
-                enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified }}</div>'
-            },
-        ];
         
-        $scope.gridOptions = gridFactory.defaultGridOptions();
-        $scope.gridOptions.paginationCurrentPage = parseInt(self.wsParams.page || 1);
-        $scope.gridOptions.paginationPageSize = parseInt(self.wsParams.page_size) || $scope.gridOptions.paginationPageSize;
-        var colDefs = $rootScope.colDefs ? $rootScope.colDefs : defaultColumnDefs;
-        $scope.gridOptions.columnDefs = gridFactory.applySortConfig(colDefs, self.wsParams);
-        $scope.gridOptions.data = $scope.workspaces;
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
-            //set gridApi on scope
-            $scope.gridApi = gridApi;
-            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                if ($scope.actionClicked) {
-                    $scope.actionClicked = false;
-                } else {
-                    $scope.$apply(function(){
-                        $location.path('/workspaces/' + row.entity.id);
-                    });
-                }
-
-            });
-            $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                self.wsParams.page = currentPage;
-                self.wsParams.page_size = pageSize;
-                $scope.filterResults();
-            });
-            $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                $rootScope.colDefs = null;
-                _.forEach($scope.gridApi.grid.columns, function (col) {
-                    col.colDef.sort = col.sort;
-                });
-                $rootScope.colDefs = $scope.gridApi.grid.options.columnDefs;
-                var sortArr = [];
-                _.forEach(sortColumns, function (col) {
-                    sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
-                });
-                self.updateJobOrder(sortArr);
-            });
-        };
-
-        $scope.cancelCreate = function(){
+        $scope.cancelCreate = function() {
             //disableSaveWorkspace();
             $location.path('workspaces');
         };
 
-        $scope.editWorkspace = function(){
+        $scope.editWorkspace = function() {
             $scope.mode = 'edit';
         };
 
-        $scope.saveWorkspace = function(){
-            workspacesService.saveWorkspace($scope.activeWorkspace).then(function(workspace){
+        $scope.saveWorkspace = function() {
+            workspacesService.saveWorkspace($scope.activeWorkspace).then(function(workspace) {
                 debugger;
                 $scope.loadWorkspace(workspace.id);
-            }).fail(function(){
+            }).fail(function() {
 
             });
         };
 
-        $scope.newWorkspace = function(){
-            $scope.mode = "add";
-            $scope.loadWorkspace('new');
-            //$scope.activeWorkspace =  new Workspace();
+        $scope.newWorkspace = function() {
+            $scope.mode = 'add';
+            $scope.loadWorkspace(0);
+            disableSaveWorkspace();
         };
 
-        $scope.loadWorkspace = function(id){
+        $scope.loadWorkspace = function(id) {
             $location.path('workspaces/' + id);
-
-        }
+        };
 
         var enableSaveWorkspace = function () {
-            if($scope.activeWorkspace){
+            if ($scope.activeWorkspace) {
                 $scope.activeWorkspace.modified = true;
-                $scope.saveBtnClass = 'btn-primary';
+                $scope.saveBtnClass = 'btn-success';
             }
         };
 
         var disableSaveWorkspace = function () {
             $scope.activeWorkspace.modified = false;
-            $scope.saveBtnClass = 'btn-default;'
+            $scope.saveBtnClass = 'btn-default';
         };
 
         $scope.$watchCollection('activeWorkspace', function (newValue, oldValue) {
-            if(oldValue){
-                enableSaveWorkspace();
+            if (angular.equals(newValue, oldValue)) {
+                return;
             }
-
+            console.log(newValue.json_config);
+            if (newValue.validate()) {
+                enableSaveWorkspace();
+            } else {
+                disableSaveWorkspace();
+            }
         });
 
-        self.getWorkspaces = function () {
+        var getWorkspaces = function () {
             $scope.loading = true;
             workspacesService.getWorkspaces().then(function (data) {
                 $scope.workspaces = data;
-                $scope.gridOptions.data = data;
                 $scope.loading = false;
             }).catch(function (error) {
                 $scope.loading = false;
@@ -141,25 +80,21 @@
             });
         };
 
-        self.initialize = function () {
-            self.getWorkspaces();
+        var initialize = function () {
+            getWorkspaces();
             $scope.activeWorkspace = null;
             $scope.mode = 'view';
-            $rootScope.user = userService.getUserCreds();
 
-            if ($rootScope.user) {
-                $scope.readonly = false;
-            }
-            if($routeParams.id){
-                var id = $routeParams.id;
+            if ($routeParams.id) {
+                var id = parseInt($routeParams.id);
                 console.log(id);
-                if(id === 'new'){
+                if (id === 0) {
                     $scope.mode = 'add';
                     $scope.activeWorkspace = new Workspace();
-                }
-                else {
+                    disableSaveWorkspace();
+                } else {
                     // set activeWorkspace = workspace details for id
-                    workspacesService.getWorkspaceDetails(id).then(function(data){
+                    workspacesService.getWorkspaceDetails(id).then(function(data) {
                         $scope.activeWorkspace = data;
                     });
                 }
@@ -167,7 +102,15 @@
             navService.updateLocation('workspaces');
         };
 
-        self.initialize();
+        initialize();
 
+        angular.element(document).ready(function () {
+            // set container heights equal to available page height
+            var viewport = scaleService.getViewportSize(),
+                offset = scaleConfig.headerOffset,
+                containerMaxHeight = viewport.height - offset + 60;
+
+            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
+        });
     });
 })();

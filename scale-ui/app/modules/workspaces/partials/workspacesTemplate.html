@@ -1,23 +1,19 @@
-<ais-header hide-title="true" name="'Workspaces'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
-<div class="page-header">
-    <h1>
-        Workspaces
-    </h1>
-    <hr />
-</div>
+<ais-header name="'Workspaces'" loading="loading"></ais-header>
 
 <div class="row">
-    <div class="master-container" ng-class="masterClass" style="{{ containerStyle }}">
+    <div class="col-xs-3 master-container" style="{{ containerStyle }}">
         <div class="master-content">
-            <div class="master-controls text-right">
+            <div class="master-controls">
+                <div ng-if="!readonly">
                     <button class="btn btn-sm" ng-show="!readonly" ng-class="addBtnClass" ng-click="newWorkspace()"><i class="fa" ng-class="addBtnIcon"></i> Create Workspace</button>
+                </div>
             </div>
-            <ul class="list-unstyled" ng-show="!minimizeMaster">
+            <ul class="list-unstyled">
                 <li ng-repeat="workspace in workspaces" ng-class="{ active: activeWorkspace.id === workspace.id }" ng-click="loadWorkspace(workspace.id)">{{ workspace.title }}</li>
             </ul>
         </div>
     </div>
-    <div class="detail-container" ng-class="detailClass" style="{{ containerStyle }}">
+    <div class="col-xs-9 detail-container" style="{{ containerStyle }}">
         <div class="text-center" ng-if="!activeWorkspace">
             <h2>Select a Workspace to view its details.</h2>
         </div>
@@ -37,14 +33,14 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="wsName" class="sr-only">Name</label>
+                                    <label for="wsName">Name</label>
                                     <input id="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
                                     </input>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="wsTitle" class="sr-only">Title</label>
+                                    <label for="wsTitle">Title</label>
                                     <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
                                 </div>
                             </div>
@@ -53,15 +49,15 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="wsDescription" class="sr-only">Description</label>
-                                    <input id="wsDescription" type="text" class="form-control" ng-model="activeWorkspace.description" placeholder="Description">
+                                    <label for="wsDescription">Description</label>
+                                    <textarea id="wsDescription" class="form-control" ng-model="activeWorkspace.description" placeholder="Description" rows="4"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="wsBaseUrl" class="sr-only">Base URL</label>
+                                    <label for="wsBaseUrl">Base URL</label>
                                     <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
                                 </div>
                             </div>
@@ -69,26 +65,25 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="wsType" class="sr-only">Type</label>
-                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config.type" ng-options="t.type as t.type for t in availableWorkspaceTypes"></select>
+                                    <label for="wsType">Type</label>
+                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config" ng-options="t as t.type for t in availableWorkspaceTypes"></select>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <span ng-if="activeWorkspace.json_config.type">fields for {{activeWorkspace.json_config.type}} should be here</span>
+                                <div class="form-group" ng-repeat="field in activeWorkspace.json_config.fields">
+                                    <label for="{{ field }}">{{ field }}</label>
+                                    <input id="{{ field }}" type="text" class="form-control" placeholder="{{ field }}">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
-                                <!--<div class="form-group">-->
-                                    <div class="checkbox">
-                                        <label for="wsActive">
-                                            <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
-                                            Active
-                                        </label>
-                                    </div>
-                                <!--</div>-->
+                                <div class="checkbox">
+                                    <label for="wsActive">
+                                        <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
+                                        Active
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,8 +92,8 @@
                     <div class="btn-group btn-group-sm" ng-show="!readonly">
                         <!--<button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>-->
                         <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
-                        <button class="btn btn-default" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-ban"></i></button>
-                        <button class="btn btn-default" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-warning" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
+                        <button class="btn btn-success" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
                     </div>
                 </div>
             </div>

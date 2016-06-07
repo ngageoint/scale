@@ -117,7 +117,7 @@
 
         var enableSaveRecipe = function () {
             $scope.recipeType.modified = true;
-            //$scope.saveBtnClass = 'btn-primary';
+            $scope.saveBtnClass = 'btn-success';
         };
 
         var disableSaveRecipe = function () {
