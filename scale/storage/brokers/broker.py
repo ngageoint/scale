@@ -55,8 +55,8 @@ class Broker(object):
         will be given for volume_path.
 
         The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
-        each file itself and not any parent directories. No changes should be made to the ScaleFile models. Scale will
-        mark the models as deleted in the database after the files have been successfully deleted.
+        each file itself and not any parent directories. Each file model should be updated and saved when a delete is
+        successful, including fields such as is_deleted and deleted.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
@@ -76,8 +76,9 @@ class Broker(object):
         use a container volume, None will be given for volume_path.
 
         The file_downloads list contains named tuples that each contain a ScaleFile model to be downloaded and the
-        absolute local container path where the file should be downloaded. No changes should be made to the ScaleFile
-        models. Any directories in the absolute local container paths should already exist.
+        absolute local container path where the file should be downloaded. Typically, no changes are needed to file
+        models during a download, but any changes should be saved by the broker. Any directories in the absolute local
+        container paths should already exist.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
@@ -109,9 +110,8 @@ class Broker(object):
         The file_moves list contains named tuples that each contain a ScaleFile model to be moved and the new relative
         file_path field for the new location of the file. The broker is expected to set the file_path field of each
         ScaleFile model to its new location (which the broker may alter) and is free to alter any additional fields as
-        necessary. The broker should NOT perform a model save/update to the database. Scale will save/update the models
-        in the database after they have all been successfully moved. The directories in the new file_path may not exist,
-        so it is the responsibility of the broker to create them if necessary.
+        necessary. The broker is responsible for saving any changes to models when a move is successful The directories
+        in the new file_path may not exist, so it is the responsibility of the broker to create them if necessary.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
@@ -134,9 +134,9 @@ class Broker(object):
         local container path where the file currently exists. The broker is free to alter the ScaleFile fields of the
         uploaded files, including the final file_path (the given file_path is a recommendation by Scale that guarantees
         path uniqueness). The ScaleFile models may not have been saved to the database yet and so may not have their id
-        field populated. The broker should NOT perform a model save/update to the database. Scale will save the models
-        into the database after they have all been successfully uploaded. The directories in the remote file_path may
-        not exist, so it is the responsibility of the broker to create them if necessary.
+        field populated. The broker should perform a model save/update to the database for any files that are
+        successfully uploaded. The directories in the remote file_path may not exist, so it is the responsibility of the
+        broker to create them if necessary.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume

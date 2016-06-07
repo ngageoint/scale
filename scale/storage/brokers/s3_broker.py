@@ -7,7 +7,6 @@ import time
 from collections import namedtuple
 
 import boto
-import django.utils.timezone as timezone
 from boto.exception import S3ResponseError
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -43,8 +42,9 @@ class S3Broker(Broker):
 
                 self._delete_file(s3_key, scale_file)
 
-                scale_file.is_deleted = True
-                scale_file.deleted = timezone.now()
+                # Update model attributes
+                scale_file.set_deleted()
+                scale_file.save()
 
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""
@@ -73,7 +73,9 @@ class S3Broker(Broker):
 
                 self._move_file(s3_key, file_move.file, file_move.new_path)
 
+                # Update model attributes
                 file_move.file.file_path = file_move.new_path
+                file_move.file.save()
 
     def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`"""
@@ -86,6 +88,9 @@ class S3Broker(Broker):
                 s3_key.encrypted = settings.S3_ENCRYPTED
 
                 self._upload_file(s3_key, file_upload.file, file_upload.local_path)
+
+                # Create new model
+                file_upload.file.save()
 
     def validate_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.validate_configuration`"""

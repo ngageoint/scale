@@ -8,6 +8,7 @@ import re
 
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
+import django.utils.timezone as timezone
 import djorm_pgjson.fields
 from django.db import transaction
 
@@ -307,13 +308,13 @@ class ScaleFileManager(models.Manager):
         # Store files in workspace
         workspace.upload_files(file_uploads)
 
+        # Populate the country list for all files that were saved
         with transaction.atomic():
             for file_upload in file_uploads:
                 scale_file = file_upload.file
-                # Save model to get model ID, update the country list, then save again
-                scale_file.save()
-                scale_file.set_countries()
-                scale_file.save()
+                if scale_file.pk:
+                    scale_file.set_countries()
+                    scale_file.save()
 
         return file_list
 
@@ -451,6 +452,11 @@ class ScaleFile(models.Model):
         elif self.data_ended is not None:
             target_date = self.data_ended
         apply(self.countries.add, CountryData.objects.get_intersects(self.geometry, target_date).values())
+
+    def set_deleted(self):
+        """Marks the current file as deleted and updates the corresponding fields."""
+        self.is_deleted = True
+        self.deleted = timezone.now()
 
     def _set_data_type_tags(self, tags):
         """Sets the data type tags on the model

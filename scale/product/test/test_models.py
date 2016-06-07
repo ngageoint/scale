@@ -79,18 +79,14 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         direct_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
                                                      ancestor_job__isnull=True)
         self.assertEqual(direct_qry.count(), 3)
-        file_8_parent_ids = set()
-        for link in direct_qry:
-            file_8_parent_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_parent_ids, set([self.file_4.id, self.file_6.id, self.file_7.id]))
+        file_8_parent_ids = {link.ancestor_id for link in direct_qry}
+        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
 
         indirect_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
                                                        ancestor_job__isnull=False)
         self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = set()
-        for link in indirect_qry:
-            file_8_ancestor_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_ancestor_ids, set([self.file_1.id, self.file_2.id, self.file_3.id]))
+        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
+        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
 
     def test_products(self):
         """Tests creating links for inputs with generated products at the same time."""
@@ -105,17 +101,13 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
         direct_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=True)
         self.assertEqual(direct_qry.count(), 3)
-        file_8_parent_ids = set()
-        for link in direct_qry:
-            file_8_parent_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_parent_ids, set([self.file_4.id, self.file_6.id, self.file_7.id]))
+        file_8_parent_ids = {link.ancestor_id for link in direct_qry}
+        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
 
         indirect_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=False)
         self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = set()
-        for link in indirect_qry:
-            file_8_ancestor_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_ancestor_ids, set([self.file_1.id, self.file_2.id, self.file_3.id]))
+        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
+        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
 
     def test_inputs_and_products(self):
         """Tests creating links for inputs and then later replacing with generated products."""
@@ -144,17 +136,13 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
         direct_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=True)
         self.assertEqual(direct_qry.count(), 3)
-        file_8_parent_ids = set()
-        for link in direct_qry:
-            file_8_parent_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_parent_ids, set([self.file_4.id, self.file_6.id, self.file_7.id]))
+        file_8_parent_ids = {link.ancestor_id for link in direct_qry}
+        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
 
         indirect_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=False)
         self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = set()
-        for link in indirect_qry:
-            file_8_ancestor_ids.add(link.ancestor_id)
-        self.assertSetEqual(file_8_ancestor_ids, set([self.file_1.id, self.file_2.id, self.file_3.id]))
+        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
+        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
 
 
 class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
@@ -306,11 +294,11 @@ class TestProductFileManagerPopulateSourceAncestors(TestCase):
 
         for product in products:
             if product.id == self.product_1.id:
-                self.assertSetEqual(set(product.source_files), set([self.src_file_1, self.src_file_2]))
+                self.assertSetEqual(set(product.source_files), {self.src_file_1, self.src_file_2})
             elif product.id == self.product_2.id:
-                self.assertSetEqual(set(product.source_files), set([self.src_file_1, self.src_file_2]))
+                self.assertSetEqual(set(product.source_files), {self.src_file_1, self.src_file_2})
             elif product.id == self.product_3.id:
-                self.assertSetEqual(set(product.source_files), set([self.src_file_3, self.src_file_4]))
+                self.assertSetEqual(set(product.source_files), {self.src_file_3, self.src_file_4})
 
 
 class TestProductFileManagerUploadFiles(TestCase):
@@ -318,9 +306,17 @@ class TestProductFileManagerUploadFiles(TestCase):
     def setUp(self):
         django.setup()
 
+        def upload_files(file_uploads):
+            for file_upload in file_uploads:
+                file_upload.file.save()
+
+        def delete_files(files):
+            for scale_file in files:
+                scale_file.save()
+
         self.workspace = storage_test_utils.create_workspace()
-        self.workspace.upload_files = MagicMock()
-        self.workspace.delete_files = MagicMock()
+        self.workspace.upload_files = MagicMock(side_effect=upload_files)
+        self.workspace.delete_files = MagicMock(side_effect=delete_files)
 
         self.source_file = source_test_utils.create_source(file_name='input1.txt', workspace=self.workspace)
 

@@ -471,6 +471,15 @@ class TestScaleFile(TestCase):
         self.assertIn('TC', tmp)
         self.assertIn('TT', tmp)
 
+    def test_set_deleted(self):
+        """Tests marking a file as deleted."""
+        scale_file = storage_test_utils.create_file()
+
+        scale_file.set_deleted()
+
+        self.assertTrue(scale_file.is_deleted)
+        self.assertIsNotNone(scale_file.deleted)
+
 
 class TestCountryData(TestCase):
 

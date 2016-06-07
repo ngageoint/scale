@@ -7,10 +7,10 @@ from boto.s3.key import Key
 from django.test import TestCase
 from mock import MagicMock, Mock, mock_open, patch
 
+import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.brokers.s3_broker import S3Broker, BrokerConnection
-from storage.models import ScaleFile
 
 
 class TestS3Broker(TestCase):
@@ -41,8 +41,8 @@ class TestS3Broker(TestCase):
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file.json')
 
-        file_1 = ScaleFile(file_path=file_path_1)
-        file_2 = ScaleFile(file_path=file_path_2)
+        file_1 = storage_test_utils.create_file(file_path=file_path_1)
+        file_2 = storage_test_utils.create_file(file_path=file_path_2)
 
         # Call method to test
         self.broker.delete_files(None, [file_1, file_2])
@@ -72,8 +72,8 @@ class TestS3Broker(TestCase):
         workspace_path_file_1 = os.path.join('my_wrk_dir_1', file_name_1)
         workspace_path_file_2 = os.path.join('my_wrk_dir_2', file_name_2)
 
-        file_1 = ScaleFile(file_path=workspace_path_file_1)
-        file_2 = ScaleFile(file_path=workspace_path_file_2)
+        file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
+        file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
         file_1_dl = FileDownload(file_1, local_path_file_1)
         file_2_dl = FileDownload(file_2, local_path_file_2)
 
@@ -121,8 +121,8 @@ class TestS3Broker(TestCase):
         new_workspace_path_1 = os.path.join('my_new_dir_1', file_name_1)
         new_workspace_path_2 = os.path.join('my_new_dir_2', file_name_2)
 
-        file_1 = ScaleFile(file_path=old_workspace_path_1)
-        file_2 = ScaleFile(file_path=old_workspace_path_2)
+        file_1 = storage_test_utils.create_file(file_path=old_workspace_path_1)
+        file_2 = storage_test_utils.create_file(file_path=old_workspace_path_2)
         file_1_mv = FileMove(file_1, new_workspace_path_1)
         file_2_mv = FileMove(file_2, new_workspace_path_2)
 
@@ -152,8 +152,8 @@ class TestS3Broker(TestCase):
         workspace_path_file_1 = os.path.join('my_wrk_dir_1', file_name_1)
         workspace_path_file_2 = os.path.join('my_wrk_dir_2', file_name_2)
 
-        file_1 = ScaleFile(file_path=workspace_path_file_1, media_type='text/plain')
-        file_2 = ScaleFile(file_path=workspace_path_file_2, media_type='application/json')
+        file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1, media_type='text/plain')
+        file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2, media_type='application/json')
         file_1_up = FileUpload(file_1, local_path_file_1)
         file_2_up = FileUpload(file_2, local_path_file_2)
 
