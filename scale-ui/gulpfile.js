@@ -175,7 +175,7 @@ gulp.task('app-html', ['clean'], appHtml);
 gulp.task('app-html-watch', appHtml);
 
 var appCss = function () {
-    return gulp.src(paths.styles)
+    return gulp.src('./app/styles/main.less')
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(concat('app.css'))

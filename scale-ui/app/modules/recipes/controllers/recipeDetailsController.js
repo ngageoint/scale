@@ -31,8 +31,6 @@
 
         self.initialize = function () {
             navService.updateLocation('recipes');
-            $rootScope.user = userService.getUserCreds();
-
             self.getRecipeDetail($scope.recipeId);
         };
 

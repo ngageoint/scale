@@ -1,11 +1,8 @@
-@import 'colors';
-
 .grid-container {
     background: #fff;
 
     .scale-grid {
         width: auto;
-        height: 100%;
         box-sizing: border-box;
 
         .ui-grid-header {
@@ -22,11 +19,6 @@
 
             }
             .ui-grid-cell-contents {
-                .label {
-                    width: 32%;
-                    display: inline-block;
-                    padding: 5px 0;
-                }
                 &.status{
                     text-align: center;
                     font-size: 1.0em;
@@ -44,23 +36,12 @@
 
 .ui-grid-viewport {
     width: 100% !important;
-    height: 100% !important;
 }
 
-.label-running {
-    background-color: @chart_blue;
-}
+.pagination-controls {
+    text-align: center;
 
-.label-completed {
-     background-color: @chart_green;
-}
-
-.label-data {
-    background-color: @failure_data;
-}
-.label-system {
-    background-color: @failure_system;
-}
-.label-algorithm {
-    background-color: @failure_algorithm;
+    .pagination {
+        margin: 10px 0 0 0;
+    }
 }

@@ -216,7 +216,7 @@
             "jobs": [
                 { "path": "jobs/types", "label": "Job Types" },
                 { "path": "jobs", "label": "Jobs" },
-                { "path": "jobs/errors", "label": "Job Types Error Rates"}
+                { "path": "jobs/failure-rates", "label": "Failure Rates"}
             ],
             "load": [
                 { "path": "load", "label": "Queued" },
@@ -233,6 +233,7 @@
             ]
         },
         "headerOffset": 165,
-        "dateFilterOffset": 45
+        "dateFilterOffset": 45,
+        "paginationOffset": 35
     }
 }

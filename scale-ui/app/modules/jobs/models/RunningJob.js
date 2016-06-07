@@ -14,7 +14,7 @@
                 return scaleService.calculateDuration(this.longest_running, moment.utc().toISOString());
             },
             getIcon: function () {
-                var icon = this.job_type.icon_code ? '<i class="fa">&#x' + this.job_type.icon_code + '</i>' : '<i class="fa">&#x' + scaleConfig.defaultIconCode + '</i>';
+                var icon = this.job_type.icon_code ? '<i class="fa fa-fw">&#x' + this.job_type.icon_code + '</i>' : '<i class="fa fa-fw">&#x' + scaleConfig.defaultIconCode + '</i>';
                 return icon;
             }
         };

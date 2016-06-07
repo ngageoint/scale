@@ -12,6 +12,21 @@
             return [request.status, request.response, {}];
         };
 
+        var getUrlParams = function (url) {
+            var obj = {};
+
+            if (url && url.split('?').length > 1) {
+                url.split('?')[1].split('&').forEach(function (item) {
+                    var s = item.split('='),
+                        k = s[0],
+                        v = s[1] && decodeURIComponent(s[1]);
+                    (k in obj) ? obj[k].push(v) : obj[k] = [v]
+                });
+            }
+
+            return obj;
+        };
+
         // Ingests Status
         var ingestsStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/status/', 'i');
         $httpBackend.whenGET(ingestsStatusRegex).respond(function () {
@@ -57,8 +72,46 @@
         // Ingests
         var ingestsOverrideUrl = 'test/data/ingests.json';
         var ingestsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/', 'i');
-        $httpBackend.whenGET(ingestsRegex).respond(function () {
-            return getSync(ingestsOverrideUrl);
+        $httpBackend.whenGET(ingestsRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(ingestsOverrideUrl),
+                ingests = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                ingests.results = _.sortByOrder(ingests.results, fields, orders);
+            }
+
+            if (urlParams.page && urlParams.page.length > 0) {
+                var page = parseInt(urlParams.page[0]),
+                    pageSize = parseInt(urlParams.page_size[0]);
+
+                if (page === 1) {
+                    ingests.results = _.take(ingests.results, pageSize);
+                } else {
+                    var startIdx = (page - 1) * pageSize,
+                        idxArray = [];
+
+                    for (var i = startIdx; i < ingests.results.length - 1; i++) {
+                        idxArray.push(i);
+                    }
+
+                    ingests.results = _.at(ingests.results, idxArray);
+                }
+            }
+
+            returnObj[1] = JSON.stringify(ingests);
+
+            return returnObj;
         });
 
         // Job load
@@ -89,7 +142,6 @@
         var jobDetailsOverrideUrl = 'test/data/jobDetails.json';
         var jobDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/.*/', 'i');
         $httpBackend.whenGET(jobDetailsRegex).respond(function (method, url) {
-            //return getSync(jobDetailsOverrideUrl);
             // get the jobType.id from the url
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
@@ -100,8 +152,32 @@
         // Jobs
         var jobsOverrideUrl = 'test/data/jobs.json';
         var jobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/', 'i');
-        $httpBackend.whenGET(jobsRegex).respond(function () {
-            return getSync(jobsOverrideUrl);
+        $httpBackend.whenGET(jobsRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(jobsOverrideUrl),
+                jobs = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    if (field === 'job_type') {
+                        field = 'job_type.name';
+                    }
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                jobs.results = _.sortByOrder(jobs.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(jobs);
+
+            return returnObj;
         });
 
         // Job type status
@@ -132,8 +208,28 @@
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
         var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
-        $httpBackend.whenGET(jobTypesRegex).respond(function () {
-            return getSync(jobTypesOverrideUrl);
+        $httpBackend.whenGET(jobTypesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(jobTypesOverrideUrl),
+                jobTypes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                jobTypes.results = _.sortByOrder(jobTypes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(jobTypes);
+
+            return returnObj;
         });
         
         // Job execution logs
@@ -148,15 +244,8 @@
         //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
         var metricsPlotDataRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/.*/','i');
         $httpBackend.whenGET(metricsPlotDataRegex).respond(function (method, url) {
-            var obj = {},
+            var urlParams = getUrlParams(url),
                 random = 0;
-
-            url.split('?')[1].split('&').forEach(function(item) {
-                var s = item.split('='),
-                    k = s[0],
-                    v = s[1] && decodeURIComponent(s[1]);
-                (k in obj) ? obj[k].push(v) : obj[k] = [v]
-            });
 
             var returnObj = {
                 count: 28,
@@ -165,37 +254,39 @@
                 results: []
             };
 
-            var numDays = moment.utc(obj.ended[0]).diff(moment.utc(obj.started[0]), 'd') + 1;
+            var numDays = moment.utc(urlParams.ended[0]).diff(moment.utc(urlParams.started[0]), 'd') + 1;
 
-            _.forEach(obj.column, function (metric) {
+            _.forEach(urlParams.column, function (metric) {
+                var maxRandom = metric === 'total_count' ? 1000 : 200;
+                var minRandom = metric === 'total_count' ? 800 : 10;
                 var returnResult = {
                     column: { title: _.startCase(metric) },
-                    min_x: moment.utc(obj.started[0]).format('YYYY-MM-DD'),
-                    max_x: moment.utc(obj.ended[0]).format('YYYY-MM-DD'),
+                    min_x: moment.utc(urlParams.started[0]).format('YYYY-MM-DD'),
+                    max_x: moment.utc(urlParams.ended[0]).format('YYYY-MM-DD'),
                     min_y: 1,
                     max_y: 1000,
                     values: []
                 };
 
                 for (var i = 0; i < numDays; i++) {
-                    if (obj.choice_id && obj.choice_id.length > 1) {
-                        _.forEach(obj.choice_id, function (id) {
-                            random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                            if (random % 2 == 0) {
-                                var value = Math.floor(Math.random() * (100 - 5 + 1)) + 5;
+                    if (urlParams.choice_id && urlParams.choice_id.length > 1) {
+                        _.forEach(urlParams.choice_id, function (id) {
+                            random = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+                            if (random <= 4) {
+                                var value = Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom;
                                 returnResult.values.push({
-                                    date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                    date: moment.utc(urlParams.started[0]).add(i, 'd').format('YYYY-MM-DD'),
                                     value: value,
                                     id: parseInt(id)
                                 });
                             }
                         });
                     } else {
-                        random = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
-                        if (random % 2 == 0) {
+                        random = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+                        if (random <= 4) {
                             returnResult.values.push({
-                                date: moment.utc(obj.started[0]).add(i, 'd').format('YYYY-MM-DD'),
-                                value: Math.floor(Math.random() * (100 - 5 + 1)) + 5
+                                date: moment.utc(urlParams.started[0]).add(i, 'd').format('YYYY-MM-DD'),
+                                value: Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom
                             });
                         }
                     }
@@ -269,8 +360,32 @@
         // Recipes service
         var recipesOverrideUrl = 'test/data/recipes.json';
         var recipesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/', 'i');
-        $httpBackend.whenGET(recipesRegex).respond(function () {
-            return getSync(recipesOverrideUrl);
+        $httpBackend.whenGET(recipesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(recipesOverrideUrl),
+                recipes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    if (field === 'recipe_type') {
+                        field = 'recipe_type.name';
+                    }
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                recipes.results = _.sortByOrder(recipes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(recipes);
+
+            return returnObj;
         });
 
         // Recipe type validation service
@@ -300,8 +415,28 @@
         // Recipe Types service
         var recipeTypesOverrideUrl = 'test/data/recipeTypes.json';
         var recipeTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
-        $httpBackend.whenGET(recipeTypesRegex).respond(function () {
-            return getSync(recipeTypesOverrideUrl);
+        $httpBackend.whenGET(recipeTypesRegex).respond(function (method, url) {
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(recipeTypesOverrideUrl),
+                recipeTypes = JSON.parse(returnObj[1]);
+
+            if (urlParams.order && urlParams.order.length > 0) {
+                var orders = [],
+                    fields = [];
+                _.forEach(urlParams.order, function (o) {
+                    var order = o.charAt(0) === '-' ? 'desc' : 'asc',
+                        field = order === 'desc' ? urlParams.order[0].substring(1) : urlParams.order[0];
+
+                    orders.push(order);
+                    fields.push(field);
+                });
+
+                recipeTypes.results = _.sortByOrder(recipeTypes.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(recipeTypes);
+
+            return returnObj;
         });
 
         // Save Recipe Type

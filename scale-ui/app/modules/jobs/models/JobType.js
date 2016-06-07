@@ -37,7 +37,7 @@
                 return 'JobType';
             },
             getIcon: function () {
-                return this.icon_code ? '<i class="fa">&#x' + this.icon_code + '</i>' : '<i class="fa">&#x' + scaleConfig.defaultIconCode + '</i>';
+                return this.icon_code ? '<i class="fa fa-fw">&#x' + this.icon_code + '</i>' : '<i class="fa fa-fw">&#x' + scaleConfig.defaultIconCode + '</i>';
             },
             getCellText: function () {
                 return this.icon_code ? '&#x' + this.icon_code + ';' : '&#x' + scaleConfig.defaultIconCode + ';';

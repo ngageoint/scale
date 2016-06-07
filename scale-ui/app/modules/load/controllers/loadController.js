@@ -34,7 +34,7 @@
                         field: 'job_type.title',
                         displayName: 'Job Type',
                         enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
+                        cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
                     },
                     { field: 'job_type.version', displayName: 'Version', enableFiltering: false },
                     { field: 'highest_priority', enableFiltering: false },
