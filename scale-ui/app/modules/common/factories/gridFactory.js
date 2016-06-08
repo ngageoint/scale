@@ -3,20 +3,24 @@
 
     angular.module('scaleApp').factory('gridFactory', function (uiGridConstants) {
 
-        var getSortConfig = function(orderParam){
-            if(orderParam){
-                var sortField = orderParam
-                var sortDirection = 'asc';
-                if(_.startsWith(orderParam, '-')){
-                    sortDirection = 'desc';
-                    sortField = sortField[0].length === 1 ? sortField.substring(1) : sortField[0].substring(1);
-                }
-                return {
-                    direction: sortDirection,
-                    field: sortField
-                };
+        var getSortConfig = function (orderParam) {
+            var sortArr = [];
+
+            if (orderParam) {
+                _.forEach(orderParam, function (param) {
+                    var sortField = param;
+                    var sortDirection = 'asc';
+                    if (_.startsWith(param, '-')) {
+                        sortDirection = 'desc';
+                    }
+                    sortArr.push({
+                        direction: sortDirection,
+                        field: sortField
+                    })
+                });
             }
-            return {};
+
+            return sortArr;
         };
 
         return {
@@ -33,20 +37,24 @@
                     minRowsToShow: 17,
                     paginationPageSizes: [25, 50, 75, 100],
                     paginationPageSize: 25,
-                    useExternalPagination: true
+                    useExternalPagination: true,
+                    enablePaginationControls: false,
+                    paginationCurrentPage: 1
                 }
             },
-            applySortConfig: function(columnDefs, gridParams){
+            applySortConfig: function (columnDefs, gridParams) {
                 var sortConfig = getSortConfig(gridParams.order);
-                if(sortConfig.field){
-                    var colDef = _.find(columnDefs, {field: sortConfig.field});
-                    if(colDef){
+                _.forEach(sortConfig, function (config, idx) {
+                    var field = _.startsWith(config.field, '-') ? config.field.substring(1) : config.field,
+                        colDef = _.find(columnDefs, {field: field});
+
+                    if (colDef) {
                         colDef.sort = {
-                            direction: sortConfig.direction,
-                            priority: 1
-                        }
+                            direction: config.direction,
+                            priority: idx
+                        };
                     }
-                }
+                });
                 return columnDefs;
             }
         }

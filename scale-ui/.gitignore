@@ -1,7 +1,7 @@
 app/styles/**/*.css
 node_modules
 build
-dist/
+/dist/
 reports
 .idea
 .idea/workspace.xml
@@ -10,3 +10,4 @@ reports
 .DS_Store
 npm-debug.log
 deploy
+config/scaleConfig.local.json

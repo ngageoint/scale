@@ -47,6 +47,8 @@ class NodesView(ListAPIView):
 
 class NodeDetailsView(GenericAPIView):
     """This view is the endpoint for viewing and modifying a node"""
+    queryset = Node.objects.all()
+    serializer_class = NodeDetailsSerializer
     update_fields = ('hostname', 'port', 'pause_reason', 'is_paused', 'is_active')
     required_fields = ('hostname', 'port', 'is_paused', 'is_active')
 
@@ -66,7 +68,7 @@ class NodeDetailsView(GenericAPIView):
             node = Node.objects.get_details(node_id)
         except Node.DoesNotExist:
             raise Http404
-        serializer = NodeDetailsSerializer(node)
+        serializer = self.get_serializer(node)
         result = serializer.data
 
         # Attempt to fetch resource usage for the node

@@ -1,32 +1,21 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('recipesController', function ($rootScope, $scope, $location, scaleService, navService, gridFactory, uiGridConstants, scaleConfig, subnavService, recipeService) {
+    angular.module('scaleApp').controller('recipesController', function ($scope, $location, scaleConfig, scaleService, stateService, recipeService, navService, subnavService, gridFactory) {
+        subnavService.setCurrentPath('recipes');
 
-        var recipesParams = {
-            page: null, page_size: null, started: null, ended: null, order: $rootScope.recipesControllerOrder || null, type_id: null, type_name: null, url: null
-        };
+        var self = this,
+            recipeTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
-        // check for recipesParams in query string, and update as necessary
-        _.forEach(_.pairs(recipesParams), function (param) {
-            var value = _.at($location.search(), param[0]);
-            if (value.length > 0) {
-                recipesParams[param[0]] = value.length > 1 ? value : value[0];
-            }
-        });
+        self.recipesParams = stateService.getRecipesParams();
 
-        var gridPageNumber = recipesParams.page || 1,
-            filteredByRecipeType = recipesParams.type_id ? true : false,
-            filteredByOrder = recipesParams.order ? true : false;
-
-        // this file will be similar to jobsController
-        $scope.recipesData = {};
+        $scope.stateService = stateService;
         $scope.loading = true;
-        $scope.recipeTypeValues = [];
-        $scope.selectedRecipeType = recipesParams.type_id || 0;
+        $scope.recipeTypeValues = [recipeTypeViewAll];
+        $scope.selectedRecipeType = self.recipesParams.type_id ? self.recipesParams.type_id : recipeTypeViewAll;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
         $scope.gridStyle = '';
-        $scope.lastModifiedStart = recipesParams.started ? moment.utc(recipesParams.started).toDate() : moment.utc().subtract(1, 'weeks').startOf('d').toDate();
+        $scope.lastModifiedStart = moment.utc(self.recipesParams.started).toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
         };
@@ -34,7 +23,7 @@
             $event.stopPropagation();
             $scope.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = recipesParams.ended ? moment.utc(recipesParams.ended).toDate() : moment.utc().endOf('d').toDate();
+        $scope.lastModifiedStop = moment.utc(self.recipesParams.ended).toDate();
         $scope.lastModifiedStopPopup = {
             opened: false
         };
@@ -45,92 +34,50 @@
         $scope.dateModelOptions = {
             timezone: '+000'
         };
+        $scope.gridOptions = gridFactory.defaultGridOptions();
+        $scope.gridOptions.paginationCurrentPage = self.recipesParams.page || 1;
+        $scope.gridOptions.paginationPageSize = self.recipesParams.page_size || $scope.gridOptions.paginationPageSize;
+        $scope.gridOptions.data = [];
 
-        subnavService.setCurrentPath('recipes');
+        var filteredByRecipeType = self.recipesParams.type_id ? true : false,
+            filteredByOrder = self.recipesParams.order ? true : false;
 
-        var defaultColumnDefs = [
+        self.colDefs = [
             {
                 field: 'recipe_type',
                 displayName: 'Recipe Type',
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.recipe_type.title }} {{ row.entity.recipe_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedRecipeType"><option ng-selected="{{ grid.appScope.recipeTypeValues[$index].id == grid.appScope.selectedRecipeType }}" value="{{ grid.appScope.recipeTypeValues[$index].id }}" ng-repeat="recipeType in grid.appScope.recipeTypeValues track by $index">{{ grid.appScope.recipeTypeValues[$index].title }} {{ grid.appScope.recipeTypeValues[$index].version }}</option></select>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedRecipeType" ng-options="recipeType as (recipeType.title + \' \' + recipeType.version) for recipeType in grid.appScope.recipeTypeValues"></select>'
             },
-            //{ field: 'created', enableFiltering: false, cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\''},
-            { field: 'created', enableFiltering: false},
+            {
+                field: 'created',
+                displayName: 'Created (Z)',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.created_formatted }}</div>'
+            },
             {
                 field: 'last_modified',
+                displayName: 'Last Modified (Z)',
                 enableFiltering: false,
-                //cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'',                
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
             },
-            { field: 'duration', enableFiltering: false, enableSorting: false, cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.getDuration() }}</div>' }
+            {
+                field: 'duration',
+                enableFiltering: false,
+                enableSorting: false,
+                width: 120,
+                cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
+            },
+            {
+                field: 'completed',
+                enableFiltering: false,
+                enableSorting: true,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.completed_formatted }}</div>'
+            }
         ];
 
-        $scope.gridOptions = gridFactory.defaultGridOptions();
-        $scope.gridOptions.paginationCurrentPage = parseInt(recipesParams.page || 1);
-        $scope.gridOptions.paginationPageSize = parseInt(recipesParams.page_size) || $scope.gridOptions.paginationPageSize;
-        var colDefs = $rootScope.recipeColDefs ? $rootScope.recipeColDefs : defaultColumnDefs;
-        $scope.gridOptions.columnDefs = gridFactory.applySortConfig(colDefs, recipesParams);
-        $scope.gridOptions.data = [];
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
-            //set gridApi on scope
-            $scope.gridApi = gridApi;
-            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $scope.$apply(function(){
-                    $location.path('/recipes/recipe/' + row.entity.id);
-                });
-
-            });
-            $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                recipesParams.page = currentPage;
-                recipesParams.page_size = pageSize;
-                console.log('gridApi');
-                $scope.filterResults();
-            });
-            $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                $rootScope.recipeColDefs = null;
-                _.forEach($scope.gridApi.grid.columns, function (col) {
-                    col.colDef.sort = col.sort;
-                });
-                $rootScope.recipeColDefs = $scope.gridApi.grid.options.columnDefs;
-                var sortArr = [];
-                _.forEach(sortColumns, function (col) {
-                    sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
-                });
-                updateRecipeOrder(sortArr);
-            });
-        };
-
-        $scope.getPage = function (filter, pageNumber, pageSize, url) {
-            $scope.loading = true;
-            recipeService.getRecipes(filter, pageNumber, pageSize, url).then(function (data) {
-                var newData = [];
-                for (var i = 0; i < $scope.gridOptions.paginationPageSize; i++) {
-                    if (data.results[i]) {
-                        newData.push(data.results[i]);
-                    }
-                }
-                $scope.gridOptions.data = newData;
-                $scope.gridOptions.totalItems = data.count;
-                $scope.jobsData = data;
-                gridPageNumber = pageNumber;
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
-                $scope.loading = false;
-            });
-        };
-
-        $scope.filterResults = function () {
-            _.forEach(_.pairs(recipesParams), function (param) {
-                $location.search(param[0], param[1]);
-            });
-            $scope.loading = true;
-            getRecipes();
-        };
-
-        var getRecipes = function () {
-            recipeService.getRecipes(recipesParams).then(function (data) {
-                $scope.recipesData = data;
+        self.getRecipes = function () {
+            recipeService.getRecipes(self.recipesParams).then(function (data) {
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
             }).catch(function (error) {
@@ -140,92 +87,132 @@
             });
         };
 
-        var getRecipeTypes = function () {
+        self.getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
-                $scope.recipeTypeValues = data;
-                $scope.recipeTypeValues.unshift({ name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 });
-                getRecipes();
+                $scope.recipeTypeValues.push(data.results);
+                $scope.recipeTypeValues = _.flatten($scope.recipeTypeValues);
+                $scope.selectedRecipeType = _.find($scope.recipeTypeValues, { id: self.recipesParams.type_id }) || recipeTypeViewAll;
+                self.getRecipes();
             }).catch(function (error) {
                 $scope.loading = false;
-                console.log(error);
             });
         };
 
-        var updateRecipeOrder = function (sortArr) {
-            recipesParams.order = sortArr.length > 0 ? sortArr : null;
-            filteredByOrder = sortArr.length > 0;
-            $scope.filterResults();
+        self.filterResults = function () {
+            stateService.setRecipesParams(self.recipesParams);
+            $scope.loading = true;
+            self.getRecipes();
         };
 
-        var updateRecipeType = function (value) {
-            if (value != recipesParams.type_id) {
-                recipesParams.page = 1;
+        self.updateColDefs = function () {
+            $scope.gridOptions.columnDefs = gridFactory.applySortConfig(self.colDefs, self.recipesParams);
+        };
+
+        self.updateRecipeOrder = function (sortArr) {
+            self.recipesParams.order = sortArr.length > 0 ? sortArr : null;
+            filteredByOrder = sortArr.length > 0;
+            self.filterResults();
+        };
+
+        self.updateRecipeType = function (value) {
+            if (value.id !== self.recipesParams.type_id) {
+                self.recipesParams.page = 1;
             }
-            recipesParams.type_id = value == 0 ? null : value;
-            recipesParams.page_size = $scope.gridOptions.paginationPageSize;
-            console.log('selectedRecipeType');
+            self.recipesParams.type_id = value.id === 0 ? null : value.id;
+            self.recipesParams.page_size = $scope.gridOptions.paginationPageSize;
             if (!$scope.loading) {
-                $scope.filterResults();
+                self.filterResults();
             }
         };
+
+        $scope.gridOptions.onRegisterApi = function (gridApi) {
+            //set gridApi on scope
+            $scope.gridApi = gridApi;
+            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                $scope.$apply(function () {
+                    $location.path('/recipes/recipe/' + row.entity.id);
+                });
+            });
+            $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
+                self.recipesParams.page = currentPage;
+                self.recipesParams.page_size = pageSize;
+                self.filterResults();
+            });
+            $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                _.forEach($scope.gridApi.grid.columns, function (col) {
+                    col.colDef.sort = col.sort;
+                });
+                stateService.setRecipesColDefs($scope.gridApi.grid.options.columnDefs);
+                var sortArr = [];
+                _.forEach(sortColumns, function (col) {
+                    sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
+                });
+                self.updateRecipeOrder(sortArr);
+            });
+        };
+
+        self.initialize = function () {
+            stateService.setRecipesParams(self.recipesParams);
+            self.updateColDefs();
+            self.getRecipeTypes();
+            navService.updateLocation('recipes');
+        };
+
+        self.initialize();
+
+        angular.element(document).ready(function () {
+            // set container heights equal to available page height
+            var viewport = scaleService.getViewportSize(),
+                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset,
+                gridMaxHeight = viewport.height - offset;
+
+            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
+        });
+
+        $scope.$watch('selectedRecipeType', function (value) {
+            if (parseInt(value)) {
+                value = _.find($scope.recipeTypeValues, {id: parseInt(value)});
+            }
+            if (value) {
+                if ($scope.loading) {
+                    if (filteredByRecipeType) {
+                        self.updateRecipeType(value);
+                    }
+                } else {
+                    filteredByRecipeType = !angular.equals(value, recipeTypeViewAll);
+                    self.updateRecipeType(value);
+                }
+            }
+        });
 
         $scope.$watch('lastModifiedStart', function (value) {
             if (!$scope.loading) {
-                recipesParams.started = value.toISOString();
-                $scope.filterResults();
+                self.recipesParams.started = value.toISOString();
+                self.filterResults();
             }
         });
 
         $scope.$watch('lastModifiedStop', function (value) {
             if (!$scope.loading) {
-                recipesParams.ended = value.toISOString();
-                $scope.filterResults();
+                self.recipesParams.ended = value.toISOString();
+                self.filterResults();
             }
         });
 
-        $scope.$watch('selectedRecipeType', function (value) {
-            if ($scope.loading) {
-                if (filteredByRecipeType) {
-                    updateRecipeType(value);
-                }
-            } else {
-                filteredByRecipeType = value != 0;
-                updateRecipeType(value);
+        $scope.$watchCollection('stateService.getRecipesColDefs()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
             }
+            self.colDefs = newValue;
+            self.updateColDefs();
         });
 
-        var initialize = function () {
-            if (typeof $rootScope.recipeColDefs === 'undefined') {
-                // root column defs have not been altered by user, so set up defaults
-                if (!recipesParams.order) {
-                    recipesParams.order = '-last_modified';
-                    $location.search('order', recipesParams.order).replace();
-                }
-                if (!recipesParams.page_size) {
-                    recipesParams.page_size = $scope.gridOptions.paginationPageSize;
-                    $location.search('page_size', recipesParams.page_size).replace();
-                }
-                if (!recipesParams.started) {
-                    recipesParams.started = moment.utc($scope.lastModifiedStart).toISOString();
-                    $location.search('started', recipesParams.started).replace();
-                }
-                if (!recipesParams.ended) {
-                    recipesParams.ended = moment.utc($scope.lastModifiedStop).toISOString();
-                    $location.search('ended', recipesParams.ended).replace();
-                }
+        $scope.$watchCollection('stateService.getRecipesParams()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
             }
-            getRecipeTypes();
-            navService.updateLocation('recipes');
-        };
-
-        initialize();
-
-        angular.element(document).ready(function(){
-           // set container height equal to available page height
-            var viewport = scaleService.getViewportSize();
-            var offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset;
-            var gridMaxHeight = viewport.height - offset;
-            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px;';
+            self.recipesParams = newValue;
+            self.updateColDefs();
         });
     });
 })();

@@ -8,7 +8,7 @@
         this.$get = function () {
             var config = $.ajax({
                 type: 'GET',
-                url: '/config/scaleConfig.json',
+                url: 'config/scaleConfig.json',
                 cache: false,
                 async: false,
                 contentType: 'application/json',
@@ -20,7 +20,7 @@
 
                 var configLocal = $.ajax({
                     type: 'GET',
-                    url: '/config/scaleConfig.local.json',
+                    url: 'config/scaleConfig.local.json',
                     cache: false,
                     async: false,
                     contentType: 'application/json',

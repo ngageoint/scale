@@ -16,6 +16,18 @@
             setTotalJobTypes();
         }, 3100);*/
 
+        var getJobTypeParams = function (page, page_size, started, ended, name, category, order) {
+            return {
+                page: page,
+                page_size: page_size,
+                started: started,
+                ended: ended,
+                name: name,
+                category: category,
+                order: order ? order : ['title', 'version']
+            };
+        };
+
         var getJobTypeStatusParams = function (page, page_size, started, ended) {
             var params = {};
 
@@ -28,10 +40,11 @@
         };
 
         return {
-            getJobTypes: function (order) {
-                var params = {
-                    order: order || ['name','version']
-                };
+            getJobTypes: function (params) {
+                params = params || getJobTypeParams();
+                // var params = {
+                //     order: order || ['name','version']
+                // };
 
                 var jobTypesResource = $resource(scaleConfig.urls.apiPrefix + 'job-types/', params),
                     jobTypesPoller = pollerFactory.newPoller(jobTypesResource, scaleConfig.pollIntervals.jobTypes);
@@ -79,15 +92,15 @@
                     }
                 });
             },
-            getJobTypesOnce: function (order) {
-                order = order || ['name','version'];
+            getJobTypesOnce: function (params) {
+                params = params || getJobTypeParams();
 
                 var d = $q.defer();
 
                 $http({
                     url: scaleConfig.urls.apiPrefix + 'job-types/',
                     method: 'GET',
-                    params: { order: order }
+                    params: params
                 }).success(function (data) {
                     data.results = JobType.transformer(data.results);
                     d.resolve(data);

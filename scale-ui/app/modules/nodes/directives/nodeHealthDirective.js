@@ -80,6 +80,20 @@
                             count: $scope.nodesPaused
                         });
                     }
+                    
+                    if ($scope.nodesOfflineAndPaused) {
+                        donutData.push({
+                            status: 'Offline and Paused',
+                            count: $scope.nodesOfflineAndPaused
+                        });
+                    }
+
+                    if ($scope.nodesOfflineAndPausedErrors) {
+                        donutData.push({
+                            status: 'Offline and Paused due to Errors',
+                            count: $scope.nodesOfflineAndPausedErrors
+                        });
+                    }
 
                     $scope.nodeHealth = {
                         gaugeData: gaugeData,

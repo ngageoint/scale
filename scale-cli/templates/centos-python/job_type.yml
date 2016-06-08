@@ -1,0 +1,24 @@
+---
+name: {{ .name }}
+version: "1.0.0"
+title: {{ .name }}
+description: {{ .description }}
+author_name: "{{ .maintainer }}"
+docker_image: "{{ .image_name }}"
+priority: 250
+timeout: 300
+max_tries: 3
+cpus_required: 1.0
+mem_required: 512.0
+interface:
+  version: "1.0"
+  command: "./entryPoint.sh"
+  command_arguments: "${input_file} ${job_output_dir}"
+  output_data:
+    - type: file
+      required: true
+      name: output_file
+  input_data:
+    - required: true
+      type: file
+      name: input_file

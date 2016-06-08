@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import json
@@ -18,7 +17,7 @@ from recipe.models import RecipeType
 
 
 class TestConfigurationViewExport(TestCase):
-    '''Tests related to the configuration export endpoint'''
+    """Tests related to the configuration export endpoint"""
 
     def setUp(self):
         django.setup()
@@ -28,7 +27,7 @@ class TestConfigurationViewExport(TestCase):
         self.error1 = error_test_utils.create_error(category='DATA')
 
     def test_errors(self):
-        '''Tests exporting only errors.'''
+        """Tests exporting only errors."""
         url = '/configuration/?include=errors'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
@@ -41,7 +40,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(results['errors'][0]['name'], self.error1.name)
 
     def test_errors_system(self):
-        '''Tests exporting errors without any system-level entries.'''
+        """Tests exporting errors without any system-level entries."""
         error_test_utils.create_error(category='SYSTEM')
 
         url = '/configuration/'
@@ -52,7 +51,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['errors']), 1)
 
     def test_errors_by_id(self):
-        '''Tests exporting errors by id.'''
+        """Tests exporting errors by id."""
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
@@ -64,7 +63,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['errors']), 2)
 
     def test_errors_by_name(self):
-        '''Tests exporting errors by name.'''
+        """Tests exporting errors by name."""
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
@@ -76,7 +75,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['errors']), 2)
 
     def test_job_types(self):
-        '''Tests exporting only job types.'''
+        """Tests exporting only job types."""
         url = '/configuration/?include=job_types'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
@@ -89,7 +88,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['errors']), 0)
 
     def test_job_types_system(self):
-        '''Tests exporting job types without any system-level entries.'''
+        """Tests exporting job types without any system-level entries."""
         job_test_utils.create_job_type(category='system')
 
         url = '/configuration/'
@@ -100,7 +99,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['job_types']), 1)
 
     def test_job_types_by_id(self):
-        '''Tests exporting job types by id.'''
+        """Tests exporting job types by id."""
         job_type2 = job_test_utils.create_job_type()
         job_type3 = job_test_utils.create_job_type()
 
@@ -112,7 +111,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['job_types']), 2)
 
     def test_job_types_by_name(self):
-        '''Tests exporting job types by name.'''
+        """Tests exporting job types by name."""
         job_test_utils.create_job_type(name='job-name')
         job_test_utils.create_job_type(name='job-name')
 
@@ -124,7 +123,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['job_types']), 2)
 
     def test_job_types_by_category(self):
-        '''Tests exporting job types by category.'''
+        """Tests exporting job types by category."""
         job_test_utils.create_job_type(category='job-category')
         job_test_utils.create_job_type(category='job-category')
 
@@ -136,7 +135,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['job_types']), 2)
 
     def test_recipe_types(self):
-        '''Tests exporting only recipe types.'''
+        """Tests exporting only recipe types."""
         url = '/configuration/?include=recipe_types'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
@@ -149,7 +148,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['errors']), 0)
 
     def test_recipe_types_by_id(self):
-        '''Tests exporting recipe types by id.'''
+        """Tests exporting recipe types by id."""
         recipe_type2 = recipe_test_utils.create_recipe_type()
         recipe_type3 = recipe_test_utils.create_recipe_type()
 
@@ -161,7 +160,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['recipe_types']), 2)
 
     def test_recipe_types_by_name(self):
-        '''Tests exporting recipe types by name.'''
+        """Tests exporting recipe types by name."""
         recipe_test_utils.create_recipe_type(name='recipe-name')
         recipe_test_utils.create_recipe_type(name='recipe-name')
 
@@ -173,7 +172,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(len(results['recipe_types']), 2)
 
     def test_all(self):
-        '''Tests exporting all the relevant models.'''
+        """Tests exporting all the relevant models."""
         url = '/configuration/'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
@@ -188,7 +187,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(results['errors'][0]['name'], self.error1.name)
 
     def test_cascaded_filters(self):
-        '''Tests exporting using a filter for recipes that is passed along to children filters.'''
+        """Tests exporting using a filter for recipes that is passed along to children filters."""
         error2 = error_test_utils.create_error(category='DATA')
         error_mapping2 = {
             'version': '1.0',
@@ -222,7 +221,7 @@ class TestConfigurationViewExport(TestCase):
         self.assertEqual(results['errors'][0]['name'], error2.name)
 
     def test_combined_filters(self):
-        '''Tests exporting using multiple filters together.'''
+        """Tests exporting using multiple filters together."""
         error2 = error_test_utils.create_error(category='DATA')
         error_mapping2 = {
             'version': '1.0',
@@ -273,13 +272,13 @@ class TestConfigurationViewExport(TestCase):
 
 
 class TestConfigurationViewImport(TestCase):
-    '''Tests related to the configuration import endpoint'''
+    """Tests related to the configuration import endpoint"""
 
     def setUp(self):
         django.setup()
 
     def test_errors_create(self):
-        '''Tests importing only errors that create new models.'''
+        """Tests importing only errors that create new models."""
         json_data = {
             'import': {
                 'errors': [{
@@ -306,7 +305,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.category, 'DATA')
 
     def test_errors_edit(self):
-        '''Tests importing only errors that update existing models.'''
+        """Tests importing only errors that update existing models."""
         error = error_test_utils.create_error(category='DATA')
         json_data = {
             'import': {
@@ -332,7 +331,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.category, error.category)
 
     def test_errors_bad_system(self):
-        '''Tests rejecting a system category error.'''
+        """Tests rejecting a system category error."""
         json_data = {
             'import': {
                 'errors': [{
@@ -354,7 +353,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(len(errors), 0)
 
     def test_errors_bad_category(self):
-        '''Tests rejecting an error with an invalid category.'''
+        """Tests rejecting an error with an invalid category."""
         json_data = {
             'import': {
                 'errors': [{
@@ -376,7 +375,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(len(errors), 0)
 
     def test_errors_bad_name(self):
-        '''Tests rejecting an error without a name.'''
+        """Tests rejecting an error without a name."""
         json_data = {
             'import': {
                 'errors': [{
@@ -396,8 +395,64 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(errors), 0)
 
+    def test_errors_empty_fields(self):
+        """Tests importing errors with empty string values for optional fields."""
+        fields = ['description', 'title']
+        error_type_dict = {
+            'name': 'test-error',
+            'category': 'DATA',
+        }
+        for field in fields:
+            error_type_dict[field] = ''
+
+        json_data = {
+            'import': {
+                'errors': [error_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        errors = Error.objects.filter(name='test-error')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(errors), 1)
+        result = errors[0]
+        for field in fields:
+            self.assertEqual(getattr(result, field), '')
+
+    def test_errors_null_fields(self):
+        """Tests importing errors with null values for optional fields."""
+        fields = ['description', 'title']
+        error_type_dict = {
+            'name': 'test-error',
+            'category': 'DATA',
+        }
+        for field in fields:
+            error_type_dict[field] = None
+
+        json_data = {
+            'import': {
+                'errors': [error_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        errors = Error.objects.filter(name='test-error')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(errors), 1)
+        result = errors[0]
+        for field in fields:
+            self.assertIsNone(getattr(result, field))
+
     def test_job_types_create(self):
-        '''Tests importing only job types that create new models.'''
+        """Tests importing only job types that create new models."""
         error = error_test_utils.create_error()
         workspace = storage_test_utils.create_workspace()
 
@@ -500,7 +555,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
 
     def test_job_types_edit_simple(self):
-        '''Tests importing only job types that update basic models.'''
+        """Tests importing only job types that update basic models."""
         job_type = job_test_utils.create_job_type()
         json_data = {
             'import': {
@@ -527,7 +582,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNotNone(result.trigger_rule)
 
     def test_job_types_edit_interface(self):
-        '''Tests importing only job types that update the interface JSON.'''
+        """Tests importing only job types that update the interface JSON."""
         job_type = job_test_utils.create_job_type()
 
         interface = {
@@ -563,7 +618,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.interface, interface)
 
     def test_job_types_edit_error_mapping(self):
-        '''Tests importing only job types that update the error mapping JSON.'''
+        """Tests importing only job types that update the error mapping JSON."""
         error = error_test_utils.create_error()
         job_type = job_test_utils.create_job_type()
 
@@ -598,7 +653,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.error_mapping, error_mapping)
 
     def test_job_types_edit_trigger_rule(self):
-        '''Tests importing only job types that update the trigger rule configuration JSON.'''
+        """Tests importing only job types that update the trigger rule configuration JSON."""
         workspace = storage_test_utils.create_workspace()
         job_type = job_test_utils.create_job_type()
 
@@ -647,7 +702,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
 
     def test_job_types_remove_trigger_rule(self):
-        '''Tests importing only job types that remove the trigger rule.'''
+        """Tests importing only job types that remove the trigger rule."""
         trigger_rule = trigger_test_utils.create_trigger_rule()
         job_type = job_test_utils.create_job_type(trigger_rule=trigger_rule)
 
@@ -675,7 +730,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNone(result.trigger_rule)
 
     def test_job_types_bad_system(self):
-        '''Tests rejecting a system category job type.'''
+        """Tests rejecting a system category job type."""
         job_type = job_test_utils.create_job_type(category='system')
         json_data = {
             'import': {
@@ -700,7 +755,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.title, job_type.title)
 
     def test_job_types_bad_name(self):
-        '''Tests rejecting a job type without a name.'''
+        """Tests rejecting a job type without a name."""
         job_type = job_test_utils.create_job_type()
         json_data = {
             'import': {
@@ -724,7 +779,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.title, job_type.title)
 
     def test_job_types_bad_field(self):
-        '''Tests rejecting changes to read-only job type fields.'''
+        """Tests rejecting changes to read-only job type fields."""
         job_type = job_test_utils.create_job_type()
         json_data = {
             'import': {
@@ -753,7 +808,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.title, 'test-title EDIT')
 
     def test_job_types_bad_interface(self):
-        '''Tests rejecting a job type with invalid interface JSON.'''
+        """Tests rejecting a job type with invalid interface JSON."""
         job_type = job_test_utils.create_job_type()
 
         interface = {
@@ -783,7 +838,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.interface, job_type.interface)
 
     def test_job_types_bad_error_mapping(self):
-        '''Tests rejecting a job type with invalid error mapping JSON.'''
+        """Tests rejecting a job type with invalid error mapping JSON."""
         job_type = job_test_utils.create_job_type()
 
         error_mapping = {
@@ -814,7 +869,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.error_mapping, job_type.error_mapping)
 
     def test_job_types_bad_trigger_rule(self):
-        '''Tests rejecting a job type with an invalid trigger rule.'''
+        """Tests rejecting a job type with an invalid trigger rule."""
         job_type = job_test_utils.create_job_type()
 
         json_data = {
@@ -842,7 +897,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.trigger_rule.type, job_type.trigger_rule.type)
 
     def test_job_types_missing_error(self):
-        '''Tests rejecting a job type with missing error dependencies.'''
+        """Tests rejecting a job type with missing error dependencies."""
         job_type = job_test_utils.create_job_type()
 
         error_mapping = {
@@ -874,8 +929,81 @@ class TestConfigurationViewImport(TestCase):
 
         self.assertDictEqual(result.error_mapping, job_type.error_mapping)
 
+    def test_job_types_empty_fields(self):
+        """Tests importing job types with empty string values for optional fields."""
+        fields = ['author_name', 'author_url', 'category', 'description', 'docker_image', 'icon_code', 'title']
+        job_type_dict = {
+            'name': 'test-job',
+            'version': '1.0.0',
+            'interface': {
+                'version': '1.0',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+        }
+        for field in fields:
+            job_type_dict[field] = ''
+
+        json_data = {
+            'import': {
+                'job_types': [job_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        job_types = JobType.objects.filter(name='test-job', version='1.0.0')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(job_types), 1)
+        result = job_types[0]
+        for field in fields:
+            self.assertEqual(getattr(result, field), '')
+
+    def test_job_types_null_fields(self):
+        """Tests importing job types with null values for optional fields."""
+        fields = ['author_name', 'author_url', 'category', 'description', 'docker_image', 'icon_code', 'max_scheduled',
+                  'title', 'trigger_rule']
+        job_type_dict = {
+            'name': 'test-job',
+            'version': '1.0.0',
+            'interface': {
+                'version': '1.0',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+        }
+        for field in fields:
+            job_type_dict[field] = None
+
+        json_data = {
+            'import': {
+                'job_types': [job_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        job_types = JobType.objects.filter(name='test-job', version='1.0.0')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(job_types), 1)
+        result = job_types[0]
+        for field in fields:
+            self.assertIsNone(getattr(result, field))
+
     def test_recipe_types_create(self):
-        '''Tests importing only recipe types that create new models.'''
+        """Tests importing only recipe types that create new models."""
         job_type = job_test_utils.create_job_type()
         workspace = storage_test_utils.create_workspace()
 
@@ -939,7 +1067,7 @@ class TestConfigurationViewImport(TestCase):
 
         recipe_types = RecipeType.objects.filter(name='test-name', version='1.0.0')
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(recipe_types), 1)
 
         result = recipe_types[0]
@@ -954,7 +1082,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
 
     def test_recipe_types_edit_simple(self):
-        '''Tests importing only recipe types that update basic models.'''
+        """Tests importing only recipe types that update basic models."""
         recipe_type = recipe_test_utils.create_recipe_type()
         json_data = {
             'import': {
@@ -981,7 +1109,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNotNone(result.trigger_rule)
 
     def test_recipe_types_edit_definition(self):
-        '''Tests importing only recipe types that update the definition JSON.'''
+        """Tests importing only recipe types that update the definition JSON."""
         job_type = job_test_utils.create_job_type()
         recipe_type = recipe_test_utils.create_recipe_type()
 
@@ -1033,7 +1161,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.definition, definition)
 
     def test_recipe_types_edit_trigger_rule(self):
-        '''Tests importing only recipe types that update the trigger rule configuration JSON.'''
+        """Tests importing only recipe types that update the trigger rule configuration JSON."""
         workspace = storage_test_utils.create_workspace()
         recipe_type = recipe_test_utils.create_recipe_type()
 
@@ -1082,7 +1210,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
 
     def test_recipe_types_remove_trigger_rule(self):
-        '''Tests importing only recipe types that remove the trigger rule.'''
+        """Tests importing only recipe types that remove the trigger rule."""
         trigger_rule = trigger_test_utils.create_trigger_rule()
         recipe_type = recipe_test_utils.create_recipe_type(trigger_rule=trigger_rule)
 
@@ -1110,7 +1238,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNone(result.trigger_rule)
 
     def test_recipe_types_bad_name(self):
-        '''Tests rejecting a recipe type without a name.'''
+        """Tests rejecting a recipe type without a name."""
         recipe_type = recipe_test_utils.create_recipe_type()
         json_data = {
             'import': {
@@ -1134,7 +1262,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.title, recipe_type.title)
 
     def test_recipe_types_bad_interface(self):
-        '''Tests rejecting a recipe type with invalid definition JSON.'''
+        """Tests rejecting a recipe type with invalid definition JSON."""
         recipe_type = recipe_test_utils.create_recipe_type()
 
         definition = {
@@ -1164,7 +1292,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertDictEqual(result.definition, recipe_type.definition)
 
     def test_recipe_types_bad_trigger_rule(self):
-        '''Tests rejecting a recipe type with an invalid trigger rule.'''
+        """Tests rejecting a recipe type with an invalid trigger rule."""
         recipe_type = recipe_test_utils.create_recipe_type()
 
         json_data = {
@@ -1192,7 +1320,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.trigger_rule.type, recipe_type.trigger_rule.type)
 
     def test_recipe_types_missing_job_type(self):
-        '''Tests rejecting a recipe type with missing job type dependencies.'''
+        """Tests rejecting a recipe type with missing job type dependencies."""
         recipe_type = recipe_test_utils.create_recipe_type()
 
         definition = {
@@ -1241,8 +1369,74 @@ class TestConfigurationViewImport(TestCase):
 
         self.assertDictEqual(result.definition, recipe_type.definition)
 
+    def test_recipe_types_empty_fields(self):
+        """Tests importing recipe types with empty string values for optional fields."""
+        fields = ['description', 'title']
+        recipe_type_dict = {
+            'name': 'test-recipe',
+            'version': '1.0.0',
+            'definition': {
+                'version': '1.0',
+                'input_data': [],
+                'jobs': [],
+            },
+        }
+        for field in fields:
+            recipe_type_dict[field] = ''
+
+        json_data = {
+            'import': {
+                'recipe_types': [recipe_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        recipe_types = RecipeType.objects.filter(name='test-recipe', version='1.0.0')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(recipe_types), 1)
+        result = recipe_types[0]
+        for field in fields:
+            self.assertEqual(getattr(result, field), '')
+
+    def test_recipe_types_null_fields(self):
+        """Tests importing recipe types with null values for optional fields."""
+        fields = ['description', 'title']
+        recipe_type_dict = {
+            'name': 'test-recipe',
+            'version': '1.0.0',
+            'definition': {
+                'version': '1.0',
+                'input_data': [],
+                'jobs': [],
+            },
+        }
+        for field in fields:
+            recipe_type_dict[field] = None
+
+        json_data = {
+            'import': {
+                'recipe_types': [recipe_type_dict],
+            },
+        }
+
+        url = '/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        json.loads(response.content)
+
+        recipe_types = RecipeType.objects.filter(name='test-recipe', version='1.0.0')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(recipe_types), 1)
+        result = recipe_types[0]
+        for field in fields:
+            self.assertIsNone(getattr(result, field))
+
     def test_all_create(self):
-        '''Tests importing all types that create new models.'''
+        """Tests importing all types that create new models."""
         workspace = storage_test_utils.create_workspace()
 
         interface = {
@@ -1374,7 +1568,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_edit(self):
-        '''Tests importing all types that edit existing models.'''
+        """Tests importing all types that edit existing models."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
         recipe_type = recipe_test_utils.create_recipe_type()
@@ -1423,7 +1617,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_mixed(self):
-        '''Tests importing all types that create new models and edit existing models.'''
+        """Tests importing all types that create new models and edit existing models."""
 
         # Create a job type with one error
         error = error_test_utils.create_error(category='DATA')
@@ -1554,7 +1748,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertIsNotNone(recipe_types[0].trigger_rule)
 
     def test_all_mixed_bad(self):
-        '''Tests importing all types that invalidates the models as the imports are applied.'''
+        """Tests importing all types that invalidates the models as the imports are applied."""
 
         # Create a job type with one error
         error = error_test_utils.create_error(category='DATA')
@@ -1631,6 +1825,7 @@ class TestConfigurationViewImport(TestCase):
                     'name': job_type.name,
                     'version': job_type.version,
                     'error_mapping': error_mapping,
+                    'interface': interface,
                 }],
                 'recipe_types': [{
                     'name': recipe_type.name,
@@ -1655,7 +1850,7 @@ class TestConfigurationViewImport(TestCase):
 
 
 class TestConfigurationDownloadView(TestCase):
-    '''Tests related to the configuration export download endpoint'''
+    """Tests related to the configuration export download endpoint"""
 
     def setUp(self):
         django.setup()
@@ -1665,7 +1860,7 @@ class TestConfigurationDownloadView(TestCase):
         self.error1 = error_test_utils.create_error(category='DATA')
 
     def test_download(self):
-        '''Tests exporting as a separate download file.'''
+        """Tests exporting as a separate download file."""
         url = '/configuration/download/'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
@@ -1678,13 +1873,13 @@ class TestConfigurationDownloadView(TestCase):
 
 
 class TestConfigurationUploadView(TestCase):
-    '''Tests related to the configuration import upload endpoint'''
+    """Tests related to the configuration import upload endpoint"""
 
     def setUp(self):
         django.setup()
 
     def test_upload_missing_file(self):
-        '''Tests importing as a separate upload file without any provided content.'''
+        """Tests importing as a separate upload file without any provided content."""
 
         url = '/configuration/upload/'
         response = self.client.generic('POST', url, '', 'multipart/form-data')
@@ -1695,13 +1890,13 @@ class TestConfigurationUploadView(TestCase):
 
 
 class TestConfigurationValidationView(TestCase):
-    '''Tests related to the configuration import endpoint'''
+    """Tests related to the configuration import endpoint"""
 
     def setUp(self):
         django.setup()
 
     def test_successful(self):
-        '''Tests validating an edit of all types successfully.'''
+        """Tests validating an edit of all types successfully."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
         recipe_type = recipe_test_utils.create_recipe_type()
@@ -1746,7 +1941,7 @@ class TestConfigurationValidationView(TestCase):
         self.assertEqual(recipe_types[0].title, recipe_type.title)
 
     def test_errors(self):
-        '''Tests validating an edit of all types with a critical error.'''
+        """Tests validating an edit of all types with a critical error."""
         error = error_test_utils.create_error(category='SYSTEM')
         job_type = job_test_utils.create_job_type(category='system')
         recipe_type = recipe_test_utils.create_recipe_type()
@@ -1790,7 +1985,7 @@ class TestConfigurationValidationView(TestCase):
         self.assertEqual(recipe_types[0].title, recipe_type.title)
 
     def test_warnings(self):
-        '''Tests validating an edit of all types with only warnings.'''
+        """Tests validating an edit of all types with only warnings."""
         error = error_test_utils.create_error(category='DATA')
         job_type = job_test_utils.create_job_type()
         recipe_type = recipe_test_utils.create_recipe_type()

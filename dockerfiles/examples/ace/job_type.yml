@@ -1,0 +1,27 @@
+name: ace
+version: "1.2.0"
+title: Adaptive Cosine Estimation
+description: Signature matching with ACE followed but clustering and centroid detection. Stores result in a PostGIS database.
+author_name: "Trevor R.H. Clarke <tclarke@ball.com>"
+icon_code: f0fb
+docker_image: "geoint/ace"
+priority: 250
+timeout: 300
+max_tries: 2
+cpus_required: 2.0
+mem_required: 1024.0
+interface:
+  version: "1.0"
+  command: "./runOpticks.sh"
+  command_arguments: '${image} ${signature} ${job_output_dir} ${pg_connect_string}'
+  input_data:
+    - media_types: [ "image/tiff" ]
+      required: true
+      type: file
+      name: image
+    - required: true
+      type: file
+      name: signature
+    - required: true
+      type: property
+      name: pg_connect_string

@@ -1,140 +1,14 @@
 ---
 # build-scale/tasks/main.yml
-- name: Install unzip
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=unzip
-  become: true
-
-- name: Install postgresql client and libs
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=postgresql
-  become: true
-
-- name: Install gdal python
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=gdal-python
-  become: true
-
-- name: Install psycopg2
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=python-psycopg2
-  become: true
-
-- name: Install geos
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=geos
-  become: true
-
-- name: Install subversion libs
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=subversion-libs
-  become: true
-
-- name: Install protobuf
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=protobuf
-  become: true
-
-- name: Install npm
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=npm
-  become: true
-
-- name: Install node-gyp
-  tags: [ build-scale, build-scale-minimal ]
-  yum: name=node-gyp
-  become: true
-
-- name: Install gulp
-  tags: [ build-scale, build-scale-minimal ]
-  npm: name=gulp global=true
-  become: true
-
-- name: Create scale folder
-  tags: [ build-scale, build-scale-sync ]
-  file: path='{{ scale_build_root }}' state=directory mode=755
-  become: true
-
-- name: Install scale
-  tags: [ build-scale, build-scale-sync ]
-  synchronize: src="{{ playbook_dir }}/.." dest='{{ scale_build_root }}' delete=yes
-  become: true
-
-- name: Install python build libraries
-  tags: [ build-scale, build-scale-minimal ]
-  pip: requirements='{{ scale_build_root }}/scale/pip/build_linux.txt'
-  become: true
-
-- name: Install npm ui dependencies
-  tags: [ build-scale, build-scale-minimal ]
-  npm: path='{{ scale_build_root }}/scale-ui'
-
-- name: Build ui with gulp
-  tags: [ build-scale, build-scale-minimal ]
-  command: gulp deploy chdir='{{ scale_build_root }}/scale-ui' creates='{{ scale_build_root }}/scale-ui/deploy/'
-
-- name: Create ui target
-  tags: [ build-scale, build-scale-minimal ]
-  file: path='{{ scale_build_root }}/scale/ui' state=directory
-
-- name: Install ui files
-  tags: [ build-scale, build-scale-minimal ]
-  unarchive: copy=no src='{{ item }}' dest='{{ scale_build_root }}/scale/ui'
-  with_fileglob: "{{ scale_build_root }}/scale-ui/deploy/scale*.tar.gz"
-
-- name: Install local_settings.py
-  tags: [ build-scale, build-scale-minimal ]
-  template: src=local_settings.py.j2 dest='{{ scale_build_root }}/scale/scale/local_settings.py'
-
-- name: Create database migrations.
-  tags: [ build-scale, build-scale-minimal ]
-  django_manage: command=makemigrations app_path='{{ django_build_dir }}'
-
-- name: Create docs
-  tags: [ build-scale, build-scale-minimal ]
-  command: make code_docs html chdir='{{ scale_build_root }}/scale/docs'
-
-- name: Collect static files.
-  tags: [ build-scale, build-scale-minimal ]
-  django_manage: command=collectstatic app_path='{{ django_build_dir }}'
-
-- name: Copy built files to the docker directory
-  tags: [ build-scale, build-scale-docker, build-scale-minimal ]
-  command: "rsync -a {{ scale_build_root }}/scale {{ scale_build_root }}/dockerfiles/framework/scale"
-
 - name: Build scale docker image
   tags: [ build-scale, build-scale-docker ]
   docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/framework/scale"
+    path: "{{ scale_build_root }}"
     name: "scale"
     tag: "{{ scale_docker_version }}"
     state: build
-  become: true
   notify:
     - push scale
-
-- name: Ensure {{ scale_build_root }}/dockerfiles/framework/scale-web/temp/ dir exists
-  tags: [ build-scale, build-scale-docker ]
-  file: path={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/ state=directory
-
-- name: Copy scale-web Dockerfile
-  tags: [ build-scale, build-scale-docker ]
-  copy: src=../../../../dockerfiles/framework/scale-web/Dockerfile dest={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/Dockerfile
-
-- name: Replace base image in scale-web Dockerfile
-  tags: [ build-scale, build-scale-docker ]
-  lineinfile: dest={{ scale_build_root }}/dockerfiles/framework/scale-web/temp/Dockerfile line="FROM scale:{{ scale_docker_version }}" regexp="^FROM .*$"
-
-- name: Build scale-web docker image
-  tags: [ build-scale, build-scale-docker ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web/temp/"
-    name: "scale-web"
-    tag: "{{ scale_docker_version }}"
-    state: build
-  become: true
-  notify:
-    - push scale-web
 
 - name: Build scale-web-static docker image
   tags: [ build-scale, build-scale-docker ]
@@ -143,6 +17,145 @@
     name: "scale-web-static"
     tag: "{{ scale_docker_version }}"
     state: build
-  become: true
   notify:
     - push scale-web-static
+
+- name: Install git
+  tags: common
+  yum: name=git
+  become: true
+
+- name: Download golang
+  tags: [ build-scale, build-scale-cli ]
+  get_url: url=https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz dest=/tmp/ mode=0666
+
+- name: Install golang
+  tags: [ build-scale, build-scale-cli ]
+  unarchive: src=/tmp/go1.6.2.linux-amd64.tar.gz dest=/usr/local/ copy=no
+  become: true
+
+- name: Setup go links
+  tags: [ build-scale, build-scale-cli ]
+  file: src='/usr/local/go/bin/go' dest='/usr/bin/go' state=link
+  become: true
+
+- name: Download glide
+  tags: [ build-scale, build-scale-cli ]
+  get_url: url=https://github.com/Masterminds/glide/releases/download/0.10.2/glide-0.10.2-linux-386.tar.gz dest=/tmp/ mode=0666
+
+- name: Unpack glide
+  tags: [ build-scale, build-scale-cli ]
+  unarchive: src=/tmp/glide-0.10.2-linux-386.tar.gz dest=/tmp/ copy=no
+
+- name: Install glide
+  tags: [ build-scale, build-scale-cli ]
+  command: "install -m 0755 /tmp/linux-386/glide /usr/bin/"
+  become: true
+
+- name: Setup go src
+  tags: [ build-scale, build-scale-cli ]
+  file: path='{{ scale_build_root }}/src/github.com/ngageoint' state=directory
+  become: true
+
+- name: Setup GOPATH
+  tags: [ build-scale, build-scale-cli ]
+  file: src='{{ scale_build_root }}' dest='{{ scale_build_root }}/src/github.com/ngageoint/scale' state=link
+  become: true
+
+- name: Grab dependencies
+  tags: [ build-scale, build-scale-cli ]
+  command: /usr/bin/glide install -u chdir='{{ scale_build_root }}/src/github.com/ngageoint/scale/scale-cli'
+  environment:
+    GOROOT: '/usr/local/go'
+    GOPATH: '{{ scale_build_root }}'
+
+- name: Build cli
+  tags: [ build-scale, build-scale-cli ]
+  command: go install github.com/ngageoint/scale/scale-cli/cmd/goscale creates='{{ scale_build_root }}/bin/goscale'
+  environment:
+    GOROOT: '/usr/local/go'
+    GOPATH: '{{ scale_build_root }}'
+
+- name: Build landsat-base docker image
+  tags: [ build-scale, build-examples ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-base"
+    name: "landsat-base"
+    tag: "{{ example_image_tag }}"
+    state: build
+  notify:
+    - push landsat-base
+
+- name: Build landsat-parse docker image
+  tags: [ build-scale, build-examples ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-parse"
+    name: "landsat-parse"
+    tag: "{{ example_image_tag }}"
+    state: build
+  notify:
+    - push landsat-parse
+
+- name: Build landsat-ndwi docker image
+  tags: [ build-scale, build-examples ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-ndwi"
+    name: "landsat-ndwi"
+    tag: "{{ example_image_tag }}"
+    state: build
+  notify:
+    - push landsat-ndwi
+
+- name: Build landsat-tiles docker image
+  tags: [ build-scale, build-examples ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-tiles"
+    name: "landsat-tiles"
+    tag: "{{ example_image_tag }}"
+    state: build
+  notify:
+    - push landsat-tiles
+
+- name: Build pca docker image
+  tags: [ build-scale, build-examples ]
+  docker_image:
+    path: "{{ scale_build_root }}/dockerfiles/examples/pca"
+    name: "pca"
+    tag: "{{ example_image_tag }}"
+  notify:
+    - push pca
+
+- name: Build ace docker image
+  tags: [ build-scale, build-examples ]
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/ace"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Build tad docker image
+  tags: [ build-scale, build-examples ]
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/tad"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Build jpl-signatures docker image
+  tags: [ build-scale, build-examples ]
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/jpl-signatures"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Build parse-binary docker image
+  tags: [ build-scale, build-examples ]
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+
+- name: Build vash docker image
+  tags: [ build-scale, build-examples ]
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/vash"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'

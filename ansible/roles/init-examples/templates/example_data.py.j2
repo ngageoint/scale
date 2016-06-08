@@ -4,12 +4,11 @@ from job.configuration.interface.job_interface import JobInterface
 import ingest.models
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 import recipe.models
-import storage.models
 import trigger.models
 import trigger.handler as trigger_handler
 
 nfs_server="{{ nfs_server }}"
-registry="{{ docker_registry }}"
+registry="{{ example_docker_registry }}"
 docker_tag="{{ example_image_tag }}"
 
 # Workspaces
@@ -17,13 +16,13 @@ if not storage.models.Workspace.objects.filter(name="raw").exists():
     storage.models.Workspace.objects.create(name="raw", title="raw", description="Raw ingested data",
         base_url="http://{{ example_server }}:8080/raw",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/raw" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/raw", "type": "host"}}).save()
 
 if not storage.models.Workspace.objects.filter(name="products").exists():
     storage.models.Workspace.objects.create(name="products", title="products", description="Product storage",
         base_url="http://{{ example_server }}:8080/products",
         json_config={
-        "version": "1.0", "broker": {"mount": "%s:/products" % nfs_server, "type": "nfs"}}).save()
+        "version": "1.0", "broker": {"host_path": "/products", "type": "host"}}).save()
 
 # Triggers
 if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
@@ -36,26 +35,26 @@ if not trigger.models.TriggerRule.objects.filter(name="landsat-parse").exists():
         },
         "data": {
             "input_data_name": "infile",
-            "workspace_name": "raw"
+            "workspace_name": "products"
         }
     }, "landsat-parse", True)
 
 # Job types
 if not job.models.JobType.objects.filter(name="landsat-parse").exists():
     jt = job.models.JobType.objects.create_job_type("landsat-parse", "1.0.0",
-            JobInterface({"output_data": [
-                {"media_type": "image/tiff", "required": True, "type": "file", "name": "multispectral"},
-                {"media_type": "image/tiff", "required": True, "type": "file", "name": "panchromatic"},
-                {"media_type": "image/tiff", "required": True, "type": "file", "name": "thermal"}
-            ],
-            "shared_resources": [],
-            "command_arguments": "${infile} ${job_output_dir}",
-            "input_data": [
-                {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
-            "version": "1.0", "command": "./parse_landsat.sh"}),
-        description="Parse landsat multi-tif files in tar.gz archives",
-        docker_image="%slandsat-parse_1.0:%s" % (registry, docker_tag),
-        priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
+                                                    JobInterface({"output_data": [
+                                                        {"media_type": "image/tiff", "required": True, "type": "file", "name": "multispectral"},
+                                                        {"media_type": "image/tiff", "required": True, "type": "file", "name": "panchromatic"},
+                                                        {"media_type": "image/tiff", "required": True, "type": "file", "name": "thermal"}
+                                                    ],
+                                                        "shared_resources": [],
+                                                        "command_arguments": "${infile} ${job_output_dir}",
+                                                        "input_data": [
+                                                            {"media_types": ["application/octet-stream"], "required": True, "type": "file", "name": "infile"}],
+                                                        "version": "1.0", "command": "./parse_landsat.sh"}),
+                                                    description="Parse landsat multi-tif files in tar.gz archives",
+                                                    docker_image="%sgeoint/landsat-parse:%s" % (registry, docker_tag),
+                                                    priority=200, timeout=300, max_tries=3, cpus_required=0.25, mem_required=512.)
     jt.title = "Landsat Parse"
     jt.save()
 if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
@@ -68,22 +67,22 @@ if not job.models.JobType.objects.filter(name="landsat-ndwi").exists():
                 {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "msi"}],
             "version": "1.0", "command": "python landsat_ndwi.py"}),
         description="Perform NDWI on landsat 8 data.",
-        docker_image="%slandsat-ndwi_1.0:%s" % (registry, docker_tag),
+        docker_image="%sgeoint/landsat-ndwi:%s" % (registry, docker_tag),
         priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat NDWI"
     jt.save()
 if not job.models.JobType.objects.filter(name="landsat-tiles").exists():
     jt = job.models.JobType.objects.create_job_type("landsat-tiles", "1.0.0",
-            JobInterface({"output_data": [
-                {"required": True, "type": "files", "name": "tiles"}],
-            "shared_resources": [],
-            "command_arguments": "${image} ${job_output_dir}",
-            "input_data": [
-                {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
-            "version": "1.0", "command": "./landsat_tiles.sh"}),
-        description="Generate map tiles for a landsat 8 product.",
-        docker_image="%slandsat-tiles_1.0:%s" % (registry, docker_tag),
-        priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
+                                                    JobInterface({"output_data": [
+                                                        {"required": True, "type": "files", "name": "tiles"}],
+                                                        "shared_resources": [],
+                                                        "command_arguments": "${image} ${job_output_dir}",
+                                                        "input_data": [
+                                                            {"media_types": ["image/tiff"], "required": True, "type": "file", "name": "image"}],
+                                                        "version": "1.0", "command": "./landsat_tiles.sh"}),
+                                                    description="Generate map tiles for a landsat 8 product.",
+                                                    docker_image="%sgeoint/landsat-tiles:%s" % (registry, docker_tag),
+                                                    priority=250, timeout=300, max_tries=3, cpus_required=0.5, mem_required=512.)
     jt.title = "Landsat Tiles"
     jt.save()
 
@@ -95,7 +94,7 @@ try:
             ingest_jt.mem_required = 512.
             ingest_jt.save()
 except:
-    print("scale-ingest not found! did you load_all_data?")
+    raise Exception("scale-ingest not found! did you load_all_data?")
 
 # Recipes
 if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
@@ -158,7 +157,7 @@ if not recipe.models.RecipeType.objects.filter(name="landsat").exists():
                 ]
             }), trigger_rule)
 
-# Strike process
+# Strike processes
 if not ingest.models.Strike.objects.filter(name="landsat").exists():
     ingest.models.Strike.objects.create_strike_process("landsat", "Landsat", "Landsat GeoTIFF Ingest",
 	{
@@ -172,7 +171,7 @@ if not ingest.models.Strike.objects.filter(name="landsat").exists():
 		    "workspace_path": "landsat"
 		}
 	    ],
-	    "mount": "%s:/ingest" % nfs_server,
+	    "mount": "%s:/ingest/landsat" % nfs_server,
 	    "transfer_suffix": "_tmp",
 	    "version": "1.0"
 	}).save()

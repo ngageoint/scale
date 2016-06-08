@@ -1,7 +1,6 @@
 """Defines the class for a job execution job task"""
 from __future__ import unicode_literals
 
-from job import settings
 from job.execution.running.tasks.base_task import Task
 from job.models import JobExecution
 from job.resources import NodeResources
@@ -22,14 +21,14 @@ class JobTask(Task):
         super(JobTask, self).__init__('%i_job' % job_exe.id, job_exe)
 
         self._uses_docker = job_exe.uses_docker()
-        self._docker_image = job_exe.get_docker_image()
         if self._uses_docker:
-            self._docker_params = job_exe.get_docker_params()
-        self._is_docker_privileged = job_exe.is_docker_privileged()
+            if job_exe.job.job_type.is_system:
+                self._docker_image = self.create_scale_image_name()
+            else:
+                self._docker_image = job_exe.get_docker_image()
+            self._docker_params = job_exe.get_job_configuration().get_job_task_docker_params()
+            self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
-        if job_exe.is_system:
-            self._command = '%s %s %s' % (settings.settings.PYTHON_EXECUTABLE, settings.settings.MANAGE_FILE,
-                                          self._command)
         self._command_arguments = job_exe.command_arguments
 
     def complete(self, task_results):
@@ -61,6 +60,8 @@ class JobTask(Task):
         if not error:
             # Use job's error mapping here to determine error
             error = self._error_mapping.get_error(task_results.exit_code)
+        if not error:
+            error = self.consider_general_error(task_results)
 
         JobExecution.objects.task_ended(self._job_exe_id, 'job', task_results.when, task_results.exit_code,
                                         task_results.stdout, task_results.stderr)
@@ -80,4 +81,5 @@ class JobTask(Task):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
+        super(JobTask, self).running(when, stdout_url, stderr_url)
         JobExecution.objects.task_started(self._job_exe_id, 'job', when, stdout_url, stderr_url)

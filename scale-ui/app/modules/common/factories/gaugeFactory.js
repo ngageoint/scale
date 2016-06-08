@@ -28,6 +28,7 @@
                 this.config.greenColor 	= configuration.greenColor || '#8fca0e';
                 this.config.yellowColor = configuration.yellowColor || '#ffc317';
                 this.config.redColor 	= configuration.redColor || '#f54d36';
+                this.config.grayColor   = configuration.grayColor || '#aaa';
 
                 this.config.transitionDuration = configuration.transitionDuration || 500;
             };
@@ -216,6 +217,11 @@
 
             this.redraw = function(value, transitionDuration)
             {
+                var isDisabled = false;
+                if (value < 0) {
+                    isDisabled = true;
+                    value = 0;
+                }
                 var pointerContainer = this.body.select('.pointerContainer');
 
                 pointerContainer.selectAll('text').text(parseFloat(value).toFixed(2) + '%');
@@ -247,10 +253,12 @@
                     .duration(750)
                     .style('fill', function () {
                         var i = parseInt(value);
-                        if (i >= 0 && i < 75) {
+                        if (i >= 0 && i < 75 && !isDisabled) {
                             return self.config.greenColor;
-                        } else if (i >= 75 && i < 90) {
+                        } else if (i >= 75 && i < 90 && !isDisabled) {
                             return self.config.yellowColor;
+                        } else if (i === 0 && isDisabled) {
+                            return self.config.redColor;
                         } else {
                             return self.config.redColor;
                         }

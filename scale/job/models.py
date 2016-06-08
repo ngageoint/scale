@@ -9,18 +9,22 @@ import urllib
 
 import django.utils.timezone as timezone
 import djorm_pgjson.fields
+from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 
 from error.models import Error
+from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, SCALE_JOB_EXE_INPUT_PATH,\
+    SCALE_JOB_EXE_OUTPUT_PATH
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
-from storage.models import ScaleFile
+from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction
@@ -91,7 +95,6 @@ class JobManager(models.Manager):
         job.event = event
         job.priority = job_type.priority
         job.timeout = job_type.timeout
-        job.docker_params = job_type.docker_params
         job.max_tries = job_type.max_tries
         job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
         job.mem_required = max(job_type.mem_required, MIN_MEM)
@@ -107,7 +110,7 @@ class JobManager(models.Manager):
         return job
 
     def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, order=None):
+                 job_type_categories=None, error_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -124,6 +127,8 @@ class JobManager(models.Manager):
         :type job_type_names: list[str]
         :param job_type_categories: Query jobs of the type associated with the category.
         :type job_type_categories: list[str]
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: list[str]
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of jobs that match the time range.
@@ -150,6 +155,8 @@ class JobManager(models.Manager):
             jobs = jobs.filter(job_type__name__in=job_type_names)
         if job_type_categories:
             jobs = jobs.filter(job_type__category__in=job_type_categories)
+        if error_categories:
+            jobs = jobs.filter(error__category__in=error_categories)
 
         # Apply sorting
         if order:
@@ -362,10 +369,17 @@ class JobManager(models.Manager):
         interface = job.get_job_interface()
         interface.validate_data(data)
 
-        # Calculate disk space required for the job
+        # Analyze input files
         input_file_ids = data.get_input_file_ids()
-        # Get total input file size in MiB rounded up to the nearest whole MiB
-        input_size_mb = long(math.ceil((ScaleFile.objects.get_total_file_size(input_file_ids) / (1024.0 * 1024.0))))
+        input_files = ScaleFile.objects.get_files(input_file_ids)
+        input_size_bytes = 0
+        input_workspaces = set()
+        for input_file in input_files:
+            input_size_bytes += input_file.file_size
+            input_workspaces.add(input_file.workspace.name)
+
+        # Calculate total input file size in MiB rounded up to the nearest whole MiB
+        input_size_mb = long(math.ceil((input_size_bytes / (1024.0 * 1024.0))))
         # Calculate output space required in MiB rounded up to the nearest whole MiB
         multiplier = job.job_type.disk_out_mult_required
         const = job.job_type.disk_out_const_required
@@ -373,15 +387,39 @@ class JobManager(models.Manager):
         disk_in_required = max(input_size_mb, MIN_DISK)
         disk_out_required = max(output_size_mb, MIN_DISK)
 
+        # Configure workspaces needed for the job
+        configuration = JobConfiguration()
+        for name in input_workspaces:
+            configuration.add_job_task_workspace(name, MODE_RO)
+        if not job.job_type.is_system:
+            for name in input_workspaces:
+                configuration.add_pre_task_workspace(name, MODE_RO)
+                # We add input workspaces to post task so it can perform a parse results move if requested by the job's
+                # results manifest
+                configuration.add_post_task_workspace(name, MODE_RW)
+            # TODO: Using workspace names in job data instead of IDs would save a query here
+            for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
+                if workspace.name not in input_workspaces:
+                    configuration.add_post_task_workspace(workspace.name, MODE_RW)
+        elif job.job_type.name == 'scale-ingest':
+            # TODO: This is an ugly hack. Figure out a better way for an ingest job type to pass along that it requires
+            # a certain workspace. Not sure I like using job data for this.
+            ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
+            from ingest.models import Ingest
+            ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
+            configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+
         # Update job model in memory
         job.data = data.get_dict()
+        job.configuration = configuration.get_dict()
         job.disk_in_required = disk_in_required
         job.disk_out_required = disk_out_required
         job.last_modified = modified
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
-                                      disk_out_required=disk_out_required, last_modified=modified)
+        self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),
+                                      disk_in_required=disk_in_required, disk_out_required=disk_out_required,
+                                      last_modified=modified)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -529,12 +567,11 @@ class Job(models.Model):
     :keyword data: JSON description defining the data for this job. This field must be populated when the job is first
         queued.
     :type data: :class:`djorm_pgjson.fields.JSONField`
+    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
     :keyword results: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type results: :class:`djorm_pgjson.fields.JSONField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
-    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -582,6 +619,7 @@ class Job(models.Model):
     :keyword last_modified: When the job was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
     JOB_STATUSES = (
         ('PENDING', 'PENDING'),
         ('BLOCKED', 'BLOCKED'),
@@ -600,8 +638,8 @@ class Job(models.Model):
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = djorm_pgjson.fields.JSONField()
+    configuration = djorm_pgjson.fields.JSONField()
     results = djorm_pgjson.fields.JSONField()
-    docker_params = djorm_pgjson.fields.JSONField(null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
@@ -637,6 +675,15 @@ class Job(models.Model):
         """
 
         return JobData(self.data)
+
+    def get_job_configuration(self):
+        """Returns the configuration for this job
+
+        :returns: The configuration for this job
+        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -941,13 +988,13 @@ class JobExecutionManager(models.Manager):
             job_exe = JobExecution()
             job_exe.job = job
             job_exe.timeout = job.timeout
-            job_exe.docker_params = job.docker_params
             job_exe.queued = when
             job_exe.created = when
             # Fill in job execution command argument string with data that doesn't require pre-task
             interface = job.get_job_interface()
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
+            job_exe.configuration = job.configuration
             job_exes.append(job_exe)
 
         if not job_exes:
@@ -958,7 +1005,7 @@ class JobExecutionManager(models.Manager):
         return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions):
+    def schedule_job_executions(self, job_executions, workspaces):
         """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
         Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
         will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
@@ -968,6 +1015,8 @@ class JobExecutionManager(models.Manager):
             schedule it on, and the resources it will be given
         :type job_executions: list[(:class:`job.models.JobExecution`, :class:`node.models.Node`,
             :class:`job.resources.JobResources`)]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
         :rtype: list[:class:`job.models.JobExecution`]
         """
@@ -1007,6 +1056,7 @@ class JobExecutionManager(models.Manager):
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node = node
+            job_exe.configure_docker_params(workspaces)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1018,30 +1068,6 @@ class JobExecutionManager(models.Manager):
             job_exes.append(job_exe)
 
         return job_exes
-
-    # TODO: Deprecated. I don't think the task_id fields are even used. If so, they should be removed. Do so the next
-    # time we make other job_exe model changes. At the same time, also rename pre_completed, job_completed, etc to
-    # pre_ended, job_ended, etc. This will force changes through the REST API though, so coordinate with UI
-    @transaction.atomic
-    def set_task_ids(self, job_exe_id, pre_task_id, job_task_id, post_task_id):
-        """Sets the task IDs for the given job execution. All database changes occur in an atomic transaction.
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param pre_task_id: The pre-task ID, possibly None
-        :type pre_task_id: str
-        :param job_task_id: The job-task ID, possibly None
-        :type job_task_id: str
-        :param post_task_id: The post-task ID, possibly None
-        :type post_task_id: str
-        """
-
-        # Acquire model lock
-        job_exe = JobExecution.objects.defer('stdout', 'stderr').select_for_update().get(pk=job_exe_id)
-        job_exe.pre_task_id = pre_task_id
-        job_exe.job_task_id = job_task_id
-        job_exe.post_task_id = post_task_id
-        job_exe.save()
 
     def task_ended(self, job_exe_id, task, when, exit_code, stdout, stderr):
         """Updates the given job execution to reflect that the given task has ended
@@ -1166,9 +1192,8 @@ class JobExecution(models.Model):
     :type command_arguments: :class:`django.db.models.CharField`
     :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
-    :type docker_params: :class:`djorm_pgjson.fields.JSONField`
+    :keyword configuration: JSON description describing the configuration for how the job execution should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
@@ -1189,8 +1214,6 @@ class JobExecution(models.Model):
     :keyword requires_cleanup: Whether this job execution still requires cleanup on the node
     :type requires_cleanup: :class:`django.db.models.BooleanField`
 
-    :keyword pre_task_id: The unique ID of the pre-task
-    :type pre_task_id: :class:`django.db.models.CharField`
     :keyword pre_started: When the pre-task was started
     :type pre_started: :class:`django.db.models.DateTimeField`
     :keyword pre_completed: When the pre-task was completed
@@ -1198,8 +1221,6 @@ class JobExecution(models.Model):
     :keyword pre_exit_code: The exit code of the pre-task
     :type pre_exit_code: :class:`django.db.models.IntegerField`
 
-    :keyword job_task_id: The unique ID of the task running the job
-    :type job_task_id: :class:`django.db.models.CharField`
     :keyword job_started: When the main job task started running
     :type job_started: :class:`django.db.models.DateTimeField`
     :keyword job_completed: When the main job task was completed
@@ -1207,8 +1228,6 @@ class JobExecution(models.Model):
     :keyword job_exit_code: The exit code of the main job task
     :type job_exit_code: :class:`django.db.models.IntegerField`
 
-    :keyword post_task_id: The unique ID of the post-task
-    :type post_task_id: :class:`django.db.models.CharField`
     :keyword post_started: When the post-task was started
     :type post_started: :class:`django.db.models.DateTimeField`
     :keyword post_completed: When the post-task was completed
@@ -1262,7 +1281,7 @@ class JobExecution(models.Model):
 
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
-    docker_params = djorm_pgjson.fields.JSONField(null=True)
+    configuration = djorm_pgjson.fields.JSONField()
 
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     environment = djorm_pgjson.fields.JSONField()
@@ -1274,18 +1293,17 @@ class JobExecution(models.Model):
     requires_cleanup = models.BooleanField(default=False, db_index=True)
     cleanup_job = models.ForeignKey('job.Job', related_name='cleans', blank=True, null=True, on_delete=models.PROTECT)
 
-    pre_task_id = models.CharField(blank=True, max_length=50, null=True)
+    # TODO: Rename pre_completed, job_completed, etc to pre_ended, job_ended, etc. This will force changes through the
+    # REST API though, so coordinate with UI
     pre_started = models.DateTimeField(blank=True, null=True)
     pre_completed = models.DateTimeField(blank=True, null=True)
     pre_exit_code = models.IntegerField(blank=True, null=True)
 
-    job_task_id = models.CharField(blank=True, max_length=50, null=True)
     job_started = models.DateTimeField(blank=True, null=True)
     job_completed = models.DateTimeField(blank=True, null=True)
     job_exit_code = models.IntegerField(blank=True, null=True)
     job_metrics = djorm_pgjson.fields.JSONField(null=True)
 
-    post_task_id = models.CharField(blank=True, max_length=50, null=True)
     post_started = models.DateTimeField(blank=True, null=True)
     post_completed = models.DateTimeField(blank=True, null=True)
     post_exit_code = models.IntegerField(blank=True, null=True)
@@ -1307,6 +1325,60 @@ class JobExecution(models.Model):
 
     objects = JobExecutionManager()
 
+    def configure_docker_params(self, workspaces):
+        """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
+        determine any Docker parameters that might be required by this job execution's workspaces.
+
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
+        """
+
+        configuration = self.get_job_configuration()
+
+        # Pass database connection details from scheduler as environment variables
+        db = settings.DATABASES['default']
+        if self.job.job_type.is_system:
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+        else:
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
+            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+
+        if not self.job.job_type.is_system:
+            # Non-system jobs get named Docker volumes for input and output data
+            input_vol_name = get_job_exe_input_vol_name(self.id)
+            output_vol_name = get_job_exe_output_vol_name(self.id)
+            input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
+            input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
+            output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
+            output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
+            configuration.add_pre_task_docker_param(DockerParam('volume', input_volume_rw))
+            configuration.add_pre_task_docker_param(DockerParam('volume', output_volume_rw))
+            configuration.add_job_task_docker_param(DockerParam('volume', input_volume_ro))
+            configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
+            configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
+
+        # Configure any Docker parameters needed for workspaces
+        configuration.configure_workspace_docker_params(self.id, workspaces)
+
+        # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
+        # jobs no longer mount within the container.
+        if self.job.job_type.name in ['scale-strike', 'scale-ingest']:
+            configuration.add_job_task_docker_param(DockerParam('env', 'ENABLE_NFS=1'))
+
+        self.configuration = configuration.get_dict()
+
     def get_docker_image(self):
         """Gets the Docker image for the job execution
 
@@ -1316,21 +1388,6 @@ class JobExecution(models.Model):
 
         return self.job.job_type.docker_image
 
-    def get_docker_params(self):
-        """Get the Docker params as a list of lists. Performs some basic validation.
-
-        :returns: The Docker params as a list of lists
-        :rtype: list
-        """
-
-        if self.docker_params is None or len(self.docker_params) == 0:
-            return []
-        if type(self.docker_params) is not type([]):
-            return []
-        if False in map(lambda x: type(x) is type([]) and len(x) == 2, self.docker_params):
-            return []
-        return self.docker_params
-
     def get_error_interface(self):
         """Returns the error interface for this job execution
 
@@ -1339,6 +1396,15 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.get_error_interface()
+
+    def get_job_configuration(self):
+        """Returns the configuration for this job
+
+        :returns: The configuration for this job
+        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def get_job_environment(self):
         """Returns the environment data for this job
@@ -1539,7 +1605,7 @@ class JobTypeManager(models.Manager):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
-        :param name: The stable name of the job type used by clients for queries
+        :param name: The identifying name of the job type used by clients for queries
         :type name: str
         :param version: The version of the job type
         :type version: str
@@ -1841,13 +1907,9 @@ class JobTypeManager(models.Manager):
         :rtype: list[:class:`job.models.JobTypeRunningStatus`]
         """
 
-        # Make a list of all the basic job type fields to fetch
-        job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
-                           'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code']
-
         # Fetch a count of all running jobs with type information
         # We have to specify values to workaround the JSON fields throwing an error when used with annotate
-        job_dicts = Job.objects.values(*['job_type__%s' % f for f in job_type_fields])
+        job_dicts = Job.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
         job_dicts = job_dicts.filter(status='RUNNING')
         job_dicts = job_dicts.annotate(count=models.Count('job_type'),
                                        longest_running=models.Min('last_status_change'))
@@ -1856,7 +1918,7 @@ class JobTypeManager(models.Manager):
         # Convert each result to a real job type model with added statistics
         results = []
         for job_dict in job_dicts:
-            job_type_dict = {f: job_dict['job_type__%s' % f] for f in job_type_fields}
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
             job_type = JobType(**job_type_dict)
 
             status = JobTypeRunningStatus(job_type, job_dict['count'], job_dict['longest_running'])
@@ -1873,16 +1935,12 @@ class JobTypeManager(models.Manager):
         :rtype: list[:class:`job.models.JobTypeFailedStatus`]
         """
 
-        # Make a list of all the basic job type fields to fetch
-        job_type_fields = ['id', 'name', 'version', 'title', 'description', 'category', 'is_system',
-                           'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code']
-
         # Make a list of all the basic error fields to fetch
-        error_fields = ['id', 'name', 'description', 'category', 'created', 'last_modified']
+        error_fields = ['id', 'name', 'title', 'description', 'category', 'created', 'last_modified']
 
         # We have to specify values to workaround the JSON fields throwing an error when used with annotate
         query_fields = []
-        query_fields.extend(['job_type__%s' % f for f in job_type_fields])
+        query_fields.extend(['job_type__%s' % f for f in JobType.BASE_FIELDS])
         query_fields.extend(['error__%s' % f for f in error_fields])
 
         # Fetch a count of all running jobs with type information
@@ -1896,7 +1954,7 @@ class JobTypeManager(models.Manager):
         # Convert each result to a real job type model with added statistics
         results = []
         for job_dict in job_dicts:
-            job_type_dict = {f: job_dict['job_type__%s' % f] for f in job_type_fields}
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
             job_type = JobType(**job_type_dict)
 
             error_dict = {f: job_dict['error__%s' % f] for f in error_fields}
@@ -1985,7 +2043,7 @@ class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
     lock on the model using select_for_update().
 
-    :keyword name: The stable name of the job type used by clients for queries
+    :keyword name: The identifying name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
@@ -2025,7 +2083,7 @@ class JobType(models.Model):
     :keyword interface: JSON description defining the interface for running a job of this type
     :type interface: :class:`djorm_pgjson.fields.JSONField`
     :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-    See the mesos prototype file for further information.
+        See the mesos prototype file for further information.
     :type docker_params: :class:`djorm_pgjson.fields.JSONField`
     :keyword revision_num: The current revision number of the interface, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
@@ -2065,6 +2123,9 @@ class JobType(models.Model):
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
+    BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
+                   'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code')
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
                          'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')

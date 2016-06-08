@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').factory('RecipeTypeValidation', function (RecipeTypeDefinition) {
 
-        var getRecipeTypeValidationJobs = function(jobs){
+        var getRecipeTypeValidationJobs = function (jobs) {
             var jobsOut = [];
             _.forEach(jobs, function(job){
                jobsOut.push({
@@ -17,19 +17,18 @@
                })
             });
             return jobsOut;
-        }
+        };
+        
         var RecipeTypeValidation = function (id, name, version, title, description, definition, trigger_rule) {
-            if(id){
+            if (id) {
                 this.id = id;
             }
             this.name = name;
             this.version = version;
             this.title = title;
             this.description = description;
-            //this.definition = definition ? RecipeTypeDefinition.transformer(definition) : new RecipeTypeDefinition();
             this.definition = {
                 input_data: definition.input_data,
-                version: definition.version,
                 jobs: getRecipeTypeValidationJobs(definition.jobs)
             };
             this.trigger_rule = trigger_rule;

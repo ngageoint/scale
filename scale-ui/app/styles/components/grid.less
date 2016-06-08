@@ -1,10 +1,9 @@
-@import 'colors';
-
 .grid-container {
     background: #fff;
 
     .scale-grid {
         width: auto;
+        box-sizing: border-box;
 
         .ui-grid-header {
             width: 100%;
@@ -15,13 +14,34 @@
                 .ui-grid-cell-contents {
                     cursor: pointer;
                     background: @accent_blue;
-                    color: white;
+                    color: @light;
+                }
+
+            }
+            .ui-grid-cell-contents {
+                &.status{
+                    text-align: center;
+                    font-size: 1.0em;
                 }
             }
+
         }
     }
 }
 
+
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
     background-color: inherit;
+}
+
+.ui-grid-viewport {
+    width: 100% !important;
+}
+
+.pagination-controls {
+    text-align: center;
+
+    .pagination {
+        margin: 10px 0 0 0;
+    }
 }

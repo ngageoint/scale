@@ -18,14 +18,32 @@
             };
         };
 
+        var getRecipeTypesParams = function (page, page_size, started, ended, order) {
+            return {
+                page: page,
+                page_size: page_size,
+                started: started,
+                ended: ended,
+                order: order ? order : ['title', 'version']
+            };
+        };
+
         return {
-            getRecipeTypes: function () {
+            getRecipeTypes: function (params) {
+                params = params || getRecipeTypesParams();
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/').success(function (data) {
-                    d.resolve(RecipeType.transformer(data.results));
+
+                $http({
+                    url: scaleConfig.urls.apiPrefix + 'recipe-types/',
+                    method: 'GET',
+                    params: params
+                }).success(function (data) {
+                    data.results = RecipeType.transformer(data.results);
+                    d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
                 });
+                
                 return d.promise;
             },
 
@@ -33,8 +51,8 @@
               var d = $q.defer();
 
               $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/' + id + '/').success(function (data) {
-                var returnData = RecipeTypeDetail.transformer(data);
-                d.resolve(returnData);
+                  var returnData = RecipeTypeDetail.transformer(data);
+                  d.resolve(returnData);
               });
               return d.promise;
             },
@@ -68,14 +86,13 @@
                 return d.promise;
             },
 
-            saveRecipeType: function(recipeType) {
+            saveRecipeType: function (recipeType) {
                 var d = $q.defer();
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
-                if(!cleanRecipeType.id){
+                if (!cleanRecipeType.id) {
                     $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {
-                        recipeType.id = result;
-                        d.resolve(recipeType);
+                        d.resolve(result);
                     }).error(function(error){
                         d.reject(error);
                     });

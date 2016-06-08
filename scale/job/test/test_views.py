@@ -103,6 +103,21 @@ class TestJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job1.job_type.category)
 
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/jobs/?error_category=%s' % error.category
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
 
@@ -129,7 +144,8 @@ class TestJobDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file = storage_test_utils.create_file()
+        self.country = storage_test_utils.create_country()
+        self.file = storage_test_utils.create_file(countries=[self.country])
 
         job_interface = {
             'version': '1.0',
@@ -198,7 +214,7 @@ class TestJobDetailsView(TestCase):
 
         try:
             import product.test.utils as product_test_utils
-            self.product = product_test_utils.create_product(job_exe=self.job_exe)
+            self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
         except:
             self.product = None
 
@@ -283,10 +299,12 @@ class TestJobDetailsView(TestCase):
 
         self.assertEqual(len(result['inputs']), 1)
         self.assertEqual(result['inputs'][0]['value']['id'], self.file.id)
+        self.assertEqual(result['inputs'][0]['value']['countries'][0], self.country.iso3)
 
         if self.product:
             self.assertEqual(len(result['outputs']), 1)
             self.assertEqual(result['outputs'][0]['value']['id'], self.product.id)
+            self.assertEqual(result['outputs'][0]['value']['countries'][0], self.country.iso3)
 
     def test_successful_files(self):
         """Tests successfully calling the job details view for multiple input/output files."""
@@ -318,10 +336,12 @@ class TestJobDetailsView(TestCase):
 
         self.assertEqual(len(result['inputs']), 1)
         self.assertEqual(result['inputs'][0]['value'][0]['id'], self.file.id)
+        self.assertEqual(result['inputs'][0]['value'][0]['countries'][0], self.country.iso3)
 
         if self.product:
             self.assertEqual(len(result['outputs']), 1)
             self.assertEqual(result['outputs'][0]['value'][0]['id'], self.product.id)
+            self.assertEqual(result['outputs'][0]['value'][0]['countries'][0], self.country.iso3)
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
@@ -355,7 +375,8 @@ class TestJobsUpdateView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file = storage_test_utils.create_file()
+        self.country = storage_test_utils.create_country()
+        self.file = storage_test_utils.create_file(countries=[self.country])
 
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1')
         self.job1 = job_test_utils.create_job(
@@ -1418,6 +1439,21 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
         for job_entry in results['results']:
             self.assertTrue(job_entry['id'] in (self.job_2a.id, self.job_2b.id))
+
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/jobs/executions/?error_category=%s' % error.category
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
 
 
 class TestJobExecutionsView(TransactionTestCase):

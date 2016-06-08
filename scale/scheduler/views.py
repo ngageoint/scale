@@ -2,6 +2,7 @@
 import logging
 
 import rest_framework.status as status
+from django.conf import settings
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
+    queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
     update_fields = (u'is_paused', )
 
@@ -72,3 +74,21 @@ class StatusView(GenericAPIView):
         """
         status = Scheduler.objects.get_status()
         return Response(status)
+
+
+class VersionView(GenericAPIView):
+    """This view is the endpoint for viewing version/build information"""
+
+    def get(self, request):
+        """Gets various version/build information
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        version_info = {
+            'version': getattr(settings, 'VERSION', 'snapshot'),
+        }
+        return Response(version_info)

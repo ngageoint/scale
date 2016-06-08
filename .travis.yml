@@ -10,8 +10,8 @@ services:
 - postgresql
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv
-  -in publish-key.enc -out ~/.ssh/publish-key -d
+- if [ "${TRAVIS_BRANCH}" = "master" ]; then openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv
+  -in publish-key.enc -out ~/.ssh/publish-key -d; fi
 before_script:
 - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
 - psql -c 'create database scale;' -U postgres
@@ -20,13 +20,17 @@ before_script:
 - python scale/manage.py migrate --noinput
 install:
 - pip install -q -r scale/pip/build_linux.txt
-script:
-- cd scale
-- python manage.py test --noinput
-- cd docs
-- make code_docs html
-- source push-docs.sh
+script: ./travis-build.sh
+
 branches:
   only:
   - master
   - develop
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/11ff4f6760c5e218ccb7
+    on_success: change
+    on_failure: always
+    on_start: never

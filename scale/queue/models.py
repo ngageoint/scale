@@ -5,10 +5,11 @@ import abc
 import logging
 
 import django.utils.timezone as timezone
+import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
@@ -220,6 +221,25 @@ class QueueEventProcessor(object):
         raise NotImplemented()
 
 
+class QueueStatus(object):
+    """Represents queue status statistics.
+
+    :keyword job_type: The job type being counted.
+    :type job_type: :class:`job.models.JobType`
+    :keyword count: The number of job executions running for the associated job type.
+    :type count: int
+    :keyword longest_queued: The date/time of the last queued job execution for the associated job type.
+    :type longest_queued: datetime.datetime
+    :keyword highest_priority: The priority of the most important job execution for the associated job type.
+    :type highest_priority: int
+    """
+    def __init__(self, job_type, count=0, longest_queued=None, highest_priority=100):
+        self.job_type = job_type
+        self.count = count
+        self.longest_queued = longest_queued
+        self.highest_priority = highest_priority
+
+
 class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
@@ -237,31 +257,27 @@ class QueueManager(models.Manager):
         return Queue.objects.order_by('priority', 'queued').iterator()
 
     def get_queue_status(self):
-        """Returns the current status of the queue, which is a list of dicts with each dict containing a job type and
-        version with overall stats for that type
+        """Returns the current status of the queue with statistics broken down by job type.
 
-        :returns: The list of each job type with stats
-        :rtype: list of dict
+        :returns: A list of each job type with calculated statistics.
+        :rtype: list[:class:`queue.models.QueueStatus`]
         """
 
-        status_qry = Queue.objects.values('job_type__name', 'job_type__version', 'job_type__is_paused')
-        status_qry = status_qry.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
-                                         highest_priority=models.Min('priority'))
-        status_qry = status_qry.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
+        status_dicts = Queue.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
+        status_dicts = status_dicts.annotate(count=models.Count('job_type'), longest_queued=models.Min('queued'),
+                                             highest_priority=models.Min('priority'))
+        status_dicts = status_dicts.order_by('job_type__is_paused', 'highest_priority', 'longest_queued')
 
-        # Remove double underscores
-        for entry in status_qry:
-            name = entry['job_type__name']
-            version = entry['job_type__version']
-            is_paused = entry['job_type__is_paused']
-            del entry['job_type__name']
-            del entry['job_type__version']
-            del entry['job_type__is_paused']
-            entry['job_type_name'] = name
-            entry['job_type_version'] = version
-            entry['is_job_type_paused'] = is_paused
+        # Convert each result to a real job type model with added statistics
+        results = []
+        for status_dict in status_dicts:
+            job_type_dict = {f: status_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
+            job_type = JobType(**job_type_dict)
 
-        return status_qry
+            status = QueueStatus(job_type, status_dict['count'], status_dict['longest_queued'],
+                                 status_dict['highest_priority'])
+            results.append(status)
+        return results
 
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
@@ -419,8 +435,8 @@ class QueueManager(models.Manager):
         :type data: dict
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :returns: The ID of the new job and the ID of the job execution
-        :rtype: int
+        :returns: The new queued job
+        :rtype: :class:`job.models.Job`
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
@@ -431,7 +447,7 @@ class QueueManager(models.Manager):
         Job.objects.populate_job_data(job, JobData(data))
         self._queue_jobs([job])
 
-        return job.id
+        return job
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -452,7 +468,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job(job_type, data, event)
+        job_id = self.queue_new_job(job_type, data, event).id
         job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
         return job_id, job_exe.id
 
@@ -523,51 +539,6 @@ class QueueManager(models.Manager):
         logger.debug('Registering queue processor: %s', processor_class)
         self._processors.append(processor_class)
 
-    # TODO: deprecated, use requeue_jobs() instead
-    @transaction.atomic
-    def requeue_existing_job(self, job_id):
-        """Puts an existing task on the queue to run that has previously been attempted. The given job identifier must
-        correspond to an existing model previously saved in the database and the job must have its related job_type
-        model. The new job_exe and queue models are saved in the database in an atomic transaction.
-
-        :param job_id: The ID of the job to update
-        :type job_id: int
-        :returns: The new job execution id or None if one was not created.
-        :rtype: int
-        :raises InvalidData: If the job data is invalid
-        :raises StatusError: If the job is not in a valid state to be queued.
-        """
-
-        # Make sure the job is ready to be re-queued
-        jobs = Job.objects.get_locked_jobs([job_id])
-        if not jobs:
-            raise Job.DoesNotExist
-        job = jobs[0]
-        if not job.is_ready_to_requeue:
-            raise StatusError
-
-        # Increase the max tries to ensure it can be scheduled
-        job.increase_max_tries()
-        Job.objects.filter(id=job.id).update(max_tries=job.max_tries)
-
-        when = timezone.now()
-        job_exe_id = None
-        if job.num_exes == 0:
-            # Job has never been queued before, set it to BLOCKED, might be changed to PENDING
-            Job.objects.update_status([job], 'BLOCKED', when)
-        else:
-            # Job has been queued before, so queue it again
-            self._queue_jobs([job])
-            job_exe = JobExecution.objects.get(job_id=job.id, status='QUEUED')
-            job_exe_id = job_exe.id
-
-        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
-        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
-        if handler:
-            jobs_to_pending = handler.get_pending_jobs()
-            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
-        return job_exe_id
-
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
@@ -611,13 +582,15 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions):
+    def schedule_job_executions(self, job_executions, workspaces):
         """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
         be deleted from the database. All database changes occur in an atomic transaction.
 
         :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
             run
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job executions
         :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
@@ -668,7 +641,7 @@ class QueueManager(models.Manager):
 
         # Schedule job executions
         scheduled_job_exes = []
-        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule):
+        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule, workspaces):
             scheduled_job_exes.append(RunningJobExecution(job_exe))
 
         # Clear the job executions from the queue
@@ -701,7 +674,7 @@ class QueueManager(models.Manager):
             }
             desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
-            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event)
+            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event).id
             job_exe.cleanup_job_id = cleanup_job_id
             job_exe.save()
 
@@ -732,6 +705,7 @@ class QueueManager(models.Manager):
         for job_exe in job_exes:
             queue = Queue()
             queue.job_exe = job_exe
+            queue.job = job_exe.job
             queue.job_type = job_exe.job.job_type
             queue.priority = job_exe.job.priority
             if job_exe.job.job_type.name == 'scale-cleanup':
@@ -741,6 +715,7 @@ class QueueManager(models.Manager):
             queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
             queue.disk_out_required = job_exe.job.disk_out_required if job_exe.job.disk_out_required else 0
             queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
+            queue.configuration = job_exe.job.configuration
             queue.queued = when_queued
             queues.append(queue)
 
@@ -756,6 +731,8 @@ class Queue(models.Model):
 
     :keyword job_exe: The job execution that has been queued
     :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that has been queued
+    :type job: :class:`django.db.models.ForeignKey`
     :keyword job_type: The type of this job execution
     :type job_type: :class:`django.db.models.ForeignKey`
 
@@ -775,6 +752,9 @@ class Queue(models.Model):
     :keyword disk_total_required: The total amount of disk space in MiB required for this job
     :type disk_total_required: :class:`django.db.models.FloatField`
 
+    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job execution was placed onto the queue
@@ -784,6 +764,7 @@ class Queue(models.Model):
     """
 
     job_exe = models.ForeignKey('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
 
     priority = models.IntegerField(db_index=True)
@@ -793,6 +774,8 @@ class Queue(models.Model):
     disk_in_required = models.FloatField()
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
+
+    configuration = djorm_pgjson.fields.JSONField()
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()

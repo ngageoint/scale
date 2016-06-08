@@ -1,4 +1,4 @@
-'''Defines the database models related to ingesting files'''
+"""Defines the database models related to ingesting files"""
 from __future__ import unicode_literals
 
 import datetime
@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration, ValidationWarning
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class IngestCounts(object):
-    '''Represents ingest status values for a specific time slot.
+    """Represents ingest status values for a specific time slot.
 
     :keyword time: The time slot being counted.
     :type time: datetime.datetime
@@ -28,7 +28,7 @@ class IngestCounts(object):
     :type files: int
     :keyword size: The total size of all files ingested for the time slot in bytes.
     :type size: int
-    '''
+    """
     def __init__(self, time, files=0, size=0):
         self.time = time
         self.files = files
@@ -36,7 +36,7 @@ class IngestCounts(object):
 
 
 class IngestStatus(object):
-    '''Represents ingest status values for a strike process.
+    """Represents ingest status values for a strike process.
 
     :keyword strike: The strike process that generated the ingests being counted.
     :type strike: :class:`strike.models.Strike`
@@ -48,7 +48,7 @@ class IngestStatus(object):
     :type size: int
     :keyword values: A list of values that summarize work done by the strike process.
     :type values: list[:class:`ingest.models.IngestCounts`]
-    '''
+    """
     def __init__(self, strike, most_recent=None, files=0, size=0, values=None):
         self.strike = strike
         self.most_recent = most_recent
@@ -58,31 +58,33 @@ class IngestStatus(object):
 
 
 class IngestManager(models.Manager):
-    '''Provides additional methods for handling ingests.'''
+    """Provides additional methods for handling ingests."""
 
     def get_ingest_job_type(self):
-        '''Returns the Scale Ingest job type
+        """Returns the Scale Ingest job type
 
         :returns: The ingest job type
         :rtype: :class:`job.models.JobType`
-        '''
+        """
 
         return JobType.objects.get(name='scale-ingest', version='1.0')
 
-    def get_ingests(self, started=None, ended=None, status=None, order=None):
-        '''Returns a list of ingests within the given time range.
+    def get_ingests(self, started=None, ended=None, status=None, file_name=None, order=None):
+        """Returns a list of ingests within the given time range.
 
         :param started: Query ingests updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query ingests updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param status: Query ingests with the a specific process status.
-        :type status: str
+        :type status: string
+        :param file_name: Query ingests with the a specific file name.
+        :type file_name: string
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: list[string]
         :returns: The list of ingests that match the time range.
         :rtype: list[:class:`ingest.models.Ingest`]
-        '''
+        """
 
         # Fetch a list of ingests
         ingests = Ingest.objects.all()
@@ -97,6 +99,8 @@ class IngestManager(models.Manager):
 
         if status:
             ingests = ingests.filter(status=status)
+        if file_name:
+            ingests = ingests.filter(file_name=file_name)
 
         # Apply sorting
         if order:
@@ -106,13 +110,13 @@ class IngestManager(models.Manager):
         return ingests
 
     def get_details(self, ingest_id):
-        '''Gets additional details for the given ingest model based on related model attributes.
+        """Gets additional details for the given ingest model based on related model attributes.
 
         :param ingest_id: The unique identifier of the ingest.
         :type ingest_id: int
         :returns: The ingest with extra related attributes.
         :rtype: :class:`ingest.models.Ingest`
-        '''
+        """
 
         # Attempt to fetch the requested ingest
         ingest = Ingest.objects.all().select_related('strike', 'strike__job', 'strike__job__job_type',
@@ -123,7 +127,7 @@ class IngestManager(models.Manager):
         return ingest
 
     def get_status(self, started=None, ended=None, use_ingest_time=False):
-        '''Returns ingest status information within the given time range grouped by strike process.
+        """Returns ingest status information within the given time range grouped by strike process.
 
         :param started: Query ingests updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -133,7 +137,7 @@ class IngestManager(models.Manager):
         :type use_ingest_time: bool
         :returns: The list of ingest status models that match the time range.
         :rtype: list[:class:`ingest.models.IngestStatus`]
-        '''
+        """
 
         # Fetch a list of ingests
         ingests = Ingest.objects.filter(status='INGESTED')
@@ -162,7 +166,7 @@ class IngestManager(models.Manager):
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
 
     def _group_by_time(self, ingests, use_ingest_time):
-        '''Groups the given ingests by hourly time slots.
+        """Groups the given ingests by hourly time slots.
 
         :param ingests: Query ingests updated after this amount of time.
         :type ingests: list[:class:`ingest.models.Ingest`]
@@ -170,7 +174,7 @@ class IngestManager(models.Manager):
         :type use_ingest_time: bool
         :returns: A mapping of ingest status models to hourly groups of counts.
         :rtype: dict[:class:`ingest.models.IngestStatus`, dict[datetime.datetime, :class:`ingest.models.IngestCounts`]]
-        '''
+        """
 
         # Build a mapping of all possible strike processes
         strike_map = {}
@@ -197,7 +201,7 @@ class IngestManager(models.Manager):
         return {strike_map[strike]: slot_map[strike] for strike in strike_map}
 
     def _update_status(self, ingest_status, time_slots, ingest, dated):
-        '''Updates the given ingest status model based on attributes of an ingest model.
+        """Updates the given ingest status model based on attributes of an ingest model.
 
         :param ingest_status: The ingest status to update.
         :type ingest_status: :class:`ingest.models.IngestStatus`
@@ -207,7 +211,7 @@ class IngestManager(models.Manager):
         :type ingest: :class:`ingest.models.Ingest`
         :returns: The ingest status model after the counts are updated.
         :rtype: :class:`ingest.models.IngestStatus`
-        '''
+        """
 
         # Calculate the hourly time slot the record falls within
         time_slot = datetime.datetime(dated.year, dated.month, dated.day, dated.hour, tzinfo=timezone.utc)
@@ -228,7 +232,7 @@ class IngestManager(models.Manager):
         return ingest_status
 
     def _fill_status(self, ingest_status, time_slots, started=None, ended=None):
-        '''Fills all the values for the given ingest status using a specified time range and grouped values.
+        """Fills all the values for the given ingest status using a specified time range and grouped values.
 
         This method ensures that each hourly bin has a value, even when no data actually exists.
 
@@ -242,7 +246,7 @@ class IngestManager(models.Manager):
         :type ended: datetime.datetime
         :returns: The ingest status model after the values array is filled.
         :rtype: :class:`ingest.models.IngestStatus`
-        '''
+        """
 
         # Make sure we have a valid time range
         started = started if started else datetime.datetime.combine(timezone.now().date(), datetime.time.min)
@@ -261,11 +265,11 @@ class IngestManager(models.Manager):
 
 
 class Ingest(models.Model):
-    '''Represents an instance of a file being ingested into a workspace
+    """Represents an instance of a file being ingested into a workspace
 
     :keyword file_name: The name of the file
     :type file_name: :class:`django.db.models.CharField`
-    :keyword strike: The Strike process that handled this file's transfer
+    :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
     :keyword job: The ingest job that is processing this ingest
     :type job: :class:`django.db.models.ForeignKey`
@@ -305,7 +309,7 @@ class Ingest(models.Model):
     :type created: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the ingest model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
     INGEST_STATUSES = (
         ('TRANSFERRING', 'TRANSFERRING'),
         ('TRANSFERRED', 'TRANSFERRED'),
@@ -318,10 +322,9 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', blank=True, null=True)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True)
-    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING',
-                              max_length=50, db_index=True)
+    status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     transfer_path = models.CharField(max_length=1000)
     bytes_transferred = models.BigIntegerField()
@@ -345,13 +348,13 @@ class Ingest(models.Model):
     objects = IngestManager()
 
     def add_data_type_tag(self, tag):
-        '''Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
+        """Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
         spaces.
 
         :param tag: The data type tag to add
-        :type tag: str
+        :type tag: string
         :raises InvalidDataTypeTag: If the given tag is invalid
-        '''
+        """
 
         if not VALID_TAG_PATTERN.match(tag):
             raise InvalidDataTypeTag('%s is an invalid data type tag' % tag)
@@ -361,11 +364,11 @@ class Ingest(models.Model):
         self._set_data_type_tags(tags)
 
     def get_data_type_tags(self):
-        '''Returns the set of data type tags associated with this file
+        """Returns the set of data type tags associated with this file
 
         :returns: The set of data type tags
-        :rtype: set of str
-        '''
+        :rtype: set of string
+        """
 
         tags = set()
         if self.data_type:
@@ -374,41 +377,43 @@ class Ingest(models.Model):
         return tags
 
     def _set_data_type_tags(self, tags):
-        '''Sets the data type tags on the model
+        """Sets the data type tags on the model
 
         :param tags: The data type tags
-        :type tags: set of str
-        '''
+        :type tags: set of string
+        """
 
         self.data_type = ','.join(tags)
 
     class Meta(object):
-        '''meta information for database'''
+        """meta information for database"""
         db_table = 'ingest'
 
 
 class StrikeManager(models.Manager):
-    '''Provides additional methods for handling Strike processes
-    '''
+    """Provides additional methods for handling Strike processes
+    """
 
     @transaction.atomic
-    def create_strike_process(self, name, title, description, configuration):
-        '''Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
+    def create_strike(self, name, title, description, configuration):
+        """Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
         will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
         the database will occur in an atomic transaction.
 
-        :param name: The stable name of this Strike process
-        :type name: str
+        :param name: The identifying name of this Strike process
+        :type name: string
         :param title: The human-readable name of this Strike process
-        :type title: str
+        :type title: string
         :param description: A description of this Strike process
-        :type description: str
+        :type description: string
         :param configuration: The Strike configuration
         :type configuration: dict
         :returns: The new Strike process
         :rtype: :class:`ingest.models.Strike`
-        :raises InvalidStrikeConfiguration: If the configuration is invalid
-        '''
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
+        """
 
         # Validate the configuration, no exception is success
         StrikeConfiguration(configuration)
@@ -421,30 +426,142 @@ class StrikeManager(models.Manager):
         strike.save()
 
         strike_type = self.get_strike_job_type()
-        job_data = {'input_data': [{'name': 'Strike ID', 'value': unicode(strike.id)}]}
+        job_data = {
+            'input_data': [{
+                'name': 'Strike ID',
+                'value': unicode(strike.id),
+            }],
+        }
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        job_id = Queue.objects.queue_new_job(strike_type, job_data, event)
-
-        strike.job_id = job_id
+        strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
         strike.save()
 
         return strike
 
+    @transaction.atomic
+    def edit_strike(self, strike_id, title=None, description=None, configuration=None):
+        """Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param strike_id: The unique identifier of the Strike process to edit
+        :type strike_id: int
+        :param title: The human-readable name of this Strike process
+        :type title: string
+        :param description: A description of this Strike process
+        :type description: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
+        """
+
+        strike = Strike.objects.get(pk=strike_id)
+
+        # Validate the configuration, no exception is success
+        if configuration:
+            config = StrikeConfiguration(configuration)
+            strike.configuration = config.get_dict()
+
+        # Update editable fields
+        if title:
+            strike.title = title
+        if description:
+            strike.description = description
+        strike.save()
+
     def get_strike_job_type(self):
-        '''Returns the Scale Strike job type
+        """Returns the Scale Strike job type
 
         :returns: The Strike job type
         :rtype: :class:`job.models.JobType`
-        '''
+        """
 
         return JobType.objects.get(name='scale-strike', version='1.0')
 
+    def get_strikes(self, started=None, ended=None, names=None, order=None):
+        """Returns a list of Strike processes within the given time range.
+
+        :param started: Query Strike processes updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Strike processes updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param names: Query Strike processes associated with the name.
+        :type names: list[string]
+        :param order: A list of fields to control the sort order.
+        :type order: list[string]
+        :returns: The list of Strike processes that match the time range.
+        :rtype: list[:class:`ingest.models.Strike`]
+        """
+
+        # Fetch a list of strikes
+        strikes = Strike.objects.select_related('job', 'job__job_type').defer('configuration')
+
+        # Apply time range filtering
+        if started:
+            strikes = strikes.filter(last_modified__gte=started)
+        if ended:
+            strikes = strikes.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if names:
+            strikes = strikes.filter(name__in=names)
+
+        # Apply sorting
+        if order:
+            strikes = strikes.order_by(*order)
+        else:
+            strikes = strikes.order_by('last_modified')
+        return strikes
+
+    def get_details(self, strike_id):
+        """Returns the Strike process for the given ID with all detail fields included.
+
+        :param strike_id: The unique identifier of the Strike process.
+        :type strike_id: int
+        :returns: The Strike process with all detail fields included.
+        :rtype: :class:`ingest.models.Strike`
+        """
+
+        return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
+
+    def validate_strike(self, name, configuration):
+        """Validates a new Strike process prior to attempting a save
+
+        :param name: The identifying name of a Strike process to validate
+        :type name: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
+        """
+        warnings = []
+
+        # Validate the configuration, no exception is success
+        StrikeConfiguration(configuration)
+
+        # Check for issues when changing an existing Strike configuration
+        try:
+            strike = Strike.objects.get(name=name)
+
+            if (configuration['mount'] and strike.configuration['mount'] and
+                    configuration['mount'] != strike.configuration['mount']):
+                warnings.append(ValidationWarning('mount_change',
+                                                  'Changing the mount path may disrupt file monitoring.'))
+        except Strike.DoesNotExist:
+            pass
+
+        return warnings
+
 
 class Strike(models.Model):
-    '''Represents an instance of a Strike process which will run and detect incoming files in a directory for ingest
+    """Represents an instance of a Strike process which will run and detect incoming files in a directory for ingest
 
-    :keyword name: The stable name of this Strike process
+    :keyword name: The identifying name of this Strike process
     :type name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of this Strike process
     :type title: :class:`django.db.models.CharField`
@@ -460,7 +577,7 @@ class Strike(models.Model):
     :type created: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the Strike process was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     name = models.CharField(max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
@@ -475,14 +592,14 @@ class Strike(models.Model):
     objects = StrikeManager()
 
     def get_strike_configuration(self):
-        '''Returns the configuration for this Strike process
+        """Returns the configuration for this Strike process
 
         :returns: The configuration for this Strike process
         :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
-        '''
+        """
 
         return StrikeConfiguration(self.configuration)
 
     class Meta(object):
-        '''meta information for database'''
+        """meta information for database"""
         db_table = 'strike'

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<batch xmlns="https://comet.balldayton.com/standards/namespaces/2005/v1/comet.xsd">
+
+  <wizard filename="/wizards/tad.wiz">
+    <parameter item="Import Data Set" name="Input Filename" type="Filename">
+      <value>file:///</value>
+    </parameter>
+    <parameter item="Tad" name="Component Threshold" type="double">
+      <value>2</value>
+    </parameter>
+    <parameter item="Tad" name="Background Threshold" type="double">
+      <value>10</value>
+    </parameter>
+    <parameter item="Tad" name="Sample Size" type="unsigned int">
+      <value>10000</value>
+    </parameter>
+    <parameter item="Threshold Data" name="Region Units" type="RegionUnits">
+      <value>Raw</value>
+    </parameter>
+    <parameter item="Threshold Data" name="Pass Area" type="PassArea">
+      <value>Upper</value>
+    </parameter>
+    <parameter item="Export Data Set" name="Output Filename" type="Filename">
+      <value>file:///</value>
+    </parameter>
+    <parameter item="Export Data Set" name="Exporter Name" type="string">
+      <value>ENVI Exporter</value>
+    </parameter>
+  </wizard>
+
+</batch>

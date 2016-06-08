@@ -3,12 +3,6 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta, abstractmethod
 import logging
-import os
-
-from job.execution.file_system import get_job_exe_input_data_dir, get_job_exe_input_work_dir, \
-    get_job_exe_output_data_dir, get_job_exe_output_work_dir, \
-    delete_normal_job_exe_dir_tree
-from storage.models import ScaleFile, Workspace
 
 
 logger = logging.getLogger(__name__)
@@ -42,28 +36,8 @@ class NormalJobExecutionCleaner(JobExecutionCleaner):
 
         logger.info('Cleaning up a non-system job')
 
-        download_dir = get_job_exe_input_data_dir(job_exe.id)
-        download_work_dir = get_job_exe_input_work_dir(job_exe.id)
-        upload_dir = get_job_exe_output_data_dir(job_exe.id)
-        upload_work_dir = get_job_exe_output_work_dir(job_exe.id)
-
-        logger.info('Cleaning up download directory')
-        ScaleFile.objects.cleanup_download_dir(download_dir, download_work_dir)
-
-        logger.info('Cleaning up upload directories')
-        workspace_ids = job_exe.job.get_job_data().get_output_workspace_ids()
-        for workspace in Workspace.objects.filter(id__in=workspace_ids):
-            logger.info('Cleaning up upload directory for workspace %s', workspace.name)
-            ScaleFile.objects.cleanup_upload_dir(upload_dir, upload_work_dir, workspace)
-
-        move_work_dir = os.path.join(upload_work_dir, 'move_source_file_in_workspace')
-        if os.path.exists(move_work_dir):
-            logger.info('Cleaning up work directory for moving parsed source files')
-            ScaleFile.objects.cleanup_move_dir(move_work_dir)
-            logger.info('Deleting %s', move_work_dir)
-            os.rmdir(move_work_dir)
-
-        delete_normal_job_exe_dir_tree(job_exe.id)
+        # TODO: the normal cleanup on the host is now obsolete with moving everything into Docker volumes, need to
+        # investigate this to see if doing job execution clean up still makes sense or if this should be removed
 
         # TODO: commenting this out since it doesn't currently work, need to grab Docker container IDs to work
         # save_job_exe_metrics(job_exe)

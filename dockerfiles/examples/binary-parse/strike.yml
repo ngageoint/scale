@@ -1,0 +1,12 @@
+name: data
+version: "1.0"
+title: Binary Data
+description: Arbitrary binary data ingest
+configuration:
+  version: "1.0"
+  mount: "10.4.4.10:/ingest/binary"
+  transfer_suffix: "_tmp"
+  files_to_ingest:
+    - filename_regex: '.*.bin'
+      workspace_path: binary
+      workspace_name: raw

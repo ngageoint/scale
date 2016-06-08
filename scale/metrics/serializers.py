@@ -63,8 +63,8 @@ class MetricsPlotMultiValueSerializer(MetricsPlotValueSerializer):
 class MetricsPlotSerializer(serializers.Serializer):
     """Converts metrics plot values to REST output"""
     column = MetricsTypeColumnSerializer()
-    min_x = serializers.IntegerField()
-    max_x = serializers.IntegerField()
+    min_x = serializers.DateField()
+    max_x = serializers.DateField()
     min_y = serializers.IntegerField()
     max_y = serializers.IntegerField()
     values = MetricsPlotValueSerializer(many=True)
@@ -73,6 +73,13 @@ class MetricsPlotSerializer(serializers.Serializer):
 class MetricsPlotMultiSerializer(MetricsPlotSerializer):
     """Converts metrics plot values to REST output"""
     values = MetricsPlotMultiValueSerializer(many=True)
+
+
+class MetricsErrorDetailsSerializer(MetricsTypeDetailsSerializer):
+    """Converts ingest metrics details model fields to REST output"""
+    from error.serializers import ErrorBaseSerializer
+
+    choices = ErrorBaseSerializer(many=True)
 
 
 class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):

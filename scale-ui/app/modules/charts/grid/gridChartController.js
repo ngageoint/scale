@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $uibModal, userService, scaleConfig) {
+    angular.module('scaleApp').controller('aisGridChartController', function ($rootScope, $scope, $location, $uibModal, userService, scaleConfig, scaleService) {
         var svg = null,
             rect = null,
             scale = parseFloat($scope.scale),
@@ -9,7 +9,25 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function(d) {
-                    return d.title + ' ' + d.version + '<br />' + getCellError(d) + '<br />' + getCellTotal(d);
+                    var failures = d.status.getFailures(),
+                        failStr = failures.length > 0 ? '<br /><br />' : '',
+                        running = getCellActivityTotal(d),
+                        completed = getCellTotal(d),
+                        statusStr = running > 0 || completed > 0 ? '<br />' : '';
+
+                    if (running > 0) {
+                        statusStr = statusStr + '<span class="label label-running">Running: ' + running + '</span>';
+                    }
+                    if (completed > 0) {
+                        statusStr = statusStr + ' <span class="label label-completed">Completed: ' + completed + '</span>';
+                    }
+
+                    failures = _.sortByOrder(failures, ['order']);
+
+                    _.forEach(failures, function (f) {
+                        failStr = failStr + '<span class="label label-' + f.status.toLowerCase() + '">' + _.capitalize(f.status.toLowerCase()) + ': ' + f.count + '</span> ';
+                    });
+                    return d.title + ' ' + d.version + '<br />' + statusStr + failStr;
                 });
 
         $scope.loading = true;
@@ -27,7 +45,7 @@
         };
 
         var width = $('.grid-chart').width(),
-            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
+            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : $scope.mode === 'zoom' ? scaleService.getViewportSize().height * 2 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
             cols = 0,
             rows = 0,
             cellFontLg = .4,
@@ -46,12 +64,13 @@
                     });
                     $scope.dataValues = _.sortByOrder(_.values(data.data), ['status.has_running', 'status.description', 'name'], ['asc', 'asc', 'asc']);
                 } else if (dataType === 'Node') {
-                    $scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
+                    $scope.dataValues = _.values(data.data);
+                    //$scope.dataValues = _.sortByOrder(_.values(data.data), ['hostname'], ['asc']);
                     // associate Node with NodeStatus
                     _.forEach($scope.dataValues, function (val) {
                         val.status = _.find(data.status, 'node.id', val.id);
                     });
-                    $scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
+                    //$scope.dataValues = _.sortByOrder($scope.dataValues, ['hostname'], ['asc']); // sort by hostName asc
                 } else {
                     $scope.dataValues = data.data;
                 }
@@ -179,8 +198,8 @@
         var drag = d3.behavior.drag()
             .on('dragstart', function () {
                 // track offsetX and offsetY to distinguish between drag and click
-                dragOffsetX = d3.event.sourceEvent.offsetX;
-                dragOffsetY = d3.event.sourceEvent.offsetY;
+                dragOffsetX = d3.event.sourceEvent.layerX;
+                dragOffsetY = d3.event.sourceEvent.layerY;
             });
 
         var getCellFill = function (d) {
@@ -198,7 +217,7 @@
 
         var getCellActivity = function (d) {
             if (d && d.status) {
-                return d.status.getCellActivity();
+                return d.status.getRunning();
             }
         };
 
@@ -251,10 +270,18 @@
             }
         };
 
+        var getCellFailures = function (d) {
+            if (d && d.status) {
+                if (d.toString() === 'JobType') {
+                    return d.status.getCellFailures();
+                }
+            }
+        };
+
         var cellClickHandler = function (target) {
             // track offsetX and offsetY to distinguish between drag and click
-            clickOffsetX = d3.event.offsetX;
-            clickOffsetY = d3.event.offsetY;
+            clickOffsetX = d3.event.layerX;
+            clickOffsetY = d3.event.layerY;
             if (dragOffsetX === clickOffsetX && dragOffsetY === clickOffsetY) {
                 // offsets are the same; no dragging occurred; process as click event
                 $scope.$apply(function () {
@@ -283,21 +310,95 @@
 
             // UPDATE
             // Update old elements as needed.
+            containerGroup.selectAll('.stop1')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 1) {
+                            return '100%';
+                        }
+                        return '0%';
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return failures[0] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[0] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
+            containerGroup.selectAll('.stop2')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 3) {
+                            return '50%';
+                        } else if (failures.length === 2) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        return failures[1] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[1] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
+            containerGroup.selectAll('.stop3')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        if (failures.length === 3) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        return failures[2] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[2] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
             containerGroup.selectAll('.cell')
                 .data($scope.gridData, function (d) { return d.coords; })
                 .transition()
                 .duration(750)
+                .attr('class', function (d) {
+                    var active = getCellActivity(d);
+                    if (active) {
+                        return active.count > 0 ? 'cell cell-activity' : 'cell';
+                    }
+                    return 'cell';
+                })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
                 })
                 .style('fill', function (d) {
-                    return getCellFill(d);
+                    if (d.toString() === 'Node') {
+                        return getCellFill(d);
+                    }
                 });
+
+            var cg = containerGroup.selectAll('.cell-gradient');
 
             containerGroup.selectAll('.cell-text')
                 .data($scope.gridData, function (d) { return d.coords; })
                 .html(function (d) {
                     return getCellText(d);
+                })
+                .attr('y', function (d) {
+                    if (d.toString() === 'JobType' && getCellActivityTotal(d) > 0) {
+                        return $scope.cellHeight / 2;
+                    }
+                    return ($scope.cellHeight / 2) + 10;
                 });
 
             containerGroup.selectAll('.cell-total-active')
@@ -312,12 +413,6 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .html(function (d) {
                     return getCellPauseResume(d);
-                });
-
-            containerGroup.selectAll('.cell-activity-icon')
-                .data($scope.gridData, function (d) { return d.coords; })
-                .html(function (d) {
-                    return getCellActivity(d);
                 });
 
             containerGroup.selectAll('.cell-title')
@@ -362,12 +457,93 @@
                 .append('g')
                 .attr('class', 'cell-group');
 
+            var defs = cellGroup.append('defs');
+            var gradient = defs.append('linearGradient')
+                .attr('id', function (d) {
+                    return d.name;
+                })
+                .attr('class', 'cell-gradient')
+                .attr('x1', 0)
+                .attr('y1', 0)
+                .attr('x2', 0)
+                .attr('y2', 1);
+            gradient.append('stop')
+                .attr('class', 'stop1')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        if (failures.length === 1) {
+                            return '100%';
+                        }
+                        return '0%';
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 0) {
+                        return failures[0] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[0] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+            gradient.append('stop')
+                .attr('class', 'stop2')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        if (failures.length === 3) {
+                            return '50%';
+                        } else if (failures.length === 2) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 1) {
+                        return failures[1] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[1] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+            gradient.append('stop')
+                .attr('class', 'stop3')
+                .attr('offset', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        if (failures.length === 3) {
+                            return '100%';
+                        }
+                    }
+                    return '0%';
+                })
+                .attr('stop-color', function (d) {
+                    var failures = getCellFailures(d);
+                    if (failures && failures.length > 2) {
+                        return failures[2] === 'SYSTEM' ? scaleConfig.colors.failure_system : failures[2] === 'DATA' ? scaleConfig.colors.failure_data : scaleConfig.colors.failure_algorithm;
+                    }
+                    return getCellFill(d);
+                });
+
             cellGroup.append('rect')
-                .attr('class', 'cell')
+                .attr('class', function (d) {
+                    var active = getCellActivity(d);
+                    if (active) {
+                        return active.count > 0 ? 'cell cell-activity' : 'cell';
+                    }
+                    return 'cell';
+                })
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
                 .style('fill', function (d) {
-                    return getCellFill(d);
+                    if (d.toString() === 'Node') {
+                        return getCellFill(d);
+                    }
+                })
+                .attr('fill', function (d) {
+                    if (d.toString() === 'JobType') {
+                        return 'url(#' + d.name + ')';
+                    }
                 })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
@@ -382,7 +558,21 @@
                 })
                 .attr('text-anchor', 'middle')
                 .attr('x', $scope.cellWidth / 2)
-                .attr('y', ($scope.cellHeight / 2) + 12)
+                .attr('y', function (d) {
+                    if (d.toString() === 'JobType') {
+                        if (getCellActivityTotal(d) > 0) {
+                            return $scope.cellHeight / 2;
+                        }
+                        return ($scope.cellHeight / 2) + 10;
+                    }
+                    return $scope.cellHeight / 2;
+                })
+                .style('font-size', function (d) {
+                    if (d.toString() === 'Node') {
+                        return $scope.scale * 8 + 'px';
+                    }
+                    return '';
+                })
                 .style('display', $scope.enableReveal ? 'block' : 'none');
 
             cellGroup.append('text')
@@ -392,21 +582,10 @@
                         return getCellActivityTotal(d);
                     }
                 })
-                .attr('text-anchor', 'end')
-                .attr('x', $scope.cellWidth - 2)
+                .attr('text-anchor', 'middle')
+                .attr('x', $scope.cellWidth / 2)
                 .attr('y', $scope.cellHeight - 5)
                 .style('display', $scope.enableReveal ? 'block' : 'none');
-
-            cellGroup.append('g')
-                .attr('class', 'cell-activity')
-                .append('text')
-                .attr('class', 'cell-activity-icon')
-                .html(function (d) {
-                    return getCellActivity(d);
-                })
-                .attr('text-anchor', 'end')
-                .attr('x', $scope.cellWidth - 2)
-                .attr('y', 14);
 
             var detail = cellGroup.append('text')
                 .attr('class', 'cell-text-detail')
@@ -479,13 +658,14 @@
                 .attr('class', 'cell-overlay')
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
+                .style('fill', '#fff')
                 .on('mouseover', function () {
-                    d3.select(d3.select(this)[0][0].parentElement.children[0])
-                        .style('fill-opacity', '0.75');
+                    d3.select(this)
+                        .style('fill-opacity', '0.25');
                 })
                 .on('mouseout', function () {
-                    d3.select(d3.select(this)[0][0].parentElement.children[0])
-                        .style('fill-opacity', '1.0');
+                    d3.select(this)
+                        .style('fill-opacity', '0');
                 })
                 .on('click', function (d) {
                     cellClickHandler(d);
@@ -499,10 +679,10 @@
                         return getCellPauseResume(d);
                     })
                     .attr('text-anchor', 'start')
-                    .attr('x', 5)
-                    .attr('y', 20)
+                    .attr('x', $scope.enableReveal ? 2 : 5)
+                    .attr('y', $scope.enableReveal ? $scope.scale * 8 : 20)
                     .style('display', $scope.enableReveal ? 'none' : 'block')
-                    .style('font-size', '1.3em')
+                    .style('font-size', $scope.enableReveal ? $scope.scale * 7 + 'px' : '1.3em')
                     .on('mouseover', function () {
                         d3.select(this)
                             .style('cursor', 'pointer')

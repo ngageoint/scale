@@ -1,0 +1,402 @@
+{
+    "id": 3,
+    "recipe_type": {
+        "id": 3,
+        "name": "worldview",
+        "version": "1.0.2",
+        "title": "WorldView",
+        "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification",
+        "is_active": true,
+        "definition": {
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "input_file"
+            }],
+            "version": "1.0.2",
+            "jobs": [{
+                "recipe_inputs": [],
+                "name": "wv2-parse",
+                "job_type": {
+                    "name": "wv2-parse",
+                    "version": "1.0.1"
+                },
+                "dependencies": []
+            }, {
+                "recipe_inputs": [],
+                "name": "wv2-atmosphere-corr",
+                "job_type": {
+                    "name": "wv2-atmosphere-corr",
+                    "version": "1.0.1"
+                },
+                "dependencies": [{
+                    "name": "wv2-parse",
+                    "connections": [{
+                        "output": "wv2-parsed",
+                        "input": "infile"
+                    }]
+                }]
+            }, {
+                "recipe_inputs": [],
+                "name": "wv2-ortho",
+                "job_type": {
+                    "name": "wv2-ortho",
+                    "version": "2.0"
+                },
+                "dependencies": [{
+                    "name": "wv2-parse",
+                    "connections": [{
+                        "output": "wv2-parsed",
+                        "input": "infile"
+                    }]
+                }]
+            }, {
+                "recipe_inputs": [],
+                "name": "export-shp",
+                "job_type": {
+                    "name": "export-shp",
+                    "version": "2.0"
+                },
+                "dependencies": [{
+                    "name": "wv2-ortho",
+                    "connections": [{
+                        "output": "wv2-ortho-out",
+                        "input": "infile"
+                    }]
+                }, {
+                    "name": "wv2-atmosphere-corr",
+                    "connections": [{
+                        "output": "wv2-corrected",
+                        "input": "infile"
+                    }]
+                }]
+            }]
+        },
+        "created": "2016-05-02T02:58:23.221Z",
+        "last_modified": "2016-05-02T02:58:23.221Z",
+        "archived": null
+    },
+    "recipe_type_rev": {
+        "id":6,
+        "recipe_type": {
+            "id": 3
+        },
+        "revision_num": 3,
+        "definition": {
+            "input_data": [{
+                "media_types": ["image/nitf"],
+                "required": true,
+                "type": "file",
+                "name": "input_file"
+            }],
+            "version": "1.0.2",
+            "jobs": [{
+                "recipe_inputs": [],
+                "name": "wv2-parse",
+                "job_type": {
+                    "name": "wv2-parse",
+                    "version": "1.0.1"
+                },
+                "dependencies": []
+            }, {
+                "recipe_inputs": [],
+                "name": "wv2-atmosphere-corr",
+                "job_type": {
+                    "name": "wv2-atmosphere-corr",
+                    "version": "1.0.1"
+                },
+                "dependencies": [{
+                    "name": "wv2-parse",
+                    "connections": [{
+                        "output": "wv2-parsed",
+                        "input": "infile"
+                    }]
+                }]
+            }, {
+                "recipe_inputs": [],
+                "name": "wv2-ortho",
+                "job_type": {
+                    "name": "wv2-ortho",
+                    "version": "2.0"
+                },
+                "dependencies": [{
+                    "name": "wv2-parse",
+                    "connections": [{
+                        "output": "wv2-parsed",
+                        "input": "infile"
+                    }]
+                }]
+            }, {
+                "recipe_inputs": [],
+                "name": "export-shp",
+                "job_type": {
+                    "name": "export-shp",
+                    "version": "2.0"
+                },
+                "dependencies": [{
+                    "name": "wv2-ortho",
+                    "connections": [{
+                        "output": "wv2-ortho-out",
+                        "input": "infile"
+                    }]
+                }, {
+                    "name": "wv2-atmosphere-corr",
+                    "connections": [{
+                        "output": "wv2-corrected",
+                        "input": "infile"
+                    }]
+                }]
+            }]
+        },
+        "created": "2015-11-06T19:44:09.989Z"
+    },
+    "event": {
+        "id": 7,
+        "type": "INGEST",
+        "rule": {
+            "id": 8,
+            "type": "INGEST",
+            "is_active": true,
+            "configuration": {
+                "trigger": {
+                    "media_type": "",
+                    "data_types": ["worldview"]
+                },
+                "create": {
+                    "recipes": [
+                        {
+                            "recipe_type": {
+                                "name": "worldview",
+                                "version": "1.0.2"
+                            },
+                            "file_input_name": "input_file",
+                            "workspace_name": "products"
+                        }
+                    ]
+                },
+                "version": "1.0.2"
+            }
+        },
+        "occurred": "2016-04-28T19:03:59.054Z",
+        "description": {
+            "file_name": "data-file.png",
+            "version": "1.0",
+            "parse_id": 1
+        }
+    },
+    "created": "2016-04-15T19:03:26.346Z",
+    "completed": "",
+    "last_modified": "2016-04-15T19:03:26.346Z",
+    "data": {
+        "input_data": [
+            {
+                "name": "input_file",
+                "file_id": 4
+            }
+        ],
+        "version": "1.0.2",
+        "workspace_id": 2
+    },
+    "input_files": [
+        {
+            "id": 4,
+            "workspace": {
+                "id": 1,
+                "name": "products"
+            },
+            "file_name": "image.nitf",
+            "media_type": "image/nitf",
+            "file_size": 7346298,
+            "data_type": ["worldview"],
+            "is_deleted": false,
+            "uuid": "d897wae9y80u9af9y8afhiuadfihouas",
+            "url": "http://host.com/image.nitf",
+            "created": "2016-04-10T15:24:53.962Z",
+            "deleted": null,
+            "data_started": "2016-04-10T15:24:53.962Z",
+            "data_ended": "2016-04-10T15:24:53.962Z",
+            "geometry": null,
+            "center_point": null,
+            "meta_data": {},
+            "last_modified": "2016-04-10T15:24:53.962Z"
+        }
+    ],
+    "jobs": [
+        {
+            "job_name": "wv2-parse",
+            "job": {
+                "id": 1,
+                "job_type": {
+                    "id": 5,
+                    "name": "wv2-parse",
+                    "version": "1.0.1",
+                    "title": "WorldView-2 Parse",
+                    "description": "Parses WorldView-2 imagery. WorldView-2 is a commercial Earth observation satellite owned by DigitalGlobe. WorldView-2 provides commercially available panchromatic imagery of .46 m resolution, and eight-band multispectral imagery with 1.84 m (6 ft 0 in) resolution. It was launched October 8, 2009 to become DigitalGlobe's third satellite in orbit, joining WorldView-1 which was launched in 2007 and QuickBird which was launched in 2001. It takes a new photograph of any place on Earth every 1.1 days.",
+                    "category": "worldview",
+                    "author_name": "DigitalGlobe",
+                    "author_url": "https://en.wikipedia.org/wiki/WorldView-2",
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f0c2"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "INGEST",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2016-04-30T15:31:59.054Z"
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 1.0,
+                "mem_required": 15360.0,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2016-04-11T00:00:00Z",
+                "queued": "2016-04-11T00:00:00Z",
+                "started": "2016-04-11T00:00:00Z",
+                "ended": "2016-04-11T00:00:00Z",
+                "last_status_change": "2016-06-11T00:00:00Z",
+                "last_modified": "2016-04-11T00:00:00Z"
+            }
+        },
+        {
+            "job_name": "wv2-atmosphere-corr",
+            "job": {
+                "job_type": {
+                    "id": 6,
+                    "name": "wv2-atmosphere-corr",
+                    "version": "1.0.1",
+                    "title": "WorldView-2 Atmospheric Correction",
+                    "description": "Applies Atmospheric Correction to WorldView-2 GeoTiffs",
+                    "category": "worldview",
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f14e"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "INGEST",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2016-04-28T19:03:59.054Z"
+                },
+                "error": null,
+                "status": "RUNNING",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 4.0,
+                "mem_required": 2048.0,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2016-04-11T00:00:00Z",
+                "queued": "2016-04-11T00:00:00Z",
+                "started": "2016-04-11T00:00:00Z",
+                "ended": "2016-04-11T00:00:00Z",
+                "last_status_change": "2016-06-11T00:00:00Z",
+                "last_modified": "2016-04-11T00:00:00Z"
+            }
+        },
+        {
+            "job_name": "wv2-ortho",
+            "job": {
+                "job_type": {
+                    "id": 9,
+                    "name": "wv2-ortho",
+                    "version": "2.0",
+                    "title": "WorldView-2 Rigorous Orthorectification",
+                    "description": "Applies Orthorectification to WorldView-2 data",
+                    "category": "worldview",
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f219"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "INGEST",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2016-04-28T19:03:59.054Z"
+                },
+                "error": null,
+                "status": "RUNNING",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 4.0,
+                "mem_required": 2048.0,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2016-04-11T00:00:00Z",
+                "queued": "2016-04-11T00:00:00Z",
+                "started": "2016-04-11T00:00:00Z",
+                "ended": "2016-04-11T00:00:00Z",
+                "last_status_change": "2016-06-11T00:00:00Z",
+                "last_modified": "2016-04-11T00:00:00Z"
+            }
+        },
+        {
+            "job_name": "export-shp",
+            "job": {
+                "job_type": {
+                    "id": 8,
+                    "name": "export-shp",
+                    "version": "2.0",
+                    "title": "Export Shapefile",
+                    "description": "Creates shapefile (.shp) from raster data",
+                    "category": "export",
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f06e"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "INGEST",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2016-04-28T19:03:59.054Z"
+                },
+                "error": null,
+                "status": "PENDING",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 4.0,
+                "mem_required": 4096.0,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2016-04-11T00:00:00Z",
+                "queued": "2016-04-11T00:00:00Z",
+                "started": "2016-04-11T00:00:00Z",
+                "ended": "2016-04-11T00:00:00Z",
+                "last_status_change": "2016-06-11T00:00:00Z",
+                "last_modified": "2016-04-11T00:00:00Z"
+            }
+        }
+    ]
+}

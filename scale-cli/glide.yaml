@@ -1,0 +1,13 @@
+import:
+- package: github.com/codegangsta/cli
+- package: gopkg.in/resty.v0
+- package: github.com/op/go-logging
+- package: github.com/fatih/color
+- package: github.com/ghodss/yaml
+- package: github.com/cloudfoundry-incubator/candiedyaml
+- package: github.com/docker/docker
+  subpackages:
+  - builder/dockerfile/parser
+- package: golang.org/x/net
+  subpackages:
+  - publicsuffix

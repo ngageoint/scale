@@ -1,1 +1,2 @@
+Defaults    !requiretty
 scale ALL=(ALL) NOPASSWD: ALL

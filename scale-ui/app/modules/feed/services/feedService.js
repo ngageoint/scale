@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    angular.module('scaleApp').service('feedService', function ($location, $timeout, $q, $http, scaleConfig, scaleService, Feed, FeedStatus) {
+    angular.module('scaleApp').service('feedService', function ($location, $timeout, $q, $http, scaleConfig, Ingest) {
 
         var getFeedParams = function(params){
             if(!params){ params = {}; }
@@ -39,9 +39,7 @@
                     method: 'GET',
                     params: params
                 }).success(function (data) {
-                    _.forEach(data.results, function(d){
-                        d.file_size_formatted = scaleService.calculateFileSizeFromBytes(d.file_size);
-                    });
+                    data.results = Ingest.transformer(data.results);
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);

@@ -1,0 +1,195 @@
+{
+    "id": 72,
+    "recipe_type": {
+        "id": 1,
+        "name": "simple-recipe",
+        "title": "Simple Recipe",
+        "version": "1.0",
+        "description": "Data mockup of a simple Scale recipe",
+        "is_active": true,
+        "definition": {
+            "input_data": [
+                {
+                    "media_types": [
+                        "image/png"
+                    ],
+                    "type": "file",
+                    "name": "input_file"
+                }
+            ],
+            "version": "1.0",
+            "jobs": [
+                {
+                    "recipe_inputs": [
+                        {
+                            "job_input": "input_file",
+                            "recipe_input": "input_file"
+                        }
+                    ],
+                    "name": "nitf",
+                    "job_type": {
+                        "name": "alfa",
+                        "version": "1.0"
+                    }
+                }
+            ]
+        },
+        "created": "2015-06-15T19:03:26.346Z",
+        "last_modified": "2015-06-15T19:03:26.346Z",
+        "archived": null
+    },
+    "recipe_type_rev": {
+        "id": 5,
+        "recipe_type": {
+            "id": 1
+        },
+        "revision_num": 3,
+        "definition": {
+            "input_data": [
+                {
+                    "media_types": [
+                        "image/png"
+                    ],
+                    "type": "file",
+                    "name": "input_file"
+                }
+            ],
+            "version": "1.0",
+            "jobs": [
+                {
+                    "recipe_inputs": [
+                        {
+                            "job_input": "input_file",
+                            "recipe_input": "input_file"
+                        }
+                    ],
+                    "name": "alfa",
+                    "job_type": {
+                        "name": "alfa-footprint",
+                        "version": "1.1"
+                    }
+                }
+            ]
+        },
+        "created": "2015-11-06T19:44:09.989Z"
+    },
+    "event": {
+        "id": 7,
+        "type": "PARSE",
+        "rule": {
+            "id": 8,
+            "type": "PARSE",
+            "is_active": true,
+            "configuration": {
+                "trigger": {
+                    "media_type": "image/png",
+                    "data_types": []
+                },
+                "create": {
+                    "recipes": [
+                        {
+                            "recipe_type": {
+                                "name": "my_parse",
+                                "version": "1.0"
+                            },
+                            "file_input_name": "input_file",
+                            "workspace_name": "products"
+                        }
+                    ]
+                },
+                "version": "1.0"
+            }
+        },
+        "occurred": "2015-08-28T19:03:59.054Z",
+        "description": {
+            "file_name": "data-file.png",
+            "version": "1.0",
+            "parse_id": 1
+        }
+    },
+    "created": "2015-06-15T19:03:26.346Z",
+    "completed": "2015-06-15T19:03:26.346Z",
+    "last_modified": "2015-06-15T19:03:26.346Z",
+    "data": {
+        "input_data": [
+            {
+                "name": "input_file",
+                "file_id": 4
+            }
+        ],
+        "version": "1.0",
+        "workspace_id": 2
+    },
+    "input_files": [
+        {
+            "id": 4,
+            "workspace": {
+                "id": 1,
+                "name": "Raw Source"
+            },
+            "file_name": "input_file.txt",
+            "media_type": "text/plain",
+            "file_size": 1234,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "d897wae9y80u9af9y8afhiuadfihouas",
+            "url": "http://host.com/input_file.txt",
+            "created": "2015-09-10T15:24:53.962Z",
+            "deleted": null,
+            "data_started": "2015-09-10T15:24:53.962Z",
+            "data_ended": "2015-09-10T15:24:53.962Z",
+            "geometry": null,
+            "center_point": null,
+            "meta_data": {},
+            "last_modified": "2015-09-10T15:24:53.962Z"
+        }
+    ],
+    "jobs": [
+        {
+            "job_name": "alfa",
+            "job": {
+                "id": 700,
+                "job_type": {
+                    "id": 1,
+                    "name": "alfa",
+                    "version": "1.0",
+                    "title": "Alfa",
+                    "description": "Ingests a source file into a workspace",
+                    "category": "footprint",
+                    "author_name": null,
+                    "author_url": null,
+                    "is_system": false,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f13d"
+                },
+                "event": {
+                    "id": 7,
+                    "type": "PARSE",
+                    "rule": {
+                        "id": 8
+                    },
+                    "occurred": "2015-08-28T19:03:59.054Z"
+                },
+                "error": null,
+                "status": "COMPLETED",
+                "priority": 10,
+                "num_exes": 1,
+                "timeout": 1800,
+                "max_tries": 3,
+                "cpus_required": 1.0,
+                "mem_required": 15360.0,
+                "disk_in_required": 2.0,
+                "disk_out_required": 16.0,
+                "created": "2015-03-11T00:00:00Z",
+                "queued": "2015-03-11T00:00:00Z",
+                "started": "2015-03-11T00:00:00Z",
+                "ended": "2015-03-11T00:00:00Z",
+                "last_status_change": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
+            }
+        }
+    ]
+}

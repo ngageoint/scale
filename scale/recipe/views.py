@@ -110,6 +110,7 @@ class RecipeTypesView(GenericAPIView):
 
 class RecipeTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of a recipe type"""
+    queryset = RecipeType.objects.all()
     serializer_class = RecipeTypeDetailsSerializer
 
     def get(self, request, recipe_type_id):
@@ -204,6 +205,7 @@ class RecipeTypeDetailsView(GenericAPIView):
 
 class RecipeTypesValidationView(APIView):
     """This view is the endpoint for validating a new recipe type before attempting to actually create it"""
+    queryset = RecipeType.objects.all()
 
     def post(self, request):
         """Validates a new recipe type and returns any warnings discovered
@@ -286,6 +288,7 @@ class RecipesView(ListAPIView):
 
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""
+    queryset = Recipe.objects.all()
     serializer_class = RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):

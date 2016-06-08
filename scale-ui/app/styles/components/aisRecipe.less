@@ -1,5 +1,3 @@
-@import 'colors';
-
 .recipe-editor{
     color: #000;
     label {
@@ -19,6 +17,23 @@
     width: 100%;
     vertical-align: top;
 
+    .recipeNode {
+        width: 173px;
+        overflow: hidden;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #999;
+        }
+    }
+
+    .badge {
+        &:hover {
+            cursor: pointer;
+            background-color: #999;
+        }
+    }
+
     h3 {
         margin-top: 0;
         margin-bottom: 2px!important;
@@ -28,14 +43,22 @@
         margin-top: 0;
     }
 
+    .io-selector {
+        width: 200px;
+        margin: 0 0 0 0;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        z-index: 20;
+
+        .io-selector-title {
+            color: #fff;
+        }
+    }
+
     .panel-heading {
         h4 {
             margin: 0;
         }
-    }
-
-    .input-name {
-
     }
 
     .input-media-types {
@@ -72,8 +95,13 @@
 
     .col-graph {
         width: 100%;
+        height: 65vh;
         //border: #ccc 1px solid;
         //border-radius: 5px;
+
+        &.edit-recipe {
+            height: 59vh;
+        }
 
         &.panel-default {
             border-color: #f3f3f3;
@@ -191,7 +219,7 @@
     svg {
         width: 100%;
         height: 100%;
-        overflow: hidden;
+        //overflow: hidden;
         vertical-align: top;
     }
 
@@ -200,14 +228,25 @@
         font-size: 14px;
     }
 
-    .live.map .node rect {
+    .live.map .nodeRect {
         stroke-width: 1.5px;
         stroke: #bbb;
         fill: #666;
+
+        &.selected-node {
+            stroke: @chart_green;
+            stroke-width: 3px;
+        }
+
+        &.selected-node-selectable {
+            stroke: yellow;
+            stroke-width: 3px;
+        }
     }
 
     .live.map .status {
         height: 100%;
+        min-height: 32px;
         width: 15px;
         display: block;
         float: left;
@@ -271,39 +310,42 @@
         margin-top: 2px;
     }
 
-    .live.map .node g div {
-        width: 220px;
-        height: 40px;
-        //   color: #fff;
+    .label {
+        color: #fff;
+    }
+
+    .label div {
+        min-height: 32px;
         border-radius: 5px;
         font-weight: normal;
-        line-height: 40px;
-        vertical-align: middle;
-        font-size: 20px;
+        line-height: 32px;
+        font-size: 16px;
     }
 
-    .live.map .node g div.selected-node {
-        transition-property: border;
-        transition-duration: .1s;
-        transition-timing-function: linear;
-        border: #ADFF2F 3px solid;
+    .live.map .node {
+        &.selected-node {
+            border: 3px solid @chart_green;
+        }
+        //outline: 3px solid #ADFF2F;
+        //box-shadow: 0 0 0 3px #ADFF2F;
+        //overflow: hidden;
     }
 
-    .live.map .node g div.selected-node-selectable {
-        border: yellow 3px solid;
-        background: #663;
-    }
+    //.live.map .node g div.selected-node-selectable {
+    //    border: yellow 3px solid;
+    //    background: #663;
+    //    line-height: 25px;
+    //}
 
     .live.map .node g div.selected-node-secondary {
         border: yellow 3px solid;
         background: #663;
+        line-height: 25px;
     }
 
     .live.map .node g div.selected-node-dependency {
-        transition-property: border;
-        transition-duration: .1s;
-        transition-timing-function: linear;
         border: #2FFFAD 3px solid;
+        line-height: 25px;
     }
 
     .live.map .node g div span.consumers {
@@ -322,4 +364,10 @@
         fill: #999;
     }
 
+}
+
+.recipe-details {
+    .job-details {
+        padding: 0 10px;
+    }
 }

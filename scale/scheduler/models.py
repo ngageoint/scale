@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import logging
 
 import mesos_api.api as mesos_api
@@ -10,27 +12,36 @@ logger = logging.getLogger(__name__)
 
 
 class SchedulerManager(models.Manager):
-    '''Provides additional methods for handling scheduler db entry
-    '''
+    """Provides additional methods for handling scheduler db entry
+    """
 
     def get_master(self):
-        '''Gets the current master scheduler instance for the cluster.
+        """Gets the current master scheduler instance for the cluster.
 
         :returns: The master scheduler.
         :rtype: :class:`scheduler.models.Scheduler`
-        '''
+        """
         try:
             return Scheduler.objects.get(pk=1)
         except Scheduler.DoesNotExist:
             logger.exception('Initial database import missing master scheduler: 1')
             raise
 
+    def initialize_scheduler(self):
+        """Initializes the scheduler table by creating a model if one does not already exist
+        """
+
+        if self.all().count() == 0:
+            logger.info('Creating initial scheduler model in database')
+            scheduler = Scheduler()
+            scheduler.save()
+
     def is_master_active(self):
-        '''Checks whether the current master scheduler is ready to schedule.
+        """Checks whether the current master scheduler is ready to schedule.
 
         :returns: True if the master scheduler is not registered or not paused.
         :rtype: bool
-        '''
+        """
         scheduler = None
         try:
             scheduler = Scheduler.objects.get(pk=1)
@@ -42,34 +53,34 @@ class SchedulerManager(models.Manager):
 
     @transaction.atomic
     def update_scheduler(self, new_data):
-        '''Update the data for the scheduler.
+        """Update the data for the scheduler.
 
         :param new_data: Updated data for the node
         :type new_data: dict
-        '''
+        """
 
         sched = self.select_for_update().filter(id=1)
         sched.update(**new_data)
 
     @transaction.atomic
     def update_master(self, hostname, port):
-        '''Update mesos master information.
+        """Update mesos master information.
 
         :param hostname: Hostname for the master
         :type hostname: str
         :param port: Port for the mesos master RESTful API
         :type port: int
-        '''
+        """
 
         sched = self.select_for_update().filter(id=1)
         sched.update(master_hostname=hostname, master_port=port)
 
     def get_status(self):
-        '''Fetch summary hardware resource usage for the scheduler framework.
+        """Fetch summary hardware resource usage for the scheduler framework.
 
         :returns: Node resource usage information.
         :rtype: dict
-        '''
+        """
         master_dict = {
             'is_online': False,
             'hostname': None,
@@ -115,22 +126,24 @@ class SchedulerManager(models.Manager):
 
 
 class Scheduler(models.Model):
-    '''Represents a scheduler instance.
+    """Represents a scheduler instance.
     There should only be a single instance of this and it's used for
     storing cluster-wide state related to scheduling in mesos.
 
     :keyword is_paused: True if the entire cluster is currently paused and should not accept new jobs
     :type is_paused: :class:`django.db.models.BooleanField()`
-    :keyword node_error_period: The number of minutes sampled when deciding if a node should be paused due to excessive errors.
+    :keyword node_error_period: The number of minutes sampled when deciding if a node should be paused due to excessive
+        errors.
     :type node_error_period: :class:`django.db.models.IntegerField`
-    :keyword max_node_errors: The maximum number of system errors which can occur in node_error_period before a node is paused
+    :keyword max_node_errors: The maximum number of system errors which can occur in node_error_period before a node is
+        paused
     :type max_node_errors: :class:`django.db.models.FloatField`
 
-    :keyword master_hostname: The full domain-qualified hostname of the mesos master
+    :keyword master_hostname: The full domain-qualified hostname of the Mesos master
     :type master_hostname: :class:`django.db.models.CharField`
-    :keyword port: The port being used by the mesos master REST API
-    :type port: :class:`django.db.models.IntegerField`
-    '''
+    :keyword master_port: The port being used by the Mesos master REST API
+    :type master_port: :class:`django.db.models.IntegerField`
+    """
 
     is_paused = models.BooleanField(default=False)
     node_error_period = models.IntegerField(default=1)
@@ -142,5 +155,5 @@ class Scheduler(models.Model):
     objects = SchedulerManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = u'scheduler'

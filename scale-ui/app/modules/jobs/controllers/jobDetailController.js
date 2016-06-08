@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, toastr) {
+    angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, stateService, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, scaleService, toastr) {
         $scope.job = {};
         $scope.jobId = $routeParams.id;
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
@@ -82,19 +82,25 @@
                 $scope.loading = false;
             });
         };
+        
+        $scope.calculateFileSize = function (size) {
+            return scaleService.calculateFileSizeFromBytes(size);
+        };
 
         var getJobDetail = function (jobId) {
             $scope.loadingJobDetail = true;
             jobService.getJobDetail(jobId).then(function (data) {
                 $scope.job = data;
                 $scope.timeline = calculateTimeline(data);
-                $scope.publishedProducts = _.where(data.products, { 'is_published': true });
-                $scope.unpublishedProducts = _.where(data.products, { 'is_published': false });
-                $scope.publishedProductsGrouped = _.pairs(_.groupBy($scope.publishedProducts, 'job_exe.id'));
+                // $scope.publishedProducts = _.where(data.products, { 'is_published': true });
+                // $scope.unpublishedProducts = _.where(data.products, { 'is_published': false });
+                // $scope.publishedProductsGrouped = _.pairs(_.groupBy($scope.publishedProducts, 'job_exe.id'));
                 $scope.latestExecution = data.getLatestExecution();
                 $scope.jobErrorCreated = data.error ? moment.utc(data.error.created).toISOString() : '';
                 $scope.lastStatusChange = data.last_status_change ? moment.duration(moment.utc(data.last_status_change).diff(moment.utc())).humanize(true) : '';
                 $scope.triggerOccurred = data.event.occurred ? moment.duration(moment.utc(data.event.occurred).diff(moment.utc())).humanize(true) : '';
+                $scope.inputs = data.inputs;
+                $scope.outputs = data.outputs;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
@@ -113,12 +119,8 @@
 
         var initialize = function () {
             navService.updateLocation('jobs');
-
-            $rootScope.user = userService.getUserCreds();
-            if($rootScope.user){
-                $scope.readonly = false;
-            }
-
+            var user = userService.getUserCreds();
+            $scope.readonly = !(user && user.is_admin);
             getJobDetail($scope.jobId);
         };
 

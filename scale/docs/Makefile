@@ -51,7 +51,7 @@ html:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 code_docs:
-	$(SPHINXAPIDOC) -f -T -o $(CODE_DOCS) ..
+	$(SPHINXAPIDOC) -f -T -o $(CODE_DOCS) .. ../scale
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml

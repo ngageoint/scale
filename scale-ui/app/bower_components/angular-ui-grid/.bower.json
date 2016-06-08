@@ -35,14 +35,15 @@
     "data grid"
   ],
   "license": "MIT",
-  "version": "3.0.7",
-  "_release": "3.0.7",
+  "version": "3.1.1",
+  "_release": "3.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "v3.0.7",
-    "commit": "944b927c0f824b27d8d3a2ba4c43175e4f440e0b"
+    "tag": "v3.1.1",
+    "commit": "a3c75fbc7488555c5cac1676a8f78998a889c77e"
   },
-  "_source": "git://github.com/angular-ui/bower-ui-grid.git",
-  "_target": "~3.0.0-rc.21",
-  "_originalSource": "angular-ui-grid"
+  "_source": "https://github.com/angular-ui/bower-ui-grid.git",
+  "_target": "^3.1.1",
+  "_originalSource": "angular-ui-grid",
+  "_direct": true
 }

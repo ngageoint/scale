@@ -12,11 +12,11 @@ from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
 import util.rest as rest_util
-from job.configuration.data.exceptions import InvalidData, StatusError
+from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
 from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
 from recipe.models import Recipe, RecipeType
 from recipe.serializers import RecipeDetailsSerializer
 
@@ -123,10 +123,12 @@ class QueueNewRecipeView(GenericAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 
-class QueueStatusView(GenericAPIView):
+class QueueStatusView(ListAPIView):
     """This view is the endpoint for retrieving the queue status."""
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
 
-    def get(self, request):
+    def list(self, request):
         """Retrieves the current status of the queue and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -134,9 +136,11 @@ class QueueStatusView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        queue_statuses = Queue.objects.get_queue_status()
 
-        queue_status = Queue.objects.get_queue_status()
-        return Response({'queue_status': queue_status})
+        page = self.paginate_queryset(queue_statuses)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class RequeueJobsView(GenericAPIView):
@@ -161,12 +165,14 @@ class RequeueJobsView(GenericAPIView):
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_categories', required=False)
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
 
         priority = rest_util.parse_int(request, 'priority', required=False)
 
         # Fetch all the jobs matching the filters
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
-                                    job_type_categories)
+        jobs = Job.objects.get_jobs(started=started, ended=ended, status=job_status, job_ids=job_ids,
+                                    job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                    job_type_categories=job_type_categories, error_categories=error_categories)
         if not jobs:
             raise Http404
 
@@ -180,38 +186,3 @@ class RequeueJobsView(GenericAPIView):
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
-
-
-# TODO: Remove this once the UI migrates to /queue/requeue-jobs/
-class RequeueExistingJobView(GenericAPIView):
-    """This view is the endpoint for requeuing jobs which have already been executed for the maximum number of tries
-    """
-    parser_classes = (JSONParser,)
-    serializer_class = JobDetailsSerializer
-
-    def post(self, request):
-        """Increase max_tries, place it on the queue, and returns the new job information in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_id: The ID of the job to requeue. This job must exist and must be in a FAILED or CANCELED state.
-        :rtype: int
-        :returns: the HTTP response to send back to the user
-        """
-        job_id = request.data['job_id']
-
-        try:
-            Queue.objects.requeue_existing_job(job_id)
-            job_details = Job.objects.get_details(job_id)
-
-            serializer = self.get_serializer(job_details)
-            return Response(serializer.data)
-        except Job.DoesNotExist:
-            raise Http404
-        except InvalidData:
-            logger.exception('Invalid job data submitted for requeue: %i', job_id)
-            return Response('Job meta data failed to validate: %i' % job_id, status=status.HTTP_400_BAD_REQUEST)
-        except StatusError:
-            logger.exception('Incorrect status for job submitted for requeue: %i', job_id)
-            return Response('Job must be in the CANCELED or FAILED state for requeue',
-                            status=status.HTTP_409_CONFLICT)

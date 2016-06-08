@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import datetime
@@ -25,7 +24,7 @@ class TestIngestsView(TestCase):
         self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED')
 
     def test_successful(self):
-        '''Tests successfully calling the ingests view.'''
+        """Tests successfully calling the ingests view."""
 
         url = '/ingests/'
         response = self.client.generic('GET', url)
@@ -45,7 +44,7 @@ class TestIngestsView(TestCase):
             self.assertEqual(entry['status'], expected.status)
 
     def test_status(self):
-        '''Tests successfully calling the ingests view.'''
+        """Tests successfully calling the ingests view filtered by status."""
 
         url = '/ingests/?status=%s' % self.ingest1.status
         response = self.client.generic('GET', url)
@@ -54,6 +53,17 @@ class TestIngestsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['status'], self.ingest1.status)
+
+    def test_file_name(self):
+        """Tests successfully calling the ingests view filtered by file name."""
+
+        url = '/ingests/?file_name=%s' % self.ingest1.file_name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
 
 class TestIngestDetailsView(TestCase):
@@ -65,26 +75,40 @@ class TestIngestDetailsView(TestCase):
 
         self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
 
-    def test_not_found(self):
-        '''Tests calling the ingest details view with an id that does not exist.'''
-
-        url = '/ingests/100/'
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_successful(self):
-        '''Tests successfully calling the ingest details view.'''
+    def test_id(self):
+        """Tests successfully calling the ingests view by id."""
 
         url = '/ingests/%d/' % self.ingest.id
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.generic('GET', url)
         result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(result['id'], self.ingest.id)
-        self.assertEqual(result['file_name'], 'test1.txt')
-        self.assertEqual(result['status'], 'QUEUED')
+        self.assertEqual(result['file_name'], self.ingest.file_name)
+        self.assertEqual(result['status'], self.ingest.status)
+
+    def test_file_name(self):
+        """Tests successfully calling the ingests view by file name."""
+
+        url = '/ingests/%s/' % self.ingest.file_name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['id'], self.ingest.id)
+        self.assertEqual(result['file_name'], self.ingest.file_name)
+        self.assertEqual(result['status'], self.ingest.status)
+
+    def test_missing(self):
+        """Tests calling the ingests view with an invalid id or file name."""
+
+        url = '/ingests/12345/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND), response.content
+
+        url = '/ingests/missing_file.txt/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 class TestIngestStatusView(TestCase):
@@ -103,7 +127,7 @@ class TestIngestStatusView(TestCase):
                                                        ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=timezone.utc))
 
     def test_successful(self):
-        '''Tests successfully calling the ingest status view.'''
+        """Tests successfully calling the ingest status view."""
 
         url = '/ingests/status/'
         response = self.client.generic('GET', url)
@@ -119,7 +143,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size)
 
     def test_time_range(self):
-        '''Tests successfully calling the ingest status view with a time range filter.'''
+        """Tests successfully calling the ingest status view with a time range filter."""
 
         url = '/ingests/status/?started=2015-01-01T00:00:00Z'
         response = self.client.generic('GET', url)
@@ -135,7 +159,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size + self.ingest4.file_size)
 
     def test_use_ingest_time(self):
-        '''Tests successfully calling the ingest status view grouped by ingest time instead of data time.'''
+        """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
 
         url = '/ingests/status/?started=2015-02-01T00:00:00Z&ended=2015-03-01T00:00:00Z&use_ingest_time=true'
         response = self.client.generic('GET', url)
@@ -151,7 +175,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(entry['size'], self.ingest3.file_size)
 
     def test_fill_empty_slots(self):
-        '''Tests successfully calling the ingest status view with place holder zero values when no data exists.'''
+        """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
 
         url = '/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z'
         response = self.client.generic('GET', url)
@@ -168,7 +192,7 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(len(entry['values']), 24)
 
     def test_multiple_strikes(self):
-        '''Tests successfully calling the ingest status view with multiple strike process groupings.'''
+        """Tests successfully calling the ingest status view with multiple strike process groupings."""
         ingest_test_utils.create_strike()
         strike3 = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
@@ -181,19 +205,83 @@ class TestIngestStatusView(TestCase):
         self.assertEqual(len(result['results']), 3)
 
 
-class TestCreateStrikeView(TestCase):
+class TestStrikesView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.strike1 = ingest_test_utils.create_strike(name='test-1', description='test A')
+        self.strike2 = ingest_test_utils.create_strike(name='test-2', description='test Z')
+
+    def test_successful(self):
+        """Tests successfully calling the get all strikes view."""
+
+        url = '/strikes/'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.strike1.id:
+                expected = self.strike1
+            elif entry['id'] == self.strike2.id:
+                expected = self.strike2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+
+    def test_name(self):
+        """Tests successfully calling the strikes view filtered by Strike name."""
+
+        url = '/strikes/?name=%s' % self.strike1.name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+
+    def test_sorting(self):
+        """Tests custom sorting."""
+
+        url = '/strikes/?order=description'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+        self.assertEqual(result['results'][1]['name'], self.strike2.name)
+
+    def test_reverse_sorting(self):
+        """Tests custom sorting in reverse."""
+
+        url = '/strikes/?order=-description'
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike2.name)
+        self.assertEqual(result['results'][1]['name'], self.strike1.name)
+
+
+class TestStrikeCreateView(TestCase):
 
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace()
+        self.workspace = storage_test_utils.create_workspace(name='raw')
 
     def test_missing_configuration(self):
-        '''Tests calling the create Strike view with missing configuration.'''
+        """Tests calling the create Strike view with missing configuration."""
 
-        url = '/strike/create/'
+        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -201,12 +289,12 @@ class TestCreateStrikeView(TestCase):
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_configuration_bad_type(self):
-        '''Tests calling the create Strike view with configuration that is not a dict.'''
+        """Tests calling the create Strike view with configuration that is not a dict."""
 
-        url = '/strike/create/'
+        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -215,28 +303,12 @@ class TestCreateStrikeView(TestCase):
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_invalid_configuration(self):
-        '''Tests calling the create Strike view with invalid configuration.'''
+        """Tests calling the create Strike view with invalid configuration."""
 
-        url = '/strike/create/'
-        json_data = {
-            'name': 'strike-name',
-            'title': 'Strike Title',
-            'description': 'Strike description',
-            'configuration': {
-                'mount': 123,
-            }
-        }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_successful(self):
-        '''Tests calling the create Strike view successfully.'''
-
-        url = '/strike/create/'
+        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -245,16 +317,266 @@ class TestCreateStrikeView(TestCase):
                 'mount': 'host:/my/path',
                 'transfer_suffix': '_tmp',
                 'files_to_ingest': [{
-                    'filename_regex': '.*',
+                    'filename_regex': '.*txt',
                     'workspace_path': 'my/path',
-                    'workspace_name': self.workspace.name,
-                }]
-            }
+                    'workspace_name': 'BAD',
+                }],
+            },
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        strike = Strike.objects.all().first()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_successful(self):
+        """Tests calling the create Strike view successfully."""
+
+        url = '/strikes/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         result = json.loads(response.content)
-        self.assertDictEqual(result, {'strike_id': strike.id}, 'JSON result was incorrect')
+
+        strikes = Strike.objects.filter(name='strike-name')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(len(strikes), 1)
+
+        self.assertEqual(result['title'], strikes[0].title)
+        self.assertEqual(result['description'], strikes[0].description)
+        self.assertDictEqual(result['configuration'], strikes[0].configuration)
+
+
+class TestStrikeDetailsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+        self.strike = ingest_test_utils.create_strike()
+
+    def test_not_found(self):
+        """Tests successfully calling the get Strike process details view with a model id that does not exist."""
+
+        url = '/strikes/100/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the get Strike process details view."""
+
+        url = '/strikes/%d/' % self.strike.id
+        response = self.client.get(url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['name'], self.strike.name)
+        self.assertIsNotNone(result['job'])
+        self.assertIsNotNone(result['configuration'])
+
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a Strike process"""
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['title'], 'Title EDIT')
+        self.assertEqual(result['description'], 'Description EDIT')
+        self.assertDictEqual(result['configuration'], self.strike.configuration)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertEqual(strike.title, 'Title EDIT')
+        self.assertEqual(strike.description, 'Description EDIT')
+
+    def test_edit_config(self):
+        """Tests editing the configuration of a Strike process"""
+
+        config = {
+            'version': '1.0',
+            'mount': 'host:/my/path/EDIT',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'data_types': ['test'],
+                'filename_regex': '.*txt',
+                'workspace_path': 'my_path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'configuration': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['title'], self.strike.title)
+        self.assertDictEqual(result['configuration'], config)
+
+        strike = Strike.objects.get(pk=self.strike.id)
+        self.assertEqual(strike.title, self.strike.title)
+        self.assertDictEqual(strike.configuration, config)
+
+    def test_edit_bad_config(self):
+        """Tests attempting to edit a Strike process using an invalid configuration"""
+
+        config = {
+            'version': 'BAD',
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'workspace_path': 'my/path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        url = '/strikes/%d/' % self.strike.id
+        json_data = {
+            'configuration': config,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestStrikesValidationView(TestCase):
+    """Tests related to the Strike process validation endpoint"""
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+
+    def test_successful(self):
+        """Tests validating a new Strike process."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_missing_configuration(self):
+        """Tests validating a new Strike process with missing configuration."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests validating a new Strike process with configuration that is not a dict."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': 123,
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests validating a new Strike process with invalid configuration."""
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'BAD',
+                }],
+            },
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_warnings(self):
+        """Tests validating a new Strike process where the mount path is changed."""
+
+        configuration = {
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'workspace_path': 'my/path',
+                'workspace_name': 'raw',
+            }],
+        }
+        ingest_test_utils.create_strike(name='strike-test', configuration=configuration)
+
+        url = '/strikes/validation/'
+        json_data = {
+            'name': 'strike-test',
+            'configuration': {
+                'mount': 'host:/my/new/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'mount_change')

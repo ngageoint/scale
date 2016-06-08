@@ -1,0 +1,8 @@
+{
+  "warnings": [
+    {
+      "id": "media_type",
+      "details": "Invalid media type for data input: input_file -> image/png"
+    }
+  ]
+}
