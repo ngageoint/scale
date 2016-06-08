@@ -7,7 +7,8 @@ import os
 
 import django.utils.timezone as timezone
 import rest_framework.status as status
-from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import MultiPartParser
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -33,6 +34,13 @@ class DownloadRenderer(JSONRenderer):
         response['Content-Disposition'] = disposition
         response['Content-Length'] = str(len(result))
         return result
+
+
+class UploadRenderer(BrowsableAPIRenderer):
+    """Renders an HTML response to indicate a file attachment is required rather than a normal JSON form."""
+
+    def show_form_for_method(self, view, method, request, obj):
+        return False
 
 
 class ConfigurationView(APIView):
@@ -104,7 +112,14 @@ class ConfigurationDownloadView(ConfigurationView):
 
 
 class ConfigurationUploadView(APIView):
-    """This view is the endpoint for uploading an import file of job and recipe configuration."""
+    """This view is the endpoint for uploading an import file of job and recipe configuration.
+
+    It is designed to be used by a web application via a file "Browse..." input box and is not supported by the
+    interactive API viewer directly. See the REST API documentation about imports for example code or the base
+    configuration API to paste import content into an input box as text.
+    """
+    renderer_classes = (UploadRenderer, JSONRenderer)
+    parser_classes = (MultiPartParser,)
 
     def post(self, request, *args, **kwargs):
         file_name = None
