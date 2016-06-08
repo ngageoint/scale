@@ -6,10 +6,10 @@ import django
 from django.test import TestCase
 from mock import call, patch
 
+import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.brokers.host_broker import HostBroker
-from storage.models import ScaleFile
 
 
 class TestHostBrokerDeleteFiles(TestCase):
@@ -35,10 +35,8 @@ class TestHostBrokerDeleteFiles(TestCase):
         full_path_file_1 = os.path.join(volume_path, file_path_1)
         full_path_file_2 = os.path.join(volume_path, file_path_2)
 
-        file_1 = ScaleFile()
-        file_1.file_path = file_path_1
-        file_2 = ScaleFile()
-        file_2.file_path = file_path_2
+        file_1 = storage_test_utils.create_file(file_path=file_path_1)
+        file_2 = storage_test_utils.create_file(file_path=file_path_2)
 
         # Call method to test
         self.broker.delete_files(volume_path, [file_1, file_2])
@@ -46,6 +44,11 @@ class TestHostBrokerDeleteFiles(TestCase):
         # Check results
         two_calls = [call(full_path_file_1), call(full_path_file_2)]
         mock_remove.assert_has_calls(two_calls)
+
+        self.assertTrue(file_1.is_deleted)
+        self.assertIsNotNone(file_1.deleted)
+        self.assertTrue(file_2.is_deleted)
+        self.assertIsNotNone(file_2.deleted)
 
 
 class TestHostBrokerDownloadFiles(TestCase):
@@ -74,10 +77,9 @@ class TestHostBrokerDownloadFiles(TestCase):
         workspace_path_file_2 = os.path.join('my_wrk_dir_2', file_name_2)
         full_workspace_path_file_1 = os.path.join(volume_path, workspace_path_file_1)
         full_workspace_path_file_2 = os.path.join(volume_path, workspace_path_file_2)
-        file_1 = ScaleFile()
-        file_1.file_path = workspace_path_file_1
-        file_2 = ScaleFile()
-        file_2.file_path = workspace_path_file_2
+
+        file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
+        file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
         file_1_dl = FileDownload(file_1, local_path_file_1)
         file_2_dl = FileDownload(file_2, local_path_file_2)
 
@@ -140,10 +142,9 @@ class TestHostBrokerMoveFiles(TestCase):
         full_old_workspace_path_2 = os.path.join(volume_path, old_workspace_path_2)
         full_new_workspace_path_1 = os.path.join(volume_path, new_workspace_path_1)
         full_new_workspace_path_2 = os.path.join(volume_path, new_workspace_path_2)
-        file_1 = ScaleFile()
-        file_1.file_path = old_workspace_path_1
-        file_2 = ScaleFile()
-        file_2.file_path = old_workspace_path_2
+
+        file_1 = storage_test_utils.create_file(file_path=old_workspace_path_1)
+        file_2 = storage_test_utils.create_file(file_path=old_workspace_path_2)
         file_1_mv = FileMove(file_1, new_workspace_path_1)
         file_2_mv = FileMove(file_2, new_workspace_path_2)
 
@@ -159,6 +160,9 @@ class TestHostBrokerMoveFiles(TestCase):
         mock_move.assert_has_calls(two_calls)
         two_calls = [call(full_new_workspace_path_1, 0644), call(full_new_workspace_path_2, 0644)]
         mock_chmod.assert_has_calls(two_calls)
+
+        self.assertEqual(file_1.file_path, new_workspace_path_1)
+        self.assertEqual(file_2.file_path, new_workspace_path_2)
 
 
 class TestHostBrokerUploadFiles(TestCase):
@@ -189,10 +193,9 @@ class TestHostBrokerUploadFiles(TestCase):
         workspace_path_file_2 = os.path.join('my_wrk_dir_2', file_name_2)
         full_workspace_path_file_1 = os.path.join(volume_path, workspace_path_file_1)
         full_workspace_path_file_2 = os.path.join(volume_path, workspace_path_file_2)
-        file_1 = ScaleFile()
-        file_1.file_path = workspace_path_file_1
-        file_2 = ScaleFile()
-        file_2.file_path = workspace_path_file_2
+
+        file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
+        file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
         file_1_up = FileUpload(file_1, local_path_file_1)
         file_2_up = FileUpload(file_2, local_path_file_2)
 
