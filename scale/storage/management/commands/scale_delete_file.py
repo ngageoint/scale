@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
         try:
             ScaleFile.objects.delete_files([scale_file])
-            scale_file.save()
         except:
             logger.exception('Unknown error occurred, exit code 1 returning')
             sys.exit(1)

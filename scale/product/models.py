@@ -303,8 +303,7 @@ class ProductFileManager(models.GeoManager):
             product.save()
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
-        """Uploads the given local product files into the workspace. All database changes will be made in an atomic
-        transaction.
+        """Uploads the given local product files into the workspace.
 
         :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
             storing the file, media_type)

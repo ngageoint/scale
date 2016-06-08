@@ -34,7 +34,6 @@ class Command(BaseCommand):
 
         try:
             ScaleFile.objects.move_files([FileMove(scale_file, remote_path)])
-            scale_file.save()
         except:
             logger.exception('Unknown error occurred, exit code 1 returning')
             sys.exit(1)

@@ -158,8 +158,7 @@ class ScaleFileManager(models.Manager):
 
     def delete_files(self, files):
         """Deletes the given files from the remove storage system. Each ScaleFile model should have its related
-        workspace field populated. This method will update the is_deleted field in each ScaleFile model, but the caller
-        is responsible for performing the model save.
+        workspace field populated. This method will update the ScaleFile model and save the changes in the database.
 
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
@@ -233,8 +232,8 @@ class ScaleFileManager(models.Manager):
 
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace
-        field populated. This method will update the file_path field in each ScaleFile model to the new path, but the
-        caller is responsible for performing the model save.
+        field populated. This method will update the file_path field in each ScaleFile model to the new path (it may
+        also change other ScaleFile fields) and save the changes in the database.
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
@@ -269,7 +268,7 @@ class ScaleFileManager(models.Manager):
         """Uploads the given files from the given local file system paths into the given workspace. Each ScaleFile model
         should have its file_path field populated with the relative location where the file should be stored within the
         workspace. This method will update the workspace and other fields (including possibly changing file_path) in
-        each ScaleFile model and will save the models to the database in an atomic transaction.
+        each ScaleFile model and will save the models to the database.
 
         :param workspace: The workspace to upload files into
         :type workspace: :class:`storage.models.Workspace`
@@ -309,12 +308,11 @@ class ScaleFileManager(models.Manager):
         workspace.upload_files(file_uploads)
 
         # Populate the country list for all files that were saved
-        with transaction.atomic():
-            for file_upload in file_uploads:
-                scale_file = file_upload.file
-                if scale_file.pk:
-                    scale_file.set_countries()
-                    scale_file.save()
+        for file_upload in file_uploads:
+            scale_file = file_upload.file
+            if scale_file.pk:
+                scale_file.set_countries()
+                scale_file.save()
 
         return file_list
 
@@ -736,9 +734,9 @@ class Workspace(models.Model):
         return get_workspace_volume_path(self.name)
 
     def delete_files(self, files):
-        """Deletes the given files using the workspace's broker. If this workspace's broker uses a container volume,
-        the workspace expects this volume file system to already be mounted at workspace_volume_path or an exception
-        will be raised.
+        """Deletes the given files using the workspace's broker and saves the ScaleFile model changes in the database.
+        If this workspace's broker uses a container volume, the workspace expects this volume file system to already be
+        mounted at workspace_volume_path or an exception will be raised.
 
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
@@ -772,9 +770,9 @@ class Workspace(models.Model):
         self._get_broker().download_files(volume_path, file_downloads)
 
     def move_files(self, file_moves):
-        """Moves the given files to the new file system paths. If this workspace's broker uses a container volume, the
-        workspace expects this volume file system to already be mounted at workspace_volume_path or an exception will be
-        raised.
+        """Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
+        this workspace's broker uses a container volume, the workspace expects this volume file system to already be
+        mounted at workspace_volume_path or an exception will be raised.
 
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
@@ -786,9 +784,9 @@ class Workspace(models.Model):
         self._get_broker().move_files(volume_path, file_moves)
 
     def upload_files(self, file_uploads):
-        """Uploads the given files from the given local file system paths. If this workspace's broker uses a container
-        volume, the workspace expects this volume file system to already be mounted at workspace_volume_path or an
-        exception will be raised.
+        """Uploads the given files from the given local file system paths and saves the ScaleFile models in the
+        database. If this workspace's broker uses a container volume, the workspace expects this volume file system to
+        already be mounted at workspace_volume_path or an exception will be raised.
 
         :param file_uploads: List of files to upload
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
