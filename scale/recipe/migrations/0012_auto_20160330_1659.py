@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('job', '0014_auto_20160317_1208'),
-        ('recipe', '0010_auto_20160330_1505'),
+        ('recipe', '0011_auto_20160330_1505'),
     ]
 
     def populate_recipe_job(apps, schema_editor):

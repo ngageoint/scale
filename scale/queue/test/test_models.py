@@ -14,7 +14,6 @@ import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import CACHED_BUILTIN_ERRORS, Error
-from job.configuration.data.exceptions import StatusError
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job
