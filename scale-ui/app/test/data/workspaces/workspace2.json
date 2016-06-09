@@ -10,5 +10,10 @@
   "created": "2015-10-05T21:26:04.876Z",
   "archived": null,
   "last_modified": "2015-10-05T21:26:04.876Z",
-  "json_config": {}
+  "json_config": {
+    "broker": {
+      "type": "nfs",
+      "nfs_path": "/data/srv"
+    }
+  }
 }

@@ -4,9 +4,9 @@
     <div class="col-xs-3 master-container" style="{{ containerStyle }}">
         <div class="master-content">
             <div class="master-controls">
-                <div ng-if="!readonly">
-                    <button class="btn btn-sm" ng-show="!readonly" ng-class="addBtnClass" ng-click="newWorkspace()"><i class="fa" ng-class="addBtnIcon"></i> Create Workspace</button>
-                </div>
+                <toggle-switch ng-model="showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small pull-right"></toggle-switch>
+                <button class="btn btn-sm" ng-if="!readonly" ng-class="addBtnClass" ng-click="newWorkspace()"><i class="fa" ng-class="addBtnIcon"></i> Create Workspace</button>
+                <button ng-if="scaleConfig.static && localWorkspaces.length > 0 && !readonly" class="btn btn-sm btn-default" ng-click="clearLocalWorkspaces()" title="Clear local workspaces"><i class="fa fa-remove"></i></button>
             </div>
             <ul class="list-unstyled">
                 <li ng-repeat="workspace in workspaces" ng-class="{ active: activeWorkspace.id === workspace.id }" ng-click="loadWorkspace(workspace.id)">{{ workspace.title }}</li>
@@ -18,66 +18,69 @@
             <h2>Select a Workspace to view its details.</h2>
         </div>
         <div class="detail-content no-tabs" ng-if="activeWorkspace">
-            <div class="row">
-                <div class="col-xs-12 col-md-9">
-                    <div ng-if="mode==='view'">
-                        <h3>{{ activeWorkspace.title }}</h3>
-                        <div>
-                            <strong>Description:</strong> {{ activeWorkspace.description }}
+            <div class="pull-right">
+                <div class="btn-group btn-group-sm" ng-show="!readonly">
+                    <button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-warning" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
+                    <button class="btn btn-success" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
+                </div>
+            </div>
+            <div>
+                <h3 ng-show="!activeWorkspace.title">Untitled Workspace</h3>
+                <h3 ng-show="activeWorkspace.title !== ''">{{ activeWorkspace.title }}</h3>
+                <hr />
+                <div ng-if="mode==='view'">
+                    <dl>
+                        <dt>Description:</dt>
+                        <dd>{{ activeWorkspace.description }}</dd>
+                        <dt>Type:</dt>
+                        <dd>{{ activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 'nfs'">{{ activeWorkspace.json_config.broker.nfs_path }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 'host'">Host Mount:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 'host'">{{ activeWorkspace.json_config.broker.host_mount }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.bucket_name }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.access_key_id }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Secret Access Key:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.secret_access_key }}</dd>
+                    </dl>
+                </div>
+                <div ng-if="mode === 'edit' || mode === 'add'">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="wsName">Name</label>
+                                <input id="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
+                            </div>
                         </div>
-                        <div>
-                            <strong>Type:</strong> {{ activeWorkspace.json_config.type }}
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="wsTitle">Title</label>
+                                <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
+                            </div>
                         </div>
                     </div>
-                    <div ng-if="mode==='edit' || mode==='add'">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="wsName">Name</label>
-                                    <input id="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
-                                    </input>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="wsTitle">Title</label>
-                                    <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label for="wsDescription">Description</label>
-                                    <textarea id="wsDescription" class="form-control" ng-model="activeWorkspace.description" placeholder="Description" rows="4"></textarea>
-                                </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="wsDescription">Description</label>
+                                <textarea id="wsDescription" class="form-control" ng-model="activeWorkspace.description" placeholder="Description" rows="4"></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label for="wsBaseUrl">Base URL</label>
-                                    <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label for="wsBaseUrl">Base URL</label>
+                                <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="wsType">Type</label>
-                                    <select id="wsType" class="form-control input-sm" ng-model="activeWorkspace.json_config" ng-options="t as t.type for t in availableWorkspaceTypes"></select>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group" ng-repeat="field in activeWorkspace.json_config.fields">
-                                    <label for="{{ field }}">{{ field }}</label>
-                                    <input id="{{ field }}" type="text" class="form-control" placeholder="{{ field }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                        <div class="col-xs-12 col-md-6" ng-if="mode === 'edit'">
+                            <div class="form-group">
+                                <label for="wsActive">Workspace Status</label>
                                 <div class="checkbox">
                                     <label for="wsActive">
                                         <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
@@ -87,20 +90,49 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-3 text-right">
-                    <div class="btn-group btn-group-sm" ng-show="!readonly">
-                        <!--<button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>-->
-                        <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
-                        <button class="btn btn-warning" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
-                        <button class="btn btn-success" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="wsType">Type</label>
+                                        <select id="wsType" class="form-control" ng-model="activeWorkspace.json_config.broker.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in availableWorkspaceTypes"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {{ brokerDescription }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 'nfs'">
+                                <label for="nfs_path">NFS Path</label>
+                                <input id="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="activeWorkspace.json_config.broker.nfs_path">
+                            </div>
+                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 'host'">
+                                <label for="host_mount">Host Mount</label>
+                                <input id="host_mount" type="text" class="form-control" placeholder="Host Mount" ng-model="activeWorkspace.json_config.broker.host_mount">
+                            </div>
+                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                <label for="bucket_name">Bucket Name</label>
+                                <input id="bucket_name" type="text" class="form-control" placeholder="Bucket Name" ng-model="activeWorkspace.json_config.broker.bucket_name">
+                            </div>
+                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                <label for="access_key_id">Access Key ID</label>
+                                <input id="access_key_id" type="text" class="form-control" placeholder="Access Key ID" ng-model="activeWorkspace.json_config.broker.credentials.access_key_id">
+                            </div>
+                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                <label for="secret_access_key">Secret Access Key</label>
+                                <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="activeWorkspace.json_config.broker.credentials.secret_access_key">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>
 <script type="text/ng-template" id="editWorkspace.html">
     <div>

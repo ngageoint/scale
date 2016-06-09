@@ -151,23 +151,29 @@
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
         "workspaceTypes": [
             {
-                "type": "nfs",
-                "fields": [
-                    "mount"
-                ]
+                "broker": {
+                    "type": "nfs",
+                    "nfs_path": ""
+                }
             },{
-                "type": "host",
-                "fields": [
-                    "host_mount"
-                ]
+                "broker": {
+                    "type": "host",
+                    "host_mount": ""
+                }
             },{
-                "type": "s3",
-                "fields": [
-                    "mount",
-                    "key"
-                ]
+                "broker": {
+                    "type": "s3",
+                    "bucket_name": "",
+                    "credentials": {
+                        "access_key_id": "",
+                        "secret_access_key": ""
+                    }
+                }
             }
         ],
+        "nfsBrokerDescription": "The NFS broker mounts a remote network file system volume into the job’s container.",
+        "hostBrokerDescription": "The host broker mounts a local directory from the host into the job’s container. This local directory should be a shared file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted at the same location for this broker to work properly.",
+        "s3BrokerDescription": "The S3 broker mounts a remote Amazon S3 directory.",
         "axisTypes": ["linear", "time"],
         "executions": ["success","warning","error"],
         "errorCategories": [

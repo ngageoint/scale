@@ -12,7 +12,8 @@
         'ui.grid.selection',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
-        'cfp.hotkeys'
+        'cfp.hotkeys',
+        'toggle-switch'
     ]);
 
     app.config(function($routeProvider, $resourceProvider, pollerConfig) {

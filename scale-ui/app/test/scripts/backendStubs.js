@@ -497,10 +497,13 @@
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
             workspaceDetailsOverrideUrl = 'test/data/workspaces/workspace' + id + '.json';
-            return getSync(workspaceDetailsOverrideUrl);
-        });
-        $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
-            return [200, data, {}];
+            var returnValue = getSync(workspaceDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('workspace' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
         });
 
 
@@ -510,12 +513,38 @@
         $httpBackend.whenGET(workspacesRegex).respond(function () {
             return getSync(workspacesOverrideUrl);
         });
-        $httpBackend.whenPOST(workspacesRegex).respond(function (method, url, data) {
-            var result = JSON.parse(data);
-            result.id = 9999;
-            return result;
-        });
 
+        // Save Workspace
+        var getReturn = function (data, id) {
+            var workspace = JSON.parse(data);
+
+            return {
+                id: id || Math.floor(Math.random() * (10000 - 5 + 1)) + 5,
+                name: workspace.name,
+                title: workspace.title,
+                description: workspace.description,
+                base_url: workspace.base_url,
+                is_active: workspace.is_active || false,
+                used_size: 0,
+                total_size: 0,
+                created: new Date().toISOString(),
+                archived: null,
+                last_modified: new Date().toISOString(),
+                json_config: workspace.json_config
+            };
+        };
+        var workspaceCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');
+        $httpBackend.whenPOST(workspaceCreateRegex).respond(function (method, url, data) {
+            var returnWorkspace = getReturn(data);
+            return [200, JSON.stringify(returnWorkspace), {}];
+        });
+        $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
+            // get the workspace.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            var returnWorkspace = getReturn(data, id);
+            return [200, JSON.stringify(returnWorkspace), {}];
+        });
 
         // For everything else, don't mock
         $httpBackend.whenGET(/^\w+.*/).passThrough();
