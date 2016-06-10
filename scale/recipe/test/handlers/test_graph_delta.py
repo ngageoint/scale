@@ -283,4 +283,7 @@ class TestRecipeGraphDelta(TestCase):
 
         expected_results = {'Job 1': 'Job A', 'Job 2': 'Job B', 'Job 3': 'Job C', 'Job 4': 'Job D', 'Job 5': 'Job E',
                             'Job 6': 'Job F', 'Job 7': 'Job G', 'Job 8': 'Job H'}
+        self.assertDictEqual(delta.get_changed_nodes(), {})
+        self.assertSetEqual(delta.get_deleted_nodes(), set())
         self.assertDictEqual(delta.get_identical_nodes(), expected_results)
+        self.assertSetEqual(delta.get_new_nodes(), set())

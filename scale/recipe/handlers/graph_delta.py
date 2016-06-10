@@ -33,6 +33,26 @@ class RecipeGraphDelta(object):
         self._unresolved_a_nodes = set()
         self._unresolved_b_nodes = set()
 
+    def get_changed_nodes(self):
+        """Returns the job name mapping between the nodes in graph A and graph B that represent changed nodes that
+        supersede one another
+
+        :returns: Dict where the keys are job names from graph B that map to the job names from graph A that they
+            supersede
+        :rtype: {string: string}
+        """
+
+        return self._changed_nodes
+
+    def get_deleted_nodes(self):
+        """Returns the set of job names from graph A that represent job nodes that were deleted in graph B
+
+        :returns: The set of job names from graph A that were deleted in graph B
+        :rtype: {string}
+        """
+
+        return self._deleted_nodes
+
     def get_identical_nodes(self):
         """Returns the job name mapping between the nodes in graph A and graph B that are identical with respect to each
         other.
@@ -43,6 +63,15 @@ class RecipeGraphDelta(object):
         """
 
         return self._identical_nodes
+
+    def get_new_nodes(self):
+        """Returns the set of job names from graph B that represent job nodes that are new (did not exist in graph A)
+
+        :returns: The set of job names from graph B that are new
+        :rtype: {string}
+        """
+
+        return self._new_nodes
 
     def _is_node_identical(self, job_name_a, job_name_b):
         """Compares the node from graph A and the node from graph B and return true if they are identical. This method
