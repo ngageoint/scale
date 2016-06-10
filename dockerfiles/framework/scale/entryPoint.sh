@@ -4,17 +4,14 @@ if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
 then
     sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
     sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py
-    sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
+    sudo sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
     sed -i 's/\/api/.\/api/' /opt/scale/ui/config/scaleConfig.json
     sed -i 's/\/docs/.\/docs/' /opt/scale/ui/config/scaleConfig.json
-    sed -i 's/PREFIX/\/ui/' /etc/httpd/conf.d/scale.conf
-else
-    sed -i 's/PREFIX//' /etc/httpd/conf.d/scale.conf
 fi
 
 if [[ ${PORT0}x != x ]]
 then
-  sed -i '/Listen 80/ aListen '${PORT0} /etc/httpd/conf/httpd.conf
+  sudo sed -i '/Listen 80/ aListen '${PORT0} /etc/httpd/conf/httpd.conf
 fi
 
 if [[ ${DEPLOY_DB}x != x ]]
@@ -50,7 +47,7 @@ fi
 
 if [[ ${ENABLE_HTTPD}x != x ]]
 then
-    /usr/sbin/httpd
+    sudo /usr/sbin/httpd
 fi
 
 if [[ ${ENABLE_NFS}x != x ]]
