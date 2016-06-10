@@ -33,6 +33,22 @@ class NodeInputConnection(object):
 
         raise NotImplementedError()
 
+    @abstractmethod
+    def is_equal_to(self, connection, matched_job_names):
+        """Returns true if and only if the given node input connection is equal to this one. This is used for checking
+        the equality of two inputs across two different recipe graphs. Since the different graphs may have different job
+        names for the same node, a dict of matched job names between the graphs is provided.
+
+        :param connection: The node input connection
+        :type connection: :class:`recipe.handlers.connection.NodeInputConnection`
+        :param matched_job_names: Dict matching job names for identical nodes
+        :type matched_job_names: {Job Name: Job Name}
+        :returns: True if the connections are equal, False otherwise
+        :rtype: bool
+        """
+
+        raise NotImplementedError()
+
 
 class DependencyInputConnection(NodeInputConnection):
     """Represents a connection from one node's output to another node's input
@@ -61,6 +77,19 @@ class DependencyInputConnection(NodeInputConnection):
         parent_results = parent_results[self.node.job_name]
         parent_results.add_output_to_data(self.output_name, job_data, self.input_name)
 
+    def is_equal_to(self, connection, matched_job_names):
+        """See :meth:`recipe.handlers.connection.NodeInputConnection.is_equal_to`
+        """
+
+        if not isinstance(connection, DependencyInputConnection):
+            return False
+
+        same_input_name = self.input_name == connection.input_name
+        same_job_name = self.node.job_name == matched_job_names[connection.node.job_name]
+        same_output_name = self.output_name == connection.output_name
+
+        return same_input_name and same_job_name and same_output_name
+
 
 class RecipeInputConnection(NodeInputConnection):
     """Represents a connection from a recipe's input to a node's input
@@ -84,3 +113,14 @@ class RecipeInputConnection(NodeInputConnection):
         """
 
         recipe_data.add_input_to_data(self.recipe_input.input_name, job_data, self.input_name)
+
+    def is_equal_to(self, connection, matched_job_names):
+        """See :meth:`recipe.handlers.connection.NodeInputConnection.is_equal_to`
+        """
+
+        if not isinstance(connection, RecipeInputConnection):
+            return False
+
+        same_input_name = self.input_name == connection.input_name
+        same_recipe_input = self.recipe_input.input_name == connection.recipe_input.input_name
+        return same_input_name and same_recipe_input

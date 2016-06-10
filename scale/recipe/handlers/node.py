@@ -24,7 +24,7 @@ class RecipeNode(object):
         self.job_type_version = job_type_version
         self.parents = []
         self.children = []
-        self._inputs = {}  # {Input name: NodeInputConnection}
+        self.inputs = {}  # {Input name: NodeInputConnection}
 
     def add_child(self, child_node):
         """Adds a child node that is dependent on this node
@@ -46,7 +46,7 @@ class RecipeNode(object):
 
         self.parents.append(parent_node)
         for connection in connections:
-            self._inputs[connection.input_name] = connection
+            self.inputs[connection.input_name] = connection
 
     def add_recipe_input(self, recipe_input):
         """Adds a recipe input connection to this node
@@ -55,7 +55,7 @@ class RecipeNode(object):
         :type recipe_input: :class:`recipe.handlers.connection.RecipeInputConnection`
         """
 
-        self._inputs[recipe_input.input_name] = recipe_input
+        self.inputs[recipe_input.input_name] = recipe_input
 
     def create_job_data(self, job_interface, recipe_data, parent_results):
         """Creates the data for the job within this node. The parent_results must contain completed results from every
@@ -73,7 +73,7 @@ class RecipeNode(object):
 
         job_data = JobData({})
 
-        for input_connection in self._inputs.values():
+        for input_connection in self.inputs.values():
             input_connection.add_input_to_job_data(job_data, recipe_data, parent_results)
 
         # Add workspace for file outputs if needed
