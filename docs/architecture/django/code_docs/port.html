@@ -547,9 +547,22 @@
 <em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">ConfigurationUploadView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationUploadView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
 <p>This view is the endpoint for uploading an import file of job and recipe configuration.</p>
+<p>It is designed to be used by a web application via a file &#8220;Browse...&#8221; input box and is not supported by the
+interactive API viewer directly. See the REST API documentation about imports for example code or the base
+configuration API to paste import content into an input box as text.</p>
+<dl class="attribute">
+<dt id="port.views.ConfigurationUploadView.parser_classes">
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.MultiPartParser'&gt;,)</em><a class="headerlink" href="#port.views.ConfigurationUploadView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="port.views.ConfigurationUploadView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.ConfigurationUploadView.post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="port.views.ConfigurationUploadView.renderer_classes">
+<code class="descname">renderer_classes</code><em class="property"> = (&lt;class 'port.views.UploadRenderer'&gt;, &lt;class 'rest_framework.renderers.JSONRenderer'&gt;)</em><a class="headerlink" href="#port.views.ConfigurationUploadView.renderer_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -630,6 +643,18 @@
 <dl class="method">
 <dt id="port.views.DownloadRenderer.render">
 <code class="descname">render</code><span class="sig-paren">(</span><em>data</em>, <em>accepted_media_type=None</em>, <em>renderer_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.DownloadRenderer.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="port.views.UploadRenderer">
+<em class="property">class </em><code class="descclassname">port.views.</code><code class="descname">UploadRenderer</code><a class="headerlink" href="#port.views.UploadRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.renderers.BrowsableAPIRenderer</span></code></p>
+<p>Renders an HTML response to indicate a file attachment is required rather than a normal JSON form.</p>
+<dl class="method">
+<dt id="port.views.UploadRenderer.show_form_for_method">
+<code class="descname">show_form_for_method</code><span class="sig-paren">(</span><em>view</em>, <em>method</em>, <em>request</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#port.views.UploadRenderer.show_form_for_method" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

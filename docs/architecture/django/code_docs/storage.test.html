@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.nfs">storage.nfs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.views">storage.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage">Module contents</a></li>
@@ -199,6 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.test.brokers.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_host_broker">storage.test.brokers.test_host_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker">storage.test.brokers.test_nfs_broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_s3_broker">storage.test.brokers.test_s3_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers">Module contents</a></li>
 </ul>
 </li>
@@ -313,6 +315,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.test.test_models.TestScaleFile.test_set_deleted">
+<code class="descname">test_set_deleted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_set_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests marking a file as deleted.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.test.test_models.TestScaleFile.test_url">
 <code class="descname">test_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFile.test_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests building a URL for a file.</p>
@@ -380,6 +388,35 @@
 <dt id="storage.test.test_models.TestScaleFileGetDataTypeTags.test_tags">
 <code class="descname">test_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileGetDataTypeTags.test_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_data_type_tags() with tags</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.test_models.TestScaleFileManagerDeleteFiles">
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestScaleFileManagerDeleteFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDeleteFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.test_models.TestScaleFileManagerDeleteFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDeleteFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_models.TestScaleFileManagerDeleteFiles.test_deleted_file">
+<code class="descname">test_deleted_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_deleted_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to delete a file that is already deleted</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_models.TestScaleFileManagerDeleteFiles.test_inactive_workspace">
+<code class="descname">test_inactive_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_inactive_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling deleting files from an inactive workspace</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_models.TestScaleFileManagerDeleteFiles.test_success">
+<code class="descname">test_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests deleting files successfully</p>
 </dd></dl>
 
 </dd></dl>
@@ -507,17 +544,29 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.test.test_models.TestWorkspaceManagerCreate">
-<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestWorkspaceManagerCreate</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManagerCreate" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_models.TestWorkspaceManager">
+<em class="property">class </em><code class="descclassname">storage.test.test_models.</code><code class="descname">TestWorkspaceManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
-<dt id="storage.test.test_models.TestWorkspaceManagerCreate.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManagerCreate.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_models.TestWorkspaceManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.test_models.TestWorkspaceManagerCreate.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManagerCreate.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_models.TestWorkspaceManager.test_broker_validation">
+<code class="descname">test_broker_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager.test_broker_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that getting the broker instance performs validation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_models.TestWorkspaceManager.test_broker_validation_error">
+<code class="descname">test_broker_validation_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager.test_broker_validation_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that attempting to get a bad broker instance raises an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_models.TestWorkspaceManager.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_models.TestWorkspaceManager.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling WorkspaceManager.create_workspace() successfully</p>
 </dd></dl>
 
@@ -701,7 +750,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

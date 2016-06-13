@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.nfs">storage.nfs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.views">storage.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage">Module contents</a></li>
@@ -413,6 +414,62 @@
 <dt id="storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_successfully">
 <code class="descname">test_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_successfully" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling NfsBroker.validate_configuration() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.test.brokers.test_s3_broker">
+<span id="storage-test-brokers-test-s3-broker-module"></span><h2>storage.test.brokers.test_s3_broker module<a class="headerlink" href="#module-storage.test.brokers.test_s3_broker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_s3_broker.</code><code class="descname">TestS3Broker</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_delete_files">
+<code class="descname">test_delete_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests deleting files successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_download_files">
+<code class="descname">test_download_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_download_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests downloading files successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration">
+<code class="descname">test_load_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests loading a valid configuration successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_move_files">
+<code class="descname">test_move_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests moving files successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_upload_files">
+<code class="descname">test_upload_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests uploading files successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration">
+<code class="descname">test_validate_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a configuration successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration_missing">
+<code class="descname">test_validate_configuration_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a configuration with missing attributes</p>
 </dd></dl>
 
 </dd></dl>

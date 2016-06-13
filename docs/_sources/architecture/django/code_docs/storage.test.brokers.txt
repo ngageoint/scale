@@ -20,6 +20,14 @@ storage.test.brokers.test_nfs_broker module
     :undoc-members:
     :show-inheritance:
 
+storage.test.brokers.test_s3_broker module
+------------------------------------------
+
+.. automodule:: storage.test.brokers.test_s3_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

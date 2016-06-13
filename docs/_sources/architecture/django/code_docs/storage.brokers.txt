@@ -44,6 +44,14 @@ storage.brokers.nfs_broker module
     :undoc-members:
     :show-inheritance:
 
+storage.brokers.s3_broker module
+--------------------------------
+
+.. automodule:: storage.brokers.s3_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

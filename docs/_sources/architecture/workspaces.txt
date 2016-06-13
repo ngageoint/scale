@@ -68,6 +68,10 @@ A valid workspace configuration is a JSON document with the following structure:
 
             An "nfs" broker utilizes an NFS (Network File System) for file storage
 
+        **s3**
+
+            An "s3" broker utilizes the Amazon Web Services (AWS) Simple Storage Service (S3) for file storage
+
         Additional *broker* fields may be required depending on the type of broker selected. See below for more
         information on each broker type.
 
@@ -93,7 +97,7 @@ Example host broker configuration:
 .. code-block:: javascript
 
    {
-      "version": STRING,
+      "version": "1.0",
       "broker": {
          "type": "host",
          "host_path": "/the/absolute/host/path"
@@ -127,7 +131,7 @@ Example NFS broker configuration:
 .. code-block:: javascript
 
    {
-      "version": STRING,
+      "version": "1.0",
       "broker": {
          "type": "nfs",
          "nfs_path": "host:/my/path"
@@ -140,3 +144,64 @@ The NFS broker requires one additional field in its configuration:
 
     The *nfs_path* is a required string that specifies the remote NFS path to use for storing and retrieving the
     workspace files. It should be in the format *host:/path*.
+
+S3 Broker *(experimental)*
+------------------------------------------------------------------------------------------------------------------------
+
+The S3 broker references a storage location that exists as an S3 bucket in your AWS account. Please take note of the
+bucket name, which is typically of the form *my_name.domain.com* since bucket names must be globally unique
+(See `Bucket Restrictions`_). The bucket must be configured for read and/or write access through an appropriate IAM
+account (Identity and Access Management). Once the IAM account is created and granted permissions to the bucket, then
+the *ACCESS KEY ID* and *SECRET ACCESS KEY* can be generated and used with this broker (See `AWS Credentials`_). These
+tokens allow 3rd party software to access resources on behalf of the associated account.
+
+.. _Bucket Restrictions: http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
+.. _AWS Credentials: http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html
+
+**Security**
+
+A dedicated IAM account should be used rather than the root AWS account to limit the risk of damage if a leak were to
+occur and similarly the IAM account should be given the minimum possible permissions needed to work with the bucket. The
+access tokens should also be changed periodically to further protect against leaks.
+
+While this broker is in the experimental phase, the access tokens are currently stored in plain text within the Scale
+database and exposed via the REST interface. A future version will maintain these values using a more appropriate
+encrypted store service.
+
+Example S3 broker configuration:
+
+.. code-block:: javascript
+
+   {
+      "version": "1.0",
+      "broker": {
+         "type": "s3",
+         "bucket_name": "my_bucket.domain.com",
+         "credentials": {
+            "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+            "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+         }
+      }
+   }
+
+The S3 broker requires the following additional fields in its configuration:
+
+**bucket_name**: JSON string
+
+    The *bucket_name* is a required string that specifies the globally unique name of a storage bucket within S3. The
+    bucket should be created before attempting to use it here.
+
+**credentials**
+
+    The *credentials* is a JSON object that provides the necessary information to access the bucket. An IAM account
+    should be created and granted the appropriate permissions to the bucket before attempting to use it here.
+
+    **access_key_id**: JSON string
+
+        The *access_key_id* is a unique identifier for the user account in IAM that will be used as a proxy for read and
+        write operations within Scale.
+
+    **secret_access_key**: JSON string
+
+        The *secret_access_key* is a generated token that the system can use to prove it should be able to make requests
+        on behalf of the associated IAM account without requiring the actual password used by that account.

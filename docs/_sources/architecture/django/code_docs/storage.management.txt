@@ -1,0 +1,17 @@
+storage.management package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    storage.management.commands
+
+Module contents
+---------------
+
+.. automodule:: storage.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

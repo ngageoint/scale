@@ -189,11 +189,19 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Credentials.access_key_id">access_key_id (storage.brokers.s3_broker.S3Credentials attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.node_manager.NodeManager.add_agent_ids">add_agent_ids() (scheduler.sync.node_manager.NodeManager method)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription.add_allowed_media_type">add_allowed_media_type() (job.configuration.interface.scale_file.ScaleFileDescription method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.factory.add_broker_type">add_broker_type() (in module storage.brokers.factory)</a>
   </dt>
 
       
@@ -280,12 +288,12 @@
   <dt><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.add_output_to_connection">add_output_to_connection() (job.configuration.interface.job_interface.JobInterface method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults.add_output_to_data">add_output_to_data() (job.configuration.results.job_results.JobResults method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration.add_post_task_docker_param">add_post_task_docker_param() (job.configuration.configuration.job_configuration.JobConfiguration method)</a>
   </dt>
@@ -437,6 +445,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.BrokerConnection">BrokerConnection (class in storage.brokers.s3_broker)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.BrokerVolume">BrokerVolume (class in storage.brokers.broker)</a>
   </dt>
 
@@ -577,6 +589,22 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.load_all_data.Command">(class in scheduler.management.commands.load_all_data)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command">(class in storage.management.commands.scale_delete_file)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command">(class in storage.management.commands.scale_download_file)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command">(class in storage.management.commands.scale_move_file)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command">(class in storage.management.commands.scale_upload_file)</a>
   </dt>
 
       </dl></dd>
@@ -1066,6 +1094,14 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.delete_files">(storage.brokers.s3_broker.S3Broker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.delete_files">(storage.models.ScaleFileManager method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.delete_files">(storage.models.Workspace method)</a>
   </dt>
 
@@ -1363,6 +1399,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker.download_files">(storage.brokers.nfs_broker.NfsBroker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.download_files">(storage.brokers.s3_broker.S3Broker method)</a>
   </dt>
 
         
@@ -1725,6 +1765,10 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="architecture/django/code_docs/storage.html#storage.exceptions.FileDoesNotExist">FileDoesNotExist</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload">FileDownload (class in storage.brokers.broker)</a>
   </dt>
 
@@ -1898,6 +1942,14 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.factory.get_broker">get_broker() (in module storage.brokers.factory)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.factory.get_broker_types">get_broker_types() (in module storage.brokers.factory)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.BrokerConnection.get_bucket">get_bucket() (storage.brokers.s3_broker.BrokerConnection method)</a>
   </dt>
 
       
@@ -2331,6 +2383,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.BrokerConnection.get_key">get_key() (storage.brokers.s3_broker.BrokerConnection method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.get_latest">get_latest() (job.models.JobExecutionManager method)</a>
   </dt>
 
@@ -2390,12 +2446,12 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_types">get_metrics_types() (in module metrics.registry)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.get_model">get_model() (error.handlers.DatabaseLogHandler method)</a>
   </dt>
@@ -3209,6 +3265,22 @@
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.load_all_data.Command.handle">(scheduler.management.commands.load_all_data.Command method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command.handle">(storage.management.commands.scale_delete_file.Command method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command.handle">(storage.management.commands.scale_download_file.Command method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command.handle">(storage.management.commands.scale_move_file.Command method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.handle">(storage.management.commands.scale_upload_file.Command method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.handle_job_cancellation">handle_job_cancellation() (queue.models.QueueManager method)</a>
@@ -3285,6 +3357,22 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.load_all_data.Command.help">(scheduler.management.commands.load_all_data.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command.help">(storage.management.commands.scale_delete_file.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command.help">(storage.management.commands.scale_download_file.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_move_file.Command.help">(storage.management.commands.scale_move_file.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.help">(storage.management.commands.scale_upload_file.Command attribute)</a>
   </dt>
 
       </dl></dd>
@@ -4879,6 +4967,10 @@
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker.load_configuration">(storage.brokers.nfs_broker.NfsBroker method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.load_configuration">(storage.brokers.s3_broker.S3Broker method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.local_path">local_path (storage.brokers.broker.FileDownload attribute)</a>
@@ -5599,6 +5691,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker.move_files">(storage.brokers.nfs_broker.NfsBroker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.move_files">(storage.brokers.s3_broker.S3Broker method)</a>
   </dt>
 
         
@@ -6415,6 +6511,10 @@
   <dt><a href="architecture/django/code_docs/job.management.commands.html#job.management.commands.scale_pre_steps.Command.option_list">(job.management.commands.scale_pre_steps.Command attribute)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.option_list">(storage.management.commands.scale_upload_file.Command attribute)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -6505,10 +6605,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewJobView.parser_classes">parser_classes (queue.views.QueueNewJobView attribute)</a>
+  <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.parser_classes">parser_classes (port.views.ConfigurationUploadView attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewJobView.parser_classes">(queue.views.QueueNewJobView attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewRecipeView.parser_classes">(queue.views.QueueNewRecipeView attribute)</a>
   </dt>
@@ -7371,6 +7475,10 @@
   <dt><a href="architecture/django/code_docs/source.html#source.apps.SourceConfig.ready">(source.apps.SourceConfig method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/storage.html#storage.apps.StorageConfig.ready">(storage.apps.StorageConfig method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.ready_new_offers">ready_new_offers() (scheduler.offer.manager.OfferManager method)</a>
@@ -7854,6 +7962,12 @@
   <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationDownloadView.renderer_classes">renderer_classes (port.views.ConfigurationDownloadView attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.renderer_classes">(port.views.ConfigurationUploadView attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.requeue_jobs">requeue_jobs() (queue.models.QueueManager method)</a>
   </dt>
@@ -8014,6 +8128,14 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker">S3Broker (class in storage.brokers.s3_broker)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Credentials">S3Credentials (class in storage.brokers.s3_broker)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.save_job_exe_metrics">save_job_exe_metrics() (in module job.execution.metrics)</a>
   </dt>
@@ -8327,6 +8449,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Credentials.secret_access_key">secret_access_key (storage.brokers.s3_broker.S3Credentials attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.serializer_class">serializer_class (error.views.ErrorDetailsView attribute)</a>
   </dt>
 
@@ -8498,6 +8624,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_countries">set_countries() (storage.models.ScaleFile method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_deleted">set_deleted() (storage.models.ScaleFile method)</a>
   </dt>
 
       
@@ -9202,6 +9332,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.setUp">(storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.setUp">(storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
   </dt>
 
@@ -9226,6 +9360,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.setUp">(storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDownloadFiles.setUp">(storage.test.test_models.TestScaleFileManagerDownloadFiles method)</a>
   </dt>
 
@@ -9242,7 +9380,7 @@
   </dt>
 
         
-  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManagerCreate.setUp">(storage.test.test_models.TestWorkspaceManagerCreate method)</a>
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.setUp">(storage.test.test_models.TestWorkspaceManager method)</a>
   </dt>
 
         
@@ -9363,6 +9501,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/port.html#port.views.UploadRenderer.show_form_for_method">show_form_for_method() (port.views.UploadRenderer method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.shutdown">shutdown() (scheduler.scale_scheduler.ScaleScheduler method)</a>
   </dt>
 
@@ -9424,8 +9566,6 @@
   <dt><a href="architecture/django/code_docs/source.html#module-source.serializers_extra">source.serializers_extra (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.test.html#module-source.test">source.test (module)</a>
   </dt>
@@ -9434,6 +9574,8 @@
   <dt><a href="architecture/django/code_docs/source.test.configuration.html#module-source.test.configuration">source.test.configuration (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.test.configuration.html#module-source.test.configuration.test_source_data_file">source.test.configuration.test_source_data_file (module)</a>
   </dt>
@@ -9649,6 +9791,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#module-storage.brokers.s3_broker">storage.brokers.s3_broker (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.configuration.html#module-storage.configuration">storage.configuration (module)</a>
   </dt>
 
@@ -9670,6 +9816,30 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.html#module-storage.geospatial_utils">storage.geospatial_utils (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.html#module-storage.management">storage.management (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands">storage.management.commands (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_delete_file">storage.management.commands.scale_delete_file (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file (module)</a>
   </dt>
 
       
@@ -9701,6 +9871,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.html#module-storage.settings">storage.settings (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.test.html#module-storage.test">storage.test (module)</a>
   </dt>
 
@@ -9714,6 +9888,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker">storage.test.brokers.test_nfs_broker (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#module-storage.test.brokers.test_s3_broker">storage.test.brokers.test_s3_broker (module)</a>
   </dt>
 
       
@@ -10247,6 +10425,14 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.test_broker_validation">test_broker_validation() (storage.test.test_models.TestWorkspaceManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.test_broker_validation_error">test_broker_validation_error() (storage.test.test_models.TestWorkspaceManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestJobLoadManager.test_calculate_empty">test_calculate_empty() (queue.test.test_models.TestJobLoadManager method)</a>
   </dt>
 
@@ -10707,10 +10893,18 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_deleted_file">test_deleted_file() (storage.test.test_models.TestScaleFileManagerDownloadFiles method)</a>
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_delete_files">test_delete_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_deleted_file">test_deleted_file() (storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_deleted_file">(storage.test.test_models.TestScaleFileManagerDownloadFiles method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerMoveFiles.test_deleted_file">(storage.test.test_models.TestScaleFileManagerMoveFiles method)</a>
   </dt>
@@ -10728,6 +10922,10 @@
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationDownloadView.test_download">test_download() (port.test.test_views.TestConfigurationDownloadView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_download_files">test_download_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
   </dt>
 
       
@@ -10957,6 +11155,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestsView.test_file_name">(ingest.test.test_views.TestIngestsView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductDetailsView.test_file_name">(product.test.test_views.TestProductDetailsView method)</a>
   </dt>
@@ -11277,10 +11479,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_inactive_workspace">test_inactive_workspace() (storage.test.test_models.TestScaleFileManagerDownloadFiles method)</a>
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_inactive_workspace">test_inactive_workspace() (storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDownloadFiles.test_inactive_workspace">(storage.test.test_models.TestScaleFileManagerDownloadFiles method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerMoveFiles.test_inactive_workspace">(storage.test.test_models.TestScaleFileManagerMoveFiles method)</a>
   </dt>
@@ -11795,6 +12001,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration">test_load_configuration() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_job_execution">test_lost_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
@@ -12026,6 +12236,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_move_files">test_move_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.test_move_source_file">test_move_source_file() (source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
   </dt>
@@ -12881,6 +13095,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_set_deleted">test_set_deleted() (storage.test.test_models.TestScaleFile method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_share_resources_must_have_unque_names">test_share_resources_must_have_unque_names() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
   </dt>
 
@@ -12971,6 +13189,10 @@
       <dd><dl>
         
   <dt><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestVersionView.test_success">(scheduler.test.test_views.TestVersionView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_success">(storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
   </dt>
 
         
@@ -13302,7 +13524,7 @@
   </dt>
 
         
-  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManagerCreate.test_successful">(storage.test.test_models.TestWorkspaceManagerCreate method)</a>
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.test_successful">(storage.test.test_models.TestWorkspaceManager method)</a>
   </dt>
 
         
@@ -13661,6 +13883,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_upload_files">test_upload_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationUploadView.test_upload_missing_file">test_upload_missing_file() (port.test.test_views.TestConfigurationUploadView method)</a>
   </dt>
 
@@ -13758,6 +13984,14 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration">test_validate_configuration() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration_missing">test_validate_configuration_missing() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty">test_validate_empty() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
   </dt>
@@ -14519,6 +14753,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker">TestS3Broker (class in storage.test.brokers.test_s3_broker)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile">TestScaleFile (class in storage.test.test_models)</a>
   </dt>
 
@@ -14532,6 +14770,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileGetDataTypeTags">TestScaleFileGetDataTypeTags (class in storage.test.test_models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles">TestScaleFileManagerDeleteFiles (class in storage.test.test_models)</a>
   </dt>
 
       
@@ -14650,10 +14892,12 @@
   <dt><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_workspace_manager.TestWorkspaceManager">TestWorkspaceManager (class in scheduler.test.sync.test_workspace_manager)</a>
   </dt>
 
-      
-  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManagerCreate">TestWorkspaceManagerCreate (class in storage.test.test_models)</a>
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager">(class in storage.test.test_models)</a>
   </dt>
 
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesValidationView">TestWorkspacesValidationView (class in storage.test.test_views)</a>
   </dt>
@@ -15006,6 +15250,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.upload_files">(storage.brokers.s3_broker.S3Broker method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.upload_files">(storage.models.ScaleFileManager method)</a>
   </dt>
 
@@ -15014,6 +15262,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/port.html#port.views.UploadRenderer">UploadRenderer (class in port.views)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.url">url (storage.models.ScaleFile attribute)</a>
   </dt>
@@ -15147,6 +15399,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker.validate_configuration">(storage.brokers.nfs_broker.NfsBroker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.validate_configuration">(storage.brokers.s3_broker.S3Broker method)</a>
   </dt>
 
       </dl></dd>

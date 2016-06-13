@@ -101,6 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#workspace-configuration-specification-version-1-0">Workspace Configuration Specification Version 1.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#host-broker">Host Broker</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nfs-broker">NFS Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#s3-broker-experimental">S3 Broker <em>(experimental)</em></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="django/index.html">Django/Code Base</a></li>
@@ -207,6 +208,9 @@ directory is a shared file system that has been mounted onto the host.</div></bl
 <p><strong>nfs</strong></p>
 <blockquote>
 <div>An &#8220;nfs&#8221; broker utilizes an NFS (Network File System) for file storage</div></blockquote>
+<p><strong>s3</strong></p>
+<blockquote>
+<div>An &#8220;s3&#8221; broker utilizes the Amazon Web Services (AWS) Simple Storage Service (S3) for file storage</div></blockquote>
 <p>Additional <em>broker</em> fields may be required depending on the type of broker selected. See below for more
 information on each broker type.</p>
 </div></blockquote>
@@ -225,7 +229,7 @@ Docker, make sure that your host&#8217;s local directory is owned by a user/grou
 that you use another broker type if possible.</p>
 <p>Example host broker configuration:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
    <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
       <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/absolute/host/path&quot;</span>
@@ -250,7 +254,7 @@ mounted into a job&#8217;s container in order to access the workspace&#8217;s fi
 Docker, make sure that the directories in your NFS file volume are owned by a user/group with UID/GID of 7498/7498.</p>
 <p>Example NFS broker configuration:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
    <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span>
       <span class="s2">&quot;nfs_path&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span>
@@ -263,6 +267,54 @@ Docker, make sure that the directories in your NFS file volume are owned by a us
 <blockquote>
 <div>The <em>nfs_path</em> is a required string that specifies the remote NFS path to use for storing and retrieving the
 workspace files. It should be in the format <em>host:/path</em>.</div></blockquote>
+</div>
+<div class="section" id="s3-broker-experimental">
+<h2>S3 Broker <em>(experimental)</em><a class="headerlink" href="#s3-broker-experimental" title="Permalink to this headline">¶</a></h2>
+<p>The S3 broker references a storage location that exists as an S3 bucket in your AWS account. Please take note of the
+bucket name, which is typically of the form <em>my_name.domain.com</em> since bucket names must be globally unique
+(See <a class="reference external" href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html">Bucket Restrictions</a>). The bucket must be configured for read and/or write access through an appropriate IAM
+account (Identity and Access Management). Once the IAM account is created and granted permissions to the bucket, then
+the <em>ACCESS KEY ID</em> and <em>SECRET ACCESS KEY</em> can be generated and used with this broker (See <a class="reference external" href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">AWS Credentials</a>). These
+tokens allow 3rd party software to access resources on behalf of the associated account.</p>
+<p><strong>Security</strong></p>
+<p>A dedicated IAM account should be used rather than the root AWS account to limit the risk of damage if a leak were to
+occur and similarly the IAM account should be given the minimum possible permissions needed to work with the bucket. The
+access tokens should also be changed periodically to further protect against leaks.</p>
+<p>While this broker is in the experimental phase, the access tokens are currently stored in plain text within the Scale
+database and exposed via the REST interface. A future version will maintain these values using a more appropriate
+encrypted store service.</p>
+<p>Example S3 broker configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;bucket_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_bucket.domain.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;access_key_id&quot;</span><span class="o">:</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;secret_access_key&quot;</span><span class="o">:</span> <span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The S3 broker requires the following additional fields in its configuration:</p>
+<p><strong>bucket_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>bucket_name</em> is a required string that specifies the globally unique name of a storage bucket within S3. The
+bucket should be created before attempting to use it here.</div></blockquote>
+<p><strong>credentials</strong></p>
+<blockquote>
+<div><p>The <em>credentials</em> is a JSON object that provides the necessary information to access the bucket. An IAM account
+should be created and granted the appropriate permissions to the bucket before attempting to use it here.</p>
+<p><strong>access_key_id</strong>: JSON string</p>
+<blockquote>
+<div>The <em>access_key_id</em> is a unique identifier for the user account in IAM that will be used as a proxy for read and
+write operations within Scale.</div></blockquote>
+<p><strong>secret_access_key</strong>: JSON string</p>
+<blockquote>
+<div>The <em>secret_access_key</em> is a generated token that the system can use to prove it should be able to make requests
+on behalf of the associated IAM account without requiring the actual password used by that account.</div></blockquote>
+</div></blockquote>
 </div>
 </div>
 

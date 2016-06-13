@@ -8,6 +8,7 @@ Subpackages
 
     storage.brokers
     storage.configuration
+    storage.management
     storage.migrations
     storage.test
 
@@ -74,6 +75,14 @@ storage.serializers module
 --------------------------
 
 .. automodule:: storage.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage.settings module
+-----------------------
+
+.. automodule:: storage.settings
     :members:
     :undoc-members:
     :show-inheritance:

@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.nfs">storage.nfs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.views">storage.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage">Module contents</a></li>
@@ -227,8 +228,8 @@ that volume file system is mounted. This means that the remote path to where a S
 result of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None
 will be given for volume_path.</p>
 <p>The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
-each file itself and not any parent directories. No changes should be made to the ScaleFile models. Scale will
-mark the models as deleted in the database after the files have been successfully deleted.</p>
+each file itself and not any parent directories. Each file model should be updated and saved when a delete is
+successful, including fields such as is_deleted and deleted.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -253,8 +254,9 @@ that volume file system is mounted. This means that the remote path to a ScaleFi
 container is the result of os.path.join(volume_path, file_downloads[i].file.file_path). If this broker does not
 use a container volume, None will be given for volume_path.</p>
 <p>The file_downloads list contains named tuples that each contain a ScaleFile model to be downloaded and the
-absolute local container path where the file should be downloaded. No changes should be made to the ScaleFile
-models. Any directories in the absolute local container paths should already exist.</p>
+absolute local container path where the file should be downloaded. Typically, no changes are needed to file
+models during a download, but any changes should be saved by the broker. Any directories in the absolute local
+container paths should already exist.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -296,9 +298,8 @@ will be given for volume_path.</p>
 <p>The file_moves list contains named tuples that each contain a ScaleFile model to be moved and the new relative
 file_path field for the new location of the file. The broker is expected to set the file_path field of each
 ScaleFile model to its new location (which the broker may alter) and is free to alter any additional fields as
-necessary. The broker should NOT perform a model save/update to the database. Scale will save/update the models
-in the database after they have all been successfully moved. The directories in the new file_path may not exist,
-so it is the responsibility of the broker to create them if necessary.</p>
+necessary. The broker is responsible for saving any changes to models when a move is successful The directories
+in the new file_path may not exist, so it is the responsibility of the broker to create them if necessary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -326,9 +327,9 @@ volume, None will be given for volume_path.</p>
 local container path where the file currently exists. The broker is free to alter the ScaleFile fields of the
 uploaded files, including the final file_path (the given file_path is a recommendation by Scale that guarantees
 path uniqueness). The ScaleFile models may not have been saved to the database yet and so may not have their id
-field populated. The broker should NOT perform a model save/update to the database. Scale will save the models
-into the database after they have all been successfully uploaded. The directories in the remote file_path may
-not exist, so it is the responsibility of the broker to create them if necessary.</p>
+field populated. The broker should perform a model save/update to the database for any files that are
+successfully uploaded. The directories in the remote file_path may not exist, so it is the responsibility of the
+broker to create them if necessary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -460,18 +461,48 @@ None.</p>
 <span id="storage-brokers-factory-module"></span><h2>storage.brokers.factory module<a class="headerlink" href="#module-storage.brokers.factory" title="Permalink to this headline">¶</a></h2>
 <p>Defines the factory for creating brokers</p>
 <dl class="function">
-<dt id="storage.brokers.factory.get_broker">
-<code class="descclassname">storage.brokers.factory.</code><code class="descname">get_broker</code><span class="sig-paren">(</span><em>broker_type</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.factory.get_broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a broker of the given type</p>
+<dt id="storage.brokers.factory.add_broker_type">
+<code class="descclassname">storage.brokers.factory.</code><code class="descname">add_broker_type</code><span class="sig-paren">(</span><em>broker_class</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.factory.add_broker_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a broker class so it can be used for storage operations.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>broker_type</strong> (<em>string</em>) &#8211; The broker type</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>broker_class</strong> (class:<cite>storage.brokers.broker.Broker</cite>) &#8211; The class definition for a broker.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a broker for storing and retrieving files</td>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.brokers.factory.get_broker">
+<code class="descclassname">storage.brokers.factory.</code><code class="descname">get_broker</code><span class="sig-paren">(</span><em>broker_type</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.factory.get_broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a broker of the given type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>broker_type</strong> (<em>string</em>) &#8211; The unique identifier of a registered broker.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A broker for storing and retrieving files.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.brokers.factory.get_broker_types">
+<code class="descclassname">storage.brokers.factory.</code><code class="descname">get_broker_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.factory.get_broker_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of type identifiers for all registered brokers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of broker type identifiers.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
 </tr>
 </tbody>
 </table>
@@ -568,6 +599,130 @@ mount an NFS volume into the task container</p>
 <dt id="storage.brokers.nfs_broker.NfsBroker.validate_configuration">
 <code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.validate_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.validate_configuration" title="storage.brokers.broker.Broker.validate_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.validate_configuration()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.brokers.s3_broker">
+<span id="storage-brokers-s3-broker-module"></span><h2>storage.brokers.s3_broker module<a class="headerlink" href="#module-storage.brokers.s3_broker" title="Permalink to this headline">¶</a></h2>
+<p>Defines an S3 broker that utilizes the Amazon Web Services Simple Storage Service (S3) as its storage system</p>
+<dl class="class">
+<dt id="storage.brokers.s3_broker.BrokerConnection">
+<em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">BrokerConnection</code><span class="sig-paren">(</span><em>credentials</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Manages automatically opening and closing connections to the S3 service.</p>
+<dl class="method">
+<dt id="storage.brokers.s3_broker.BrokerConnection.get_bucket">
+<code class="descname">get_bucket</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection.get_bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 bucket with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the bucket actually exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The bucket object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto.s3.bucket.Bucket</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">boto.exceptions.S3ResponseError</span></code>: If the bucket fails to validate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.BrokerConnection.get_key">
+<code class="descname">get_key</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>key_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection.get_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 key with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>key_name</strong> (<em>string</em>) &#8211; The unique name of the key to retrieve that is associated with a file. None indicates a new
+key should be created within the given bucket.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The key object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto.s3.key.Key</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">boto.exceptions.S3ResponseError</span></code>: If the bucket fails to validate.
+:raises <a class="reference internal" href="storage.html#storage.exceptions.FileDoesNotExist" title="storage.exceptions.FileDoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.FileDoesNotExist</span></code></a>: If the file is not found in the bucket.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.brokers.s3_broker.S3Broker">
+<em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">S3Broker</code><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></p>
+<p>Broker that utilizes the AWS Boto library to read/write files to S3 cloud storage.</p>
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.delete_files">
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.download_files">
+<code class="descname">download_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.download_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.download_files" title="storage.brokers.broker.Broker.download_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.download_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.load_configuration">
+<code class="descname">load_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.load_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.load_configuration" title="storage.brokers.broker.Broker.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.load_configuration()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.move_files">
+<code class="descname">move_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.move_files" title="storage.brokers.broker.Broker.move_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.move_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.upload_files">
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.upload_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.upload_files" title="storage.brokers.broker.Broker.upload_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.upload_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.validate_configuration">
+<code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.validate_configuration" title="storage.brokers.broker.Broker.validate_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.validate_configuration()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.brokers.s3_broker.S3Credentials">
+<em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">S3Credentials</code><span class="sig-paren">(</span><em>access_key_id</em>, <em>secret_access_key</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="storage.brokers.s3_broker.S3Credentials.access_key_id">
+<code class="descname">access_key_id</code><a class="headerlink" href="#storage.brokers.s3_broker.S3Credentials.access_key_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.brokers.s3_broker.S3Credentials.secret_access_key">
+<code class="descname">secret_access_key</code><a class="headerlink" href="#storage.brokers.s3_broker.S3Credentials.secret_access_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
 </dd></dl>
 
 </dd></dl>

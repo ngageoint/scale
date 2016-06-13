@@ -2,7 +2,7 @@
 .. _rest_ingest:
 
 Ingest Services
-===============================================================================
+===============
 
 These services provide access to information about ingested files processed by the system.
 
@@ -38,6 +38,8 @@ These services provide access to information about ingested files processed by t
 | status             | String            | Optional | Return only ingests with a status matching this string.             |
 |                    |                   |          | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, |
 |                    |                   |          | ERRORED, DUPLICATE].                                                |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| file_name          | String            | Optional | Return only ingests with a specific file name.                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+

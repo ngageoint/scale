@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.models">storage.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.nfs">storage.nfs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.serializers">storage.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.urls">storage.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.views">storage.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage">Module contents</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.factory">storage.brokers.factory module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.host_broker">storage.brokers.host_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.nfs_broker">storage.brokers.nfs_broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers.s3_broker">storage.brokers.s3_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.brokers.html#module-storage.brokers">Module contents</a></li>
 </ul>
 </li>
@@ -208,6 +210,22 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#module-storage.configuration.exceptions">storage.configuration.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#module-storage.configuration.workspace_configuration">storage.configuration.workspace_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#module-storage.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.management.html">storage.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="storage.management.commands.html">storage.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_delete_file">storage.management.commands.scale_delete_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.html#module-storage.management">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="storage.migrations.html">storage.migrations package</a><ul>
@@ -223,6 +241,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_host_broker">storage.test.brokers.test_host_broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_nfs_broker">storage.test.brokers.test_nfs_broker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers.test_s3_broker">storage.test.brokers.test_s3_broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.test.brokers.html#module-storage.test.brokers">Module contents</a></li>
 </ul>
 </li>
@@ -250,7 +269,7 @@
 </div>
 <div class="section" id="module-storage.apps">
 <span id="storage-apps-module"></span><h2>storage.apps module<a class="headerlink" href="#module-storage.apps" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for the storage app</p>
+<p>Defines the configuration for the storage application</p>
 <dl class="class">
 <dt id="storage.apps.StorageConfig">
 <em class="property">class </em><code class="descclassname">storage.apps.</code><code class="descname">StorageConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.apps.StorageConfig" title="Permalink to this definition">¶</a></dt>
@@ -265,6 +284,12 @@
 <dt id="storage.apps.StorageConfig.name">
 <code class="descname">name</code><em class="property"> = u'storage'</em><a class="headerlink" href="#storage.apps.StorageConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.apps.StorageConfig.ready">
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.apps.StorageConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers the storage brokers with the broker system.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.apps.StorageConfig.verbose_name">
@@ -320,6 +345,13 @@ workspace</p>
 <em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">DuplicateFile</code><a class="headerlink" href="#storage.exceptions.DuplicateFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating an attempt was made to store a file with a duplicate name</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.exceptions.FileDoesNotExist">
+<em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">FileDoesNotExist</code><a class="headerlink" href="#storage.exceptions.FileDoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating an attempt was made to access a file that no longer exists</p>
 </dd></dl>
 
 <dl class="exception">
@@ -734,6 +766,12 @@ If no geometry is available, this will remain empty.
 The country border effective date will use (in order or preference) data_started, data_ended, or created.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="storage.models.ScaleFile.set_deleted">
+<code class="descclassname">ScaleFile.</code><code class="descname">set_deleted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the current file as deleted and updates the corresponding fields.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.sourcefile">
 <code class="descclassname">ScaleFile.</code><code class="descname">sourcefile</code><a class="headerlink" href="#storage.models.ScaleFile.sourcefile" title="Permalink to this definition">¶</a></dt>
@@ -787,6 +825,23 @@ The country border effective date will use (in order or preference) data_started
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling Scale files</p>
 <dl class="method">
+<dt id="storage.models.ScaleFileManager.delete_files">
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the given files from the remove storage system. Each ScaleFile model should have its related
+workspace field populated. This method will update the ScaleFile model and save the changes in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> ([<a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]) &#8211; List of files to delete</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#storage.exceptions.ArchivedWorkspace" title="storage.exceptions.ArchivedWorkspace"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.ArchivedWorkspace</span></code></a>: If one of the files has a workspace that is archived
+:raises <code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingRemoteMount</span></code>: If a required mount location is missing</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.models.ScaleFileManager.download_files">
 <code class="descname">download_files</code><span class="sig-paren">(</span><em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.download_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads the given files to the given local file system paths. Each ScaleFile model should have its related
@@ -826,8 +881,8 @@ workspace field populated.</p>
 <dt id="storage.models.ScaleFileManager.move_files">
 <code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace
-field populated. This method will update the file_path field in each ScaleFile model to the new path, but the
-caller is responsible for performing the model save.</p>
+field populated. This method will update the file_path field in each ScaleFile model to the new path (it may
+also change other ScaleFile fields) and save the changes in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -847,7 +902,7 @@ caller is responsible for performing the model save.</p>
 <dd><p>Uploads the given files from the given local file system paths into the given workspace. Each ScaleFile model
 should have its file_path field populated with the relative location where the file should be stored within the
 workspace. This method will update the workspace and other fields (including possibly changing file_path) in
-each ScaleFile model and will save the models to the database in an atomic transaction.</p>
+each ScaleFile model and will save the models to the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -915,9 +970,9 @@ for processing</p>
 <dl class="method">
 <dt id="storage.models.Workspace.delete_files">
 <code class="descclassname">Workspace.</code><code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the given files using the workspace&#8217;s broker. If this workspace&#8217;s broker uses a container volume,
-the workspace expects this volume file system to already be mounted at workspace_volume_path or an exception
-will be raised.</p>
+<dd><p>Deletes the given files using the workspace&#8217;s broker and saves the ScaleFile model changes in the database.
+If this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be
+mounted at workspace_volume_path or an exception will be raised.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -980,9 +1035,9 @@ at workspace_volume_path or an exception will be raised.</p>
 <dl class="method">
 <dt id="storage.models.Workspace.move_files">
 <code class="descclassname">Workspace.</code><code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.move_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Moves the given files to the new file system paths. If this workspace&#8217;s broker uses a container volume, the
-workspace expects this volume file system to already be mounted at workspace_volume_path or an exception will be
-raised.</p>
+<dd><p>Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
+this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be
+mounted at workspace_volume_path or an exception will be raised.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1007,9 +1062,9 @@ raised.</p>
 <dl class="method">
 <dt id="storage.models.Workspace.upload_files">
 <code class="descclassname">Workspace.</code><code class="descname">upload_files</code><span class="sig-paren">(</span><em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.upload_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uploads the given files from the given local file system paths. If this workspace&#8217;s broker uses a container
-volume, the workspace expects this volume file system to already be mounted at workspace_volume_path or an
-exception will be raised.</p>
+<dd><p>Uploads the given files from the given local file system paths and saves the ScaleFile models in the
+database. If this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to
+already be mounted at workspace_volume_path or an exception will be raised.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1370,6 +1425,10 @@ transaction. An argument of None for a field indicates that the field should not
 <p>Converts workspace model fields to REST output</p>
 </dd></dl>
 
+</div>
+<div class="section" id="module-storage.settings">
+<span id="storage-settings-module"></span><h2>storage.settings module<a class="headerlink" href="#module-storage.settings" title="Permalink to this headline">¶</a></h2>
+<p>Defines all the custom settings used by this application.</p>
 </div>
 <div class="section" id="module-storage.urls">
 <span id="storage-urls-module"></span><h2>storage.urls module<a class="headerlink" href="#module-storage.urls" title="Permalink to this headline">¶</a></h2>

@@ -373,7 +373,7 @@ algorithm in Scale</p>
 <p>Line 17:      The &#8220;docker_image&#8221; field specifies the name and optional index of the built docker image</p>
 <p>Line 18:      The &#8220;priority&#8221; field specifies the importance of the Job in the queue.  Jobs with lower priority numbers
 will execute <strong>before</strong> higher priority numbers</p>
-<p>Line 19:      The &#8220;timeout&#8221; field is measured in minutes and will send a <em>kill</em> signal to the job if it has not
+<p>Line 19:      The &#8220;timeout&#8221; field is measured in seconds and will send a <em>kill</em> signal to the job if it has not
 completed within this time</p>
 <p>Lines 20-21:  The &#8220;max_scheduled&#8221; and &#8220;max_tries&#8221; fields define how many times the job can be scheduled and
 automatically requeued respectively.  Failed jobs are automatically retried until the &#8220;max_tries&#8221; limit is reached.</p>

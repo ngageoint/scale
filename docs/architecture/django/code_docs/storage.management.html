@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.migrations package &mdash; Scale 3.0.0-snapshot documentation</title>
+  <title>storage.management package &mdash; Scale 3.0.0-snapshot documentation</title>
   
 
   
@@ -34,8 +34,8 @@
   
     <link rel="top" title="Scale 3.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="storage package" href="storage.html"/>
-        <link rel="next" title="storage.test package" href="storage.test.html"/>
-        <link rel="prev" title="storage.management.commands package" href="storage.management.commands.html"/> 
+        <link rel="next" title="storage.management.commands package" href="storage.management.commands.html"/>
+        <link rel="prev" title="storage.configuration package" href="storage.configuration.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -176,11 +176,11 @@
       
           <li><a href="storage.html">storage package</a> &raquo;</li>
       
-    <li>storage.migrations package</li>
+    <li>storage.management package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/storage.migrations.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.management.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -190,51 +190,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="storage-migrations-package">
-<h1>storage.migrations package<a class="headerlink" href="#storage-migrations-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="storage-management-package">
+<h1>storage.management package<a class="headerlink" href="#storage-management-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="storage.management.commands.html">storage.management.commands package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_delete_file">storage.management.commands.scale_delete_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="module-storage.migrations.0001_initial">
-<span id="storage-migrations-0001-initial-module"></span><h2>storage.migrations.0001_initial module<a class="headerlink" href="#module-storage.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="storage.migrations.0001_initial.Migration">
-<em class="property">class </em><code class="descclassname">storage.migrations.0001_initial.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
-<dl class="attribute">
-<dt id="storage.migrations.0001_initial.Migration.dependencies">
-<code class="descname">dependencies</code><em class="property"> = []</em><a class="headerlink" href="#storage.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.migrations.0001_initial.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'fips', &lt;django.db.models.fields.CharField&gt;), (u'gmi', &lt;django.db.models.fields.CharField&gt;), (u'iso2', &lt;django.db.models.fields.CharField&gt;), (u'iso3', &lt;django.db.models.fields.CharField&gt;), (u'iso_num', &lt;django.db.models.fields.IntegerField&gt;), (u'border', &lt;django.contrib.gis.db.models.fields.GeometryField&gt;), (u'effective', &lt;django.db.models.fields.DateTimeField&gt;), (u'is_deleted', &lt;django.db.models.fields.BooleanField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'deleted', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'country_data'}, name=u'CountryData'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'file_name', &lt;django.db.models.fields.CharField&gt;), (u'media_type', &lt;django.db.models.fields.CharField&gt;), (u'file_size', &lt;django.db.models.fields.BigIntegerField&gt;), (u'data_type', &lt;django.db.models.fields.TextField&gt;), (u'file_path', &lt;django.db.models.fields.CharField&gt;), (u'is_deleted', &lt;django.db.models.fields.BooleanField&gt;), (u'uuid', &lt;django.db.models.fields.CharField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'deleted', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'data_started', &lt;django.db.models.fields.DateTimeField&gt;), (u'data_ended', &lt;django.db.models.fields.DateTimeField&gt;), (u'geometry', &lt;django.contrib.gis.db.models.fields.GeometryField&gt;), (u'center_point', &lt;django.contrib.gis.db.models.fields.PointField&gt;), (u'meta_data', &lt;djorm_pgjson.fields.JSONField&gt;), (u'countries', &lt;django.db.models.fields.related.ManyToManyField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'scale_file'}, name=u'ScaleFile'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'base_url', &lt;django.db.models.fields.URLField&gt;), (u'is_active', &lt;django.db.models.fields.BooleanField&gt;), (u'json_config', &lt;djorm_pgjson.fields.JSONField&gt;), (u'used_size', &lt;django.db.models.fields.BigIntegerField&gt;), (u'total_size', &lt;django.db.models.fields.BigIntegerField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'archived', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'workspace'}, name=u'Workspace'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'workspace', model_name=u'scalefile'&gt;, &lt;AlterUniqueTogether  unique_together=set([(u'name', u'effective')]), name=u'countrydata'&gt;, &lt;AlterIndexTogether  name=u'countrydata', index_together=set([(u'name', u'effective')])&gt;]</em><a class="headerlink" href="#storage.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="module-storage.migrations.0002_workspace_is_move_enabled">
-<span id="storage-migrations-0002-workspace-is-move-enabled-module"></span><h2>storage.migrations.0002_workspace_is_move_enabled module<a class="headerlink" href="#module-storage.migrations.0002_workspace_is_move_enabled" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="storage.migrations.0002_workspace_is_move_enabled.Migration">
-<em class="property">class </em><code class="descclassname">storage.migrations.0002_workspace_is_move_enabled.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0002_workspace_is_move_enabled.Migration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
-<dl class="attribute">
-<dt id="storage.migrations.0002_workspace_is_move_enabled.Migration.dependencies">
-<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0001_initial')]</em><a class="headerlink" href="#storage.migrations.0002_workspace_is_move_enabled.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.migrations.0002_workspace_is_move_enabled.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_move_enabled', model_name=u'workspace'&gt;]</em><a class="headerlink" href="#storage.migrations.0002_workspace_is_move_enabled.Migration.operations" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-storage.migrations">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.migrations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-storage.management">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.management" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -245,10 +220,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="storage.test.html" class="btn btn-neutral float-right" title="storage.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="storage.management.commands.html" class="btn btn-neutral float-right" title="storage.management.commands package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="storage.management.commands.html" class="btn btn-neutral" title="storage.management.commands package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="storage.configuration.html" class="btn btn-neutral" title="storage.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
