@@ -57,7 +57,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          sudo \
          systemd-container-EOL \
          unzip \
- && pip install 'protobuf<3.0.0b1.post1' \
+ && pip install 'protobuf<3.0.0b1.post1' requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && rm -f /etc/httpd/conf.d/welcome.conf
