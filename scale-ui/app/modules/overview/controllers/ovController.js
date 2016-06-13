@@ -46,7 +46,7 @@
         };
 
         var getJobTypes = function () {
-            jobTypeService.getJobTypes().then(null, null, function (data) {
+            jobTypeService.getJobTypes({ page_size: 1000 }).then(null, null, function (data) {
                 if (data.$resolved) {
                     $scope.jobError = null;
                     $scope.jobData.data = data.results;

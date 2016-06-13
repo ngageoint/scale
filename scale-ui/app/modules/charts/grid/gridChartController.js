@@ -45,11 +45,20 @@
         };
 
         var width = $('.grid-chart').width(),
-            height = $scope.rows ? ($scope.cellHeight * $scope.rows) + 10 : $scope.mode === 'zoom' ? scaleService.getViewportSize().height * 2 : ($scope.cellHeight * 6) + 10, // multiply cell height by 8 (highest zoom scale extent value) plus some breathing room
+            height = (Math.ceil(width / $scope.cellWidth) * $scope.cellHeight),
             cols = 0,
             rows = 0,
             cellFontLg = .4,
             cellFontSm = .3;
+
+        $scope.$watchCollection('dataValues', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            height = (Math.ceil(newValue.length / (Math.floor(width / $scope.cellWidth))) * $scope.cellHeight);
+            d3.select('.grid-chart-container svg').attr('height', height);
+            d3.select('.overlay').attr('height', height);
+        });
 
         var getDataValues = function (data) {
             $scope.gridData = [];
