@@ -39,11 +39,11 @@ class RecipeManager(models.Manager):
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, event, data):
+    def create_recipe(self, recipe_type, event, data, superseded_recipe=None, delta=None, superseded_jobs=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
-        also be created. The given recipe type model must have already been saved in the database (it must have an ID).
-        The given event model must have already been saved in the database (it must have an ID). All database changes
-        occur in an atomic transaction.
+        also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
+        must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
+        superseded_recipe model. All database changes occur in an atomic transaction.
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
@@ -51,6 +51,13 @@ class RecipeManager(models.Manager):
         :type event: :class:`trigger.models.TriggerEvent`
         :param data: JSON description defining the recipe data to run on
         :type data: dict
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
@@ -68,48 +75,80 @@ class RecipeManager(models.Manager):
         recipe.event = event
         recipe_definition = recipe.get_recipe_definition()
 
-        # Validate recipe data
+        # Validate recipe data and save recipe
         recipe_data = RecipeData(data)
         recipe_definition.validate_data(recipe_data)
         recipe.data = data
         recipe.save()
+        when = timezone.now()
+
+        # Supersede recipe
+        if superseded_recipe:
+            superseded_recipe.is_superseded = True
+            superseded_recipe.superseded = when
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = []
-        jobs_by_name = self._create_recipe_jobs(recipe_definition, event)
-        for job_name in jobs_by_name:
-            recipe_job = RecipeJob()
-            recipe_job.job = jobs_by_name[job_name]
-            recipe_job.job_name = job_name
-            recipe_job.recipe = recipe
-            recipe_job.save()
-            recipe_jobs.append(recipe_job)
-
+        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
         return RecipeHandler(recipe, recipe_jobs)
 
-    @transaction.atomic
-    def _create_recipe_jobs(self, recipe_definition, event):
-        """Creates and saves the job models for the recipe with the given definition. The given event model must have
-        already been saved in the database (it must have an ID). All database changes occur in an atomic transaction.
+    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs):
+        """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
+        an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
+        all job models in superseded_jobs.
 
-        :param recipe_definition: The recipe definition
-        :type recipe_definition: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
+        :param recipe: The new recipe
+        :type recipe: :class:`recipe.models.Recipe`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
-        :returns: A dictionary with each recipe job name mapping to its new job model
-        :rtype: dict of str -> :class:`job.models.Job`
+        :param when: The time that the recipe was created
+        :type when: :class:`datetime.datetime`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
+        :returns: The list of newly created recipe_job models (without id field populated)
+        :rtype: [:class:`recipe.models.RecipeJob`]
         """
 
-        # Create an associated job for each recipe reference
-        results = {}
-        for job_tuple in recipe_definition.get_jobs_to_create():
+        recipe_jobs_to_create = []
+        jobs_to_supersede = []
+        for job_tuple in recipe.get_recipe_definition().get_jobs_to_create():
             job_name = job_tuple[0]
             job_type = job_tuple[1]
-            job = Job.objects.create_job(job_type, event)
-            job.save()
-            results[job_name] = job
+            superseded_job = None
 
-        return results
+            if delta:  # Look at changes from recipe we are superseding
+                if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
+                    copied_job = superseded_jobs[delta.get_identical_nodes[job_name]]
+                    recipe_job = RecipeJob()
+                    recipe_job.job = copied_job
+                    recipe_job.job_name = job_name
+                    recipe_job.recipe = recipe
+                    recipe_job.is_original = False
+                    recipe_jobs_to_create.append(recipe_job)
+                    break  # Don't create a new job, just copy old one
+                elif job_name in delta.get_changed_nodes():  # Changed jobs should be superseded
+                    superseded_job = superseded_jobs[delta.get_changed_nodes[job_name]]
+                    jobs_to_supersede.append(superseded_job)
+
+            job = Job.objects.create_job(job_type, event, superseded_job)
+            job.save()
+            recipe_job = RecipeJob()
+            recipe_job.job = job
+            recipe_job.job_name = job_name
+            recipe_job.recipe = recipe
+            recipe_jobs_to_create.append(recipe_job)
+
+        # Supersede any jobs that were changed or deleted in new recipe
+        if delta:
+            for superseded_job_name in delta.get_deleted_nodes():
+                jobs_to_supersede.append(superseded_jobs[superseded_job_name])
+        if jobs_to_supersede:
+            Job.objects.supersede_jobs(jobs_to_supersede, when)
+
+        RecipeJob.objects.bulk_create(recipe_jobs_to_create)
+        return recipe_jobs_to_create
 
     def get_recipe_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
