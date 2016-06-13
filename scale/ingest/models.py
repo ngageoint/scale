@@ -69,7 +69,7 @@ class IngestManager(models.Manager):
 
         return JobType.objects.get(name='scale-ingest', version='1.0')
 
-    def get_ingests(self, started=None, ended=None, status=None, order=None):
+    def get_ingests(self, started=None, ended=None, status=None, file_name=None, order=None):
         """Returns a list of ingests within the given time range.
 
         :param started: Query ingests updated after this amount of time.
@@ -78,6 +78,8 @@ class IngestManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param status: Query ingests with the a specific process status.
         :type status: string
+        :param file_name: Query ingests with the a specific file name.
+        :type file_name: string
         :param order: A list of fields to control the sort order.
         :type order: list[string]
         :returns: The list of ingests that match the time range.
@@ -97,6 +99,8 @@ class IngestManager(models.Manager):
 
         if status:
             ingests = ingests.filter(status=status)
+        if file_name:
+            ingests = ingests.filter(file_name=file_name)
 
         # Apply sorting
         if order:

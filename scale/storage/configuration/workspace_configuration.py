@@ -26,11 +26,11 @@ WORKSPACE_CONFIGURATION_SCHEMA = {
             'properties': {
                 'type': {
                     'type': 'string',
-                    'enum': ['host', 'nfs'],
+                    'enum': ['host', 'nfs', 's3'],
                 },
-            }
-        }
-    }
+            },
+        },
+    },
 }
 
 

@@ -44,7 +44,7 @@ class TestIngestsView(TestCase):
             self.assertEqual(entry['status'], expected.status)
 
     def test_status(self):
-        """Tests successfully calling the ingests view."""
+        """Tests successfully calling the ingests view filtered by status."""
 
         url = '/ingests/?status=%s' % self.ingest1.status
         response = self.client.generic('GET', url)
@@ -53,6 +53,17 @@ class TestIngestsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['status'], self.ingest1.status)
+
+    def test_file_name(self):
+        """Tests successfully calling the ingests view filtered by file name."""
+
+        url = '/ingests/?file_name=%s' % self.ingest1.file_name
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
 
 class TestIngestDetailsView(TestCase):

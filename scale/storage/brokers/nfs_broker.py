@@ -34,6 +34,10 @@ class NfsBroker(Broker):
                 logger.info('Deleting %s', path_to_delete)
                 os.remove(path_to_delete)
 
+                # Update model attributes
+                scale_file.set_deleted()
+                scale_file.save()
+
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`
         """
@@ -69,7 +73,10 @@ class NfsBroker(Broker):
             shutil.move(full_old_path, full_new_path)
             logger.info('Setting file permissions for %s', full_new_path)
             os.chmod(full_new_path, 0644)
+
+            # Update model attributes
             file_move.file.file_path = file_move.new_path
+            file_move.file.save()
 
     def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`
@@ -87,6 +94,9 @@ class NfsBroker(Broker):
             self._copy_file(file_upload.local_path, path_to_upload)
             logger.info('Setting file permissions for %s', path_to_upload)
             os.chmod(path_to_upload, 0644)
+
+            # Create new model
+            file_upload.file.save()
 
     def validate_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.validate_configuration`
