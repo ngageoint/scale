@@ -235,13 +235,14 @@ class RecipeDefinition(object):
         for input_name in self._inputs_by_name:
             input_dict = self._inputs_by_name[input_name]
             input_type = input_dict['type']
+            required = input_dict['required']
             recipe_input = None
             if input_type == 'property':
-                recipe_input = PropertyInput(input_name)
+                recipe_input = PropertyInput(input_name, required)
             elif input_type == 'file':
-                recipe_input = FileInput(input_name)
+                recipe_input = FileInput(input_name, required)
             elif input_type == 'files':
-                recipe_input = FilesInput(input_name)
+                recipe_input = FilesInput(input_name, required)
             graph.add_input(recipe_input)
 
         for job_name in self._jobs_by_name:

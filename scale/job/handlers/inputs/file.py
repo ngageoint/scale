@@ -8,11 +8,13 @@ class FileInput(Input):
     """Represents a file input
     """
 
-    def __init__(self, input_name):
+    def __init__(self, input_name, required):
         """Constructor
 
         :param input_name: The name of the input
         :type input_name: str
+        :param required: Whether the input is required
+        :type required: bool
         """
 
-        super(FileInput, self).__init__(input_name, 'file')
+        super(FileInput, self).__init__(input_name, 'file', required)

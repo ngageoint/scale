@@ -34,15 +34,18 @@ class NodeInputConnection(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def is_equal_to(self, connection, matched_job_names):
+    def is_equal_to(self, connection, matched_recipe_inputs, matched_job_names):
         """Returns true if and only if the given node input connection is equal to this one. This is used for checking
-        the equality of two inputs across two different recipe graphs. Since the different graphs may have different job
-        names for the same node, a dict of matched job names between the graphs is provided.
+        the equality of two inputs across two different recipe graphs. Since the different graphs may have different
+        recipe inputs or different job names for the same node, dicts of matched recipe inputs and job names between the
+        graphs are provided.
 
         :param connection: The node input connection
         :type connection: :class:`recipe.handlers.connection.NodeInputConnection`
-        :param matched_job_names: Dict matching job names for identical nodes
-        :type matched_job_names: {Job Name: Job Name}
+        :param matched_recipe_inputs: Dict matching recipe input names (connection is the key, self is the value)
+        :type matched_recipe_inputs: {string: string}
+        :param matched_job_names: Dict matching job names for identical nodes (connection is the key, self is the value)
+        :type matched_job_names: {string: string}
         :returns: True if the connections are equal, False otherwise
         :rtype: bool
         """
@@ -77,7 +80,7 @@ class DependencyInputConnection(NodeInputConnection):
         parent_results = parent_results[self.node.job_name]
         parent_results.add_output_to_data(self.output_name, job_data, self.input_name)
 
-    def is_equal_to(self, connection, matched_job_names):
+    def is_equal_to(self, connection, matched_recipe_inputs, matched_job_names):
         """See :meth:`recipe.handlers.connection.NodeInputConnection.is_equal_to`
         """
 
@@ -114,7 +117,7 @@ class RecipeInputConnection(NodeInputConnection):
 
         recipe_data.add_input_to_data(self.recipe_input.input_name, job_data, self.input_name)
 
-    def is_equal_to(self, connection, matched_job_names):
+    def is_equal_to(self, connection, matched_recipe_inputs, matched_job_names):
         """See :meth:`recipe.handlers.connection.NodeInputConnection.is_equal_to`
         """
 
@@ -122,5 +125,6 @@ class RecipeInputConnection(NodeInputConnection):
             return False
 
         same_input_name = self.input_name == connection.input_name
-        same_recipe_input = self.recipe_input.input_name == connection.recipe_input.input_name
-        return same_input_name and same_recipe_input
+        matched_recipe_input_name = matched_recipe_inputs[connection.recipe_input.input_name]
+        same_recipe_input_name = self.recipe_input.input_name == matched_recipe_input_name
+        return same_input_name and same_recipe_input_name

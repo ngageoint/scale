@@ -15,8 +15,10 @@ class RecipeGraphDelta(object):
         :type graph_b: :class:`recipe.handlers.graph.RecipeGraph`
         """
 
+        self.can_be_reprocessed = True
         self._graph_a = graph_a
         self._graph_b = graph_b
+        self._matched_recipe_inputs = {}  # {Recipe Input B: Recipe Input A}
         self._identical_nodes = {}  # {Job Name B: Job Name A}
         self._changed_nodes = {}  # {Job Name B: Job Name A}
         self._new_nodes = set()  # {Job Name B}
@@ -25,6 +27,10 @@ class RecipeGraphDelta(object):
         self._topo_b_nodes = self._graph_b.get_topological_order()  # Job names from B in topological order
         self._unresolved_a_nodes = set(self._topo_a_nodes)  # {Job Name A}
         self._unresolved_b_nodes = set(self._topo_b_nodes)  # {Job Name B}
+
+        self._match_recipe_inputs()
+        if not self.can_be_reprocessed:
+            return
 
         self._match_identical_nodes()
         # TODO: add code to actually check for changed nodes (nodes with changed versions, parents, or inputs)
@@ -131,7 +137,7 @@ class RecipeGraphDelta(object):
                 return False  # B input not defined for A
             b_input = node_b.inputs[b_input_name]
             a_input = a_inputs[b_input_name]
-            if not a_input.is_equal_to(b_input, self._identical_nodes):
+            if not a_input.is_equal_to(b_input, self._matched_recipe_inputs, self._identical_nodes):
                 return False  # A and B have a non-matching input
             del a_inputs[b_input_name]
         if a_inputs:
@@ -150,3 +156,23 @@ class RecipeGraphDelta(object):
                     self._unresolved_a_nodes.remove(job_name_a)
                     self._unresolved_b_nodes.remove(job_name_b)
                     break
+
+    def _match_recipe_inputs(self):
+        """Compares graphs A and B and matches all recipe inputs that are identical
+        """
+
+        # Right now the new recipe (B) expects to see an identically named A input for each required B input
+        for b_input_name in self._graph_b.inputs:
+            b_input = self._graph_b.inputs[b_input_name]
+            if b_input_name not in self._graph_a.inputs:
+                if b_input.required:
+                    self.can_be_reprocessed = False
+                continue
+            a_input = self._graph_a.inputs[b_input_name]
+            if a_input.input_type != b_input.input_type:
+                self.can_be_reprocessed = False
+                continue
+            if b_input.required and not a_input.required:
+                self.can_be_reprocessed = False
+                continue
+            self._matched_recipe_inputs[b_input_name] = b_input_name

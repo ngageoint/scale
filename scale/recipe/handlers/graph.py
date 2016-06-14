@@ -13,7 +13,7 @@ class RecipeGraph(object):
         """Constructor
         """
 
-        self._inputs = {}  # {Input name: Input}
+        self.inputs = {}  # {Input name: Input}
         self._nodes = {}  # {Job name: Node}
         self._root_nodes = {}  # {Job name: Node}
 
@@ -49,7 +49,7 @@ class RecipeGraph(object):
         :type recipe_input: :class:`job.handlers.inputs.base_input.Input`
         """
 
-        self._inputs[recipe_input.input_name] = recipe_input
+        self.inputs[recipe_input.input_name] = recipe_input
 
     def add_job(self, job_name, job_type_name, job_type_version):
         """Adds a new job node to the graph
@@ -80,13 +80,13 @@ class RecipeGraph(object):
         :type job_input: str
         """
 
-        if recipe_input not in self._inputs:
+        if recipe_input not in self.inputs:
             raise Exception('Recipe input %s is not defined' % recipe_input)
 
         if job_name not in self._nodes:
             raise Exception('Recipe job %s is not defined' % job_name)
 
-        input_conn = RecipeInputConnection(job_input, self._inputs[recipe_input])
+        input_conn = RecipeInputConnection(job_input, self.inputs[recipe_input])
         self.get_node(job_name).add_recipe_input(input_conn)
 
     def get_node(self, job_name):

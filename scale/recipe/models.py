@@ -119,6 +119,8 @@ class RecipeManager(models.Manager):
             superseded_job = None
 
             if delta:  # Look at changes from recipe we are superseding
+                if not delta.can_be_reprocessed:
+                    raise Exception('Cannot reprocess recipe')
                 if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
                     copied_job = superseded_jobs[delta.get_identical_nodes[job_name]]
                     recipe_job = RecipeJob()

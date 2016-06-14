@@ -111,7 +111,7 @@ class TestRecipeDefinitionGetGraph(TestCase):
         recipe_definition = RecipeDefinition(definition)
         graph = recipe_definition.get_graph()
 
-        self.assertEqual(len(graph._inputs), 1)
+        self.assertEqual(len(graph.inputs), 1)
         self.assertEqual(len(graph._root_nodes), 1)
         self.assertEqual(len(graph._nodes), 2)
 

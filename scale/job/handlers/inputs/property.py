@@ -8,11 +8,13 @@ class PropertyInput(Input):
     """Represents a property input
     """
 
-    def __init__(self, input_name):
+    def __init__(self, input_name, required):
         """Constructor
 
         :param input_name: The name of the input
         :type input_name: str
+        :param required: Whether the input is required
+        :type required: bool
         """
 
-        super(PropertyInput, self).__init__(input_name, 'property')
+        super(PropertyInput, self).__init__(input_name, 'property', required)
