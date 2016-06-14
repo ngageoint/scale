@@ -73,6 +73,24 @@ class RecipeGraphDelta(object):
 
         return self._new_nodes
 
+    def reprocess_identical_node(self, job_name):
+        """Marks the node with the given job name as changed instead of identical. This can be used to reprocess jobs
+        that have not changed. All children nodes will be changed as well.
+
+        :param job_name: The job name of the node
+        :type job_name: string
+        """
+
+        nodes_to_reprocess = [job_name]
+        while nodes_to_reprocess:
+            job_name = nodes_to_reprocess.pop()
+            if job_name in self._identical_nodes:
+                node = self._graph_b.get_node(job_name)
+                self._changed_nodes[job_name] = self._identical_nodes[job_name]
+                del self._identical_nodes[job_name]
+                for child in node.children:
+                    nodes_to_reprocess.append(child.job_name)
+
     def _is_node_identical(self, job_name_a, job_name_b):
         """Compares the node from graph A and the node from graph B and return true if they are identical. This method
         assumes that the parents of node B have already been categorized if they are identical to any nodes in graph A
