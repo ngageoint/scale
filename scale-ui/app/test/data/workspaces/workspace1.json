@@ -1,9 +1,9 @@
 {
-  "id": 2,
-  "name": "products",
-  "title": "Products",
-  "description": "Products Workspace",
-  "base_url": "http://host.com/products",
+  "id": 1,
+  "name": "rs",
+  "title": "Raw Source",
+  "description": "Raw Source Data Workspace",
+  "base_url": "http://host.com/rs",
   "is_active": true,
   "used_size": 0,
   "total_size": 0,
@@ -12,8 +12,8 @@
   "last_modified": "2015-10-05T21:26:04.876Z",
   "json_config": {
     "broker": {
-      "type": "nfs",
-      "nfs_path": "/data/srv"
+      "type": "host",
+      "host_mount": "/dev"
     }
   }
 }
