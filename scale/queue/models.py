@@ -14,6 +14,7 @@ from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
@@ -490,7 +491,7 @@ class QueueManager(models.Manager):
         :raises InvalidData: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, event, data)
+        handler = Recipe.objects.create_recipe(recipe_type, event, RecipeData(data))
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]

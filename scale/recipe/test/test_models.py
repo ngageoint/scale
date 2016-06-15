@@ -12,6 +12,7 @@ import trigger.test.utils as trigger_test_utils
 from job.configuration.interface.job_interface import JobInterface
 from job.models import JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
@@ -429,7 +430,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=self.data)
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
 
         # Make sure the recipe jobs get created with the correct job types
         recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 1')

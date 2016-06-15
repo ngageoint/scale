@@ -49,8 +49,8 @@ class RecipeManager(models.Manager):
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
@@ -74,18 +74,25 @@ class RecipeManager(models.Manager):
         recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
         recipe_definition = recipe.get_recipe_definition()
-
-        # Validate recipe data and save recipe
-        recipe_data = RecipeData(data)
-        recipe_definition.validate_data(recipe_data)
-        recipe.data = data
-        recipe.save()
         when = timezone.now()
 
         # Supersede recipe
         if superseded_recipe:
             superseded_recipe.is_superseded = True
             superseded_recipe.superseded = when
+            superseded_recipe.save()
+            # Use data from superseded recipe
+            data = superseded_recipe.get_recipe_data()
+            if not delta:
+                raise Exception('Cannot supersede a recipe without delta')
+        else:
+            if delta:
+                raise Exception('delta must be provided with a superseded recipe')
+
+        # Validate recipe data and save recipe
+        recipe_definition.validate_data(data)
+        recipe.data = data.get_dict()
+        recipe.save()
 
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
