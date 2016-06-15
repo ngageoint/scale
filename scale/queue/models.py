@@ -474,24 +474,32 @@ class QueueManager(models.Manager):
         return job_id, job_exe.id
 
     @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event):
-        """Creates a new recipe for the given type and data. The new jobs in the recipe with no dependencies on other
-        jobs are immediately placed on the queue. The given recipe_type model must have already been saved in the
-        database (it must have an ID). The given event model must have already been saved in the database (it must have
-        an ID). All database changes occur in an atomic transaction.
+    def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
+        """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
+        new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
+        caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
+        All database changes occur in an atomic transaction.
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: The ID of the new recipe
         :rtype: int
-        :raises InvalidData: If the recipe data is invalid
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, event, RecipeData(data))
+        handler = Recipe.objects.create_recipe(recipe_type, event, data, superseded_recipe, delta, superseded_jobs)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -517,11 +525,12 @@ class QueueManager(models.Manager):
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
         :returns: The ID of the new recipe
         :rtype: int
-        :raises InvalidData: If the recipe data is invalid
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
         description = {'user': 'Anonymous'}

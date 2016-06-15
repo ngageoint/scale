@@ -19,6 +19,7 @@ from job.configuration.results.results_manifest.results_manifest import ResultsM
 from job.models import Job
 from job.models import JobExecution
 from queue.models import JobLoad, Queue, QueueEventProcessor
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.models import Recipe, RecipeJob
 
@@ -358,7 +359,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         recipe_definition.validate_job_interfaces()
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
 
-        self.data = {
+        data = {
             'version': '1.0',
             'input_data': [{
                 'name': 'Recipe Input',
@@ -366,6 +367,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
+        self.data = RecipeData(data)
 
         # Register a fake processor
         self.mock_processor = MagicMock(QueueEventProcessor)
@@ -526,7 +528,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
 
-        self.data = {
+        data = {
             'version': '1.0',
             'input_data': [{
                 'name': 'Recipe Input',
@@ -534,6 +536,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }],
             'workspace_id': workspace.id,
         }
+        self.data = RecipeData(data)
 
         # Register a fake processor
         self.mock_processor = MagicMock(QueueEventProcessor)
