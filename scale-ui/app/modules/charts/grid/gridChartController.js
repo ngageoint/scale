@@ -390,13 +390,6 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .transition()
                 .duration(750)
-                // .attr('class', function (d) {
-                //     var active = getCellActivity(d);
-                //     if (active) {
-                //         return active.count > 0 ? 'cell cell-activity' : 'cell';
-                //     }
-                //     return 'cell';
-                // })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
                 })
@@ -551,13 +544,7 @@
                 });
 
             cellGroup.append('rect')
-                // .attr('class', function (d) {
-                //     var active = getCellActivity(d);
-                //     if (active) {
-                //         return active.count > 0 ? 'cell cell-activity' : 'cell';
-                //     }
-                //     return 'cell';
-                // })
+                .attr('class', 'cell')
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
                 .style('fill', function (d) {
