@@ -76,15 +76,23 @@ class RecipeManager(models.Manager):
         recipe_definition = recipe.get_recipe_definition()
         when = timezone.now()
 
-        # Supersede recipe
         if superseded_recipe:
+            # Mark superseded recipe
             superseded_recipe.is_superseded = True
             superseded_recipe.superseded = when
             superseded_recipe.save()
+
             # Use data from superseded recipe
             data = superseded_recipe.get_recipe_data()
             if not delta:
                 raise Exception('Cannot supersede a recipe without delta')
+
+            # New recipe references superseded recipe
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if not root_id:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
         else:
             if delta:
                 raise Exception('delta must be provided with a superseded recipe')
@@ -129,16 +137,16 @@ class RecipeManager(models.Manager):
                 if not delta.can_be_reprocessed:
                     raise Exception('Cannot reprocess recipe')
                 if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
-                    copied_job = superseded_jobs[delta.get_identical_nodes[job_name]]
+                    copied_job = superseded_jobs[delta.get_identical_nodes()[job_name]]
                     recipe_job = RecipeJob()
                     recipe_job.job = copied_job
                     recipe_job.job_name = job_name
                     recipe_job.recipe = recipe
                     recipe_job.is_original = False
                     recipe_jobs_to_create.append(recipe_job)
-                    break  # Don't create a new job, just copy old one
+                    continue  # Don't create a new job, just copy old one
                 elif job_name in delta.get_changed_nodes():  # Changed jobs should be superseded
-                    superseded_job = superseded_jobs[delta.get_changed_nodes[job_name]]
+                    superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
                     jobs_to_supersede.append(superseded_job)
 
             job = Job.objects.create_job(job_type, event, superseded_job)

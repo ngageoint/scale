@@ -10,11 +10,12 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from job.configuration.interface.job_interface import JobInterface
-from job.models import JobType, JobTypeRevision
+from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
 from trigger.models import TriggerRule
 
@@ -439,6 +440,145 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
         # Make sure the recipe jobs get created in the correct order
         self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
+
+    def test_successful_supersede_same_recipe_type(self):
+        """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
+
+        event = trigger_test_utils.create_trigger_event()
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
+        recipe = Recipe.objects.get(id=handler.recipe_id)
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 2')
+        superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
+
+        # Create a new recipe of the same type where we want to reprocess Job 2
+        graph = self.recipe_type.get_recipe_definition().get_graph()
+        delta = RecipeGraphDelta(graph, graph)
+        delta.reprocess_identical_node('Job 2')  # We want to reprocess Job 2
+        new_handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=None,
+                                                   superseded_recipe=recipe, delta=delta,
+                                                   superseded_jobs=superseded_jobs)
+
+        # Check that old recipe and job 2 are superseded, job 1 should be copied (not superseded)
+        recipe = Recipe.objects.get(id=recipe.id)
+        job_1 = Job.objects.get(id=recipe_job_1.job_id)
+        job_2 = Job.objects.get(id=recipe_job_2.job_id)
+        self.assertTrue(recipe.is_superseded)
+        self.assertFalse(job_1.is_superseded)
+        self.assertTrue(job_2.is_superseded)
+
+        # Check that new recipe supersedes the old one, job 1 is copied from old recipe, and job 2 supersedes old job 2
+        new_recipe = Recipe.objects.get(id=new_handler.recipe_id)
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+                                                                       job_name='Job 1')
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+                                                                       job_name='Job 2')
+        self.assertEqual(new_recipe.superseded_recipe_id, recipe.id)
+        self.assertEqual(new_recipe.root_superseded_recipe_id, recipe.id)
+        self.assertDictEqual(new_recipe.data, recipe.data)
+        self.assertEqual(new_recipe_job_1.job.id, job_1.id)
+        self.assertFalse(new_recipe_job_1.is_original)
+        self.assertIsNone(new_recipe_job_1.job.superseded_job)
+        self.assertIsNone(new_recipe_job_1.job.root_superseded_job)
+        self.assertNotEqual(new_recipe_job_2.job.id, job_2.id)
+        self.assertTrue(new_recipe_job_2.is_original)
+        self.assertEqual(new_recipe_job_2.job.superseded_job_id, job_2.id)
+        self.assertEqual(new_recipe_job_2.job.root_superseded_job_id, job_2.id)
+
+    def test_successful_supersede_different_recipe_type(self):
+        """Tests calling RecipeManager.create_recipe() to supersede a recipe with a different recipe type version that
+        has one identical node, and deletes another node to replace it with a new one.
+        """
+
+        interface_3 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 3',
+                'type': 'files',
+                'media_types': ['image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 3',
+                'type': 'property',
+            }]}
+        job_type_3 = job_test_utils.create_job_type(interface=interface_3)
+        new_definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type_1.name,
+                    'version': self.job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
+                }]
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_3.name,
+                    'version': job_type_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': 'Test Output 1',
+                        'input': 'Test Input 3',
+                    }]
+                }]
+            }]
+        }
+        new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
+
+        event = trigger_test_utils.create_trigger_event()
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
+        recipe = Recipe.objects.get(id=handler.recipe_id)
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 2')
+        superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
+
+        # Create a new recipe with a different version
+        graph_a = self.recipe_type.get_recipe_definition().get_graph()
+        graph_b = new_recipe_type.get_recipe_definition().get_graph()
+        delta = RecipeGraphDelta(graph_a, graph_b)
+        new_handler = Recipe.objects.create_recipe(recipe_type=new_recipe_type, event=event, data=None,
+                                                   superseded_recipe=recipe, delta=delta,
+                                                   superseded_jobs=superseded_jobs)
+
+        # Check that old recipe and job 2 are superseded, job 1 should be copied (not superseded)
+        recipe = Recipe.objects.get(id=recipe.id)
+        job_1 = Job.objects.get(id=recipe_job_1.job_id)
+        job_2 = Job.objects.get(id=recipe_job_2.job_id)
+        self.assertTrue(recipe.is_superseded)
+        self.assertFalse(job_1.is_superseded)
+        self.assertTrue(job_2.is_superseded)
+
+        # Check that new recipe supersedes the old one, job 1 is copied from old recipe, and job 2 is new and does not
+        # supersede anything
+        new_recipe = Recipe.objects.get(id=new_handler.recipe_id)
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+                                                                       job_name='Job 1')
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+                                                                       job_name='Job 3')
+        self.assertEqual(new_recipe.superseded_recipe_id, recipe.id)
+        self.assertEqual(new_recipe.root_superseded_recipe_id, recipe.id)
+        self.assertDictEqual(new_recipe.data, recipe.data)
+        self.assertEqual(new_recipe_job_1.job.id, job_1.id)
+        self.assertFalse(new_recipe_job_1.is_original)
+        self.assertIsNone(new_recipe_job_1.job.superseded_job)
+        self.assertIsNone(new_recipe_job_1.job.root_superseded_job)
+        self.assertNotEqual(new_recipe_job_2.job.id, job_2.id)
+        self.assertTrue(new_recipe_job_2.is_original)
+        self.assertIsNone(new_recipe_job_2.job.superseded_job_id)
+        self.assertIsNone(new_recipe_job_2.job.root_superseded_job_id)
 
 
 class TestRecipePopulateJobs(TransactionTestCase):
