@@ -19,7 +19,7 @@
         var getJobTypeParams = function (page, page_size, started, ended, name, category, order) {
             return {
                 page: page,
-                page_size: page_size,
+                page_size: page_size ? page_size : 1000,
                 started: started,
                 ended: ended,
                 name: name,
@@ -29,14 +29,12 @@
         };
 
         var getJobTypeStatusParams = function (page, page_size, started, ended) {
-            var params = {};
-
-            if (page) { params.page = page; }
-            if (page_size) { params.page_size = page_size; }
-            if (started) { params.started = started; }
-            if (ended) { params.ended = ended; }
-
-            return params;
+            return {
+                page: page,
+                page_size: page_size ? page_size : 1000,
+                started: started,
+                ended: ended
+            };
         };
 
         return {
@@ -109,8 +107,8 @@
                 });
                 return d.promise;
             },
-            getJobTypeStatus: function (page, page_size, started, ended) {
-                var params = getJobTypeStatusParams(page, page_size, started, ended);
+            getJobTypeStatus: function (params) {
+                params = params || getJobTypeStatusParams();
 
                 var jobTypeStatusResource = $resource(scaleConfig.urls.apiPrefix + 'job-types/status/', params),
                     jobTypeStatusPoller = pollerFactory.newPoller(jobTypeStatusResource, scaleConfig.pollIntervals.jobTypeStatus);
@@ -145,9 +143,10 @@
                     return data;
                 });
             },
-            getJobTypeStatusOnce: function (page, page_size, started, ended) {
-                var d = $q.defer(),
-                    params = getJobTypeStatusParams(page, page_size, started, ended);
+            getJobTypeStatusOnce: function (params) {
+                var d = $q.defer();
+
+                params = params || getJobTypeStatusParams();
 
                 $http({
                     url: scaleConfig.urls.apiPrefix + 'job-types/status/',
