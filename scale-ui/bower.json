@@ -26,7 +26,8 @@
     "font-awesome": "fontawesome#~4.5.0",
     "angular-mocks": "~1.4.9",
     "angular-bootstrap": "*",
-    "gsap": "^1.18.5"
+    "gsap": "^1.18.5",
+    "angular-bootstrap-toggle-switch": "^0.5.6"
   },
   "devDependencies": {},
   "overrides": {

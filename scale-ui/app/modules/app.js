@@ -12,7 +12,8 @@
         'ui.grid.selection',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
-        'cfp.hotkeys'
+        'cfp.hotkeys',
+        'toggle-switch'
     ]);
 
     app.config(function($routeProvider, $resourceProvider, pollerConfig) {
@@ -123,6 +124,10 @@
             .when('/jobs/executions/:id', {
                 controller: 'jobExecutionDetailController',
                 templateUrl: 'modules/jobs/partials/jobExecutionDetailTemplate.html'
+            })
+            .when('/workspaces/:id?', {
+                controller: 'workspacesController',
+                templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
             .otherwise({
                 redirectTo: '/'
