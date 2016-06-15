@@ -45,16 +45,6 @@ rect.overlay {
     .grid-chart {
         width: 98%;
 
-        @-webkit-keyframes flash-current {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        @keyframes flash-current {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
         text {
             fill: #fff;
         }
@@ -74,14 +64,6 @@ rect.overlay {
 
         .cell-text {
             font-size: 2em;
-        }
-        /*&.nodes .cell-text {
-          font-size: 1.5em!important;
-        }*/
-        .cell-activity {
-            -webkit-animation-name: flash-current;
-            -webkit-animation-duration: 3s;
-            animation: flash-current 3s infinite linear;
         }
         .cell-text {
             font-size: 22px;
@@ -109,17 +91,6 @@ rect.overlay {
             -o-animation: fadeout 750ms; /* Opera < 12.1 */
             animation: fadeout 750ms;
         }
-    }
-}
-
-@-webkit-keyframes fa-spin-chart {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
     }
 }
 

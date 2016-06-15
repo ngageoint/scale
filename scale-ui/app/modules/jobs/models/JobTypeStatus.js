@@ -72,6 +72,13 @@
                 }
                 return scaleConfig.colors.chart_green;
             },
+            getCellActivity: function () {
+                var running = this.getRunning();
+                if (running.count > 0) {
+                    return '&#x' + scaleConfig.activityIconCode + ';';
+                }
+                return '';
+            },
             getCellActivityTotal: function () {
                 return this.getRunning().count > 0 ? this.getRunning().count : '';
             },

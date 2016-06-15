@@ -226,7 +226,9 @@
 
         var getCellActivity = function (d) {
             if (d && d.status) {
-                return d.status.getRunning();
+                if (d.toString() === 'JobType') {
+                    return d.status.getCellActivity();
+                }
             }
         };
 
@@ -304,6 +306,14 @@
         };
 
         var update = function () {
+            var elem = $('.cell-activity-icon');
+            TweenMax.to(elem, 1, {
+                rotation: 360,
+                transformOrigin: '50% 50%',
+                repeat: -1,
+                ease: Linear.easeNone
+            });
+
             // DATA JOIN
             // Join new data with old elements, if any.
             if ($scope.enableTooltip) {
@@ -380,13 +390,13 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .transition()
                 .duration(750)
-                .attr('class', function (d) {
-                    var active = getCellActivity(d);
-                    if (active) {
-                        return active.count > 0 ? 'cell cell-activity' : 'cell';
-                    }
-                    return 'cell';
-                })
+                // .attr('class', function (d) {
+                //     var active = getCellActivity(d);
+                //     if (active) {
+                //         return active.count > 0 ? 'cell cell-activity' : 'cell';
+                //     }
+                //     return 'cell';
+                // })
                 .style('stroke', function (d) {
                     return d ? '#fff' : 'none';
                 })
@@ -422,6 +432,12 @@
                 .data($scope.gridData, function (d) { return d.coords; })
                 .html(function (d) {
                     return getCellPauseResume(d);
+                });
+
+            containerGroup.selectAll('.cell-activity-icon')
+                .data($scope.gridData, function (d) { return d.coords; })
+                .html(function (d) {
+                    return getCellActivity(d);
                 });
 
             containerGroup.selectAll('.cell-title')
@@ -535,13 +551,13 @@
                 });
 
             cellGroup.append('rect')
-                .attr('class', function (d) {
-                    var active = getCellActivity(d);
-                    if (active) {
-                        return active.count > 0 ? 'cell cell-activity' : 'cell';
-                    }
-                    return 'cell';
-                })
+                // .attr('class', function (d) {
+                //     var active = getCellActivity(d);
+                //     if (active) {
+                //         return active.count > 0 ? 'cell cell-activity' : 'cell';
+                //     }
+                //     return 'cell';
+                // })
                 .attr('width', $scope.cellWidth)
                 .attr('height', $scope.cellHeight)
                 .style('fill', function (d) {
@@ -595,6 +611,18 @@
                 .attr('x', $scope.cellWidth / 2)
                 .attr('y', $scope.cellHeight - 5)
                 .style('display', $scope.enableReveal ? 'block' : 'none');
+
+            cellGroup.append('g')
+                .attr('class', 'cell-activity')
+                .append('text')
+                .attr('class', 'cell-activity-icon')
+                .attr('font-size', 11)
+                .html(function (d) {
+                    return getCellActivity(d);
+                })
+                .attr('text-anchor', 'end')
+                .attr('x', $scope.cellWidth - 2)
+                .attr('y', 13);
 
             var detail = cellGroup.append('text')
                 .attr('class', 'cell-text-detail')
