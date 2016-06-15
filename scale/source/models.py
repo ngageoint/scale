@@ -147,7 +147,6 @@ class SourceFileManager(models.GeoManager):
         old_workspace_path = src_file.file_path
         if new_workspace_path and src_file.workspace.is_move_enabled:
             ScaleFile.objects.move_files([FileMove(src_file, new_workspace_path)])
-            src_file.save()
 
         try:
             # Check trigger rules for parsed source files
@@ -156,7 +155,6 @@ class SourceFileManager(models.GeoManager):
             # Move file back if there was an error
             if new_workspace_path and src_file.workspace.is_move_enabled:
                 ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
-                src_file.save()
             raise
 
     def store_file(self, local_path, data_types, workspace, remote_path):

@@ -11,3 +11,4 @@ reports
 npm-debug.log
 deploy
 config/scaleConfig.local.json
+!app/bower_components/gsap/src

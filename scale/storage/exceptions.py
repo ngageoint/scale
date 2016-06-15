@@ -24,6 +24,13 @@ class DuplicateFile(Exception):
     pass
 
 
+class FileDoesNotExist(Exception):
+    """Exception indicating an attempt was made to access a file that no longer exists
+    """
+
+    pass
+
+
 class InvalidDataTypeTag(Exception):
     """Exception indicating an attempt to add an invalid data type tag to a file
     """

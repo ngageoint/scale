@@ -8,7 +8,12 @@
         $scope.jobHealth = {};
 
         var getJobTypeStatus = function () {
-            jobTypeService.getJobTypeStatus(null, 1000, $scope.duration, null).then(null, null, function (data) {
+            jobTypeService.getJobTypeStatus({
+                page: null,
+                page_size: 1000,
+                started: $scope.duration,
+                ended: null
+            }).then(null, null, function (data) {
                 if (data.$resolved) {
                     $scope.jobHealthError = null;
                     $scope.jobTypeStatus = data.results;

@@ -46,7 +46,8 @@
                 ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
                 order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-ingest_started'],
                 status: queryString.status ? queryString.status : null
-            };
+            },
+            showActiveWorkspaces = true;
         
         var updateQuerystring = function (data) {
             // check for params in querystring, and update as necessary
@@ -107,6 +108,12 @@
             setIngestsParams: function (data) {
                 updateQuerystring(data);
                 ingestsParams = data;
+            },
+            getShowActiveWorkspaces: function () {
+                return showActiveWorkspaces;
+            },
+            setShowActiveWorkspaces: function (data) {
+                showActiveWorkspaces = data;
             }
         };
     });
