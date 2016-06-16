@@ -633,19 +633,19 @@ class QueueManager(models.Manager):
             # Check that resources are sufficient
             if resources.cpus < queue.cpus_required:
                 msg = 'Job execution requires %s CPUs and only %s were provided'
-                raise Exception(msg % (str(resources.cpus), str(queue.cpus_required)))
+                raise Exception(msg % (str(queue.cpus_required), str(resources.cpus)))
             if resources.mem < queue.mem_required:
                 msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
-                raise Exception(msg % (str(resources.mem), str(queue.mem_required)))
+                raise Exception(msg % (str(queue.mem_required), str(resources.mem)))
             if resources.disk_in < queue.disk_in_required:
                 msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_in), str(queue.disk_in_required)))
+                raise Exception(msg % (str(queue.disk_in_required), str(resources.disk_in)))
             if resources.disk_out < queue.disk_out_required:
                 msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_out), str(queue.disk_out_required)))
+                raise Exception(msg % (str(queue.disk_out_required), str(resources.disk_out)))
             if resources.disk_total < queue.disk_total_required:
                 msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_total), str(queue.disk_total_required)))
+                raise Exception(msg % (str(queue.disk_total_required), str(resources.disk_total)))
 
             executions_to_schedule.append((job_exe, node, resources))
 

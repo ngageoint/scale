@@ -8,6 +8,7 @@ from django.test import TestCase, TransactionTestCase
 from mock import MagicMock
 
 import job.test.utils as job_test_utils
+import node.test.utils as node_test_utils
 import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -16,11 +17,13 @@ import trigger.test.utils as trigger_test_utils
 from error.models import CACHED_BUILTIN_ERRORS, Error
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.models import Job
-from job.models import JobExecution
+from job.models import Job, JobExecution
+from job.resources import JobResources
+from queue.job_exe import QueuedJobExecution
 from queue.models import JobLoad, Queue, QueueEventProcessor
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeJob
 
 
@@ -450,6 +453,8 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
 
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
+    fixtures = ['basic_system_job_types.json']
+
     def setUp(self):
         django.setup()
 
@@ -562,6 +567,103 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         recipe = Recipe.objects.get(pk=recipe_id)
         self.assertIsNone(recipe.completed)
+
+    def test_successful_supersede(self):
+        """Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe."""
+
+        # Queue initial recipe and complete its first job
+        node = node_test_utils.create_node()
+        recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        recipe = Recipe.objects.get(id=recipe_id)
+        recipe_job_1 = RecipeJob.objects.select_related('job__job_exe').get(recipe_id=recipe_id, job_name='Job 1')
+        job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
+        queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
+        queued_job_exe.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
+        Queue.objects.schedule_job_executions([queued_job_exe], {})
+        results = JobResults()
+        results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().file_id])
+        JobExecution.objects.filter(id=job_exe_1.id).update(results=results.get_dict())
+        Queue.objects.handle_job_completion(job_exe_1.id, now())
+
+        # Create a new recipe type that has a new version of job 2 (job 1 is identical)
+        new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
+                                                        interface=self.job_type_2.interface)
+        new_definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'New Job 1',
+                'job_type': {
+                    'name': self.job_type_1.name,
+                    'version': self.job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
+                }]
+            }, {
+                'name': 'New Job 2',
+                'job_type': {
+                    'name': new_job_type_2.name,
+                    'version': new_job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'New Job 1',
+                    'connections': [{
+                        'output': 'Test Output 1',
+                        'input': 'Test Input 2',
+                    }]
+                }]
+            }]
+        }
+        new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
+        event = trigger_test_utils.create_trigger_event()
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 2')
+        superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
+        graph_a = self.recipe_type.get_recipe_definition().get_graph()
+        graph_b = new_recipe_type.get_recipe_definition().get_graph()
+        delta = RecipeGraphDelta(graph_a, graph_b)
+
+        # Queue new recipe that supersedes the old recipe
+        new_recipe_id = Queue.objects.queue_new_recipe(new_recipe_type, None, event, recipe, delta, superseded_jobs)
+
+        # Ensure old recipe is superseded
+        recipe = Recipe.objects.get(id=recipe_id)
+        self.assertTrue(recipe.is_superseded)
+
+        # Ensure new recipe supersedes old recipe
+        new_recipe = Recipe.objects.get(id=new_recipe_id)
+        self.assertEqual(new_recipe.superseded_recipe_id, recipe_id)
+
+        # Ensure that job 1 is already completed (it was copied from original recipe) and that job 2 is queued
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_recipe_id, job_name='New Job 1')
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_recipe_id, job_name='New Job 2')
+        self.assertEqual(new_recipe_job_1.job.status, 'COMPLETED')
+        self.assertFalse(new_recipe_job_1.is_original)
+        self.assertEqual(new_recipe_job_2.job.status, 'QUEUED')
+        self.assertTrue(new_recipe_job_2.is_original)
+
+        # Complete both the old and new job 2 and check that only the new recipe completes
+        job_exe_2 = JobExecution.objects.get(job_id=recipe_job_2.job_id)
+        queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
+        queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
+        Queue.objects.schedule_job_executions([queued_job_exe_2], {})
+        Queue.objects.handle_job_completion(job_exe_2.id, now())
+        new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
+        new_queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=new_job_exe_2.id))
+        new_queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000,
+                                                         disk_total=2000))
+        Queue.objects.schedule_job_executions([new_queued_job_exe_2], {})
+        Queue.objects.handle_job_completion(new_job_exe_2.id, now())
+        recipe = Recipe.objects.get(id=recipe.id)
+        new_recipe = Recipe.objects.get(id=new_recipe.id)
+        self.assertIsNone(recipe.completed)
+        self.assertIsNotNone(new_recipe.completed)
 
 
 class TestQueueManagerRequeueJobs(TransactionTestCase):
