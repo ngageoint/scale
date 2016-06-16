@@ -82,7 +82,10 @@
                                             <td>Last Modified</td>
                                         </tr>
                                         <tr>
-                                            <td><a href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a></td>
+                                            <td>
+                                                <a ng-show="input.value.url" href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a>
+                                                <span ng-show="!input.value.url">{{ input.value.file_name }}</span>
+                                            </td>
                                             <td>{{ calculateFileSize(input.value.file_size) }}</td>
                                             <td>{{ input.value.created }}</td>
                                             <td>{{ input.value.last_modified }}</td>
@@ -98,7 +101,10 @@
                                             <td>Last Modified</td>
                                         </tr>
                                         <tr ng-repeat="v in input.value">
-                                            <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                            <td>
+                                                <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
+                                                <span ng-show="!v.url">{{ v.file_name }}</span>
+                                            </td>
                                             <td>{{ calculateFileSize(v.file_size) }}</td>
                                             <td>{{ v.created }}</td>
                                             <td>{{ v.last_modified }}</td>
@@ -133,7 +139,10 @@
                                             <td>Last Modified</td>
                                         </tr>
                                         <tr>
-                                            <td><a href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a></td>
+                                            <td>
+                                                <a ng-show="output.value.url" href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a>
+                                                <span ng-show="!output.value.url">{{ output.value.file_name }}</span>
+                                            </td>
                                             <td>{{ calculateFileSize(output.value.file_size) }}</td>
                                             <td>{{ output.value.created }}</td>
                                             <td>{{ output.value.last_modified }}</td>
@@ -149,7 +158,10 @@
                                             <td>Last Modified</td>
                                         </tr>
                                         <tr ng-repeat="v in output.value">
-                                            <td><a href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a></td>
+                                            <td>
+                                                <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
+                                                <span ng-show="!v.url">{{ v.file_name }}</span>
+                                            </td>
                                             <td>{{ calculateFileSize(v.file_size) }}</td>
                                             <td>{{ v.created }}</td>
                                             <td>{{ v.last_modified }}</td>
@@ -193,79 +205,6 @@
             </tbody>
         </table>
     </div>
-    <!--<div class="tab-pane" id="recentExecution" ng-if="latestExecution">-->
-        <!--<job-execution-log execution="job.getLatestExecution()"></job-execution-log>-->
-    <!--</div>-->
-    <!--<div class="tab-pane" id="products">-->
-        <!--<span ng-show="publishedProductsGrouped.length === 0">No published products were found.</span>-->
-        <!--<table class="" style="width: 100%" ng-show="publishedProductsGrouped.length > 0">-->
-            <!--<tbody>-->
-                <!--<tr ng-repeat="group in publishedProductsGrouped">-->
-                    <!--<td>-->
-                        <!--<table class="table table-condensed table-striped">-->
-                            <!--<caption>Job Execution ID: <a ng-click="showExecutionDetails(group[0])">{{ group[0] }}</a></caption>-->
-                            <!--<thead>-->
-                                <!--<tr>-->
-                                    <!--<th>Filename</th>-->
-                                    <!--<th>Filesize</th>-->
-                                    <!--<th>Created</th>-->
-                                    <!--<th>Last Modified</th>-->
-                                    <!--<th>Type</th>-->
-                                <!--</tr>-->
-                            <!--</thead>-->
-                            <!--<tbody>-->
-                                <!--<tr ng-repeat="product in group[1]">-->
-                                    <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.media_type)"></i> <a href="{{ product.url }}" target="_blank">{{ product.file_name }}</a></td>-->
-                                    <!--<td>{{ product.file_size_readable }}</td>-->
-                                    <!--<td>{{ product.created_formatted }}</td>-->
-                                    <!--<td>{{ product.last_modified_formatted }}</td>-->
-                                    <!--<td>{{ product.is_operational_label }}</td>-->
-                                <!--</tr>-->
-                            <!--</tbody>-->
-                        <!--</table>-->
-                    <!--</td>-->
-                <!--</tr>-->
-            <!--</tbody>-->
-        <!--</table>-->
-        <!--<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" ng-show="unpublishedProducts.length > 0">-->
-            <!--<div class="panel panel-default">-->
-                <!--<a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#unpublishedProducts" aria-expanded="true" aria-controls="unpublishedProducts">-->
-                    <!--<div class="panel-heading" role="tab" id="unpublishedProductsHeading">-->
-                        <!--<h4 class="panel-title">-->
-                            <!--Unpublished Products-->
-                        <!--</h4>-->
-                    <!--</div>-->
-                <!--</a>-->
-                <!--<div id="unpublishedProducts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="unpublishedProductsHeading">-->
-                    <!--<div class="panel-body">-->
-                        <!--<table class="table table-condensed table-striped">-->
-                            <!--<thead>-->
-                            <!--<tr>-->
-                                <!--<th>Filename</th>-->
-                                <!--<th>Filesize</th>-->
-                                <!--<th>Created</th>-->
-                                <!--<th>Last Modified</th>-->
-                                <!--<th>Type</th>-->
-                            <!--</tr>-->
-                            <!--</thead>-->
-                            <!--<tbody>-->
-                            <!--<tr ng-repeat="product in unpublishedProducts">-->
-                                <!--<td><i class="fa mediaType" ng-class="mediaTypeClass(product.mediaType)"></i> <a href="{{ product.url }}" target="_blank">{{ product.fileName }}</a></td>-->
-                                <!--<td>{{ product.getReadableFilesize() }}</td>-->
-                                <!--<td>{{ product.created_formatted }}</td>-->
-                                <!--<td>{{ product.last_modified_formatted }}</td>-->
-                                <!--<td>{{ product.is_operational_label }}</td>-->
-                            <!--</tr>-->
-                            <!--</tbody>-->
-                        <!--</table>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="tab-pane" id="childJobs">
-
-    </div>-->
 </div>
 <script type="text/ng-template" id="showLog.html">
     <div>
