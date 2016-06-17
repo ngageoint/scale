@@ -55,9 +55,9 @@
                     if (data.statusText && data.statusText !== '') {
                         $scope.jobErrorStatus = data.statusText;
                     }
-                    $scope.jobError = 'Unable to retrieve job types.'
+                    $scope.jobError = 'Unable to retrieve job types.';
                 }
-                $scope.loadingJobs = false
+                $scope.loadingJobs = false;
             });
         };
 

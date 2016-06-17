@@ -38,8 +38,8 @@
                         <dd>{{ activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
                         <dt ng-if="activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
                         <dd ng-if="activeWorkspace.json_config.broker.type === 'nfs'">{{ activeWorkspace.json_config.broker.nfs_path }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 'host'">Host Mount:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 'host'">{{ activeWorkspace.json_config.broker.host_mount }}</dd>
+                        <dt ng-if="activeWorkspace.json_config.broker.type === 'host'">Host Path:</dt>
+                        <dd ng-if="activeWorkspace.json_config.broker.type === 'host'">{{ activeWorkspace.json_config.broker.host_path }}</dd>
                         <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
                         <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.bucket_name }}</dd>
                         <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
@@ -112,8 +112,8 @@
                                 <input id="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="activeWorkspace.json_config.broker.nfs_path">
                             </div>
                             <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 'host'">
-                                <label for="host_mount">Host Mount</label>
-                                <input id="host_mount" type="text" class="form-control" placeholder="Host Mount" ng-model="activeWorkspace.json_config.broker.host_mount">
+                                <label for="host_path">Host Path</label>
+                                <input id="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="activeWorkspace.json_config.broker.host_path">
                             </div>
                             <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
                                 <label for="bucket_name">Bucket Name</label>

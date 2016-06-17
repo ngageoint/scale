@@ -158,7 +158,7 @@
             },{
                 "broker": {
                     "type": "host",
-                    "host_mount": ""
+                    "host_path": ""
                 }
             },{
                 "broker": {
