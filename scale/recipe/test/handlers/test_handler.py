@@ -6,7 +6,8 @@ from django.test import TestCase
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-from recipe.models import Recipe
+from recipe.handlers.handler import RecipeHandler
+from recipe.models import RecipeJob
 
 
 class TestRecipeHandler(TestCase):
@@ -139,17 +140,27 @@ class TestRecipeHandler(TestCase):
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_co_ru_qu_b', job=self.job_co_ru_qu_b)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_qu_ca_a', job=self.job_qu_ca_a)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_qu_ca_b', job=self.job_qu_ca_b)
+        self.recipe_jobs = list(RecipeJob.objects.filter(recipe_id=self.recipe.id))
 
     def test_get_blocked_jobs(self):
         """Tests calling RecipeHandler.get_blocked_jobs()"""
 
-        handler = Recipe.objects.get_recipe_handlers_for_jobs([self.job_failed.id])[self.job_failed.id]
+        handler = RecipeHandler(self.recipe, self.recipe_jobs)
         blocked_jobs = handler.get_blocked_jobs()
         blocked_job_ids = set()
         for blocked_job in blocked_jobs:
             blocked_job_ids.add(blocked_job.id)
 
         self.assertSetEqual(blocked_job_ids, {self.job_fa_co_b.id, self.job_qu_ca_a.id, self.job_qu_ca_b.id})
+
+    def test_get_dependent_job_ids(self):
+        """Tests calling RecipeHandler.get_dependent_job_ids()"""
+
+        handler = RecipeHandler(self.recipe, self.recipe_jobs)
+        dependent_job_ids = handler.get_dependent_job_ids(self.job_completed.id)
+
+        self.assertSetEqual(dependent_job_ids, {self.job_fa_co_a.id, self.job_fa_co_b.id, self.job_co_ru_qu_a.id,
+                                                self.job_co_ru_qu_b.id})
 
     def test_get_existing_jobs_to_queue(self):
         """Tests calling RecipeHandler.get_existing_jobs_to_queue()"""
@@ -238,8 +249,9 @@ class TestRecipeHandler(TestCase):
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
+        recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
 
-        handler = Recipe.objects.get_recipe_handlers_for_jobs([job_1.id])[job_1.id]
+        handler = RecipeHandler(recipe, recipe_jobs)
         jobs_to_queue = handler.get_existing_jobs_to_queue()
 
         # Make sure only Job 1 is returned and that its job data is correct
@@ -260,7 +272,7 @@ class TestRecipeHandler(TestCase):
     def test_get_pending_jobs(self):
         """Tests calling RecipeHandler.get_pending_jobs()"""
 
-        handler = Recipe.objects.get_recipe_handlers_for_jobs([self.job_failed.id])[self.job_failed.id]
+        handler = RecipeHandler(self.recipe, self.recipe_jobs)
         pending_jobs = handler.get_pending_jobs()
         pending_job_ids = set()
         for pending_job in pending_jobs:

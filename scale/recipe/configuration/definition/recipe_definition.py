@@ -7,11 +7,14 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
-from job.configuration.data.job_data import JobData
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.handlers.inputs.file import FileInput
+from job.handlers.inputs.files import FilesInput
+from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.handlers.graph import RecipeGraph
 
 
 DEFAULT_VERSION = '1.0'
@@ -221,6 +224,51 @@ class RecipeDefinition(object):
 
         return self._definition
 
+    def get_graph(self):
+        """Returns the recipe graph for this definition
+
+        :returns: The recipe graph
+        :rtype: :class:`recipe.handlers.graph.RecipeGraph`
+        """
+
+        graph = RecipeGraph()
+        for input_name in self._inputs_by_name:
+            input_dict = self._inputs_by_name[input_name]
+            input_type = input_dict['type']
+            required = input_dict['required']
+            recipe_input = None
+            if input_type == 'property':
+                recipe_input = PropertyInput(input_name, required)
+            elif input_type == 'file':
+                recipe_input = FileInput(input_name, required)
+            elif input_type == 'files':
+                recipe_input = FilesInput(input_name, required)
+            graph.add_input(recipe_input)
+
+        for job_name in self._jobs_by_name:
+            job_dict = self._jobs_by_name[job_name]
+            job_type = job_dict['job_type']
+            job_type_name = job_type['name']
+            job_type_version = job_type['version']
+            graph.add_job(job_name, job_type_name, job_type_version)
+            for recipe_input_dict in job_dict['recipe_inputs']:
+                recipe_input_name = recipe_input_dict['recipe_input']
+                job_input_name = recipe_input_dict['job_input']
+                graph.add_recipe_input_connection(recipe_input_name, job_name, job_input_name)
+
+        for job_name in self._jobs_by_name:
+            job_dict = self._jobs_by_name[job_name]
+            for dependency_dict in job_dict['dependencies']:
+                dependency_name = dependency_dict['name']
+                dependency_connections = []
+                for conn_dict in dependency_dict['connections']:
+                    conn_input = conn_dict['input']
+                    job_output = conn_dict['output']
+                    dependency_connections.append((job_output, conn_input))
+                graph.add_dependency(dependency_name, job_name, dependency_connections)
+
+        return graph
+
     def get_job_types(self, lock=False):
         """Returns a set of job types for each job in the recipe
 
@@ -275,7 +323,7 @@ class RecipeDefinition(object):
         return results
 
     def get_jobs_to_create(self):
-        """Returns the list of job names and types to create for the recipe, in the order that they be created
+        """Returns the list of job names and types to create for the recipe, in the order that they should be created
 
         :returns: List of tuples with each job's name and type
         :rtype: [(str, :class:`job.models.JobType`)]
@@ -283,102 +331,11 @@ class RecipeDefinition(object):
 
         results = []
         job_type_map = self.get_job_type_map()
-        ordering = self._get_topological_order()
+        ordering = self.get_graph().get_topological_order()
         for job_name in ordering:
             job_tuple = (job_name, job_type_map[job_name])
             results.append(job_tuple)
         return results
-
-    def get_next_jobs_to_queue(self, data, unqueued_jobs, completed_jobs):
-        """Returns the IDs and data for the next recipe jobs that should be placed on the queue
-
-        :param data: The recipe data
-        :type data: :class:`recipe.configuration.data.recipe_data.RecipeData`
-        :param unqueued_jobs: The job models (with related job type and job type revision models) that have not yet been
-            queued, mapped by recipe job name
-        :type unqueued_jobs: dict of str -> :class:`job.models.Job`
-        :param completed_jobs: The job models (with related job type and job type revision models) that have been
-            successfully completed, mapped by recipe job name
-        :type completed_jobs: dict of str -> :class:`job.models.Job`
-        :returns: Dictionary with the ID of each job to queue mapping to its job data
-        :rtype: dict of int -> :class:`job.configuration.data.job_data.JobData`
-        """
-
-        jobs_to_queue = {}
-
-        for job_name in unqueued_jobs:
-            unqueued_job = unqueued_jobs[job_name]
-            unqueued_job_dict = self._jobs_by_name[job_name]
-
-            # Check all dependencies for this unqueued job
-            all_dependencies_completed = True
-            for dependency_dict in unqueued_job_dict['dependencies']:
-                dependency_name = dependency_dict['name']
-                if not dependency_name in completed_jobs:
-                    all_dependencies_completed = False
-                    break
-
-            if all_dependencies_completed:
-                # All dependencies completed, compile data needed to queue this job
-                job_data = self._create_job_data(unqueued_job_dict, unqueued_job, data, completed_jobs)
-                jobs_to_queue[unqueued_job.id] = job_data
-
-        return jobs_to_queue
-
-    def get_unqueued_job_statuses(self, recipe_jobs):
-        """Returns the status (PENDING or BLOCKED) that each recipe job that has never been queued should be set to
-        based upon whether any of its dependencies are FAILED or CANCELED
-
-        :param recipe_jobs: All of the recipe job models, mapped by recipe job name
-        :type recipe_jobs: dict of str -> :class:`job.models.Job`
-        :returns: Dictionary with the ID of each never-queued job mapping to its appropriate status (PENDING or BLOCKED)
-        :rtype: dict of int -> :class:`job.configuration.data.job_data.JobData`
-        """
-
-        job_statuses = {}  # {Job ID: Status}
-        processed_jobs = {}  # {Recipe Job Name: Job}
-        unprocessed_jobs = {}  # {Recipe Job Name: Job}
-
-        for job_name in recipe_jobs:
-            job = recipe_jobs[job_name]
-            if job.status in ['PENDING', 'BLOCKED']:
-                unprocessed_jobs[job_name] = job
-            else:
-                processed_jobs[job_name] = job
-                job_statuses[job.id] = job.status
-
-        while unprocessed_jobs:
-            job_names = unprocessed_jobs.keys()
-            for job_name in job_names:
-                unprocessed_job = unprocessed_jobs[job_name]
-                unprocessed_job_dict = self._jobs_by_name[job_name]
-
-                # Check all dependencies for this job
-                job_is_blocked = False
-                unprocessed_dependency = False
-                for dependency_dict in unprocessed_job_dict['dependencies']:
-                    dependency_name = dependency_dict['name']
-                    if dependency_name in processed_jobs:
-                        dependency_status = job_statuses[processed_jobs[dependency_name].id]
-                        if dependency_status in ['BLOCKED', 'FAILED', 'CANCELED']:
-                            job_is_blocked = True
-                            break
-                    else:
-                        unprocessed_dependency = True
-
-                if job_is_blocked:
-                    processed_jobs[job_name] = unprocessed_job
-                    del unprocessed_jobs[job_name]
-                    job_statuses[unprocessed_job.id] = 'BLOCKED'
-                elif not unprocessed_dependency:
-                    processed_jobs[job_name] = unprocessed_job
-                    del unprocessed_jobs[job_name]
-                    job_statuses[unprocessed_job.id] = 'PENDING'
-
-        for job_id in job_statuses.keys():
-            if job_statuses[job_id] not in ['PENDING', 'BLOCKED']:
-                del job_statuses[job_id]
-        return job_statuses
 
     def validate_connection(self, recipe_conn):
         """Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
@@ -488,45 +445,6 @@ class RecipeDefinition(object):
                 optional = not input_data_dict['required']
                 job_conn.add_input_file(job_input, multiple, media_types, optional)
 
-    def _create_job_data(self, job_dict, job, recipe_data, completed_jobs):
-        """Creates and returns the job data for the given recipe job
-
-        :param job_dict: The recipe job dictionary
-        :type job_dict: dict
-        :param job: The job model with related job type and job type revision models
-        :type job: :class:`job.models.Job`
-        :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
-        :param completed_jobs: The recipe jobs (with related job type field) that have been successfully completed,
-            mapped by recipe job name
-        :type completed_jobs: dict of str -> :class:`job.models.Job`
-        :returns: The job data
-        :rtype: :class:`job.configuration.data.job_data.JobData`
-        """
-
-        job_data = JobData({})
-
-        # Grab inputs from recipe data
-        for recipe_input_dict in job_dict['recipe_inputs']:
-            recipe_input = recipe_input_dict['recipe_input']
-            job_input = recipe_input_dict['job_input']
-            recipe_data.add_input_to_data(recipe_input, job_data, job_input)
-
-        # Grab inputs from dependencies
-        for dependency_dict in job_dict['dependencies']:
-            dependency_model = completed_jobs[dependency_dict['name']]
-            for connection_dict in dependency_dict['connections']:
-                results_output = connection_dict['output']
-                data_input = connection_dict['input']
-                dependency_model.get_job_results().add_output_to_data(results_output, job_data, data_input)
-
-        # Add workspace for file outputs if needed
-        job_interface = job.get_job_interface()
-        if job_interface.get_file_output_names():
-            job_interface.add_workspace_to_data(job_data, recipe_data.get_workspace_id())
-
-        return job_data
-
     def _create_validation_dicts(self):
         """Creates the validation dicts required by recipe_data to perform its validation"""
 
@@ -547,67 +465,6 @@ class RecipeDefinition(object):
                     for media_type in input_data['media_types']:
                         file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, True, file_desc)
-
-    def _get_topological_order(self):
-        """Returns the recipe job names in a valid topological ordering
-
-        :returns: The list of job names in topological ordering
-        :rtype: [str]
-        """
-
-        nodes_by_name = {}  # {Job name: Recipe Node}
-        root_nodes = []  # Recipe nodes that have jobs with no dependencies
-
-        for job_name in self._jobs_by_name:
-            node = RecipeNode()
-            node.job_name = job_name
-            nodes_by_name[job_name] = node
-
-        for job_name in self._jobs_by_name:
-            job_dict = self._jobs_by_name[job_name]
-            dependent_node = nodes_by_name[job_name]
-            dependencies = job_dict['dependencies']
-            if dependencies:
-                for dependency_dict in job_dict['dependencies']:
-                    parent_node = nodes_by_name[dependency_dict['name']]
-                    parent_node.dependent_nodes.append(dependent_node)
-                    dependent_node.parent_nodes.append(parent_node)
-            else:
-                root_nodes.append(dependent_node)
-
-        results = []
-        perm_set = set()
-        temp_set = set()
-        unmarked_set = set(self._jobs_by_name.keys())
-        while unmarked_set:
-            job_name = unmarked_set.pop()
-            node = nodes_by_name[job_name]
-            self._get_topological_order_visit(node, results, perm_set, temp_set)
-            unmarked_set = set(self._jobs_by_name.keys()) - perm_set
-        return results
-
-    def _get_topological_order_visit(self, node, results, perm_set, temp_set):
-        """Recursive depth-first search algorithm for determining a topological ordering of the recipe jobs
-
-        :param node: The job dictionary
-        :type node: :class:`recipe.configuration.definition.recipe_definition.RecipeNode`
-        :param results: The list of job names in topological order
-        :type results: list
-        :param perm_set: A permanent set of visited nodes (job names)
-        :type perm_set: set
-        :param temp_set: A temporary set of visited nodes (job names)
-        :type temp_set: set
-        """
-
-        if node.job_name in temp_set:
-            raise Exception('Recipe has cyclic dependencies')
-        if node.job_name not in perm_set:
-            temp_set.add(node.job_name)
-            for dependent_node in node.dependent_nodes:
-                self._get_topological_order_visit(dependent_node, results, perm_set, temp_set)
-            perm_set.add(node.job_name)
-            temp_set.remove(node.job_name)
-            results.insert(0, node.job_name)
 
     def _populate_default_values(self):
         """Goes through the definition and populates any missing values with defaults
@@ -740,16 +597,3 @@ class RecipeDefinition(object):
                 if recipe_input not in self._inputs_by_name:
                     msg = 'Invalid recipe definition: Job %s has undefined recipe input %s' % (job_name, recipe_input)
                     raise InvalidDefinition(msg)
-
-
-class RecipeNode(object):
-    """This class represents a node within a recipe. A node contains a job name along with links to its parent jobs and
-    dependent jobs."""
-
-    def __init__(self):
-        """Constructor
-        """
-
-        self.dependent_nodes = []
-        self.parent_nodes = []
-        self.job_name = None

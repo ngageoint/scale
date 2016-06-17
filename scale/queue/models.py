@@ -14,6 +14,7 @@ from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
@@ -356,17 +357,18 @@ class QueueManager(models.Manager):
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
         handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
         if handler:
-            jobs_to_queue = []
-            for job_tuple in handler.get_existing_jobs_to_queue():
-                job = job_tuple[0]
-                job_data = job_tuple[1]
-                try:
-                    Job.objects.populate_job_data(job, job_data)
-                except InvalidData as ex:
-                    raise Exception('Scale created invalid job data: %s' % str(ex))
-                jobs_to_queue.append(job)
-            if jobs_to_queue:
-                self._queue_jobs(jobs_to_queue)
+            if not job_exe.job.is_superseded:  # Do not queue dependent jobs for superseded jobs
+                jobs_to_queue = []
+                for job_tuple in handler.get_existing_jobs_to_queue():
+                    job = job_tuple[0]
+                    job_data = job_tuple[1]
+                    try:
+                        Job.objects.populate_job_data(job, job_data)
+                    except InvalidData as ex:
+                        raise Exception('Scale created invalid job data: %s' % str(ex))
+                    jobs_to_queue.append(job)
+                if jobs_to_queue:
+                    self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
                 Recipe.objects.complete(handler.recipe_id, when)
 
@@ -404,18 +406,21 @@ class QueueManager(models.Manager):
                 logger.exception('Unable to call queue processor for failed job execution: %s -> %s', processor_class,
                                  job_exe_id)
 
-        # Re-queue job if a system error occurred and there are more tries left
-        requeue = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
-        # Also re-queue long running jobs
-        requeue = requeue or job_exe.job.job_type.is_long_running
-        if requeue:
-            self._queue_jobs([job_exe.job])
+        # Re-try job if a system error occurred and there are more tries left
+        retry = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
+        # Also re-try long running jobs
+        retry = retry or job_exe.job.job_type.is_long_running
+        # Do not re-try superseded jobs
+        retry = retry and not job_exe.job.is_superseded
 
-        # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
-        if handler:
-            jobs_to_blocked = handler.get_blocked_jobs()
-            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+        if retry:
+            self._queue_jobs([job_exe.job])
+        else:
+            # If this job is in a recipe, update dependent jobs so that they are BLOCKED
+            handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+            if handler:
+                jobs_to_blocked = handler.get_blocked_jobs()
+                Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
@@ -469,24 +474,32 @@ class QueueManager(models.Manager):
         return job_id, job_exe.id
 
     @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event):
-        """Creates a new recipe for the given type and data. The new jobs in the recipe with no dependencies on other
-        jobs are immediately placed on the queue. The given recipe_type model must have already been saved in the
-        database (it must have an ID). The given event model must have already been saved in the database (it must have
-        an ID). All database changes occur in an atomic transaction.
+    def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
+        """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
+        new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
+        caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
+        All database changes occur in an atomic transaction.
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: The ID of the new recipe
         :rtype: int
-        :raises InvalidData: If the recipe data is invalid
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, event, data)
+        handler = Recipe.objects.create_recipe(recipe_type, event, data, superseded_recipe, delta, superseded_jobs)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -512,11 +525,12 @@ class QueueManager(models.Manager):
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
         :returns: The ID of the new recipe
         :rtype: int
-        :raises InvalidData: If the recipe data is invalid
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
         description = {'user': 'Anonymous'}
@@ -537,8 +551,8 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
-        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued will be
-        ignored. All database changes will occur within an atomic transaction.
+        """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
+        superseded will be ignored. All database changes will occur within an atomic transaction.
 
         :param job_ids: The IDs of the jobs to re-queue
         :type job_ids: [int]
@@ -552,7 +566,7 @@ class QueueManager(models.Manager):
         jobs_to_blocked = []
         jobs_to_pending = []
         for job in jobs_to_requeue:
-            if not job.is_ready_to_requeue:
+            if not job.is_ready_to_requeue or job.is_superseded:
                 continue
             all_valid_job_ids.append(job.id)
             if job.num_exes == 0:
@@ -572,11 +586,8 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
         # Update dependent recipe jobs (with model locks) that should now go back to PENDING
-        handlers = Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids)
-        for job_id in all_valid_job_ids:
-            if job_id in handlers:
-                handler = handlers[job_id]
-                jobs_to_pending.extend(handler.get_pending_jobs())
+        for handler in Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids):
+            jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
@@ -622,19 +633,19 @@ class QueueManager(models.Manager):
             # Check that resources are sufficient
             if resources.cpus < queue.cpus_required:
                 msg = 'Job execution requires %s CPUs and only %s were provided'
-                raise Exception(msg % (str(resources.cpus), str(queue.cpus_required)))
+                raise Exception(msg % (str(queue.cpus_required), str(resources.cpus)))
             if resources.mem < queue.mem_required:
                 msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
-                raise Exception(msg % (str(resources.mem), str(queue.mem_required)))
+                raise Exception(msg % (str(queue.mem_required), str(resources.mem)))
             if resources.disk_in < queue.disk_in_required:
                 msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_in), str(queue.disk_in_required)))
+                raise Exception(msg % (str(queue.disk_in_required), str(resources.disk_in)))
             if resources.disk_out < queue.disk_out_required:
                 msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_out), str(queue.disk_out_required)))
+                raise Exception(msg % (str(queue.disk_out_required), str(resources.disk_out)))
             if resources.disk_total < queue.disk_total_required:
                 msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
-                raise Exception(msg % (str(resources.disk_total), str(queue.disk_total_required)))
+                raise Exception(msg % (str(queue.disk_total_required), str(resources.disk_total)))
 
             executions_to_schedule.append((job_exe, node, resources))
 
@@ -678,10 +689,9 @@ class QueueManager(models.Manager):
             job_exe.save()
 
     def _queue_jobs(self, jobs, priority=None):
-        """Queues the given jobs and returns the new queued job executions. For jobs that are in recipes, the caller
-        must have obtained model locks on all of the corresponding recipe models. For jobs not in recipes, the caller
-        must have obtained model locks on the job models. Any jobs not in a valid status for being queued or without job
-        data will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
+        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
+        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
@@ -718,6 +728,9 @@ class QueueManager(models.Manager):
             queue.configuration = job_exe.job.configuration
             queue.queued = when_queued
             queues.append(queue)
+
+        if not queues:
+            return []
 
         self.bulk_create(queues)
         return job_exes

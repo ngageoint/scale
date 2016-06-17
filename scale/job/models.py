@@ -305,8 +305,8 @@ class JobManager(models.Manager):
 
     def queue_jobs(self, jobs, when, priority=None):
         """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-        the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
-        should have their related job_type and job_type_rev models populated.
+        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
+        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
 
         :param jobs: The jobs to put on the queue
         :type jobs: [:class:`job.models.Job`]
@@ -324,7 +324,7 @@ class JobManager(models.Manager):
         job_ids = set()
         jobs_to_queue = []
         for job in jobs:
-            if not job.is_ready_to_queue or not job.data:
+            if not job.is_ready_to_queue or not job.data or job.is_superseded:
                 continue
 
             job_ids.add(job.id)
@@ -466,14 +466,21 @@ class JobManager(models.Manager):
 
         # Update job models in memory and collect job IDs
         job_ids = set()
+        jobs_to_cancel = []
         for job in jobs:
             job_ids.add(job.id)
             job.is_superseded = True
             job.superseded = when
             job.last_modified = modified
+            if job.status in ['PENDING', 'BLOCKED']:
+                jobs_to_cancel.append(job)
 
         # Update job models in database with single query
         self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=modified)
+
+        # Cancel any jobs that are PENDING or BLOCKED
+        if jobs_to_cancel:
+            self.update_status(jobs_to_cancel, 'CANCELED', when)
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
@@ -989,6 +996,9 @@ class JobExecutionManager(models.Manager):
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
             job_exe.configuration = job.configuration
             job_exes.append(job_exe)
+
+        if not job_exes:
+            return []
 
         # Create job executions and re-query to get ID fields
         self.bulk_create(job_exes)

@@ -185,9 +185,30 @@ class TestJobDetailsView(TestCase):
 
         try:
             import recipe.test.utils as recipe_test_utils
-            self.recipe = recipe_test_utils.create_recipe()
-            self.recipe_job = recipe_test_utils.create_recipe_job(self.recipe, job=self.job)
+            definition = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'Recipe Input',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'jobs': [{
+                    'name': 'Job 1',
+                    'job_type': {
+                        'name': self.job_type.name,
+                        'version': self.job_type.version,
+                    },
+                    'recipe_inputs': [{
+                        'recipe_input': 'Recipe Input',
+                        'job_input': 'input_files',
+                    }]
+                }]
+            }
+            self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+            self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+            self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job=self.job, job_name='Job 1')
         except:
+            self.recipe_type = None
             self.recipe = None
             self.recipe_job = None
 

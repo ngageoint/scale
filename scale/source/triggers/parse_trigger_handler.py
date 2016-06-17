@@ -77,7 +77,7 @@ class ParseTriggerHandler(TriggerRuleHandler):
                     recipe_data.add_file_input(rule_config.get_input_data_name(), source_file.id)
                     recipe_data.set_workspace_id(workspace.id)
                     logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)
-                    Queue.objects.queue_new_recipe(recipe_type, recipe_data.get_dict(), event)
+                    Queue.objects.queue_new_recipe(recipe_type, recipe_data, event)
 
         if not any_rules:
             logger.info('No rules triggered')

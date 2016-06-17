@@ -8,7 +8,7 @@ from django.db import models, transaction
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
-from recipe.handler import RecipeHandler
+from recipe.handlers.handler import RecipeHandler
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -39,20 +39,27 @@ class RecipeManager(models.Manager):
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, event, data):
+    def create_recipe(self, recipe_type, event, data, superseded_recipe=None, delta=None, superseded_jobs=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
-        also be created. The given recipe type model must have already been saved in the database (it must have an ID).
-        The given event model must have already been saved in the database (it must have an ID). All database changes
-        occur in an atomic transaction.
+        also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
+        must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
+        superseded_recipe model. All database changes occur in an atomic transaction.
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
-        :param data: JSON description defining the recipe data to run on
-        :type data: dict
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handler.RecipeHandler`
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
@@ -67,53 +74,103 @@ class RecipeManager(models.Manager):
         recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
         recipe_definition = recipe.get_recipe_definition()
+        when = timezone.now()
 
-        # Validate recipe data
-        recipe_data = RecipeData(data)
-        recipe_definition.validate_data(recipe_data)
-        recipe.data = data
+        if superseded_recipe:
+            # Mark superseded recipe
+            superseded_recipe.is_superseded = True
+            superseded_recipe.superseded = when
+            superseded_recipe.save()
+
+            # Use data from superseded recipe
+            data = superseded_recipe.get_recipe_data()
+            if not delta:
+                raise Exception('Cannot supersede a recipe without delta')
+
+            # New recipe references superseded recipe
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if not root_id:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
+        else:
+            if delta:
+                raise Exception('delta must be provided with a superseded recipe')
+
+        # Validate recipe data and save recipe
+        recipe_definition.validate_data(data)
+        recipe.data = data.get_dict()
         recipe.save()
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = []
-        jobs_by_name = self._create_recipe_jobs(recipe_definition, event)
-        for job_name in jobs_by_name:
-            recipe_job = RecipeJob()
-            recipe_job.job = jobs_by_name[job_name]
-            recipe_job.job_name = job_name
-            recipe_job.recipe = recipe
-            recipe_job.save()
-            recipe_jobs.append(recipe_job)
-
+        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
         return RecipeHandler(recipe, recipe_jobs)
 
-    @transaction.atomic
-    def _create_recipe_jobs(self, recipe_definition, event):
-        """Creates and saves the job models for the recipe with the given definition. The given event model must have
-        already been saved in the database (it must have an ID). All database changes occur in an atomic transaction.
+    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs):
+        """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
+        an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
+        all job models in superseded_jobs.
 
-        :param recipe_definition: The recipe definition
-        :type recipe_definition: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
+        :param recipe: The new recipe
+        :type recipe: :class:`recipe.models.Recipe`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
-        :returns: A dictionary with each recipe job name mapping to its new job model
-        :rtype: dict of str -> :class:`job.models.Job`
+        :param when: The time that the recipe was created
+        :type when: :class:`datetime.datetime`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
+        :returns: The list of newly created recipe_job models (without id field populated)
+        :rtype: [:class:`recipe.models.RecipeJob`]
         """
 
-        # Create an associated job for each recipe reference
-        results = {}
-        for job_tuple in recipe_definition.get_jobs_to_create():
+        recipe_jobs_to_create = []
+        jobs_to_supersede = []
+        for job_tuple in recipe.get_recipe_definition().get_jobs_to_create():
             job_name = job_tuple[0]
             job_type = job_tuple[1]
-            job = Job.objects.create_job(job_type, event)
-            job.save()
-            results[job_name] = job
+            superseded_job = None
 
-        return results
+            if delta:  # Look at changes from recipe we are superseding
+                if not delta.can_be_reprocessed:
+                    raise Exception('Cannot reprocess recipe')
+                if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
+                    copied_job = superseded_jobs[delta.get_identical_nodes()[job_name]]
+                    recipe_job = RecipeJob()
+                    recipe_job.job = copied_job
+                    recipe_job.job_name = job_name
+                    recipe_job.recipe = recipe
+                    recipe_job.is_original = False
+                    recipe_jobs_to_create.append(recipe_job)
+                    continue  # Don't create a new job, just copy old one
+                elif job_name in delta.get_changed_nodes():  # Changed jobs should be superseded
+                    superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
+                    jobs_to_supersede.append(superseded_job)
+
+            job = Job.objects.create_job(job_type, event, superseded_job)
+            job.save()
+            recipe_job = RecipeJob()
+            recipe_job.job = job
+            recipe_job.job_name = job_name
+            recipe_job.recipe = recipe
+            recipe_jobs_to_create.append(recipe_job)
+
+        # Supersede any jobs that were changed or deleted in new recipe
+        if delta:
+            for superseded_job_name in delta.get_deleted_nodes():
+                jobs_to_supersede.append(superseded_jobs[superseded_job_name])
+        if jobs_to_supersede:
+            Job.objects.supersede_jobs(jobs_to_supersede, when)
+
+        RecipeJob.objects.bulk_create(recipe_jobs_to_create)
+        return recipe_jobs_to_create
 
     def get_recipe_for_job(self, job_id):
-        """Returns the recipe, possibly None, for the job with the given ID. The returned model will have its related
-        recipe_type and recipe_type_rev models populated.
+        """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
+        returned model will have its related recipe_type and recipe_type_rev models populated. If the job exists in
+        multiple recipes due to superseding, the original (first) recipe is returned.
 
         :param job_id: The job ID
         :type job_id: int
@@ -123,7 +180,7 @@ class RecipeManager(models.Manager):
 
         recipe_job_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         try:
-            recipe_job = recipe_job_qry.get(job_id=job_id)
+            recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)
         except RecipeJob.DoesNotExist:
             return None
         return recipe_job.recipe
@@ -131,57 +188,59 @@ class RecipeManager(models.Manager):
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
-        all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs.
+        all jobs models that depend upon the given job, allowing update queries to be made on the dependent jobs. No
+        handler will be returned for a job that is not in a non-superseded recipe.
 
         :param job_id: The job ID
         :type job_id: int
         :returns: The recipe handler, possibly None
-        :rtype: :class:`recipe.handler.RecipeHandler`
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
         """
 
         handlers = self.get_recipe_handlers_for_jobs([job_id])
-        if job_id not in handlers:
-            return None
-        return handlers[job_id]
+        if handlers:
+            return handlers[0]
+        return None
 
     def get_recipe_handlers_for_jobs(self, job_ids):
         """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
         have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
-        all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs. Note
-        that a given job ID will not appear in the results if it does not exist within a recipe.
+        all jobs models that depend upon the given jobs, allowing update queries to be made on the dependent jobs.
+        Handlers will not be returned for jobs that are not in a recipe or for recipes that are superseded.
 
         :param job_ids: The job IDs
         :type job_ids: [int]
-        :returns: The recipe handlers by job ID
-        :rtype: {int: :class:`recipe.handler.RecipeHandler`}
+        :returns: The recipe handlers
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
         """
 
-        # Figure out all recipe IDs for the given job IDs
-        recipe_ids_per_job_id = {}  # {Job ID: [Recipe ID]}
-        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids).iterator():
-            if recipe_job.job_id not in recipe_ids_per_job_id:
-                recipe_ids_per_job_id[recipe_job.job_id] = []
-            recipe_ids_per_job_id[recipe_job.job_id].append(recipe_job.recipe_id)
-        if not recipe_ids_per_job_id:
+        # Figure out the non-superseded recipe ID (if applicable) for each job ID
+        recipe_id_per_job_id = {}  # {Job ID: Recipe ID}
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids, recipe__is_superseded=False).iterator():
+            # A job should match at most one non-superseded recipe
+            recipe_id_per_job_id[recipe_job.job_id] = recipe_job.recipe_id
+        if not recipe_id_per_job_id:
             return {}
 
         # Get handlers for all recipes and figure out dependent jobs to lock
-        handlers = self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
+        recipe_ids = recipe_id_per_job_id.values()
+        handlers = self._get_recipe_handlers(recipe_ids)
         job_ids_to_lock = set()
-        for job_id in job_ids:
-            if job_id in handlers:
-                handler = handlers[job_id]
-                job_ids_to_lock.union(handler.get_dependent_job_ids(job_id))
+        for job_id in recipe_id_per_job_id:
+            recipe_id = recipe_id_per_job_id[job_id]
+            if recipe_id in handlers:
+                handler = handlers[recipe_id]
+                job_ids_to_lock |= handler.get_dependent_job_ids(job_id)  # Add dependent IDs by doing set union
 
         if not job_ids_to_lock:
-            # Dependent jobs, just return handlers
-            return handlers
+            # No dependent jobs, just return handlers
+            return handlers.values()
 
         # Lock dependent recipe jobs
         Job.objects.lock_jobs(job_ids_to_lock)
 
         # Return handlers with updated data after all dependent jobs have been locked
-        return self._get_recipe_handlers_for_jobs(recipe_ids_per_job_id)
+        return self._get_recipe_handlers(recipe_ids).values()
 
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, order=None):
         """Returns a list of recipes within the given time range.
@@ -250,28 +309,25 @@ class RecipeManager(models.Manager):
         recipe.jobs = jobs
         return recipe
 
-    def _get_recipe_handlers_for_jobs(self, recipe_ids_per_job_id):
-        """Returns handlers for the recipes tied to each job ID
+    def _get_recipe_handlers(self, recipe_ids):
+        """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
+        the results.
 
-        :param recipe_ids_per_job_id: Each job ID mapping to its corresponding recipe IDs
-        :type recipe_ids_per_job_id: {int: [int]}
-        :returns: The recipe handlers by job ID
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: [int]
+        :returns: The recipe handlers by recipe ID
         :rtype: {int: :class:`recipe.handler.RecipeHandler`}
         """
 
-        all_recipe_ids = set()
-        for job_id in recipe_ids_per_job_id:
-            for recipe_id in recipe_ids_per_job_id[job_id]:
-                all_recipe_ids.add(recipe_id)
-
-        handlers = {}  # {Job ID: Recipe handler}
-        recipes = RecipeJob.objects.get_recipe_data(all_recipe_ids)
-        for job_id in recipe_ids_per_job_id:
-            recipe_id = recipe_ids_per_job_id[job_id][0]
-            recipe = recipes[recipe_id][0]
-            recipe_jobs = recipes[recipe_id][1]
-            handler = RecipeHandler(recipe, recipe_jobs)
-            handlers[job_id] = handler
+        handlers = {}  # {Recipe ID: Recipe handler}
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_ids)
+        for recipe_id in recipe_ids:
+            if recipe_id in recipe_jobs_dict:
+                recipe_jobs = recipe_jobs_dict[recipe_id]
+                if recipe_jobs:
+                    recipe = recipe_jobs[0].recipe
+                    handler = RecipeHandler(recipe, recipe_jobs)
+                    handlers[recipe.id] = handler
         return handlers
 
 
@@ -288,10 +344,23 @@ class Recipe(models.Model):
     :keyword data: JSON description defining the data for this recipe
     :type data: :class:`djorm_pgjson.fields.JSONField`
 
+    :keyword is_superseded: Whether this recipe has been superseded and is obsolete. This may be true while
+        superseded_by_recipe (the reverse relationship of superseded_recipe) is null, indicating that this recipe is
+        obsolete, but there is no new recipe that has directly taken its place.
+    :type is_superseded: :class:`django.db.models.BooleanField`
+    :keyword root_superseded_recipe: The first recipe in the chain of superseded recipes. This field will be null for
+        the first recipe in the chain (i.e. recipes that have a null superseded_recipe field).
+    :type root_superseded_recipe: :class:`django.db.models.ForeignKey`
+    :keyword superseded_recipe: The recipe that was directly superseded by this recipe. The reverse relationship can be
+        accessed using 'superseded_by_recipe'.
+    :type superseded_recipe: :class:`django.db.models.ForeignKey`
+
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword completed: When every job in the recipe was completed successfully
     :type completed: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this recipe was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the recipe was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -302,8 +371,15 @@ class Recipe(models.Model):
 
     data = djorm_pgjson.fields.JSONField()
 
+    is_superseded = models.BooleanField(default=False)
+    root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
+                                               null=True, on_delete=models.PROTECT)
+    superseded_recipe = models.OneToOneField('recipe.Recipe', related_name='superseded_by_recipe', blank=True,
+                                             null=True, on_delete=models.PROTECT)
+
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeManager()
@@ -336,18 +412,17 @@ class RecipeJobManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
-    def get_recipe_data(self, recipe_ids):
-        """Returns the recipe, recipe_job, and job models for the given recipe IDs with the recipe/job type and revision
-        models included
+    def get_recipe_jobs(self, recipe_ids):
+        """Returns the recipe_job models with related recipe, recipe_type, recipe_type_rev, job, job_type, and
+        job_type_rev models for the given recipe IDs
 
         :param recipe_ids: The recipe IDs
         :type recipe_ids: [int]
-        :returns: Dict where each recipe ID maps to a tuple of its recipe model and a list of its recipe_job models
-        :rtype: {int: (:class:`recipe.models.Recipe`, [:class:`recipe.models.RecipeJob`])}
+        :returns: Dict where each recipe ID maps to its corresponding recipe_job models
+        :rtype: {int: [:class:`recipe.models.RecipeJob`]}
         """
 
-        # Call get_my_handlers() and organize them, lock dependent jobs, and call get_my_handlers() and organize them
-        recipes = {}  # {Recipe ID: (Recipe, [Recipe job])}
+        recipes = {}  # {Recipe ID: [Recipe job]}
 
         recipe_qry = self.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
         recipe_qry = recipe_qry.select_related('job__job_type', 'job__job_type_rev')
@@ -355,26 +430,32 @@ class RecipeJobManager(models.Manager):
 
         for recipe_job in recipe_qry.iterator():
             if recipe_job.recipe_id not in recipes:
-                recipes[recipe_job.recipe_id] = (recipe_job.recipe, [])
-            recipes[recipe_job.recipe_id][1].append(recipe_job)
+                recipes[recipe_job.recipe_id] = []
+            recipes[recipe_job.recipe_id].append(recipe_job)
 
         return recipes
 
 
 class RecipeJob(models.Model):
-    """Links a job to its recipe
+    """Links a job and a recipe together. Jobs may exist in multiple recipes due to superseding. For an original job and
+    recipe combination, the is_original flag is True. When recipe B supersedes recipe A, the non-superseded jobs from
+    recipe A that are being copied to recipe B will have models with is_original set to False.
 
-    :keyword job: A job in a recipe
-    :type job: :class:`django.db.models.OneToOneField`
-    :keyword job_name: The name of the job within the recipe
-    :type job_name: :class:`django.db.models.CharField`
-    :keyword recipe: The recipe that the job belongs to
+    :keyword recipe: The recipe that the job is linked to
     :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that the recipe is linked to
+    :type job: :class:`django.db.models.OneToOneField`
+    :keyword job_name: The unique name of the job within the recipe
+    :type job_name: :class:`django.db.models.CharField`
+    :keyword is_original: Whether this is the original recipe for the job (True) or the job is copied from a superseded
+        recipe (False)
+    :type is_original: :class:`django.db.models.BooleanField`
     """
 
-    job = models.OneToOneField('job.Job', primary_key=True, on_delete=models.PROTECT)
-    job_name = models.CharField(max_length=100)
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    job_name = models.CharField(max_length=100)
+    is_original = models.BooleanField(default=True)
 
     objects = RecipeJobManager()
 
