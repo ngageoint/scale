@@ -7,17 +7,10 @@ Subpackages
 .. toctree::
 
     recipe.test.configuration
+    recipe.test.handlers
 
 Submodules
 ----------
-
-recipe.test.test_handler module
--------------------------------
-
-.. automodule:: recipe.test.test_handler
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 recipe.test.test_models module
 ------------------------------

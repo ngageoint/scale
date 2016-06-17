@@ -282,6 +282,22 @@
 <li class="toctree-l2"><a class="reference internal" href="job.fixtures.html#module-job.fixtures">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="job.handlers.html">job.handlers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="job.handlers.inputs.html">job.handlers.inputs package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.base_input">job.handlers.inputs.base_input module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.file">job.handlers.inputs.file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.files">job.handlers.inputs.files module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.property">job.handlers.inputs.property module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.html#module-job.handlers">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="job.management.html">job.management package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.management.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="job.management.commands.html">job.management.commands package</a><ul>
@@ -810,8 +826,8 @@ Callers must save the model to persist the change.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.recipejob">
-<code class="descclassname">Job.</code><code class="descname">recipejob</code><a class="headerlink" href="#job.models.Job.recipejob" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.Job.recipejob_set">
+<code class="descclassname">Job.</code><code class="descname">recipejob_set</code><a class="headerlink" href="#job.models.Job.recipejob_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1857,8 +1873,8 @@ on the job model. The job should have its related job_type and job_type_rev mode
 <dt id="job.models.JobManager.queue_jobs">
 <code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-the job models. Any jobs not in a valid status for being queued or without job data will be ignored. All jobs
-should have their related job_type and job_type_rev models populated.</p>
+the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
+superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

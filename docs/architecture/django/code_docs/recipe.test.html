@@ -113,7 +113,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.handler">recipe.handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
@@ -210,43 +209,19 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.configuration.html#module-recipe.test.configuration">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.test.handlers.html">recipe.test.handlers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_graph">recipe.test.handlers.test_graph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_graph_delta">recipe.test.handlers.test_graph_delta module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_handler">recipe.test.handlers.test_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-recipe.test.test_handler">
-<span id="recipe-test-test-handler-module"></span><h2>recipe.test.test_handler module<a class="headerlink" href="#module-recipe.test.test_handler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.test_handler.TestRecipeHandler">
-<em class="property">class </em><code class="descclassname">recipe.test.test_handler.</code><code class="descname">TestRecipeHandler</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_handler.TestRecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_handler.TestRecipeHandler.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_handler.TestRecipeHandler.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_handler.TestRecipeHandler.test_get_blocked_jobs">
-<code class="descname">test_get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_handler.TestRecipeHandler.test_get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_blocked_jobs()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue">
-<code class="descname">test_get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_existing_jobs_to_queue()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_handler.TestRecipeHandler.test_get_pending_jobs">
-<code class="descname">test_get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_handler.TestRecipeHandler.test_get_pending_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_pending_jobs()</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-recipe.test.test_models">
 <span id="recipe-test-test-models-module"></span><h2>recipe.test.test_models module<a class="headerlink" href="#module-recipe.test.test_models" title="Permalink to this headline">¶</a></h2>
@@ -301,6 +276,23 @@ change is made</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.test.test_models.TestRecipeManager">
+<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs">
+<code class="descname">test_get_recipe_handlers_for_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeManager.get_recipe_handlers_for_jobs() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe">
 <em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManagerCreateRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -313,6 +305,19 @@ change is made</p>
 <dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeManager.create_recipe() successfully.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_different_recipe_type">
+<code class="descname">test_successful_supersede_different_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_different_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeManager.create_recipe() to supersede a recipe with a different recipe type version that
+has one identical node, and deletes another node to replace it with a new one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type">
+<code class="descname">test_successful_supersede_same_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type.</p>
 </dd></dl>
 
 </dd></dl>

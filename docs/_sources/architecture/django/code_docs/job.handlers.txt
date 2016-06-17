@@ -1,0 +1,17 @@
+job.handlers package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.handlers.inputs
+
+Module contents
+---------------
+
+.. automodule:: job.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:

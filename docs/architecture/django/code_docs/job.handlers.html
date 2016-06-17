@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cli.management.commands package &mdash; Scale 3.1.0-snapshot documentation</title>
+  <title>job.handlers package &mdash; Scale 3.1.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="cli.management package" href="cli.management.html"/>
-        <link rel="next" title="error package" href="error.html"/>
-        <link rel="prev" title="cli.management package" href="cli.management.html"/> 
+        <link rel="up" title="job package" href="job.html"/>
+        <link rel="next" title="job.handlers.inputs package" href="job.handlers.inputs.html"/>
+        <link rel="prev" title="job.fixtures package" href="job.fixtures.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -99,14 +99,23 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="cli.html">cli package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="cli.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cli.html#module-cli">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
@@ -162,15 +171,13 @@
       
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
       
-          <li><a href="cli.html">cli package</a> &raquo;</li>
+          <li><a href="job.html">job package</a> &raquo;</li>
       
-          <li><a href="cli.management.html">cli.management package</a> &raquo;</li>
-      
-    <li>cli.management.commands package</li>
+    <li>job.handlers package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/cli.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/job.handlers.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -180,45 +187,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cli-management-commands-package">
-<h1>cli.management.commands package<a class="headerlink" href="#cli-management-commands-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="job-handlers-package">
+<h1>job.handlers package<a class="headerlink" href="#job-handlers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.handlers.inputs.html">job.handlers.inputs package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.base_input">job.handlers.inputs.base_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.file">job.handlers.inputs.file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.files">job.handlers.inputs.files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs.property">job.handlers.inputs.property module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.handlers.inputs.html#module-job.handlers.inputs">Module contents</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="module-cli.management.commands.migratedata">
-<span id="cli-management-commands-migratedata-module"></span><h2>cli.management.commands.migratedata module<a class="headerlink" href="#module-cli.management.commands.migratedata" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="cli.management.commands.migratedata.Command">
-<em class="property">class </em><code class="descclassname">cli.management.commands.migratedata.</code><code class="descname">Command</code><a class="headerlink" href="#cli.management.commands.migratedata.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
-<p>Command that migrates existing data files into scale</p>
-<dl class="staticmethod">
-<dt id="cli.management.commands.migratedata.Command.generate_file_list">
-<em class="property">static </em><code class="descname">generate_file_list</code><span class="sig-paren">(</span><em>path</em>, <em>include</em>, <em>exclude</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.generate_file_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="cli.management.commands.migratedata.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
-<p>This method migrates existing data files into scale.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="cli.management.commands.migratedata.Command.help">
-<code class="descname">help</code><em class="property"> = 'Migrate existing data into scale'</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="cli.management.commands.migratedata.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2ab289fffef0: -v/--verbosity&gt;, &lt;Option at 0x2ab28a014050: --settings&gt;, &lt;Option at 0x2ab28a014098: --pythonpath&gt;, &lt;Option at 0x2ab28a0140e0: --traceback&gt;, &lt;Option at 0x2ab28a014170: --no-color&gt;, &lt;Option at 0x2ab29ae20f80: -n&gt;, &lt;Option at 0x2ab29ae20fc8: -w/--workspace&gt;, &lt;Option at 0x2ab29ae25050: -p/--workspace-path&gt;, &lt;Option at 0x2ab29ae25098: -l/--local-path&gt;, &lt;Option at 0x2ab29ae250e0: -d/--data-type&gt;, &lt;Option at 0x2ab29ae25128: -i/--include&gt;, &lt;Option at 0x2ab29ae25170: -e/--exclude&gt;)</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.option_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="module-cli.management.commands">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cli.management.commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-job.handlers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.handlers" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -229,10 +217,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="error.html" class="btn btn-neutral float-right" title="error package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.handlers.inputs.html" class="btn btn-neutral float-right" title="job.handlers.inputs package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="cli.management.html" class="btn btn-neutral" title="cli.management package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.fixtures.html" class="btn btn-neutral" title="job.fixtures package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

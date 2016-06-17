@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="recipe.configuration package" href="recipe.configuration.html"/>
-        <link rel="next" title="recipe.migrations package" href="recipe.migrations.html"/>
+        <link rel="next" title="recipe.handlers package" href="recipe.handlers.html"/>
         <link rel="prev" title="recipe.configuration.data package" href="recipe.configuration.data.html"/> 
 
   
@@ -113,7 +113,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.handler">recipe.handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
@@ -229,6 +228,22 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_graph">
+<code class="descname">get_graph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe graph for this definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe graph</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.graph.RecipeGraph" title="recipe.handlers.graph.RecipeGraph"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.graph.RecipeGraph</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys">
 <code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of tuples that represent keys for each job in the recipe</p>
@@ -281,7 +296,7 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <dl class="method">
 <dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create">
 <code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the list of job names and types to create for the recipe, in the order that they be created</p>
+<dd><p>Returns the list of job names and types to create for the recipe, in the order that they should be created</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -289,52 +304,6 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of tuples with each job&#8217;s name and type</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(str, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>)]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_next_jobs_to_queue">
-<code class="descname">get_next_jobs_to_queue</code><span class="sig-paren">(</span><em>data</em>, <em>unqueued_jobs</em>, <em>completed_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_next_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the IDs and data for the next recipe jobs that should be placed on the queue</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</li>
-<li><strong>unqueued_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job models (with related job type and job type revision models) that have not yet been
-queued, mapped by recipe job name</li>
-<li><strong>completed_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job models (with related job type and job type revision models) that have been
-successfully completed, mapped by recipe job name</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dictionary with the ID of each job to queue mapping to its job data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_unqueued_job_statuses">
-<code class="descname">get_unqueued_job_statuses</code><span class="sig-paren">(</span><em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_unqueued_job_statuses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the status (PENDING or BLOCKED) that each recipe job that has never been queued should be set to
-based upon whether any of its dependencies are FAILED or CANCELED</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_jobs</strong> (dict of str -&gt; <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; All of the recipe job models, mapped by recipe job name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dictionary with the ID of each never-queued job mapping to its appropriate status (PENDING or BLOCKED)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -405,14 +374,6 @@ connections are valid</p>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeNode">
-<em class="property">class </em><code class="descclassname">recipe.configuration.definition.recipe_definition.</code><code class="descname">RecipeNode</code><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class represents a node within a recipe. A node contains a job name along with links to its parent jobs and
-dependent jobs.</p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-recipe.configuration.definition">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.configuration.definition" title="Permalink to this headline">¶</a></h2>
@@ -426,7 +387,7 @@ dependent jobs.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.migrations.html" class="btn btn-neutral float-right" title="recipe.migrations package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recipe.handlers.html" class="btn btn-neutral float-right" title="recipe.handlers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="recipe.configuration.data.html" class="btn btn-neutral" title="recipe.configuration.data package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

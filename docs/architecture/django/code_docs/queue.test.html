@@ -243,6 +243,40 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="queue.test.test_models.TestQueueManager">
+<em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="queue.test.test_models.TestQueueManager.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json']</em><a class="headerlink" href="#queue.test.test_models.TestQueueManager.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure">
+<code class="descname">test_handle_job_failure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_failure() when the job fails</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_retry">
+<code class="descname">test_handle_job_failure_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_failure() when the job retries</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_superseded">
+<code class="descname">test_handle_job_failure_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation">
 <em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerHandleJobCancellation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -322,6 +356,11 @@
 <dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe">
 <em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerQueueNewRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_system_job_types.json']</em><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.setUp" title="Permalink to this definition">¶</a></dt>
@@ -331,6 +370,12 @@
 <dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.queue_new_recipe() successfully.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede">
+<code class="descname">test_successful_supersede</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe.</p>
 </dd></dl>
 
 </dd></dl>

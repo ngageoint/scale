@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="recipe.test.configuration package" href="recipe.test.configuration.html"/>
-        <link rel="next" title="recipe.triggers package" href="recipe.triggers.html"/>
+        <link rel="next" title="recipe.test.handlers package" href="recipe.test.handlers.html"/>
         <link rel="prev" title="recipe.test.configuration.data package" href="recipe.test.configuration.data.html"/> 
 
   
@@ -113,7 +113,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.handler">recipe.handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
@@ -213,6 +212,23 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph">
+<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetGraph</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.get_graph() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys">
 <em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetJobTypeKeys</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -295,46 +311,6 @@
 <dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_unique">
 <code class="descname">test_get_job_types_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_unique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting job types without duplicates.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue">
-<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetNextJobsToQueue</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_job_1_completed">
-<code class="descname">test_successful_job_1_completed</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_job_1_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeDefinition.get_next_jobs_to_queue() successfully when job 1 has been completed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_new_recipe">
-<code class="descname">test_successful_new_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetNextJobsToQueue.test_successful_new_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeDefinition.get_next_jobs_to_queue() successfully when a new recipe is being created.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses">
-<em class="property">class </em><code class="descclassname">recipe.test.configuration.definition.test_recipe_definition.</code><code class="descname">TestRecipeDefinitionGetUnqueuedJobStatuses</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetUnqueuedJobStatuses.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeDefinition.get_unqueued_job_statuses() successfully.</p>
 </dd></dl>
 
 </dd></dl>
@@ -469,7 +445,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.triggers.html" class="btn btn-neutral float-right" title="recipe.triggers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recipe.test.handlers.html" class="btn btn-neutral float-right" title="recipe.test.handlers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="recipe.test.configuration.data.html" class="btn btn-neutral" title="recipe.test.configuration.data package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

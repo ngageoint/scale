@@ -76,6 +76,46 @@ recipe.migrations.0009_auto_20160511_2204 module
     :undoc-members:
     :show-inheritance:
 
+recipe.migrations.0010_auto_20160330_1412 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0010_auto_20160330_1412
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0011_auto_20160330_1505 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0011_auto_20160330_1505
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0012_auto_20160330_1659 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0012_auto_20160330_1659
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0013_auto_20160331_1127 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0013_auto_20160331_1127
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0014_auto_20160608_1402 module
+------------------------------------------------
+
+.. automodule:: recipe.migrations.0014_auto_20160608_1402
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

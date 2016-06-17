@@ -1,0 +1,768 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe.handlers package &mdash; Scale 3.1.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="recipe package" href="recipe.html"/>
+        <link rel="next" title="recipe.migrations package" href="recipe.migrations.html"/>
+        <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+      
+    <li>recipe.handlers package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/recipe.handlers.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="recipe-handlers-package">
+<h1>recipe.handlers package<a class="headerlink" href="#recipe-handlers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.handlers.connection">
+<span id="recipe-handlers-connection-module"></span><h2>recipe.handlers.connection module<a class="headerlink" href="#module-recipe.handlers.connection" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for handling recipe node connections</p>
+<dl class="class">
+<dt id="recipe.handlers.connection.DependencyInputConnection">
+<em class="property">class </em><code class="descclassname">recipe.handlers.connection.</code><code class="descname">DependencyInputConnection</code><span class="sig-paren">(</span><em>input_name</em>, <em>node</em>, <em>output_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.DependencyInputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection" title="recipe.handlers.connection.NodeInputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection</span></code></a></p>
+<p>Represents a connection from one node&#8217;s output to another node&#8217;s input</p>
+<dl class="method">
+<dt id="recipe.handlers.connection.DependencyInputConnection.add_input_to_job_data">
+<code class="descname">add_input_to_job_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>recipe_data</em>, <em>parent_results</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.DependencyInputConnection.add_input_to_job_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection.add_input_to_job_data" title="recipe.handlers.connection.NodeInputConnection.add_input_to_job_data"><code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection.add_input_to_job_data()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.connection.DependencyInputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em>, <em>matched_recipe_inputs</em>, <em>matched_job_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.DependencyInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection.is_equal_to" title="recipe.handlers.connection.NodeInputConnection.is_equal_to"><code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection.is_equal_to()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.handlers.connection.NodeInputConnection">
+<em class="property">class </em><code class="descclassname">recipe.handlers.connection.</code><code class="descname">NodeInputConnection</code><span class="sig-paren">(</span><em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.NodeInputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract base class that represents a connection to a recipe node input</p>
+<dl class="method">
+<dt id="recipe.handlers.connection.NodeInputConnection.add_input_to_job_data">
+<code class="descname">add_input_to_job_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>recipe_data</em>, <em>parent_results</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.NodeInputConnection.add_input_to_job_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the data for this input to the given job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
+<li><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</li>
+<li><strong>parent_results</strong> ({str: <a class="reference internal" href="job.configuration.results.html#job.configuration.results.job_results.JobResults" title="job.configuration.results.job_results.JobResults"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.results.job_results.JobResults</span></code></a>}) &#8211; The results of each parent job stored by job name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.connection.NodeInputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em>, <em>matched_recipe_inputs</em>, <em>matched_job_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.NodeInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if and only if the given node input connection is equal to this one. This is used for checking
+the equality of two inputs across two different recipe graphs. Since the different graphs may have different
+recipe inputs or different job names for the same node, dicts of matched recipe inputs and job names between the
+graphs are provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>connection</strong> (<a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection" title="recipe.handlers.connection.NodeInputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection</span></code></a>) &#8211; The node input connection</li>
+<li><strong>matched_recipe_inputs</strong> (<em>{string: string}</em>) &#8211; Dict matching recipe input names (connection is the key, self is the value)</li>
+<li><strong>matched_job_names</strong> (<em>{string: string}</em>) &#8211; Dict matching job names for identical nodes (connection is the key, self is the value)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the connections are equal, False otherwise</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.handlers.connection.RecipeInputConnection">
+<em class="property">class </em><code class="descclassname">recipe.handlers.connection.</code><code class="descname">RecipeInputConnection</code><span class="sig-paren">(</span><em>input_name</em>, <em>recipe_input</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.RecipeInputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection" title="recipe.handlers.connection.NodeInputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection</span></code></a></p>
+<p>Represents a connection from a recipe&#8217;s input to a node&#8217;s input</p>
+<dl class="method">
+<dt id="recipe.handlers.connection.RecipeInputConnection.add_input_to_job_data">
+<code class="descname">add_input_to_job_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>recipe_data</em>, <em>parent_results</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.RecipeInputConnection.add_input_to_job_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection.add_input_to_job_data" title="recipe.handlers.connection.NodeInputConnection.add_input_to_job_data"><code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection.add_input_to_job_data()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.connection.RecipeInputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em>, <em>matched_recipe_inputs</em>, <em>matched_job_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.connection.RecipeInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.handlers.connection.NodeInputConnection.is_equal_to" title="recipe.handlers.connection.NodeInputConnection.is_equal_to"><code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.NodeInputConnection.is_equal_to()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.handlers.graph">
+<span id="recipe-handlers-graph-module"></span><h2>recipe.handlers.graph module<a class="headerlink" href="#module-recipe.handlers.graph" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for handling recipe graphs</p>
+<dl class="class">
+<dt id="recipe.handlers.graph.RecipeGraph">
+<em class="property">class </em><code class="descclassname">recipe.handlers.graph.</code><code class="descname">RecipeGraph</code><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a graph of recipe nodes</p>
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>parent_job_name</em>, <em>child_job_name</em>, <em>connections</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a dependency that one job has upon another job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parent_job_name</strong> (<em>str</em>) &#8211; The name of the parent job</li>
+<li><strong>child_job_name</strong> (<em>str</em>) &#8211; The name of the child job</li>
+<li><strong>connections</strong> (<em>[(str, str)]</em>) &#8211; List of tuples where first item is parent output name and second item is child input name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.add_input">
+<code class="descname">add_input</code><span class="sig-paren">(</span><em>recipe_input</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.add_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a recipe input to this graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_input</strong> (<a class="reference internal" href="job.handlers.inputs.html#job.handlers.inputs.base_input.Input" title="job.handlers.inputs.base_input.Input"><code class="xref py py-class docutils literal"><span class="pre">job.handlers.inputs.base_input.Input</span></code></a>) &#8211; The recipe input</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.add_job">
+<code class="descname">add_job</code><span class="sig-paren">(</span><em>job_name</em>, <em>job_type_name</em>, <em>job_type_version</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.add_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new job node to the graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_name</strong> (<em>str</em>) &#8211; The unique name of the job</li>
+<li><strong>job_type_name</strong> (<em>str</em>) &#8211; The name of the job&#8217;s type</li>
+<li><strong>job_type_version</strong> (<em>str</em>) &#8211; The version of the job&#8217;s type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.add_recipe_input_connection">
+<code class="descname">add_recipe_input_connection</code><span class="sig-paren">(</span><em>recipe_input</em>, <em>job_name</em>, <em>job_input</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.add_recipe_input_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a recipe input connection from the given recipe input to the given job input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_input</strong> (<em>str</em>) &#8211; The name of the recipe input</li>
+<li><strong>job_name</strong> (<em>str</em>) &#8211; The name of the job</li>
+<li><strong>job_input</strong> (<em>str</em>) &#8211; The name of the job input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.get_node">
+<code class="descname">get_node</code><span class="sig-paren">(</span><em>job_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.get_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the node with the given job_name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>str</em>) &#8211; The job name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The node</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.handlers.node.RecipeNode" title="recipe.handlers.node.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.node.RecipeNode</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph.RecipeGraph.get_topological_order">
+<code class="descname">get_topological_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph.RecipeGraph.get_topological_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe job names in a valid topological ordering (dependency order)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of job names in topological ordering</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[str]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.handlers.graph_delta">
+<span id="recipe-handlers-graph-delta-module"></span><h2>recipe.handlers.graph_delta module<a class="headerlink" href="#module-recipe.handlers.graph_delta" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for handling recipe graph deltas</p>
+<dl class="class">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta">
+<em class="property">class </em><code class="descclassname">recipe.handlers.graph_delta.</code><code class="descname">RecipeGraphDelta</code><span class="sig-paren">(</span><em>graph_a</em>, <em>graph_b</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the change between two different recipe graphs</p>
+<dl class="method">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta.get_changed_nodes">
+<code class="descname">get_changed_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta.get_changed_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job name mapping between the nodes in graph A and graph B that represent changed nodes that
+supersede one another</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where the keys are job names from graph B that map to the job names from graph A that they
+supersede</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string: string}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta.get_deleted_nodes">
+<code class="descname">get_deleted_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta.get_deleted_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the set of job names from graph A that represent job nodes that were deleted in graph B</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The set of job names from graph A that were deleted in graph B</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta.get_identical_nodes">
+<code class="descname">get_identical_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta.get_identical_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job name mapping between the nodes in graph A and graph B that are identical with respect to each
+other.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where the keys are job names from graph B that map to the job names from graph A that are
+identical</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string: string}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta.get_new_nodes">
+<code class="descname">get_new_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta.get_new_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the set of job names from graph B that represent job nodes that are new (did not exist in graph A)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The set of job names from graph B that are new</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.graph_delta.RecipeGraphDelta.reprocess_identical_node">
+<code class="descname">reprocess_identical_node</code><span class="sig-paren">(</span><em>job_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta.reprocess_identical_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the node with the given job name as changed instead of identical. This can be used to reprocess jobs
+that have not changed. All children nodes will be changed as well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>string</em>) &#8211; The job name of the node</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.handlers.handler">
+<span id="recipe-handlers-handler-module"></span><h2>recipe.handlers.handler module<a class="headerlink" href="#module-recipe.handlers.handler" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for handling recipes</p>
+<dl class="class">
+<dt id="recipe.handlers.handler.RecipeHandler">
+<em class="property">class </em><code class="descclassname">recipe.handlers.handler.</code><code class="descname">RecipeHandler</code><span class="sig-paren">(</span><em>recipe</em>, <em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class handles the logic for a recipe</p>
+<dl class="attribute">
+<dt id="recipe.handlers.handler.RecipeHandler.BLOCKING_STATUSES">
+<code class="descname">BLOCKING_STATUSES</code><em class="property"> = [u'BLOCKED', u'FAILED', u'CANCELED']</em><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.BLOCKING_STATUSES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_blocked_jobs">
+<code class="descname">get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the jobs within this recipe that should be updated to BLOCKED status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to BLOCKED</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_dependent_job_ids">
+<code class="descname">get_dependent_job_ids</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IDs of the jobs that depend upon the job with the given ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The set of job IDs that depend on the given job</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{int}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_existing_jobs_to_queue">
+<code class="descname">get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of the existing recipe jobs that are ready to be queued</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of existing jobs that are ready to be queued along with their data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>, <a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>)]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_pending_jobs">
+<code class="descname">get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the jobs within this recipe that should be updated to PENDING status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs that should be updated to PENDING</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this recipe has been completed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this recipe has been completed, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.handlers.handler.RecipeHandler.recipe_id">
+<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of the recipe for this handler</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.handlers.node">
+<span id="recipe-handlers-node-module"></span><h2>recipe.handlers.node module<a class="headerlink" href="#module-recipe.handlers.node" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for handling recipe nodes</p>
+<dl class="class">
+<dt id="recipe.handlers.node.RecipeNode">
+<em class="property">class </em><code class="descclassname">recipe.handlers.node.</code><code class="descname">RecipeNode</code><span class="sig-paren">(</span><em>job_name</em>, <em>job_type_name</em>, <em>job_type_version</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.node.RecipeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a node in a recipe</p>
+<dl class="method">
+<dt id="recipe.handlers.node.RecipeNode.add_child">
+<code class="descname">add_child</code><span class="sig-paren">(</span><em>child_node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.node.RecipeNode.add_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a child node that is dependent on this node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>child_node</strong> (<a class="reference internal" href="#recipe.handlers.node.RecipeNode" title="recipe.handlers.node.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.node.RecipeNode</span></code></a>) &#8211; The child node to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.node.RecipeNode.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>parent_node</em>, <em>connections</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.node.RecipeNode.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a parent node upon which this node is dependent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parent_node</strong> (<a class="reference internal" href="#recipe.handlers.node.RecipeNode" title="recipe.handlers.node.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.node.RecipeNode</span></code></a>) &#8211; The parent node to add</li>
+<li><strong>connections</strong> ([<a class="reference internal" href="#recipe.handlers.connection.DependencyInputConnection" title="recipe.handlers.connection.DependencyInputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.connection.DependencyInputConnection</span></code></a>]) &#8211; The connections to the parent&#8217;s outputs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.node.RecipeNode.add_recipe_input">
+<code class="descname">add_recipe_input</code><span class="sig-paren">(</span><em>recipe_input</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.node.RecipeNode.add_recipe_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a recipe input connection to this node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_input</strong> (<a class="reference internal" href="#recipe.handlers.connection.RecipeInputConnection" title="recipe.handlers.connection.RecipeInputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.connection.RecipeInputConnection</span></code></a>) &#8211; The recipe input connection</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.node.RecipeNode.create_job_data">
+<code class="descname">create_job_data</code><span class="sig-paren">(</span><em>job_interface</em>, <em>recipe_data</em>, <em>parent_results</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.node.RecipeNode.create_job_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the data for the job within this node. The parent_results must contain completed results from every
+parent node that this node depends upon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The job&#8217;s interface</li>
+<li><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</li>
+<li><strong>parent_results</strong> ({str: <a class="reference internal" href="job.configuration.results.html#job.configuration.results.job_results.JobResults" title="job.configuration.results.job_results.JobResults"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.results.job_results.JobResults</span></code></a>}) &#8211; The results of each parent job stored by job name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The created job data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.handlers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.handlers" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.migrations.html" class="btn btn-neutral float-right" title="recipe.migrations package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.1.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

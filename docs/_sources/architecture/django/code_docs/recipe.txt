@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     recipe.configuration
+    recipe.handlers
     recipe.migrations
     recipe.test
     recipe.triggers
@@ -18,14 +19,6 @@ recipe.apps module
 ------------------
 
 .. automodule:: recipe.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-recipe.handler module
----------------------
-
-.. automodule:: recipe.handler
     :members:
     :undoc-members:
     :show-inheritance:

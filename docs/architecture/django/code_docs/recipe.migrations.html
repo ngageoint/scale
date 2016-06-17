@@ -35,7 +35,7 @@
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="recipe package" href="recipe.html"/>
         <link rel="next" title="recipe.test package" href="recipe.test.html"/>
-        <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html"/> 
+        <link rel="prev" title="recipe.handlers package" href="recipe.handlers.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -113,7 +113,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.handler">recipe.handler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
@@ -361,6 +360,106 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.migrations.0010_auto_20160330_1412">
+<span id="recipe-migrations-0010-auto-20160330-1412-module"></span><h2>recipe.migrations.0010_auto_20160330_1412 module<a class="headerlink" href="#module-recipe.migrations.0010_auto_20160330_1412" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0010_auto_20160330_1412.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0010_auto_20160330_1412.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0010_auto_20160330_1412.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0010_auto_20160330_1412.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0009_auto_20160511_2204')]</em><a class="headerlink" href="#recipe.migrations.0010_auto_20160330_1412.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0010_auto_20160330_1412.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_superseded', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'root_superseded_recipe', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'superseded', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.OneToOneField&gt;, preserve_default=True, name=u'superseded_recipe', model_name=u'recipe'&gt;]</em><a class="headerlink" href="#recipe.migrations.0010_auto_20160330_1412.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0011_auto_20160330_1505">
+<span id="recipe-migrations-0011-auto-20160330-1505-module"></span><h2>recipe.migrations.0011_auto_20160330_1505 module<a class="headerlink" href="#module-recipe.migrations.0011_auto_20160330_1505" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0011_auto_20160330_1505.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0011_auto_20160330_1505.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0011_auto_20160330_1505.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0011_auto_20160330_1505.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0010_auto_20160330_1412')]</em><a class="headerlink" href="#recipe.migrations.0011_auto_20160330_1505.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0011_auto_20160330_1505.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RenameModel  new_name=u'recipejobold', old_name=u'recipejob'&gt;, &lt;AlterModelTable  table=u'recipe_job_old', name=u'recipejobold'&gt;]</em><a class="headerlink" href="#recipe.migrations.0011_auto_20160330_1505.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0012_auto_20160330_1659">
+<span id="recipe-migrations-0012-auto-20160330-1659-module"></span><h2>recipe.migrations.0012_auto_20160330_1659 module<a class="headerlink" href="#module-recipe.migrations.0012_auto_20160330_1659" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0012_auto_20160330_1659.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0012_auto_20160330_1659.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0012_auto_20160330_1659.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0012_auto_20160330_1659.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0014_auto_20160317_1208'), (u'recipe', u'0011_auto_20160330_1505')]</em><a class="headerlink" href="#recipe.migrations.0012_auto_20160330_1659.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0012_auto_20160330_1659.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'recipe', model_name=u'recipejobold'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'job_name', &lt;django.db.models.fields.CharField&gt;), (u'is_original', &lt;django.db.models.fields.BooleanField&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'recipe_job'}, name=u'RecipeJob'&gt;]</em><a class="headerlink" href="#recipe.migrations.0012_auto_20160330_1659.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0013_auto_20160331_1127">
+<span id="recipe-migrations-0013-auto-20160331-1127-module"></span><h2>recipe.migrations.0013_auto_20160331_1127 module<a class="headerlink" href="#module-recipe.migrations.0013_auto_20160331_1127" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0013_auto_20160331_1127.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0013_auto_20160331_1127.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0013_auto_20160331_1127.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0012_auto_20160330_1659')]</em><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0013_auto_20160331_1127.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_recipe_job at 0x2ab2a0007398&gt;&gt;]</em><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.migrations.0013_auto_20160331_1127.Migration.populate_recipe_job">
+<code class="descname">populate_recipe_job</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration.populate_recipe_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0014_auto_20160608_1402">
+<span id="recipe-migrations-0014-auto-20160608-1402-module"></span><h2>recipe.migrations.0014_auto_20160608_1402 module<a class="headerlink" href="#module-recipe.migrations.0014_auto_20160608_1402" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0014_auto_20160608_1402.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0014_auto_20160608_1402.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0014_auto_20160608_1402.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0014_auto_20160608_1402.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0013_auto_20160331_1127')]</em><a class="headerlink" href="#recipe.migrations.0014_auto_20160608_1402.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0014_auto_20160608_1402.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'job', model_name=u'recipejobold'&gt;, &lt;RemoveField  name=u'recipe', model_name=u'recipejobold'&gt;, &lt;DeleteModel  name=u'recipejobold'&gt;]</em><a class="headerlink" href="#recipe.migrations.0014_auto_20160608_1402.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -376,7 +475,7 @@
         <a href="recipe.test.html" class="btn btn-neutral float-right" title="recipe.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.handlers.html" class="btn btn-neutral" title="recipe.handlers package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

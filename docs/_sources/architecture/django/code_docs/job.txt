@@ -9,6 +9,7 @@ Subpackages
     job.configuration
     job.execution
     job.fixtures
+    job.handlers
     job.management
     job.migrations
     job.test

@@ -1,0 +1,46 @@
+job.handlers.inputs package
+===========================
+
+Submodules
+----------
+
+job.handlers.inputs.base_input module
+-------------------------------------
+
+.. automodule:: job.handlers.inputs.base_input
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.handlers.inputs.file module
+-------------------------------
+
+.. automodule:: job.handlers.inputs.file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.handlers.inputs.files module
+--------------------------------
+
+.. automodule:: job.handlers.inputs.files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.handlers.inputs.property module
+-----------------------------------
+
+.. automodule:: job.handlers.inputs.property
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.handlers.inputs
+    :members:
+    :undoc-members:
+    :show-inheritance:
