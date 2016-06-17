@@ -56,6 +56,9 @@
                 return;
             }
             height = (Math.ceil(newValue.length / (Math.floor(width / $scope.cellWidth))) * $scope.cellHeight);
+            if ($scope.enableZoom) {
+                height = height * 6;
+            }
             d3.select('.grid-chart-container svg').attr('height', height);
             d3.select('.overlay').attr('height', height);
         });

@@ -13,7 +13,7 @@
   "json_config": {
     "broker": {
       "type": "nfs",
-      "nfs_path": "/data/srv"
+      "mount": "/data/srv"
     }
   }
 }
