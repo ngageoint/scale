@@ -8,9 +8,6 @@
             xArr = [],
             removeIds = [],
             yUnits = [],
-            locationParams = {
-                chart: null
-            },
             self = this;
 
         $scope._ = _;
@@ -56,24 +53,6 @@
         $scope.lineClass = 'btn-default';
         $scope.splineClass = 'btn-default';
         $scope.scatterClass = 'btn-default';
-
-        /*
-        // check for locationParams in query string, and update as necessary
-        _.forEach(_.pairs(locationParams), function (param) {
-            var value = _.at($location.search(), param[0]);
-            if (value.length > 0) {
-                locationParams[param[0]] = value.length > 1 ? value : value[0];
-            }
-        });
-
-        if (locationParams.chart) {
-            try {
-                $scope.chartArr = JSON.parse(atob(locationParams.chart));
-            } catch (e) {
-                toastr['error']('Unable to parse JSON');
-            }
-        }
-        */
 
         self.getPlotDataParams = function (obj) {
             return {
@@ -123,10 +102,6 @@
                         toastr['error'](error);
                     });
                 });
-                /*
-                locationParams.chart = btoa(JSON.stringify($scope.chartArr));
-                $location.search('chart', locationParams.chart).replace();
-                */
             }
         };
 
@@ -174,11 +149,9 @@
         $scope.changeDataTypeSelection = function () {
             // reset options
             $scope.filtersApplied = [];
-            //$scope.filteredChoices = [];
             $scope.selectedDataTypeOptions = [];
             $scope.dataTypeFilterText = '';
             $scope.selectedMetrics = [];
-            //$scope.columnGroups = [];
             $scope.columns = [];
 
             if (!$scope.selectedDataType.name || $scope.selectedDataType.name === '') {
@@ -189,26 +162,9 @@
             }
         };
 
-        /*$scope.changeFilterSelection = function (name) {
-            console.log(name + ': ' + $scope.filtersApplied[name]);
-            // remove filter if value is null or empty
-            if (!$scope.filtersApplied[name] || $scope.filtersApplied[name] === '') {
-                delete $scope.filtersApplied[name];
-            }
-            // update filtered choices
-            applyFiltersToChoices();
-        };*/
-
         $scope.areFiltersApplied = function () {
             return $scope.filtersApplied.length > 0;
         };
-
-        /*$scope.removeFilter = function (name) {
-            // set value = null
-            $scope.filtersApplied[name] = '';
-            // trigger filter selection change
-            $scope.changeFilterSelection(name);
-        };*/
 
         $scope.updateChartDisplay = function (display) {
             $scope.chartDisplay = display;
@@ -240,18 +196,7 @@
         self.initialize = function () {
             navService.updateLocation('metrics');
             self.getDataTypes();
-            /*
-            if ($scope.chartArr.length > 0) {
-                self.updateChart();
-            }
-            */
         };
-
-        /*var applyFiltersToChoices = function () {
-            var choices = $scope.selectedDataTypeOptions ? $scope.selectedDataTypeOptions.choices : [];
-            var filteredChoices = _.where(choices,$scope.filtersApplied);
-            $scope.filteredChoices = filteredChoices;
-        };*/
 
         self.getDataTypes = function () {
             metricsService.getDataTypes().then(function (result) {
@@ -512,6 +457,16 @@
                             }
                         },
                         y: {
+                            tick: {
+                                format: function (d) {
+                                    if (yUnits[0] === 'seconds') {
+                                        return scaleService.calculateDuration(moment.utc().startOf('d'), moment.utc().startOf('d').add(d, 's'));
+                                    } else if (yUnits[0] === 'bytes') {
+                                        return scaleService.calculateFileSizeFromBytes(d, 1);
+                                    }
+                                    return d;
+                                }
+                            },
                             label: {
                                 text: _.capitalize(yUnits[0]),
                                 position: 'outer-middle'
