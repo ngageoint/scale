@@ -49,7 +49,13 @@
             },
             showActiveWorkspaces = true;
         
-        var updateQuerystring = function (data) {
+        var updateQuerystring = function (data, defaultOrder) {
+            // set defaults
+            data.page = data.page || 1;
+            data.page_size = data.page_size || 25;
+            data.started = data.started || moment.utc().subtract(1, 'weeks').startOf('d').toISOString();
+            data.ended = data.ended || moment.utc().endOf('d').toISOString();
+            data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : [defaultOrder];
             // check for params in querystring, and update as necessary
             _.forEach(_.pairs(data), function (param) {
                 $location.search(param[0], param[1]);
@@ -73,14 +79,14 @@
                 return jobsParams;
             },
             setJobsParams: function (data) {
-                updateQuerystring(data);
+                updateQuerystring(data, '-last_modified');
                 jobsParams = data;
             },
             getJobTypesFailureRatesParams: function () {
                 return jobTypesFailureRatesParams;
             },
             setJobTypesFailureRatesParams: function (data) {
-                updateQuerystring(data);
+                updateQuerystring(data, null);
                 jobTypesFailureRatesParams = data;
             },
             getRecipesColDefs: function () {
@@ -93,7 +99,7 @@
                 return recipesParams;
             },
             setRecipesParams: function (data) {
-                updateQuerystring(data);
+                updateQuerystring(data, '-last_modified');
                 recipesParams = data;
             },
             getIngestsColDefs: function () {
@@ -106,7 +112,7 @@
                 return ingestsParams;
             },
             setIngestsParams: function (data) {
-                updateQuerystring(data);
+                updateQuerystring(data, '-ingest_started');
                 ingestsParams = data;
             },
             getShowActiveWorkspaces: function () {

@@ -65,7 +65,7 @@
                 controller: 'nodeDetailsController',
                 templateUrl: 'modules/nodes/partials/nodeDetailsTemplate.html'
             })
-            .when('/load', {
+            .when('/load/queued', {
                 controller: 'loadController',
                 templateUrl: 'modules/load/partials/loadTemplate.html'
             })
