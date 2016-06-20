@@ -235,7 +235,8 @@
             ],
             "feed": [
                 { "path": "feed", "label": "Status" },
-                { "path": "feed/ingests", "label": "Ingest Records" }
+                { "path": "feed/ingests", "label": "Ingest Records" },
+                { "path": "feed/trace", "label": "File Trace" }
             ]
         },
         "headerOffset": 165,

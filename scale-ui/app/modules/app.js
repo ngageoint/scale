@@ -52,6 +52,10 @@
                 templateUrl: 'modules/feed/partials/ingestRecordsTemplate.html',
                 reloadOnSearch: false
             })
+            .when('/feed/trace', {
+                controller: 'fileTraceController',
+                templateUrl: 'modules/feed/partials/fileTraceTemplate.html'
+            })
             .when('/metrics', {
                 controller: 'metricsController',
                 templateUrl: 'modules/metrics/partials/metricsTemplate.html',

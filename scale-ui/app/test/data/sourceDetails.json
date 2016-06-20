@@ -1,0 +1,99 @@
+{
+    "id": 1,
+    "workspace": {
+        "id": 1,
+        "name": "Raw Source"
+    },
+    "file_name": "my_file.kml",
+    "media_type": "application/vnd.google-earth.kml+xml",
+    "file_size": 100,
+    "data_type": ["landsat"],
+    "is_deleted": false,
+    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+    "url": "http://host.com/file/path/my_file.kml",
+    "created": "1970-01-01T00:00:00Z",
+    "deleted": null,
+    "data_started": null,
+    "data_ended": null,
+    "geometry": null,
+    "center_point": null,
+    "meta_data": {},
+    "countries": [],
+    "last_modified": "1970-01-01T00:00:00Z",
+    "is_parsed": true,
+    "parsed": "1970-01-01T00:00:00Z",
+    "ingests": [
+        {
+            "id": 1,
+            "file_name": "my_file.kml",
+            "strike": {
+                "id": 1
+            },
+            "status": "INGESTED",
+            "bytes_transferred": 100,
+            "transfer_started": "1970-01-01T00:00:00Z",
+            "transfer_ended": "1970-01-01T00:00:00Z",
+            "media_type": "application/vnd.google-earth.kml+xml",
+            "file_size": 4806986,
+            "data_type": [],
+            "ingest_started": "1970-01-01T00:00:00Z",
+            "ingest_ended": "1970-01-01T00:00:00Z",
+            "source_file": {
+                "id": 1
+            },
+            "created": "1970-01-01T00:00:00Z",
+            "last_modified": "1970-01-01T00:00:00Z"
+        }
+    ],
+    "products": [
+        {
+            "id": 2,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "my_file.png",
+            "media_type": "image/png",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://host.com/file/path/my_file.png",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 6,
+                "name": "kml-parse",
+                "version": "1.0.0",
+                "title": "KML Parse",
+                "description": "Parse KML into a PNG image",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 6
+            },
+            "job_exe": {
+                "id": 6
+            }
+        }
+    ]
+}
