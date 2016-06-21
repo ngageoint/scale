@@ -148,7 +148,7 @@
         },
 
         "jobStatus": ["VIEW ALL","COMPLETED","BLOCKED","QUEUED","RUNNING","FAILED","CANCELED","PENDING"],
-        "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
+        "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","QUEUED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
         "workspaceTypes": [
             {
                 "broker": {
@@ -235,8 +235,7 @@
             ],
             "feed": [
                 { "path": "feed", "label": "Status" },
-                { "path": "feed/ingests", "label": "Ingest Records" },
-                { "path": "feed/trace", "label": "File Trace" }
+                { "path": "feed/ingests", "label": "Ingest Records" }
             ]
         },
         "headerOffset": 165,
