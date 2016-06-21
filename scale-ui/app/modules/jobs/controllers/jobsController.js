@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobTypeService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobTypeService, loadService, gridFactory, toastr) {
         subnavService.setCurrentPath('jobs');
 
         var self = this,
