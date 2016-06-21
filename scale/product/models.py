@@ -279,18 +279,22 @@ class ProductFileManager(models.GeoManager):
             product_lists[link.descendant_id].append(source_files[link.ancestor_id])
 
     @transaction.atomic
-    def publish_products(self, job_exe_id, when):
+    def publish_products(self, job_exe, when):
         """Publishes all of the products produced by the given job execution. All database changes will be made in an
         atomic transaction.
 
-        :param job_exe_id: The ID of the job execution
-        :type job_exe_id: int
+        :param job_exe: The locked job execution model with related job model
+        :type job_exe: :class:`job.models.JobExecution`
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
         """
 
+        # Don't publish products if the job is already superseded
+        if job_exe.job.is_superseded:
+            return
+
         # Acquire model lock
-        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe_id).order_by('id')
+        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe.id).order_by('id')
         for product in product_qry:
             product.has_been_published = True
             product.is_published = True

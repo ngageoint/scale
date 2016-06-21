@@ -203,6 +203,58 @@ class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
         self.assertListEqual(result_ids, [self.file_1.id, self.file_8.id])
 
 
+class TestProductFileManager(TestCase):
+    """Tests on the ProductFileManager"""
+
+    def setUp(self):
+        django.setup()
+
+        self.job_exe = job_test_utils.create_job_exe()
+
+        self.product_1 = prod_test_utils.create_product(job_exe=self.job_exe)
+        self.product_2 = prod_test_utils.create_product(job_exe=self.job_exe)
+        self.product_3 = prod_test_utils.create_product(job_exe=self.job_exe)
+
+    def test_publish_products_successfully(self):
+        """Tests calling ProductFileManager.publish_products() successfully"""
+
+        when = now()
+        ProductFile.objects.publish_products(self.job_exe, when)
+
+        product_1 = ProductFile.objects.get(id=self.product_1.id)
+        product_2 = ProductFile.objects.get(id=self.product_2.id)
+        product_3 = ProductFile.objects.get(id=self.product_3.id)
+        self.assertTrue(product_1.has_been_published)
+        self.assertTrue(product_1.is_published)
+        self.assertEqual(product_1.published, when)
+        self.assertTrue(product_2.has_been_published)
+        self.assertTrue(product_2.is_published)
+        self.assertEqual(product_2.published, when)
+        self.assertTrue(product_3.has_been_published)
+        self.assertTrue(product_3.is_published)
+        self.assertEqual(product_3.published, when)
+
+    def test_publish_products_already_superseded(self):
+        """Tests calling ProductFileManager.publish_products() where the job execution is already superseded"""
+
+        self.job_exe.job.is_superseded = True
+        when = now()
+        ProductFile.objects.publish_products(self.job_exe, when)
+
+        product_1 = ProductFile.objects.get(id=self.product_1.id)
+        product_2 = ProductFile.objects.get(id=self.product_2.id)
+        product_3 = ProductFile.objects.get(id=self.product_3.id)
+        self.assertFalse(product_1.has_been_published)
+        self.assertFalse(product_1.is_published)
+        self.assertIsNone(product_1.published)
+        self.assertFalse(product_2.has_been_published)
+        self.assertFalse(product_2.is_published)
+        self.assertIsNone(product_2.published)
+        self.assertFalse(product_3.has_been_published)
+        self.assertFalse(product_3.is_published)
+        self.assertIsNone(product_3.published)
+
+
 class TestProductFileManagerGetProductUpdatesQuery(TestCase):
     """Tests on the ProductFileManager.get_product_updates_query() method"""
 
