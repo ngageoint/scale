@@ -1,14 +1,16 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('loadController', function($scope, $location, scaleService, navService, loadService, uiGridConstants, scaleConfig, subnavService, QueueStatus, gridFactory) {
+    angular.module('scaleApp').controller('loadController', function($scope, $location, scaleService, stateService, navService, loadService, uiGridConstants, scaleConfig, subnavService, QueueStatus, gridFactory) {
         $scope.loading = true;
         $scope.queueStatusError = null;
         $scope.queueStatusErrorStatus = null;
         $scope.totalQueued = 0;
         $scope.gridStyle = '';
         $scope.subnavLinks = scaleConfig.subnavLinks.load;
-        subnavService.setCurrentPath('load');
+        subnavService.setCurrentPath('load/queued');
+        
+        var jobsParams = stateService.getJobsParams();
 
         $scope.getPage = function (pageNumber, pageSize) {
             $scope.loading = true;
@@ -53,7 +55,8 @@
                     $scope.gridApi = gridApi;
                     gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                         $scope.$apply(function () {
-                            $location.path('/jobs').search({job_type_id: row.entity.job_type.id, status: 'QUEUED'});
+                            stateService.setJobsParams({job_type_id: row.entity.job_type.id, status: 'QUEUED', page: jobsParams.page, page_size: jobsParams.page_size, order: jobsParams.order});
+                            $location.path('/jobs');
                         });
                     });
                     $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {

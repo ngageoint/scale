@@ -5,51 +5,22 @@
         var queryString = $location.search(),
             version = '',
             jobsColDefs = [],
-            jobsParams = {
-                page: queryString.page ? parseInt(queryString.page) : 1,
-                page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
-                started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
-                status: queryString.status ? queryString.status : null,
-                error_category: queryString.error_category ? queryString.error_category : null,
-                job_type_id: queryString.job_type_id ? parseInt(queryString.job_type_id) : null,
-                job_type_name: queryString.job_type_name ? queryString.job_type_name : null,
-                job_type_category: queryString.job_type_category ? queryString.job_type_category : null,
-                url: null
-            },
+            jobsParams = {},
             recipesColDefs = [],
-            jobTypesFailureRatesParams = {
-                page: queryString.page ? parseInt(queryString.page) : null,
-                page_size: queryString.page_size ? parseInt(queryString.page_size) : null,
-                started: queryString.started ? queryString.started : null,
-                ended: queryString.ended ? queryString.ended : null,
-                name: queryString.name ? queryString.name : null,
-                category: queryString.category ? queryString.category : null,
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : null
-            },
-            recipesParams = {
-                page: queryString.page ? parseInt(queryString.page) : 1,
-                page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
-                started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
-                type_id: queryString.type_id ? parseInt(queryString.type_id) : null,
-                type_name: queryString.type_name ? queryString.type_name : null,
-                url: null
-            },
+            jobTypesFailureRatesParams = {},
+            recipesParams = {},
             ingestsColDefs = [],
-            ingestsParams = {
-                page: queryString.page ? parseInt(queryString.page) : 1,
-                page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
-                started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-ingest_started'],
-                status: queryString.status ? queryString.status : null
-            },
+            ingestsParams = {},
             showActiveWorkspaces = true;
         
-        var updateQuerystring = function (data) {
+        var updateQuerystring = function (data, defaultOrder) {
+            // set defaults
+            data.page = data.page || 1;
+            data.page_size = data.page_size || 25;
+            data.started = data.started || moment.utc().subtract(1, 'weeks').startOf('d').toISOString();
+            data.ended = data.ended || moment.utc().endOf('d').toISOString();
+            data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : [defaultOrder];
+            data.status = data.status || null;
             // check for params in querystring, and update as necessary
             _.forEach(_.pairs(data), function (param) {
                 $location.search(param[0], param[1]);
@@ -73,15 +44,35 @@
                 return jobsParams;
             },
             setJobsParams: function (data) {
-                updateQuerystring(data);
-                jobsParams = data;
+                updateQuerystring(data, '-last_modified');
+                jobsParams = {
+                    page: data.page ? parseInt(data.page) : 1,
+                    page_size: data.page_size ? parseInt(data.page_size) : 25,
+                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                    status: data.status ? data.status : null,
+                    error_category: data.error_category ? data.error_category : null,
+                    job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
+                    job_type_name: data.job_type_name ? data.job_type_name : null,
+                    job_type_category: data.job_type_category ? data.job_type_category : null,
+                    url: null
+                };
             },
             getJobTypesFailureRatesParams: function () {
                 return jobTypesFailureRatesParams;
             },
             setJobTypesFailureRatesParams: function (data) {
-                updateQuerystring(data);
-                jobTypesFailureRatesParams = data;
+                updateQuerystring(data, null);
+                jobTypesFailureRatesParams = {
+                    page: data.page ? parseInt(data.page) : null,
+                    page_size: data.page_size ? parseInt(data.page_size) : null,
+                    started: data.started ? data.started : null,
+                    ended: data.ended ? data.ended : null,
+                    name: data.name ? data.name : null,
+                    category: data.category ? data.category : null,
+                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : null
+                };
             },
             getRecipesColDefs: function () {
                 return recipesColDefs;
@@ -93,8 +84,17 @@
                 return recipesParams;
             },
             setRecipesParams: function (data) {
-                updateQuerystring(data);
-                recipesParams = data;
+                updateQuerystring(data, '-last_modified');
+                recipesParams = {
+                    page: data.page ? parseInt(data.page) : 1,
+                    page_size: data.page_size ? parseInt(data.page_size) : 25,
+                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                    type_id: data.type_id ? parseInt(data.type_id) : null,
+                    type_name: data.type_name ? data.type_name : null,
+                    url: null
+                };
             },
             getIngestsColDefs: function () {
                 return ingestsColDefs;
@@ -106,8 +106,15 @@
                 return ingestsParams;
             },
             setIngestsParams: function (data) {
-                updateQuerystring(data);
-                ingestsParams = data;
+                updateQuerystring(data, '-ingest_started');
+                ingestsParams = {
+                    page: data.page ? parseInt(data.page) : 1,
+                    page_size: data.page_size ? parseInt(data.page_size) : 25,
+                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
+                    status: data.status ? data.status : null
+                };
             },
             getShowActiveWorkspaces: function () {
                 return showActiveWorkspaces;
