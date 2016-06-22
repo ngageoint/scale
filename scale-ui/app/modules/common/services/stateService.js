@@ -63,15 +63,17 @@
                 return jobTypesFailureRatesParams;
             },
             setJobTypesFailureRatesParams: function (data) {
-                updateQuerystring(data, null);
+                _.forEach(_.pairs(data), function (param) {
+                    $location.search(param[0], param[1]);
+                });
                 jobTypesFailureRatesParams = {
-                    page: data.page ? parseInt(data.page) : null,
-                    page_size: data.page_size ? parseInt(data.page_size) : null,
-                    started: data.started ? data.started : null,
-                    ended: data.ended ? data.ended : null,
+                    page: null,
+                    page_size: null,
+                    started: null,
+                    ended: null,
                     name: data.name ? data.name : null,
-                    category: data.category ? data.category : null,
-                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : null
+                    category: null,
+                    order: null
                 };
             },
             getRecipesColDefs: function () {
