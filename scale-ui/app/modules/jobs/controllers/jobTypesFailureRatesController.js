@@ -80,10 +80,15 @@
             var rgb = errorType === 'system' ? '103, 0, 13' : errorType === 'algorithm' ? '203, 24, 29' : '241, 105, 19';
             return 'background: rgba(' + rgb + ', ' + errorValue + '); color: ' + textColor;
         };
+
+        vm.failRateStyle = function (error, total) {
+            var percentage = ((error / total) * 100).toFixed(0);
+            return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
+        };
         
         vm.getPercentageOfTotal = function (errorTotal, total) {
             if (total === 0) {
-                return '100%';
+                return '0%';
             }
             return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
@@ -136,6 +141,7 @@
         };
 
         var initialize = function () {
+            vm.gridStyle = scaleService.setGridHeight();
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
                 jobTypes = _.cloneDeep(jobTypesData.results);
@@ -170,12 +176,12 @@
                             });
                         });
 
-                        vm.performanceData = _.sortByOrder(vm.performanceData, function (d) {
+                        vm.performanceData = _.sortByOrder(vm.performanceData, [function (d) {
                             if (d.twentyfour_hours.total > 0) {
                                 return d.twentyfour_hours.errorTotal / d.twentyfour_hours.total;
                             }
-                            return 1;
-                        }, ['desc']);
+                            return 0;
+                        }, 'twentyfour_hours.total'], ['desc', 'desc']);
 
                         vm.gridOptions.data = vm.performanceData;
                     }
@@ -203,15 +209,6 @@
                 filteredByJobType = newValue !== 'VIEW ALL';
                 vm.updateJobType(newValue);
             }
-        });
-
-        angular.element(document).ready(function () {
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset,
-                gridMaxHeight = viewport.height - offset;
-
-            vm.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
         });
     });
 })();
