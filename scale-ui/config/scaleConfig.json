@@ -225,8 +225,8 @@
                 { "path": "jobs/failure-rates", "label": "Failure Rates"}
             ],
             "load": [
-                { "path": "load", "label": "Queued" },
                 { "path": "load/running", "label": "Running" },
+                { "path": "load/queued", "label": "Queued" },
                 { "path": "load/depth", "label": "Job Load" }
             ],
             "recipes": [
