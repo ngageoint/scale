@@ -501,7 +501,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
             }],
             'output_data': [{
                 'name': 'Test Output 3',
-                'type': 'property',
+                'type': 'file',
             }]}
         job_type_3 = job_test_utils.create_job_type(interface=interface_3)
         new_definition = {
