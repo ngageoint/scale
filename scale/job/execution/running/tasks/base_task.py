@@ -181,7 +181,7 @@ class Task(object):
         :rtype: :class:`error.models.Error`
         """
 
-        if not self.is_running and not task_results.exit_code:
+        if not self.is_running:
             if self.uses_docker:
                 return Error.objects.get_builtin_error('docker-task-launch')
             else:

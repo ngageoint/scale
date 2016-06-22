@@ -52,7 +52,7 @@ class PreTask(Task):
         if self._task_id != task_results.task_id:
             return None
 
-        if not error:
+        if not error and self.is_running:
             # Check scale_pre_steps command to see if exit code maps to a specific error
             if task_results.exit_code and task_results.exit_code in PRE_EXIT_CODE_DICT:
                 error = PRE_EXIT_CODE_DICT[task_results.exit_code]()
