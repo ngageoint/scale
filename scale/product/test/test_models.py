@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import hashlib
 import os
 import time
 
@@ -306,10 +307,53 @@ class TestProductFileManager(TestCase):
         product_3_b = ProductFile.objects.get(id=product_3_b.id)
         self.assertTrue(product_3_a.has_been_published)
         self.assertTrue(product_3_a.is_published)
+        self.assertFalse(product_3_a.is_superseded)
         self.assertEqual(product_3_a.published, when)
+        self.assertIsNone(product_3_a.superseded)
         self.assertTrue(product_3_b.has_been_published)
         self.assertTrue(product_3_b.is_published)
+        self.assertFalse(product_3_b.is_superseded)
         self.assertEqual(product_3_b.published, when)
+        self.assertIsNone(product_3_b.superseded)
+
+    def test_publish_products_supersede_products(self):
+        """Tests calling ProductFileManager.publish_products() where products with existing UUIDs get superseded
+        """
+
+        # Create existing products with known UUIDs
+        builder = hashlib.md5()
+        builder.update('test')
+        uuid_1 = builder.hexdigest()
+        builder.update('hello')
+        uuid_2 = builder.hexdigest()
+        builder.update('again')
+        uuid_3 = builder.hexdigest()
+        product_a = prod_test_utils.create_product(uuid=uuid_1, has_been_published=True, is_published=True)
+        product_b = prod_test_utils.create_product(uuid=uuid_2, has_been_published=True, is_published=True)
+        product_c = prod_test_utils.create_product(uuid=uuid_3, has_been_published=True, is_published=True)
+
+        # Set the new products with the same UUIDs
+        ProductFile.objects.filter(id=self.product_1.id).update(uuid=uuid_1)
+        ProductFile.objects.filter(id=self.product_2.id).update(uuid=uuid_2)
+        ProductFile.objects.filter(id=self.product_3.id).update(uuid=uuid_3)
+
+        # Publish new products
+        when = now()
+        ProductFile.objects.publish_products(self.job_exe, when)
+
+        # Check old products to make sure they are superseded
+        product_a = ProductFile.objects.get(id=product_a.id)
+        product_b = ProductFile.objects.get(id=product_b.id)
+        product_c = ProductFile.objects.get(id=product_c.id)
+        self.assertFalse(product_a.is_published)
+        self.assertTrue(product_a.is_superseded)
+        self.assertEqual(product_a.superseded, when)
+        self.assertFalse(product_b.is_published)
+        self.assertTrue(product_b.is_superseded)
+        self.assertEqual(product_b.superseded, when)
+        self.assertFalse(product_c.is_published)
+        self.assertTrue(product_c.is_superseded)
+        self.assertEqual(product_c.superseded, when)
 
 
 class TestProductFileManagerGetProductUpdatesQuery(TestCase):

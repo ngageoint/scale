@@ -299,13 +299,19 @@ class ProductFileManager(models.GeoManager):
             query = self.filter(Q(job__root_superseded_job_id=root_id) | Q(job_id=root_id))
             query.update(is_published=False, unpublished=when, last_modified=timezone.now())
 
-        # Acquire model lock
-        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe.id).order_by('id')
-        for product in product_qry:
-            product.has_been_published = True
-            product.is_published = True
-            product.published = when
-            product.save()
+        # Grab UUIDs from new products to be published
+        uuids = []
+        for product_file in self.filter(job_exe_id=job_exe.id):
+            uuids.append(product_file.uuid)
+
+        # Supersede products with the same UUIDs (a given UUID should only appear once in the product API calls)
+        if uuids:
+            query = self.filter(uuid__in=uuids, has_been_published=True)
+            query.update(is_published=False, is_superseded=True, superseded=when, last_modified=timezone.now())
+
+        # Publish this job execution's products
+        self.filter(job_exe_id=job_exe.id).update(has_been_published=True, is_published=True, published=when,
+                                                  last_modified=timezone.now())
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.
@@ -397,10 +403,14 @@ class ProductFile(ScaleFile):
     :keyword is_published: Whether this product is currently published. A published product has had its job execution
         complete successfully and has not been unpublished.
     :type is_published: :class:`django.db.models.BooleanField`
+    :keyword is_superseded: Whether this product has been superseded by another product with the same UUID
+    :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword published: When this product was published (its job execution was completed)
     :type published: :class:`django.db.models.DateTimeField`
     :keyword unpublished: When this product was unpublished
     :type unpublished: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this product was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     """
 
     file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
@@ -411,8 +421,10 @@ class ProductFile(ScaleFile):
 
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
+    is_superseded = models.BooleanField(default=False)
     published = models.DateTimeField(blank=True, null=True)
     unpublished = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
 
     objects = ProductFileManager()
 

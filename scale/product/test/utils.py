@@ -28,7 +28,7 @@ def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, rec
                                            recipe=recipe)
 
 
-def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False,
+def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False, uuid='',
                    file_name='my_test_file.txt', file_path='/file/path/my_test_file.txt', media_type='text/plain',
                    file_size=100, countries=None):
     """Creates a product file model for unit testing
@@ -44,8 +44,8 @@ def create_product(job_exe=None, workspace=None, has_been_published=False, is_pu
 
     product_file = ProductFile.objects.create(job_exe=job_exe, job=job_exe.job, job_type=job_exe.job.job_type,
                                               has_been_published=has_been_published, is_published=is_published,
-                                              file_name=file_name, media_type=media_type, file_size=file_size,
-                                              file_path=file_path, workspace=workspace)
+                                              uuid=uuid, file_name=file_name, media_type=media_type,
+                                              file_size=file_size, file_path=file_path, workspace=workspace)
     if countries:
         product_file.countries = countries
         product_file.save()
