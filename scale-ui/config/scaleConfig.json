@@ -134,11 +134,11 @@
         "dateFormats": {
             "day": "YYYY-MM-DD",
             "day_hour": "YYYY-MM-DD HHZ",
-            "day_minute": "YYYY-MM-DD HH:MM",
-            "day_minute_utc": "YYYY-MM-DD HH:MM[Z]",
-            "day_second": "YYYY-MM-DD HH:MM:SSZ",
-            "day_second_utc": "YYYY-MM-DD HH:MM:SS[Z]",
-            "day_second_utc_nolabel": "YYYY-MM-DD HH:MM:SS",
+            "day_minute": "YYYY-MM-DD HH:mm",
+            "day_minute_utc": "YYYY-MM-DD HH:mm[Z]",
+            "day_second": "YYYY-MM-DD HH:mm:ssZ",
+            "day_second_utc": "YYYY-MM-DD HH:mm:ss[Z]",
+            "day_second_utc_nolabel": "YYYY-MM-DD HH:mm:ss",
             "day_millis": "YYYY-MM-DD HH:mm:ss.SSS",
             "hour_minute": "HH:mm",
             "hour_seconds": "HH:mm:ss",
@@ -225,8 +225,8 @@
                 { "path": "jobs/failure-rates", "label": "Failure Rates"}
             ],
             "load": [
-                { "path": "load", "label": "Queued" },
                 { "path": "load/running", "label": "Running" },
+                { "path": "load/queued", "label": "Queued" },
                 { "path": "load/depth", "label": "Job Load" }
             ],
             "recipes": [
