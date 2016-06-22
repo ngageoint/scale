@@ -57,8 +57,8 @@ class JobTask(Task):
         if self._task_id != task_results.task_id:
             return None
 
-        if not error:
-            # Use job's error mapping here to determine error
+        if not error and self.is_running:
+            # If the task successfully started, use job's error mapping here to determine error
             error = self._error_mapping.get_error(task_results.exit_code)
         if not error:
             error = self.consider_general_error(task_results)

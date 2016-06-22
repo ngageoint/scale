@@ -255,6 +255,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task fails to launch
         pre_task_results = TaskResults(pre_task_id)
+        pre_task_results.exit_code = 1
         pre_task_results.when = now()
         running_job_exe.task_fail(pre_task_results)
 
@@ -293,6 +294,7 @@ class TestRunningJobExecution(TestCase):
 
         # Job-task fails to launch
         job_task_results = TaskResults(job_task_id)
+        job_task_results.exit_code = 1
         job_task_results.when = now()
         running_job_exe.task_fail(job_task_results)
 
@@ -346,6 +348,7 @@ class TestRunningJobExecution(TestCase):
 
         # Post-task fails to launch
         post_task_results = TaskResults(post_task_id)
+        post_task_results.exit_code = 1
         post_task_results.when = now()
         running_job_exe.task_fail(post_task_results)
 
