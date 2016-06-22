@@ -53,8 +53,8 @@
         self.colDefs = [
             {
                 field: 'file_name',
-                displayName: 'File Name',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><input ng-model="grid.appScope.searchText" ng-change="grid.appScope.refreshData()" class="form-control" placeholder="Search"></div>'
+                displayName: 'Filename',
+                enableFiltering: false
             },
             {
                 field: 'file_size',
@@ -140,7 +140,7 @@
             $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 $scope.$apply(function () {
                     $location.search({});
-                    $location.path('/feed/ingests/' + row.entity.file_name);
+                    $location.path('/feed/ingests/' + row.entity.id);
                 });
             });
             $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {

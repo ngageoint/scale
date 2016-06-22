@@ -72,10 +72,10 @@
                 });
                 return d.promise;
             },
-            getSourceDetails: function (file_name) {
+            getSourceDetails: function (id) {
                 var d = $q.defer();
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'sources/' + file_name + '/',
+                    url: scaleConfig.urls.apiPrefix + 'sources/' + id + '/',
                     method: 'GET'
                 }).success(function (data) {
                     d.resolve(data);

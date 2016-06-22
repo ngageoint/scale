@@ -1,7 +1,15 @@
-<ais-header name="ingestRecord.file_name" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<ais-header name="'Ingest Details'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
 
 <div class="form-inline">
     <div ng-if="ingestRecord" class="margin-top-lg">
-        {{ ingestRecord.media_type }}
+        <h2 class="margin-top-sm margin-bottom-md"><a href="{{ ingestRecord.url }}">{{ ingestRecord.file_name }}</a></h2>
+        <ul class="list-unstyled">
+            <li><strong>Media Type:</strong> {{ ingestRecord.media_type }}</li>
+            <li><strong>File Size:</strong> {{ scaleService.calculateFileSizeFromBytes(ingestRecord.file_size) }}</li>
+            <li><strong>Workspace:</strong> <a href="/#/workspaces/{{ ingestRecord.workspace.id }}">{{ ingestRecord.workspace.name }}</a></li>
+            <li><strong>Created:</strong> {{ moment.utc(ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</li>
+            <li><strong>Last Modified:</strong> {{ moment.utc(ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</li>
+            <li ng-if="ingestRecord.parsed"><strong>Parsed:</strong> {{ moment.utc(ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</li>
+        </ul>
     </div>
 </div>

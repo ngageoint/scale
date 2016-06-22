@@ -52,7 +52,7 @@
                 templateUrl: 'modules/feed/partials/ingestRecordsTemplate.html',
                 reloadOnSearch: false
             })
-            .when('/feed/ingests/:file_name', {
+            .when('/feed/ingests/:id', {
                 controller: 'ingestRecordDetailsController',
                 templateUrl: 'modules/feed/partials/ingestRecordDetailsTemplate.html'
             })

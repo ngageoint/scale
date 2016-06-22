@@ -1,14 +1,16 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('ingestRecordDetailsController', function ($scope, $routeParams, scaleConfig, navService, subnavService, feedService) {
+    angular.module('scaleApp').controller('ingestRecordDetailsController', function ($scope, $routeParams, scaleConfig, scaleService, navService, subnavService, feedService) {
         $scope.loading = false;
         $scope.subnavLinks = scaleConfig.subnavLinks.feed;
+        $scope.scaleService = scaleService;
+        $scope.moment = moment;
         $scope.ingestRecord = null;
 
         var getIngestRecordDetails = function () {
             $scope.loading = true;
-            feedService.getSourceDetails($routeParams.file_name).then(function (data) {
+            feedService.getSourceDetails($routeParams.id).then(function (data) {
                 $scope.ingestRecord = data;
             }).catch(function (error) {
                 console.log(error);
