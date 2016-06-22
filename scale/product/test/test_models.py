@@ -15,7 +15,9 @@ import product.test.utils as prod_test_utils
 import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
+import trigger.test.utils as trigger_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
+from job.models import Job
 from product.models import FileAncestryLink, ProductFile
 
 
@@ -253,6 +255,61 @@ class TestProductFileManager(TestCase):
         self.assertFalse(product_3.has_been_published)
         self.assertFalse(product_3.is_published)
         self.assertIsNone(product_3.published)
+
+    def test_publish_products_unpublish_superseded(self):
+        """Tests calling ProductFileManager.publish_products() where the job has superseded job products that must be
+        unpublished
+        """
+
+        # Job 1 is superseded by Job 2 and Job 2 is superseded by Job 3
+        job_exe_1 = job_test_utils.create_job_exe()
+        product_1_a = prod_test_utils.create_product(job_exe=job_exe_1, has_been_published=True, is_published=True)
+        product_1_b = prod_test_utils.create_product(job_exe=job_exe_1, has_been_published=True, is_published=True)
+        job_type = job_test_utils.create_job_type()
+        event = trigger_test_utils.create_trigger_event()
+        job_2 = Job.objects.create_job(job_type=job_type, event=event, superseded_job=job_exe_1.job)
+        job_2.save()
+        job_exe_2 = job_test_utils.create_job_exe(job=job_2)
+        Job.objects.supersede_jobs([job_exe_1.job], now())
+        product_2_a = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
+        product_2_b = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
+        job_3 = Job.objects.create_job(job_type=job_type, event=event, superseded_job=job_exe_2.job)
+        job_3.save()
+        job_exe_3 = job_test_utils.create_job_exe(job=job_3)
+        Job.objects.supersede_jobs([job_2], now())
+        product_3_a = prod_test_utils.create_product(job_exe=job_exe_3)
+        product_3_b = prod_test_utils.create_product(job_exe=job_exe_3)
+
+        when = now()
+        ProductFile.objects.publish_products(job_exe_3, when)
+
+        # Make sure products from Job 1 and Job 2 are unpublished
+        product_1_a = ProductFile.objects.get(id=product_1_a.id)
+        product_1_b = ProductFile.objects.get(id=product_1_b.id)
+        product_2_a = ProductFile.objects.get(id=product_2_a.id)
+        product_2_b = ProductFile.objects.get(id=product_2_b.id)
+        self.assertTrue(product_1_a.has_been_published)
+        self.assertFalse(product_1_a.is_published)
+        self.assertEqual(product_1_a.unpublished, when)
+        self.assertTrue(product_1_b.has_been_published)
+        self.assertFalse(product_1_b.is_published)
+        self.assertEqual(product_1_b.unpublished, when)
+        self.assertTrue(product_2_a.has_been_published)
+        self.assertFalse(product_2_a.is_published)
+        self.assertEqual(product_2_a.unpublished, when)
+        self.assertTrue(product_2_b.has_been_published)
+        self.assertFalse(product_2_b.is_published)
+        self.assertEqual(product_2_b.unpublished, when)
+
+        # Make sure Job 3 products are published
+        product_3_a = ProductFile.objects.get(id=product_3_a.id)
+        product_3_b = ProductFile.objects.get(id=product_3_b.id)
+        self.assertTrue(product_3_a.has_been_published)
+        self.assertTrue(product_3_a.is_published)
+        self.assertEqual(product_3_a.published, when)
+        self.assertTrue(product_3_b.has_been_published)
+        self.assertTrue(product_3_b.is_published)
+        self.assertEqual(product_3_b.published, when)
 
 
 class TestProductFileManagerGetProductUpdatesQuery(TestCase):

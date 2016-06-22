@@ -293,6 +293,12 @@ class ProductFileManager(models.GeoManager):
         if job_exe.job.is_superseded:
             return
 
+        # Unpublish any products created by jobs that are superseded by this job
+        if job_exe.job.root_superseded_job_id:
+            root_id = job_exe.job.root_superseded_job_id
+            query = self.filter(Q(job__root_superseded_job_id=root_id) | Q(job_id=root_id))
+            query.update(is_published=False, unpublished=when, last_modified=timezone.now())
+
         # Acquire model lock
         product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe.id).order_by('id')
         for product in product_qry:
