@@ -295,9 +295,7 @@ class ProductFileManager(models.GeoManager):
 
         # Unpublish any products created by jobs that are superseded by this job
         if job_exe.job.root_superseded_job_id:
-            root_id = job_exe.job.root_superseded_job_id
-            query = self.filter(Q(job__root_superseded_job_id=root_id) | Q(job_id=root_id))
-            query.update(is_published=False, unpublished=when, last_modified=timezone.now())
+            self.unpublish_products(job_exe.job.root_superseded_job_id, when)
 
         # Grab UUIDs from new products to be published
         uuids = []
@@ -312,6 +310,18 @@ class ProductFileManager(models.GeoManager):
         # Publish this job execution's products
         self.filter(job_exe_id=job_exe.id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
+
+    def unpublish_products(self, root_job_id, when):
+        """Unpublishes all of the published products created by the superseded jobs with the given root ID
+
+        :param root_job_id: The root superseded job ID
+        :type root_job_id: int
+        :param when: When the products were unpublished
+        :type when: :class:`datetime.datetime`
+        """
+
+        query = self.filter(Q(job__root_superseded_job_id=root_job_id) | Q(job_id=root_job_id), is_published=True)
+        query.update(is_published=False, unpublished=when, last_modified=timezone.now())
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.

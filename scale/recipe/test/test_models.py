@@ -543,6 +543,10 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         recipe = Recipe.objects.get(id=handler.recipe_id)
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 1')
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 2')
+        job_exe_2 = job_test_utils.create_job_exe(job=recipe_job_2.job)
+        from product.models import ProductFile
+        from product.test import utils as product_test_utils
+        product = product_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
         superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
 
         # Create a new recipe with a different version
@@ -560,6 +564,11 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         self.assertTrue(recipe.is_superseded)
         self.assertFalse(job_1.is_superseded)
         self.assertTrue(job_2.is_superseded)
+
+        # Check that product of job 2 (which was superseded with no new job) was unpublished
+        product = ProductFile.objects.get(id=product.id)
+        self.assertFalse(product.is_published)
+        self.assertIsNotNone(product.unpublished)
 
         # Check that new recipe supersedes the old one, job 1 is copied from old recipe, and job 2 is new and does not
         # supersede anything
