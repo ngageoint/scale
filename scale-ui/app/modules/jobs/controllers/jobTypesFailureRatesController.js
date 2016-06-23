@@ -155,7 +155,7 @@
                     page_size: null,
                     started: started,
                     ended: ended,
-                    choice_id: _.map(jobTypes, 'id'),
+                    choice_id: vm.selectedJobType.id > 0 ? [vm.selectedJobType.id] : _.map(jobTypes, 'id'),
                     column: ['error_system_count', 'error_algorithm_count', 'error_data_count', 'total_count'],
                     group: null,
                     dataType: 'job-types'
