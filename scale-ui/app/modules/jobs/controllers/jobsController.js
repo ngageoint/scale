@@ -21,7 +21,6 @@
         $scope.selectedErrorCategory = self.jobsParams.error_category || $scope.errorCategoryValues[0];
         $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
         $scope.actionClicked = false;
-        $scope.gridStyle = '';
         $scope.lastModifiedStart = moment.utc(self.jobsParams.started).toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
@@ -109,6 +108,8 @@
         self.getJobs = function () {
             jobService.getJobsOnce(self.jobsParams).then(function (data) {
                 $scope.gridOptions.totalItems = data.count;
+                $scope.gridOptions.minRowsToShow = data.results.length;
+                $scope.gridOptions.virtualizationThreshold = data.results.length;
                 $scope.gridOptions.data = data.results;
             }).catch(function (error) {
                 console.log(error);
@@ -173,7 +174,7 @@
                 $scope.loading = false;
             });
         };
-
+        
         self.filterResults = function () {
             stateService.setJobsParams(self.jobsParams);
             $scope.loading = true;

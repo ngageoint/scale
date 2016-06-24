@@ -19,7 +19,6 @@
         vm.performanceData = [];
         vm.jobTypeValues = [jobTypeViewAll];
         vm.selectedJobType = vm.jobTypesParams.name ? vm.jobTypesParams.name : jobTypeViewAll;
-        vm.gridStyle = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/failure-rates');
 
@@ -177,6 +176,8 @@
                             return 1;
                         }, ['desc']);
 
+                        vm.gridOptions.minRowsToShow = vm.performanceData.length;
+                        vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
                     }
 

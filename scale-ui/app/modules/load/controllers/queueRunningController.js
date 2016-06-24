@@ -6,7 +6,6 @@
         $scope.runningJobsError = null;
         $scope.runningJobsErrorStatus = null;
         $scope.totalRunning = 0;
-        $scope.gridStyle = '';
         $scope.subnavLinks = scaleConfig.subnavLinks.load;
         subnavService.setCurrentPath('load/running');
 
@@ -19,16 +18,18 @@
                 for(var i = 0; i < $scope.gridOptions.paginationPageSize; i++){
                     newData.push(data.results[i]);
                 }
+                $scope.gridOptions.minRowsToShow = newData.length;
+                $scope.gridOptions.virtualizationThreshold = newData.length;
                 $scope.gridOptions.data = newData;
-            }).catch(function(error){
+            }).catch(function (error) {
                 $scope.status = 'Unable to load queue running status: ' + error.message;
                 console.error($scope.status);
-            }).finally(function(){
+            }).finally(function () {
                 $scope.loading = false;
             });
         };
 
-        var initialize = function() {
+        var initialize = function () {
             $scope.gridOptions = gridFactory.defaultGridOptions();
             $scope.gridOptions.enableSorting = false;
             $scope.gridOptions.columnDefs = [
@@ -64,6 +65,8 @@
 
             jobService.getRunningJobs(0, $scope.gridOptions.paginationPageSize).then(null, null, function (data) {
                 if (data.$resolved) {
+                    $scope.gridOptions.minRowsToShow = data.results.length;
+                    $scope.gridOptions.virtualizationThreshold = data.results.length;
                     $scope.gridOptions.data = data.results;
                     $scope.gridOptions.totalItems = data.results.length;
                     $scope.totalRunning = _.sum(data.results, 'count');
