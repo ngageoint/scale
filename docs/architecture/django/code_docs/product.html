@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="product.migrations.html">product.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0001_initial">product.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0002_auto_20160622_1344">product.migrations.0002_auto_20160622_1344 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -424,8 +425,10 @@ execution completes successfully. A product that has been published will appear 
 product updates.</li>
 <li><strong>is_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product is currently published. A published product has had its job execution
 complete successfully and has not been unpublished.</li>
+<li><strong>is_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has been superseded by another product with the same UUID</li>
 <li><strong>published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was published (its job execution was completed)</li>
 <li><strong>unpublished</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was unpublished</li>
+<li><strong>superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was superseded</li>
 </ul>
 </td>
 </tr>
@@ -552,8 +555,26 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The locked job execution model with related job model</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the products were published</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.models.ProductFileManager.unpublish_products">
+<code class="descname">unpublish_products</code><span class="sig-paren">(</span><em>root_job_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.unpublish_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpublishes all of the published products created by the superseded jobs with the given root ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>root_job_id</strong> (<em>int</em>) &#8211; The root superseded job ID</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the products were unpublished</li>
 </ul>
 </td>
 </tr>

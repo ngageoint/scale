@@ -252,6 +252,43 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="product.test.test_models.TestProductFileManager">
+<em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestProductFileManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests on the ProductFileManager</p>
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManager.test_publish_products_already_superseded">
+<code class="descname">test_publish_products_already_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager.test_publish_products_already_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.publish_products() where the job execution is already superseded</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManager.test_publish_products_successfully">
+<code class="descname">test_publish_products_successfully</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager.test_publish_products_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.publish_products() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManager.test_publish_products_supersede_products">
+<code class="descname">test_publish_products_supersede_products</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager.test_publish_products_supersede_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.publish_products() where products with existing UUIDs get superseded</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.test.test_models.TestProductFileManager.test_publish_products_unpublish_superseded">
+<code class="descname">test_publish_products_unpublish_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManager.test_publish_products_unpublish_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProductFileManager.publish_products() where the job has superseded job products that must be
+unpublished</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="product.test.test_models.TestProductFileManagerGetProductUpdatesQuery">
 <em class="property">class </em><code class="descclassname">product.test.test_models.</code><code class="descname">TestProductFileManagerGetProductUpdatesQuery</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -587,7 +624,7 @@
 
 <dl class="function">
 <dt id="product.test.utils.create_product">
-<code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>is_published=False</em>, <em>uuid=None</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a product file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
