@@ -6,7 +6,6 @@
         $scope.queueStatusError = null;
         $scope.queueStatusErrorStatus = null;
         $scope.totalQueued = 0;
-        $scope.gridStyle = '';
         $scope.subnavLinks = scaleConfig.subnavLinks.load;
         subnavService.setCurrentPath('load/queued');
         
@@ -19,6 +18,8 @@
                 for (var i = 0; i < $scope.gridOptions.paginationPageSize; i++) {
                     newData.push(data.jobs[i]);
                 }
+                $scope.gridOptions.minRowsToShow = newData.length;
+                $scope.gridOptions.virtualizationThreshold = newData.length;
                 $scope.gridOptions.data = newData;
             }).catch(function (error) {
                 $scope.status = 'Unable to load queue status: ' + error.message;
@@ -29,26 +30,25 @@
         };
 
         var initialize = function () {
-            $scope.gridStyle = scaleService.setGridHeight();
             $scope.gridOptions = gridFactory.defaultGridOptions();
             $scope.gridOptions.enableSorting = false;
             $scope.gridOptions.columnDefs = [
-                    {
-                        field: 'job_type.title',
-                        displayName: 'Job Type',
-                        enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
-                    },
-                    { field: 'job_type.version', displayName: 'Version', enableFiltering: false },
-                    { field: 'highest_priority', enableFiltering: false },
-                    {
-                        field: 'longestQueued',
-                        displayName: 'Duration of Longest Queued Job',
-                        enableFiltering: false,
-                        cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
-                    },
-                    { field: 'count', enableFiltering: false }
-                ];
+                {
+                    field: 'job_type.title',
+                    displayName: 'Job Type',
+                    enableFiltering: false,
+                    cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }}</div>'
+                },
+                { field: 'job_type.version', displayName: 'Version', enableFiltering: false },
+                { field: 'highest_priority', enableFiltering: false },
+                {
+                    field: 'longestQueued',
+                    displayName: 'Duration of Longest Queued Job',
+                    enableFiltering: false,
+                    cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
+                },
+                { field: 'count', enableFiltering: false }
+            ];
             $scope.gridOptions.data = [];
             $scope.gridOptions.onRegisterApi = function (gridApi) {
                     //set gridApi on scope
@@ -67,6 +67,8 @@
 
             loadService.getQueueStatus(0, $scope.gridOptions.paginationPageSize).then(null, null, function (result) {
                 if (result.$resolved) {
+                    $scope.gridOptions.minRowsToShow = result.results.length;
+                    $scope.gridOptions.virtualizationThreshold = result.results.length;
                     $scope.gridOptions.data = result.results;
                     $scope.gridOptions.totalItems = result.results.length;
                     $scope.totalQueued = _.sum(result.results, 'count');

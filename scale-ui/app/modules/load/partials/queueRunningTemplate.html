@@ -3,7 +3,7 @@
 <div class="grid-container">
     <div ng-show="runningJobsError" class="alert alert-danger text-center"><strong>{{ runningJobsError }}</strong> {{ runningJobsErrorStatus }}</div>
     <div ng-show="!runningJobsError">
-        <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid" style="{{ gridStyle }}"></div>
+        <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
     </div>
 </div>
 <ais-grid-pagination></ais-grid-pagination>

@@ -13,7 +13,6 @@
         $scope.subnavLinks = scaleConfig.subnavLinks.feed;
         $scope.ingestStatusValues = scaleConfig.ingestStatus;
         $scope.selectedIngestStatus = $scope.ingestsParams.status || $scope.ingestStatusValues[0];
-        $scope.gridStyle = '';
         $scope.lastModifiedStart = moment.utc($scope.ingestsParams.started).toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
@@ -98,6 +97,8 @@
             $scope.loading = true;
             feedService.getIngestsOnce($scope.ingestsParams).then(function (data) {
                 $scope.ingestData = data.results;
+                $scope.gridOptions.minRowsToShow = data.results.length;
+                $scope.gridOptions.virtualizationThreshold = data.results.length;
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
             }).catch(function (error) {
@@ -156,7 +157,6 @@
         };
 
         self.initialize = function () {
-            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setIngestsParams($scope.ingestsParams);
             self.updateColDefs();
             self.getIngests();

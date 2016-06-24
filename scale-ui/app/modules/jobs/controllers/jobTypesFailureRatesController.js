@@ -19,7 +19,6 @@
         vm.performanceData = [];
         vm.jobTypeValues = [jobTypeViewAll];
         vm.selectedJobType = vm.jobTypesParams.name ? vm.jobTypesParams.name : jobTypeViewAll;
-        vm.gridStyle = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/failure-rates');
 
@@ -141,7 +140,6 @@
         };
 
         var initialize = function () {
-            vm.gridStyle = scaleService.setGridHeight();
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
                 jobTypes = _.cloneDeep(jobTypesData.results);
@@ -183,6 +181,8 @@
                             return 0;
                         }, 'twentyfour_hours.total'], ['desc', 'desc']);
 
+                        vm.gridOptions.minRowsToShow = vm.performanceData.length;
+                        vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
                     }
 
