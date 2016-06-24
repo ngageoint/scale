@@ -159,14 +159,18 @@ class RecipeManager(models.Manager):
 
         if delta:
             # Go through deleted jobs, unpublish their products, and get ready to supersede them
-            from product.models import ProductFile
+            try:
+                from product.models import ProductFile
+            except ImportError:
+                ProductFile = None
             for deleted_job_name in delta.get_deleted_nodes():
                 deleted_job = superseded_jobs[deleted_job_name]
                 jobs_to_supersede.append(deleted_job)
                 root_job_id = deleted_job.root_superseded_job_id
                 if not root_job_id:
                     root_job_id = deleted_job.id
-                ProductFile.objects.unpublish_products(root_job_id, when)
+                if ProductFile:
+                    ProductFile.objects.unpublish_products(root_job_id, when)
         if jobs_to_supersede:
             # Supersede any jobs that were changed or deleted in new recipe
             Job.objects.supersede_jobs(jobs_to_supersede, when)

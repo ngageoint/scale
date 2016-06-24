@@ -1,6 +1,8 @@
 """Defines utility methods for testing products"""
 from __future__ import unicode_literals
 
+import hashlib
+
 from job.test import utils as job_utils
 from product.models import FileAncestryLink, ProductFile
 from storage.test import utils as storage_utils
@@ -28,7 +30,7 @@ def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, rec
                                            recipe=recipe)
 
 
-def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False, uuid='',
+def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False, uuid=None,
                    file_name='my_test_file.txt', file_path='/file/path/my_test_file.txt', media_type='text/plain',
                    file_size=100, countries=None):
     """Creates a product file model for unit testing
@@ -41,6 +43,12 @@ def create_product(job_exe=None, workspace=None, has_been_published=False, is_pu
         job_exe = job_utils.create_job_exe()
     if not workspace:
         workspace = storage_utils.create_workspace()
+
+    if not uuid:
+        builder = hashlib.md5()
+        builder.update(str(job_exe.job.job_type.id))
+        builder.update(file_name)
+        uuid = builder.hexdigest()
 
     product_file = ProductFile.objects.create(job_exe=job_exe, job=job_exe.job, job_type=job_exe.job.job_type,
                                               has_been_published=has_been_published, is_published=is_published,
