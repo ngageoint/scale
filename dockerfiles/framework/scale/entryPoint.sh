@@ -7,8 +7,6 @@ then
     sudo sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
     sed -i 's/\/api/.\/api/' /opt/scale/ui/config/scaleConfig.json
     sed -i 's/\/docs/.\/docs/' /opt/scale/ui/config/scaleConfig.json
-    sudo sed -i 's/PREFIX/\/ui/' /etc/httpd/conf.d/scale.conf
-else
     sudo sed -i 's/PREFIX//' /etc/httpd/conf.d/scale.conf
 fi
 
