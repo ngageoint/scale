@@ -149,7 +149,7 @@ Line 17:      The "docker_image" field specifies the name and optional index of 
 Line 18:      The "priority" field specifies the importance of the Job in the queue.  Jobs with lower priority numbers
 will execute **before** higher priority numbers
 
-Line 19:      The "timeout" field is measured in minutes and will send a *kill* signal to the job if it has not
+Line 19:      The "timeout" field is measured in seconds and will send a *kill* signal to the job if it has not
 completed within this time
 
 Lines 20-21:  The "max_scheduled" and "max_tries" fields define how many times the job can be scheduled and

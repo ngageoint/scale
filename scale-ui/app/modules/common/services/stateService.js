@@ -19,6 +19,15 @@
                 url: null
             },
             recipesColDefs = [],
+            jobTypesFailureRatesParams = {
+                page: queryString.page ? parseInt(queryString.page) : null,
+                page_size: queryString.page_size ? parseInt(queryString.page_size) : null,
+                started: queryString.started ? queryString.started : null,
+                ended: queryString.ended ? queryString.ended : null,
+                name: queryString.name ? queryString.name : null,
+                category: queryString.category ? queryString.category : null,
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : null
+            },
             recipesParams = {
                 page: queryString.page ? parseInt(queryString.page) : 1,
                 page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
@@ -35,7 +44,7 @@
                 page_size: queryString.page_size ? parseInt(queryString.page_size) : 25,
                 started: queryString.started ? queryString.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
                 ended: queryString.ended ? queryString.ended : moment.utc().endOf('d').toISOString(),
-                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-last_modified'],
+                order: queryString.order ? Array.isArray(queryString.order) ? queryString.order : [queryString.order] : ['-ingest_started'],
                 status: queryString.status ? queryString.status : null
             };
         
@@ -65,6 +74,13 @@
             setJobsParams: function (data) {
                 updateQuerystring(data);
                 jobsParams = data;
+            },
+            getJobTypesFailureRatesParams: function () {
+                return jobTypesFailureRatesParams;
+            },
+            setJobTypesFailureRatesParams: function (data) {
+                updateQuerystring(data);
+                jobTypesFailureRatesParams = data;
             },
             getRecipesColDefs: function () {
                 return recipesColDefs;

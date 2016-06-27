@@ -70,7 +70,7 @@
         var getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
                 $scope.jobTypes = data.results;
-                $scope.jobTypeIds = _.pluck(data.results, 'id');
+                $scope.jobTypeIds = _.pluck($scope.jobTypes, 'id');
                 $scope.jobTypeCount = data.count;
                 if ($scope.requestedJobTypeId) {
                     $scope.viewDetails($scope.requestedJobTypeId);

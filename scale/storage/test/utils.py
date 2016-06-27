@@ -33,7 +33,7 @@ def create_country(name=None, fips='TT', gmi='TT', iso2='TT', iso3='TST', iso_nu
 
 
 def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size=100, file_path=None, workspace=None,
-                countries=None):
+                countries=None, is_deleted=False):
     """Creates a Scale file model for unit testing
 
     :returns: The file model
@@ -42,8 +42,14 @@ def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size
 
     if not workspace:
         workspace = create_workspace()
+
+    deleted = None
+    if is_deleted:
+        deleted = timezone.now()
+
     scale_file = ScaleFile.objects.create(file_name=file_name, media_type=media_type, file_size=file_size,
-                                          file_path=file_path or 'file/path/' + file_name, workspace=workspace)
+                                          file_path=file_path or 'file/path/' + file_name, workspace=workspace,
+                                          is_deleted=is_deleted, deleted=deleted)
     if countries:
         scale_file.countries = countries
         scale_file.save()
@@ -65,6 +71,14 @@ def create_workspace(name=None, title=None, json_config=None, base_url=None, is_
         global WORKSPACE_TITLE_COUNTER
         title = 'Test Workspace %i' % WORKSPACE_TITLE_COUNTER
         WORKSPACE_TITLE_COUNTER += 1
+    if not json_config:
+        json_config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'nfs',
+                'nfs_path': '/host/path',
+            }
+        }
     if is_active is False and not archived:
         archived = timezone.now()
 

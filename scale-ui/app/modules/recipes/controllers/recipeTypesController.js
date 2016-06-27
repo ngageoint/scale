@@ -39,7 +39,7 @@
         
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
-                $scope.recipeTypes = data;
+                $scope.recipeTypes = data.results;
                 if (scaleConfig.static) {
                     var i = 0,
                         oJson = {},
