@@ -16,7 +16,18 @@
         'toggle-switch'
     ]);
 
-    app.config(function($routeProvider, $resourceProvider, pollerConfig) {
+    app.config(function($routeProvider, $resourceProvider, $provide, pollerConfig) {
+        // Fix sourcemaps
+        // @url https://github.com/angular/angular.js/issues/5217#issuecomment-50993513
+        $provide.decorator('$exceptionHandler', function ($delegate) {
+            return function (exception, cause) {
+                $delegate(exception, cause);
+                setTimeout(function() {
+                    throw exception;
+                });
+            };
+        });
+
         // stop pollers when route changes
         pollerConfig.stopOnRouteChange = true;
         pollerConfig.smart = true;

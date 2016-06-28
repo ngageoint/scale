@@ -279,23 +279,49 @@ class ProductFileManager(models.GeoManager):
             product_lists[link.descendant_id].append(source_files[link.ancestor_id])
 
     @transaction.atomic
-    def publish_products(self, job_exe_id, when):
+    def publish_products(self, job_exe, when):
         """Publishes all of the products produced by the given job execution. All database changes will be made in an
         atomic transaction.
 
-        :param job_exe_id: The ID of the job execution
-        :type job_exe_id: int
+        :param job_exe: The locked job execution model with related job model
+        :type job_exe: :class:`job.models.JobExecution`
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock
-        product_qry = ProductFile.objects.select_for_update().filter(job_exe_id=job_exe_id).order_by('id')
-        for product in product_qry:
-            product.has_been_published = True
-            product.is_published = True
-            product.published = when
-            product.save()
+        # Don't publish products if the job is already superseded
+        if job_exe.job.is_superseded:
+            return
+
+        # Unpublish any products created by jobs that are superseded by this job
+        if job_exe.job.root_superseded_job_id:
+            self.unpublish_products(job_exe.job.root_superseded_job_id, when)
+
+        # Grab UUIDs from new products to be published
+        uuids = []
+        for product_file in self.filter(job_exe_id=job_exe.id):
+            uuids.append(product_file.uuid)
+
+        # Supersede products with the same UUIDs (a given UUID should only appear once in the product API calls)
+        if uuids:
+            query = self.filter(uuid__in=uuids, has_been_published=True)
+            query.update(is_published=False, is_superseded=True, superseded=when, last_modified=timezone.now())
+
+        # Publish this job execution's products
+        self.filter(job_exe_id=job_exe.id).update(has_been_published=True, is_published=True, published=when,
+                                                  last_modified=timezone.now())
+
+    def unpublish_products(self, root_job_id, when):
+        """Unpublishes all of the published products created by the superseded jobs with the given root ID
+
+        :param root_job_id: The root superseded job ID
+        :type root_job_id: int
+        :param when: When the products were unpublished
+        :type when: :class:`datetime.datetime`
+        """
+
+        query = self.filter(Q(job__root_superseded_job_id=root_job_id) | Q(job_id=root_job_id), is_published=True)
+        query.update(is_published=False, unpublished=when, last_modified=timezone.now())
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.
@@ -387,10 +413,14 @@ class ProductFile(ScaleFile):
     :keyword is_published: Whether this product is currently published. A published product has had its job execution
         complete successfully and has not been unpublished.
     :type is_published: :class:`django.db.models.BooleanField`
+    :keyword is_superseded: Whether this product has been superseded by another product with the same UUID
+    :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword published: When this product was published (its job execution was completed)
     :type published: :class:`django.db.models.DateTimeField`
     :keyword unpublished: When this product was unpublished
     :type unpublished: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this product was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     """
 
     file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
@@ -401,8 +431,10 @@ class ProductFile(ScaleFile):
 
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
+    is_superseded = models.BooleanField(default=False)
     published = models.DateTimeField(blank=True, null=True)
     unpublished = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
 
     objects = ProductFileManager()
 
