@@ -152,6 +152,7 @@
         };
 
         self.initialize = function () {
+            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setRecipesParams(self.recipesParams);
             self.updateColDefs();
             self.getRecipeTypes();
@@ -159,15 +160,6 @@
         };
 
         self.initialize();
-
-        angular.element(document).ready(function () {
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset,
-                gridMaxHeight = viewport.height - offset;
-
-            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
-        });
 
         $scope.$watch('selectedRecipeType', function (value) {
             if (parseInt(value)) {

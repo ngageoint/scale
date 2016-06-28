@@ -2,8 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').service('stateService', function ($location) {
-        var queryString = $location.search(),
-            version = '',
+        var version = '',
             jobsColDefs = [],
             jobsParams = {},
             recipesColDefs = [],
@@ -12,19 +11,71 @@
             ingestsColDefs = [],
             ingestsParams = {},
             showActiveWorkspaces = true;
-        
-        var updateQuerystring = function (data, defaultOrder) {
+
+        var updateQuerystring = function (data) {
             // set defaults
             data.page = data.page || 1;
             data.page_size = data.page_size || 25;
             data.started = data.started || moment.utc().subtract(1, 'weeks').startOf('d').toISOString();
             data.ended = data.ended || moment.utc().endOf('d').toISOString();
-            data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : [defaultOrder];
+            data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : null;
             data.status = data.status || null;
             // check for params in querystring, and update as necessary
             _.forEach(_.pairs(data), function (param) {
                 $location.search(param[0], param[1]);
             });
+        };
+
+        var initJobsParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                status: data.status ? data.status : null,
+                error_category: data.error_category ? data.error_category : null,
+                job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
+                job_type_name: data.job_type_name ? data.job_type_name : null,
+                job_type_category: data.job_type_category ? data.job_type_category : null,
+                url: null
+            };
+        };
+
+        var initJobTypesFailureRatesParams = function (data) {
+            return {
+                page: null,
+                page_size: null,
+                started: null,
+                ended: null,
+                name: data.name ? data.name : null,
+                category: null,
+                order: null
+            };
+        };
+
+        var initRecipesParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                type_id: data.type_id ? parseInt(data.type_id) : null,
+                type_name: data.type_name ? data.type_name : null,
+                url: null
+            };
+        };
+
+        var initIngestsParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
+                status: data.status ? data.status : null
+            };
         };
 
         return {
@@ -41,38 +92,26 @@
                 jobsColDefs = data;
             },
             getJobsParams: function () {
+                if (_.keys(jobsParams).length === 0) {
+                    return initJobsParams($location.search());
+                }
                 return jobsParams;
             },
             setJobsParams: function (data) {
-                updateQuerystring(data, '-last_modified');
-                jobsParams = {
-                    page: data.page ? parseInt(data.page) : 1,
-                    page_size: data.page_size ? parseInt(data.page_size) : 25,
-                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
-                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
-                    status: data.status ? data.status : null,
-                    error_category: data.error_category ? data.error_category : null,
-                    job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
-                    job_type_name: data.job_type_name ? data.job_type_name : null,
-                    job_type_category: data.job_type_category ? data.job_type_category : null,
-                    url: null
-                };
+                jobsParams = initJobsParams(data);
+                updateQuerystring(jobsParams);
             },
             getJobTypesFailureRatesParams: function () {
+                if (_.keys(jobTypesFailureRatesParams).length === 0) {
+                    return initJobTypesFailureRatesParams($location.search());
+                }
                 return jobTypesFailureRatesParams;
             },
             setJobTypesFailureRatesParams: function (data) {
-                updateQuerystring(data, null);
-                jobTypesFailureRatesParams = {
-                    page: data.page ? parseInt(data.page) : null,
-                    page_size: data.page_size ? parseInt(data.page_size) : null,
-                    started: data.started ? data.started : null,
-                    ended: data.ended ? data.ended : null,
-                    name: data.name ? data.name : null,
-                    category: data.category ? data.category : null,
-                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : null
-                };
+                jobTypesFailureRatesParams = initJobTypesFailureRatesParams(data);
+                _.forEach(_.pairs(jobTypesFailureRatesParams), function (param) {
+                    $location.search(param[0], param[1]);
+                });
             },
             getRecipesColDefs: function () {
                 return recipesColDefs;
@@ -81,20 +120,14 @@
                 recipesColDefs = data;
             },
             getRecipesParams: function () {
+                if (_.keys(recipesParams).length === 0) {
+                    return initRecipesParams($location.search());
+                }
                 return recipesParams;
             },
             setRecipesParams: function (data) {
-                updateQuerystring(data, '-last_modified');
-                recipesParams = {
-                    page: data.page ? parseInt(data.page) : 1,
-                    page_size: data.page_size ? parseInt(data.page_size) : 25,
-                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
-                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
-                    type_id: data.type_id ? parseInt(data.type_id) : null,
-                    type_name: data.type_name ? data.type_name : null,
-                    url: null
-                };
+                recipesParams = initRecipesParams(data);
+                updateQuerystring(recipesParams);
             },
             getIngestsColDefs: function () {
                 return ingestsColDefs;
@@ -103,18 +136,14 @@
                 ingestsColDefs = data;
             },
             getIngestsParams: function () {
+                if (_.keys(ingestsParams).length === 0) {
+                    return initIngestsParams($location.search());
+                }
                 return ingestsParams;
             },
             setIngestsParams: function (data) {
-                updateQuerystring(data, '-ingest_started');
-                ingestsParams = {
-                    page: data.page ? parseInt(data.page) : 1,
-                    page_size: data.page_size ? parseInt(data.page_size) : 25,
-                    started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                    ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
-                    order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
-                    status: data.status ? data.status : null
-                };
+                ingestsParams = initIngestsParams(data);
+                updateQuerystring(ingestsParams);
             },
             getShowActiveWorkspaces: function () {
                 return showActiveWorkspaces;

@@ -28,7 +28,8 @@
             });
         };
 
-        var initialize = function() {
+        var initialize = function () {
+            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.paginationOffset);
             $scope.gridOptions = gridFactory.defaultGridOptions();
             $scope.gridOptions.enableSorting = false;
             $scope.gridOptions.columnDefs = [
@@ -79,14 +80,5 @@
             navService.updateLocation('load');
         };
         initialize();
-
-        angular.element(document).ready(function () {
-            // set container heights equal to available page height
-            var viewport = scaleService.getViewportSize(),
-                offset = scaleConfig.headerOffset + scaleConfig.paginationOffset,
-                gridMaxHeight = viewport.height - offset;
-
-            $scope.gridStyle = 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
-        });
     });
 })();
