@@ -100,6 +100,15 @@
                 });
 
                 return d.promise;
+            },
+            setGridHeight: function (offset) {
+                // set container heights equal to available page height
+                offset = offset || scaleConfig.headerOffset;
+                
+                var viewport = this.getViewportSize(),
+                    gridMaxHeight = viewport.height - offset;
+
+                return 'height: ' + gridMaxHeight + 'px; max-height: ' + gridMaxHeight + 'px; overflow-y: auto;';
             }
         }
     });

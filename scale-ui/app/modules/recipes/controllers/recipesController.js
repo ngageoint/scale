@@ -14,6 +14,7 @@
         $scope.recipeTypeValues = [recipeTypeViewAll];
         $scope.selectedRecipeType = self.recipesParams.type_id ? self.recipesParams.type_id : recipeTypeViewAll;
         $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
+        $scope.gridStyle = '';
         $scope.lastModifiedStart = moment.utc(self.recipesParams.started).toDate();
         $scope.lastModifiedStartPopup = {
             opened: false
@@ -77,8 +78,6 @@
 
         self.getRecipes = function () {
             recipeService.getRecipes(self.recipesParams).then(function (data) {
-                $scope.gridOptions.minRowsToShow = data.results.length;
-                $scope.gridOptions.virtualizationThreshold = data.results.length;
                 $scope.gridOptions.totalItems = data.count;
                 $scope.gridOptions.data = data.results;
             }).catch(function (error) {
@@ -153,6 +152,7 @@
         };
 
         self.initialize = function () {
+            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setRecipesParams(self.recipesParams);
             self.updateColDefs();
             self.getRecipeTypes();
