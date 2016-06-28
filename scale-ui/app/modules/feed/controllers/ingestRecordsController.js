@@ -157,7 +157,6 @@
         };
 
         self.initialize = function () {
-            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setIngestsParams($scope.ingestsParams);
             self.updateColDefs();
             self.getIngests();

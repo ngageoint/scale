@@ -255,7 +255,6 @@
         };
 
         self.initialize = function () {
-            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setJobsParams(self.jobsParams);
             self.updateColDefs();
             var user = userService.getUserCreds();

@@ -140,7 +140,6 @@
         };
 
         var initialize = function () {
-            vm.gridStyle = scaleService.setGridHeight();
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
                 jobTypes = _.cloneDeep(jobTypesData.results);

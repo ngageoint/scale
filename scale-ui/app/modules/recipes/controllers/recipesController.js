@@ -153,7 +153,6 @@
         };
 
         self.initialize = function () {
-            $scope.gridStyle = scaleService.setGridHeight(scaleConfig.headerOffset + scaleConfig.dateFilterOffset + scaleConfig.paginationOffset);
             stateService.setRecipesParams(self.recipesParams);
             self.updateColDefs();
             self.getRecipeTypes();
