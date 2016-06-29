@@ -43,6 +43,7 @@ class StrikeProcessor(object):
         self.job_exe_id = job_exe_id
         self.configuration = configuration
         self.mount = None
+        self.sqs_name = None
 
         self.strike_dir = SCALE_INGEST_MOUNT_PATH
         self.rel_deferred_dir = 'deferred'
@@ -64,10 +65,17 @@ class StrikeProcessor(object):
         self.configuration = configuration
 
         self.mount = self.configuration.get_mount()
+        self.sqs_name = None
+        if 'sqs_name' in self.configuration.get_dict():
+            self.sqs_name = self.configuration.get_dict()['sqs_name']
 
     def mount_and_process_dir(self):
         """Mounts NFS and processes the current files in the Strike directory
         """
+
+        if self.sqs_name:
+            self._run_s3_processor()
+            return
 
         try:
             if not os.path.exists(self.strike_dir):
@@ -381,3 +389,55 @@ class StrikeProcessor(object):
             ingest.save()
 
         logger.info('Successfully created ingest task')
+
+    def _run_s3_processor(self):
+        """Subscribe to SQS and process S3 file notifications
+        """
+
+        logger.info('Running experimental S3 Strike processor')
+
+        # For each new file we receive a notification about:
+        # TODO: call with appropriate values
+        file_name = None
+        file_path = None
+        file_size = None
+        self._ingest_s3_file(file_name, file_path, file_size)
+
+    def _ingest_s3_file(self, file_name, file_path, file_size):
+        """Subscribe to SQS and process S3 file notifications
+
+        :param file_name: The name of the file
+        :type file_name: string
+        :param file_path: Relative path (key) in the bucket
+        :type file_path: string
+        :param file_size: The size of the file in bytes
+        :type file_size: long
+        """
+
+        right_now = now()
+
+        ingest = Ingest()
+        ingest.file_name = file_name
+        ingest.strike_id = self.strike_id
+        ingest.transfer_path = 'sqs'
+        ingest.transfer_started = right_now
+        ingest.bytes_transferred = file_size
+        ingest.transfer_ended = right_now
+        ingest.media_type = get_media_type(file_name)
+        ingest.file_size = file_size
+
+        # Check configuration for what to do with this file
+        file_config = self.configuration.match_file_name(file_name)
+        if not file_config:
+            logger.info('Ignoring unmatched file name %s', file_name)
+            return
+
+        for data_type in file_config[0]:
+            ingest.add_data_type_tag(data_type)
+        ingest.file_path = file_path
+        ingest.workspace = file_config[2]
+        ingest.ingest_path = file_path
+        ingest.status = 'TRANSFERRED'
+        with transaction.atomic():
+            ingest.save()
+            self._start_ingest_task(ingest)
