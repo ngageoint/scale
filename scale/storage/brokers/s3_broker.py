@@ -61,8 +61,9 @@ class S3Broker(Broker):
         self._bucket_name = config['bucket_name']
 
         # TODO Change credentials to use an encrypted store key reference
-        credentials_dict = config['credentials']
-        self._credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+        if 'credentials' in config:
+            credentials_dict = config['credentials']
+            self._credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
 
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`"""
@@ -99,17 +100,16 @@ class S3Broker(Broker):
         if 'bucket_name' not in config or not config['bucket_name']:
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
 
-        if 'credentials' not in config or not config['credentials']:
-            raise InvalidBrokerConfiguration('S3 broker requires "credentials" to be populated')
-
-        credentials_dict = config['credentials']
-        if 'access_key_id' not in credentials_dict or not credentials_dict['access_key_id']:
-            raise InvalidBrokerConfiguration('S3 broker requires "access_key_id" to be populated')
-        if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
-            raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
+        credentials = None
+        if 'credentials' in config and config['credentials']:
+            credentials_dict = config['credentials']
+            if 'access_key_id' not in credentials_dict or not credentials_dict['access_key_id']:
+                raise InvalidBrokerConfiguration('S3 broker requires "access_key_id" to be populated')
+            if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
+                raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
+            credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
 
         # Check whether the bucket can actually be accessed
-        credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
         with BrokerConnection(credentials) as conn:
             try:
                 conn.get_bucket(config['bucket_name'], True)
@@ -232,10 +232,11 @@ class S3Broker(Broker):
 class BrokerConnection(object):
     """Manages automatically opening and closing connections to the S3 service."""
 
-    def __init__(self, credentials):
+    def __init__(self, credentials=None):
         """Constructor
 
-        :param credentials: Authentication values needed to access S3 storage.
+        :param credentials: Authentication values needed to access S3 storage. If no credentials are passed, then IAM
+            role-based access is assumed.
         :type credentials: :class:`storage.brokers.s3_broker.S3Credentials`
         """
 
@@ -256,11 +257,17 @@ class BrokerConnection(object):
 
         host = settings.S3_HOST or S3Connection.DefaultHost
         logger.debug('Connecting to S3 host: %s', host)
-        self._connection = boto.connect_s3(
-            self.credentials.access_key_id, self.credentials.secret_access_key,
-            calling_format=self._calling_format, is_secure=settings.S3_SECURE,
-            host=host, port=settings.S3_PORT,
-        )
+        params = {
+            'calling_format': self._calling_format,
+            'is_secure': settings.S3_SECURE,
+            'host': host,
+            'port': settings.S3_PORT,
+        }
+        if self.credentials:
+            params['aws_access_key_id'] = self.credentials.access_key_id
+            params['aws_secret_access_key'] = self.credentials.secret_access_key
+
+        self._connection = boto.connect_s3(**params)
         return self
 
     def __exit__(self, type, value, traceback):
