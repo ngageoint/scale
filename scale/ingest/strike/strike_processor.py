@@ -397,11 +397,16 @@ class StrikeProcessor(object):
         logger.info('Running experimental S3 Strike processor')
 
         # For each new file we receive a notification about:
+        # TODO: use this
+        self.sqs_name
+
         # TODO: call with appropriate values
         file_name = None
         file_path = None
         file_size = None
         self._ingest_s3_file(file_name, file_path, file_size)
+
+        # TODO: delete message here
 
     def _ingest_s3_file(self, file_name, file_path, file_size):
         """Subscribe to SQS and process S3 file notifications
