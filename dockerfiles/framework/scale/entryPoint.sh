@@ -15,6 +15,9 @@ then
   sudo sed -i '/Listen 80/ aListen '${PORT0} /etc/httpd/conf/httpd.conf
 fi
 
+echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
+chmod 0600 ~/.pgpass
+
 if [[ ${DEPLOY_DB}x != x ]]
 then
     export SCALE_DB_PORT=$(./deployDb.py)
