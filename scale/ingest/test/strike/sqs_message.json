@@ -1,0 +1,12 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "0d72a634-914b-5a35-9861-e9d81a2d2e88",
+  "TopicArn" : "arn:aws:sns:us-east-1:319643818382:scale-s3-test-1466109505-UploadsTopic-1KWCO2ISY99ZD",
+  "Subject" : "Amazon S3 Notification",
+  "Message" : "{\"Records\":[{\"eventVersion\":\"2.0\",\"eventSource\":\"aws:s3\",\"awsRegion\":\"us-east-1\",\"eventTime\":\"2016-06-28T14:26:46.698Z\",\"eventName\":\"ObjectCreated:CompleteMultipartUpload\",\"userIdentity\":{\"principalId\":\"AWS:AIDAJPHZCEAZVZNSYLJZU\"},\"requestParameters\":{\"sourceIPAddress\":\"54.225.6.18\"},\"responseElements\":{\"x-amz-request-id\":\"8316E3A1B687AFE6\",\"x-amz-id-2\":\"krSoJoLV+OEIfbRn+9Kci78pjUCZ7XMhYOZBKAzXBDCOqwImLg4qNm3NRGjuKY3tRy3M03ZMO+U=\"},\"s3\":{\"s3SchemaVersion\":\"1.0\",\"configurationId\":\"acbab383-687b-4d62-a4b8-b51ece0eafc9\",\"bucket\":{\"name\":\"scale-s3-create-retrieve-test\",\"ownerIdentity\":{\"principalId\":\"A3VPXVUMUU1VLU\"},\"arn\":\"arn:aws:s3:::scale-s3-create-retrieve-test\"},\"object\":{\"key\":\"test-40GiB.file\",\"size\":42949672960,\"eTag\":\"744c3abb648cec0a86e57a75f493ad0b-1280\",\"sequencer\":\"0057728879CC6DD602\"}}}]}",
+  "Timestamp" : "2016-06-28T14:26:46.876Z",
+  "SignatureVersion" : "1",
+  "Signature" : "KsM7mY47lN+VcwYFRiq6vDFatDn7c6XuFskPcwfR0kEmQ4ObwFIZkmX5vRv+DVUOK7lKTeyaV3AGb7Ejz1OHcN2lD2WH0xMiSnL6wDQ7HYNy2MPWsWBOOdNf7+umI9mixEDq194Gid7lFMiXSOXS+2gWLKU2udpbku987F8pRjYFxbqfF+StSLBEmG/hZibBAxyinzFGFh/OdbUKB988XjuJ+60ODGbHhuvZCAx9f4tkEjFHODtsgzE88ls4uRq1lvNkqUpOTl7g4ZslPYobWMPGAlNF4TUBr0BdH8ZpPL3ZtVczeWrJK0bAl7NKVsEJJw0qe3/MkCSP7dY5244SWw==",
+  "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
+  "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:319643818382:scale-s3-test-1466109505-UploadsTopic-1KWCO2ISY99ZD:d57421e0-904a-4a72-aeb9-197333acf705"
+}

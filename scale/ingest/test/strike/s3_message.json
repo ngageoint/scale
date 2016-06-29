@@ -1,0 +1,11 @@
+{
+  "s3SchemaVersion": "1.0",
+  "bucket": {
+    "name": "scale-s3-create-retrieve-test",
+    "arn": "arn:aws:s3:::scale-s3-create-retrieve-test"
+  },
+  "object": {
+    "key": "test-40GiB.file",
+    "size": 42949672960
+  }
+}
