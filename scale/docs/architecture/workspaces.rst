@@ -152,10 +152,13 @@ The S3 broker references a storage location that exists as an S3 bucket in your 
 bucket name, which is typically of the form *my_name.domain.com* since bucket names must be globally unique
 (See `Bucket Restrictions`_). The bucket must be configured for read and/or write access through an appropriate IAM
 account (Identity and Access Management). Once the IAM account is created and granted permissions to the bucket, then
-the *ACCESS KEY ID* and *SECRET ACCESS KEY* can be generated and used with this broker (See `AWS Credentials`_). These
-tokens allow 3rd party software to access resources on behalf of the associated account.
+there are two ways to handle authentication. IAM roles can be used to automatically grant permissions to the EC2
+executing the broker operations (See `AWS Roles`_). This method is preferred because no secret keys are required.
+Alternatively, an *ACCESS KEY ID* and *SECRET ACCESS KEY* can be generated and used with this broker
+(See `AWS Credentials`_). These tokens allow 3rd party software to access resources on behalf of the associated account.
 
 .. _Bucket Restrictions: http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
+.. _AWS Roles: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
 .. _AWS Credentials: http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html
 
 **Security**
@@ -164,7 +167,7 @@ A dedicated IAM account should be used rather than the root AWS account to limit
 occur and similarly the IAM account should be given the minimum possible permissions needed to work with the bucket. The
 access tokens should also be changed periodically to further protect against leaks.
 
-While this broker is in the experimental phase, the access tokens are currently stored in plain text within the Scale
+While this broker is in the experimental phase, the access keys are currently stored in plain text within the Scale
 database and exposed via the REST interface. A future version will maintain these values using a more appropriate
 encrypted store service.
 
@@ -193,8 +196,10 @@ The S3 broker requires the following additional fields in its configuration:
 
 **credentials**
 
-    The *credentials* is a JSON object that provides the necessary information to access the bucket. An IAM account
-    should be created and granted the appropriate permissions to the bucket before attempting to use it here.
+    The *credentials* is a JSON object that provides the necessary information to access the bucket. This attribute
+    should be omitted when using IAM role-based security. If it is included for key-based security, then both
+    sub-attributes must be included. An IAM account should be created and granted the appropriate permissions to the
+    bucket before attempting to use it here.
 
     **access_key_id**: JSON string
 
