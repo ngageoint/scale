@@ -274,13 +274,15 @@ workspace files. It should be in the format <em>host:/path</em>.</div></blockquo
 bucket name, which is typically of the form <em>my_name.domain.com</em> since bucket names must be globally unique
 (See <a class="reference external" href="http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html">Bucket Restrictions</a>). The bucket must be configured for read and/or write access through an appropriate IAM
 account (Identity and Access Management). Once the IAM account is created and granted permissions to the bucket, then
-the <em>ACCESS KEY ID</em> and <em>SECRET ACCESS KEY</em> can be generated and used with this broker (See <a class="reference external" href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">AWS Credentials</a>). These
-tokens allow 3rd party software to access resources on behalf of the associated account.</p>
+there are two ways to handle authentication. IAM roles can be used to automatically grant permissions to the EC2
+executing the broker operations (See <a class="reference external" href="http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">AWS Roles</a>). This method is preferred because no secret keys are required.
+Alternatively, an <em>ACCESS KEY ID</em> and <em>SECRET ACCESS KEY</em> can be generated and used with this broker
+(See <a class="reference external" href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">AWS Credentials</a>). These tokens allow 3rd party software to access resources on behalf of the associated account.</p>
 <p><strong>Security</strong></p>
 <p>A dedicated IAM account should be used rather than the root AWS account to limit the risk of damage if a leak were to
 occur and similarly the IAM account should be given the minimum possible permissions needed to work with the bucket. The
 access tokens should also be changed periodically to further protect against leaks.</p>
-<p>While this broker is in the experimental phase, the access tokens are currently stored in plain text within the Scale
+<p>While this broker is in the experimental phase, the access keys are currently stored in plain text within the Scale
 database and exposed via the REST interface. A future version will maintain these values using a more appropriate
 encrypted store service.</p>
 <p>Example S3 broker configuration:</p>
@@ -304,8 +306,10 @@ encrypted store service.</p>
 bucket should be created before attempting to use it here.</div></blockquote>
 <p><strong>credentials</strong></p>
 <blockquote>
-<div><p>The <em>credentials</em> is a JSON object that provides the necessary information to access the bucket. An IAM account
-should be created and granted the appropriate permissions to the bucket before attempting to use it here.</p>
+<div><p>The <em>credentials</em> is a JSON object that provides the necessary information to access the bucket. This attribute
+should be omitted when using IAM role-based security. If it is included for key-based security, then both
+sub-attributes must be included. An IAM account should be created and granted the appropriate permissions to the
+bucket before attempting to use it here.</p>
 <p><strong>access_key_id</strong>: JSON string</p>
 <blockquote>
 <div>The <em>access_key_id</em> is a unique identifier for the user account in IAM that will be used as a proxy for read and
