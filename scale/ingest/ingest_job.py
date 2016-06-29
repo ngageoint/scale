@@ -236,8 +236,6 @@ def _handle_s3_ingest(ingest, job_exe_id):
         src_file.is_deleted = False
         src_file.deleted = None
         src_file.save()
-        src_file.set_countries()
-        src_file.save()
 
         status = 'INGESTED'
         logger.info('Marking ingest %i as %s', ingest.id, status)
