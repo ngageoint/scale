@@ -168,8 +168,20 @@ class TestS3Broker(TestCase):
         self.assertEqual(s3_key_1.set_contents_from_file.call_args[0][1]['Content-Type'], 'text/plain')
         self.assertEqual(s3_key_2.set_contents_from_file.call_args[0][1]['Content-Type'], 'application/json')
 
-    def test_validate_configuration(self):
-        """Tests validating a configuration successfully"""
+    def test_validate_configuration_roles(self):
+        """Tests validating a configuration based on IAM roles successfully"""
+
+        json_config = {
+            'type': S3Broker().broker_type,
+            'bucket_name': 'my_bucket.domain.com',
+        }
+        broker = S3Broker()
+
+        # No exception is success
+        broker.load_configuration(json_config)
+
+    def test_validate_configuration_keys(self):
+        """Tests validating a configuration based on IAM keys successfully"""
 
         json_config = {
             'type': S3Broker().broker_type,
