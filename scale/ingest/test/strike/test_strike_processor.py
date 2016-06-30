@@ -8,6 +8,7 @@ import time
 import django
 from django.test import TestCase
 from mock import patch
+from mock import MagicMock
 
 import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
@@ -108,18 +109,29 @@ class TestStrikeSQSNotification(TestCase):
     def setUp(self):
         django.setup()
 
-        self.valid_s3_object = '{"s3SchemaVersion": "1.0",' \
+        self.valid_s3_string = '{"s3SchemaVersion": "1.0",' \
                                '"bucket": {"name": "scale-s3-create-retrieve-test","arn": ' \
                                '"arn:aws:s3:::scale-s3-create-retrieve-test"},' \
                                '"object": {"key": "test-40GiB.file","size": 42949672960}' \
                                '}'
-        self.valid_s3_object = json.loads(self.valid_s3_object)
+
+        self.valid_s3_object = json.loads(self.valid_s3_string)
+        self.nodata_s3_object = json.loads(self.valid_s3_string)
+        self.nodata_s3_object['object']['size'] = 0
+
         self.invalid_s3_object = {}
 
+        self.empty_message_object = MagicMock()
+        self.empty_message_object.body = ''
+
+        self.none_message_object = None
+
+        self.mount = 'host:/path'
+        self.mount_on = os.path.join('my', 'test')
+        self.workspace = storage_test_utils.create_workspace()
         self.config = StrikeConfiguration({
             'version': '1.0',
             'mount': self.mount,
-            'sqs_name': 'test',
             'transfer_suffix': '_tmp',
             'files_to_ingest': [{
                 'filename_regex': '.*txt',
@@ -131,20 +143,35 @@ class TestStrikeSQSNotification(TestCase):
 
         self.strike_proc = StrikeProcessor(1, self.job_exe.id, self.config)
 
-    def test_process_s3_notification(self):
-        """Tests successfully validating and S3 notification"""
-        pass
+    @patch('ingest.strike.strike_processor.StrikeProcessor._ingest_s3_notification_object')
+    def test_process_s3_notification(self, mock_ingest):
+        """Test failing to process an invalid S3 notification"""
 
-    @patch(ingest.strike.strike_processor._ingest_s3_file)
-    def test_ingest_s3_notification_object_success(self):
-        """Test successfully ingesting a S3 object"""
+        with self.assertRaises(SQSNotificationError):
+            self.strike_proc._process_s3_notification(self.empty_message_object)
+        self.assertFalse(mock_ingest.called)
 
-        result = self.strike_proc._ingest_s3_notification_object(self.valid_s3_object)
-        self.assertIsNone(result)
+    @patch('ingest.strike.strike_processor.StrikeProcessor._ingest_s3_file')
+    def test_ingest_s3_notification_object_success(self, mock_ingest):
+        """Test successfully ingesting an S3 object"""
 
-    @patch(ingest.strike.strike_processor._ingest_s3_file)
-    def test_ingest_s3_notification_object_failure(self):
-        """Test failing to ingest an S3 object"""
+        self.strike_proc._ingest_s3_notification_object(self.valid_s3_object)
+        self.assertTrue(mock_ingest.called)
+
+    @patch('ingest.strike.strike_processor.StrikeProcessor._ingest_s3_file')
+    def test_ingest_s3_notification_object_invalid_failure(self, mock_ingest):
+        """Test failing to ingest an invalid S3 object"""
 
         with self.assertRaises(SQSNotificationError):
             self.strike_proc._ingest_s3_notification_object(self.invalid_s3_object)
+
+        self.assertFalse(mock_ingest.called)
+
+    @patch('ingest.strike.strike_processor.StrikeProcessor._ingest_s3_file')
+    def test_ingest_s3_notification_object_nodata_failure(self, mock_ingest):
+        """Test failing to ingest a no-data S3 object"""
+
+        with self.assertRaises(S3NoDataNotificationError):
+            self.strike_proc._ingest_s3_notification_object(self.nodata_s3_object)
+
+        self.assertFalse(mock_ingest.called)

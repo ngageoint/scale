@@ -13,8 +13,8 @@ from django.utils.timezone import now
 
 from ingest.container import SCALE_INGEST_MOUNT_PATH
 from ingest.models import Ingest
+from ingest.strike.exceptions import SQSNotificationError, S3NoDataNotificationError
 from queue.models import Queue
-from scale.ingest.strike.exceptions import SQSNotificationError, S3NoDataNotificationError
 from storage.media_type import get_media_type
 from storage.nfs import nfs_mount, nfs_umount
 from trigger.models import TriggerEvent
@@ -421,10 +421,11 @@ class StrikeProcessor(object):
         # This may be set to False if message visibility timeout hides them for long enough to process
         # other messages in the queue without backing up behind bad messages.
         self.sqs_discard_unrecognized = False
-        ######################
+        ###################################################
 
         logger.info('Running experimental S3 Strike processor')
 
+        # Loop endlessly polling SQS queue
         while True:
             # For each new file we receive a notification about:
             logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
@@ -453,14 +454,14 @@ class StrikeProcessor(object):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.
 
         We want to ensure we have the following minimal values before passing S3 object on:
-        - message.body.Message.Subject == 'Amazon S3 Notification'
-        - message.body.Message.Type == 'Notification
-        - message.body.Message.Records[x].eventName starts with 'ObjectCreated'
-        - message.body.Message.Records[x].eventVersion == '2.0'
-        Once the above have been validated we will pass the message on to ingest, otherwise
+        - body.Subject == 'Amazon S3 Notification'
+        - body.Type == 'Notification
+        - body.Records[x].eventName starts with 'ObjectCreated'
+        - body.Records[x].eventVersion == '2.0'
+        Once the above have been validated we will pass the S3 record on to ingest, otherwise
         exception will be raised
         :param message: SQS message containing S3 notification object
-        :type message: dict
+        :type message: object
         """
 
         try:
@@ -481,7 +482,7 @@ class StrikeProcessor(object):
             else:
                 raise SQSNotificationError('Unable to process message as it does not appear to be an S3 notification: '
                                            '%s' % json.dumps(message))
-        except TypeError as ex:
+        except (TypeError, ValueError) as ex:
             raise SQSNotificationError('Exception: %s\nUnable to process message not recognized as valid JSON: %s.' %
                                        (ex.message, message))
 
