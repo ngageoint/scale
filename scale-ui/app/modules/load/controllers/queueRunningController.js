@@ -61,6 +61,10 @@
                 $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                     $scope.getPage(currentPage, pageSize);
                 });
+                $scope.gridApi.core.on.rowsRendered($scope, function () {
+                    if (gridApi.grid.renderContainers.body.visibleRowCache.length === 0) { return; }
+                    $('.ui-grid-pager-panel').remove();
+                });
             };
 
             jobService.getRunningJobs(0, $scope.gridOptions.paginationPageSize).then(null, null, function (data) {

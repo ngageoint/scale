@@ -51,18 +51,22 @@
             ];
             $scope.gridOptions.data = [];
             $scope.gridOptions.onRegisterApi = function (gridApi) {
-                    //set gridApi on scope
-                    $scope.gridApi = gridApi;
-                    gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                        $scope.$apply(function () {
-                            stateService.setJobsParams({job_type_id: row.entity.job_type.id, status: 'QUEUED', page: jobsParams.page, page_size: jobsParams.page_size, order: jobsParams.order});
-                            $location.path('/jobs');
-                        });
+                //set gridApi on scope
+                $scope.gridApi = gridApi;
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    $scope.$apply(function () {
+                        stateService.setJobsParams({job_type_id: row.entity.job_type.id, status: 'QUEUED', page: jobsParams.page, page_size: jobsParams.page_size, order: jobsParams.order});
+                        $location.path('/jobs');
                     });
-                    $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                        $scope.getPage(currentPage, pageSize);
-                    });
-                };
+                });
+                $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
+                    $scope.getPage(currentPage, pageSize);
+                });
+                $scope.gridApi.core.on.rowsRendered($scope, function () {
+                    if (gridApi.grid.renderContainers.body.visibleRowCache.length === 0) { return; }
+                    $('.ui-grid-pager-panel').remove();
+                });
+            };
 
 
             loadService.getQueueStatus(0, $scope.gridOptions.paginationPageSize).then(null, null, function (result) {
