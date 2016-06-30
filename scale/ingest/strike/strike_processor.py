@@ -440,13 +440,13 @@ class StrikeProcessor(object):
 
                     # Remove message from queue now that the message is processed
                     message.delete()
-                except SQSNotificationError as ex:
+                except SQSNotificationError:
                     logger.exception('Unable to process message. Invalid SQS S3 notification.')
 
                     if self.sqs_discard_unrecognized:
                         # Remove message from queue when unrecognized
                         message.delete()
-                except S3NoDataNotificationError as ex:
+                except S3NoDataNotificationError:
                     logger.exception()
                     message.delete()
 
