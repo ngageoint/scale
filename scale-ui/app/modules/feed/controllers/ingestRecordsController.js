@@ -4,56 +4,56 @@
     angular.module('scaleApp').controller('ingestRecordsController', function ($scope, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
-        var self = this;
+        var vm = this;
 
-        $scope.ingestsParams = stateService.getIngestsParams();
+        vm.ingestsParams = stateService.getIngestsParams();
 
-        $scope.stateService = stateService;
-        $scope.loading = true;
-        $scope.subnavLinks = scaleConfig.subnavLinks.feed;
-        $scope.ingestStatusValues = scaleConfig.ingestStatus;
-        $scope.selectedIngestStatus = $scope.ingestsParams.status || $scope.ingestStatusValues[0];
-        $scope.lastModifiedStart = moment.utc($scope.ingestsParams.started).toDate();
-        $scope.lastModifiedStartPopup = {
+        vm.stateService = stateService;
+        vm.loading = true;
+        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.ingestStatusValues = scaleConfig.ingestStatus;
+        vm.selectedIngestStatus = vm.ingestsParams.status || vm.ingestStatusValues[0];
+        vm.lastModifiedStart = moment.utc(vm.ingestsParams.started).toDate();
+        vm.lastModifiedStartPopup = {
             opened: false
         };
-        $scope.openLastModifiedStartPopup = function ($event) {
+        vm.openLastModifiedStartPopup = function ($event) {
             $event.stopPropagation();
-            $scope.lastModifiedStartPopup.opened = true;
+            vm.lastModifiedStartPopup.opened = true;
         };
-        $scope.lastModifiedStop = moment.utc($scope.ingestsParams.ended).toDate();
-        $scope.lastModifiedStopPopup = {
+        vm.lastModifiedStop = moment.utc(vm.ingestsParams.ended).toDate();
+        vm.lastModifiedStopPopup = {
             opened: false
         };
-        $scope.openLastModifiedStopPopup = function ($event) {
+        vm.openLastModifiedStopPopup = function ($event) {
             $event.stopPropagation();
-            $scope.lastModifiedStopPopup.opened = true;
+            vm.lastModifiedStopPopup.opened = true;
         };
-        $scope.dateModelOptions = {
+        vm.dateModelOptions = {
             timezone: '+000'
         };
-        $scope.ingestData = [];
-        $scope.searchText = '';
-        $scope.gridOptions = gridFactory.defaultGridOptions();
-        $scope.gridOptions.paginationCurrentPage = $scope.ingestsParams.page || 1;
-        $scope.gridOptions.paginationPageSize = $scope.ingestsParams.page_size || $scope.gridOptions.paginationPageSize;
-        $scope.gridOptions.data = [];
+        vm.ingestData = [];
+        vm.searchText = '';
+        vm.gridOptions = gridFactory.defaultGridOptions();
+        vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
+        vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
+        vm.gridOptions.data = [];
 
-        $scope.refreshData = function () {
-            //$scope.gridOptions.data = $filter('filter')($scope.ingestData, $scope.searchText, undefined);
-            $scope.gridOptions.data = _.filter($scope.ingestData, function (d) {
-                return d.file_name.toLowerCase().includes($scope.searchText.toLowerCase());
+        vm.refreshData = function () {
+            var filteredData = _.filter(vm.ingestData, function (d) {
+                return d.file_name.toLowerCase().includes(vm.searchText.toLowerCase());
             });
+            vm.gridOptions.data = filteredData.length > 0 ? filteredData : vm.gridOptions.data;
         };
 
-        var filteredByStatus = $scope.ingestsParams.status ? true : false,
-            filteredByOrder = $scope.ingestsParams.order ? true : false;
+        var filteredByStatus = vm.ingestsParams.status ? true : false,
+            filteredByOrder = vm.ingestsParams.order ? true : false;
 
-        self.colDefs = [
+        vm.colDefs = [
             {
                 field: 'file_name',
                 displayName: 'File Name',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><input ng-model="grid.appScope.searchText" ng-change="grid.appScope.refreshData()" class="form-control" placeholder="Search"></div>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><input ng-model="grid.appScope.vm.searchText" ng-change="grid.appScope.vm.refreshData()" class="form-control" placeholder="Search"></div>'
             },
             {
                 field: 'file_size',
@@ -69,7 +69,7 @@
             },
             {
                 field: 'status',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedIngestStatus" ng-options="status.toUpperCase() for status in grid.appScope.ingestStatusValues"></select></div>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedIngestStatus" ng-options="status.toUpperCase() for status in grid.appScope.vm.ingestStatusValues"></select></div>'
             },
             {
                 field: 'transfer_started',
@@ -93,121 +93,122 @@
             }
         ];
 
-        self.getIngests = function () {
-            $scope.loading = true;
-            feedService.getIngestsOnce($scope.ingestsParams).then(function (data) {
-                $scope.ingestData = data.results;
-                $scope.gridOptions.minRowsToShow = data.results.length;
-                $scope.gridOptions.virtualizationThreshold = data.results.length;
-                $scope.gridOptions.totalItems = data.count;
-                $scope.gridOptions.data = data.results;
+        vm.getIngests = function () {
+            vm.loading = true;
+            feedService.getIngestsOnce(vm.ingestsParams).then(function (data) {
+                vm.ingestData = data.results;
+                vm.gridOptions.minRowsToShow = data.results.length;
+                vm.gridOptions.virtualizationThreshold = data.results.length;
+                vm.gridOptions.totalItems = data.count;
+                vm.gridOptions.data = data.results;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
-                $scope.loading = false;
+                vm.loading = false;
             });
         };
 
-        self.filterResults = function () {
-            stateService.setIngestsParams($scope.ingestsParams);
-            $scope.loading = true;
-            self.getIngests();
+        vm.filterResults = function () {
+            stateService.setIngestsParams(vm.ingestsParams);
+            vm.loading = true;
+            vm.getIngests();
+            $('.ui-grid-pager-panel').remove();
         };
 
-        self.updateColDefs = function () {
-            $scope.gridOptions.columnDefs = gridFactory.applySortConfig(self.colDefs, $scope.ingestsParams);
+        vm.updateColDefs = function () {
+            vm.gridOptions.columnDefs = gridFactory.applySortConfig(vm.colDefs, vm.ingestsParams);
         };
 
-        self.updateIngestOrder = function (sortArr) {
-            $scope.ingestsParams.order = sortArr.length > 0 ? sortArr : null;
+        vm.updateIngestOrder = function (sortArr) {
+            vm.ingestsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
-            self.filterResults();
+            vm.filterResults();
         };
 
-        self.updateIngestStatus = function (value) {
-            if (value != $scope.ingestsParams.status) {
-                $scope.ingestsParams.page = 1;
+        vm.updateIngestStatus = function (value) {
+            if (value != vm.ingestsParams.status) {
+                vm.ingestsParams.page = 1;
             }
-            $scope.ingestsParams.status = value === 'VIEW ALL' ? null : value;
-            $scope.ingestsParams.page_size = $scope.gridOptions.paginationPageSize;
-            if (!$scope.loading) {
-                self.filterResults();
+            vm.ingestsParams.status = value === 'VIEW ALL' ? null : value;
+            vm.ingestsParams.page_size = vm.gridOptions.paginationPageSize;
+            if (!vm.loading) {
+                vm.filterResults();
             }
         };
 
-        $scope.gridOptions.onRegisterApi = function (gridApi) {
+        vm.gridOptions.onRegisterApi = function (gridApi) {
             //set gridApi on scope
-            $scope.gridApi = gridApi;
-            $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                $scope.ingestsParams.page = currentPage;
-                $scope.ingestsParams.page_size = pageSize;
-                self.filterResults();
+            vm.gridApi = gridApi;
+            vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
+                vm.ingestsParams.page = currentPage;
+                vm.ingestsParams.page_size = pageSize;
+                vm.filterResults();
             });
-            $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                _.forEach($scope.gridApi.grid.columns, function (col) {
+            vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                _.forEach(vm.gridApi.grid.columns, function (col) {
                     col.colDef.sort = col.sort;
                 });
-                stateService.setIngestsColDefs($scope.gridApi.grid.options.columnDefs);
+                stateService.setIngestsColDefs(vm.gridApi.grid.options.columnDefs);
                 var sortArr = [];
                 _.forEach(sortColumns, function (col) {
                     sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
                 });
-                self.updateIngestOrder(sortArr);
+                vm.updateIngestOrder(sortArr);
             });
-            $scope.gridApi.core.on.rowsRendered($scope, function () {
+            vm.gridApi.core.on.rowsRendered($scope, function () {
                 if (gridApi.grid.renderContainers.body.visibleRowCache.length === 0) { return; }
                 $('.ui-grid-pager-panel').remove();
             });
         };
 
-        self.initialize = function () {
-            stateService.setIngestsParams($scope.ingestsParams);
-            self.updateColDefs();
-            self.getIngests();
+        vm.initialize = function () {
+            stateService.setIngestsParams(vm.ingestsParams);
+            vm.updateColDefs();
+            vm.getIngests();
             navService.updateLocation('feed');
         };
 
-        self.initialize();
+        vm.initialize();
 
-        $scope.$watch('selectedIngestStatus', function (value) {
-            if ($scope.loading) {
+        $scope.$watch('vm.selectedIngestStatus', function (value) {
+            if (vm.loading) {
                 if (filteredByStatus) {
-                    self.updateIngestStatus(value);
+                    vm.updateIngestStatus(value);
                 }
             } else {
                 filteredByStatus = value !== 'VIEW ALL';
-                self.updateIngestStatus(value);
+                vm.updateIngestStatus(value);
             }
         });
 
-        $scope.$watch('lastModifiedStart', function (value) {
-            if (!$scope.loading) {
-                $scope.ingestsParams.started = value.toISOString();
-                self.filterResults();
+        $scope.$watch('vm.lastModifiedStart', function (value) {
+            if (!vm.loading) {
+                vm.ingestsParams.started = value.toISOString();
+                vm.filterResults();
             }
         });
 
-        $scope.$watch('lastModifiedStop', function (value) {
-            if (!$scope.loading) {
-                $scope.ingestsParams.ended = value.toISOString();
-                self.filterResults();
+        $scope.$watch('vm.lastModifiedStop', function (value) {
+            if (!vm.loading) {
+                vm.ingestsParams.ended = value.toISOString();
+                vm.filterResults();
             }
         });
 
-        $scope.$watchCollection('stateService.getIngestsColDefs()', function (newValue, oldValue) {
+        $scope.$watchCollection('vm.stateService.getIngestsColDefs()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            self.colDefs = newValue;
-            self.updateColDefs();
+            vm.colDefs = newValue;
+            vm.updateColDefs();
         });
 
-        $scope.$watchCollection('stateService.getIngestsParams()', function (newValue, oldValue) {
+        $scope.$watchCollection('vm.stateService.getIngestsParams()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            $scope.ingestsParams = newValue;
-            self.updateColDefs();
+            vm.ingestsParams = newValue;
+            vm.updateColDefs();
         });
     });
 })();

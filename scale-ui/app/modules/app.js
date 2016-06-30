@@ -60,6 +60,7 @@
             })
             .when('/feed/ingests', {
                 controller: 'ingestRecordsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/ingestRecordsTemplate.html',
                 reloadOnSearch: false
             })
@@ -78,10 +79,12 @@
             })
             .when('/load/queued', {
                 controller: 'loadController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/load/partials/loadTemplate.html'
             })
             .when('/load/running', {
                 controller: 'queueRunningController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/load/partials/queueRunningTemplate.html'
             })
             .when('/load/depth', {
@@ -90,6 +93,7 @@
             })
             .when('/recipes', {
                 controller: 'recipesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/recipes/partials/recipesTemplate.html',
                 reloadOnSearch: false
             })
@@ -111,6 +115,7 @@
             })
             .when('/jobs', {
                 controller: 'jobsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobsTemplate.html',
                 reloadOnSearch: false
             })
