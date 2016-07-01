@@ -18,119 +18,127 @@
             <h2>Select a Workspace to view its details.</h2>
         </div>
         <div class="detail-content no-tabs" ng-if="activeWorkspace">
-            <div class="pull-right">
-                <div class="btn-group btn-group-sm" ng-show="!readonly">
-                    <button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                    <button class="btn" ng-class="saveBtnClass" ng-click="saveWorkspace()" ng-disabled="!activeWorkspace.modified" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
-                    <button class="btn btn-warning" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
-                    <button class="btn btn-success" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
-                </div>
-            </div>
-            <div>
-                <h3 ng-show="!activeWorkspace.title">Untitled Workspace</h3>
-                <h3 ng-show="activeWorkspace.title !== ''">{{ activeWorkspace.title }}</h3>
-                <hr />
-                <div ng-if="mode==='view'">
-                    <dl>
-                        <dt>Description:</dt>
-                        <dd>{{ activeWorkspace.description }}</dd>
-                        <dt>Type:</dt>
-                        <dd>{{ activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 'nfs'">{{ activeWorkspace.json_config.broker.nfs_path }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 'host'">Host Path:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 'host'">{{ activeWorkspace.json_config.broker.host_path }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.bucket_name }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.access_key_id }}</dd>
-                        <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Secret Access Key:</dt>
-                        <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.secret_access_key }}</dd>
-                    </dl>
-                </div>
-                <div ng-if="mode === 'edit' || mode === 'add'">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="wsName">Name</label>
-                                <input id="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name">
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="wsTitle">Title</label>
-                                <input id="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title">
-                            </div>
-                        </div>
+            <form name="workspaces" novalidate>
+                <div class="pull-right">
+                    <div class="btn-group btn-group-sm" ng-show="!readonly">
+                        <button class="btn btn-default" ng-click="validateWorkspace()" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                        <button class="btn" ng-class="{ 'btn-success': workspaces.$invalid === false, 'btn-default': workspaces.$invalid === true }" ng-click="saveWorkspace()" ng-disabled="workspaces.$invalid" ng-if="mode === 'edit' || mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                        <button class="btn btn-warning" ng-click="cancelCreate()" ng-if="mode === 'add' || mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
+                        <button class="btn btn-success" ng-click="editWorkspace()" ng-if="mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label for="wsDescription">Description</label>
-                                <textarea id="wsDescription" class="form-control" ng-model="activeWorkspace.description" placeholder="Description" rows="4"></textarea>
-                            </div>
-                        </div>
+                </div>
+                <div>
+                    <h3 ng-show="!activeWorkspace.title">Untitled Workspace</h3>
+                    <h3 ng-show="activeWorkspace.title !== ''">{{ activeWorkspace.title }}</h3>
+                    <hr />
+                    <div ng-if="mode==='view'">
+                        <dl>
+                            <dt>Description:</dt>
+                            <dd>{{ activeWorkspace.description }}</dd>
+                            <dt>Type:</dt>
+                            <dd>{{ activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
+                            <dt ng-if="activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
+                            <dd ng-if="activeWorkspace.json_config.broker.type === 'nfs'">{{ activeWorkspace.json_config.broker.nfs_path }}</dd>
+                            <dt ng-if="activeWorkspace.json_config.broker.type === 'host'">Host Path:</dt>
+                            <dd ng-if="activeWorkspace.json_config.broker.type === 'host'">{{ activeWorkspace.json_config.broker.host_path }}</dd>
+                            <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
+                            <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.bucket_name }}</dd>
+                            <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
+                            <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.access_key_id }}</dd>
+                            <dt ng-if="activeWorkspace.json_config.broker.type === 's3'">Secret Access Key:</dt>
+                            <dd ng-if="activeWorkspace.json_config.broker.type === 's3'">{{ activeWorkspace.json_config.broker.credentials.secret_access_key }}</dd>
+                        </dl>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label for="wsBaseUrl">Base URL</label>
-                                <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
+                    <div ng-if="mode === 'edit' || mode === 'add'">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error' : workspaces.wsName.$invalid }">
+                                    <label for="wsName">Name</label>
+                                    <input id="wsName" name="wsName" type="text" ng-disabled="mode === 'edit'" class="form-control" ng-model="activeWorkspace.name" placeholder="Name" required>
+                                    <p ng-show="workspaces.wsName.$invalid && !workspaces.wsName.$pristine" class="help-block">Name is required.</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6" ng-if="mode === 'edit'">
-                            <div class="form-group">
-                                <label for="wsActive">Workspace Status</label>
-                                <div class="checkbox">
-                                    <label for="wsActive">
-                                        <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
-                                        Active
-                                    </label>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error' : workspaces.wsTitle.$invalid }">
+                                    <label for="wsTitle">Title</label>
+                                    <input id="wsTitle" name="wsTitle" type="text" class="form-control" ng-model="activeWorkspace.title" placeholder="Title" required>
+                                    <p ng-show="workspaces.wsTitle.$invalid && !workspaces.wsTitle.$pristine" class="help-block">Title is required.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="form-group">
-                                        <label for="wsType">Type</label>
-                                        <select id="wsType" class="form-control" ng-model="activeWorkspace.json_config.broker.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in availableWorkspaceTypes"></select>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error' : workspaces.wsDescription.$invalid }">
+                                    <label for="wsDescription">Description</label>
+                                    <textarea id="wsDescription" name="wsDescription" class="form-control" ng-model="activeWorkspace.description" placeholder="Description" rows="4" required></textarea>
+                                    <p ng-show="workspaces.wsDescription.$invalid && !workspaces.wsDescription.$pristine" class="help-block">Description is required.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="wsBaseUrl">Base URL</label>
+                                    <input id="wsBaseUrl" type="text" class="form-control" ng-model="activeWorkspace.base_url" placeholder="Base URL">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6" ng-if="mode === 'edit'">
+                                <div class="form-group">
+                                    <label for="wsActive">Workspace Status</label>
+                                    <div class="checkbox">
+                                        <label for="wsActive">
+                                            <input id="wsActive" type="checkbox" ng-model="activeWorkspace.is_active">
+                                            Active
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    {{ brokerDescription }}
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" ng-class="{ 'has-error' : workspaces.wsType.$invalid }">
+                                            <label for="wsType">Type</label>
+                                            <select id="wsType" name="wsType" class="form-control" ng-model="activeWorkspace.json_config.broker.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in availableWorkspaceTypes" required></select>
+                                            <p ng-show="workspaces.wsType.$invalid && !workspaces.wsType.$pristine" class="help-block">Broker Type is required.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {{ brokerDescription }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 'nfs'">
-                                <label for="nfs_path">NFS Path</label>
-                                <input id="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="activeWorkspace.json_config.broker.nfs_path">
-                            </div>
-                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 'host'">
-                                <label for="host_path">Host Path</label>
-                                <input id="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="activeWorkspace.json_config.broker.host_path">
-                            </div>
-                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
-                                <label for="bucket_name">Bucket Name</label>
-                                <input id="bucket_name" type="text" class="form-control" placeholder="Bucket Name" ng-model="activeWorkspace.json_config.broker.bucket_name">
-                            </div>
-                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
-                                <label for="access_key_id">Access Key ID</label>
-                                <input id="access_key_id" type="text" class="form-control" placeholder="Access Key ID" ng-model="activeWorkspace.json_config.broker.credentials.access_key_id">
-                            </div>
-                            <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
-                                <label for="secret_access_key">Secret Access Key</label>
-                                <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="activeWorkspace.json_config.broker.credentials.secret_access_key">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error' : workspaces.nfs_path.$invalid }" ng-if="activeWorkspace.json_config.broker.type === 'nfs'">
+                                    <label for="nfs_path">NFS Path</label>
+                                    <input id="nfs_path" name="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="activeWorkspace.json_config.broker.nfs_path" required>
+                                    <p ng-show="workspaces.nfs_path.$invalid && !workspaces.nfs_path.$pristine" class="help-block">NFS Path is required.</p>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error' : workspaces.host_path.$invalid }" ng-if="activeWorkspace.json_config.broker.type === 'host'">
+                                    <label for="host_path">Host Path</label>
+                                    <input id="host_path" name="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="activeWorkspace.json_config.broker.host_path" required>
+                                    <p ng-show="workspaces.host_path.$invalid && !workspaces.host_path.$pristine" class="help-block">Host Path is required.</p>
+                                </div>
+                                <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="bucket_name">Bucket Name</label>
+                                    <input id="bucket_name" type="text" class="form-control" placeholder="Bucket Name" ng-model="activeWorkspace.json_config.broker.bucket_name">
+                                </div>
+                                <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="access_key_id">Access Key ID</label>
+                                    <input id="access_key_id" type="text" class="form-control" placeholder="Access Key ID" ng-model="activeWorkspace.json_config.broker.credentials.access_key_id">
+                                </div>
+                                <div class="form-group" ng-if="activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="secret_access_key">Secret Access Key</label>
+                                    <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="activeWorkspace.json_config.broker.credentials.secret_access_key">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
