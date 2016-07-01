@@ -112,7 +112,6 @@
             stateService.setIngestsParams(vm.ingestsParams);
             vm.loading = true;
             vm.getIngests();
-            $('.ui-grid-pager-panel').remove();
         };
 
         vm.updateColDefs = function () {
@@ -154,10 +153,6 @@
                     sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
                 });
                 vm.updateIngestOrder(sortArr);
-            });
-            vm.gridApi.core.on.rowsRendered($scope, function () {
-                if (gridApi.grid.renderContainers.body.visibleRowCache.length === 0) { return; }
-                $('.ui-grid-pager-panel').remove();
             });
         };
 
