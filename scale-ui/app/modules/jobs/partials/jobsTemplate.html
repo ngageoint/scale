@@ -22,10 +22,10 @@
         <input id="lastModifiedStop" type="text" class="form-control" aria-describedby="to-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStop" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStopPopup($event)" />
     </div>
 </div>
-<div class="row">
+<div class="row" ng-if="vm.gridOptions.data.length > 0">
     <div class="col-xs-12">
         <div class="grid-container">
-            <div ng-if="vm.gridOptions.data.length > 0" ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
         </div>
         <ais-grid-pagination></ais-grid-pagination>
     </div>
