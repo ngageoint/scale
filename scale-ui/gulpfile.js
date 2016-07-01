@@ -26,8 +26,7 @@ var paths = {
     testData: ['./app/test/data/**/*'],
     tests: ['./tests/*.js'],
     stubs: './app/test/scripts/backendStubs.js',
-    config: './config/*.json',
-    uiGrid: './app/scripts/ui-grid'
+    config: './config/*.json'
 };
 
 var getVersionJson = function() {
@@ -59,34 +58,19 @@ gulp.task('clean-scale', ['deploy-scale'], function () {
     ]);
 });
 
-gulp.task('ui-grid-js', ['clean'], function () {
-    return gulp.src('./app/scripts/ui-grid/ui-grid.js')
-        .pipe(gulp.dest('./.tmp/ui-grid/js'));
-});
-gulp.task('ui-grid-css', ['clean'], function () {
-    return gulp.src('./app/scripts/ui-grid/ui-grid.css')
-        .pipe(gulp.dest('./.tmp/ui-grid/css'));
-});
-gulp.task('ui-grid-fonts', ['clean'], function () {
-    return gulp.src([paths.uiGrid + '/*.{otf,eot,woff,woff2,svg,ttf}'])
-        .pipe(gulp.dest('./build/stylesheets'));
-});
-gulp.task('ui-grid', ['ui-grid-js', 'ui-grid-css', 'ui-grid-fonts']);
-
 // vendor scripts and css
-gulp.task('bower', ['ui-grid'], function () {
+gulp.task('bower', ['clean'], function () {
     var jsFilter = gulpFilter('*.js', {restore: true});
     var cssFilter = gulpFilter(['*.css','*.less'], {restore: true});
     var imageFilter = gulpFilter(['*.jpg','*.png'], {restore: true});
-    var sourceFiles = mainBowerFiles();
 
-    return gulp.src(sourceFiles)
+    return gulp.src(mainBowerFiles())
         // js
         .pipe(jsFilter)
         .pipe(sourcemaps.init())
-        .pipe(concat('bower.js'))
+        .pipe(concat('vendor.js'))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./.tmp'))
+        .pipe(gulp.dest('./build/scripts'))
         .pipe(jsFilter.restore)
 
         // css
@@ -99,13 +83,6 @@ gulp.task('bower', ['ui-grid'], function () {
         // images
         .pipe(imageFilter)
         .pipe(gulp.dest('./build/stylesheets/images'))
-});
-
-// concat ui-grid and other bower js
-gulp.task('vendor-js', ['bower'], function () {
-    return gulp.src(['./.tmp/bower.js', './.tmp/ui-grid/js/ui-grid.js'])
-        .pipe(concat('vendor.js'))
-        .pipe(gulp.dest('./build/scripts'));
 });
 
 // handle bootstrap separately to facilitate bootstrap overrides
@@ -136,8 +113,8 @@ gulp.task('compileBootstrap', ['bootstrapVariables'], function () {
 });
 
 // concat bootstrap and other bower css
-gulp.task('vendor-css', ['compileBootstrap'], function () {
-    return gulp.src(['./.tmp/*.css', './.tmp/ui-grid/css/ui-grid.css'])
+gulp.task('vendor', ['compileBootstrap'], function () {
+    return gulp.src('./.tmp/*.css')
         .pipe(concat('vendor.css'))
         .pipe(gulp.dest('./build/stylesheets'));
 });
@@ -153,9 +130,14 @@ gulp.task('glyphicons', ['clean'], function () {
         .pipe(gulp.dest('./build/fonts'));
 });
 
+gulp.task('ui-grid', ['clean'], function () {
+    return gulp.src('./app/bower_components/angular-ui-grid/**/*.{otf,eot,woff,woff2,svg,ttf}')
+        .pipe(gulp.dest('./build/stylesheets'));
+});
+
 gulp.task('vendor-fonts', ['fontawesome','glyphicons', 'ui-grid']);
 
-gulp.task('vendor-build', ['vendor-js', 'vendor-css', 'vendor-fonts']);
+gulp.task('vendor-build', ['vendor', 'vendor-fonts']);
 
 // app
 var appJs = function () {

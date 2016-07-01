@@ -62,6 +62,10 @@
                 vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                     vm.getPage(currentPage, pageSize);
                 });
+                vm.gridApi.core.on.rowsRendered($scope, function () {
+                    if (gridApi.grid.renderContainers.body.visibleRowCache.length === 0) { return; }
+                    $('.ui-grid-pager-panel').remove();
+                });
             };
 
 
