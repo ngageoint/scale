@@ -11716,7 +11716,7 @@ module.service('gridUtil', ['$log', '$window', '$document', '$http', '$templateC
     if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
     nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
 
-    fn.call($elm[0], newEvent);
+    //fn.call($elm[0], newEvent);
   }
 
   function nullLowestDelta() {
