@@ -25,6 +25,10 @@
             getIngestRecordDetails();
         };
 
+        $scope.calculateFileSize = function (size) {
+            return scaleService.calculateFileSizeFromBytes(size);
+        };
+
         initialize();
     });
 })();
