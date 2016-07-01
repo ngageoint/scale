@@ -14,7 +14,7 @@
             this.created = created;
             this.archived = archived;
             this.last_modified = last_modified;
-            this.json_config = json_config || scaleConfig.workspaceTypes[0];
+            this.json_config = json_config || _.cloneDeep(scaleConfig.workspaceTypes[0]);
         };
 
         Workspace.prototype = {
