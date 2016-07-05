@@ -6,10 +6,9 @@ import ssl
 import time
 from collections import namedtuple
 
-import boto
-from boto.exception import S3ResponseError
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
+from boto3.session import Session
+from botocore.client import Config
+from botocore.exceptions import ClientError
 
 import storage.settings as settings
 from storage.brokers.broker import Broker
@@ -36,11 +35,11 @@ class S3Broker(Broker):
     def delete_files(self, volume_path, files):
         """See :meth:`storage.brokers.broker.Broker.delete_files`"""
 
-        with BrokerConnection(self._credentials) as conn:
+        with S3Client(self._credentials) as client:
             for scale_file in files:
-                s3_key = conn.get_key(self._bucket_name, scale_file.file_path)
+                s3_object = client.get_object(self._bucket_name, scale_file.file_path)
 
-                self._delete_file(s3_key, scale_file)
+                self._delete_file(s3_object, scale_file)
 
                 # Update model attributes
                 scale_file.set_deleted()
@@ -49,11 +48,11 @@ class S3Broker(Broker):
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""
 
-        with BrokerConnection(self._credentials) as conn:
+        with S3Client(self._credentials) as client:
             for file_download in file_downloads:
-                s3_key = conn.get_key(self._bucket_name, file_download.file.file_path)
+                s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
 
-                self._download_file(s3_key, file_download.file, file_download.local_path)
+                self._download_file(s3_object, file_download.file, file_download.local_path)
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""
@@ -68,11 +67,12 @@ class S3Broker(Broker):
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`"""
 
-        with BrokerConnection(self._credentials) as conn:
+        with S3Client(self._credentials) as client:
             for file_move in file_moves:
-                s3_key = conn.get_key(self._bucket_name, file_move.file.file_path)
+                s3_object_src = client.get_object(self._bucket_name, file_move.file.file_path)
+                s3_object_dest = client.get_object(self._bucket_name, file_move.new_path, False)
 
-                self._move_file(s3_key, file_move.file, file_move.new_path)
+                self._move_file(s3_object_src, s3_object_dest, file_move.file, file_move.new_path)
 
                 # Update model attributes
                 file_move.file.file_path = file_move.new_path
@@ -81,14 +81,11 @@ class S3Broker(Broker):
     def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`"""
 
-        with BrokerConnection(self._credentials) as conn:
+        with S3Client(self._credentials) as client:
             for file_upload in file_uploads:
-                s3_key = conn.get_key(self._bucket_name)
-                s3_key.key = file_upload.file.file_path
-                s3_key.storage_class = settings.S3_STORAGE_CLASS
-                s3_key.encrypted = settings.S3_ENCRYPTED
+                s3_object = client.get_object(self._bucket_name, file_upload.file.file_path, False)
 
-                self._upload_file(s3_key, file_upload.file, file_upload.local_path)
+                self._upload_file(s3_object, file_upload.file, file_upload.local_path)
 
                 # Create new model
                 file_upload.file.save()
@@ -110,22 +107,22 @@ class S3Broker(Broker):
             credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
 
         # Check whether the bucket can actually be accessed
-        with BrokerConnection(credentials) as conn:
+        with S3Client(credentials) as client:
             try:
-                conn.get_bucket(config['bucket_name'], True)
-            except S3ResponseError:
+                client.get_bucket(config['bucket_name'])
+            except ClientError:
                 warnings.append(ValidationWarning('bucket_access',
                                                   'Unable to access bucket. Check the bucket name and credentials.'))
 
         return warnings
 
-    def _delete_file(self, s3_key, scale_file, retries=settings.S3_RETRY_COUNT):
+    def _delete_file(self, s3_object, scale_file, retries=settings.S3_RETRY_COUNT):
         """Deletes a file from the S3 file system.
 
         This method will attempt to retry the delete if :class:`ssl.SSLError` is raised up to a number of retries given.
 
-        :param s3_key: The S3 key representing the file to delete.
-        :type s3_key: :class:`boto.s3.key.Key`
+        :param s3_object: The S3 object representing the file to delete.
+        :type s3_object: :class:`boto3.s3.Object`
         :param scale_file: The model associated with the file to delete.
         :type scale_file: :class:`storage.models.ScaleFile`
         """
@@ -133,7 +130,7 @@ class S3Broker(Broker):
         logger.info('Deleting %s', scale_file.file_path)
         for attempt in range(retries):
             try:
-                s3_key.delete()
+                s3_object.delete()
                 return
             except ssl.SSLError:
                 if attempt >= retries:
@@ -141,13 +138,13 @@ class S3Broker(Broker):
                 time.sleep(settings.S3_RETRY_DELAY * attempt)
                 logger.exception('Retrying S3 delete attempt: %i', attempt + 1)
 
-    def _download_file(self, s3_key, scale_file, path, retries=settings.S3_RETRY_COUNT):
+    def _download_file(self, s3_object, scale_file, path, retries=settings.S3_RETRY_COUNT):
         """Downloads a file in S3 storage to the local file system.
 
         This method will attempt to retry the delete if :class:`ssl.SSLError` is raised up to a number of retries given.
 
-        :param s3_key: The S3 key representing the file to download.
-        :type s3_key: :class:`boto.s3.key.Key`
+        :param s3_object: The S3 object representing the file to download.
+        :type s3_object: :class:`boto3.s3.Object`
         :param scale_file: The model associated with the file to download.
         :type scale_file: :class:`storage.models.ScaleFile`
         :param path: The destination path for the file download.
@@ -157,16 +154,15 @@ class S3Broker(Broker):
         logger.info('Downloading %s -> %s', scale_file.file_path, path)
         for attempt in range(retries):
             try:
-                with open(path, 'wb') as fp:
-                    s3_key.get_contents_to_file(fp)
-                    return
+                s3_object.download_file(path)
+                return
             except ssl.SSLError:
                 if attempt >= retries:
                     raise
                 time.sleep(settings.S3_RETRY_DELAY * attempt)
                 logger.exception('Retrying S3 download attempt: %i', attempt + 1)
 
-    def _move_file(self, s3_key, scale_file, path, retries=settings.S3_RETRY_COUNT):
+    def _move_file(self, s3_object_src, s3_object_dest, scale_file, path, retries=settings.S3_RETRY_COUNT):
         """Moves a file within the S3 file system.
 
         Note that S3 does not support an atomic move, so this operation is implemented as a copy and delete.
@@ -175,8 +171,10 @@ class S3Broker(Broker):
         Note that since S3 does not support an atomic move, this method copies the file to the new destination and then
         attempts to delete the original file content.
 
-        :param s3_key: The S3 key representing the file to move.
-        :type s3_key: :class:`boto.s3.key.Key`
+        :param s3_object_src: The S3 object representing the source of the file to move.
+        :type s3_object_src: :class:`boto3.s3.Object`
+        :param s3_object_dest: The S3 object representing the destination of the file to move.
+        :type s3_object_dest: :class:`boto3.s3.Object`
         :param scale_file: The model associated with the file to move.
         :type scale_file: :class:`storage.models.ScaleFile`
         :param path: The destination path for the file move.
@@ -184,11 +182,20 @@ class S3Broker(Broker):
         """
 
         logger.info('Copying %s -> %s', scale_file.file_path, path)
+        options = dict()
+        options['CopySource'] = {
+            'Bucket': s3_object_src.bucket_name,
+            'Key': s3_object_src.key,
+        }
+        options['StorageClass'] = settings.S3_STORAGE_CLASS
+        if settings.S3_SERVER_SIDE_ENCRYPTION:
+            options['ServerSideEncryption'] = settings.S3_SERVER_SIDE_ENCRYPTION
+        if scale_file.media_type:
+            options['ContentType'] = scale_file.media_type
+
         for attempt in range(retries):
             try:
-                s3_key.copy(self._bucket_name, path,
-                            reduced_redundancy=(settings.S3_STORAGE_CLASS == 'REDUCED_REDUNDANCY'),
-                            encrypt_key=settings.S3_ENCRYPTED, preserve_acl=True, validate_dst_bucket=False)
+                s3_object_dest.copy_from(**options)
                 break
             except ssl.SSLError:
                 if attempt >= retries:
@@ -196,32 +203,33 @@ class S3Broker(Broker):
                 time.sleep(settings.S3_RETRY_DELAY * attempt)
                 logger.exception('Retrying S3 copy attempt: %i', attempt + 1)
 
-        self._delete_file(s3_key, scale_file)
+        self._delete_file(s3_object_src, scale_file)
 
-    def _upload_file(self, s3_key, scale_file, path, retries=settings.S3_RETRY_COUNT):
+    def _upload_file(self, s3_object, scale_file, path, retries=settings.S3_RETRY_COUNT):
         """Uploads a file in local storage to the S3 remote file system.
 
         This method will attempt to retry the delete if :class:`ssl.SSLError` is raised up to a number of retries given.
 
-        :param s3_key: The S3 key representing the file to upload.
-        :type s3_key: :class:`boto.s3.key.Key`
+        :param s3_object: The S3 object representing the file to upload.
+        :type s3_object: :class:`boto3.s3.Object`
         :param scale_file: The model associated with the file to upload.
         :type scale_file: :class:`storage.models.ScaleFile`
         :param path: The source path for the file upload.
         :type path: string
         """
 
-        # Determine the proper mime-type for the file
-        headers = dict()
+        options = dict()
+        options['StorageClass'] = settings.S3_STORAGE_CLASS
+        if settings.S3_SERVER_SIDE_ENCRYPTION:
+            options['ServerSideEncryption'] = settings.S3_SERVER_SIDE_ENCRYPTION
         if scale_file.media_type:
-            headers['Content-Type'] = scale_file.media_type
+            options['ContentType'] = scale_file.media_type
 
         logger.info('Uploading %s -> %s', path, scale_file.file_path)
         for attempt in range(retries):
             try:
-                with open(path, 'rb') as fp:
-                    s3_key.set_contents_from_file(fp, headers)
-                    return
+                s3_object.upload_file(path, options)
+                return
             except ssl.SSLError:
                 if attempt >= retries:
                     raise
@@ -229,8 +237,8 @@ class S3Broker(Broker):
                 logger.exception('Retrying S3 upload attempt: %i', attempt + 1)
 
 
-class BrokerConnection(object):
-    """Manages automatically opening and closing connections to the S3 service."""
+class S3Client(object):
+    """Manages automatically creating and destroying clients to the S3 service."""
 
     def __init__(self, credentials=None):
         """Constructor
@@ -241,42 +249,32 @@ class BrokerConnection(object):
         """
 
         self.credentials = credentials
-        self._connection = None
-
-        # Check whether to use a local mock S3 or the real services
-        if settings.S3_CALLING_FORMAT:
-            self._calling_format = settings.S3_CALLING_FORMAT
-        else:
-            self._calling_format = boto.config.get(
-                's3', 'calling_format',
-                'boto.s3.connection.OrdinaryCallingFormat'
-            )
+        self._client = None
 
     def __enter__(self):
-        """Callback handles opening a new connection to S3."""
+        """Callback handles creating a new client for S3 access."""
 
-        host = settings.S3_HOST or S3Connection.DefaultHost
-        logger.debug('Connecting to S3 host: %s', host)
-        params = {
-            'calling_format': self._calling_format,
-            'is_secure': settings.S3_SECURE,
-            'host': host,
-            'port': settings.S3_PORT,
+        logger.debug('Setting up S3 client...')
+        session_args = {
+            'region_name': settings.S3_REGION,
         }
         if self.credentials:
-            params['aws_access_key_id'] = self.credentials.access_key_id
-            params['aws_secret_access_key'] = self.credentials.secret_access_key
+            session_args['aws_access_key_id'] = self.credentials.access_key_id
+            session_args['aws_secret_access_key'] = self.credentials.secret_access_key
+        self._session = Session(**session_args)
 
-        self._connection = boto.connect_s3(**params)
+        s3_args = {
+            'addressing_style': settings.S3_ADDRESSING_STYLE,
+        }
+        self._client = self._session.client('s3', config=Config(s3=s3_args))
+        self._resource = self._session.resource('s3', config=Config(s3=s3_args))
         return self
 
     def __exit__(self, type, value, traceback):
-        """Callback handles closing an existing connection to S3."""
+        """Callback handles destroying an existing client to S3."""
+        pass
 
-        if self._connection:
-            self._connection.close()
-
-    def get_bucket(self, bucket_name, validate=False):
+    def get_bucket(self, bucket_name, validate=True):
         """Gets a reference to an S3 bucket with the given identifier.
 
         :param bucket_name: The unique name of the bucket to retrieve.
@@ -284,32 +282,39 @@ class BrokerConnection(object):
         :param validate: Whether to perform a request that verifies the bucket actually exists.
         :type validate: bool
         :returns: The bucket object for the given name.
-        :rtype: :class:`boto.s3.bucket.Bucket`
+        :rtype: :class:`boto3.s3.Bucket`
 
-        :raises :class:`boto.exceptions.S3ResponseError`: If the bucket fails to validate.
+        :raises :class:`botocore.exceptions.ClientError`: If the bucket fails to validate.
         """
 
         logger.debug('Accessing S3 bucket: %s', bucket_name)
-        return self._connection.get_bucket(bucket_name, validate=validate)
+        if validate:
+            self._client.head_bucket(Bucket=bucket_name)
+        return self._resource.Bucket(bucket_name)
 
-    def get_key(self, bucket_name, key_name=None):
-        """Gets a reference to an S3 key with the given identifier.
+    def get_object(self, bucket_name, key_name, validate=True):
+        """Gets a reference to an S3 object with the given identifier.
 
         :param bucket_name: The unique name of the bucket to retrieve.
         :type bucket_name: string
-        :param key_name: The unique name of the key to retrieve that is associated with a file. None indicates a new
-            key should be created within the given bucket.
+        :param key_name: The unique name of the object to retrieve that is associated with a file.
         :type key_name: string
-        :returns: The key object for the given name.
-        :rtype: :class:`boto.s3.key.Key`
+        :param validate: Whether to perform a request that verifies the object actually exists.
+        :type validate: bool
+        :returns: The S3 object for the given name.
+        :rtype: :class:`boto3.s3.Object`
 
-        :raises :class:`boto.exceptions.S3ResponseError`: If the bucket fails to validate.
+        :raises :class:`botocore.exceptions.ClientError`: If the request is invalid.
         :raises :class:`storage.exceptions.FileDoesNotExist`: If the file is not found in the bucket.
         """
+        s3_object = self._resource.Object(bucket_name, key_name)
 
-        bucket = self.get_bucket(bucket_name)
-
-        s3_key = bucket.get_key(key_name) if key_name else Key(bucket)
-        if not s3_key:
-            raise FileDoesNotExist('Unable to access remote file: %s %s' % (bucket_name, key_name))
-        return s3_key
+        try:
+            if validate:
+                s3_object.get()
+        except ClientError as err:
+            error_code = err.response['ResponseMetadata']['HTTPStatusCode']
+            if error_code == 404:
+                raise FileDoesNotExist('Unable to access remote file: %s %s' % (bucket_name, key_name))
+            raise
+        return s3_object
