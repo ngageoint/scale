@@ -1,31 +1,33 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('feedDetailsController', function($scope, $location, scaleConfig, navService, subnavService, feedService, moment) {
-        $scope.loading = true;
-        $scope.feedData = {};
-        $scope.subnavLinks = scaleConfig.subnavLinks.feed;
-        $scope.useIngestTime = 'false';
-        $scope.filterValue = 1;
-        $scope.filterDuration = 'w';
+    angular.module('scaleApp').controller('feedDetailsController', function ($scope, $location, scaleConfig, navService, subnavService, feedService, moment) {
+        var vm = this;
+        
+        vm.loading = true;
+        vm.feedData = {};
+        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.useIngestTime = 'false';
+        vm.filterValue = 1;
+        vm.filterDuration = 'w';
 
-        $scope.changeFeedSelection = function(){
+        vm.changeFeedSelection = function (){
             setFeedUrl();
             //getFeed();
         };
 
-        $scope.changeIngestTimeSelection = function(){
+        vm.changeIngestTimeSelection = function (){
             setFeedUrl();
             getFeed();
         };
 
-        var getFeedParams = function(){
+        var getFeedParams = function (){
             var params = {};
-            var strikeId = $scope.selectedFeed ? $scope.selectedFeed.strike.id : null;
-            var useIngestTime = $scope.useIngestTime ? $scope.useIngestTime : null;
+            var strikeId = vm.selectedFeed ? vm.selectedFeed.strike.id : null;
+            var useIngestTime = vm.useIngestTime ? vm.useIngestTime : null;
 
-            params.started = moment.utc().subtract($scope.filterValue, $scope.filterDuration).startOf('d').toISOString();
-            params.ended = moment.utc(params.started).add(1, $scope.filterDuration).endOf('d').toISOString();
+            params.started = moment.utc().subtract(vm.filterValue, vm.filterDuration).startOf('d').toISOString();
+            params.ended = moment.utc(params.started).add(1, vm.filterDuration).endOf('d').toISOString();
 
             if (strikeId != $location.search().strike_id) {
                 params.strike_id = strikeId;
@@ -44,44 +46,44 @@
         };
 
         var getFeed = function () {
-            $scope.loading = true;
+            vm.loading = true;
             if ($location.search().use_ingest_time) {
-                $scope.useIngestTime = $location.search().use_ingest_time;
+                vm.useIngestTime = $location.search().use_ingest_time;
             }
             var feedParams = getFeedParams();
             $location.search(feedParams);
             feedService.getFeed(feedParams).then(function (data) {
-                $scope.allFeeds = _.sortByOrder(data.results, ['strike.name'], ['asc']);
+                vm.allFeeds = _.sortByOrder(data.results, ['strike.name'], ['asc']);
                 var strikeId = $location.search().strike_id;
                 if(strikeId){
                     // set selectedFeed = new feed
-                    var feed = _.find($scope.allFeeds, function(feed){
+                    var feed = _.find(vm.allFeeds, function (feed){
                         return feed.strike.id == strikeId;
                     });
-                    $scope.selectedFeed = feed ? feed : null;
+                    vm.selectedFeed = feed ? feed : null;
                 } else {
-                    $scope.selectedFeed = $scope.allFeeds[0];
+                    vm.selectedFeed = vm.allFeeds[0];
                     setFeedUrl();
                 }
-            }).finally(function(){
-                $scope.loading = false;
+            }).finally(function (){
+                vm.loading = false;
             });
         };
 
-        $scope.updateFeedRange = function (action) {
+        vm.updateFeedRange = function (action) {
             if (action === 'older') {
-                $scope.filterValue++;
+                vm.filterValue++;
             } else if (action === 'newer') {
-                if ($scope.filterValue > 1) {
-                    $scope.filterValue--;
+                if (vm.filterValue > 1) {
+                    vm.filterValue--;
                 }
             } else if (action === 'today') {
-                $scope.filterValue = 1;
+                vm.filterValue = 1;
             }
             getFeed();
         };
 
-        var setFeedUrl = function(){
+        var setFeedUrl = function (){
             // set param in URL
             var params = getFeedParams();
             $location.search(params);
@@ -95,7 +97,7 @@
 
         initialize();
 
-        $scope.$watch('filterValue', function (value) {
+        $scope.$watch('vm.filterValue', function (value) {
             var $feedNewer = $('.feed-newer'),
                 $feedToday = $('.feed-today');
 

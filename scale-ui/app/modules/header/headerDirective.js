@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisHeaderController', function($scope, $element, subnavService) {
-        $scope.date = new Date();
-        $scope.currentPath = subnavService.getCurrentPath();
+    angular.module('scaleApp').controller('aisHeaderController', function(subnavService) {
+        var vm = this;
+        vm.currentPath = subnavService.getCurrentPath();
     })
     .directive('aisHeader', function () {
         /**
@@ -11,6 +11,7 @@
          */
         return {
             controller: 'aisHeaderController',
+            controllerAs: 'vm',
             restrict: 'E',
             templateUrl: 'modules/header/headerTemplate.html',
             scope: {

@@ -1,67 +1,56 @@
-<ais-header name="'Job Detail'" show-subnav="true" subnav-links="subnavLinks" loading="loadingJobDetail"></ais-header>
+<ais-header name="'Job Detail'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loadingJobDetail"></ais-header>
 <div class="pull-right">
-    <span ng-show="!readonly && (job.status === 'FAILED' || job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
-    <span ng-show="!readonly && job.status !== 'COMPLETED' && job.status !== 'CANCELED'"><button ng-click="cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+    <span ng-show="!vm.readonly && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+    <span ng-show="!vm.readonly && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
 </div>
 <ul class="nav nav-tabs" role="tablist">
-    <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ job.id }}</a></li>
-    <li><a data-target="#executions" data-toggle="tab">Executions ({{job.num_exes}})</a></li>
-    <!--<li><a data-target="#recentExecution" data-toggle="tab" ng-if="latestExecution">Latest Execution</a></li>-->
-    <!--<li><a data-target="#products" data-toggle="tab">Products ({{ job.products.length }})</a></li>-->
-    <!--<li><a data-target="#childJobs" data-toggle="tab">Child Jobs</a></li>-->
+    <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ vm.job.id }}</a></li>
+    <li><a data-target="#executions" data-toggle="tab">Executions ({{ vm.job.num_exes }})</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="details">
         <div class="margin-top-sm margin-bottom-lg">
-            <h3 ng-show="job.status !== 'FAILED'">
-                <span class="label {{job.getStatusClass()}}">{{ job.status }} {{ lastStatusChange }}</span>
+            <h3 ng-show="vm.job.status !== 'FAILED'">
+                <span class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }} {{ vm.lastStatusChange }}</span>
             </h3>
         </div>
-        <!--<div class="row">-->
-            <!--<div class="col-xs-12 col-md-6 col-md-offset-3">-->
-                <!--<div class="well well-sm error-well margin-top-md margin-bottom-md" ng-show="job.status === 'FAILED'">-->
-                    <!--<h4 class="panel-title error-title"><strong>{{ job.error.category }} Error: {{ job.error.title }}</strong></h4>-->
-                    <!--{{ job.error.description }}-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
         <div class="row">
             <div class="col-xs-12 col-md-6">
-                <div class="panel panel-error" ng-show="job.status === 'FAILED'">
+                <div class="panel panel-error" ng-show="vm.job.status === 'FAILED'">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <strong>{{ job.status }} {{ lastStatusChange }}</strong>
+                            <strong>{{ vm.job.status }} {{ vm.lastStatusChange }}</strong>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <h4 class="panel-title error-title"><strong>{{ job.error.category }} Error: {{ job.error.title }}</strong></h4>
-                        {{ job.error.description }}
+                        <h4 class="panel-title error-title"><strong>{{ vm.job.error.category }} Error: {{ vm.job.error.title }}</strong></h4>
+                        {{ vm.job.error.description }}
                     </div>
                 </div>
                 <strong>Overview</strong>
                 <table class="table table-hover table-condensed table-striped">
                     <tbody>
-                        <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{job.job_type.id}}"><span ng-bind-html="job.job_type.getIcon()"></span> {{ job.job_type.title }} {{ job.job_type.version }}</a></td></tr>
-                        <tr ng-show="job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{job.recipes[0].id}}">{{ job.recipes[0].recipe_type.title }} {{ job.recipes[0].recipe_type.version }}</a></td></tr>
-                        <tr><td>Status:</td><td><div class="label {{job.getStatusClass()}}">{{ job.status }}</div></td></tr>
-                        <tr><td>Trigger:</td><td>{{ job.event.type }} {{ triggerOccurred }}</td></tr>
-                        <tr><td>Priority:</td><td>{{ job.priority }}</td></tr>
-                        <tr><td>Created:</td><td>{{ job.created }}</td></tr>
-                        <tr><td>Last Updated:</td><td>{{ job.last_modified }}</td></tr>
-                        <tr><td>Num Executions:</td><td>{{ job.num_exes }}</td></tr>
-                        <tr><td>Max Tries:</td><td>{{ job.max_tries }}</td></tr>
-                        <tr ng-show="job.timeout"><td>Timeout:</td><td>{{ job.timeout }} seconds</td></tr>
+                        <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{ vm.job.job_type.id }}"><span ng-bind-html="vm.job.job_type.getIcon()"></span> {{ vm.job.job_type.title }} {{ vm.job.job_type.version }}</a></td></tr>
+                        <tr ng-show="vm.job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{ vm.job.recipes[0].id }}">{{ vm.job.recipes[0].recipe_type.title }} {{ vm.job.recipes[0].recipe_type.version }}</a></td></tr>
+                        <tr><td>Status:</td><td><div class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }}</div></td></tr>
+                        <tr><td>Trigger:</td><td>{{ vm.job.event.type }} {{ vm.triggerOccurred }}</td></tr>
+                        <tr><td>Priority:</td><td>{{ vm.job.priority }}</td></tr>
+                        <tr><td>Created:</td><td>{{ vm.job.created }}</td></tr>
+                        <tr><td>Last Updated:</td><td>{{ vm.job.last_modified }}</td></tr>
+                        <tr><td>Num Executions:</td><td>{{ vm.job.num_exes }}</td></tr>
+                        <tr><td>Max Tries:</td><td>{{ vm.job.max_tries }}</td></tr>
+                        <tr ng-show="job.timeout"><td>Timeout:</td><td>{{ vm.job.timeout }} seconds</td></tr>
                     </tbody>
                 </table>
             </div>
             <div class="col-xs-12 col-md-6">
                 <strong>Timeline</strong>
-                <ais-timeline tasks="timeline" started="'started'" ended="'ended'"></ais-timeline>
+                <ais-timeline tasks="vm.timeline" started="'started'" ended="'ended'"></ais-timeline>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <table class="table table-striped table-bordered" cols="5" ng-if="inputs.length > 0">
+                <table class="table table-striped table-bordered" cols="5" ng-if="vm.inputs.length > 0">
                     <tbody>
                         <caption>Inputs</caption>
                         <tr>
@@ -69,7 +58,7 @@
                             <th class="col-md-1">Type</th>
                             <th class="col-md-9">Value</th>
                         </tr>
-                        <tr ng-repeat="input in inputs">
+                        <tr ng-repeat="input in vm.inputs">
                             <td>{{ input.name }}</td>
                             <td>{{ input.type }}</td>
                             <td>
@@ -86,7 +75,7 @@
                                                 <a ng-show="input.value.url" href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a>
                                                 <span ng-show="!input.value.url">{{ input.value.file_name }}</span>
                                             </td>
-                                            <td>{{ calculateFileSize(input.value.file_size) }}</td>
+                                            <td>{{ vm.calculateFileSize(input.value.file_size) }}</td>
                                             <td>{{ input.value.created }}</td>
                                             <td>{{ input.value.last_modified }}</td>
                                         </tr>
@@ -105,7 +94,7 @@
                                                 <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
                                                 <span ng-show="!v.url">{{ v.file_name }}</span>
                                             </td>
-                                            <td>{{ calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ vm.calculateFileSize(v.file_size) }}</td>
                                             <td>{{ v.created }}</td>
                                             <td>{{ v.last_modified }}</td>
                                         </tr>
@@ -118,7 +107,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="table table-striped table-bordered" ng-if="outputs.length > 0">
+                <table class="table table-striped table-bordered" ng-if="vm.outputs.length > 0">
                     <tbody>
                         <caption>Outputs</caption>
                         <tr>
@@ -126,7 +115,7 @@
                             <th class="col-md-1">Type</th>
                             <th class="col-md-9">Value</th>
                         </tr>
-                        <tr ng-repeat="output in outputs">
+                        <tr ng-repeat="output in vm.outputs">
                             <td>{{ output.name }}</td>
                             <td>{{ output.type }}</td>
                             <td>
@@ -143,7 +132,7 @@
                                                 <a ng-show="output.value.url" href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a>
                                                 <span ng-show="!output.value.url">{{ output.value.file_name }}</span>
                                             </td>
-                                            <td>{{ calculateFileSize(output.value.file_size) }}</td>
+                                            <td>{{ vm.calculateFileSize(output.value.file_size) }}</td>
                                             <td>{{ output.value.created }}</td>
                                             <td>{{ output.value.last_modified }}</td>
                                         </tr>
@@ -162,18 +151,17 @@
                                                 <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
                                                 <span ng-show="!v.url">{{ v.file_name }}</span>
                                             </td>
-                                            <td>{{ calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ vm.calculateFileSize(v.file_size) }}</td>
                                             <td>{{ v.created }}</td>
                                             <td>{{ v.last_modified }}</td>
                                         </tr>
                                     </table>
                                 </span>
                                 <span ng-if="output.type === 'property' && output.value">
-                                    {{output.value}}
+                                    {{ output.value }}
                                 </span>
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -193,14 +181,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="link" ng-repeat="execution in job.job_exes">
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.status }}</td>
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.ended_formatted }}</td>
-                    <td ng-click="showExecutionDetails(execution.id)">{{ execution.last_modified_formatted }}</td>
-                    <td class="text-center"><button class="btn btn-xs btn-default" ng-click="showLog(execution)"><i class="fa fa-file-text"></i></button></td>
+                <tr class="link" ng-repeat="execution in vm.job.job_exes">
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.status }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.ended_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.last_modified_formatted }}</td>
+                    <td class="text-center"><button class="btn btn-xs btn-default" ng-click="vm.showLog(execution)"><i class="fa fa-file-text"></i></button></td>
                 </tr>
             </tbody>
         </table>
@@ -209,10 +197,10 @@
 <script type="text/ng-template" id="showLog.html">
     <div>
         <div class="modal-header">
-            <h3>Log for Execution ID: {{ selectedExecutionLog.id }}</h3>
+            <h3>Log for Execution ID: {{ vm.selectedExecutionLog.id }}</h3>
         </div>
         <div class="modal-body">
-            <job-execution-log execution="selectedExecutionLog"></job-execution-log>
+            <job-execution-log execution="vm.selectedExecutionLog"></job-execution-log>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="$dismiss()">Close</button>
@@ -222,7 +210,7 @@
 <script type="text/ng-template" id="showExecutionDetails.html">
 <div>
     <div class="modal-header">
-        <h3>Job Execution ID: {{ selectedExecutionDetails.id }}</h3>
+        <h3>Job Execution ID: {{ vm.selectedExecutionDetails.id }}</h3>
     </div>
     <div class="modal-body">
         <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
@@ -232,7 +220,7 @@
                     <th>Value</th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="detail in selectedExecutionDetailValues">
+                    <tr ng-repeat="detail in vm.selectedExecutionDetailValues">
                         <td>{{ detail[0] }}</td>
                         <td>{{ detail[1] }}</td>
                     </tr>

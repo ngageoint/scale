@@ -51,15 +51,18 @@
             })
             .when('/about', {
                 controller: 'aboutController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/about/partials/aboutTemplate.html'
             })
             .when('/feed', {
                 controller: 'feedDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/feedDetailsTemplate.html',
                 reloadOnSearch: false
             })
             .when('/feed/ingests', {
                 controller: 'ingestRecordsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/ingestRecordsTemplate.html',
                 reloadOnSearch: false
             })
@@ -116,10 +119,12 @@
             })
             .when('/jobs/job/:id', {
                 controller: 'jobDetailController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobDetailTemplate.html'
             })
             .when('/jobs/types/:id?', {
                 controller: 'jobTypesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
             })
             .when('/jobs/failure-rates', {
@@ -134,6 +139,7 @@
             })
             .when('/jobs/executions/:id', {
                 controller: 'jobExecutionDetailController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobExecutionDetailTemplate.html'
             })
             .when('/workspaces/:id?', {
