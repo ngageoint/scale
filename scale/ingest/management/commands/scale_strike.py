@@ -38,6 +38,7 @@ class Command(BaseCommand):
         super(Command, self).__init__()
         self.running = False
         self.job_exe_id = None
+        self._do_sys_exit = False
 
         # TODO: this is not bullet proof, figure out a better way to ensure two Strike processes with the same Strike ID
         # cannot run at the same time
@@ -117,6 +118,7 @@ class Command(BaseCommand):
                     strike_proc = self._init_processor(strike_id)
                 else:
                     self._reload_processor(strike_id, strike_proc)
+                self._do_sys_exit = 'sqs_name' in strike_proc.configuration.get_dict()
 
                 # Process the directory and record number of seconds used
                 started = now()
@@ -150,3 +152,6 @@ class Command(BaseCommand):
         '''
         logger.info('Strike command terminated due to signal: %i', signum)
         self.running = False
+
+        if self._do_sys_exit:
+            sys.exit(1)
