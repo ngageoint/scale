@@ -506,9 +506,9 @@ class StrikeProcessor(object):
         if not object_size:
             raise S3NoDataNotificationError('Skipping folder or 0 byte file: %s' % object_key)
 
-        object_path, object_name = os.path.split(object_key)
+        object_name = os.path.basename(object_key)
 
-        self._ingest_s3_file(object_name, object_path, object_size)
+        self._ingest_s3_file(object_name, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))
 
     def _ingest_s3_file(self, file_name, file_path, file_size):

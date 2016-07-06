@@ -112,7 +112,7 @@ class TestStrikeSQSNotification(TestCase):
         self.valid_s3_string = '{"s3SchemaVersion": "1.0",' \
                                '"bucket": {"name": "scale-s3-create-retrieve-test","arn": ' \
                                '"arn:aws:s3:::scale-s3-create-retrieve-test"},' \
-                               '"object": {"key": "test-40GiB.file","size": 42949672960}' \
+                               '"object": {"key": "mytree/test-40GiB.file","size": 42949672960}' \
                                '}'
 
         self.valid_s3_object = json.loads(self.valid_s3_string)
@@ -157,6 +157,7 @@ class TestStrikeSQSNotification(TestCase):
 
         self.strike_proc._ingest_s3_notification_object(self.valid_s3_object)
         self.assertTrue(mock_ingest.called)
+        mock_ingest.assert_called_with('test-40GiB.file', 'mytree/test-40GiB.file', 42949672960)
 
     @patch('ingest.strike.strike_processor.StrikeProcessor._ingest_s3_file')
     def test_ingest_s3_notification_object_invalid_failure(self, mock_ingest):
