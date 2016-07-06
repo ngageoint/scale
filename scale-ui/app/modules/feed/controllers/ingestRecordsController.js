@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -142,6 +142,12 @@
                 vm.ingestsParams.page = currentPage;
                 vm.ingestsParams.page_size = pageSize;
                 vm.filterResults();
+            });
+            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                $scope.$apply(function () {
+                    $location.search({});
+                    $location.path('/feed/ingests/' + row.entity.id);
+                });
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {
