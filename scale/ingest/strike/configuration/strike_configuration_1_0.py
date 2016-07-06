@@ -8,36 +8,28 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from ingest.strike.configuration.strike_configuration_1_0 import StrikeConfiguration as StrikeConfiguration_1_0
 from storage.models import Workspace
 
 
-CURRENT_VERSION = '2.0'
+DEFAULT_VERSION = '1.0'
 
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'monitor', 'files_to_ingest'],
+    'required': ['mount', 'transfer_suffix', 'files_to_ingest'],
     'additionalProperties': False,
     'properties': {
         'version': {
             'description': 'Version of the Strike configuration schema',
             'type': 'string'
         },
-        'workspace': {
+        'mount': {
             'type': 'string',
             'minLength': 1
         },
-        'monitor': {
-            'type': 'object',
-            'required': ['type'],
-            'additionalProperties': True,
-            'properties': {
-                'type': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-            }
+        'transfer_suffix': {
+            'type': 'string',
+            'minLength': 1
         },
         'files_to_ingest': {
             'type': 'array',
@@ -48,7 +40,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
     'definitions': {
         'file_item': {
             'type': 'object',
-            'required': ['filename_regex'],
+            'required': ['filename_regex', 'workspace_path', 'workspace_name'],
             'additionalProperties': False,
             'properties': {
                 'filename_regex': {
@@ -59,13 +51,12 @@ STRIKE_CONFIGURATION_SCHEMA = {
                     'type': 'array',
                     'items': {'type': 'string', 'minLength': 1}
                 },
-                'new_workspace': {
+                'workspace_path': {
                     'type': 'string',
                     'minLength': 1
                 },
-                'new_workspace_path': {
-                    'type': 'string',
-                    'minLength': 1
+                'workspace_name': {
+                    'type': 'string'
                 }
             }
         }
@@ -74,7 +65,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
 
 
 class ValidationWarning(object):
-    """Tracks Strike configuration warnings during validation that may prevent the process from working."""
+    """Tracks Strike configuration warnings during validation that may not prevent the process from working."""
 
     def __init__(self, key, details):
         """Constructor sets basic attributes.
@@ -105,26 +96,22 @@ class StrikeConfiguration(object):
 
         self._configuration = configuration
 
-        # Convert old versions
-        if 'version' in self._configuration and self._configuration['version'] != CURRENT_VERSION:
-            self._configuration = self._convert_schema(configuration)
-
         try:
             validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
 
         self._populate_default_values()
-        if self._configuration['version'] != CURRENT_VERSION:
+        if not self._configuration['version'] == '1.0':
             msg = 'Invalid Strike configuration: %s is an unsupported version number'
             raise InvalidStrikeConfiguration(msg % self._configuration['version'])
 
         # Normalize paths
         for file_dict in self._configuration['files_to_ingest']:
-            if os.path.isabs(file_dict['new_workspace_path']):
+            if os.path.isabs(file_dict['workspace_path']):
                 msg = 'Invalid Strike configuration: workspace_path may not be an absolute path'
                 raise InvalidStrikeConfiguration(msg)
-            file_dict['new_workspace_path'] = os.path.normpath(file_dict['new_workspace_path'])
+            file_dict['workspace_path'] = os.path.normpath(file_dict['workspace_path'])
 
         # Build a mapping of required workspaces
         self._workspace_map = self._get_workspace_map(self._configuration['files_to_ingest'])
@@ -183,31 +170,11 @@ class StrikeConfiguration(object):
                 return regex_entry[1], regex_entry[2], regex_entry[3]
         return None
 
-    def _convert_schema(self, configuration):
-        """Tries to validate the configuration as version 1.0 and convert it to version 2.0
-
-        :param configuration: The Strike configuration
-        :type configuration: dict
-        :returns: The converted configuration
-        :rtype: dict
-        """
-
-        # Try converting from 1.0
-        converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
-
-        converted_configuration['version'] = CURRENT_VERSION
-
-        for file_dict in converted_configuration['files_to_ingest']:
-            pass
-        # TODO:
-
-        return converted_configuration
-
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 
         if 'version' not in self._configuration:
-            self._configuration['version'] = CURRENT_VERSION
+            self._configuration['version'] = DEFAULT_VERSION
 
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
