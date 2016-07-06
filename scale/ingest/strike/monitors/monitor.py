@@ -9,10 +9,10 @@ from storage.models import Workspace
 logger = logging.getLogger(__name__)
 
 
-# TODO: mention methods that sub-classes should override (load_configuration, validate_configuration)
 class Monitor(object):
     """Abstract class for a monitor that processes incoming files to ingest. Sub-classes must have a no-argument
-    constructor that passes in the correct monitor type.
+    constructor that passes in the correct monitor type and should override the load_configuration(), run(), stop(), and
+    validate_configuration() methods.
     """
 
     __metaclass__ = ABCMeta
@@ -63,6 +63,21 @@ class Monitor(object):
 
         strike = Strike.objects.get(id=self.strike_id)
         strike.get_strike_configuration().load_monitor_configuration(self)
+
+    def run(self):
+        """Runs the monitor until signaled to stop by the stop() method. Sub-classes that override this method should
+        make it block until the stop() method is called and should call reload_configuration() on a regular basis to get
+        updated configuration from the database.
+        """
+
+        pass
+
+    def stop(self):
+        """Signals the monitor to stop running. Sub-classes that override this method should make it stop the run() call
+        as gracefully and quickly as possible.
+        """
+
+        pass
 
     def validate_configuration(self, configuration):
         """Validates the given configuration
