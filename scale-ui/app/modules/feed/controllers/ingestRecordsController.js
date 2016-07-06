@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
         var self = this;
@@ -53,8 +53,8 @@
         self.colDefs = [
             {
                 field: 'file_name',
-                displayName: 'File Name',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><input ng-model="grid.appScope.searchText" ng-change="grid.appScope.refreshData()" class="form-control" placeholder="Search"></div>'
+                displayName: 'Filename',
+                enableFiltering: false
             },
             {
                 field: 'file_size',
@@ -137,6 +137,12 @@
         $scope.gridOptions.onRegisterApi = function (gridApi) {
             //set gridApi on scope
             $scope.gridApi = gridApi;
+            $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                $scope.$apply(function () {
+                    $location.search({});
+                    $location.path('/feed/ingests/' + row.entity.id);
+                });
+            });
             $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                 $scope.ingestsParams.page = currentPage;
                 $scope.ingestsParams.page_size = pageSize;

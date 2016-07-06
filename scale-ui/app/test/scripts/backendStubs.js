@@ -114,6 +114,42 @@
             return returnObj;
         });
 
+        // Source details
+        var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
+        var sourceDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/.*/', 'i');
+        $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
+            // // get the jobType.id from the url
+            // url = url.toString();
+            // var filename = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            // sourceDetailsOverrideUrl = 'test/data/source-details/' + filename + '.json';
+            return getSync(sourceDetailsOverrideUrl);
+        });
+        
+        // Sources
+        var sourcesOverrideUrl = 'test/data/sources.json';
+        var sourcesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/', 'i');
+        $httpBackend.whenGET(sourcesRegex).respond(function (method, url) {
+            //return getSync(sourcesOverrideUrl);
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(sourcesOverrideUrl),
+                sources = JSON.parse(returnObj[1]);
+
+            if (urlParams.file_name && urlParams.file_name.length > 0) {
+                var orders = ['file_name'],
+                    fields = ['asc'];
+
+                sources.results = _.filter(sources.results, function (r) {
+                    return r.file_name.toLowerCase().includes(urlParams.file_name[0].toLowerCase());
+                });
+
+                sources.results = _.sortByOrder(sources.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(sources);
+
+            return returnObj;
+        });
+
         // Job load
         var jobLoadRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'load/', 'i');
         $httpBackend.whenGET(jobLoadRegex).respond(function () {

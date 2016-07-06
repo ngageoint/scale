@@ -27,6 +27,10 @@ STRIKE_CONFIGURATION_SCHEMA = {
             'type': 'string',
             'minLength': 1
         },
+        'sqs_name': {
+            'type': 'string',
+            'minLength': 1
+        },
         'transfer_suffix': {
             'type': 'string',
             'minLength': 1

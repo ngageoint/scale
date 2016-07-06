@@ -63,6 +63,10 @@
                 templateUrl: 'modules/feed/partials/ingestRecordsTemplate.html',
                 reloadOnSearch: false
             })
+            .when('/feed/ingests/:id', {
+                controller: 'ingestRecordDetailsController',
+                templateUrl: 'modules/feed/partials/ingestRecordDetailsTemplate.html'
+            })
             .when('/metrics', {
                 controller: 'metricsController',
                 templateUrl: 'modules/metrics/partials/metricsTemplate.html',

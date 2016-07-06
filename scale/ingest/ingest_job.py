@@ -34,6 +34,12 @@ def perform_ingest(ingest_id, mount):
     # transaction with as few queries as possible, include retries
     ingest = _get_ingest(ingest_id)
     job_exe_id = _get_job_exe_id(ingest)
+
+    # TODO: experimental S3 ingest
+    if ingest.transfer_path == 'sqs':
+        _handle_s3_ingest(ingest, job_exe_id)
+        return
+
     if not os.path.exists(SCALE_INGEST_MOUNT_PATH):
         logger.info('Creating %s', SCALE_INGEST_MOUNT_PATH)
         os.makedirs(SCALE_INGEST_MOUNT_PATH, mode=0755)
@@ -191,3 +197,56 @@ def _set_ingesting_status(ingest, ingest_path, dup_path):
     ingest.ingest_started = timezone.now()
     ingest.save()
     return ingest
+
+
+def _handle_s3_ingest(ingest, job_exe_id):
+    """Handles ingesting a S3 found in an S3 bucket
+
+    :param ingest: The ingest model
+    :type ingest: :class:`ingest.models.Ingest`
+    :param job_exe_id: The job execution ID
+    :type job_exe_id: int
+    """
+
+    logger.info('Performing experimental S3 ingest of %s', ingest.file_name)
+
+    with transaction.atomic():
+        file_name = ingest.file_name
+        # Check for duplicate file, else create new file
+        try:
+            src_file = SourceFile.objects.get(file_name=file_name)
+            # Duplicate files that are deleted should be stored again
+            if not src_file.is_deleted:
+                raise DuplicateFile('\'%s\' already exists' % file_name)
+        except SourceFile.DoesNotExist:
+            src_file = SourceFile()  # New file
+
+        # Add a stable identifier based on the file name
+        src_file.update_uuid(file_name)
+
+        # Add tags and store the new/updated source file
+        for tag in ingest.get_data_type_tags():
+            src_file.add_data_type_tag(tag)
+
+        src_file.file_name = file_name
+        src_file.file_path = ingest.file_path
+        src_file.media_type = ingest.media_type
+        src_file.file_size = ingest.file_size
+        src_file.workspace = ingest.workspace
+        src_file.is_deleted = False
+        src_file.deleted = None
+        src_file.save()
+
+        status = 'INGESTED'
+        logger.info('Marking ingest %i as %s', ingest.id, status)
+        ingest.source_file = src_file
+        ingest.status = status
+        ingest.ingest_started = timezone.now()
+        ingest.ingest_ended = ingest.ingest_started
+        ingest.save()
+        IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)
+
+    try:
+        cleanup_job_exe(job_exe_id)
+    except Exception:
+        logger.exception('Job Execution %i: Error cleaning up', job_exe_id)
