@@ -16,6 +16,7 @@ from ingest.models import Ingest, Strike
 from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
                                 StrikeDetailsSerializer, StrikeSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -241,7 +242,8 @@ class StrikesValidationView(APIView):
 
         # Validate the Strike configuration
         try:
-            warnings = Strike.objects.validate_strike(name, configuration)
+            config = StrikeConfiguration(configuration)
+            warnings = config.validate()
         except InvalidStrikeConfiguration as ex:
             logger.exception('Unable to validate new Strike process: %s', name)
             raise BadParameter(unicode(ex))

@@ -108,6 +108,9 @@ class Command(BaseCommand):
         :param throttle: The minimum delay time in seconds before subsequent reads of the directory
         :type throttle: int
         '''
+
+        # TODO: after creating the monitor to run, make sure to set the strike_id on it
+
         strike_proc = None
 
         # TODO: figure out how to guarantee only one Strike process runs at a time

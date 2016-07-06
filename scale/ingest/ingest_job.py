@@ -30,6 +30,8 @@ def perform_ingest(ingest_id, mount):
     :type mount: string
     """
 
+    # TODO: make sure ingest job has workspace info populated in job configuration
+
     # TODO: refactor to combine _get_ingest(), _get_job_exe_id(), and _set_ingesting_status() in one database
     # transaction with as few queries as possible, include retries
     ingest = _get_ingest(ingest_id)

@@ -416,13 +416,14 @@ class StrikeManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        StrikeConfiguration(configuration)
+        config = StrikeConfiguration(configuration)
+        config.validate()
 
         strike = Strike()
         strike.name = name
         strike.title = title
         strike.description = description
-        strike.configuration = configuration
+        strike.configuration = config.get_dict()
         strike.save()
 
         strike_type = self.get_strike_job_type()
@@ -462,6 +463,7 @@ class StrikeManager(models.Manager):
         # Validate the configuration, no exception is success
         if configuration:
             config = StrikeConfiguration(configuration)
+            config.validate()
             strike.configuration = config.get_dict()
 
         # Update editable fields
@@ -525,37 +527,6 @@ class StrikeManager(models.Manager):
         """
 
         return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
-
-    def validate_strike(self, name, configuration):
-        """Validates a new Strike process prior to attempting a save
-
-        :param name: The identifying name of a Strike process to validate
-        :type name: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
-
-        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
-            invalid.
-        """
-        warnings = []
-
-        # Validate the configuration, no exception is success
-        StrikeConfiguration(configuration)
-
-        # Check for issues when changing an existing Strike configuration
-        try:
-            strike = Strike.objects.get(name=name)
-
-            if (configuration['mount'] and strike.configuration['mount'] and
-                    configuration['mount'] != strike.configuration['mount']):
-                warnings.append(ValidationWarning('mount_change',
-                                                  'Changing the mount path may disrupt file monitoring.'))
-        except Strike.DoesNotExist:
-            pass
-
-        return warnings
 
 
 class Strike(models.Model):

@@ -1,6 +1,7 @@
 """Defines the configuration for running an instance of Strike"""
 from __future__ import unicode_literals
 
+import logging
 import os
 import re
 
@@ -9,7 +10,13 @@ from jsonschema.exceptions import ValidationError
 
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration_1_0 import StrikeConfiguration as StrikeConfiguration_1_0
+from ingest.strike.handlers.file_handler import FileHandler
+from ingest.strike.handlers.file_rule import FileRule
+from ingest.strike.monitors import factory
 from storage.models import Workspace
+
+
+logger = logging.getLogger(__name__)
 
 
 CURRENT_VERSION = '2.0'
@@ -88,6 +95,7 @@ class ValidationWarning(object):
         self.details = details
 
 
+# TODO: unit tests
 class StrikeConfiguration(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
@@ -126,19 +134,20 @@ class StrikeConfiguration(object):
                 raise InvalidStrikeConfiguration(msg)
             file_dict['new_workspace_path'] = os.path.normpath(file_dict['new_workspace_path'])
 
-        # Build a mapping of required workspaces
-        self._workspace_map = self._get_workspace_map(self._configuration['files_to_ingest'])
-
-        # Compile and organize regular expressions
-        self.file_regex_entries = []  # List of (regex pattern, list of data types, workspace path, workspace)
+        self._file_handler = FileHandler()
         for file_dict in self._configuration['files_to_ingest']:
             try:
                 regex_pattern = re.compile(file_dict['filename_regex'])
             except re.error:
                 raise InvalidStrikeConfiguration('Invalid file name regex: %s' % file_dict['filename_regex'])
-            regex_tuple = (regex_pattern, file_dict['data_types'], file_dict['workspace_path'],
-                           self._workspace_map[file_dict['workspace_name']])
-            self.file_regex_entries.append(regex_tuple)
+            new_workspace = None
+            if 'new_workspace' in file_dict:
+                new_workspace = file_dict['new_workspace']
+            new_workspace_path = None
+            if 'new_workspace_path' in file_dict:
+                new_workspace_path = file_dict['new_workspace_path']
+            rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_workspace_path)
+            self._file_handler.add_rule(rule)
 
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
@@ -149,39 +158,66 @@ class StrikeConfiguration(object):
 
         return self._configuration
 
-    def get_mount(self):
-        """Returns the "mount" value
+    def get_monitor(self):
+        """Returns the configured monitor for this Strike configuration
 
-        :returns: The mount value
-        :rtype: str
+        :returns: The configured monitor
+        :rtype: :class:`ingest.strike.monitors.monitor.Monitor`
         """
 
-        return self._configuration['mount']
+        monitor_type = self._configuration['monitor']['type']
+        monitor = factory.get_monitor(monitor_type)
+        self.load_monitor_configuration(monitor)
+        return monitor
 
-    def get_transfer_suffix(self):
-        """Returns the "transfer_suffix" value
+    def load_monitor_configuration(self, monitor):
+        """Loads the configuration into the given monitor
 
-        :returns: The transfer_suffix value
-        :rtype: str
+        :param monitor: The configuration as a dictionary
+        :type monitor: :class:`ingest.strike.monitors.monitor.Monitor`
         """
 
-        return self._configuration['transfer_suffix']
+        monitor_dict = self._configuration['monitor']
+        monitor_type = monitor_dict['type']
+        workspace = self._configuration['workspace']
 
-    def match_file_name(self, file_name):
-        """Attempts to match the given file name against this configuration and if a match is made, returns the details
-        about how to ingest the file. If no match is found, None is returned
+        # Only load configuration if monitor type is unchanged
+        if monitor_type == monitor.monitor_type:
+            monitor.load_configuration(monitor_dict, workspace, self._file_handler)
+        else:
+            msg = 'Strike monitor type has been changed from %s to %s. Cannot reload configuration.'
+            logger.warning(msg, monitor.monitor_type, monitor_type)
 
-        :param file_name: The name of the file
-        :type file_name: str
-        :returns: A tuple of the list of data types to add to the file, the remote path for storing the file within the
-            workspace, and the workspace, or None if no file name match is found
-        :rtype: tuple(list of str, str, :class:`storage.models.Workspace`)
+    def validate(self):
+        """Validates the Strike configuration
+
+        :returns: A list of warnings discovered during validation
+        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+
+        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
+            invalid.
         """
 
-        for regex_entry in self.file_regex_entries:
-            if regex_entry[0].match(file_name):
-                return regex_entry[1], regex_entry[2], regex_entry[3]
-        return None
+        warnings = []
+
+        monitor_type = self._configuration['monitor']['type']
+        if monitor_type not in factory.get_monitor_types():
+            raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
+
+        workspace_names = {self._configuration['workspace']}
+        for rule in self._file_handler.rules:
+            if rule.new_workspace:
+                workspace_names.add(rule.new_workspace)
+
+        for workspace in Workspace.objects.filter(name__in=workspace_names):
+            if not workspace.is_active:
+                raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
+            workspace_names.remove(workspace.name)
+
+        if workspace_names:
+            raise InvalidStrikeConfiguration('Unknown workspace name: %s' % workspace_names.pop())
+
+        return warnings
 
     def _convert_schema(self, configuration):
         """Tries to validate the configuration as version 1.0 and convert it to version 2.0
@@ -194,12 +230,32 @@ class StrikeConfiguration(object):
 
         # Try converting from 1.0
         converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
-
         converted_configuration['version'] = CURRENT_VERSION
 
+        mount = converted_configuration['mount']
+        mount_path = mount.split(':')[1]
+        transfer_suffix = converted_configuration['transfer_suffix']
+        del converted_configuration['mount']
+        del converted_configuration['transfer_suffix']
+        auto_workspace_name = 'auto_workspace_for_%s' % mount.replace(':', '_').replace('/', '_')
+        try:
+            Workspace.objects.get(name=auto_workspace_name)
+        except Workspace.DoesNotExist:
+            workspace = Workspace()
+            workspace.name = auto_workspace_name
+            workspace.title = 'Auto Workspace for %s' % mount
+            desc = 'This workspace was automatically created for mount %s to support converting Strike from 1.0 to 2.0'
+            workspace.description = desc % mount
+            workspace.json_config = '{"version": "1.0", "broker": {"type": "host", "host_path": %s}}' % mount_path
+            workspace.save()
+
+        converted_configuration['workspace'] = auto_workspace_name
+        converted_configuration['monitor'] = {'type': 'dir-watcher', 'transfer_suffix': transfer_suffix}
         for file_dict in converted_configuration['files_to_ingest']:
-            pass
-        # TODO:
+            file_dict['new_workspace'] = file_dict['workspace_name']
+            file_dict['new_workspace_path'] = file_dict['workspace_path']
+            del file_dict['new_workspace']
+            del file_dict['new_workspace_path']
 
         return converted_configuration
 
@@ -212,25 +268,3 @@ class StrikeConfiguration(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []
-
-    def _get_workspace_map(self, configuration):
-        """Builds a mapping for a workspace and configuration of name to model instance.
-
-        :param configuration: A list of configurations that specify system names of models to fetch and map.
-        :type configuration: list[dict]
-        :returns: A mapping of workspace system names to associated model instances.
-        :rtype: dict[string, :class:`storage.models.Workspace`]
-        """
-
-        # Build a mapping of required workspaces
-        results = {file_dict['workspace_name']: None for file_dict in configuration}
-        for workspace in Workspace.objects.filter(name__in=results.keys):
-            if not workspace.is_active:
-                raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
-            results[workspace.name] = workspace
-
-        # Check for any missing workspace model declarations
-        for name, workspace in results.iteritems():
-            if not workspace:
-                raise InvalidStrikeConfiguration('Unknown workspace reference: %s' % name)
-        return results
