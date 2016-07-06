@@ -608,65 +608,6 @@ mount an NFS volume into the task container</p>
 <span id="storage-brokers-s3-broker-module"></span><h2>storage.brokers.s3_broker module<a class="headerlink" href="#module-storage.brokers.s3_broker" title="Permalink to this headline">¶</a></h2>
 <p>Defines an S3 broker that utilizes the Amazon Web Services Simple Storage Service (S3) as its storage system</p>
 <dl class="class">
-<dt id="storage.brokers.s3_broker.BrokerConnection">
-<em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">BrokerConnection</code><span class="sig-paren">(</span><em>credentials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Manages automatically opening and closing connections to the S3 service.</p>
-<dl class="method">
-<dt id="storage.brokers.s3_broker.BrokerConnection.get_bucket">
-<code class="descname">get_bucket</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection.get_bucket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a reference to an S3 bucket with the given identifier.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
-<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the bucket actually exists.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The bucket object for the given name.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto.s3.bucket.Bucket</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <code class="xref py py-class docutils literal"><span class="pre">boto.exceptions.S3ResponseError</span></code>: If the bucket fails to validate.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.brokers.s3_broker.BrokerConnection.get_key">
-<code class="descname">get_key</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>key_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.BrokerConnection.get_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a reference to an S3 key with the given identifier.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
-<li><strong>key_name</strong> (<em>string</em>) &#8211; The unique name of the key to retrieve that is associated with a file. None indicates a new
-key should be created within the given bucket.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The key object for the given name.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto.s3.key.Key</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <code class="xref py py-class docutils literal"><span class="pre">boto.exceptions.S3ResponseError</span></code>: If the bucket fails to validate.
-:raises <a class="reference internal" href="storage.html#storage.exceptions.FileDoesNotExist" title="storage.exceptions.FileDoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.FileDoesNotExist</span></code></a>: If the file is not found in the bucket.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="storage.brokers.s3_broker.S3Broker">
 <em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">S3Broker</code><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></p>
@@ -705,6 +646,65 @@ key should be created within the given bucket.</li>
 <dt id="storage.brokers.s3_broker.S3Broker.validate_configuration">
 <code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.validate_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.validate_configuration" title="storage.brokers.broker.Broker.validate_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.validate_configuration()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.brokers.s3_broker.S3Client">
+<em class="property">class </em><code class="descclassname">storage.brokers.s3_broker.</code><code class="descname">S3Client</code><span class="sig-paren">(</span><em>credentials=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Manages automatically creating and destroying clients to the S3 service.</p>
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Client.get_bucket">
+<code class="descname">get_bucket</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Client.get_bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 bucket with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the bucket actually exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The bucket object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto3.s3.Bucket</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">botocore.exceptions.ClientError</span></code>: If the bucket fails to validate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.s3_broker.S3Client.get_object">
+<code class="descname">get_object</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>key_name</em>, <em>validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Client.get_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 object with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>key_name</strong> (<em>string</em>) &#8211; The unique name of the object to retrieve that is associated with a file.</li>
+<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the object actually exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The S3 object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto3.s3.Object</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">botocore.exceptions.ClientError</span></code>: If the request is invalid.
+:raises <a class="reference internal" href="storage.html#storage.exceptions.FileDoesNotExist" title="storage.exceptions.FileDoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.FileDoesNotExist</span></code></a>: If the file is not found in the bucket.</p>
 </dd></dl>
 
 </dd></dl>
