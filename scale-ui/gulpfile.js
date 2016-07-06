@@ -19,7 +19,7 @@ var gulp = require('gulp'),
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
-    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/modules/**/*.spec.js'],
+    scripts: ['./app/modules/**/*.js', './app/scripts/**/*.js', '!./app/scripts/angular-ui-grid/*.js', '!./app/modules/**/*.spec.js'],
     html: ['./app/modules/**/*.html'],
     images: ['./app/images/**/*'],
     fonts: ['./app/fonts/**/*'],
@@ -63,8 +63,12 @@ gulp.task('bower', ['clean'], function () {
     var jsFilter = gulpFilter('*.js', {restore: true});
     var cssFilter = gulpFilter(['*.css','*.less'], {restore: true});
     var imageFilter = gulpFilter(['*.jpg','*.png'], {restore: true});
+    var sourceFiles = mainBowerFiles();
 
-    return gulp.src(mainBowerFiles())
+    sourceFiles.push('./app/scripts/angular-ui-grid/ui-grid.js');
+    sourceFiles.push('./app/scripts/angular-ui-grid/ui-grid.css');
+
+    return gulp.src(sourceFiles)
         // js
         .pipe(jsFilter)
         .pipe(sourcemaps.init())
@@ -131,7 +135,7 @@ gulp.task('glyphicons', ['clean'], function () {
 });
 
 gulp.task('ui-grid', ['clean'], function () {
-    return gulp.src('./app/bower_components/angular-ui-grid/**/*.{otf,eot,woff,woff2,svg,ttf}')
+    return gulp.src('./app/scripts/angular-ui-grid/**/*.{otf,eot,woff,woff2,svg,ttf}')
         .pipe(gulp.dest('./build/stylesheets'));
 });
 
