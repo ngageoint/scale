@@ -2,14 +2,16 @@
     'use strict';
 
     angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, navService, nodeService) {
-        $scope.nodeCounts = [];
-        $scope.loading = true;
-        $scope.hourValue = 3;
-        $scope.nodesError = null;
-        $scope.nodesErrorStatus = null;
-        $scope.nodeStatusError = null;
-        $scope.nodeStatusErrorStatus = null;
-        $scope.nodeData = {
+        var vm = this;
+        
+        vm.nodeCounts = [];
+        vm.loading = true;
+        vm.hourValue = 3;
+        vm.nodesError = null;
+        vm.nodesErrorStatus = null;
+        vm.nodeStatusError = null;
+        vm.nodeStatusErrorStatus = null;
+        vm.nodeData = {
             data: null,
             status: null
         };
@@ -25,36 +27,36 @@
             }, 500);
         };
 
-        $scope.redrawGrid = function () {
-            debounceBroadcast('redrawGrid', $scope.nodeData);
+        vm.redrawGrid = function () {
+            debounceBroadcast('redrawGrid', vm.nodeData);
         };
 
         var getNodes = function () {
             nodeService.getNodes().then(null, null, function (data) {
                 if (data.$resolved) {
-                    $scope.nodesError = null;
-                    $scope.nodeData.data = data.results;
-                    $scope.redrawGrid();
+                    vm.nodesError = null;
+                    vm.nodeData.data = data.results;
+                    vm.redrawGrid();
                 } else {
                     if (data.statusText && data.statusText !== '') {
-                        $scope.nodesErrorStatus = data.statusText;
+                        vm.nodesErrorStatus = data.statusText;
                     }
-                    $scope.nodesError = 'Unable to retrieve nodes.';
+                    vm.nodesError = 'Unable to retrieve nodes.';
                 }
             });
         };
 
         var getNodeStatus = function () {
-            nodeService.getNodeStatus(null, null, 'PT' + $scope.hourValue + 'H', null).then(null, null, function (data) {
+            nodeService.getNodeStatus(null, null, 'PT' + vm.hourValue + 'H', null).then(null, null, function (data) {
                 if (data.$resolved) {
-                    $scope.nodeStatusError = null;
-                    $scope.nodeData.status = data.results;
-                    $scope.redrawGrid();
+                    vm.nodeStatusError = null;
+                    vm.nodeData.status = data.results;
+                    vm.redrawGrid();
                 } else {
                     if (data.statusText && data.statusText !== '') {
-                        $scope.nodeStatusErrorStatus = data.statusText;
+                        vm.nodeStatusErrorStatus = data.statusText;
                     }
-                    $scope.nodeStatusError = 'Unable to retrieve node status.';
+                    vm.nodeStatusError = 'Unable to retrieve node status.';
                 }
             });
         };
@@ -63,7 +65,7 @@
             getNodes();
             getNodeStatus();
             _.defer(function () {
-                $scope.loading = false;
+                vm.loading = false;
             });
             navService.updateLocation('nodes');
         };

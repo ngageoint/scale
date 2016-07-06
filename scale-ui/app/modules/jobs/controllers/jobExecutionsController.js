@@ -1,124 +1,263 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobExecutionsController', function($scope, $location, navService, statsService, jobExecutionService, jobTypeService, uiGridConstants, scaleConfig, subnavService) {
+    angular.module('scaleApp').controller('jobExecutionsController', function ($scope, $location, navService, stateService, gridFactory, userService, jobExecutionService, jobTypeService, uiGridConstants, scaleConfig, subnavService) {
+        subnavService.setCurrentPath('jobs');
 
-        $scope.jobExecutions = [];
-        $scope.loading = true;
-        $scope.jobTypeValues = [];
-        $scope.selectedJobType = '';
-        $scope.jobStatus = scaleConfig.jobStatus;
-        $scope.selectedJobStatus = '';
-        $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
-        subnavService.setCurrentPath('jobs/executions');
+        var vm = this,
+            jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
-        var gridFilter = {},
-            gridPageNumber = 1;
+        vm.jobExecutionsParams = stateService.getJobExecutionsParams();
 
-        $scope.gridOptions = {
-            enableRowSelection: true,
-            enableRowHeaderSelection: false,
-            enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-            multiSelect: false,
-            enableFiltering: true,
-            useExternalFiltering: true,
-            enableSorting: true,
-            minRowsToShow: 17,
-            paginationPageSizes: [25,50,75],
-            paginationPageSize: 25,
-            useExternalPagination: true,
-            columnDefs: [
-                {
-                    field: 'jobTypeId',
-                    displayName: 'Job Type',
-                    cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.getIcon()"></span> {{ row.entity.job.jobType.title }}</div>',
-                    filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobType"><option value="{{ grid.appScope.jobTypeValues[$index].id }}" ng-repeat="jobType in grid.appScope.jobTypeValues track by $index">{{ grid.appScope.jobTypeValues[$index].name }} {{ grid.appScope.jobTypeValues[$index].version }}</option></select>'
-                },
-                { field: 'created', enableFiltering: false, cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'' },
-                { field: 'lastModified', enableFiltering: false, cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'' },
-                {
-                    field: 'status',
-                    filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.selectedJobStatus"><option ng-repeat="status in grid.appScope.jobStatus track by $index">{{ status.toUpperCase() }}</option></select>'
-                },
-                { field: 'id', displayName: 'ID', enableFiltering: false }
-            ],
-            data: [],
-            onRegisterApi: function (gridApi) {
-                //set gridApi on scope
-                $scope.gridApi = gridApi;
-                $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                    $scope.$apply(function () {
-                        //$location.path('/jobexecutions/' + row.entity.id);
-                        console.log(row);
-                    });
-                });
-                $scope.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                    $scope.getPage(currentPage, pageSize);
-                });
-            }
+        vm.stateService = stateService;
+        vm.loading = true;
+        vm.readonly = true;
+        vm.jobTypeValues = [jobTypeViewAll];
+        vm.jobExecution = null;
+        vm.selectedJobType = vm.jobExecutionsParams.job_type_id ? vm.jobExecutionsParams.job_type_id : jobTypeViewAll;
+        vm.jobStatusValues = scaleConfig.jobStatus;
+        vm.selectedJobStatus = vm.jobExecutionsParams.status || vm.jobStatusValues[0];
+        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.actionClicked = false;
+        vm.lastModifiedStart = moment.utc(vm.jobExecutionsParams.started).toDate();
+        vm.lastModifiedStartPopup = {
+            opened: false
         };
+        vm.openLastModifiedStartPopup = function ($event) {
+            $event.stopPropagation();
+            vm.lastModifiedStartPopup.opened = true;
+        };
+        vm.lastModifiedStop = moment.utc(vm.jobExecutionsParams.ended).toDate();
+        vm.lastModifiedStopPopup = {
+            opened: false
+        };
+        vm.openLastModifiedStopPopup = function ($event) {
+            $event.stopPropagation();
+            vm.lastModifiedStopPopup.opened = true;
+        };
+        vm.dateModelOptions = {
+            timezone: '+000'
+        };
+        vm.gridOptions = gridFactory.defaultGridOptions();
+        vm.gridOptions.paginationCurrentPage = vm.jobExecutionsParams.page || 1;
+        vm.gridOptions.paginationPageSize = vm.jobExecutionsParams.page_size || vm.gridOptions.paginationPageSize;
+        vm.gridOptions.data = [];
 
-        $scope.$watch('selectedJobType', function (value) {
-            if (!$scope.loading) {
-                gridFilter.jobTypeId = value;
-                $scope.getPage(gridPageNumber, $scope.gridOptions.paginationPageSize, gridFilter);
+        var filteredByJobType = vm.jobExecutionsParams.job_type_id ? true : false,
+            filteredByJobStatus = vm.jobExecutionsParams.status ? true : false,
+            filteredByOrder = vm.jobExecutionsParams.order ? true : false;
+
+        vm.colDefs = [
+            {
+                field: 'job_type',
+                displayName: 'Job Type',
+                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title + \' \' + jobType.version) for jobType in grid.appScope.vm.jobTypeValues"></select></div>'
+            },
+            {
+                field: 'created',
+                displayName: 'Created (Z)',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.created_formatted }}</div>'
+            },
+            {
+                field: 'last_modified',
+                displayName: 'Last Modified (Z)',
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
+            },
+            {
+                field: 'duration',
+                enableFiltering: false,
+                enableSorting: false,
+                width: 120,
+                cellTemplate: '<div class="ui-grid-cell-contents text-right">{{ row.entity.getDuration() }}</div>'
+            },
+            {
+                field: 'status',
+                width: 150,
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><button ng-show="((!grid.appScope.vm.readonly) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.vm.requeueJobs({ job_ids: [row.entity.id] })" class="btn btn-xs btn-default" title="Requeue Job"><i class="fa fa-repeat"></i></button> <button ng-show="!grid.appScope.vm.readonly && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.vm.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job"><i class="fa fa-ban"></i></button></div> {{ row.entity.status }}</div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobStatus"><option ng-selected="{{ grid.appScope.vm.jobStatusValues[$index] == grid.appScope.vm.selectedJobStatus }}" value="{{ grid.appScope.vm.jobStatusValues[$index] }}" ng-repeat="status in grid.appScope.vm.jobStatusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
+            },
+            {
+                field: 'id',
+                displayName: 'Log',
+                enableFiltering: false,
+                sortable: false,
+                width: 60,
+                cellTemplate: '<div class="ui-grid-cell-contents text-center"><button ng-click="grid.appScope.vm.showLog(row.entity)" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i></button></div>'
             }
-        });
+        ];
 
-        $scope.$watch('selectedJobStatus', function (value) {
-            if (!$scope.loading) {
-                gridFilter.jobStatus = value;
-                $scope.getPage(gridPageNumber, $scope.gridOptions.paginationPageSize, gridFilter);
-            }
-        });
-
-        $scope.getPage = function (pageNumber, pageSize) {
-            $scope.loading = true;
-            gridPageNumber = pageNumber;
-            jobExecutionService.getJobExecutions(pageNumber, pageSize, gridFilter).then(function (data) {
-                var newData = [];
-                for (var i = 0; i < $scope.gridOptions.paginationPageSize; i++) {
-                    if (data.executions[i]) {
-                        newData.push(data.executions[i]);
-                    }
-                }
-                $scope.gridOptions.data = newData;
-                $scope.gridOptions.totalItems = data.count;
+        vm.getJobExecutions = function () {
+            jobExecutionService.getJobExecutions(vm.jobExecutionsParams).then(function (data) {
+                vm.gridOptions.totalItems = data.count;
+                vm.gridOptions.minRowsToShow = data.results.length;
+                vm.gridOptions.virtualizationThreshold = data.results.length;
+                vm.gridOptions.data = data.results;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
-                $scope.loading = false;
+                vm.loading = false;
             });
         };
 
-        var getJobExecutions = function () {
-            jobExecutionService.getJobExecutions(gridPageNumber, $scope.gridOptions.paginationPageSize, gridFilter).then(function (data) {
-                window.localStorage['scale-jobexecutions-time'] = moment.utc().toISOString();
-                window.localStorage['scale-jobexecutions'] = JSON.stringify(data);
-                $scope.gridOptions.totalItems = data.count;
-                $scope.gridOptions.data = data.executions;
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
-                getJobTypes();
-            });
-        };
-
-        var getJobTypes = function () {
+        vm.getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
-                $scope.jobTypeValues = data.results;
-                $scope.jobTypeValues.unshift({ name: '', version: '', id: null });
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
-                $scope.loading = false;
+                vm.jobTypeValues.push(data.results);
+                vm.jobTypeValues = _.flatten(vm.jobTypeValues);
+                vm.selectedJobType = _.find(vm.jobTypeValues, { id: vm.jobExecutionsParams.job_type_id }) || jobTypeViewAll;
+                vm.getJobExecutions();
+            }).catch(function () {
+                vm.loading = false;
             });
         };
 
-        var initialize = function() {
-            getJobExecutions();
-            navService.updateLocation('jobs');
+        vm.showLog = function (jobExecution) {
+            // show log modal
+            vm.actionClicked = true;
+            vm.jobExecution = jobExecution;
+            $uibModal.open({
+                animation: true,
+                templateUrl: 'showLog.html',
+                scope: $scope,
+                size: 'lg',
+                windowClass: 'log-modal-window'
+            });
         };
-        initialize();
+
+        vm.filterResults = function () {
+            stateService.setJobsParams(vm.jobExecutionsParams);
+            vm.loading = true;
+            vm.getJobs();
+        };
+
+        vm.updateColDefs = function () {
+            vm.gridOptions.columnDefs = gridFactory.applySortConfig(vm.colDefs, vm.jobExecutionsParams);
+        };
+
+        vm.updateJobOrder = function (sortArr) {
+            vm.jobExecutionsParams.order = sortArr.length > 0 ? sortArr : null;
+            filteredByOrder = sortArr.length > 0;
+            vm.filterResults();
+        };
+
+        vm.updateJobType = function (value) {
+            if (value.id !== vm.jobExecutionsParams.job_type_id) {
+                vm.jobExecutionsParams.page = 1;
+            }
+            vm.jobExecutionsParams.job_type_id = value.id === 0 ? null : value.id;
+            vm.jobExecutionsParams.page_size = vm.gridOptions.paginationPageSize;
+            if (!vm.loading) {
+                vm.filterResults();
+            }
+        };
+
+        vm.updateJobStatus = function (value) {
+            if (value != vm.jobExecutionsParams.status) {
+                vm.jobExecutionsParams.page = 1;
+            }
+            vm.jobExecutionsParams.status = value === 'VIEW ALL' ? null : value;
+            vm.jobExecutionsParams.page_size = vm.gridOptions.paginationPageSize;
+            if (!vm.loading) {
+                vm.filterResults();
+            }
+        };
+
+        vm.gridOptions.onRegisterApi = function (gridApi) {
+            //set gridApi on scope
+            vm.gridApi = gridApi;
+            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                if (vm.actionClicked) {
+                    vm.actionClicked = false;
+                } else {
+                    $location.path('/jobs/job/' + row.entity.id);
+                }
+            });
+            vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
+                vm.jobExecutionsParams.page = currentPage;
+                vm.jobExecutionsParams.page_size = pageSize;
+                vm.filterResults();
+            });
+            vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                _.forEach(vm.gridApi.grid.columns, function (col) {
+                    col.colDef.sort = col.sort;
+                });
+                stateService.setJobsColDefs(vm.gridApi.grid.options.columnDefs);
+                var sortArr = [];
+                _.forEach(sortColumns, function (col) {
+                    sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
+                });
+                vm.updateJobOrder(sortArr);
+            });
+        };
+
+        vm.initialize = function () {
+            stateService.setJobExecutionsParams(vm.jobExecutionsParams);
+            vm.updateColDefs();
+            var user = userService.getUserCreds();
+            vm.readonly = !(user && user.is_admin);
+            vm.getJobTypes();
+            navService.updateLocation('jobs/executions');
+        };
+
+        vm.initialize();
+
+        $scope.$watch('vm.selectedJobType', function (value) {
+            if (parseInt(value)) {
+                value = _.find(vm.jobTypeValues, {id: parseInt(value)});
+            }
+            if (value) {
+                if (vm.loading) {
+                    if (filteredByJobType) {
+                        vm.updateJobType(value);
+                    }
+                } else {
+                    filteredByJobType = !angular.equals(value, jobTypeViewAll);
+                    vm.updateJobType(value);
+                }
+            }
+        });
+
+        $scope.$watch('vm.selectedJobStatus', function (value) {
+            if (vm.loading) {
+                if (filteredByJobStatus) {
+                    vm.updateJobStatus(value);
+                }
+            } else {
+                filteredByJobStatus = value !== 'VIEW ALL';
+                vm.updateJobStatus(value);
+            }
+        });
+
+        $scope.$watch('vm.lastModifiedStart', function (value) {
+            if (!vm.loading) {
+                vm.jobExecutionsParams.started = value.toISOString();
+                vm.filterResults();
+            }
+        });
+
+        $scope.$watch('vm.lastModifiedStop', function (value) {
+            if (!vm.loading) {
+                vm.jobExecutionsParams.ended = value.toISOString();
+                vm.filterResults();
+            }
+        });
+
+        $scope.$watchCollection('vm.stateService.getJobsColDefs()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.colDefs = newValue;
+            vm.updateColDefs();
+        });
+
+        $scope.$watchCollection('vm.stateService.getJobsParams()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.jobExecutionsParams = newValue;
+            vm.updateColDefs();
+        });
     });
 })();

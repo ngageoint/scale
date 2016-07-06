@@ -39,6 +39,7 @@
         $routeProvider
             .when('/', {
                 controller: 'ovController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/overview/partials/ovTemplate.html'
             })
             .when('/admin/login',{
@@ -72,15 +73,18 @@
             })
             .when('/metrics', {
                 controller: 'metricsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/metrics/partials/metricsTemplate.html',
                 reloadOnSearch: false
             })
             .when('/nodes', {
                 controller: 'nodesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/nodes/partials/nodesTemplate.html'
             })
             .when('/nodes/:id', {
                 controller: 'nodeDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/nodes/partials/nodeDetailsTemplate.html'
             })
             .when('/load/queued', {
@@ -95,6 +99,7 @@
             })
             .when('/load/depth', {
                 controller: 'loadDepthController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/load/partials/loadDepthTemplate.html'
             })
             .when('/recipes', {
@@ -143,6 +148,7 @@
             })
             .when('/jobs/executions', {
                 controller: 'jobExecutionsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobExecutionsTemplate.html'
             })
             .when('/jobs/executions/:id', {

@@ -2,59 +2,59 @@
     'use strict';
 
     angular.module('scaleApp').controller('metricsController', function ($scope, $location, scaleConfig, scaleService, navService, metricsService, moment) {
-        var chart = null,
+        var vm = this,
+            chart = null,
             colArr = [],
             colNames = {},
             xArr = [],
             removeIds = [],
-            yUnits = [],
-            self = this;
+            yUnits = [];
 
-        $scope._ = _;
-        $scope.moment = moment;
-        $scope.loadingMetrics = false;
-        $scope.chartArr = [];
-        $scope.chartData = [];
-        $scope.chartStyle = '';
-        $scope.selectedDataType = {};
-        $scope.inputStartDate = moment.utc().subtract(1, 'M').toDate();
-        $scope.inputEndDate = moment.utc().toDate();
-        $scope.openInputStart = function ($event) {
+        vm._ = _;
+        vm.moment = moment;
+        vm.loadingMetrics = false;
+        vm.chartArr = [];
+        vm.chartData = [];
+        vm.chartStyle = '';
+        vm.selectedDataType = {};
+        vm.inputStartDate = moment.utc().subtract(1, 'M').toDate();
+        vm.inputEndDate = moment.utc().toDate();
+        vm.openInputStart = function ($event) {
             $event.stopPropagation();
-            $scope.inputStartOpened = true;
+            vm.inputStartOpened = true;
         };
-        $scope.inputStartOpened = false;
-        $scope.openInputEnd = function ($event) {
+        vm.inputStartOpened = false;
+        vm.openInputEnd = function ($event) {
             $event.stopPropagation();
-            $scope.inputEndOpened = true;
+            vm.inputEndOpened = true;
         };
-        $scope.inputEndOpened = false;
-        $scope.dateModelOptions = {
+        vm.inputEndOpened = false;
+        vm.dateModelOptions = {
             timezone: '+000'
         };
-        $scope.dataTypeFilterText = '';
-        $scope.filtersApplied = [];
-        $scope.filteredChoices = [];
-        $scope.filteredChoicesOptions = [];
-        $scope.selectedMetrics = [];
-        $scope.columnGroupsOptions = [];
-        $scope.columns = [];
-        $scope.groups = [];
-        $scope.chartTitle = '';
-        $scope.chartDisplay = 'stacked';
-        $scope.stackedClass = 'btn-primary';
-        $scope.groupedClass = 'btn-default';
-        $scope.subchartClass = 'btn-primary';
-        $scope.subchartEnabled = false;
-        $scope.chartType = 'bar';
-        $scope.chartTypeDisplay = 'Bar';
-        $scope.barClass = 'btn-primary';
-        $scope.areaClass = 'btn-default';
-        $scope.lineClass = 'btn-default';
-        $scope.splineClass = 'btn-default';
-        $scope.scatterClass = 'btn-default';
+        vm.dataTypeFilterText = '';
+        vm.filtersApplied = [];
+        vm.filteredChoices = [];
+        vm.filteredChoicesOptions = [];
+        vm.selectedMetrics = [];
+        vm.columnGroupsOptions = [];
+        vm.columns = [];
+        vm.groups = [];
+        vm.chartTitle = '';
+        vm.chartDisplay = 'stacked';
+        vm.stackedClass = 'btn-primary';
+        vm.groupedClass = 'btn-default';
+        vm.subchartClass = 'btn-primary';
+        vm.subchartEnabled = false;
+        vm.chartType = 'bar';
+        vm.chartTypeDisplay = 'Bar';
+        vm.barClass = 'btn-primary';
+        vm.areaClass = 'btn-default';
+        vm.lineClass = 'btn-default';
+        vm.splineClass = 'btn-default';
+        vm.scatterClass = 'btn-default';
 
-        self.getPlotDataParams = function (obj) {
+        vm.getPlotDataParams = function (obj) {
             return {
                 page: null,
                 page_size: null,
@@ -67,37 +67,37 @@
             };
         };
 
-        self.resetSelections = function () {
-            $scope.inputStartDate = moment.utc().subtract(1, 'M').toDate();
-            $scope.inputEndDate = moment.utc().toDate();
-            $scope.selectedDataType = {};
-            $scope.changeDataTypeSelection();
+        vm.resetSelections = function () {
+            vm.inputStartDate = moment.utc().subtract(1, 'M').toDate();
+            vm.inputEndDate = moment.utc().toDate();
+            vm.selectedDataType = {};
+            vm.changeDataTypeSelection();
         };
 
-        self.updateChart = function () {
-            $scope.chartData = [];
-            if ($scope.chartArr.length === 0) {
+        vm.updateChart = function () {
+            vm.chartData = [];
+            if (vm.chartArr.length === 0) {
                 // nothing to show on chart
                 chart.destroy();
                 chart = null;
             } else {
-                var callInit = _.after($scope.chartArr.length, function () {
+                var callInit = _.after(vm.chartArr.length, function () {
                     // only initChart after this function has been called for all datasets in chartArr
-                    $scope.loadingMetrics = false;
-                    self.initChart();
+                    vm.loadingMetrics = false;
+                    vm.initChart();
                 });
 
-                _.forEach($scope.chartArr, function (obj) {
-                    var params = self.getPlotDataParams(obj);
+                _.forEach(vm.chartArr, function (obj) {
+                    var params = vm.getPlotDataParams(obj);
                     metricsService.getPlotData(params).then(function (data) {
                     //metricsService.getGeneratedPlotData({query: obj, params: params}).then(function (data) {
-                        $scope.chartData.push({
+                        vm.chartData.push({
                             query: obj,
                             results: data.results
                         });
                         callInit();
                     }).catch(function (error) {
-                        $scope.loadingMetrics = false;
+                        vm.loadingMetrics = false;
                         console.log(error);
                         toastr['error'](error);
                     });
@@ -105,142 +105,142 @@
             }
         };
 
-        $scope.addToChart = function () {
-            $scope.chartArr = []; // comment this out if allowing multiple adds
-            $scope.loadingMetrics = true;
+        vm.addToChart = function () {
+            vm.chartArr = []; // comment this out if allowing multiple adds
+            vm.loadingMetrics = true;
             var filteredChoices = [],
                 selectedColumns = [];
             // find the filter object associated with the chosen filter IDs
-            _.forEach($scope.filtersApplied, function (id) {
-                filteredChoices.push(_.find($scope.filteredChoices, { id: parseInt(id) }));
+            _.forEach(vm.filtersApplied, function (id) {
+                filteredChoices.push(_.find(vm.filteredChoices, { id: parseInt(id) }));
             });
-            if (angular.isArray($scope.selectedMetrics)) {
-                _.forEach($scope.selectedMetrics, function (metric) {
-                    selectedColumns.push(_.find($scope.columns, { name: metric }));
+            if (angular.isArray(vm.selectedMetrics)) {
+                _.forEach(vm.selectedMetrics, function (metric) {
+                    selectedColumns.push(_.find(vm.columns, { name: metric }));
                 });
             } else {
-                selectedColumns.push(_.find($scope.columns, { name: $scope.selectedMetrics }));
+                selectedColumns.push(_.find(vm.columns, { name: vm.selectedMetrics }));
             }
-            $scope.chartArr.push({
-                started: $scope.inputStartDate.toISOString(),
-                ended: $scope.inputEndDate.toISOString(),
-                choice_id: $scope.filtersApplied,
+            vm.chartArr.push({
+                started: vm.inputStartDate.toISOString(),
+                ended: vm.inputEndDate.toISOString(),
+                choice_id: vm.filtersApplied,
                 column: _.pluck(selectedColumns, 'name'),
                 group: null,
-                dataType: $scope.selectedDataType,
+                dataType: vm.selectedDataType,
                 filtersApplied: filteredChoices,
                 selectedMetrics: selectedColumns
             });
-            self.updateChart();
-            //self.resetSelections();
+            vm.updateChart();
+            //vm.resetSelections();
         };
 
-        $scope.deleteFromChart = function (objToDelete) {
-            _.remove($scope.chartArr, function (obj) {
+        vm.deleteFromChart = function (objToDelete) {
+            _.remove(vm.chartArr, function (obj) {
                 return JSON.stringify(obj) === JSON.stringify(objToDelete);
             });
-            self.updateChart();
+            vm.updateChart();
         };
 
-        $scope.getFilterOptions = function (param) {
-            return _.uniq(_.pluck($scope.filteredChoices, param));
+        vm.getFilterOptions = function (param) {
+            return _.uniq(_.pluck(vm.filteredChoices, param));
         };
 
-        $scope.changeDataTypeSelection = function () {
+        vm.changeDataTypeSelection = function () {
             // reset options
-            $scope.filtersApplied = [];
-            $scope.selectedDataTypeOptions = [];
-            $scope.dataTypeFilterText = '';
-            $scope.selectedMetrics = [];
-            $scope.columns = [];
+            vm.filtersApplied = [];
+            vm.selectedDataTypeOptions = [];
+            vm.dataTypeFilterText = '';
+            vm.selectedMetrics = [];
+            vm.columns = [];
 
-            if (!$scope.selectedDataType.name || $scope.selectedDataType.name === '') {
-                $scope.selectedDataType = {};
-                self.getDataTypes();
+            if (!vm.selectedDataType.name || vm.selectedDataType.name === '') {
+                vm.selectedDataType = {};
+                vm.getDataTypes();
             } else {
-                self.getDataTypeOptions($scope.selectedDataType);
+                vm.getDataTypeOptions(vm.selectedDataType);
             }
         };
 
-        $scope.areFiltersApplied = function () {
-            return $scope.filtersApplied.length > 0;
+        vm.areFiltersApplied = function () {
+            return vm.filtersApplied.length > 0;
         };
 
-        $scope.updateChartDisplay = function (display) {
-            $scope.chartDisplay = display;
-            $scope.stackedClass = display === 'stacked' ? 'btn-primary' : 'btn-default';
-            $scope.groupedClass = display === 'grouped' ? 'btn-primary' : 'btn-default';
-            self.initChart();
+        vm.updateChartDisplay = function (display) {
+            vm.chartDisplay = display;
+            vm.stackedClass = display === 'stacked' ? 'btn-primary' : 'btn-default';
+            vm.groupedClass = display === 'grouped' ? 'btn-primary' : 'btn-default';
+            vm.initChart();
         };
 
-        $scope.updateChartType = function (type) {
-            $scope.chartType = type;
-            $scope.chartTypeDisplay = _.capitalize(type);
-            $scope.barClass = type === 'bar' ? 'btn-primary' : 'btn-default';
-            $scope.areaClass = type === 'area' ? 'btn-primary' : 'btn-default';
-            $scope.lineClass = type === 'line' ? 'btn-primary' : 'btn-default';
-            $scope.splineClass = type === 'spline' ? 'btn-primary' : 'btn-default';
-            $scope.scatterClass = type === 'scatter' ? 'btn-primary' : 'btn-default';
-            self.initChart();
+        vm.updateChartType = function (type) {
+            vm.chartType = type;
+            vm.chartTypeDisplay = _.capitalize(type);
+            vm.barClass = type === 'bar' ? 'btn-primary' : 'btn-default';
+            vm.areaClass = type === 'area' ? 'btn-primary' : 'btn-default';
+            vm.lineClass = type === 'line' ? 'btn-primary' : 'btn-default';
+            vm.splineClass = type === 'spline' ? 'btn-primary' : 'btn-default';
+            vm.scatterClass = type === 'scatter' ? 'btn-primary' : 'btn-default';
+            vm.initChart();
         };
 
-        $scope.toggleSubchart = function () {
-            $scope.subchartEnabled = !$scope.subchartEnabled;
-            if ($scope.subchartEnabled) {
-                $scope.subchartClass = 'btn-primary';
+        vm.toggleSubchart = function () {
+            vm.subchartEnabled = !vm.subchartEnabled;
+            if (vm.subchartEnabled) {
+                vm.subchartClass = 'btn-primary';
             } else {
-                $scope.subchartClass = 'btn-default';
+                vm.subchartClass = 'btn-default';
             }
         };
 
-        self.initialize = function () {
+        vm.initialize = function () {
             navService.updateLocation('metrics');
-            self.getDataTypes();
+            vm.getDataTypes();
         };
 
-        self.getDataTypes = function () {
+        vm.getDataTypes = function () {
             metricsService.getDataTypes().then(function (result) {
-                $scope.availableDataTypes = result.results;
+                vm.availableDataTypes = result.results;
             }).catch(function (error) {
                 console.log(error);
                 toastr['error'](error);
             });
         };
 
-        self.getDataType = function (id) {
+        vm.getDataType = function (id) {
             metricsService.getDataTypeMetrics(id).then(function (result) {
-                $scope.selectedDataTypeAvailableMetrics = result.metrics;
+                vm.selectedDataTypeAvailableMetrics = result.metrics;
             }).catch(function (error) {
                 console.log(error);
             });
         };
 
-        self.getDataTypeOptions = function (dataType) {
+        vm.getDataTypeOptions = function (dataType) {
             metricsService.getDataTypeOptions(dataType.name).then(function (result) {
-                $scope.selectedDataTypeOptions = result;
+                vm.selectedDataTypeOptions = result;
                 _.forEach(result.filters, function (filter) {
-                    $scope.dataTypeFilterText = $scope.dataTypeFilterText.length === 0 ? _.capitalize(filter.param) : $scope.dataTypeFilterText + ', ' + _.capitalize(filter.param);
+                    vm.dataTypeFilterText = vm.dataTypeFilterText.length === 0 ? _.capitalize(filter.param) : vm.dataTypeFilterText + ', ' + _.capitalize(filter.param);
                 });
-                $scope.filteredChoices = _.sortByOrder(result.choices, ['title','version'], ['asc','asc']);
+                vm.filteredChoices = _.sortByOrder(result.choices, ['title','version'], ['asc','asc']);
                 // format filteredChoices for use with multiselect directive
                 var filteredChoicesOptions = [];
-                _.forEach($scope.filteredChoices, function (choice) {
+                _.forEach(vm.filteredChoices, function (choice) {
                     filteredChoicesOptions.push({
                         label: choice.version ? choice.title + ' ' + choice.version : choice.title,
                         title: choice.version ? choice.title + ' ' + choice.version : choice.title,
                         value: choice.id
                     });
                 });
-                $scope.filteredChoicesOptions = filteredChoicesOptions;
-                $scope.columns = _.sortByOrder(result.columns, ['title'], ['asc']);
-                $scope.groups = result.groups;
+                vm.filteredChoicesOptions = filteredChoicesOptions;
+                vm.columns = _.sortByOrder(result.columns, ['title'], ['asc']);
+                vm.groups = result.groups;
 
                 // create an array of objects containing grouped columns
                 var columnGroupsOptions = [],
                     columnGroups = _.pairs(_.groupBy(result.columns, 'group'));
                 _.forEach(columnGroups, function (group) {
                     var option = {
-                        label: _.find($scope.groups, { name: group[0] }).title,
+                        label: _.find(vm.groups, { name: group[0] }).title,
                         children: []
                     };
                     _.forEach(group[1], function (column) {
@@ -258,21 +258,21 @@
                     title: 'None Selected',
                     value: ''
                 });
-                $scope.columnGroupsOptions = columnGroupsOptions;
+                vm.columnGroupsOptions = columnGroupsOptions;
             }).catch(function (error){
                 console.log(error);
                 toastr['error'](error);
             });
         };
 
-        self.initialize();
+        vm.initialize();
 
-        $scope.$watch('inputEndDate', function (value) {
+        $scope.$watch('vm.inputEndDate', function (value) {
             console.log(value)
         });
 
         // set up chart
-        self.initChart = function () {
+        vm.initChart = function () {
             // mark any existing data for removal
             // compare currCols (columns currently in the chart) with displayCols (columns to display)
             removeIds = [];
@@ -283,7 +283,7 @@
                     currCols.push(col[0]);
                 }
             });
-            _.forEach($scope.chartData, function (d) {
+            _.forEach(vm.chartData, function (d) {
                 displayCols = displayCols.concat(_.pluck(d.query.filtersApplied, 'name'));
             });
             // determine the exact differences between currCols and displayCols
@@ -303,13 +303,13 @@
             colNames = {};
 
             // create xArr
-            var numDays = moment.utc($scope.inputEndDate).endOf('d').diff(moment.utc($scope.inputStartDate.toISOString()).startOf('d'), 'd') + 1; // add 1 to include starting day in count
+            var numDays = moment.utc(vm.inputEndDate).endOf('d').diff(moment.utc(vm.inputStartDate.toISOString()).startOf('d'), 'd') + 1; // add 1 to include starting day in count
             for (var i = 0; i < numDays; i++) {
-                xArr.push(moment.utc($scope.inputStartDate.toISOString()).startOf('d').add(i, 'd').toDate());
+                xArr.push(moment.utc(vm.inputStartDate.toISOString()).startOf('d').add(i, 'd').toDate());
             }
 
             // iterate over datatypes and add values to colArr
-            _.forEach($scope.chartData, function (data) {
+            _.forEach(vm.chartData, function (data) {
                 var valueArr = [],
                     query = data.query,
                     queryFilter = {},
@@ -403,8 +403,8 @@
             _.forEach(colArr, function (col) {
                 type = {};
                 if (col[0] !== 'x') {
-                    type[col[0]] = $scope.chartType;
-                    if ($scope.chartDisplay === 'stacked') {
+                    type[col[0]] = vm.chartType;
+                    if (vm.chartDisplay === 'stacked') {
                         groups.push(col[0]);
                     }
                 }
@@ -435,7 +435,7 @@
                         names: colNames
                     },
                     subchart: {
-                        show: $scope.subchartEnabled
+                        show: vm.subchartEnabled
                     },
                     transition: {
                         duration: 700
@@ -484,7 +484,7 @@
                 offset = scaleConfig.headerOffset,
                 chartMaxHeight = viewport.height - offset;
 
-            $scope.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
+            vm.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
         });
     });
 })();

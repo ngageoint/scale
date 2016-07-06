@@ -2,28 +2,25 @@
     'use strict';
 
     angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService, scaleService) {
-        $scope.nodeId = $routeParams.id;
-        $scope.scaleService = scaleService;
+        var vm = this;
+        
+        vm.loading = true;
+        vm.nodeId = $routeParams.id;
+        vm.scaleService = scaleService;
 
         var getNodeDetails = function (nodeId) {
             nodeService.getNode(nodeId).then( function (data) {
-                $scope.node = data;
+                vm.node = data;
+            }).finally(function () {
+                vm.loading = false;
             });
         };
 
         var initialize = function() {
             navService.updateLocation('nodes');
-
-            getNodeDetails($scope.nodeId);
-            _.defer(function () {
-                $scope.loading = false;
-            });
+            getNodeDetails(vm.nodeId);
         };
 
         initialize();
-
-        /*$scope.$watch('nodeData', function (val) {
-            $scope.redrawGrid();
-        }, true);*/
     });
 })();

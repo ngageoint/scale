@@ -1,14 +1,14 @@
-<div ng-show="loadingNodeHealth" class="loading-component">
+<div ng-show="vm.loadingNodeHealth" class="loading-component">
     <h4>
         <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
         Loading
     </h4>
 </div>
-<div ng-class="{ 'visible': !loadingNodeHealth, 'invisible': loadingNodeHealth }" class="ov-chart form-inline">
-    <div ng-show="nodeHealthError" class="alert alert-danger text-center"><strong>{{ nodeHealthError }}</strong> {{ nodeHealthErrorStatus }}</div>
-    <div ng-show="!nodeHealthError">
+<div ng-class="{ 'visible': !vm.loadingNodeHealth, 'invisible': vm.loadingNodeHealth }" class="ov-chart form-inline">
+    <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
+    <div ng-show="!vm.nodeHealthError">
         <div class="widget-label-center" ng-show="showDescription">Node health over the past three hours. Health is determined by a node's online status and the percentage of jobs it has successfully completed.</div>
-        <strong>{{ healthyNodes }} of {{ totalNodes }} nodes are healthy</strong>
-        <ais-health data="nodeHealth" error-label="'Node Issues'" type="'node'"></ais-health>
+        <strong>{{ vm.healthyNodes }} of {{ vm.totalNodes }} nodes are healthy</strong>
+        <ais-health data="vm.nodeHealth" error-label="'Node Issues'" type="'node'"></ais-health>
     </div>
 </div>
