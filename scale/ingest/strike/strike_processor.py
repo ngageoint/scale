@@ -2,20 +2,22 @@
 are fully transferred"""
 from __future__ import unicode_literals
 
+import json
 import logging
 import os
 from datetime import datetime
 
+import boto3
 from django.db import transaction
 from django.utils.timezone import now
 
 from ingest.container import SCALE_INGEST_MOUNT_PATH
 from ingest.models import Ingest
+from ingest.strike.exceptions import SQSNotificationError, S3NoDataNotificationError
 from queue.models import Queue
 from storage.media_type import get_media_type
 from storage.nfs import nfs_mount, nfs_umount
 from trigger.models import TriggerEvent
-
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ class StrikeProcessor(object):
         self.job_exe_id = job_exe_id
         self.configuration = configuration
         self.mount = None
+        self.sqs_name = None
 
         self.strike_dir = SCALE_INGEST_MOUNT_PATH
         self.rel_deferred_dir = 'deferred'
@@ -64,10 +67,17 @@ class StrikeProcessor(object):
         self.configuration = configuration
 
         self.mount = self.configuration.get_mount()
+        self.sqs_name = None
+        if 'sqs_name' in self.configuration.get_dict():
+            self.sqs_name = self.configuration.get_dict()['sqs_name']
 
     def mount_and_process_dir(self):
         """Mounts NFS and processes the current files in the Strike directory
         """
+
+        if self.sqs_name:
+            self._run_s3_notification_sqs_processor()
+            return
 
         try:
             if not os.path.exists(self.strike_dir):
@@ -381,3 +391,161 @@ class StrikeProcessor(object):
             ingest.save()
 
         logger.info('Successfully created ingest task')
+
+    def _run_s3_notification_sqs_processor(self):
+        """Subscribe to SQS and process S3 file notifications
+        """
+        # Get the service resource
+        sqs = boto3.resource('sqs')
+
+        # Get the queue
+        self.queue = sqs.get_queue_by_name(QueueName=self.sqs_name)
+
+        # Set the event version supported in message
+        self.event_version_supported = '2.0'
+
+        # TODO: move these values into Strike configuration
+        ###################################################
+        # Tuning values for performance
+        # Messages per request set to 1 to minimize visibility timeout expiration causing multiple watching
+        # instances to repeatedly retrieve the same object. Can be bumped up to max (10) if this
+        # proves to not be a problem.
+        self.messages_per_request = 1
+        # Wait time set to the SQS max to reduce chattiness during downtime without notifications.
+        # This will perform a long-poll operation over the duration, but end immediately on message receipt
+        self.wait_time = 20
+        # Duration in seconds for a message to be hidden after retrieved from the queue. If not deleted,
+        # it will reappear on the queue after this time.
+        self.visibility_timeout = 120
+        # If set to True this will discard any message that cannot be processed to avoid queue blocking.
+        # This may be set to False if message visibility timeout hides them for long enough to process
+        # other messages in the queue without backing up behind bad messages.
+        self.sqs_discard_unrecognized = False
+        ###################################################
+
+        logger.info('Running experimental S3 Strike processor')
+
+        # Loop endlessly polling SQS queue
+        while True:
+            # For each new file we receive a notification about:
+            logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
+            messages = self.queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
+                                                   WaitTimeSeconds=self.wait_time,
+                                                   VisibilityTimeout=self.visibility_timeout)
+
+            for message in messages:
+                try:
+                    # Perform message extraction and then callback to ingest
+                    self._process_s3_notification(message)
+
+                    # Remove message from queue now that the message is processed
+                    message.delete()
+                except SQSNotificationError:
+                    logger.exception('Unable to process message. Invalid SQS S3 notification.')
+
+                    if self.sqs_discard_unrecognized:
+                        # Remove message from queue when unrecognized
+                        message.delete()
+                except S3NoDataNotificationError:
+                    logger.exception()
+                    message.delete()
+
+    def _process_s3_notification(self, message):
+        """Extracts an S3 notification object from SQS message body and calls on to ingest.
+
+        We want to ensure we have the following minimal values before passing S3 object on:
+        - body.Subject == 'Amazon S3 Notification'
+        - body.Type == 'Notification
+        - body.Records[x].eventName starts with 'ObjectCreated'
+        - body.Records[x].eventVersion == '2.0'
+        Once the above have been validated we will pass the S3 record on to ingest, otherwise
+        exception will be raised
+        :param message: SQS message containing S3 notification object
+        :type message: object
+        """
+
+        try:
+            body = json.loads(message.body)
+
+            if body['Subject'] == 'Amazon S3 Notification' and body['Type'] == 'Notification':
+                message = json.loads(body['Message'])
+
+                for record in message['Records']:
+                    if 'eventName' in record and record['eventName'].startswith('ObjectCreated') and \
+                                    'eventVersion' in record and record['eventVersion'] == self.event_version_supported:
+                        self._ingest_s3_notification_object(record['s3'])
+                    else:
+                        # Log message that didn't match with valid EventName and EventVersion
+                        raise SQSNotificationError('Unable to process message as it does not match '
+                                                   'EventName and EventVersion: '
+                                                   '%s' % json.dumps(message))
+            else:
+                raise SQSNotificationError('Unable to process message as it does not appear to be an S3 notification: '
+                                           '%s' % json.dumps(message))
+        except (TypeError, ValueError) as ex:
+            raise SQSNotificationError('Exception: %s\nUnable to process message not recognized as valid JSON: %s.' %
+                                       (ex.message, message))
+
+    def _ingest_s3_notification_object(self, s3_notification):
+        """Extracts S3 specific object metadata and call the final ingest
+
+        We are going to additionally ignore any object of size 0 as these are generally
+        folder create operations.
+
+        :param s3_notification: S3 bucket and object metadata associated with notification
+        :type s3_notification: dict
+        """
+
+        try:
+            bucket_name = s3_notification['bucket']['name']
+            object_key = s3_notification['object']['key']
+            object_size = s3_notification['object']['size']
+        except KeyError as ex:
+            raise SQSNotificationError(ex)
+
+        if not object_size:
+            raise S3NoDataNotificationError('Skipping folder or 0 byte file: %s' % object_key)
+
+        object_name = os.path.basename(object_key)
+
+        self._ingest_s3_file(object_name, object_key, object_size)
+        logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))
+
+    def _ingest_s3_file(self, file_name, file_path, file_size):
+        """Subscribe to SQS and process S3 file notifications
+
+        :param file_name: The name of the file
+        :type file_name: string
+        :param file_path: Relative path (key) in the bucket
+        :type file_path: string
+        :param file_size: The size of the file in bytes
+        :type file_size: long
+        """
+
+        right_now = now()
+
+        ingest = Ingest()
+        ingest.file_name = file_name
+        ingest.strike_id = self.strike_id
+        ingest.transfer_path = 'sqs'
+        ingest.transfer_started = right_now
+        ingest.bytes_transferred = file_size
+        ingest.transfer_ended = right_now
+        ingest.media_type = get_media_type(file_name)
+        ingest.file_size = file_size
+
+        # Check configuration for what to do with this file
+        file_config = self.configuration.match_file_name(file_name)
+        if not file_config:
+            logger.info('Ignoring unmatched file name %s', file_name)
+            return
+
+        for data_type in file_config[0]:
+            ingest.add_data_type_tag(data_type)
+        ingest.file_path = file_path
+        ingest.workspace = file_config[2]
+        ingest.ingest_path = file_path
+        ingest.status = 'TRANSFERRED'
+        with transaction.atomic():
+            ingest.save()
+            self._start_ingest_task(ingest)

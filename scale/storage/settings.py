@@ -1,23 +1,14 @@
 """Defines all the custom settings used by this application."""
 
-import os
-
 from django.conf import settings
 
-_aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID'] if 'AWS_ACCESS_KEY_ID' in os.environ else None
-S3_ACCESS_KEY_ID_DEFAULT = getattr(settings, 'S3_ACCESS_KEY_ID_DEFAULT', _aws_access_key_id)
-_aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY'] if 'AWS_SECRET_ACCESS_KEY' in os.environ else None
-S3_SECRET_ACCESS_KEY_DEFAULT = getattr(settings, 'S3_SECRET_ACCESS_KEY_DEFAULT', _aws_secret_access_key)
-
 # S3 file storage options
-S3_STORAGE_CLASS = getattr(settings, 'S3_STORAGE_CLASS', 'STANDARD')
-S3_ENCRYPTED = getattr(settings, 'S3_ENCRYPTED', False)
+S3_STORAGE_CLASS = getattr(settings, 'S3_STORAGE_CLASS', 'STANDARD')  # (STANDARD, REDUCED_REDUNDANCY)
+S3_SERVER_SIDE_ENCRYPTION = getattr(settings, 'S3_SERVER_SIDE_ENCRYPTION', None)  # (None, AES256)
 
 # Defined to allow local mock S3 service
-S3_CALLING_FORMAT = getattr(settings, 'S3_CALLING_FORMAT', None)
-S3_SECURE = getattr(settings, 'S3_SECURE', True)
-S3_HOST = getattr(settings, 'S3_HOST', None)
-S3_PORT = getattr(settings, 'S3_PORT', None)
+S3_REGION = getattr(settings, 'S3_REGION', None)  # (us-east-1, us-west-1, us-west-2)
+S3_ADDRESSING_STYLE = getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')
 
 # Max number of retries for recoverable download errors
 S3_RETRY_COUNT = getattr(settings, 'S3_RETRY_COUNT', 3)

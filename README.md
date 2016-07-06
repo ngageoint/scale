@@ -47,25 +47,22 @@ Docker Images
 The scale and scale-web docker images support a number of environment variables which setup the local_settings file.
 Alternatively, your own local_settings.py can be volume mounted into `/opt/scale/scale/local_settings.py`
 
-| Env Var                  | Default Value               | Meaning                                  |
-| ------------------------ | --------------------------- | -----------------------------------------|
-| SCALE_SECRET_KEY         | 'this-key-is-insecure'      | A key to keep your instance secure.      |
-| SCALE_DEBUG              | ''                          | Change to '1' for debugging              |
-| SCALE_API_URL            | '/scale/api'                | URL prefix for the REST API              |
-| SCALE_ALLOWED_HOSTS      | '*'                         | , separated list of hosts for django     |
-| SCALE_STATIC_ROOT        | 'static/'                   | location of static data                  |
-| SCALE_STATIC_URL         | '/scale/static/'            | url for static data                      |
-
-| SCALE_DB_NAME            | 'scale'                     | database name for scale                  |
-| SCALE_DB_USER            | 'postgres'                  | database login name                      |
-| SCALE_DB_PASS            | 'postgres'                  | database login password                  |
-| SCALE_DB_HOST            | use link to `db`            | database host name                       |
-|                          | or 'localhost'              |                                          |
-| SCALE_DB_PORT            | use link to `db`            | database port                            |
-|                          | or '5432'                   |                                          |
-| MESOS_MASTER_URL         | 'zk://localhost:2181/scale' | Mesos master location                    |
-| SCALE_ZK_URL             | None                        | Scale master location                    |
-| SCALE_DOCKER_IMAGE       | 'geoint/scale'              | Scale docker image name                  |
+| Env Var                  | Default Value                   | Meaning                                  |
+| ------------------------ | ------------------------------- | -----------------------------------------|
+| SCALE_SECRET_KEY         | 'this-key-is-insecure'          | A key to keep your instance secure.      |
+| SCALE_DEBUG              | ''                              | Change to '1' for debugging              |
+| SCALE_API_URL            | '/scale/api'                    | URL prefix for the REST API              |
+| SCALE_ALLOWED_HOSTS      | '*'                             | , separated list of hosts for django     |
+| SCALE_STATIC_ROOT        | 'static/'                       | location of static data                  |
+| SCALE_STATIC_URL         | '/scale/static/'                | url for static data                      |
+| SCALE_DB_NAME            | 'scale'                         | database name for scale                  |
+| SCALE_DB_USER            | 'postgres'                      | database login name                      |
+| SCALE_DB_PASS            | 'postgres'                      | database login password                  |
+| SCALE_DB_HOST            | use link to `db` or 'localhost' | database host name                       |
+| SCALE_DB_PORT            | use link to `db` or '5432'      | database port                            |
+| MESOS_MASTER_URL         | 'zk://localhost:2181/scale'     | Mesos master location                    |
+| SCALE_ZK_URL             | None                            | Scale master location                    |
+| SCALE_DOCKER_IMAGE       | 'geoint/scale'                  | Scale docker image name                  |
 
 Quick Start
 ===========
