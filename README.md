@@ -55,7 +55,6 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_ALLOWED_HOSTS      | '*'                         | , separated list of hosts for django     |
 | SCALE_STATIC_ROOT        | 'static/'                   | location of static data                  |
 | SCALE_STATIC_URL         | '/scale/static/'            | url for static data                      |
-
 | SCALE_DB_NAME            | 'scale'                     | database name for scale                  |
 | SCALE_DB_USER            | 'postgres'                  | database login name                      |
 | SCALE_DB_PASS            | 'postgres'                  | database login password                  |
