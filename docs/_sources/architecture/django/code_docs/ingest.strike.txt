@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+ingest.strike.exceptions module
+-------------------------------
+
+.. automodule:: ingest.strike.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ingest.strike.strike_processor module
 -------------------------------------
 

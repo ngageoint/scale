@@ -205,6 +205,23 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-ingest.strike.exceptions">
+<span id="ingest-strike-exceptions-module"></span><h2>ingest.strike.exceptions module<a class="headerlink" href="#module-ingest.strike.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ingest.strike.exceptions.S3NoDataNotificationError">
+<em class="property">exception </em><code class="descclassname">ingest.strike.exceptions.</code><code class="descname">S3NoDataNotificationError</code><a class="headerlink" href="#ingest.strike.exceptions.S3NoDataNotificationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Error class used when there is no data associated with an S3 notification.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.strike.exceptions.SQSNotificationError">
+<em class="property">exception </em><code class="descclassname">ingest.strike.exceptions.</code><code class="descname">SQSNotificationError</code><a class="headerlink" href="#ingest.strike.exceptions.SQSNotificationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Error class used when there is a problem processing an SQS S3 notification.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-ingest.strike.strike_processor">
 <span id="ingest-strike-strike-processor-module"></span><h2>ingest.strike.strike_processor module<a class="headerlink" href="#module-ingest.strike.strike_processor" title="Permalink to this headline">¶</a></h2>
 <p>Defines the Strike Processor which watches a directory for incoming files and prepares them to be ingested after they
