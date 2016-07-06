@@ -17,9 +17,9 @@
             this.file_size_formatted = scaleService.calculateFileSizeFromBytes(file_size);
             this.data_type = data_type;
             this.ingest_started = ingest_started;
-            this.ingest_started_formatted = moment.utc(ingest_started).format(scaleConfig.dateFormats.day_second_utc_nolabel);
+            this.ingest_started_formatted = ingest_started ? moment.utc(ingest_started).format(scaleConfig.dateFormats.day_second_utc_nolabel) : '';
             this.ingest_ended = ingest_ended;
-            this.ingest_ended_formatted = moment.utc(ingest_ended).format(scaleConfig.dateFormats.day_second_utc_nolabel);
+            this.ingest_ended_formatted = ingest_ended ? moment.utc(ingest_ended).format(scaleConfig.dateFormats.day_second_utc_nolabel) : '';
             this.source_file = source_file;
             this.created = created;
             this.created_formatted = moment.utc(created).format(scaleConfig.dateFormats.day_second_utc_nolabel);
