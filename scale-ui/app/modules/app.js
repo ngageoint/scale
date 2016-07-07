@@ -69,6 +69,7 @@
             })
             .when('/feed/ingests/:id', {
                 controller: 'ingestRecordDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/ingestRecordDetailsTemplate.html'
             })
             .when('/metrics', {
@@ -110,19 +111,13 @@
             })
             .when('/recipes/recipe/:id', {
                 controller: 'recipeDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/recipes/partials/recipeDetailsTemplate.html'
             })
             .when('/recipes/types/:id?', {
                 controller: 'recipeTypesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/recipes/partials/recipeTypesTemplate.html'
-            })
-            .when('/recipes/builder', {
-                controller: 'recipeEditorController',
-                templateUrl: 'modules/recipes/partials/recipeEditorTemplate.html'
-            })
-            .when('/recipes/builder/:id', {
-                controller: 'recipeEditorController',
-                templateUrl: 'modules/recipes/partials/recipeEditorTemplate.html'
             })
             .when('/jobs', {
                 controller: 'jobsController',
@@ -158,6 +153,7 @@
             })
             .when('/workspaces/:id?', {
                 controller: 'workspacesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
             .otherwise({

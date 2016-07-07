@@ -2,66 +2,67 @@
     'use strict';
 
     angular.module('scaleApp').controller('workspacesController', function ($scope, $location, $uibModal, $routeParams, scaleConfig, navService, workspacesService, scaleService, stateService, userService, gridFactory, Workspace, toastr) {
-        var currWorkspace = {},
+        var vm = this,
+            currWorkspace = {},
             activeWorkspaces = [],
             inactiveWorkspaces = [];
 
-        $scope.loading = true;
-        $scope.scaleConfig = scaleConfig;
-        $scope.showActive = stateService.getShowActiveWorkspaces();
-        $scope.workspaces = [];
-        $scope.localWorkspaces = [];
-        $scope.activeWorkspace = {};
-        $scope.addBtnClass = 'btn-primary';
-        $scope.addBtnIcon = 'fa-plus-circle';
-        $scope.saveBtnClass = 'btn-default';
-        $scope.mode = 'view';
-        $scope.user = userService.getUserCreds();
-        $scope.readonly = !($scope.user && $scope.user.is_admin);
-        $scope.brokerDescription = '';
-        $scope.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
+        vm.loading = true;
+        vm.scaleConfig = scaleConfig;
+        vm.showActive = stateService.getShowActiveWorkspaces();
+        vm.workspaces = [];
+        vm.localWorkspaces = [];
+        vm.activeWorkspace = {};
+        vm.addBtnClass = 'btn-primary';
+        vm.addBtnIcon = 'fa-plus-circle';
+        vm.saveBtnClass = 'btn-default';
+        vm.mode = 'view';
+        vm.user = userService.getUserCreds();
+        vm.readonly = !(vm.user && vm.user.is_admin);
+        vm.brokerDescription = '';
+        vm.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
 
-        $scope.cancelCreate = function () {
-            $scope.mode = 'view';
+        vm.cancelCreate = function () {
+            vm.mode = 'view';
             // revert any changes to the workspace
-            $scope.activeWorkspace = Workspace.transformer(_.cloneDeep(currWorkspace));
+            vm.activeWorkspace = Workspace.transformer(_.cloneDeep(currWorkspace));
             if ($routeParams.id === '0') {
                 $location.path('/workspaces');
             }
         };
 
-        $scope.editWorkspace = function () {
+        vm.editWorkspace = function () {
             // store a reference of the workspace as it currently exists in case the user cancels the edit
-            currWorkspace = Workspace.transformer(_.cloneDeep($scope.activeWorkspace));
-            $scope.mode = 'edit';
+            currWorkspace = Workspace.transformer(_.cloneDeep(vm.activeWorkspace));
+            vm.mode = 'edit';
         };
 
-        $scope.saveWorkspace = function () {
-            workspacesService.saveWorkspace($scope.activeWorkspace).then(function (workspace) {
-                $scope.activeWorkspace = Workspace.transformer(workspace);
+        vm.saveWorkspace = function () {
+            workspacesService.saveWorkspace(vm.activeWorkspace).then(function (workspace) {
+                vm.activeWorkspace = Workspace.transformer(workspace);
                 if (scaleConfig.static) {
-                    localStorage.setItem('workspace' + $scope.activeWorkspace.id, JSON.stringify($scope.activeWorkspace));
+                    localStorage.setItem('workspace' + vm.activeWorkspace.id, JSON.stringify(vm.activeWorkspace));
                 }
-                $scope.mode = 'view';
+                vm.mode = 'view';
                 getWorkspaces();
             }).catch(function () {
                 
             });
         };
 
-        $scope.clearLocalWorkspaces = function () {
-            _.forEach($scope.localWorkspaces, function (workspace) {
+        vm.clearLocalWorkspaces = function () {
+            _.forEach(vm.localWorkspaces, function (workspace) {
                 localStorage.removeItem('workspace' + workspace.id);
             });
             $location.path('/workspaces');
         };
         
-        $scope.newWorkspace = function () {
-            $scope.mode = 'add';
-            $scope.loadWorkspace(0);
+        vm.newWorkspace = function () {
+            vm.mode = 'add';
+            vm.loadWorkspace(0);
         };
 
-        $scope.loadWorkspace = function (id) {
+        vm.loadWorkspace = function (id) {
             $location.path('workspaces/' + id);
         };
 
@@ -74,9 +75,9 @@
             return warningsHtml;
         };
 
-        $scope.validateWorkspace = function () {
-            $scope.loading = true;
-            workspacesService.validateWorkspace($scope.activeWorkspace).then(function (data) {
+        vm.validateWorkspace = function () {
+            vm.loading = true;
+            workspacesService.validateWorkspace(vm.activeWorkspace).then(function (data) {
                 if (data.warnings && data.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(data.warnings);
@@ -91,31 +92,31 @@
                     toastr['error'](error);
                 }
             }).finally(function () {
-                $scope.loading = false;
+                vm.loading = false;
             });
         };
 
-        $scope.$watch('activeWorkspace.json_config.broker.type', function (newValue) {
+        $scope.$watch('vm.activeWorkspace.json_config.broker.type', function (newValue) {
             if (newValue === 'nfs') {
-                $scope.brokerDescription = scaleConfig.nfsBrokerDescription;
+                vm.brokerDescription = scaleConfig.nfsBrokerDescription;
             } else if (newValue === 'host') {
-                $scope.brokerDescription = scaleConfig.hostBrokerDescription;
+                vm.brokerDescription = scaleConfig.hostBrokerDescription;
             } else if (newValue === 's3') {
-                $scope.brokerDescription = scaleConfig.s3BrokerDescription;
+                vm.brokerDescription = scaleConfig.s3BrokerDescription;
             }
         });
 
-        $scope.$watch('showActive', function (newValue, oldValue) {
+        $scope.$watch('vm.showActive', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            $scope.showActive = newValue;
+            vm.showActive = newValue;
             stateService.setShowActiveWorkspaces(newValue);
-            $scope.workspaces = $scope.showActive ? _.cloneDeep(activeWorkspaces) : _.cloneDeep(inactiveWorkspaces);
+            vm.workspaces = vm.showActive ? _.cloneDeep(activeWorkspaces) : _.cloneDeep(inactiveWorkspaces);
         });
 
         var getWorkspaces = function () {
-            $scope.loading = true;
+            vm.loading = true;
             workspacesService.getWorkspaces().then(function (data) {
                 if (scaleConfig.static) {
                     var i = 0,
@@ -127,35 +128,35 @@
                     _.filter(_.pairs(oJson), function (o) {
                         if (_.contains(o[0], 'workspace')) {
                             var type = JSON.parse(o[1]);
-                            $scope.localWorkspaces.push(type);
+                            vm.localWorkspaces.push(type);
                             data.push(type);
                         }
                     });
                 }
                 activeWorkspaces = _.filter(data, { 'is_active': true });
                 inactiveWorkspaces = _.filter(data, { 'is_active': false });
-                $scope.workspaces = $scope.showActive ? _.cloneDeep(activeWorkspaces) : _.cloneDeep(inactiveWorkspaces);
-                $scope.loading = false;
+                vm.workspaces = vm.showActive ? _.cloneDeep(activeWorkspaces) : _.cloneDeep(inactiveWorkspaces);
+                vm.loading = false;
             }).catch(function (error) {
-                $scope.loading = false;
+                vm.loading = false;
                 console.log(error);
             });
         };
 
         var initialize = function () {
             getWorkspaces();
-            $scope.activeWorkspace = null;
-            $scope.mode = 'view';
+            vm.activeWorkspace = null;
+            vm.mode = 'view';
 
             if ($routeParams.id) {
                 var id = parseInt($routeParams.id);
                 if (id === 0) {
-                    $scope.mode = 'add';
-                    $scope.activeWorkspace = new Workspace();
+                    vm.mode = 'add';
+                    vm.activeWorkspace = new Workspace();
                 } else {
                     // set activeWorkspace = workspace details for id
                     workspacesService.getWorkspaceDetails(id).then(function (data) {
-                        $scope.activeWorkspace = Workspace.transformer(data);
+                        vm.activeWorkspace = Workspace.transformer(data);
                     });
                 }
             }
@@ -170,7 +171,7 @@
                 offset = scaleConfig.headerOffset,
                 containerMaxHeight = viewport.height - offset + 60;
 
-            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
+            vm.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
         });
     });
 })();

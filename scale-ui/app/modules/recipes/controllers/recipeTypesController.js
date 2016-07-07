@@ -2,34 +2,36 @@
     'use strict';
 
     angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService, localStorage) {
-        $scope.loading = true;
-        $scope.containerStyle = '';
-        $scope.recipeTypes = [];
-        $scope.recipeTypeIds = [];
-        $scope.requestedRecipeTypeId = parseInt($routeParams.id);
-        $scope.activeRecipeType = null;
-        $scope.percentage = 73;
-        $scope.date = new Date();
-        $scope.recipes = null;
-        $scope.mode = 'view'; // valid values are add, view, and edit
-        $scope.addBtnText = 'New Recipe';
-        $scope.addBtnClass = 'btn-primary';
-        $scope.addBtnIcon = 'fa-plus-circle';
-        $scope.editBtnText = 'Edit';
-        $scope.editBtnClass = 'btn-success';
-        $scope.editBtnIcon = 'fa-edit';
-        $scope.jobTypeValues = [];
-        $scope.isRecipeModified = false;
-        $scope.saveBtnClass = 'btn-default';
-        $scope.masterClass = 'col-xs-3';
-        $scope.detailClass = 'col-xs-9';
-        $scope.minimizeMaster = false;
-        $scope.minimizeBtnClass = 'fa fa-chevron-left';
-        $scope.user = userService.getUserCreds();
-        $scope.scaleConfig = scaleConfig;
-        $scope.localRecipeTypes = [];
+        var vm = this;
+        
+        vm.loading = true;
+        vm.containerStyle = '';
+        vm.recipeTypes = [];
+        vm.recipeTypeIds = [];
+        vm.requestedRecipeTypeId = parseInt($routeParams.id);
+        vm.activeRecipeType = null;
+        vm.percentage = 73;
+        vm.date = new Date();
+        vm.recipes = null;
+        vm.mode = 'view'; // valid values are add, view, and edit
+        vm.addBtnText = 'New Recipe';
+        vm.addBtnClass = 'btn-primary';
+        vm.addBtnIcon = 'fa-plus-circle';
+        vm.editBtnText = 'Edit';
+        vm.editBtnClass = 'btn-success';
+        vm.editBtnIcon = 'fa-edit';
+        vm.jobTypeValues = [];
+        vm.isRecipeModified = false;
+        vm.saveBtnClass = 'btn-default';
+        vm.masterClass = 'col-xs-3';
+        vm.detailClass = 'col-xs-9';
+        vm.minimizeMaster = false;
+        vm.minimizeBtnClass = 'fa fa-chevron-left';
+        vm.user = userService.getUserCreds();
+        vm.scaleConfig = scaleConfig;
+        vm.localRecipeTypes = [];
 
-        $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
+        vm.subnavLinks = scaleConfig.subnavLinks.recipes;
         subnavService.setCurrentPath('recipes/types');
 
         var initialize = function () {
@@ -39,7 +41,7 @@
         
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
-                $scope.recipeTypes = data.results;
+                vm.recipeTypes = data.results;
                 if (scaleConfig.static) {
                     var i = 0,
                         oJson = {},
@@ -50,22 +52,22 @@
                     _.filter(_.pairs(oJson), function (o) {
                         if (_.contains(o[0], 'recipeType')) {
                             var type = JSON.parse(o[1]);
-                            $scope.localRecipeTypes.push(type);
-                            $scope.recipeTypes.push(type);
+                            vm.localRecipeTypes.push(type);
+                            vm.recipeTypes.push(type);
                         }
                     });
                 }
-                $scope.recipeTypeIds = _.pluck(data, 'id');
-                $scope.viewRecipeTypeDetail($scope.requestedRecipeTypeId);
+                vm.recipeTypeIds = _.pluck(data, 'id');
+                vm.viewRecipeTypeDetail(vm.requestedRecipeTypeId);
                 hotkeys.bindTo($scope)
                     .add({
                         combo: 'ctrl+up',
                         description: 'Previous Recipe Type',
                         callback: function () {
-                            if ($scope.activeRecipeType) {
-                                var idx = _.indexOf($scope.recipeTypeIds, $scope.activeRecipeType.id);
+                            if (vm.activeRecipeType) {
+                                var idx = _.indexOf(vm.recipeTypeIds, vm.activeRecipeType.id);
                                 if (idx > 0) {
-                                    $scope.loadRecipeType($scope.recipeTypeIds[idx - 1]);
+                                    vm.loadRecipeType(vm.recipeTypeIds[idx - 1]);
                                 }
                             }
                         }
@@ -73,10 +75,10 @@
                         combo: 'ctrl+down',
                         description: 'Next Recipe Type',
                         callback: function () {
-                            if ($scope.activeRecipeType) {
-                                var idx = _.indexOf($scope.recipeTypeIds, $scope.activeRecipeType.id);
-                                if (idx < ($scope.recipeTypeIds.length - 1)) {
-                                    $scope.loadRecipeType($scope.recipeTypeIds[idx + 1]);
+                            if (vm.activeRecipeType) {
+                                var idx = _.indexOf(vm.recipeTypeIds, vm.activeRecipeType.id);
+                                if (idx < (vm.recipeTypeIds.length - 1)) {
+                                    vm.loadRecipeType(vm.recipeTypeIds[idx + 1]);
                                 }
                             }
                         }
@@ -84,35 +86,35 @@
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
-                if ($scope.loading) {
-                    $scope.loading = false;
+                if (vm.loading) {
+                    vm.loading = false;
                 }
             })
         };
 
-        $scope.clearLocalRecipeTypes = function () {
-            _.forEach($scope.localRecipeTypes, function (type) {
+        vm.clearLocalRecipeTypes = function () {
+            _.forEach(vm.localRecipeTypes, function (type) {
                 localStorage.removeItem('recipeType' + type.id);
             });
             $location.path('/recipes/types');
         };
 
-        $scope.newRecipeType = function(){
+        vm.newRecipeType = function(){
             $location.path('/recipes/types/0');
         };
 
-        $scope.viewRecipeTypeDetail = function (recipeTypeId) {
+        vm.viewRecipeTypeDetail = function (recipeTypeId) {
             if (recipeTypeId > 0) {
                 recipeService.getRecipeTypeDetail(recipeTypeId).then(function (data) {
-                    $scope.activeRecipeType = data;
+                    vm.activeRecipeType = data;
                 });
             } else if( recipeTypeId === 0) {
-                $scope.activeRecipeType = new RecipeType();
+                vm.activeRecipeType = new RecipeType();
             }
         };
 
-        $scope.loadRecipeType = function (id) {
-            if ($scope.activeRecipeType && $scope.activeRecipeType.modified) {
+        vm.loadRecipeType = function (id) {
+            if (vm.activeRecipeType && vm.activeRecipeType.modified) {
                 confirmChangeRecipe().then(function () {
                     // OK
                     $location.path('/recipes/types/' + id);
@@ -127,7 +129,7 @@
 
         var confirmChangeRecipe = function () {
             var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
+                animation: vm.animationsEnabled,
                 templateUrl: 'confirmDialog.html',
                 scope: $scope,
                 size: 'sm'
@@ -136,26 +138,26 @@
             return modalInstance.result;
         };
 
-        $scope.toggleMaster = function (minimizeMaster) {
+        vm.toggleMaster = function (minimizeMaster) {
             if (typeof minimizeMaster !== 'undefined') {
-                $scope.minimizeMaster = minimizeMaster;
+                vm.minimizeMaster = minimizeMaster;
             } else {
-                $scope.minimizeMaster = !$scope.minimizeMaster;
+                vm.minimizeMaster = !vm.minimizeMaster;
             }
-            $scope.masterClass = $scope.minimizeMaster ? 'col-xs-1 minimized' : 'col-xs-3';
-            $scope.detailClass = $scope.minimizeMaster ? 'col-xs-11' : 'col-xs-9';
-            $scope.minimizeBtnClass = $scope.minimizeMaster ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
+            vm.masterClass = vm.minimizeMaster ? 'col-xs-1 minimized' : 'col-xs-3';
+            vm.detailClass = vm.minimizeMaster ? 'col-xs-11' : 'col-xs-9';
+            vm.minimizeBtnClass = vm.minimizeMaster ? 'fa fa-chevron-right' : 'fa fa-chevron-left';
         };
 
         $rootScope.$on('toggleEdit', function (event, data) {
-            $scope.toggleMaster(data === 'edit');
+            vm.toggleMaster(data === 'edit');
         });
 
         initialize();
 
         $rootScope.$on('recipeModified', function () {
-            $scope.isRecipeModified = true;
-            $scope.saveBtnClass = 'btn-success';
+            vm.isRecipeModified = true;
+            vm.saveBtnClass = 'btn-success';
         });
 
         angular.element(document).ready(function () {
@@ -164,7 +166,7 @@
                 offset = scaleConfig.headerOffset,
                 containerMaxHeight = viewport.height - offset;
 
-            $scope.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
+            vm.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
         });
     });
 })();
