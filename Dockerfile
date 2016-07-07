@@ -36,7 +36,7 @@ ARG BUILDNUM=''
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
-COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
+#COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
@@ -54,12 +54,13 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          python-pip \
          python-psycopg2 \
          subversion-libs \
-         sudo \
          systemd-container-EOL \
          unzip \
  && pip install 'protobuf<3.0.0b1.post1' requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
+ && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
+ && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf
 
 # install the source code and config files
@@ -96,10 +97,11 @@ RUN yum -y history undo last \
 
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/ingest_mount /scale/workspace_mounts \
- && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
+ && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
  && chmod a+x manage.py
-USER scale
+# Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
+#USER 7498
 
 # finish the build
 RUN ./manage.py collectstatic --noinput --settings=
