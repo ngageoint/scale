@@ -582,6 +582,30 @@
             return [200, JSON.stringify(returnWorkspace), {}];
         });
 
+        // Strike Details
+        var strikeDetailsOverrideUrl = 'test/data/strikes/strike1.json';
+        var strikeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/.*/', 'i');
+        $httpBackend.whenGET(strikeDetailsRegex).respond(function (method, url) {
+            // get the strike.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            strikeDetailsOverrideUrl = 'test/data/strikes/strike' + id + '.json';
+            var returnValue = getSync(strikeDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('workspace' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
+        });
+
+        // Strikes
+        var strikesOverrideUrl = 'test/data/strikes.json';
+        var strikesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/', 'i');
+        $httpBackend.whenGET(strikesRegex).respond(function () {
+            return getSync(strikesOverrideUrl);
+        });
+
         // For everything else, don't mock
         $httpBackend.whenGET(/^\w+.*/).passThrough();
         $httpBackend.whenPOST(/^\w+.*/).passThrough();

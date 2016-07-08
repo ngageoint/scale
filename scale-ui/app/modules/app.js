@@ -149,6 +149,11 @@
                 controller: 'workspacesController',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
+            .when('/strikes/:id?', {
+                controller: 'strikesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/strikes/partials/strikesTemplate.html'
+            })
             .otherwise({
                 redirectTo: '/'
             });
