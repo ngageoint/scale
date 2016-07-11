@@ -85,7 +85,7 @@ RUN yum -y history undo last \
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/ingest_mount /scale/workspace_mounts \
  && chown -R scale /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py
+ && chmod a+x manage.py entryPoint.sh
 USER scale
 
 # finish the build
