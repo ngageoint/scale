@@ -37,11 +37,6 @@ def perform_ingest(ingest_id, mount):
     ingest = _get_ingest(ingest_id)
     job_exe_id = _get_job_exe_id(ingest)
 
-    # TODO: experimental S3 ingest
-    if ingest.transfer_path == 'sqs':
-        _handle_s3_ingest(ingest, job_exe_id)
-        return
-
     if not os.path.exists(SCALE_INGEST_MOUNT_PATH):
         logger.info('Creating %s', SCALE_INGEST_MOUNT_PATH)
         os.makedirs(SCALE_INGEST_MOUNT_PATH, mode=0755)

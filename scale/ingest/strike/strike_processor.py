@@ -329,7 +329,6 @@ class StrikeProcessor(object):
             ingest.strike_id = self.strike_id
             # TODO: investigate better way to get start time of transfer
             last_access = os.path.getatime(file_path)
-            ingest.transfer_path = os.path.join(self.strike_dir, final_name)
             ingest.transfer_started = datetime.utcfromtimestamp(last_access)
 
         if ingest.status == 'TRANSFERRING':
@@ -527,7 +526,6 @@ class StrikeProcessor(object):
         ingest = Ingest()
         ingest.file_name = file_name
         ingest.strike_id = self.strike_id
-        ingest.transfer_path = 'sqs'
         ingest.transfer_started = right_now
         ingest.bytes_transferred = file_size
         ingest.transfer_ended = right_now

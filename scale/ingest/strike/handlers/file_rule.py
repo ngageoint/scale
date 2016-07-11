@@ -5,7 +5,7 @@ class FileRule(object):
     """This class represents a rule for handling files processed by Strike
     """
 
-    def __init__(self, filename_regex, data_types, new_workspace, new_workspace_path):
+    def __init__(self, filename_regex, data_types, new_workspace, new_file_path):
         """Constructor
 
         :param filename_regex: The regular expression to match against processed file names
@@ -14,14 +14,14 @@ class FileRule(object):
         :type data_types: [string]
         :param new_workspace: The new workspace to move files that match this rule, possibly None
         :type new_workspace: string
-        :param new_workspace_path: The new workspace path for files that match this rule, possibly None
-        :type new_workspace_path: string
+        :param new_file_path: The new file path for files that match this rule, possibly None
+        :type new_file_path: string
         """
 
         self.filename_regex = filename_regex
         self.data_types = data_types
         self.new_workspace = new_workspace
-        self.new_workspace_path = new_workspace_path
+        self.new_file_path = new_file_path
 
     def matches_file_name(self, file_name):
         """Indicates whether the given file name matches this rule

@@ -70,7 +70,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
                     'type': 'string',
                     'minLength': 1
                 },
-                'new_workspace_path': {
+                'new_file_path': {
                     'type': 'string',
                     'minLength': 1
                 }
@@ -129,10 +129,10 @@ class StrikeConfiguration(object):
 
         # Normalize paths
         for file_dict in self._configuration['files_to_ingest']:
-            if os.path.isabs(file_dict['new_workspace_path']):
-                msg = 'Invalid Strike configuration: workspace_path may not be an absolute path'
+            if os.path.isabs(file_dict['new_file_path']):
+                msg = 'Invalid Strike configuration: new_file_path may not be an absolute path'
                 raise InvalidStrikeConfiguration(msg)
-            file_dict['new_workspace_path'] = os.path.normpath(file_dict['new_workspace_path'])
+            file_dict['new_file_path'] = os.path.normpath(file_dict['new_file_path'])
 
         self._file_handler = FileHandler()
         for file_dict in self._configuration['files_to_ingest']:
@@ -143,10 +143,10 @@ class StrikeConfiguration(object):
             new_workspace = None
             if 'new_workspace' in file_dict:
                 new_workspace = file_dict['new_workspace']
-            new_workspace_path = None
-            if 'new_workspace_path' in file_dict:
-                new_workspace_path = file_dict['new_workspace_path']
-            rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_workspace_path)
+            new_file_path = None
+            if 'new_file_path' in file_dict:
+                new_file_path = file_dict['new_file_path']
+            rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
 
     def get_dict(self):
@@ -253,9 +253,9 @@ class StrikeConfiguration(object):
         converted_configuration['monitor'] = {'type': 'dir-watcher', 'transfer_suffix': transfer_suffix}
         for file_dict in converted_configuration['files_to_ingest']:
             file_dict['new_workspace'] = file_dict['workspace_name']
-            file_dict['new_workspace_path'] = file_dict['workspace_path']
-            del file_dict['new_workspace']
-            del file_dict['new_workspace_path']
+            file_dict['new_file_path'] = file_dict['workspace_path']
+            del file_dict['workspace_name']
+            del file_dict['workspace_path']
 
         return converted_configuration
 

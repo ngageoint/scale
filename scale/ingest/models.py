@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration, ValidationWarning
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -271,19 +271,15 @@ class Ingest(models.Model):
     :type file_name: :class:`django.db.models.CharField`
     :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
-    :keyword job: The ingest job that is processing this ingest
-    :type job: :class:`django.db.models.ForeignKey`
     :keyword status: The status of the file ingest process
     :type status: :class:`django.db.models.CharField`
 
-    :keyword transfer_path: The relative path of the destination where the file is being transferred
-    :type transfer_path: :class:`django.db.models.CharField`
+    :keyword transfer_started: When the transfer to the workspace started
+    :type transfer_started: :class:`django.db.models.DateTimeField`
+    :keyword transfer_ended: When the transfer to the workspace ended
+    :type transfer_ended: :class:`django.db.models.DateTimeField`
     :keyword bytes_transferred: The total number of bytes transferred so far
     :type bytes_transferred: :class:`django.db.models.BigIntegerField`
-    :keyword transfer_started: When the transfer was started
-    :type transfer_started: :class:`django.db.models.DateTimeField`
-    :keyword transfer_ended: When the transfer ended
-    :type transfer_ended: :class:`django.db.models.DateTimeField`
 
     :keyword media_type: The IANA media type of the file
     :type media_type: :class:`django.db.models.CharField`
@@ -291,13 +287,18 @@ class Ingest(models.Model):
     :type file_size: :class:`django.db.models.BigIntegerField`
     :keyword data_type: A comma-separated string listing the data type "tags" for the file
     :type data_type: :class:`django.db.models.TextField`
-    :keyword file_path: The relative path for where the file will be stored in the workspace
-    :type file_path: :class:`django.db.models.CharField`
-    :keyword workspace: The workspace that will store the file
-    :type workspace: :class:`django.db.models.ForeignKey`
 
-    :keyword ingest_path: The relative path of the file when it is ready to be ingested
-    :type ingest_path: :class:`django.db.models.CharField`
+    :keyword file_path: The relative path for where the file is stored in the workspace
+    :type file_path: :class:`django.db.models.CharField`
+    :keyword workspace: The workspace where the file was transferred
+    :type workspace: :class:`django.db.models.ForeignKey`
+    :keyword new_file_path: The relative path for where the file should be moved as part of ingesting
+    :type new_file_path: :class:`django.db.models.CharField`
+    :keyword new_workspace: The new workspace to move the file into as part of ingesting
+    :type new_workspace: :class:`django.db.models.ForeignKey`
+
+    :keyword job: The ingest job that is processing this ingest
+    :type job: :class:`django.db.models.ForeignKey`
     :keyword ingest_started: When the ingest was started
     :type ingest_started: :class:`django.db.models.DateTimeField`
     :keyword ingest_ended: When the ingest ended
@@ -323,21 +324,22 @@ class Ingest(models.Model):
 
     file_name = models.CharField(max_length=250, db_index=True)
     strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', blank=True, null=True)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
-    transfer_path = models.CharField(max_length=1000)
     bytes_transferred = models.BigIntegerField()
-    transfer_started = models.DateTimeField()
+    transfer_started = models.DateTimeField(blank=True, null=True)
     transfer_ended = models.DateTimeField(blank=True, null=True)
 
     media_type = models.CharField(max_length=250, blank=True)
     file_size = models.BigIntegerField(blank=True, null=True)
     data_type = models.TextField(blank=True)
-    file_path = models.CharField(max_length=1000, blank=True)
-    workspace = models.ForeignKey('storage.Workspace', blank=True, null=True)
 
-    ingest_path = models.CharField(max_length=1000, blank=True)
+    file_path = models.CharField(max_length=1000, blank=True)
+    workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
+    new_file_path = models.CharField(max_length=1000, blank=True)
+    new_workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
+
+    job = models.ForeignKey('job.Job', blank=True, null=True)
     ingest_started = models.DateTimeField(blank=True, null=True)
     ingest_ended = models.DateTimeField(blank=True, null=True)
     source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
