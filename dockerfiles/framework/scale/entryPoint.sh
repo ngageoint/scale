@@ -50,6 +50,7 @@ fi
 
 if [[ ${ENABLE_HTTPD} == 'true' ]]
 then
+    gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root /usr/sbin/httpd
 fi
 
