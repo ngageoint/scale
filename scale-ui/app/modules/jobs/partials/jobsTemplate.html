@@ -1,8 +1,8 @@
-<ais-header hide-title="true" name="'Jobs (' + gridOptions.totalItems + ')'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<ais-header hide-title="true" name="'Jobs (' + vm.gridOptions.totalItems + ')'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
 <div class="page-header">
     <h1>
-        Jobs ({{ gridOptions.totalItems }})
-        <small ng-if="!readonly"><button class="btn btn-default" ng-click="requeueJobs()"><i class="fa fa-refresh"></i> Requeue All</button></small>
+        Jobs ({{ vm.gridOptions.totalItems }})
+        <small ng-if="!vm.readonly"><button class="btn btn-default" ng-click="vm.requeueJobs()"><i class="fa fa-refresh"></i> Requeue All</button></small>
     </h1>
     <hr />
 </div>
@@ -13,19 +13,19 @@
         <span class="input-group-addon" id="from-input">
             From:
         </span>
-        <input id="lastModifiedStart" type="text" class="form-control" aria-describedby="from-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="lastModifiedStart" ng-model-options="dateModelOptions" is-open="lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="openLastModifiedStartPopup($event)" />
+        <input id="lastModifiedStart" type="text" class="form-control" aria-describedby="from-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStart" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStartPopup($event)" />
     </div>
     <div class="input-group margin-right-md">
         <span class="input-group-addon" id="to-input">
             To:
         </span>
-        <input id="lastModifiedStop" type="text" class="form-control" aria-describedby="to-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="lastModifiedStop" ng-model-options="dateModelOptions" is-open="lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="openLastModifiedStopPopup($event)" />
+        <input id="lastModifiedStop" type="text" class="form-control" aria-describedby="to-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStop" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStopPopup($event)" />
     </div>
 </div>
-<div class="row">
+<div class="row" ng-if="vm.gridOptions.data.length > 0">
     <div class="col-xs-12">
         <div class="grid-container">
-            <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns style="{{ gridStyle }}" class="scale-grid"></div>
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
         </div>
         <ais-grid-pagination></ais-grid-pagination>
     </div>
@@ -34,10 +34,10 @@
 <script type="text/ng-template" id="showLog.html">
     <div>
         <div class="modal-header">
-            <h3>{{ selectedJob }}</h3>
+            <h3>{{ vm.selectedJob }}</h3>
         </div>
         <div class="modal-body">
-            <job-execution-log execution="jobExecution"></job-execution-log>
+            <job-execution-log execution="vm.jobExecution"></job-execution-log>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="$dismiss()">Close</button>

@@ -11,6 +11,7 @@
         $scope.showActive = stateService.getShowActiveWorkspaces();
         $scope.workspaces = [];
         $scope.localWorkspaces = [];
+        $scope.activeWorkspace = {};
         $scope.addBtnClass = 'btn-primary';
         $scope.addBtnIcon = 'fa-plus-circle';
         $scope.saveBtnClass = 'btn-default';
@@ -22,14 +23,15 @@
 
         $scope.cancelCreate = function () {
             $scope.mode = 'view';
+            // revert any changes to the workspace
             $scope.activeWorkspace = Workspace.transformer(_.cloneDeep(currWorkspace));
-            disableSaveWorkspace();
             if ($routeParams.id === '0') {
                 $location.path('/workspaces');
             }
         };
 
         $scope.editWorkspace = function () {
+            // store a reference of the workspace as it currently exists in case the user cancels the edit
             currWorkspace = Workspace.transformer(_.cloneDeep($scope.activeWorkspace));
             $scope.mode = 'edit';
         };
@@ -41,9 +43,7 @@
                     localStorage.setItem('workspace' + $scope.activeWorkspace.id, JSON.stringify($scope.activeWorkspace));
                 }
                 $scope.mode = 'view';
-                disableSaveWorkspace();
                 getWorkspaces();
-                //$location.path('/workspaces/' + $scope.activeWorkspace.id);
             }).catch(function () {
                 
             });
@@ -63,18 +63,6 @@
 
         $scope.loadWorkspace = function (id) {
             $location.path('workspaces/' + id);
-        };
-
-        var enableSaveWorkspace = function () {
-            if ($scope.activeWorkspace) {
-                $scope.activeWorkspace.modified = true;
-                $scope.saveBtnClass = 'btn-success';
-            }
-        };
-
-        var disableSaveWorkspace = function () {
-            $scope.activeWorkspace.modified = false;
-            $scope.saveBtnClass = 'btn-default';
         };
 
         var getWarningsHtml = function (warnings) {
@@ -114,17 +102,6 @@
                 $scope.brokerDescription = scaleConfig.hostBrokerDescription;
             } else if (newValue === 's3') {
                 $scope.brokerDescription = scaleConfig.s3BrokerDescription;
-            }
-        });
-
-        $scope.$watchCollection('activeWorkspace', function (newValue, oldValue) {
-            if (angular.equals(newValue, oldValue)) {
-                return;
-            }
-            if (newValue.hasRequired()) {
-                enableSaveWorkspace();
-            } else {
-                disableSaveWorkspace();
             }
         });
 
@@ -175,7 +152,6 @@
                 if (id === 0) {
                     $scope.mode = 'add';
                     $scope.activeWorkspace = new Workspace();
-                    disableSaveWorkspace();
                 } else {
                     // set activeWorkspace = workspace details for id
                     workspacesService.getWorkspaceDetails(id).then(function (data) {

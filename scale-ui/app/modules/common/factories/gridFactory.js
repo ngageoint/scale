@@ -29,6 +29,7 @@
                     enableRowSelection: true,
                     enableRowHeaderSelection: false,
                     enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
+                    enableVerticalScrollbar: uiGridConstants.scrollbars.NEVER,
                     multiSelect: false,
                     enableFiltering: true,
                     useExternalSorting: true,

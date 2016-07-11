@@ -14,34 +14,10 @@
             this.created = created;
             this.archived = archived;
             this.last_modified = last_modified;
-            this.json_config = json_config || scaleConfig.workspaceTypes[0];
-            this.modified = false;
-        };
-
-        var checkRequired = function (field) {
-            return !(field === '' || field === null || typeof field === 'undefined');
+            this.json_config = json_config || _.cloneDeep(scaleConfig.workspaceTypes[0]);
         };
 
         Workspace.prototype = {
-            hasRequired: function () {
-                var hasRequired = true;
-                if (!checkRequired(this.name)) {
-                    hasRequired = false;
-                }
-                if (!checkRequired(this.title)) {
-                    hasRequired = false;
-                }
-                if (!checkRequired(this.description)) {
-                    hasRequired = false;
-                }
-                if (!checkRequired(this.base_url)) {
-                    hasRequired = false;
-                }
-                if (!checkRequired(this.json_config.broker.type)) {
-                    hasRequired = false;
-                }
-                return hasRequired;
-            },
             clean: function () {
                 return {
                     name: this.name,
