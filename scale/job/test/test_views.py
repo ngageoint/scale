@@ -343,6 +343,45 @@ class TestJobDetailsView(TestCase):
             self.assertEqual(result['outputs'][0]['value'][0]['id'], self.product.id)
             self.assertEqual(result['outputs'][0]['value'][0]['countries'][0], self.country.iso3)
 
+    def test_superseded(self):
+        """Tests successfully calling the job details view for superseded jobs."""
+
+        job_data = {
+            'input_data': []
+        }
+        job_results = {
+            'output_data': []
+        }
+        new_job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results,
+                                            superseded_job=self.job, delete_superseded=False)
+
+        # Make sure the original job was updated
+        url = '/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(result['is_superseded'])
+        self.assertIsNone(result['root_superseded_job'])
+        self.assertIsNotNone(result['superseded_by_job'])
+        self.assertEqual(result['superseded_by_job']['id'], new_job.id)
+        self.assertIsNotNone(result['superseded'])
+        self.assertTrue(result['delete_superseded'])
+
+        # Make sure the new new job has the expected relations
+        url = '/jobs/%i/' % new_job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(result['is_superseded'])
+        self.assertIsNotNone(result['root_superseded_job'])
+        self.assertEqual(result['root_superseded_job']['id'], self.job.id)
+        self.assertIsNotNone(result['superseded_job'])
+        self.assertEqual(result['superseded_job']['id'], self.job.id)
+        self.assertIsNone(result['superseded'])
+        self.assertFalse(result['delete_superseded'])
+
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
 
