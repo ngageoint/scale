@@ -18,7 +18,7 @@ fi
 echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
 chmod 0600 ~/.pgpass
 
-if [[ ${DEPLOY_DB}x != x ]]
+if [[ ${DEPLOY_DB} == 'true' ]]
 then
     export SCALE_DB_PORT=$(./deployDb.py)
     echo "DATABASE_PORT: ${SCALE_DB_PORT}"
@@ -41,25 +41,25 @@ while [[ "$CHECK1" = "0" ]]; do
   fi
 done
 
-if [[ ${INIT_DB}x != x ]]
+if [[ ${INIT_DB} == 'true' ]]
 then
     /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
     ./manage.py migrate
     ./manage.py load_all_data
 fi
 
-if [[ ${ENABLE_HTTPD}x != x ]]
+if [[ ${ENABLE_HTTPD} == 'true' ]]
 then
     gosu root /usr/sbin/httpd
 fi
 
-if [[ ${ENABLE_NFS}x != x ]]
+if [[ ${ENABLE_NFS} == 'true' ]]
 then
    gosu root /usr/sbin/rpcbind
    gosu root /usr/sbin/rpc.statd
 fi
 
-if [[ ${ENABLE_GUNICORN}x != x ]]
+if [[ ${ENABLE_GUNICORN} == 'true' ]]
 then
     /usr/bin/gunicorn -D -b 0.0.0.0:8000 -w 4 scale.wsgi:application
 fi
