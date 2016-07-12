@@ -39,6 +39,7 @@
         $routeProvider
             .when('/', {
                 controller: 'ovController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/overview/partials/ovTemplate.html'
             })
             .when('/admin/login',{
@@ -51,10 +52,12 @@
             })
             .when('/about', {
                 controller: 'aboutController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/about/partials/aboutTemplate.html'
             })
             .when('/feed', {
                 controller: 'feedDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/feedDetailsTemplate.html',
                 reloadOnSearch: false
             })
@@ -66,19 +69,23 @@
             })
             .when('/feed/ingests/:id', {
                 controller: 'ingestRecordDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/ingestRecordDetailsTemplate.html'
             })
             .when('/metrics', {
                 controller: 'metricsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/metrics/partials/metricsTemplate.html',
                 reloadOnSearch: false
             })
             .when('/nodes', {
                 controller: 'nodesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/nodes/partials/nodesTemplate.html'
             })
             .when('/nodes/:id', {
                 controller: 'nodeDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/nodes/partials/nodeDetailsTemplate.html'
             })
             .when('/load/queued', {
@@ -93,6 +100,7 @@
             })
             .when('/load/depth', {
                 controller: 'loadDepthController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/load/partials/loadDepthTemplate.html'
             })
             .when('/recipes', {
@@ -103,19 +111,13 @@
             })
             .when('/recipes/recipe/:id', {
                 controller: 'recipeDetailsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/recipes/partials/recipeDetailsTemplate.html'
             })
             .when('/recipes/types/:id?', {
                 controller: 'recipeTypesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/recipes/partials/recipeTypesTemplate.html'
-            })
-            .when('/recipes/builder', {
-                controller: 'recipeEditorController',
-                templateUrl: 'modules/recipes/partials/recipeEditorTemplate.html'
-            })
-            .when('/recipes/builder/:id', {
-                controller: 'recipeEditorController',
-                templateUrl: 'modules/recipes/partials/recipeEditorTemplate.html'
             })
             .when('/jobs', {
                 controller: 'jobsController',
@@ -125,10 +127,12 @@
             })
             .when('/jobs/job/:id', {
                 controller: 'jobDetailController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobDetailTemplate.html'
             })
             .when('/jobs/types/:id?', {
                 controller: 'jobTypesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
             })
             .when('/jobs/failure-rates', {
@@ -139,14 +143,17 @@
             })
             .when('/jobs/executions', {
                 controller: 'jobExecutionsController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobExecutionsTemplate.html'
             })
             .when('/jobs/executions/:id', {
                 controller: 'jobExecutionDetailController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/jobs/partials/jobExecutionDetailTemplate.html'
             })
             .when('/workspaces/:id?', {
                 controller: 'workspacesController',
+                controllerAs: 'vm',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
             .otherwise({

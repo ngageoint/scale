@@ -3,45 +3,45 @@
 
     angular.module('scaleApp').controller('recipeDetailsController', function ($rootScope, $scope, $location, $routeParams, navService, recipeService, scaleConfig, subnavService, userService) {
 
-        var self = this;
+        var vm = this;
 
-        $scope.recipe = {};
-        $scope.recipeId = $routeParams.id;
-        $scope.subnavLinks = scaleConfig.subnavLinks.recipes;
+        vm.recipe = {};
+        vm.recipeId = $routeParams.id;
+        vm.subnavLinks = scaleConfig.subnavLinks.recipes;
         subnavService.setCurrentPath('recipes');
-        $scope.loadingRecipeDetail = true;
-        $scope.activeTab = 'status';
-        $scope.lastStatusChange = '';
+        vm.loadingRecipeDetail = true;
+        vm.activeTab = 'status';
+        vm.lastStatusChange = '';
 
-        self.getRecipeDetail = function (recipeId) {
-            $scope.loadingRecipeDetail = true;
+        vm.getRecipeDetail = function (recipeId) {
+            vm.loadingRecipeDetail = true;
             recipeService.getRecipeDetails(recipeId).then(function (data) {
-                $scope.recipe = data;
+                vm.recipe = data;
                 recipeService.getRecipeTypeDetail(data.recipe_type.id).then(function(recipeType){
-                    $scope.recipeType = recipeType;
+                    vm.recipeType = recipeType;
                 }).catch(function(error){
                    console.log(error);
                 });
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
-                $scope.loadingRecipeDetail = false;
+                vm.loadingRecipeDetail = false;
             });
         };
 
-        self.initialize = function () {
+        vm.initialize = function () {
             navService.updateLocation('recipes');
-            self.getRecipeDetail($scope.recipeId);
+            vm.getRecipeDetail(vm.recipeId);
         };
 
 
 
-        $scope.switchTab = function (tab) {
-            $('#' + $scope.activeTab).hide();
-            $scope.activeTab = tab;
-            $('#' + $scope.activeTab).show();
+        vm.switchTab = function (tab) {
+            $('#' + vm.activeTab).hide();
+            vm.activeTab = tab;
+            $('#' + vm.activeTab).show();
         };
 
-        self.initialize();
+        vm.initialize();
     });
 })();

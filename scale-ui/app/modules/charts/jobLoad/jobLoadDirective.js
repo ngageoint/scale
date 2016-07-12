@@ -4,6 +4,7 @@
     angular.module('scaleApp').directive('aisJobLoad', function () {
         return {
             controller: 'aisJobLoadController',
+            controllerAs: 'vm',
             templateUrl: 'modules/charts/jobLoad/jobLoadTemplate.html',
             restrict: 'E',
             scope: {

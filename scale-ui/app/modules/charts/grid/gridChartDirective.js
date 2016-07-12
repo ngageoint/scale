@@ -4,6 +4,7 @@
     angular.module('scaleApp').directive('aisGridChart', function () {
         return {
             controller: 'aisGridChartController',
+            controllerAs: 'vm',
             templateUrl: 'modules/charts/grid/gridChartTemplate.html',
             restrict: 'E',
             scope: {

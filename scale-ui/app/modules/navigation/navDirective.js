@@ -5,7 +5,8 @@
         return {
             restrict: 'E',
             templateUrl: 'modules/navigation/partials/navTemplate.html',
-            controller: 'navController'
+            controller: 'navController',
+            controllerAs: 'vm'
         };
     });
 })();

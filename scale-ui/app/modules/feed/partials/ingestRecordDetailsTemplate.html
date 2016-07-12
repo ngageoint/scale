@@ -1,26 +1,23 @@
-<ais-header name="'Ingest Details'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<ais-header name="'Ingest Details'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
 
 <div class="row">
     <div class="col-xs-12 col-md-6">
         <div class="form-inline">
-            <div ng-if="ingestRecord">
-                <h2 class="margin-top-sm margin-bottom-md"><a href="{{ ingestRecord.url }}">{{ ingestRecord.file_name }}</a></h2>
+            <div ng-if="vm.ingestRecord">
+                <h2 class="margin-top-sm margin-bottom-md"><a href="{{ vm.ingestRecord.url }}">{{ vm.ingestRecord.file_name }}</a></h2>
                 <table class="table table-hover table-condensed table-striped">
                     <tbody>
-                        <tr><td>Media Type:</td> <td>{{ ingestRecord.media_type }}</td></tr>
-                        <tr><td>File Size:</td> <td>{{ scaleService.calculateFileSizeFromBytes(ingestRecord.file_size) }}</td></tr>
-                        <tr><td>Workspace:</td> <td><a href="/#/workspaces/{{ ingestRecord.workspace.id }}">{{ ingestRecord.workspace.name }}</a></td></tr>
-                        <tr><td>Created:</td> <td>{{ moment.utc(ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
-                        <tr><td>Last Modified:</td> <td>{{ moment.utc(ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
-                        <tr ng-if="ingestRecord.parsed"><td>Parsed:</td> <td>{{ moment.utc(ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                        <tr><td>Media Type:</td> <td>{{ vm.ingestRecord.media_type }}</td></tr>
+                        <tr><td>File Size:</td> <td>{{ vm.scaleService.calculateFileSizeFromBytes(vm.ingestRecord.file_size) }}</td></tr>
+                        <tr><td>Workspace:</td> <td><a href="/#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.name }}</a></td></tr>
+                        <tr><td>Created:</td> <td>{{ vm.moment.utc(vm.ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                        <tr><td>Last Modified:</td> <td>{{ vm.moment.utc(vm.ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                        <tr ng-if="vm.ingestRecord.parsed"><td>Parsed:</td> <td>{{ vm.moment.utc(vm.ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <!--<div class="col-xs-12 col-md-6">-->
-        <!--<scale-file-ancestry-tree source="nuller" />-->
-    <!--</div>-->
 </div>
 <div class="row">
     <div class="col-xs-12">
@@ -34,7 +31,7 @@
                 <td>Created</td>
                 <td>Last Modified</td>
             </tr>
-            <tr ng-repeat="product in ingestRecord.products">
+            <tr ng-repeat="product in vm.ingestRecord.products">
                 <td>
                     <a ng-show="product.url" href="{{ product.url }}" target="_jobfile">{{ product.file_name }}</a>
                     <span ng-show="!product.url">{{ product.file_name }}</span>
@@ -42,7 +39,7 @@
                 <td>
                     <a ng-show="product.job.id" href="{{ '#/jobs/job/' + product.job.id }}">{{ product.job_type.title }}</a>
                 </td>
-                <td>{{ calculateFileSize(product.file_size) }}</td>
+                <td>{{ vm.calculateFileSize(product.file_size) }}</td>
                 <td>{{ product.created }}</td>
                 <td>{{ product.last_modified }}</td>
             </tr>

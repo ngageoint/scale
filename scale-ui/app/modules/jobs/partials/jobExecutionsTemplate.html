@@ -1,10 +1,10 @@
-<ais-header name="'Job Executions (' + gridOptions.totalItems + ')'" loading="loading" show-subnav="true" subnav-links="subnavLinks"></ais-header>
+<ais-header name="'Job Executions (' + vm.gridOptions.totalItems + ')'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <div class="grid-container">
-                <div ui-grid="gridOptions" ui-grid-selection ui-grid-pagination class="scale-grid"></div>
+                <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
             </div>
         </div>
     </div>

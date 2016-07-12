@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('scaleApp').controller('aisRadialPercentageController', function($scope, $element, scaleConfig) {
+angular.module('scaleApp').controller('aisRadialPercentageController', function ($scope, $element, scaleConfig) {
     var isInitialized = false,
         foreground = '',
         text = '',
@@ -18,7 +18,7 @@ angular.module('scaleApp').controller('aisRadialPercentageController', function(
         }
     };
 
-    var initialize = function() {
+    var initialize = function () {
         // handle input either .83 or 83
         var percentage = $scope.percentage || 0;
         if (percentage > 1) {
@@ -31,9 +31,7 @@ angular.module('scaleApp').controller('aisRadialPercentageController', function(
         if ($element[0].parentNode.clientHeight < size) {
             size = $element[0].parentNode.clientHeight;
         }
-
-
-        var duration = 1000;
+        
         var formatPercent = d3.format('.0%');
 
         var arc = d3.svg.arc()
@@ -78,23 +76,23 @@ angular.module('scaleApp').controller('aisRadialPercentageController', function(
             .attr('dy', '.35em');
 
 
-        textTween = function(transition, newPercentage) {
-            transition.attrTween('text', function(d) {
+        textTween = function (transition, newPercentage) {
+            transition.attrTween('text', function (d) {
                 if (typeof d === 'undefined') {
                     d = 0;
                 }
                 var i = d3.interpolate(d.percentage, newPercentage);
-                return function(t) {
+                return function (t) {
                     d.percentage = i(t);
                     text.text(formatPercent(i(t)));
                     return t;
                 }
             });
         };
-        arcTween = function(transition, newAngle) {
-            transition.attrTween('d', function(d) {
+        arcTween = function (transition, newAngle) {
+            transition.attrTween('d', function (d) {
                 var i = d3.interpolate(d.endAngle, newAngle);
-                return function(t) {
+                return function (t) {
                     d.endAngle = i(t);
                     return arc(d);
                 };
@@ -104,11 +102,6 @@ angular.module('scaleApp').controller('aisRadialPercentageController', function(
         isInitialized = true;
 
         redraw(percentage);
-
-        // get progress...
-
-        //foreground.attr('d', arc.endAngle((Math.PI * 2) * 0.83));
-        //text.text(formatPercent(percentage));
     };
 
     var redraw = function (value) {
@@ -117,20 +110,17 @@ angular.module('scaleApp').controller('aisRadialPercentageController', function(
             if (percentage > 1) {
                 percentage /= 100;
             }
-            //console.log('Setting percentage to: ' + percentage);
 
-            //foreground.transition().duration(5000).attr('d', arc);
             foreground.transition().duration(1000)
                 .style('fill', function () {
                     return getForeground();
                 })
                 .call(arcTween, (Math.PI * 2) * percentage);
-            //text.text(formatPercent(percentage));
             text.transition().duration(1000).call(textTween, percentage);
         }
     };
 
-    $scope.$watch('percentage', function(value) {
+    $scope.$watch('percentage', function (value) {
         if (value && !isInitialized) {
             initialize();
         } else {

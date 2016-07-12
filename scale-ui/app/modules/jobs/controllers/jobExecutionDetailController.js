@@ -2,19 +2,21 @@
     'use strict';
 
     angular.module('scaleApp').controller('jobExecutionDetailController', function ($scope, $location, $routeParams, navService, jobExecutionService, nodeService, scaleConfig, subnavService) {
-        $scope.jobExecution = {};
-        $scope.jobExecutionId = $routeParams.id;
-        $scope.loading = true;
-        $scope.subnavLinks = scaleConfig.subnavLinks.jobs;
+        var vm = this;
+        
+        vm.jobExecution = {};
+        vm.jobExecutionId = $routeParams.id;
+        vm.loading = true;
+        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/runs');
 
-        var getJobExecutionDetail = function (jobExecutionId) {
+        var getJobExecutionDetail = function () {
             jobExecutionService.getJobExecutionDetail(id).then(function (data) {
-                $scope.jobExecution = data;
+                vm.jobExecution = data;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
-                $scope.loading = false;
+                vm.loading = false;
             });
         };
 

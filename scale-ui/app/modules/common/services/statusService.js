@@ -10,7 +10,6 @@
                 return statusPoller.promise.then(null, null, function (result) {
                     if (result.$resolved) {
                         result = Status.transformer(result);
-                        //result = angular.extend(result, returnResult);
                     } else {
                         statusPoller.stop();
                     }

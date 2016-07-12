@@ -2,84 +2,52 @@
     'use strict';
 
     angular.module('scaleApp').controller('aisJobLoadController', function ($scope, scaleConfig, scaleService, loadService) {
-        var chart = null,
+        var vm = this,
+            chart = null,
             colArr = [],
-            xArr = [],
-            pendingArr = [],
-            queuedArr = [],
-            runningArr = [],
-            removeIds = [],
-            legendHide = [];
+            xArr = [];
 
-        $scope.filterValue = 1;
-        $scope.filterDuration = 'w';
-        $scope.filterDurations = ['M', 'w', 'd'];
-        $scope.zoomEnabled = false;
-        $scope.zoomClass = 'btn-default';
-        $scope.zoomText = 'Enable Zoom';
-        $scope.jobLoadData = {};
-        $scope.loadingJobLoad = true;
-        $scope.jobLoadError = null;
-        $scope.jobLoadErrorStatus = null;
-        $scope.total = 0;
-        $scope.chartStyle = '';
+        vm.filterValue = 1;
+        vm.filterDuration = 'w';
+        vm.filterDurations = ['M', 'w', 'd'];
+        vm.zoomEnabled = false;
+        vm.zoomClass = 'btn-default';
+        vm.zoomText = 'Enable Zoom';
+        vm.jobLoadData = {};
+        vm.loadingJobLoad = true;
+        vm.jobLoadError = null;
+        vm.jobLoadErrorStatus = null;
+        vm.total = 0;
+        vm.chartStyle = '';
 
         var jobLoadParams = {
-            started: moment.utc().subtract($scope.filterValue, $scope.filterDuration).startOf('d').toDate(), ended: moment.utc().endOf('d').toDate(), job_type_id: null, job_type_name: null, job_type_category: null, url: null
+            started: moment.utc().subtract(vm.filterValue, vm.filterDuration).startOf('d').toDate(), ended: moment.utc().endOf('d').toDate(), job_type_id: null, job_type_name: null, job_type_category: null, url: null
         };
 
-        $scope.toggleZoom = function () {
-            $scope.zoomEnabled = !$scope.zoomEnabled;
-            chart.zoom.enable($scope.zoomEnabled);
-            if ($scope.zoomEnabled) {
-                $scope.zoomClass = 'btn-primary';
-                $scope.zoomText = 'Disable Zoom';
+        vm.toggleZoom = function () {
+            vm.zoomEnabled = !vm.zoomEnabled;
+            chart.zoom.enable(vm.zoomEnabled);
+            if (vm.zoomEnabled) {
+                vm.zoomClass = 'btn-primary';
+                vm.zoomText = 'Disable Zoom';
             } else {
-                $scope.zoomClass = 'btn-default';
-                $scope.zoomText = 'Enable Zoom';
+                vm.zoomClass = 'btn-default';
+                vm.zoomText = 'Enable Zoom';
             }
         };
 
         var initChart = function () {
-            colArr = [];
             xArr = [];
-            pendingArr = [];
-            queuedArr = [];
-            runningArr = [];
-
-            /*
-            // x axis values
-            var numHours = moment.utc(jobLoadParams.ended).diff(moment.utc(jobLoadParams.started), 'h');
-            for (var i = 0; i < numHours; i++) {
-                xArr.push(moment.utc(jobLoadParams.started).add(i, 'h').startOf('h').toDate());
-            }
-
-            // data values
-            _.forEach(xArr, function (xDate) {
-                var dataObj = _.find($scope.jobLoadData.results, function (d) {
-                    return moment.utc(d.time).startOf('h').isSame(xDate, 'hour');
-                });
-                // push 0 if data for xDate is not present in queryDates
-                pendingArr.push(dataObj ? dataObj.pending_count : 0);
-                queuedArr.push(dataObj ? dataObj.queued_count : 0);
-                runningArr.push(dataObj ? dataObj.running_count : 0);
-            });
-
-            xArr.unshift('x');
-            pendingArr.unshift('Pending');
-            queuedArr.unshift('Queued');
-            runningArr.unshift('Running');
-            */
-
-            xArr = _.pluck($scope.jobLoadData.results, 'time');
+            
+            xArr = _.pluck(vm.jobLoadData.results, 'time');
             _.forEach(xArr, function (d, i) {
                 xArr[i] = moment.utc(d).toDate();
             });
             xArr.unshift('x');
 
-            var pendingArr = _.pluck($scope.jobLoadData.results, 'pending_count'),
-                queuedArr = _.pluck($scope.jobLoadData.results, 'queued_count'),
-                runningArr = _.pluck($scope.jobLoadData.results, 'running_count');
+            var pendingArr = _.pluck(vm.jobLoadData.results, 'pending_count'),
+                queuedArr = _.pluck(vm.jobLoadData.results, 'queued_count'),
+                runningArr = _.pluck(vm.jobLoadData.results, 'running_count');
 
             pendingArr.unshift('Pending');
             queuedArr.unshift('Queued');
@@ -93,112 +61,97 @@
                 groups = [];
 
             _.forEach(colArr, function(col){
-                    type = {};
-                    if (col[0] !== 'x') {
-                        type[col[0]] = 'area';
-                        groups.push(col[0]);
-                    }
+                type = {};
+                if (col[0] !== 'x') {
+                    type[col[0]] = 'area';
+                    groups.push(col[0]);
+                }
                 angular.extend(types, type);
             });
 
-            //if (chart) {
-                /*
-                chart.groups([groups]);
-                chart.load({
-                    columns: colArr,
-                    types: types,
-                });
-                */
-                /*
-                chart.flow({
-                    columns: colArr
-                });
-                */
-            //} else {
             if (chart) {
                 chart.flush();
             }
-                // chart config
-                chart = c3.generate({
-                    bindto: '#job-load',
-                    data: {
-                        x: 'x',
-                        columns: colArr,
-                        types: types,
-                        groups: [groups],
-                        colors: {
-                            Pending: scaleConfig.colors.chart_pink,
-                            Queued: scaleConfig.colors.chart_purple,
-                            Running: scaleConfig.colors.chart_blue
+            // chart config
+            chart = c3.generate({
+                bindto: '#job-load',
+                data: {
+                    x: 'x',
+                    columns: colArr,
+                    types: types,
+                    groups: [groups],
+                    colors: {
+                        Pending: scaleConfig.colors.chart_pink,
+                        Queued: scaleConfig.colors.chart_purple,
+                        Running: scaleConfig.colors.chart_blue
+                    }
+                },
+                transition: {
+                    duration: 700
+                },
+                tooltip: {
+                    format: {
+                        title: function (x) {
+                            return moment.utc(x).startOf('h').format(scaleConfig.dateFormats.day_second);
                         }
-                    },
-                    transition: {
-                        duration: 700
-                    },
-                    tooltip: {
-                        format: {
-                            title: function (x) {
-                                return moment.utc(x).startOf('h').format(scaleConfig.dateFormats.day_second);
-                            }
-                        }
-                    },
-                    axis: {
-                        x: {
-                            type: 'timeseries',
-                            tick: {
-                                format: function (d) {
-                                    return moment.utc(d).format(scaleConfig.dateFormats.day);
-                                }
+                    }
+                },
+                axis: {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            format: function (d) {
+                                return moment.utc(d).format(scaleConfig.dateFormats.day);
                             }
                         }
                     }
-                });
-            //}
-            $scope.loadingJobLoad = false;
+                }
+            });
+            vm.loadingJobLoad = false;
         };
 
         var getJobLoad = function (showPageLoad) {
             if (showPageLoad) {
                 $scope.$parent.loading = true;
             } else {
-                $scope.loadingJobLoad = true;
+                vm.loadingJobLoad = true;
             }
-            jobLoadParams.started = moment.utc().subtract($scope.filterValue, $scope.filterDuration).startOf('d').toDate();
-            jobLoadParams.ended = moment.utc(jobLoadParams.started).add(1, $scope.filterDuration).endOf('d').toDate();
+            jobLoadParams.started = moment.utc().subtract(vm.filterValue, vm.filterDuration).startOf('d').toDate();
+            jobLoadParams.ended = moment.utc(jobLoadParams.started).add(1, vm.filterDuration).endOf('d').toDate();
             jobLoadParams.page_size = 1000;
 
             loadService.getJobLoad(jobLoadParams).then(null, null, function (result) {
                 if (result.$resolved) {
-                    $scope.jobLoadData = result;
+                    vm.jobLoadData = result;
                     initChart();
                 } else {
                     if (result.statusText && result.statusText !== '') {
-                        $scope.jobLoadErrorStatus = result.statusText;
+                        vm.jobLoadErrorStatus = result.statusText;
                     }
-                    $scope.jobLoadError = 'Unable to retrieve job load.';
+                    vm.jobLoadError = 'Unable to retrieve job load.';
                 }
                 if (showPageLoad) {
                     $scope.$parent.loading = false;
                 } else {
-                    $scope.loadingJobLoad = false;
+                    vm.loadingJobLoad = false;
                 }
             });
         };
 
-        $scope.updateJobLoadRange = function (action) {
+        vm.updateJobLoadRange = function (action) {
             if (action === 'older') {
-                $scope.filterValue++;
+                vm.filterValue++;
             } else if (action === 'newer') {
-                if ($scope.filterValue > 1) {
-                    $scope.filterValue--;
+                if (vm.filterValue > 1) {
+                    vm.filterValue--;
                 }
             } else if (action === 'today') {
-                $scope.filterValue = 1;
+                vm.filterValue = 1;
             }
             getJobLoad(true);
         };
 
-        $scope.$watch('filterValue', function (value) {
+        $scope.$watch('vm.filterValue', function (value) {
             var $jobLoadNewer = $('.job-load-newer'),
                 $jobLoadToday = $('.job-load-today');
 
@@ -223,7 +176,7 @@
                     filterOffset = $('.job-load-filter').outerHeight(true),
                     chartMaxHeight = viewport.height - offset - headerOffset - legendOffset - filterOffset - 5;
 
-                $scope.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
+                vm.chartStyle = 'height: ' + chartMaxHeight + 'px; max-height: ' + chartMaxHeight + 'px;';
                 getJobLoad();
             });
         } else {
