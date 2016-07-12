@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').factory('Strike', function (scaleConfig, Job) {
+    angular.module('scaleApp').factory('Strike', function (scaleConfig, Job, StrikeConfiguration) {
         var Strike = function (id, name, title, description, job, created, last_modified, configuration) {
             this.id = id;
             this.name = name;
@@ -10,7 +10,7 @@
             this.job = Job.transformer(job);
             this.created = created;
             this.last_modified = last_modified;
-            this.configuration = configuration;
+            this.configuration = StrikeConfiguration.transformer(configuration);
         };
 
         Strike.prototype = {

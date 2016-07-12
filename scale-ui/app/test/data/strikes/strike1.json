@@ -35,12 +35,16 @@
     "last_modified": "2015-10-05T21:26:04.876Z",
     "configuration": {
         "version": "1.0",
-        "mount": "host:/my/path",
-        "transfer_suffix": "_tmp",
+        "workspace": "rs",
+        "monitor": {
+            "type": "s3",
+            "sqs_name": "my-sqs"
+        },
         "files_to_ingest": [{
             "filename_regex": ".*txt",
-            "workspace_path": "my/path",
-            "workspace_name": "rs"
+            "data_types": [],
+            "new_workspace": "",
+            "new_file_path": ""
         }]
     }
 }
