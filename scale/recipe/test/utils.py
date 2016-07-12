@@ -1,4 +1,4 @@
-'''Defines utility methods for testing jobs and job types'''
+"""Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
 import job.test.utils as job_test_utils
@@ -20,8 +20,8 @@ MOCK_ERROR_TYPE = 'MOCK_RECIPE_TRIGGER_RULE_ERROR_TYPE'
 
 
 class MockTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    '''Mock trigger rule configuration for testing
-    '''
+    """Mock trigger rule configuration for testing
+    """
 
     def __init__(self, trigger_rule_type, configuration):
         super(MockTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
@@ -37,8 +37,8 @@ class MockTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
 
 
 class MockErrorTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    '''Mock error trigger rule configuration for testing
-    '''
+    """Mock error trigger rule configuration for testing
+    """
 
     def __init__(self, trigger_rule_type, configuration):
         super(MockErrorTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
@@ -54,8 +54,8 @@ class MockErrorTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
 
 
 class MockTriggerRuleHandler(TriggerRuleHandler):
-    '''Mock trigger rule handler for testing
-    '''
+    """Mock trigger rule handler for testing
+    """
 
     def __init__(self):
         super(MockTriggerRuleHandler, self).__init__(MOCK_TYPE)
@@ -65,8 +65,8 @@ class MockTriggerRuleHandler(TriggerRuleHandler):
 
 
 class MockErrorTriggerRuleHandler(TriggerRuleHandler):
-    '''Mock error trigger rule handler for testing
-    '''
+    """Mock error trigger rule handler for testing
+    """
 
     def __init__(self):
         super(MockErrorTriggerRuleHandler, self).__init__(MOCK_ERROR_TYPE)
@@ -80,31 +80,31 @@ register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 
 def create_recipe_type(name=None, version=None, title=None, description=None, definition=None, trigger_rule=None):
-    '''Creates a recipe type for unit testing
+    """Creates a recipe type for unit testing
 
     :returns: The RecipeType model
     :rtype: :class:`recipe.models.RecipeType`
-    '''
+    """
 
     if not name:
         global NAME_COUNTER
         name = 'test-recipe-type-%i' % NAME_COUNTER
-        NAME_COUNTER = NAME_COUNTER + 1
+        NAME_COUNTER += 1
 
     if not version:
         global VERSION_COUNTER
         version = '%i.0.0' % VERSION_COUNTER
-        VERSION_COUNTER = VERSION_COUNTER + 1
+        VERSION_COUNTER += 1
 
     if not title:
         global TITLE_COUNTER
         title = 'Test Recipe Type %i' % TITLE_COUNTER
-        TITLE_COUNTER = TITLE_COUNTER + 1
+        TITLE_COUNTER += 1
 
     if not description:
         global DESCRIPTION_COUNTER
         description = 'Test Description %i' % DESCRIPTION_COUNTER
-        DESCRIPTION_COUNTER = DESCRIPTION_COUNTER + 1
+        DESCRIPTION_COUNTER += 1
 
     if not definition:
         definition = {
@@ -131,7 +131,7 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
 
 
 def create_recipe(recipe_type=None, data=None, event=None):
-    '''Creates a job type model for unit testing
+    """Creates a job type model for unit testing
 
     :param recipe_type: The associated recipe type
     :type recipe_type: :class:'recipe.models.RecipeType'
@@ -141,7 +141,7 @@ def create_recipe(recipe_type=None, data=None, event=None):
     :type event: :class:'trigger.models.TriggerEvent'
     :returns: The recipe model
     :rtype: :class:`recipe.models.Recipe`
-    '''
+    """
 
     if not data:
         data = {}
@@ -163,17 +163,17 @@ def create_recipe(recipe_type=None, data=None, event=None):
 
 
 def create_recipe_job(recipe=None, job_name=None, job=None):
-    '''Creates a job type model for unit testing
+    """Creates a job type model for unit testing
 
     :param recipe: The associated recipe
     :type recipe: :class:'recipe.models.Recipe'
     :param job_name: The associated name for the recipe job
-    :type data: string
+    :type job_name: string
     :param job: The associated job
     :type job: :class:'job.models.Job'
     :returns: The recipe job model
     :rtype: :class:`recipe.models.RecipeJob`
-    '''
+    """
     if not recipe:
         recipe = create_recipe()
 
