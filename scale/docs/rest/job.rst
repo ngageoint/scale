@@ -60,61 +60,76 @@ These services provide access to information about "all", "currently running" an
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type          | JSON Object       | The job type that is associated with the job.                                  |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type_rev      | JSON Object       | The job type revision that is associated with the job.                         |
-|                    |                   | This represents the definition at the time the job was scheduled.              |
-|                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .event             | JSON Object       | The trigger event that is associated with the job.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .error             | JSON Object       | The error that is associated with the job.                                     |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .status            | String            | The current status of the job.                                                 |
-|                    |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .priority          | Integer           | The priority of the job.                                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .num_exes          | Integer           | The number of executions this job has had.                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .timeout           | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .max_tries         | Integer           | The maximum number of times to attempt this job when failed (minimum one).     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .cpus_required     | Decimal           | The number of CPUs needed for a job of this type.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .mem_required      | Decimal           | The amount of RAM in MiB needed for a job of this type.                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_in_required  | Decimal           | The amount of disk space in MiB required for input files for this job.         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .started           | ISO-8601 Datetime | When the job started running.                                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .ended             | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_status_change| ISO-8601 Datetime | When the status of the job was last changed.                                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| count               | Integer           | The total number of results that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| next                | URL               | A URL to the next page of results.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| previous            | URL               | A URL to the previous page of results.                                        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| results             | Array             | List of result JSON objects that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.    |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .job_type           | JSON Object       | The job type that is associated with the job.                                 |
+|                     |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                         |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
+|                     |                   | This represents the definition at the time the job was scheduled.             |
+|                     |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .event              | JSON Object       | The trigger event that is associated with the job.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .error              | JSON Object       | The error that is associated with the job.                                    |
+|                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .status             | String            | The current status of the job.                                                |
+|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .priority           | Integer           | The priority of the job.                                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .num_exes           | Integer           | The number of executions this job has had.                                    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds). |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .cpus_required      | Decimal           | The number of CPUs needed for a job of this type.                             |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .mem_required       | Decimal           | The amount of RAM in MiB needed for a job of this type.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_in_required   | Decimal           | The amount of disk space in MiB required for input files for this job.        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                        |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                           |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .started            | ISO-8601 Datetime | When the job started running.                                                 |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .ended              | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_status_change | ISO-8601 Datetime | When the status of the job was last changed.                                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -160,11 +175,17 @@ These services provide access to information about "all", "currently running" an
 |                "mem_required": 64.0,                                                                                    |
 |                "disk_in_required": 0.0,                                                                                 |
 |                "disk_out_required": 64.0,                                                                               |
+|                "is_superseded": false,                                                                                  |
+|                "root_superseded_job": null,                                                                             |
+|                "superseded_job": null,                                                                                  |
+|                "superseded_by_job": null,                                                                               |
+|                "delete_superseded": true,                                                                               |
 |                "created": "2015-08-28T17:55:41.005Z",                                                                   |
 |                "queued": "2015-08-28T17:56:41.005Z",                                                                    |
 |                "started": "2015-08-28T17:57:41.005Z",                                                                   |
 |                "ended": "2015-08-28T17:58:41.005Z",                                                                     |
 |                "last_status_change": "2015-08-28T17:58:45.906Z",                                                        |
+|                "superseded": null,                                                                                      |
 |                "last_modified": "2015-08-28T17:58:46.001Z"                                                              |
 |            },                                                                                                           |
 |            ...                                                                                                          |
@@ -222,6 +243,19 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                         |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                 |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                            |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
@@ -231,6 +265,8 @@ These services provide access to information about "all", "currently running" an
 | ended              | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_status_change | ISO-8601 Datetime | When the status of the job was last changed.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -350,11 +386,17 @@ These services provide access to information about "all", "currently running" an
 |        "mem_required": 15360.0,                                                                                         |
 |        "disk_in_required": 2.0,                                                                                         |
 |        "disk_out_required": 16.0,                                                                                       |
+|        "is_superseded": false,                                                                                          |
+|        "root_superseded_job": null,                                                                                     |
+|        "superseded_job": null,                                                                                          |
+|        "superseded_by_job": null,                                                                                       |
+|        "delete_superseded": true,                                                                                       |
 |        "created": "2015-08-28T17:55:41.005Z",                                                                           |
 |        "queued": "2015-08-28T17:56:41.005Z",                                                                            |
 |        "started": "2015-08-28T17:57:41.005Z",                                                                           |
 |        "ended": "2015-08-28T17:58:41.005Z",                                                                             |
 |        "last_status_change": "2015-08-28T17:58:45.906Z",                                                                |
+|        "superseded": null,                                                                                              |
 |        "last_modified": "2015-08-28T17:58:46.001Z",                                                                     |
 |        "data": {                                                                                                        |
 |            "input_data": [                                                                                              |
@@ -598,64 +640,79 @@ These services provide access to information about "all", "currently running" an
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type          | JSON Object       | The job type that is associated with the job.                                  |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type_rev      | JSON Object       | The job type revision that is associated with the job.                         |
-|                    |                   | This represents the definition at the time the job was scheduled.              |
-|                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .event             | JSON Object       | The trigger event that is associated with the job.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .error             | JSON Object       | The error that is associated with the job.                                     |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .status            | String            | The current status of the job.                                                 |
-|                    |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .priority          | Integer           | The priority of the job.                                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .num_exes          | Integer           | The number of executions this job has had.                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .timeout           | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .max_tries         | Integer           | The maximum number of times to attempt this job when failed (minimum one).     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .cpus_required     | Decimal           | The number of CPUs needed for a job of this type.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .mem_required      | Decimal           | The amount of RAM in MiB needed for a job of this type.                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_in_required  | Decimal           | The amount of disk space in MiB required for input files for this job.         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .started           | ISO-8601 Datetime | When the job started running.                                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .ended             | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_status_change| ISO-8601 Datetime | When the status of the job was last changed.                                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .input_files       | JSON Object       | A list of files that the job used as input.                                    |
-|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| count               | Integer           | The total number of results that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| next                | URL               | A URL to the next page of results.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| previous            | URL               | A URL to the previous page of results.                                        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| results             | Array             | List of result JSON objects that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.    |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .job_type           | JSON Object       | The job type that is associated with the job.                                 |
+|                     |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                         |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
+|                     |                   | This represents the definition at the time the job was scheduled.             |
+|                     |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .event              | JSON Object       | The trigger event that is associated with the job.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .error              | JSON Object       | The error that is associated with the job.                                    |
+|                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .status             | String            | The current status of the job.                                                |
+|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .priority           | Integer           | The priority of the job.                                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .num_exes           | Integer           | The number of executions this job has had.                                    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds). |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .cpus_required      | Decimal           | The number of CPUs needed for a job of this type.                             |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .mem_required       | Decimal           | The amount of RAM in MiB needed for a job of this type.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_in_required   | Decimal           | The amount of disk space in MiB required for input files for this job.        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                        |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                           |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .started            | ISO-8601 Datetime | When the job started running.                                                 |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .ended              | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_status_change | ISO-8601 Datetime | When the status of the job was last changed.                                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .input_files        | JSON Object       | A list of files that the job used as input.                                   |
+|                     |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -701,11 +758,17 @@ These services provide access to information about "all", "currently running" an
 |                "mem_required": 64.0,                                                                                    |
 |                "disk_in_required": 0.0,                                                                                 |
 |                "disk_out_required": 64.0,                                                                               |
+|                "is_superseded": false,                                                                                  |
+|                "root_superseded_job": null,                                                                             |
+|                "superseded_job": null,                                                                                  |
+|                "superseded_by_job": null,                                                                               |
+|                "delete_superseded": true,                                                                               |
 |                "created": "2015-08-28T17:55:41.005Z",                                                                   |
 |                "queued": "2015-08-28T17:56:41.005Z",                                                                    |
 |                "started": "2015-08-28T17:57:41.005Z",                                                                   |
 |                "ended": "2015-08-28T17:58:41.005Z",                                                                     |
 |                "last_status_change": "2015-08-28T17:58:45.906Z",                                                        |
+|                "superseded": null,                                                                                      |
 |                "last_modified": "2015-08-28T17:58:46.001Z",                                                             |
 |                "input_files": [                                                                                         |
 |                    {                                                                                                    |
@@ -788,60 +851,75 @@ These services provide access to information about "all", "currently running" an
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type          | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .event             | JSON Object       | The trigger event that is associated with the count.                           |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .error             | JSON Object       | The error that is associated with the count.                                   |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .status            | String            | The current status of the job.                                                 |
-|                    |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .priority          | Integer           | The priority of the job.                                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .num_exes          | Integer           | The number of executions this job has had.                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .timeout           | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .max_tries         | Integer           | The maximum number of times to attempt this job when failed (minimum one).     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .cpus_required     | Decimal           | The number of CPUs needed for a job of this type.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .mem_required      | Decimal           | The amount of RAM in MiB needed for a job of this type.                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_in_required  | Decimal           | The amount of disk space in MiB required for input files for this job.         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .disk_out_required | Decimal           | The amount of disk space in MiB required for output files for this job.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .queued            | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .started           | ISO-8601 Datetime | When the job started running.                                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .ended             | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_status_change| ISO-8601 Datetime | When the status of the job was last changed.                                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .latest_job_exe    | JSON Object       | The most recent execution of the job.                                          |
-|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| count               | Integer           | The total number of results that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| next                | URL               | A URL to the next page of results.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| previous            | URL               | A URL to the previous page of results.                                        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| results             | Array             | List of result JSON objects that match the query parameters.                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.    |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .job_type           | JSON Object       | The job type that is associated with the count.                               |
+|                     |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                         |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .event              | JSON Object       | The trigger event that is associated with the count.                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .error              | JSON Object       | The error that is associated with the count.                                  |
+|                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .status             | String            | The current status of the job.                                                |
+|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .priority           | Integer           | The priority of the job.                                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .num_exes           | Integer           | The number of executions this job has had.                                    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds). |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .cpus_required      | Decimal           | The number of CPUs needed for a job of this type.                             |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .mem_required       | Decimal           | The amount of RAM in MiB needed for a job of this type.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_in_required   | Decimal           | The amount of disk space in MiB required for input files for this job.        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                        |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                           |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .started            | ISO-8601 Datetime | When the job started running.                                                 |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .ended              | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_status_change | ISO-8601 Datetime | When the status of the job was last changed.                                  |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .latest_job_exe     | JSON Object       | The most recent execution of the job.                                         |
+|                     |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)               |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -890,11 +968,17 @@ These services provide access to information about "all", "currently running" an
 |                "mem_required": 64.0,                                                                                    |
 |                "disk_in_required": 0.0,                                                                                 |
 |                "disk_out_required": 64.0,                                                                               |
+|                "is_superseded": false,                                                                                  |
+|                "root_superseded_job": null,                                                                             |
+|                "superseded_job": null,                                                                                  |
+|                "superseded_by_job": null,                                                                               |
+|                "delete_superseded": true,                                                                               |
 |                "created": "2015-08-28T17:55:41.005Z",                                                                   |
 |                "queued": "2015-08-28T17:56:41.005Z",                                                                    |
 |                "started": "2015-08-28T17:57:41.005Z",                                                                   |
 |                "ended": "2015-08-28T17:58:41.005Z",                                                                     |
 |                "last_status_change": "2015-08-28T17:58:45.906Z",                                                        |
+|                "superseded": null,                                                                                      |
 |                "last_modified": "2015-08-28T17:58:46.001Z",                                                             |
 |                "latest_job_exe": {                                                                                      |
 |                    "id": 3,                                                                                             |
