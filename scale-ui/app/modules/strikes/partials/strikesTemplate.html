@@ -12,7 +12,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xs-9 detail-container" style="{{ vm.containerStyle }}">
+    <div class="col-xs-9 detail-container">
         <div class="text-center" ng-if="!vm.activeStrike">
             <h2>Select a Strike to view its details.</h2>
         </div>
@@ -69,57 +69,93 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="row">
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-6">
                                         <div class="form-group">
                                             <label for="scVersion">Version</label>
                                             <input id="scVersion" name="scVersion" type="text" class="form-control" ng-model="vm.activeStrike.configuration.version" placeholder="Version">
                                         </div>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scMount.$invalid }">
-                                            <label for="scMount">Mount</label>
-                                            <input id="scMount" name="scMount" type="text" class="form-control" ng-model="vm.activeStrike.configuration.mount" placeholder="Mount" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scTransferSuffix.$invalid }">
-                                            <label for="scTransferSuffix">Transfer Suffix</label>
-                                            <input id="scTransferSuffix" name="scTransferSuffix" type="text" class="form-control" ng-model="vm.activeStrike.configuration.transfer_suffix" placeholder="Transfer Suffix" required>
+                                    <div class="col-xs-6">
+                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scWorkspace.$invalid }">
+                                            <label for="scWorkspace">Workspace</label>
+                                            <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces"></select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="scFilenameRegex">Filename Regex</label>
-                                                    <input id="scFilenameRegex" name="scFilenameRegex" type="text" class="form-control" ng-model="vm.activeStrike.configuration.files_to_ingest[0].filename_regex" placeholder="Filename Regex">
-                                                    <p class="help-block">A regular expression to check against the names of newly copied files</p>
-                                                </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scMonitorType.$invalid }">
+                                            <label for="scMonitorType">Monitor Type</label>
+                                            <select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                            <label for="sqs_name">SQS Name</label>
+                                            <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
+                                        </div>
+                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nfs'">
+                                            <label for="nfs_field">NFS Field (TBD)</label>
+                                            <input id="nfs_field" name="nfs_field" type="text" class="form-control" placeholder="NFS Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.nfs_field">
+                                        </div>
+                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'host'">
+                                            <label for="host_field">Host Field (TBD)</label>
+                                            <input id="host_field" name="host_field" type="text" class="form-control" placeholder="Host Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.host_field">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Strike Ingest File</h3>
                                             </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="scDataTypes">Data Types</label>
-                                                    <input id="scDataTypes" name="scDataTypes" type="text" class="form-control" ng-model="vm.activeStrike.configuration.files_to_ingest[0].data_types" placeholder="Data Types">
-                                                    <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings “tagged” with the file.</p>
+                                            <div class="panel-body">
+                                                <!-- scif = (S)trike (C)onfig (I)ngest (F)ile -->
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label for="scifFilenameRegex">Filename Regex</label>
+                                                            <input id="scifFilenameRegex" name="scifFilenameRegex" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.filename_regex" placeholder="Filename Regex">
+                                                            <p class="help-block">A regular expression to check against the names of newly copied files</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label for="scifDataTypes">Data Types</label>
+                                                            <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.data_types" placeholder="Data Types">
+                                                            <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings “tagged” with the file.</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label for="scifNewWorkspace">New Workspace</label>
+                                                            <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label for="scifNewFilePath">New File Path</label>
+                                                            <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-default btn-block" ng-click="vm.addStrikeIngestFile()"><i class="fa fa-plus"></i> Add File to Configuration</button>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="scWorkspacePath">Workspace Path</label>
-                                                    <input id="scWorkspacePath" name="scWorkspacePath" type="text" class="form-control" ng-model="vm.activeStrike.configuration.files_to_ingest[0].workspace_path" placeholder="Workspace Path">
-                                                    <p class="help-block">Workspace Path specifies a relative path within the workspace where each file will be stored.</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="scWorkspaceName">Workspace Name</label>
-                                                    <select id="scWorkspaceName" name="scWorkspaceName" class="form-control" ng-model="vm.activeStrike.configuration.files_to_ingest[0].workspace_name" ng-options="w.name as w.title for w in vm.workspaces"></select>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <h3>Current Files</h3>
+                                        <p ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">No files in configuration.</p>
+                                        <div ng-if="vm.activeStrike.configuration.files_to_ingest.length > 0">
+                                            <ul ng-repeat="file in vm.activeStrike.configuration.files_to_ingest" class="list-group">
+                                                <li class="list-group-item">
+                                                    <code>{{ file }}</code>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>

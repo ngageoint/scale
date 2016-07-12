@@ -6,7 +6,7 @@
             this.version = version;
             this.workspace = workspace;
             this.monitor = monitor;
-            this.files_to_ingest = StrikeIngestFile.transformer(files_to_ingest);
+            this.files_to_ingest = files_to_ingest ? StrikeIngestFile.transformer(files_to_ingest) : [];
         };
 
         StrikeConfiguration.prototype = {

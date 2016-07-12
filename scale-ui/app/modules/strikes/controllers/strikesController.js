@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('strikesController', function ($scope, $location, $routeParams, scaleConfig, navService, strikeService, workspacesService, scaleService, stateService, userService, Strike, toastr) {
+    angular.module('scaleApp').controller('strikesController', function ($scope, $location, $routeParams, Strike, StrikeIngestFile, scaleConfig, navService, strikeService, workspacesService, scaleService, stateService, userService, toastr) {
         var vm = this,
             currStrike = {};
 
@@ -10,7 +10,9 @@
         vm.strikes = [];
         vm.workspaces = [];
         vm.localStrikes = [];
-        vm.activeStrike = {};
+        vm.activeStrike = new Strike();
+        vm.activeStrikeIngestFile = {};
+        vm.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
         vm.addBtnClass = 'btn-primary';
         vm.addBtnIcon = 'fa-plus-circle';
         vm.saveBtnClass = 'btn-default';
@@ -34,6 +36,7 @@
         };
 
         vm.saveStrike = function () {
+            debugger;
             strikeService.saveStrike(vm.activeStrike).then(function (strike) {
                 vm.activeStrike = Strike.transformer(strike);
                 if (scaleConfig.static) {
@@ -90,6 +93,11 @@
             }).finally(function () {
                 vm.loading = false;
             });
+        };
+
+        vm.addStrikeIngestFile = function () {
+            vm.activeStrike.configuration.files_to_ingest.push(StrikeIngestFile.transformer(vm.activeStrikeIngestFile));
+            vm.activeStrikeIngestFile = {};
         };
 
         var getWorkspaces = function () {
