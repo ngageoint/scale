@@ -24,10 +24,6 @@
                 return num;
             },
             calculateFileSizeFromBytes: function(num,decimals){
-                // if(precision){
-                //     // round num to specified precision
-                //     num = Math.round(num/precision);
-                // }
                 if (num > 0) {
                     if (num < 1024) {
                         return num.toFixed(decimals) + ' Bytes';

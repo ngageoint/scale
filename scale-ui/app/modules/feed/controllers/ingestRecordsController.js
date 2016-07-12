@@ -145,10 +145,8 @@
                 vm.filterResults();
             });
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $scope.$apply(function () {
-                    $location.search({});
-                    $location.path('/feed/ingests/' + row.entity.id);
-                });
+                $location.search({});
+                $location.path('/feed/ingests/' + row.entity.id);
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {

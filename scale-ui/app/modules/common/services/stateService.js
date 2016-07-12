@@ -5,6 +5,7 @@
         var version = '',
             jobsColDefs = [],
             jobsParams = {},
+            jobExecutionsParams = {},
             recipesColDefs = [],
             jobTypesFailureRatesParams = {},
             recipesParams = {},
@@ -39,6 +40,21 @@
                 job_type_name: data.job_type_name ? data.job_type_name : null,
                 job_type_category: data.job_type_category ? data.job_type_category : null,
                 url: null
+            };
+        };
+
+        var initJobExecutionsParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                status: data.status ? data.status : null,
+                job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
+                job_type_name: data.job_type_name ? data.job_type_name : null,
+                job_type_category: data.job_type_category ? data.job_type_category : null,
+                node_id: data.node_id ? data.node_id : null
             };
         };
 
@@ -100,6 +116,16 @@
             setJobsParams: function (data) {
                 jobsParams = initJobsParams(data);
                 updateQuerystring(jobsParams);
+            },
+            getJobExecutionsParams: function () {
+                if (_.keys(jobExecutionsParams).length === 0) {
+                    return initJobExecutionsParams($location.search());
+                }
+                return jobExecutionsParams;
+            },
+            setJobExecutionsParams: function (data) {
+                jobExecutionsParams = initJobExecutionsParams(data);
+                updateQuerystring(jobExecutionsParams);
             },
             getJobTypesFailureRatesParams: function () {
                 if (_.keys(jobTypesFailureRatesParams).length === 0) {

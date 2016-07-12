@@ -1,24 +1,23 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisDonutController', function($scope, $element, scaleConfig) {
-        var chart = null;
+    angular.module('scaleApp').controller('aisDonutController', function ($scope, $element, scaleConfig) {
+        var colData = [],
+            chart = null;
 
         var genChart = function () {
             if (chart) {
-                //chart.data()
-                //$scope.colData
                 var oldData = [],
                     removeIds = [];
 
-                // reassemble currently displayed data to match $scope.colData
+                // reassemble currently displayed data to match colData
                 _.forEach(chart.data(), function (d) {
                     oldData.push([d.values[0].id, d.values[0].value]);
                 });
 
                 // determine which elements to remove
                 _.forEach(oldData, function (od) {
-                    var keep = _.find($scope.colData, function (cd) {
+                    var keep = _.find(colData, function (cd) {
                         return cd[0] === od[0];
                     });
                     if (!keep) {
@@ -27,17 +26,15 @@
                 });
 
                 // update chart
-                //console.log(JSON.stringify($scope.colData));
-                //console.log(JSON.stringify(removeIds));
                 chart.load({
-                    columns: $scope.colData,
+                    columns: colData,
                     unload: removeIds
                 });
             } else {
                 chart = c3.generate({
                     bindto: $element[0],
                     data: {
-                        columns: $scope.colData,
+                        columns: colData,
                         type: $scope.type,
                         colors: {
                             down: scaleConfig.colors.chart_red,
@@ -85,14 +82,14 @@
             $element[0].style.position = 'static';
         };
 
-        var initColumnData = function(){
-            $scope.colData = [];
-            $scope.data.forEach(function(obj){
-                $scope.colData.push([obj.status,obj.count]);
+        var initColumnData = function (){
+            colData = [];
+            $scope.data.forEach(function (obj){
+                colData.push([obj.status,obj.count]);
             });
         };
 
-        var initialize = function() {
+        var initialize = function () {
             initColumnData();
             genChart();
         };
@@ -107,10 +104,8 @@
             }
         });
 
-        window.onresize = function() {
-          var width = $($element[0]).width();
-          console.log(width);
-          genChart();
+        window.onresize = function () {
+            genChart();
         }
     });
 })();

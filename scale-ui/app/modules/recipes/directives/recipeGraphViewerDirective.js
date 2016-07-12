@@ -3,31 +3,33 @@
  */
 (function () {
     angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, RecipeTypeDetail, JobType, localStorage) {
-        $scope.vertices = [];
-        $scope.edges = [];
-        $scope.selectedJob = null;
-        $scope.selectedInputProvider = null;
-        $scope.mode = null;
-        $scope.editMode = null;
-        $scope.dependencyBtnClass = 'fa-plus';
-        $scope.addBtnText = 'New Recipe';
-        $scope.addBtnClass = 'btn-primary';
-        $scope.addBtnIcon = 'fa-plus-circle';
-        $scope.editBtnText = 'Edit';
-        $scope.editBtnClass = 'btn-success';
-        $scope.editBtnIcon = 'fa-edit';
-        $scope.jobTypeValues = [];
-        $scope.saveBtnClass = 'btn-default';
-        $scope.savingRecipe = false;
-        $scope.warnings = [];
-        $scope.readonly = true;
-        $scope.detailMaxHeight = 0;
-        $scope.recipeTypeTrigger = { dataTypes: '' };
-        $scope.detailContainerStyle = '';
-        $scope.containerClass = $scope.hasContainer ? '' : 'detail-container no-tabs';
-        $scope.lastStatusChange = '';
-        $scope.availableWorkspaces = [];
-        $scope.recipeInputTypes = [
+        var vm = this;
+        
+        vm.vertices = [];
+        vm.edges = [];
+        vm.selectedJob = null;
+        vm.selectedInputProvider = null;
+        vm.mode = null;
+        vm.editMode = null;
+        vm.dependencyBtnClass = 'fa-plus';
+        vm.addBtnText = 'New Recipe';
+        vm.addBtnClass = 'btn-primary';
+        vm.addBtnIcon = 'fa-plus-circle';
+        vm.editBtnText = 'Edit';
+        vm.editBtnClass = 'btn-success';
+        vm.editBtnIcon = 'fa-edit';
+        vm.jobTypeValues = [];
+        vm.saveBtnClass = 'btn-default';
+        vm.savingRecipe = false;
+        vm.warnings = [];
+        vm.readonly = true;
+        vm.detailMaxHeight = 0;
+        vm.recipeTypeTrigger = { dataTypes: '' };
+        vm.detailContainerStyle = '';
+        vm.containerClass = $scope.hasContainer ? '' : 'detail-container no-tabs';
+        vm.lastStatusChange = '';
+        vm.availableWorkspaces = [];
+        vm.recipeInputTypes = [
             {
                 name: 'property',
                 title: 'Property',
@@ -56,14 +58,14 @@
                 ]
             }
         ];
-        $scope.availableTriggerTypes = scaleConfig.triggerTypes;
-        $scope.selectedRecipeInputType = {};
-        $scope.recipeInput = {
+        vm.availableTriggerTypes = scaleConfig.triggerTypes;
+        vm.selectedRecipeInputType = {};
+        vm.recipeInput = {
             name: '',
             required: true,
             type: ''
         };
-        $scope.isIE = scaleService.isIE();
+        vm.isIE = scaleService.isIE();
 
         var startJob = null;
         var zoomScale = 0;
@@ -88,46 +90,46 @@
         };
 
         var resetEditBtn = function () {
-            $scope.editBtnText = $scope.mode === 'edit' ? 'Cancel Edit' : 'Edit';
-            $scope.editBtnClass = $scope.mode === 'edit' ? 'btn-warning' : 'btn-success';
-            $scope.editBtnIcon = $scope.mode === 'edit' ? 'fa-close' : 'fa-edit';
+            vm.editBtnText = vm.mode === 'edit' ? 'Cancel Edit' : 'Edit';
+            vm.editBtnClass = vm.mode === 'edit' ? 'btn-warning' : 'btn-success';
+            vm.editBtnIcon = vm.mode === 'edit' ? 'fa-close' : 'fa-edit';
         };
 
         var resetAddBtn = function () {
-            $scope.addBtnText = $scope.mode === 'add' ? 'Cancel' : 'New Recipe';
-            $scope.addBtnClass = $scope.mode === 'add' ? 'btn-warning' : 'btn-primary';
-            $scope.addBtnIcon = $scope.mode === 'add' ? 'fa-close' : 'fa-plus-circle';
+            vm.addBtnText = vm.mode === 'add' ? 'Cancel' : 'New Recipe';
+            vm.addBtnClass = vm.mode === 'add' ? 'btn-warning' : 'btn-primary';
+            vm.addBtnIcon = vm.mode === 'add' ? 'fa-close' : 'fa-plus-circle';
         };
 
         var toggleAddRecipe = function () {
-            $scope.mode = $scope.mode === 'add' ? 'view' : 'add';
+            vm.mode = vm.mode === 'add' ? 'view' : 'add';
             resetAddBtn();
         };
 
         var toggleEditRecipe = function () {
-            if ($scope.mode === 'edit') {
-                $scope.mode = 'view';
-                $scope.reloadRecipeTypeDetail($scope.recipeType.id);
+            if (vm.mode === 'edit') {
+                vm.mode = 'view';
+                vm.reloadRecipeTypeDetail($scope.recipeType.id);
             } else {
-                $scope.mode = 'edit';
+                vm.mode = 'edit';
             }
-            $scope.editMode = '';
+            vm.editMode = '';
             resetEditBtn();
         };
 
         var enableSaveRecipe = function () {
             $scope.recipeType.modified = true;
-            $scope.saveBtnClass = 'btn-success';
+            vm.saveBtnClass = 'btn-success';
         };
 
         var disableSaveRecipe = function () {
             $scope.recipeType.modified = false;
-            $scope.saveBtnClass = 'btn-default;'
+            vm.saveBtnClass = 'btn-default;'
         };
 
         var confirmChangeRecipe = function () {
             var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
+                animation: vm.animationsEnabled,
                 templateUrl: 'confirmDialog.html',
                 scope: $scope,
                 size: 'sm'
@@ -149,7 +151,7 @@
             return className;
         };
 
-        $scope.reloadRecipeTypeDetail = function (id) {
+        vm.reloadRecipeTypeDetail = function (id) {
             var getRecipeDetail = function () {
                 recipeService.getRecipeTypeDetail(id).then(function (data) {
                     $scope.recipeType = data;
@@ -162,7 +164,7 @@
                     // OK
                     disableSaveRecipe();
                     resetAddBtn();
-                    if ($scope.mode === 'edit') {
+                    if (vm.mode === 'edit') {
                         toggleEditRecipe();
                     }
                     getRecipeDetail();
@@ -171,7 +173,7 @@
 
                 });
             } else {
-                if ($scope.mode === 'edit') {
+                if (vm.mode === 'edit') {
                     toggleEditRecipe();
                 }
                 resetAddBtn();
@@ -179,12 +181,12 @@
             }
         };
 
-        $scope.redraw = function () {
+        vm.redraw = function () {
             initialize();
             //$rootScope.$broadcast('recipeModified');
         };
 
-        $scope.nodeClick = function (name) {
+        vm.nodeClick = function (name) {
             // Remove selection class
             //$('div').removeClass('selected-node');
             d3.selectAll('.nodeRect').classed('selected-node', false);
@@ -199,13 +201,13 @@
             var pos = $name.position();
 
             // click node different from selectedJob
-            if (!$scope.selectedJob || job.name !== $scope.selectedJob.name) {
-                if ($scope.editMode === 'addDependency') {
+            if (!vm.selectedJob || job.name !== vm.selectedJob.name) {
+                if (vm.editMode === 'addDependency') {
                     addDependency(name);
                     enableSaveRecipe();
-                    $scope.redraw();
+                    vm.redraw();
 
-                } else if ($scope.editMode === 'addInput') {
+                } else if (vm.editMode === 'addInput') {
                     var contentStr = '';
                     if (job.name === 'start') {
                         contentStr = '<ul class="list-group">';
@@ -246,8 +248,8 @@
                             $name.popover('show');
                         }
                     }
-                } else if ($scope.editMode === 'addOutput') {
-                    $scope.selectedOutputReceiver = job;
+                } else if (vm.editMode === 'addOutput') {
+                    vm.selectedOutputReceiver = job;
                     if (job.job_type.job_type_interface.input_data.length > 0) {
                         contentStr = '<ul class="list-group">';
                         _.forEach(job.job_type.job_type_interface.input_data, function (jobInput) {
@@ -269,9 +271,9 @@
                     }
                 } else {
                     // update the selected job
-                    $scope.selectedJob = job;
+                    vm.selectedJob = job;
                     if ($scope.recipe) {
-                        $scope.selectedRecipeJob = _.find($scope.recipe.jobs, { job_name: job.name });
+                        vm.selectedRecipeJob = _.find($scope.recipe.jobs, { job_name: job.name });
                     }
                     // apply the selected-node class
                     //$name.addClass('selected-node');
@@ -281,43 +283,43 @@
             else { // click selected node
                 //$('div').removeClass('selected-node');
                 d3.selectAll('.nodeRect').classed('selected-node', false);
-                $scope.selectedJob = null;
-                $scope.selectedRecipeJob = null;
-                $scope.selectedOutputReceiver = null;
-                $scope.selectedInputProvider = null;
-                $scope.editMode = '';
-                $scope.dependencyBtnClass = 'fa-plus';
+                vm.selectedJob = null;
+                vm.selectedRecipeJob = null;
+                vm.selectedOutputReceiver = null;
+                vm.selectedInputProvider = null;
+                vm.editMode = '';
+                vm.dependencyBtnClass = 'fa-plus';
 
                 //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
                 getOtherNodes(name).classed('selected-node-selectable', false);
             }
-            if ($scope.selectedJob) {
-                //$('#' + $scope.selectedJob.name).addClass('selected-node');
-                getClosestNode($scope.selectedJob.name).classed('selected-node', true);
+            if (vm.selectedJob) {
+                //$('#' + vm.selectedJob.name).addClass('selected-node');
+                getClosestNode(vm.selectedJob.name).classed('selected-node', true);
             }
         };
-        $scope.toggleEditMode = function () {
-            if ($scope.mode === 'edit') {
-                $scope.reloadRecipeTypeDetail($scope.recipeType.id);
+        vm.toggleEditMode = function () {
+            if (vm.mode === 'edit') {
+                vm.reloadRecipeTypeDetail($scope.recipeType.id);
             } else {
                 toggleEditRecipe();
                 resetAddBtn();
             }
-            $rootScope.$broadcast('toggleEdit', $scope.mode);
+            $rootScope.$broadcast('toggleEdit', vm.mode);
         };
 
-        $scope.openAddJob = function () {
+        vm.openAddJob = function () {
             var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
+                animation: vm.animationsEnabled,
                 templateUrl: 'addJobContent.html',
                 scope: $scope,
                 size: 'sm'
             });
 
             modalInstance.result.then(function () {
-                if ($scope.selectedJobType) {
-                    jobTypeService.getJobTypeDetails($scope.selectedJobType.id).then(function (data) {
-                        $scope.addJobType(data);
+                if (vm.selectedJobType) {
+                    jobTypeService.getJobTypeDetails(vm.selectedJobType.id).then(function (data) {
+                        vm.addJobType(data);
                         enableSaveRecipe();
                     });
                 }
@@ -326,17 +328,17 @@
             });
         };
 
-        $scope.openEditTrigger = function () {
+        vm.openEditTrigger = function () {
             var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
+                animation: vm.animationsEnabled,
                 templateUrl: 'editTrigger.html',
                 scope: $scope,
                 size: 'md'
             });
 
             modalInstance.result.then(function () {
-                if ($scope.mode === 'edit' || $scope.mode === 'add') {
-                    $scope.recipeType.trigger_rule.configuration.condition.data_types = $scope.recipeTypeTrigger.dataTypes ? $scope.recipeTypeTrigger.dataTypes.split(',') : [];
+                if (vm.mode === 'edit' || vm.mode === 'add') {
+                    $scope.recipeType.trigger_rule.configuration.condition.data_types = vm.recipeTypeTrigger.dataTypes ? vm.recipeTypeTrigger.dataTypes.split(',') : [];
                     enableSaveRecipe();
                 }
             }, function () {
@@ -346,59 +348,59 @@
 
         };
 
-        $scope.deleteRecipeInput = function (inputName) {
+        vm.deleteRecipeInput = function (inputName) {
             var removedRecipeInput = _.remove($scope.recipeType.definition.input_data, function (recipeInput) {
                 return recipeInput.name === inputName;
             });
             console.log('removed ' + removedRecipeInput.length + ' recipe inputs.');
             enableSaveRecipe();
-            $scope.redraw();
+            vm.redraw();
 
         };
 
-        $scope.openAddInput = function () {
+        vm.openAddInput = function () {
             var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
+                animation: vm.animationsEnabled,
                 templateUrl: 'addInput.html',
                 scope: $scope
             });
 
             modalInstance.result.then(function () {
                 // check for fields and add as necessary
-                if ( $scope.selectedRecipeInputType.fields.length > 0) {
+                if ( vm.selectedRecipeInputType.fields.length > 0) {
                     var fieldArr = [];
-                    _.forEach($scope.selectedRecipeInputType.fields, function (field) {
+                    _.forEach(vm.selectedRecipeInputType.fields, function (field) {
                         _.forEach(field.value.split(','), function (value) {
                             fieldArr.push(value);
                         });
-                        $scope.recipeInput[field.name] = fieldArr;
+                        vm.recipeInput[field.name] = fieldArr;
                     });
                 }
 
                 // add input to recipe type definition
-                $scope.recipeType.definition.input_data.push($scope.recipeInput);
+                $scope.recipeType.definition.input_data.push(vm.recipeInput);
                 _.forEach($scope.recipeType.definition.jobs, function (job) {
                     if (job.recipe_inputs.length === 0) {
                         job.recipe_inputs.push({
-                            job_input: $scope.recipeInput.name,
-                            recipe_input: $scope.recipeInput.name
+                            job_input: vm.recipeInput.name,
+                            recipe_input: vm.recipeInput.name
                         });
                     }
                 });
                 getIoMappings();
 
                 // reset form fields
-                $scope.recipeInput = {
+                vm.recipeInput = {
                     name: '',
                     required: true,
                     type: ''
                 };
-                $scope.selectedRecipeInputType = {};
+                vm.selectedRecipeInputType = {};
             });
         };
 
-        $scope.changeInputType = function () {
-            $scope.selectedRecipeInputType = _.find($scope.recipeInputTypes, {'name': $scope.recipeInput.type});
+        vm.changeInputType = function () {
+            vm.selectedRecipeInputType = _.find(vm.recipeInputTypes, {'name': vm.recipeInput.type});
         };
 
         var getWarningsHtml = function (warnings) {
@@ -410,7 +412,7 @@
             return warningsHtml;
         };
 
-        $scope.validateRecipeType = function () {
+        vm.validateRecipeType = function () {
             recipeService.validateRecipeType($scope.recipeType).then(function (validationResult) {
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
@@ -430,23 +432,23 @@
         };
 
 
-        $scope.saveRecipeType = function () {
-            $scope.savingRecipe = true;
+        vm.saveRecipeType = function () {
+            vm.savingRecipe = true;
             recipeService.validateRecipeType($scope.recipeType).then(function (validationResult) {
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(validationResult.warnings);
                     toastr["error"](warningsHtml);
-                    $scope.savingRecipe = false;
+                    vm.savingRecipe = false;
                 } else {
                     recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
-                        $scope.savingRecipe = false;
+                        vm.savingRecipe = false;
                         $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
                         if (scaleConfig.static) {
                             console.log(JSON.stringify($scope.recipeType));
                             localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
                         }
-                        $scope.redraw();
+                        vm.redraw();
                         $location.path('/recipes/types/' + $scope.recipeType.id);
                     });
                 }
@@ -456,150 +458,150 @@
                 } else {
                     toastr['error'](error);
                 }
-                $scope.savingRecipe = false;
+                vm.savingRecipe = false;
             });
 
             disableSaveRecipe();
         };
 
-        $scope.addJobType = function (selectedJobType) {
+        vm.addJobType = function (selectedJobType) {
             console.log(selectedJobType.name);
             $scope.recipeType.definition.addJob(selectedJobType);
             //$scope.$broadcast('redrawRecipes');
-            $scope.redraw();
+            vm.redraw();
         };
 
-        $scope.mapInput = function (providerName, providerOutput) {
+        vm.mapInput = function (providerName, providerOutput) {
             console.log('map selected job input to ' + providerName + '.' + providerOutput);
-            var dependency = _.find($scope.selectedJob.dependencies, {name: providerName});
+            var dependency = _.find(vm.selectedJob.dependencies, {name: providerName});
 
             if (dependency && dependency.connections && dependency.connections.length > 0) {
-                var conn = _.find(dependency.connections, { output: providerOutput, input: $scope.selectedJobInput.name });
+                var conn = _.find(dependency.connections, { output: providerOutput, input: vm.selectedJobInput.name });
                 if (!conn) {
-                    dependency.connections.push({ output: providerOutput, input: $scope.selectedJobInput.name });
+                    dependency.connections.push({ output: providerOutput, input: vm.selectedJobInput.name });
                 }
             }
             else if (!dependency) {
-                dependency = {name: providerName, connections: [{ output: providerOutput, input: $scope.selectedJobInput.name }]};
-                $scope.selectedJob.dependencies.push(dependency);
+                dependency = {name: providerName, connections: [{ output: providerOutput, input: vm.selectedJobInput.name }]};
+                vm.selectedJob.dependencies.push(dependency);
             }
             else {
-                dependency.connections = [{ output: providerOutput, input: $scope.selectedJobInput.name }];
+                dependency.connections = [{ output: providerOutput, input: vm.selectedJobInput.name }];
             }
-            $scope.selectedJob.depStart = false;
-            $scope.editMode = '';
-            $scope.selectedJobInput = null;
-            $scope.selectedInputProvider = null;
+            vm.selectedJob.depStart = false;
+            vm.editMode = '';
+            vm.selectedJobInput = null;
+            vm.selectedInputProvider = null;
             enableSaveRecipe();
-            $scope.redraw();
+            vm.redraw();
         };
 
-        $scope.mapInputRecipeInput = function (recipeInput) {
+        vm.mapInputRecipeInput = function (recipeInput) {
             console.log('map selected job to recipe input ' + recipeInput);
-            var existingInput = _.find($scope.selectedJob.recipe_inputs, { job_input: $scope.selectedJobInput.name });
+            var existingInput = _.find(vm.selectedJob.recipe_inputs, { job_input: vm.selectedJobInput.name });
             if ( existingInput && existingInput.recipe_name !== recipeInput) {
                 // update it
                 existingInput.recipe_input = recipeInput;
                 enableSaveRecipe();
-                $scope.redraw();
+                vm.redraw();
             } else if ( !existingInput ) {
                 // create it
-                $scope.selectedJob.recipe_inputs.push({
-                    job_input: $scope.selectedJobInput.name,
+                vm.selectedJob.recipe_inputs.push({
+                    job_input: vm.selectedJobInput.name,
                     recipe_input: recipeInput
                 });
                 enableSaveRecipe();
-                $scope.redraw();
+                vm.redraw();
             }
-            $scope.editMode = '';
-            $scope.selectedJobInput = null;
-            $scope.selectedInputProvider = null;
+            vm.editMode = '';
+            vm.selectedJobInput = null;
+            vm.selectedInputProvider = null;
         };
 
-        $scope.mapOutput = function (receiverName, receiverInput) {
-            var dependency = _.find($scope.selectedOutputReceiver.dependencies, {name: $scope.selectedJob.name});
+        vm.mapOutput = function (receiverName, receiverInput) {
+            var dependency = _.find(vm.selectedOutputReceiver.dependencies, {name: vm.selectedJob.name});
 
             if (dependency && dependency.connections && dependency.connections.length > 0) {
-                var conn = _.find(dependency.connections, { output: $scope.selectedJobOutput.name, input: receiverInput });
+                var conn = _.find(dependency.connections, { output: vm.selectedJobOutput.name, input: receiverInput });
                 if (!conn) {
-                    dependency.connections.push({output: $scope.selectedJobOutput.name, input: receiverInput});
+                    dependency.connections.push({output: vm.selectedJobOutput.name, input: receiverInput});
                 }
             }
             else if (!dependency) {
-                dependency = {name: $scope.selectedJob.name, connections: [{output: $scope.selectedJobOutput.name, input: receiverInput}]};
-                $scope.selectedOutputReceiver.dependencies.push(dependency);
+                dependency = {name: vm.selectedJob.name, connections: [{output: vm.selectedJobOutput.name, input: receiverInput}]};
+                vm.selectedOutputReceiver.dependencies.push(dependency);
             }
             else {
-                dependency.connections = [{output: $scope.selectedJobOutput.name, input: receiverInput}];
+                dependency.connections = [{output: vm.selectedJobOutput.name, input: receiverInput}];
             }
-            $scope.selectedOutputReceiver.depStart = false;
-            $scope.editMode = '';
-            $scope.selectedJobOutput = null;
-            $scope.selectedOutputReceiver = null;
+            vm.selectedOutputReceiver.depStart = false;
+            vm.editMode = '';
+            vm.selectedJobOutput = null;
+            vm.selectedOutputReceiver = null;
             enableSaveRecipe();
-            $scope.redraw();
+            vm.redraw();
         };
 
-        $scope.toggleAddDependency = function () {
-            if ($scope.editMode === 'addDependency') {
-                $scope.editMode = '';
-                $scope.dependencyBtnClass = 'fa-plus';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+        vm.toggleAddDependency = function () {
+            if (vm.editMode === 'addDependency') {
+                vm.editMode = '';
+                vm.dependencyBtnClass = 'fa-plus';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', false);
                 //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
                 console.log('toggle addDependency mode');
-                $scope.editMode = 'addDependency';
-                $scope.dependencyBtnClass = 'fa-remove';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                vm.editMode = 'addDependency';
+                vm.dependencyBtnClass = 'fa-remove';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', true);
                 //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
-        $scope.toggleAddInput = function (jobinput) {
-            if ($scope.editMode === 'addInput') {
-                $scope.editMode = '';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+        vm.toggleAddInput = function (jobinput) {
+            if (vm.editMode === 'addInput') {
+                vm.editMode = '';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', false);
                 //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
-                $scope.selectedJobInput = jobinput;
+                vm.selectedJobInput = jobinput;
                 console.log('toggle addInput mode');
-                $scope.editMode = 'addInput';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                vm.editMode = 'addInput';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', true);
                 //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
-        $scope.toggleAddOutput = function (joboutput) {
-            if ($scope.editMode === 'addOutput') {
-                $scope.editMode = '';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', false);
+        vm.toggleAddOutput = function (joboutput) {
+            if (vm.editMode === 'addOutput') {
+                vm.editMode = '';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', false);
                 //$('.recipeNode:not(".selected-node")').removeClass('selected-node-selectable');
             } else {
-                $scope.selectedJobOutput = joboutput;
+                vm.selectedJobOutput = joboutput;
                 console.log('toggle addOutput mode');
-                $scope.editMode = 'addOutput';
-                getOtherNodes($scope.selectedJob.name).classed('selected-node-selectable', true);
+                vm.editMode = 'addOutput';
+                getOtherNodes(vm.selectedJob.name).classed('selected-node-selectable', true);
                 //$('.recipeNode:not(".selected-node")').addClass('selected-node-selectable');
             }
         };
 
-        $scope.removeDependency = function (depName) {
-            var removedDeps = _.remove($scope.selectedJob.dependencies, function (dep) {
+        vm.removeDependency = function (depName) {
+            var removedDeps = _.remove(vm.selectedJob.dependencies, function (dep) {
                 return dep.name === depName;
             });
             console.log('removed ' + removedDeps.length + ' dependencies.');
             enableSaveRecipe();
-            $scope.redraw();
+            vm.redraw();
         };
 
-        $scope.removeInputMapping = function (depName, depOutput) {
+        vm.removeInputMapping = function (depName, depOutput) {
             if ( depName === 'recipe' ) {
                 // remove it from selectedJob.recipe_inputs
-                var dep = _.remove($scope.selectedJob.recipe_inputs, { recipe_input: depOutput });
+                var dep = _.remove(vm.selectedJob.recipe_inputs, { recipe_input: depOutput });
                 enableSaveRecipe();
-                $scope.redraw();
+                vm.redraw();
             } else {
-                var dep = _.find($scope.selectedJob.dependencies, {name: depName});
+                var dep = _.find(vm.selectedJob.dependencies, {name: depName});
                 if (dep && dep.connections) {
                     // it's an input from another job
                     var removedCon = _.remove(dep.connections, function (conn) {
@@ -607,13 +609,13 @@
                     });
                     console.log('removed ' + removedCon.length + ' input connections.');
                     enableSaveRecipe();
-                    $scope.redraw();
+                    vm.redraw();
                 }
             }
 
         };
 
-        $scope.deleteRecipeJob = function (jobName) {
+        vm.deleteRecipeJob = function (jobName) {
             // remove dependent connections
             _.forEach($scope.recipeType.definition.jobs, function (job) {
                 _.remove(job.dependencies, {name: jobName});
@@ -621,45 +623,45 @@
             // remove job from definition.jobs
             _.remove($scope.recipeType.definition.jobs, { name: jobName });
             // enable save and redraw
-            $scope.selectedJob = null;
+            vm.selectedJob = null;
             enableSaveRecipe();
-            $scope.redraw();
+            vm.redraw();
         };
 
-        $scope.removeOutputMapping = function (jobName, depOutput) {
+        vm.removeOutputMapping = function (jobName, depOutput) {
             // we have to remove output mapping from the job where the dependency is defined
             var receiver = _.find($scope.recipeType.definition.jobs,{name: jobName});
             // remove it from receiver.dependencies
-            var dep = _.find(receiver.dependencies, {name: $scope.selectedJob.name});
+            var dep = _.find(receiver.dependencies, {name: vm.selectedJob.name});
             if (dep && dep.connections) {
                 var removedCon = _.remove(dep.connections, function (conn) {
                     return conn.output === depOutput;
                 });
                 console.log('removed ' + removedCon.length + ' output connections.');
                 enableSaveRecipe();
-                $scope.redraw();
+                vm.redraw();
             }
         };
 
-        $scope.selectJobTypeToAdd = function (item) {
-            $scope.selectedJobType = item;
+        vm.selectJobTypeToAdd = function (item) {
+            vm.selectedJobType = item;
         };
 
         $scope.$on('redrawRecipes', function () {
-            $scope.redraw();
+            vm.redraw();
         });
 
         var addDependency = function (jobName) {
-            console.log($scope.selectedJob.name + '->' + jobName);
-            if (!$scope.selectedJob.dependencies) {
-                $scope.selectedJob.dependencies = [];
+            console.log(vm.selectedJob.name + '->' + jobName);
+            if (!vm.selectedJob.dependencies) {
+                vm.selectedJob.dependencies = [];
             }
-            var existingDependency = _.find($scope.selectedJob.dependencies, {name: jobName});
+            var existingDependency = _.find(vm.selectedJob.dependencies, {name: jobName});
 
-            if (!existingDependency) { $scope.selectedJob.dependencies.push({name: jobName}); }
-            $scope.selectedJob.depStart = false;
-            $scope.editMode = '';
-            $scope.dependencyBtnClass = 'fa-plus';
+            if (!existingDependency) { vm.selectedJob.dependencies.push({name: jobName}); }
+            vm.selectedJob.depStart = false;
+            vm.editMode = '';
+            vm.dependencyBtnClass = 'fa-plus';
 
         };
 
@@ -715,11 +717,11 @@
         var initialize = function () {
 
             jobTypeService.getJobTypesOnce().then(function (data) {
-                $scope.jobTypeValues = data.results;
+                vm.jobTypeValues = data.results;
             });
 
             workspacesService.getWorkspaces().then(function (data) {
-                $scope.availableWorkspaces = data
+                vm.availableWorkspaces = data
             });
 
             $scope.$watch('recipeType', function (newValue, oldValue) {
@@ -728,10 +730,10 @@
                 }
 
                 if (typeof $scope.recipeType.id === 'undefined' || $scope.recipeType.id === null || $scope.recipeType.id === 0) {
-                    $scope.mode = 'add';
+                    vm.mode = 'add';
                 } else {
-                    if ($scope.mode !== 'edit') {
-                        $scope.mode = 'view'
+                    if (vm.mode !== 'edit') {
+                        vm.mode = 'view'
                     }
                 }
                 _.forEach($scope.recipeType.definition.jobs, function (job, idx) {
@@ -747,7 +749,7 @@
                     if ($scope.recipeType.trigger_rule.configuration) {
                         if ($scope.recipeType.trigger_rule.configuration.condition) {
                             if ($scope.recipeType.trigger_rule.configuration.condition.data_types) {
-                                $scope.recipeTypeTrigger.dataTypes = $scope.recipeType.trigger_rule.configuration.condition.data_types.join(',');
+                                vm.recipeTypeTrigger.dataTypes = $scope.recipeType.trigger_rule.configuration.condition.data_types.join(',');
                             }
                         }
                     }
@@ -757,8 +759,8 @@
                 getIoMappings();
                 drawGraph();
             });
-            if ($scope.$parent.user) {
-                $scope.readonly = false;
+            if ($scope.$parent.vm.user) {
+                vm.readonly = false;
             }
         };
 
@@ -766,7 +768,7 @@
             // ******
             // setup D3 container and Graph
             // ******
-            //$scope.selectedJob = null;
+            //vm.selectedJob = null;
             function clicked() {
                 var d = d3.event;
                 var x = d3.event.x;
@@ -809,7 +811,7 @@
             window.nodeClick = function (name) {
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
                 scope.$apply(function () {
-                    scope.nodeClick(name);
+                    scope.vm.nodeClick(name);
                 });
             };
 
@@ -817,7 +819,7 @@
                 $('#' + jobName).popover('destroy');
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
                 scope.$apply(function () {
-                    scope.mapInput(jobName, jobOutput);
+                    scope.vm.mapInput(jobName, jobOutput);
                 });
             };
 
@@ -825,7 +827,7 @@
                 $('#start').popover('destroy');
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
                 scope.$apply(function () {
-                    scope.mapInputRecipeInput(recipeInputName);
+                    scope.vm.mapInputRecipeInput(recipeInputName);
                 });
             };
 
@@ -833,12 +835,12 @@
                 $('#' + jobName).popover('destroy');
                 var scope = angular.element(document.getElementById('recipeviewer')).scope();
                 scope.$apply(function () {
-                    scope.mapOutput(jobName, jobInput);
+                    scope.vm.mapOutput(jobName, jobInput);
                 });
             };
 
             if ($scope.recipe) {
-                $scope.lastStatusChange = $scope.recipe.last_modified ? moment.duration(moment.utc($scope.recipe.last_modified).diff(moment.utc())).humanize(true) : '';
+                vm.lastStatusChange = $scope.recipe.last_modified ? moment.duration(moment.utc($scope.recipe.last_modified).diff(moment.utc())).humanize(true) : '';
             }
 
             var jobs = [];
@@ -950,9 +952,9 @@
                 $('.node rect').attr('class', 'nodeRect');
 
                 // add selected class to appropriate node
-                if ($scope.selectedJob) {
-                    //$('#' + $scope.selectedJob.name).addClass('selected-node');
-                    getClosestNode($scope.selectedJob.name).classed('selected-node', true);
+                if (vm.selectedJob) {
+                    //$('#' + vm.selectedJob.name).addClass('selected-node');
+                    getClosestNode(vm.selectedJob.name).classed('selected-node', true);
                 }
             });
         };
@@ -989,6 +991,7 @@
          */
         return {
             controller: 'aisScaleRecipeGraphViewerController',
+            controllerAs: 'vm',
             templateUrl: 'modules/recipes/partials/recipeGraphViewerTemplate.html',
             restrict: 'E',
             scope: {
@@ -997,13 +1000,6 @@
                 isModified: '=modified',
                 allowEdit: '=',
                 hasContainer: '='
-            },
-            link: function (scope) {
-                // angular.element(document).ready(function () {
-                //     var elHeight = document.getElementsByClassName('recipe-viewer-title')[0].scrollHeight;
-                //     scope.detailMaxHeight = scope.$parent.detailMaxHeight ? scope.$parent.detailMaxHeight - elHeight : 700;
-                //     scope.detailContainerStyle = 'height: 62vh; max-height: 62vh; overflow-y: auto;';
-                // });
             }
         };
 

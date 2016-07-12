@@ -3,34 +3,33 @@
 
     angular.module('scaleApp').service('jobExecutionService', function ($http, $q, $resource, poller, scaleConfig, JobExecution, JobExecutionLog) {
 
-        var getJobExecutionsParams = function( pageNumber, pageSize, filter ){
-            var params = {
-                page: pageNumber,
-                page_size: pageSize
+        var getJobExecutionsParams = function (page, page_size, started, ended, order, status, job_type_id, job_type_name, job_type_category, node_id) {
+            return {
+                page: page,
+                page_size: page_size,
+                started: started,
+                ended: ended,
+                order: order,
+                status: status,
+                job_type_id: job_type_id,
+                job_type_name: job_type_name,
+                job_type_category: job_type_category,
+                node_id: node_id
             };
-            var jobTypeId = filter.job_type_id ? filter.jobTypeId : '';
-            var jobStatus = filter.status ? filter.jobStatus : '';
-
-            if (jobStatus && jobStatus !== '') {
-                params.job_status = jobStatus;
-            }
-            return params;
         };
 
         return {
-            getJobExecutions: function (pageNumber, pageSize, filter) {
-                var jobExecutions = [],
-                    d = $q.defer();
+            getJobExecutions: function (params) {
+                params = params || getJobExecutionsParams();
+                var d = $q.defer();
 
-                var params = getJobExecutionsParams(pageNumber, pageSize, filter);
                 $http({
                     url: scaleConfig.urls.apiPrefix + 'job-executions/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
-                    jobExecutions.executions = JobExecution.transformer(data.results);
-                    jobExecutions.count = data.count;
-                    d.resolve(jobExecutions);
+                    data.results = JobExecution.transformer(data.results);
+                    d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
                 });

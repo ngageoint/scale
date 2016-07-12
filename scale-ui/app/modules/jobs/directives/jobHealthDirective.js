@@ -2,10 +2,12 @@
     'use strict';
 
     angular.module('scaleApp').controller('aisJobHealthController', function ($rootScope, $scope, jobTypeService) {
-        $scope.loadingJobHealth = true;
-        $scope.jobHealthError = null;
-        $scope.jobHealthErrorStatus = null;
-        $scope.jobHealth = {};
+        var vm = this;
+        
+        vm.loadingJobHealth = true;
+        vm.jobHealthError = null;
+        vm.jobHealthErrorStatus = null;
+        vm.jobHealth = {};
 
         var getJobTypeStatus = function () {
             jobTypeService.getJobTypeStatus({
@@ -15,18 +17,18 @@
                 ended: null
             }).then(null, null, function (data) {
                 if (data.$resolved) {
-                    $scope.jobHealthError = null;
-                    $scope.jobTypeStatus = data.results;
-                    $scope.total = 0;
-                    $scope.failed = 0;
+                    vm.jobHealthError = null;
+                    vm.jobTypeStatus = data.results;
+                    vm.total = 0;
+                    vm.failed = 0;
 
                     var performance = {},
                         failures = [];
 
                     _.forEach(data.results, function (status) {
                         performance = status.getPerformance();
-                        $scope.total = $scope.total + performance.total;
-                        $scope.failed = $scope.failed + performance.failed;
+                        vm.total = vm.total + performance.total;
+                        vm.failed = vm.failed + performance.failed;
                         failures.push(status.getFailures());
                     });
 
@@ -68,21 +70,21 @@
                         }
                     }
 
-                    $scope.jobHealth = {
-                        gaugeData: $scope.total === 0 ? 0 : 100 - (($scope.failed / $scope.total) * 100).toFixed(2),
+                    vm.jobHealth = {
+                        gaugeData: vm.total === 0 ? 0 : 100 - ((vm.failed / vm.total) * 100).toFixed(2),
                         donutData: failureData
                     };
 
                     if ($scope.broadcastData) {
-                        $rootScope.$broadcast('jobTypeStatus', $scope.jobTypeStatus);
+                        $rootScope.$broadcast('jobTypeStatus', vm.jobTypeStatus);
                     }
                 } else {
                     if (data.statusText && data.statusText !== '') {
-                        $scope.jobHealthErrorStatus = data.statusText;
+                        vm.jobHealthErrorStatus = data.statusText;
                     }
-                    $scope.jobHealthError = 'Unable to retrieve job statistics.';
+                    vm.jobHealthError = 'Unable to retrieve job statistics.';
                 }
-                $scope.loadingJobHealth = false;
+                vm.loadingJobHealth = false;
             });
         };
 
@@ -93,6 +95,7 @@
          **/
         return {
             controller: 'aisJobHealthController',
+            controllerAs: 'vm',
             templateUrl: 'modules/jobs/directives/jobHealthTemplate.html',
             restrict: 'E',
             scope: {

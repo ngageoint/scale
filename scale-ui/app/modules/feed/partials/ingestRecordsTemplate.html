@@ -2,7 +2,7 @@
 <div class="form-inline margin-bottom-md">
     <div class="input-group margin-right-md">
         <span class="input-group-addon" id="search-input">Search:</span>
-        <input ng-model="searchText" ng-change="refreshData()" class="form-control" placeholder="Filename">
+        <input ng-model="vm.searchText" ng-change="vm.refreshData()" class="form-control" placeholder="Filename">
     </div>
     <div class="input-group margin-right-md">
         <span class="input-group-addon" id="from-input">From:</span>
@@ -16,7 +16,7 @@
 <div class="row" ng-if="vm.gridOptions.data.length > 0">
     <div class="col-xs-12">
         <div class="grid-container">
-            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination class="scale-grid"></div>
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
         </div>
         <ais-grid-pagination></ais-grid-pagination>
     </div>

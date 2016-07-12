@@ -2,23 +2,25 @@
     'use strict';
 
     angular.module('scaleApp').controller('aisNodeHealthController', function ($rootScope, $scope, nodeService) {
-        $scope.loadingNodeHealth = true;
-        $scope.nodeHealthError = null;
-        $scope.nodeHealthErrorStatus = null;
-        $scope.nodeHealth = {};
-        $scope.nodesOffline = 0;
-        $scope.nodesPausedErrors = 0;
-        $scope.nodesPaused = 0;
-        $scope.nodesOfflineAndPaused = 0;
-        $scope.nodesOfflineAndPausedErrors = 0;
-        $scope.healthyNodes = 0;
-        $scope.totalNodes = 0;
+        var vm = this;
+        
+        vm.loadingNodeHealth = true;
+        vm.nodeHealthError = null;
+        vm.nodeHealthErrorStatus = null;
+        vm.nodeHealth = {};
+        vm.nodesOffline = 0;
+        vm.nodesPausedErrors = 0;
+        vm.nodesPaused = 0;
+        vm.nodesOfflineAndPaused = 0;
+        vm.nodesOfflineAndPausedErrors = 0;
+        vm.healthyNodes = 0;
+        vm.totalNodes = 0;
 
         var getNodeStatus = function () {
-            $scope.loadingNodeHealth = true;
+            vm.loadingNodeHealth = true;
             nodeService.getNodeStatus(null, null, $scope.duration, null).then(null, null, function (data) {
                 if (data.$resolved) {
-                    $scope.totalNodes = data.results.length;
+                    vm.totalNodes = data.results.length;
 
                     var nodesOffline = [],
                         nodesPausedErrors = [],
@@ -46,66 +48,66 @@
                         }
                     });
 
-                    $scope.nodesOffline = nodesOffline.length;
-                    $scope.nodesPausedErrors = nodesPausedErrors.length;
-                    $scope.nodesPaused = nodesPaused.length;
-                    $scope.nodesOfflineAndPausedErrors = nodesOfflineAndPausedErrors.length;
-                    $scope.nodesOfflineAndPaused = nodesOfflineAndPaused.length;
+                    vm.nodesOffline = nodesOffline.length;
+                    vm.nodesPausedErrors = nodesPausedErrors.length;
+                    vm.nodesPaused = nodesPaused.length;
+                    vm.nodesOfflineAndPausedErrors = nodesOfflineAndPausedErrors.length;
+                    vm.nodesOfflineAndPaused = nodesOfflineAndPaused.length;
 
                     // add the length of nodes both offline and paused to produce an accurate healthy count
-                    $scope.healthyNodes = $scope.totalNodes - $scope.nodesOffline - $scope.nodesPausedErrors - $scope.nodesPaused - $scope.nodesOfflineAndPaused - $scope.nodesOfflineAndPausedErrors;
+                    vm.healthyNodes = vm.totalNodes - vm.nodesOffline - vm.nodesPausedErrors - vm.nodesPaused - vm.nodesOfflineAndPaused - vm.nodesOfflineAndPausedErrors;
 
                     var donutData = [];
 
                     // determine percentage of healthy nodes, and breakdown of why nodes are unhealthy
-                    var gaugeData = $scope.totalNodes > 0 ? (($scope.healthyNodes / $scope.totalNodes) * 100).toFixed(2) : 0.00;
+                    var gaugeData = vm.totalNodes > 0 ? ((vm.healthyNodes / vm.totalNodes) * 100).toFixed(2) : 0.00;
 
-                    if ($scope.nodesOffline > 0) {
+                    if (vm.nodesOffline > 0) {
                         donutData.push({
                             status: 'Offline',
-                            count: $scope.nodesOffline
+                            count: vm.nodesOffline
                         });
                     }
 
-                    if ($scope.nodesPausedErrors > 0) {
+                    if (vm.nodesPausedErrors > 0) {
                         donutData.push({
                             status: 'High Failure Rate',
-                            count: $scope.nodesPausedErrors
+                            count: vm.nodesPausedErrors
                         });
                     }
 
-                    if ($scope.nodesPaused > 0) {
+                    if (vm.nodesPaused > 0) {
                         donutData.push({
                             status: 'Paused',
-                            count: $scope.nodesPaused
+                            count: vm.nodesPaused
                         });
                     }
                     
-                    if ($scope.nodesOfflineAndPaused) {
+                    if (vm.nodesOfflineAndPaused) {
                         donutData.push({
                             status: 'Offline and Paused',
-                            count: $scope.nodesOfflineAndPaused
+                            count: vm.nodesOfflineAndPaused
                         });
                     }
 
-                    if ($scope.nodesOfflineAndPausedErrors) {
+                    if (vm.nodesOfflineAndPausedErrors) {
                         donutData.push({
                             status: 'Offline and Paused due to Errors',
-                            count: $scope.nodesOfflineAndPausedErrors
+                            count: vm.nodesOfflineAndPausedErrors
                         });
                     }
 
-                    $scope.nodeHealth = {
+                    vm.nodeHealth = {
                         gaugeData: gaugeData,
                         donutData: donutData
                     };
                 } else {
                     if (data.statusText && data.statusText !== '') {
-                        $scope.nodeHealthErrorStatus = data.statusText;
+                        vm.nodeHealthErrorStatus = data.statusText;
                     }
-                    $scope.nodeHealthError = 'Unable to retrieve node health.';
+                    vm.nodeHealthError = 'Unable to retrieve node health.';
                 }
-                $scope.loadingNodeHealth = false;
+                vm.loadingNodeHealth = false;
             });
         };
 
@@ -120,6 +122,7 @@
          **/
          return {
              controller: 'aisNodeHealthController',
+             controllerAs: 'vm',
              templateUrl: 'modules/nodes/directives/nodeHealthTemplate.html',
              restrict: 'E',
              scope: {
