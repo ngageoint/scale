@@ -180,7 +180,7 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of all products</td>
+<tr class="row-even"><td colspan="4">Returns a list of all products, excluding superseded results</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>GET</strong> /products/</td>
 </tr>
@@ -240,151 +240,158 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td>is_operational</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Return only products flagged as operational status versus R&amp;D.</td>
+<td>Return only products flagged as operational status versus R&amp;D.
+Default is include all types of products.</td>
 </tr>
-<tr class="row-even"><td>file_name</td>
+<tr class="row-even"><td>is_published</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Return only products flagged as currently exposed for publication.
+Default is True, include only published products.</td>
+</tr>
+<tr class="row-odd"><td>file_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only products with a given file name.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.workspace</td>
+<tr class="row-odd"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the product.
 (See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.file_name</td>
+<tr class="row-even"><td>.file_name</td>
 <td>String</td>
 <td colspan="2">The name of the product file.</td>
 </tr>
-<tr class="row-even"><td>.media_type</td>
+<tr class="row-odd"><td>.media_type</td>
 <td>String</td>
 <td colspan="2">The IANA media type of the product file.</td>
 </tr>
-<tr class="row-odd"><td>.file_size</td>
+<tr class="row-even"><td>.file_size</td>
 <td>Integer</td>
 <td colspan="2">The size of the product file in bytes.</td>
 </tr>
-<tr class="row-even"><td>.data_type</td>
+<tr class="row-odd"><td>.data_type</td>
 <td>Array</td>
 <td colspan="2">List of strings describing the data type of the product.</td>
 </tr>
-<tr class="row-odd"><td>.is_deleted</td>
+<tr class="row-even"><td>.is_deleted</td>
 <td>Boolean</td>
 <td colspan="2">Whether the product file has been deleted.</td>
 </tr>
-<tr class="row-even"><td>.uuid</td>
+<tr class="row-odd"><td>.uuid</td>
 <td>String</td>
 <td colspan="2">A unique identifier that stays stable across multiple job execution runs.</td>
 </tr>
-<tr class="row-odd"><td>.url</td>
+<tr class="row-even"><td>.url</td>
 <td>URL</td>
 <td colspan="2">The absolute URL to use for downloading the file.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
+<tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.deleted</td>
+<tr class="row-even"><td>.deleted</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the product file was deleted.</td>
 </tr>
-<tr class="row-even"><td>.data_started</td>
+<tr class="row-odd"><td>.data_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When collection of the underlying data file started.</td>
 </tr>
-<tr class="row-odd"><td>.data_ended</td>
+<tr class="row-even"><td>.data_ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When collection of the underlying data file ended.</td>
 </tr>
-<tr class="row-even"><td>.geometry</td>
+<tr class="row-odd"><td>.geometry</td>
 <td>WKT String</td>
 <td colspan="2">The full geospatial geometry footprint of the product.</td>
 </tr>
-<tr class="row-odd"><td>.center_point</td>
+<tr class="row-even"><td>.center_point</td>
 <td>WKT String</td>
 <td colspan="2">The central geospatial location of the product.</td>
 </tr>
-<tr class="row-even"><td>.meta_data</td>
+<tr class="row-odd"><td>.meta_data</td>
 <td>JSON Object</td>
 <td colspan="2">A dictionary of key/value pairs that describe product-specific attributes.</td>
 </tr>
-<tr class="row-odd"><td>.countries</td>
+<tr class="row-even"><td>.countries</td>
 <td>Array</td>
 <td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
 contained in the geographic boundary of this file.</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>.is_operational</td>
+<tr class="row-even"><td>.is_operational</td>
 <td>Boolean</td>
 <td colspan="2">Whether this product was produced by an operational job type or a job type
 still in research and development.</td>
 </tr>
-<tr class="row-even"><td>.is_published</td>
+<tr class="row-odd"><td>.is_published</td>
 <td>Boolean</td>
 <td colspan="2">Whether the product file is currently published.</td>
 </tr>
-<tr class="row-odd"><td>.has_been_published</td>
+<tr class="row-even"><td>.has_been_published</td>
 <td>Boolean</td>
 <td colspan="2">Whether the product file has ever been published.</td>
 </tr>
-<tr class="row-even"><td>.published</td>
+<tr class="row-odd"><td>.published</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the product file was originally published by Scale.</td>
 </tr>
-<tr class="row-odd"><td>.unpublished</td>
+<tr class="row-even"><td>.unpublished</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the product file was unpublished by Scale.</td>
 </tr>
-<tr class="row-even"><td>.job_type</td>
+<tr class="row-odd"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The type of job that generated the product.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job</td>
+<tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job instance that generated the product.
 (See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_exe</td>
+<tr class="row-odd"><td>.job_exe</td>
 <td>JSON Object</td>
 <td colspan="2">The specific job execution that generated the product.
 (See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -810,7 +817,8 @@ development (R&amp;D) phase (False).</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns the product updates (published, unpublished, and deleted products) that have occurred in the given time range.</td>
+<tr class="row-even"><td colspan="4">Returns the product updates (published, unpublished, and deleted products) that have occurred in the given time range.
+Note that superseded results are excluded.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>GET</strong> /products/updates/</td>
 </tr>

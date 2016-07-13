@@ -559,6 +559,12 @@ unpublished</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="product.test.test_views.TestProductsView.test_is_published">
+<code class="descname">test_is_published</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_is_published" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the product files view filtered by is_published flag.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="product.test.test_views.TestProductsView.test_job_type_category">
 <code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_views.TestProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the product files view filtered by job type category.</p>
@@ -624,7 +630,7 @@ unpublished</p>
 
 <dl class="function">
 <dt id="product.test.utils.create_product">
-<code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>is_published=False</em>, <em>uuid=None</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">product.test.utils.</code><code class="descname">create_product</code><span class="sig-paren">(</span><em>job_exe=None</em>, <em>workspace=None</em>, <em>has_been_published=False</em>, <em>is_published=False</em>, <em>uuid=None</em>, <em>file_name=u'my_test_file.txt'</em>, <em>file_path=u'/file/path/my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>countries=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.utils.create_product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a product file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

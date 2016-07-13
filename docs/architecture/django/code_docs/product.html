@@ -503,7 +503,7 @@ complete successfully and has not been unpublished.</li>
 
 <dl class="method">
 <dt id="product.models.ProductFileManager.get_products">
-<code class="descname">get_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_products" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of product files within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -516,6 +516,7 @@ complete successfully and has not been unpublished.</li>
 <li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
 <li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
+<li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
