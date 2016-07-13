@@ -388,7 +388,7 @@ class JobManager(models.Manager):
         disk_out_required = max(output_size_mb, MIN_DISK)
 
         # Configure workspaces needed for the job
-        configuration = JobConfiguration()
+        configuration = job.get_job_configuration()
         for name in input_workspaces:
             configuration.add_job_task_workspace(name, MODE_RO)
         if not job.job_type.is_system:
@@ -401,13 +401,6 @@ class JobManager(models.Manager):
             for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
                 if workspace.name not in input_workspaces:
                     configuration.add_post_task_workspace(workspace.name, MODE_RW)
-        elif job.job_type.name == 'scale-ingest':
-            # TODO: This is an ugly hack. Figure out a better way for an ingest job type to pass along that it requires
-            # a certain workspace. Not sure I like using job data for this.
-            ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
-            from ingest.models import Ingest
-            ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
-            configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
 
         # Update job model in memory
         job.data = data.get_dict()

@@ -9,6 +9,7 @@ import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
@@ -423,12 +424,11 @@ class QueueManager(models.Manager):
                 Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def queue_new_job(self, job_type, data, event):
+    def queue_new_job(self, job_type, data, event, configuration=None):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
         job_type model must have already been saved in the database (it must have an ID). The given event model must
         have already been saved in the database (it must have an ID). The new job, job_exe, and queue models are saved
-        in the database in an atomic transaction. If the data is invalid, a
-        :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
+        in the database in an atomic transaction.
 
         :param job_type: The type of the new job to create and queue
         :type job_type: :class:`job.models.JobType`
@@ -436,12 +436,18 @@ class QueueManager(models.Manager):
         :type data: dict
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
+        :param configuration: The optional initial job configuration
+        :type configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
+
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
         job = Job.objects.create_job(job_type, event)
+        if not configuration:
+            configuration = JobConfiguration()
+        job.configuration = configuration.get_dict()
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet

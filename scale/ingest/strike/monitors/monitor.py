@@ -7,6 +7,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from ingest.models import Ingest, Strike
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from queue.models import Queue
 from storage.media_type import get_media_type
 from storage.models import Workspace
@@ -237,7 +238,12 @@ class Monitor(object):
         desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
         when = ingest.transfer_ended if ingest.transfer_ended else now()
         event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
-        ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
+        job_configuration = JobConfiguration()
+        if ingest.workspace:
+            job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+        if ingest.new_workspace:
+            job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
+        ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
 
         ingest.job = ingest_job
         ingest.status = 'QUEUED'
