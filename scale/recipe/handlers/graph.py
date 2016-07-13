@@ -21,11 +21,11 @@ class RecipeGraph(object):
         """Adds a dependency that one job has upon another job
 
         :param parent_job_name: The name of the parent job
-        :type parent_job_name: str
+        :type parent_job_name: string
         :param child_job_name: The name of the child job
-        :type child_job_name: str
+        :type child_job_name: string
         :param connections: List of tuples where first item is parent output name and second item is child input name
-        :type connections: [(str, str)]
+        :type connections: [(string, string)]
         """
 
         parent_node = self.get_node(parent_job_name)
@@ -55,11 +55,11 @@ class RecipeGraph(object):
         """Adds a new job node to the graph
 
         :param job_name: The unique name of the job
-        :type job_name: str
+        :type job_name: string
         :param job_type_name: The name of the job's type
-        :type job_type_name: str
+        :type job_type_name: string
         :param job_type_version: The version of the job's type
-        :type job_type_version: str
+        :type job_type_version: string
         """
 
         if job_name in self._nodes:
@@ -73,11 +73,11 @@ class RecipeGraph(object):
         """Adds a recipe input connection from the given recipe input to the given job input
 
         :param recipe_input: The name of the recipe input
-        :type recipe_input: str
+        :type recipe_input: string
         :param job_name: The name of the job
-        :type job_name: str
+        :type job_name: string
         :param job_input: The name of the job input
-        :type job_input: str
+        :type job_input: string
         """
 
         if recipe_input not in self.inputs:
@@ -93,7 +93,7 @@ class RecipeGraph(object):
         """Returns the node with the given job_name
 
         :param job_name: The job name
-        :type job_name: str
+        :type job_name: string
         :returns: The node
         :rtype: :class:`recipe.handlers.node.RecipeNode`
         """
@@ -106,7 +106,7 @@ class RecipeGraph(object):
         """Returns the recipe job names in a valid topological ordering (dependency order)
 
         :returns: The list of job names in topological ordering
-        :rtype: [str]
+        :rtype: [string]
         """
 
         results = []

@@ -222,7 +222,7 @@ class RecipeManager(models.Manager):
         :param job_ids: The job IDs
         :type job_ids: [int]
         :returns: The recipe handlers
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+        :rtype: [:class:`recipe.handlers.handler.RecipeHandler`]
         """
 
         # Figure out the non-superseded recipe ID (if applicable) for each job ID
