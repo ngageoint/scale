@@ -9,7 +9,9 @@
             this.description = description;
             this.job = Job.transformer(job);
             this.created = created;
+            this.created_formatted = moment.utc(created).format(scaleConfig.dateFormats.day_second_utc);
             this.last_modified = last_modified;
+            this.last_modified_formatted = moment.utc(last_modified).format(scaleConfig.dateFormats.day_second_utc);
             this.configuration = StrikeConfiguration.transformer(configuration);
         };
 

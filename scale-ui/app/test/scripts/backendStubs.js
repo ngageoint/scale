@@ -551,7 +551,7 @@
         });
 
         // Save Workspace
-        var getReturn = function (data, id) {
+        var getWorkspaceReturn = function (data, id) {
             var workspace = JSON.parse(data);
 
             return {
@@ -571,14 +571,14 @@
         };
         var workspaceCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');
         $httpBackend.whenPOST(workspaceCreateRegex).respond(function (method, url, data) {
-            var returnWorkspace = getReturn(data);
+            var returnWorkspace = getWorkspaceReturn(data);
             return [200, JSON.stringify(returnWorkspace), {}];
         });
         $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
             // get the workspace.id from the url
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
-            var returnWorkspace = getReturn(data, id);
+            var returnWorkspace = getWorkspaceReturn(data, id);
             return [200, JSON.stringify(returnWorkspace), {}];
         });
 
@@ -592,7 +592,7 @@
             strikeDetailsOverrideUrl = 'test/data/strikes/strike' + id + '.json';
             var returnValue = getSync(strikeDetailsOverrideUrl);
             if (returnValue[0] !== 200) {
-                returnValue = localStorage.getItem('workspace' + id);
+                returnValue = localStorage.getItem('strike' + id);
                 return [200, JSON.parse(returnValue), {}];
             } else {
                 return returnValue;
@@ -604,6 +604,34 @@
         var strikesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/', 'i');
         $httpBackend.whenGET(strikesRegex).respond(function () {
             return getSync(strikesOverrideUrl);
+        });
+
+        // Save Strike
+        var getStrikeReturn = function (data, id) {
+            var strike = JSON.parse(data);
+
+            return {
+                id: id || Math.floor(Math.random() * (10000 - 5 + 1)) + 5,
+                name: strike.name,
+                title: strike.title,
+                description: strike.description,
+                job: null,
+                created: new Date().toISOString(),
+                last_modified: new Date().toISOString(),
+                configuration: strike.configuration
+            };
+        };
+        var strikeCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/', 'i');
+        $httpBackend.whenPOST(strikeCreateRegex).respond(function (method, url, data) {
+            var returnStrike = getStrikeReturn(data);
+            return [200, JSON.stringify(returnStrike), {}];
+        });
+        $httpBackend.whenPATCH(strikeDetailsRegex).respond(function (method, url, data) {
+            // get the strike.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            var returnStrike = getStrikeReturn(data, id);
+            return [200, JSON.stringify(returnStrike), {}];
         });
 
         // For everything else, don't mock

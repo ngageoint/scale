@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('strikesController', function ($scope, $location, $routeParams, Strike, StrikeIngestFile, scaleConfig, navService, strikeService, workspacesService, scaleService, stateService, userService, toastr) {
+    angular.module('scaleApp').controller('strikesController', function ($scope, $route, $location, $routeParams, Strike, StrikeIngestFile, scaleConfig, navService, strikeService, workspacesService, scaleService, stateService, userService, toastr) {
         var vm = this,
             currStrike = {};
 
@@ -19,6 +19,7 @@
         vm.mode = 'view';
         vm.user = userService.getUserCreds();
         vm.readonly = !(vm.user && vm.user.is_admin);
+        vm.JSON = JSON;
 
         vm.cancelCreate = function () {
             vm.mode = 'view';
@@ -36,14 +37,12 @@
         };
 
         vm.saveStrike = function () {
-            debugger;
             strikeService.saveStrike(vm.activeStrike).then(function (strike) {
                 vm.activeStrike = Strike.transformer(strike);
                 if (scaleConfig.static) {
                     localStorage.setItem('strike' + vm.activeStrike.id, JSON.stringify(vm.activeStrike));
                 }
-                vm.mode = 'view';
-                getStrikes();
+                $route.reload();
             }).catch(function () {
 
             });
@@ -95,9 +94,17 @@
             });
         };
 
+        vm.disableSaveBtn = function (invalid) {
+            var returnVal = !(!invalid && vm.activeStrike.configuration.files_to_ingest.length > 0);
+            vm.saveBtnClass = returnVal ? 'btn-default' : 'btn-success';
+            return returnVal;
+        };
+
         vm.addStrikeIngestFile = function () {
-            vm.activeStrike.configuration.files_to_ingest.push(StrikeIngestFile.transformer(vm.activeStrikeIngestFile));
-            vm.activeStrikeIngestFile = {};
+            if (_.keys(vm.activeStrikeIngestFile).length > 0) {
+                vm.activeStrike.configuration.files_to_ingest.push(StrikeIngestFile.transformer(vm.activeStrikeIngestFile));
+                vm.activeStrikeIngestFile = {};
+            }
         };
 
         var getWorkspaces = function () {

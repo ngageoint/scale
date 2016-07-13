@@ -21,145 +21,139 @@
                 <div class="pull-right">
                     <div class="btn-group btn-group-sm" ng-show="!vm.readonly">
                         <button class="btn btn-default" ng-click="vm.validateStrike()" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                        <button class="btn" ng-class="{ 'btn-success': strikesForm.$invalid === false, 'btn-default': strikesForm.$invalid === true }" ng-click="vm.saveStrike()" ng-disabled="strikesForm.$invalid" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Strike" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                        <button class="btn" ng-class="vm.saveBtnClass" ng-click="vm.saveStrike()" ng-disabled="vm.disableSaveBtn(strikesForm.$invalid)" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Strike" tooltip-placement="left"><i class="fa fa-save"></i></button>
                         <button class="btn btn-warning" ng-click="vm.cancelCreate()" ng-if="vm.mode === 'add' || vm.mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
                         <button class="btn btn-success" ng-click="vm.editStrike()" ng-if="vm.mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Strike" tooltip-placement="left"><i class="fa fa-edit"></i></button>
                     </div>
                 </div>
-                <div>
-                    <h3 ng-show="!vm.activeStrike.title">Untitled Strike</h3>
-                    <h3 ng-show="vm.activeStrike.title !== ''">{{ vm.activeStrike.title }}</h3>
-                    <hr />
-                    <div ng-if="vm.mode==='view'">
-                        <dl>
-                            <dt>Description:</dt>
-                            <dd>{{ vm.activeStrike.description }}</dd>
-                            <dt>Job:</dt>
-                            <dd>{{ vm.activeStrike.job.id }}</dd>
-                            <dt>Configuration:</dt>
-                            <dd><code>{{ vm.activeStrike.configuration }}</code></dd>
-                        </dl>
+                <h3 ng-show="!vm.activeStrike.title">Untitled Strike</h3>
+                <h3 ng-show="vm.activeStrike.title !== ''">{{ vm.activeStrike.title }}</h3>
+                <hr />
+                <div ng-if="vm.mode==='view'">
+                    <dl>
+                        <dt>Description:</dt>
+                        <dd>{{ vm.activeStrike.description }}</dd>
+                        <dt ng-if="vm.activeStrike.job.id">Job:</dt>
+                        <dd ng-if="vm.activeStrike.job.id">{{ vm.activeStrike.job.id }}</dd>
+                        <dt>Created:</dt>
+                        <dd>{{ vm.activeStrike.created_formatted }}</dd>
+                        <dt>Last Modified:</dt>
+                        <dd>{{ vm.activeStrike.last_modified_formatted }}</dd>
+                        <dt>Configuration:</dt>
+                        <dd><pre>{{ vm.JSON.stringify(vm.activeStrike.configuration, null, 4) }}</pre></dd>
+                    </dl>
+                </div>
+                <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.sName.$invalid }">
+                                <label for="sName">Name</label>
+                                <input id="sName" name="sName" type="text" ng-disabled="vm.mode === 'edit'" class="form-control" ng-model="vm.activeStrike.name" placeholder="Name" required>
+                                <p ng-show="strikesForm.sName.$invalid && !strikesForm.sName.$pristine" class="help-block">Name is required.</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.sTitle.$invalid }">
+                                <label for="sTitle">Title</label>
+                                <input id="sTitle" name="sTitle" type="text" class="form-control" ng-model="vm.activeStrike.title" placeholder="Title" required>
+                                <p ng-show="strikesForm.sTitle.$invalid && !strikesForm.sTitle.$pristine" class="help-block">Title is required.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.sDescription.$invalid }">
+                                <label for="sDescription">Description</label>
+                                <textarea id="sDescription" name="sDescription" class="form-control" ng-model="vm.activeStrike.description" placeholder="Description" rows="5" required></textarea>
+                                <p ng-show="strikesForm.sDescription.$invalid && !strikesForm.sDescription.$pristine" class="help-block">Description is required.</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.scVersion.$invalid }">
+                                <label for="scVersion">Version</label>
+                                <input id="scVersion" name="scVersion" type="text" class="form-control" ng-model="vm.activeStrike.configuration.version" placeholder="Version" required>
+                                <p ng-show="strikesForm.scVersion.$invalid && !strikesForm.scVersion.$pristine" class="help-block">Version is required.</p>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.scWorkspace.$invalid }">
+                                <label for="scWorkspace">Workspace</label>
+                                <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-class="{ 'has-error': strikesForm.scMonitorType.$invalid }">
+                                <label for="scMonitorType">Monitor Type</label>
+                                <select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                <label for="sqs_name">SQS Name</label>
+                                <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nfs'">
+                                <label for="nfs_field">NFS Field (TBD)</label>
+                                <input id="nfs_field" name="nfs_field" type="text" class="form-control" placeholder="NFS Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.nfs_field">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'host'">
+                                <label for="host_field">Host Field (TBD)</label>
+                                <input id="host_field" name="host_field" type="text" class="form-control" placeholder="Host Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.host_field">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form name="ingestFileForm" novalidate ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><b>Strike Ingest Files</b> <span ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">(at least 1 is required)</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <!-- scif = (S)trike (C)onfig (I)ngest (F)ile -->
                         <div class="row">
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group" ng-class="{ 'has-error': strikesForm.sName.$invalid }">
-                                    <label for="sName">Name</label>
-                                    <input id="sName" name="sName" type="text" ng-disabled="vm.mode === 'edit'" class="form-control" ng-model="vm.activeStrike.name" placeholder="Name" required>
-                                    <p ng-show="strikesForm.sName.$invalid && !strikesForm.sName.$pristine" class="help-block">Name is required.</p>
+                            <div class="col-xs-6">
+                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifFilenameRegex.$invalid }">
+                                    <label for="scifFilenameRegex">Filename Regex</label>
+                                    <input id="scifFilenameRegex" name="scifFilenameRegex" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.filename_regex" placeholder="Filename Regex" required>
+                                    <p class="help-block">A regular expression to check against the names of newly copied files</p>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group" ng-class="{ 'has-error': strikesForm.sTitle.$invalid }">
-                                    <label for="sTitle">Title</label>
-                                    <input id="sTitle" name="sTitle" type="text" class="form-control" ng-model="vm.activeStrike.title" placeholder="Title" required>
-                                    <p ng-show="strikesForm.sTitle.$invalid && !strikesForm.sTitle.$pristine" class="help-block">Title is required.</p>
+                            <div class="col-xs-6">
+                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifDataTypes.$invalid }">
+                                    <label for="scifDataTypes">Data Types</label>
+                                    <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.data_types" placeholder="Data Types" required>
+                                    <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings “tagged” with the file.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12">
-                                <div class="form-group" ng-class="{ 'has-error': strikesForm.sDescription.$invalid }">
-                                    <label for="sDescription">Description</label>
-                                    <textarea id="sDescription" name="sDescription" class="form-control" ng-model="vm.activeStrike.description" placeholder="Description" rows="4" required></textarea>
-                                    <p ng-show="strikesForm.sDescription.$invalid && !strikesForm.sDescription.$pristine" class="help-block">Description is required.</p>
+                            <div class="col-xs-6">
+                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifNewWorkspace.$invalid }">
+                                    <label for="scifNewWorkspace">New Workspace</label>
+                                    <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace" required>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifNewFilePath.$invalid }">
+                                    <label for="scifNewFilePath">New File Path</label>
+                                    <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
-                                            <label for="scVersion">Version</label>
-                                            <input id="scVersion" name="scVersion" type="text" class="form-control" ng-model="vm.activeStrike.configuration.version" placeholder="Version">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scWorkspace.$invalid }">
-                                            <label for="scWorkspace">Workspace</label>
-                                            <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group" ng-class="{ 'has-error': strikesForm.scMonitorType.$invalid }">
-                                            <label for="scMonitorType">Monitor Type</label>
-                                            <select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
-                                            <label for="sqs_name">SQS Name</label>
-                                            <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
-                                        </div>
-                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nfs'">
-                                            <label for="nfs_field">NFS Field (TBD)</label>
-                                            <input id="nfs_field" name="nfs_field" type="text" class="form-control" placeholder="NFS Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.nfs_field">
-                                        </div>
-                                        <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'host'">
-                                            <label for="host_field">Host Field (TBD)</label>
-                                            <input id="host_field" name="host_field" type="text" class="form-control" placeholder="Host Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.host_field">
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title">Strike Ingest File</h3>
-                                            </div>
-                                            <div class="panel-body">
-                                                <!-- scif = (S)trike (C)onfig (I)ngest (F)ile -->
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <div class="form-group">
-                                                            <label for="scifFilenameRegex">Filename Regex</label>
-                                                            <input id="scifFilenameRegex" name="scifFilenameRegex" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.filename_regex" placeholder="Filename Regex">
-                                                            <p class="help-block">A regular expression to check against the names of newly copied files</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <div class="form-group">
-                                                            <label for="scifDataTypes">Data Types</label>
-                                                            <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.data_types" placeholder="Data Types">
-                                                            <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings “tagged” with the file.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <div class="form-group">
-                                                            <label for="scifNewWorkspace">New Workspace</label>
-                                                            <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <div class="form-group">
-                                                            <label for="scifNewFilePath">New File Path</label>
-                                                            <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-default btn-block" ng-click="vm.addStrikeIngestFile()"><i class="fa fa-plus"></i> Add File to Configuration</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <h3>Current Files</h3>
-                                        <p ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">No files in configuration.</p>
-                                        <div ng-if="vm.activeStrike.configuration.files_to_ingest.length > 0">
-                                            <ul ng-repeat="file in vm.activeStrike.configuration.files_to_ingest" class="list-group">
-                                                <li class="list-group-item">
-                                                    <code>{{ file }}</code>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-xs-4 col-xs-offset-4">
+                                <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addStrikeIngestFile()" ng-disabled="ingestFileForm.$invalid"><i class="fa fa-plus"></i> Add File to Configuration</button>
                             </div>
+                        </div>
+                        <b class="margin-bottom-md">Current Files</b>
+                        <p ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">No files in configuration.</p>
+                        <div ng-if="vm.activeStrike.configuration.files_to_ingest.length > 0">
+                            <ul ng-repeat="file in vm.activeStrike.configuration.files_to_ingest" class="list-unstyled">
+                                <li>
+                                    <pre>{{ vm.JSON.stringify(file, null, 4) }}</pre>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
