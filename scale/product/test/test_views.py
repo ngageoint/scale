@@ -254,8 +254,13 @@ class TestProductsUpdatesView(TestCase):
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
-                                                          is_published=True, countries=[self.country])
+        self.product2a = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=False, countries=[self.country])
+        self.product2b = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, is_superseded=True,
+                                                           countries=[self.country])
+        self.product2c = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, countries=[self.country])
 
     def test_invalid_started(self):
         """Tests calling the product file updates view when the started parameter is invalid."""
@@ -360,9 +365,14 @@ class TestProductsUpdatesView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 3)
 
         for entry in result['results']:
+
+            # Make sure superseded products are not included
+            self.assertNotEqual(entry['id'], self.product2b.id)
+
+            # Make sure additional attributes are present
             self.assertIsNotNone(entry['update'])
             self.assertIsNotNone(entry['source_files'])
             self.assertEqual(entry['countries'][0], self.country.iso3)
