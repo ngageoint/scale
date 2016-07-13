@@ -2,7 +2,7 @@
 .. _rest_recipe:
 
 Recipe Services
-===========================================================================================================================
+===============
 
 These services provide access to information about recipes.
 
@@ -47,35 +47,48 @@ These services provide access to information about recipes.
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe_type       | JSON Object       | The recipe type that is associated with the recipe.                            |
-|                    |                   | This represents the latest version of the definition.                          |
-|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe_type_rev   | JSON Object       | The recipe type revision that is associated with the recipe.                   |
-|                    |                   | This represents the definition at the time the recipe was scheduled.           |
-|                    |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .event             | JSON Object       | The trigger event that is associated with the recipe.                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .completed         | ISO-8601 Datetime | When every job in the recipe was completed successfully.                       |
-|                    |                   | This field will remain null if a job in the recipe is blocked or failed.       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++------------------------+-------------------+----------------------------------------------------------------------------+
+| count                  | Integer           | The total number of results that match the query parameters.               |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| next                   | URL               | A URL to the next page of results.                                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| previous               | URL               | A URL to the previous page of results.                                     |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| results                | Array             | List of result JSON objects that match the query parameters.               |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .id                    | Integer           | The unique identifier of the model. Can be passed to the details API call. |
+|                        |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                          |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .recipe_type           | JSON Object       | The recipe type that is associated with the recipe.                        |
+|                        |                   | This represents the latest version of the definition.                      |
+|                        |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .recipe_type_rev       | JSON Object       | The recipe type revision that is associated with the recipe.               |
+|                        |                   | This represents the definition at the time the recipe was scheduled.       |
+|                        |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)   |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .event                 | JSON Object       | The trigger event that is associated with the recipe.                      |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .is_superseded         | Boolean           | Whether this recipe has been replaced and is now obsolete.                 |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .root_superseded_recipe| JSON Object       | The first recipe in the current chain of superseded recipes.               |
+|                        |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                          |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .superseded_recipe     | JSON Object       | The previous recipe in the chain that was superseded by this recipe.       |
+|                        |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                          |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .superseded_by_recipe  | JSON Object       | The next recipe in the chain that superseded this recipe.                  |
+|                        |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                          |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .created               | ISO-8601 Datetime | When the associated database model was initially created.                  |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .completed             | ISO-8601 Datetime | When every job in the recipe was completed successfully.                   |
+|                        |                   | This field will remain null if a job in the recipe is blocked or failed.   |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .superseded            | ISO-8601 Datetime | When the the recipe became superseded by another recipe.                   |
++------------------------+-------------------+----------------------------------------------------------------------------+
+| .last_modified         | ISO-8601 Datetime | When the associated database model was last saved.                         |
++------------------------+-------------------+----------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -106,8 +119,13 @@ These services provide access to information about recipes.
 |                    },                                                                                                   |
 |                    "occurred": "2015-06-15T19:03:26.346Z"                                                               |
 |                },                                                                                                       |
+|                "is_superseded": false,                                                                                  |
+|                "root_superseded_recipe": null,                                                                          |
+|                "superseded_recipe": null,                                                                               |
+|                "superseded_by_recipe": null,                                                                            |
 |                "created": "2015-06-15T19:03:26.346Z",                                                                   |
 |                "completed": "2015-06-15T19:05:26.346Z",                                                                 |
+|                "superseded": null,                                                                                      |
 |                "last_modified": "2015-06-15T19:05:26.346Z"                                                              |
 |            },                                                                                                           |
 |            ...                                                                                                          |
@@ -132,38 +150,53 @@ These services provide access to information about recipes.
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| id                 | Integer           | The unique identifier of the model.                                            |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_type        | JSON Object       | The recipe type that is associated with the recipe.                            |
-|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_type_rev    | JSON Object       | The recipe type revision that is associated with the recipe.                   |
-|                    |                   | This represents the definition at the time the recipe was scheduled.           |
-|                    |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| event              | JSON Object       | The trigger event that is associated with the recipe.                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| completed          | ISO-8601 Datetime | When every job in the recipe was completed successfully.                       |
-|                    |                   | This field will remain null if a job in the recipe is blocked or failed.       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| data               | JSON Object       | JSON description defining the data used to execute a recipe instance.          |
-|                    |                   | (See :ref:`architecture_jobs_recipe_data_spec`)                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| input_files        | JSON Object       | A list of files that the recipe used as input.                                 |
-|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| jobs               | Array             | The jobs associated with this recipe.                                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_name          | String            | The name of the job for this recipe.                                           |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job               | JSON Object       | The job that is associated with the recipe.                                    |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| id                    | Integer           | The unique identifier of the model.                                         |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| recipe_type           | JSON Object       | The recipe type that is associated with the recipe.                         |
+|                       |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                 |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| recipe_type_rev       | JSON Object       | The recipe type revision that is associated with the recipe.                |
+|                       |                   | This represents the definition at the time the recipe was scheduled.        |
+|                       |                   | (See :ref:`Recipe Type Revision Details <rest_recipe_type_rev_details>`)    |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| event                 | JSON Object       | The trigger event that is associated with the recipe.                       |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| is_superseded         | Boolean           | Whether this recipe has been replaced and is now obsolete.                  |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| root_superseded_recipe| JSON Object       | The first recipe in the current chain of superseded recipes.                |
+|                       |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                           |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| superseded_recipe     | JSON Object       | The previous recipe in the chain that was superseded by this recipe.        |
+|                       |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                           |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| superseded_by_recipe  | JSON Object       | The next recipe in the chain that superseded this recipe.                   |
+|                       |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                           |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| created               | ISO-8601 Datetime | When the associated database model was initially created.                   |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| completed             | ISO-8601 Datetime | When every job in the recipe was completed successfully.                    |
+|                       |                   | This field will remain null if a job in the recipe is blocked or failed.    |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| superseded            | ISO-8601 Datetime | When the the recipe became superseded by another recipe.                    |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| last_modified         | ISO-8601 Datetime | When the associated database model was last saved.                          |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| data                  | JSON Object       | JSON description defining the data used to execute a recipe instance.       |
+|                       |                   | (See :ref:`architecture_jobs_recipe_data_spec`)                             |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| input_files           | JSON Object       | A list of files that the recipe used as input.                              |
+|                       |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                   |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| jobs                  | Array             | The jobs associated with this recipe.                                       |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .job_name             | String            | The name of the job for this recipe.                                        |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .is_original          | Boolean           | Whether this is from the original recipe or copied from a superseded one.   |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .job                  | JSON Object       | The job that is associated with the recipe.                                 |
+|                       |                   | (See :ref:`Job Details <rest_job_details>`)                                 |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -267,8 +300,13 @@ These services provide access to information about recipes.
 |                "parse_id": 1                                                                                            |
 |            }                                                                                                            |
 |        },                                                                                                               |
+|        "is_superseded": false,                                                                                          |
+|        "root_superseded_recipe": null,                                                                                  |
+|        "superseded_recipe": null,                                                                                       |
+|        "superseded_by_recipe": null,                                                                                    |
 |        "created": "2015-06-15T19:03:26.346Z",                                                                           |
 |        "completed": "2015-06-15T19:05:26.346Z",                                                                         |
+|        "superseded": null,                                                                                              |
 |        "last_modified": "2015-06-15T19:05:26.346Z"                                                                      |
 |        "data": {                                                                                                        |
 |            "input_data": [                                                                                              |
@@ -307,6 +345,7 @@ These services provide access to information about recipes.
 |        "jobs": [                                                                                                        |
 |            {                                                                                                            |
 |                "job_name": "kml",                                                                                       |
+|                "is_original": true,                                                                                     |
 |                "job": {                                                                                                 |
 |                    "id": 7,                                                                                             |
 |                    "job_type": {                                                                                        |

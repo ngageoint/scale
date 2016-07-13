@@ -118,7 +118,8 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type, self.job_type.id, self.new_invalid_job_interface)
+        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type, self.job_type.id,
+                          self.new_invalid_job_interface)
 
         # Check results
         job_type = JobType.objects.get(pk=self.job_type.id)
@@ -227,8 +228,8 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type, self.job_type.name, self.job_type.version,
-                          self.new_invalid_job_interface)
+        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type, self.job_type.name,
+                          self.job_type.version, self.new_invalid_job_interface)
 
         # Check results
         job_type = JobType.objects.get(pk=self.job_type.id)
@@ -339,7 +340,7 @@ class TestRecipeManager(TransactionTestCase):
         self.assertEqual(len(handlers), 2)
         recipe_ids = set()
         for handler in handlers:
-            recipe_ids.add(handler.recipe_id)
+            recipe_ids.add(handler.recipe.id)
         self.assertSetEqual(recipe_ids, {self.recipe_a.id, self.recipe_b.id})
 
 
@@ -434,8 +435,8 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
 
         # Make sure the recipe jobs get created with the correct job types
-        recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.get(recipe_id=handler.recipe_id, job_name='Job 2')
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe.id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.get(recipe_id=handler.recipe.id, job_name='Job 2')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
         # Make sure the recipe jobs get created in the correct order
@@ -446,9 +447,9 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
         event = trigger_test_utils.create_trigger_event()
         handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
-        recipe = Recipe.objects.get(id=handler.recipe_id)
-        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 2')
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
         superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
 
         # Create a new recipe of the same type where we want to reprocess Job 2
@@ -468,10 +469,10 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         self.assertTrue(job_2.is_superseded)
 
         # Check that new recipe supersedes the old one, job 1 is copied from old recipe, and job 2 supersedes old job 2
-        new_recipe = Recipe.objects.get(id=new_handler.recipe_id)
-        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+        new_recipe = Recipe.objects.get(id=new_handler.recipe.id)
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
                                                                        job_name='Job 1')
-        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
                                                                        job_name='Job 2')
         self.assertEqual(new_recipe.superseded_recipe_id, recipe.id)
         self.assertEqual(new_recipe.root_superseded_recipe_id, recipe.id)
@@ -540,9 +541,9 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
         event = trigger_test_utils.create_trigger_event()
         handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
-        recipe = Recipe.objects.get(id=handler.recipe_id)
-        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe_id, job_name='Job 2')
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
         job_exe_2 = job_test_utils.create_job_exe(job=recipe_job_2.job)
         try:
             from product.models import ProductFile
@@ -576,10 +577,10 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
         # Check that new recipe supersedes the old one, job 1 is copied from old recipe, and job 2 is new and does not
         # supersede anything
-        new_recipe = Recipe.objects.get(id=new_handler.recipe_id)
-        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+        new_recipe = Recipe.objects.get(id=new_handler.recipe.id)
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
                                                                        job_name='Job 1')
-        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe_id,
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
                                                                        job_name='Job 3')
         self.assertEqual(new_recipe.superseded_recipe_id, recipe.id)
         self.assertEqual(new_recipe.root_superseded_recipe_id, recipe.id)
@@ -978,7 +979,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_change_to_both(self):
-        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and the trigger rule"""
+        """Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and trigger rule"""
 
         # Create recipe_type
         name = 'test-recipe'
@@ -995,7 +996,8 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule, False)
+            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule,
+                                                False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results

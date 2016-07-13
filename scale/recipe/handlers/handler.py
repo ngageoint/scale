@@ -16,7 +16,9 @@ class RecipeHandler(object):
         :type recipe_jobs: [:class:`recipe.models.RecipeJob`]
         """
 
-        self._recipe = recipe
+        self.recipe = recipe
+        self.recipe_jobs = recipe_jobs
+
         self._data = recipe.get_recipe_data()
         self._graph = recipe.get_recipe_definition().get_graph()
         self._jobs_by_id = {}  # {Job ID: Recipe Job}
@@ -25,16 +27,6 @@ class RecipeHandler(object):
         for recipe_job in recipe_jobs:
             self._jobs_by_id[recipe_job.job_id] = recipe_job
             self._jobs_by_name[recipe_job.job_name] = recipe_job
-
-    @property
-    def recipe_id(self):
-        """Returns the ID of the recipe for this handler
-
-        :returns: The recipe ID
-        :rtype: int
-        """
-
-        return self._recipe.id
 
     def get_blocked_jobs(self):
         """Returns the jobs within this recipe that should be updated to BLOCKED status
