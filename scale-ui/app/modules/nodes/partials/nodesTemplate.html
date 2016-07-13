@@ -1,7 +1,11 @@
 <ais-header name="'Nodes'" loading="vm.loading"></ais-header>
 <div class="row">
     <div class="nodes col-xs-9">
-        <ais-grid-chart data="vm.nodeData" scale="1.5" mode="zoom" reveal="true"></ais-grid-chart>
+        <div class="nodes-container" ng-if="vm.nodes.length > 0">
+            <div class="node-cell" ng-class="vm.getNodeClass(node)" ng-repeat="node in vm.nodes" ng-click="vm.viewDetails(node.node.id)">
+                {{ node.node.hostname }}
+            </div>
+        </div>
     </div>
     <div class="node-health col-xs-3 text-center">
         <h3>Node Health</h3>
@@ -13,3 +17,88 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="nodeAside.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{ vmAside.node.hostname }}</h3>
+    </div>
+    <div class="modal-body">
+        Details about {{ vmAside.node.hostname }}
+        <!--<div class="row">-->
+            <!--<div class="col-xs-12 col-sm-8">-->
+                <!--<table class="table table-hover table-condensed table-striped">-->
+                    <!--<tbody>-->
+                    <!--<tr><td>Port:</td><td>{{ vmAside.node.port }}</td></tr>-->
+                    <!--<tr><td>Slave ID:</td><td>{{ vmAside.node.slave_id }}</td></tr>-->
+                    <!--<tr><td>Paused:</td><td>{{ vmAside.node.is_paused }}</td></tr>-->
+                    <!--<tr><td>Paused Due To Errors:</td><td>{{ vmAside.node.is_paused_errors }}</td></tr>-->
+                    <!--<tr><td>Paused Reason:</td><td>{{ vmAside.node.pause_reason }}</td></tr>-->
+                    <!--<tr><td>Active:</td><td>{{ vmAside.node.is_active }}</td></tr>-->
+                    <!--<tr><td>Archived:</td><td>{{ vmAside.node.archived }}</td></tr>-->
+                    <!--<tr><td>Created:</td><td>{{ vmAside.node.created }}</td></tr>-->
+                    <!--<tr><td>Last Offer:</td><td>{{ vmAside.node.last_offer }}</td></tr>-->
+                    <!--<tr><td>Last Modified:</td><td>{{ vmAside.node.last_modified }}</td></tr>-->
+                    <!--<tr><td>Disconnected:</td><td>{{ vmAside.node.disconnected }}</td></tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+            <!--</div>-->
+            <!--<div class="col-xs-12 col-sm-4">-->
+                <!--<div class="panel panel-default">-->
+                    <!--<div class="panel-heading">-->
+                        <!--<b>Resources</b>-->
+                    <!--</div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-1">-->
+                                <!--CPU-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-11">-->
+                                <!--<dl class="dl-horizontal">-->
+                                    <!--<dt>Scheduled</dt>-->
+                                    <!--<dd>{{ vmAside.node.resources.scheduled.cpus }}</dd>-->
+                                    <!--<dt>Used</dt>-->
+                                    <!--<dd>{{ vmAside.node.resources.used.cpus }}</dd>-->
+                                    <!--<dt>Total</dt>-->
+                                    <!--<dd>{{ vmAside.node.resources.total.cpus }}</dd>-->
+                                <!--</dl>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-1">-->
+                                <!--Memory-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-11">-->
+                                <!--<dl class="dl-horizontal">-->
+                                    <!--<dt>Scheduled</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.scheduled.mem) }}</dd>-->
+                                    <!--<dt>Used</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.used.mem) }}</dd>-->
+                                    <!--<dt>Total</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.total.mem) }}</dd>-->
+                                <!--</dl>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-1">-->
+                                <!--Disk-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-11">-->
+                                <!--<dl class="dl-horizontal">-->
+                                    <!--<dt>Scheduled</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.scheduled.disk) }}</dd>-->
+                                    <!--<dt>Used</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.used.disk) }}</dd>-->
+                                    <!--<dt>Total</dt>-->
+                                    <!--<dd>{{ vmAside.scaleService.calculateFileSizeFromMib(vmAside.node.resources.total.disk) }}</dd>-->
+                                <!--</dl>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="vmAside.ok($event)">OK</button>
+        <button class="btn btn-warning" ng-click="vmAside.cancel($event)">Cancel</button>
+    </div>
+</script>
