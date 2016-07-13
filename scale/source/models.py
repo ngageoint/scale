@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import os
 
 import django.contrib.gis.db.models as models
 from django.db import transaction
@@ -10,8 +9,7 @@ from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
 from source.triggers.parse_trigger_handler import ParseTriggerHandler
-from storage.brokers.broker import FileMove, FileUpload
-from storage.exceptions import DuplicateFile
+from storage.brokers.broker import FileMove
 from storage.models import ScaleFile
 
 
@@ -156,44 +154,6 @@ class SourceFileManager(models.GeoManager):
             if new_workspace_path and src_file.workspace.is_move_enabled:
                 ScaleFile.objects.move_files([FileMove(src_file, old_workspace_path)])
             raise
-
-    def store_file(self, local_path, data_types, workspace, remote_path):
-        """Stores the given local source file in the workspace
-
-        :param local_path: The absolute local path of the source file to store
-        :type local_path: str
-        :param data_types: The data type tags of the source file
-        :type data_types: list of str
-        :param workspace: The workspace to use for storing the source file
-        :type workspace: :class:`storage.models.Workspace`
-        :param remote_path: The relative path for storing the source file
-        :type remote_path: str
-        :returns: The model of the saved source file
-        :rtype: :class:`source.models.SourceFile`
-        """
-
-        file_name = os.path.basename(local_path)
-
-        # Check for duplicate file, else create new file
-        # TODO: fix race condition with many files with same name?
-        try:
-            src_file = SourceFile.objects.get(file_name=file_name)
-            # Duplicate files that are deleted should be stored again
-            if not src_file.is_deleted:
-                raise DuplicateFile('\'%s\' already exists' % file_name)
-        except SourceFile.DoesNotExist:
-            src_file = SourceFile()  # New file
-
-        # Add a stable identifier based on the file name
-        src_file.update_uuid(file_name)
-
-        # Add tags and store the new/updated source file
-        for tag in data_types:
-            src_file.add_data_type_tag(tag)
-
-        src_file.file_path = remote_path
-
-        return ScaleFile.objects.upload_files(workspace, [FileUpload(src_file, local_path)])[0]
 
 
 class SourceFile(ScaleFile):

@@ -45,7 +45,7 @@ class Command(BaseCommand):
         self._strike_id = options.get('strike_id')
 
         logger.info('Command starting: scale_strike')
-        logger.info(' - Strike ID: %i', self._strike_id)
+        logger.info('Strike ID: %i', self._strike_id)
 
         logger.info('Querying database for Strike configuration')
         strike = Strike.objects.select_related('job').get(pk=self._strike_id)

@@ -50,9 +50,9 @@ class Broker(object):
         """Deletes the given files.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
-        that volume file system is mounted. This means that the remote path to where a ScaleFile currently exists is the
-        result of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None
-        will be given for volume_path.
+        that volume file system is mounted. This means that the path to where a ScaleFile currently exists is the result
+        of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None will be
+        given for volume_path.
 
         The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
         each file itself and not any parent directories. Each file model should be updated and saved when a delete is
@@ -71,9 +71,9 @@ class Broker(object):
         """Downloads the given files to the given local file system paths.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
-        that volume file system is mounted. This means that the remote path to a ScaleFile that is accessible to the
-        container is the result of os.path.join(volume_path, file_downloads[i].file.file_path). If this broker does not
-        use a container volume, None will be given for volume_path.
+        that volume file system is mounted. This means that the path to a ScaleFile that is accessible to the container
+        is the result of os.path.join(volume_path, file_downloads[i].file.file_path). If this broker does not use a
+        container volume, None will be given for volume_path.
 
         The file_downloads list contains named tuples that each contain a ScaleFile model to be downloaded and the
         absolute local container path where the file should be downloaded. Typically, no changes are needed to file
@@ -89,6 +89,26 @@ class Broker(object):
 
         pass
 
+    def get_file_system_paths(self, volume_path, files):
+        """Returns the local file system paths for the given files, if supported by the broker.
+
+        If this broker uses a container volume, volume_path will contain the absolute local container location where
+        that volume file system is mounted. This means that the path to a ScaleFile that is accessible to the container
+        is the result of os.path.join(volume_path, scale_files[i].file_path). If this broker does not use a container
+        volume, None will be given for volume_path. If this method is not supported by the broker, None will be
+        returned.
+
+        :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
+            None if this broker does not use a container volume
+        :type volume_path: string
+        :param files: List of files
+        :type files: [:class:`storage.models.ScaleFile`]
+        :returns: The list of local file system paths if supported, None otherwise
+        :rtype: [string]
+        """
+
+        return None
+
     def load_configuration(self, config):
         """Loads the given configuration
 
@@ -102,8 +122,8 @@ class Broker(object):
         """Moves the given files to the new file system paths.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
-        that volume file system is mounted. This means that the remote path to where a ScaleFile currently exists is the
-        result of os.path.join(volume_path, files_moves[i].file.file_path) and the new path is given by
+        that volume file system is mounted. This means that the path to where a ScaleFile currently exists is the result
+        of os.path.join(volume_path, files_moves[i].file.file_path) and the new path is given by
         os.path.join(volume_path, files_moves[i].file.new_path). If this broker does not use a container volume, None
         will be given for volume_path.
 
@@ -126,8 +146,8 @@ class Broker(object):
         """Uploads the given files from the given local file system paths.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
-        that volume file system is mounted. This means that the remote path to where a ScaleFile should be uploaded is
-        the result of os.path.join(volume_path, file_uploads[i].file.file_path). If this broker does not use a container
+        that volume file system is mounted. This means that the path to where a ScaleFile should be uploaded is the
+        result of os.path.join(volume_path, file_uploads[i].file.file_path). If this broker does not use a container
         volume, None will be given for volume_path.
 
         The file_uploads list contains named tuples that each contain a ScaleFile model to be uploaded and the absolute
