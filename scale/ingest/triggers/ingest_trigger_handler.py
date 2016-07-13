@@ -72,7 +72,7 @@ class IngestTriggerHandler(TriggerRuleHandler):
                     job_data.add_file_input(rule_config.get_input_data_name(), source_file.id)
                     job_type.get_job_interface().add_workspace_to_data(job_data, workspace.id)
                     logger.info('Queuing new job of type %s %s', job_type.name, job_type.version)
-                    Queue.objects.queue_new_job(job_type, job_data.get_dict(), event)
+                    Queue.objects.queue_new_job(job_type, job_data, event)
                 elif isinstance(thing_to_create, RecipeType):
                     recipe_type = thing_to_create
                     recipe_data = RecipeData({})

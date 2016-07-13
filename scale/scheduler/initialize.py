@@ -6,6 +6,7 @@ import logging
 from django.db import transaction
 from django.utils.timezone import now
 
+from job.configuration.data.job_data import JobData
 from job.models import Job, JobType
 from queue.models import Queue
 from scheduler.models import Scheduler
@@ -29,4 +30,4 @@ def initialize_system():
         logger.info('Queuing Scale Clock job')
         with transaction.atomic():
             init_event = TriggerEvent.objects.create_trigger_event('SCALE_INIT', None, {}, now())
-            Queue.objects.queue_new_job(clock_job_type, {}, init_event)
+            Queue.objects.queue_new_job(clock_job_type, JobData(), init_event)

@@ -6,6 +6,7 @@ import logging
 import django.utils.timezone as timezone
 
 from job.clock import ClockEventError, ClockEventProcessor
+from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 
@@ -37,10 +38,6 @@ class DailyMetricsProcessor(ClockEventProcessor):
 
         # Schedule one job for each required day
         for day in days:
-            job_data = {
-                'input_data': [{
-                    'name': 'Day',
-                    'value': day.strftime('%Y-%m-%d'),
-                }]
-            }
+            job_data = JobData()
+            job_data.add_property_input('Day', day.strftime('%Y-%m-%d'))
             Queue.objects.queue_new_job(job_type, job_data, event)

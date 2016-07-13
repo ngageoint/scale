@@ -10,6 +10,7 @@ from django.db import models, transaction
 from django.utils.timezone import now
 
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -429,12 +430,8 @@ class StrikeManager(models.Manager):
         strike.save()
 
         strike_type = self.get_strike_job_type()
-        job_data = {
-            'input_data': [{
-                'name': 'Strike ID',
-                'value': unicode(strike.id),
-            }],
-        }
+        job_data = JobData()
+        job_data.add_property_input('Strike ID', unicode(strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)

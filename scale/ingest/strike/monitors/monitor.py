@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from ingest.models import Ingest, Strike
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
+from job.configuration.data.job_data import JobData
 from queue.models import Queue
 from storage.media_type import get_media_type
 from storage.models import Workspace
@@ -226,15 +227,10 @@ class Monitor(object):
 
         logger.info('Creating ingest task for %s', ingest.file_name)
 
-        # TODO: change this when updating ingest job
-        # Atomically create new ingest job and mark ingest as QUEUED
+        # Create new ingest job and mark ingest as QUEUED
         ingest_job_type = Ingest.objects.get_ingest_job_type()
-        data = {
-            'version': '1.0',
-            'input_data': [
-                {'name': 'Ingest ID', 'value': str(ingest.id)}
-            ]
-        }
+        data = JobData()
+        data.add_property_input('Ingest ID', str(ingest.id))
         desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
         when = ingest.transfer_ended if ingest.transfer_ended else now()
         event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)

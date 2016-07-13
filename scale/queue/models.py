@@ -15,7 +15,6 @@ from job.configuration.data.job_data import JobData
 from job.execution.running.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
-from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
@@ -425,15 +424,13 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event, configuration=None):
-        """Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
-        job_type model must have already been saved in the database (it must have an ID). The given event model must
-        have already been saved in the database (it must have an ID). The new job, job_exe, and queue models are saved
-        in the database in an atomic transaction.
+        """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
+        job_exe, and queue models are saved in the database in an atomic transaction.
 
         :param job_type: The type of the new job to create and queue
         :type job_type: :class:`job.models.JobType`
-        :param data: JSON description defining the job data to run on
-        :type data: dict
+        :param data: The job data to run on
+        :type data: :class:`job.configuration.data.job_data.JobData`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
         :param configuration: The optional initial job configuration
@@ -451,7 +448,7 @@ class QueueManager(models.Manager):
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
-        Job.objects.populate_job_data(job, JobData(data))
+        Job.objects.populate_job_data(job, data)
         self._queue_jobs([job])
 
         return job
@@ -475,7 +472,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job(job_type, data, event).id
+        job_id = self.queue_new_job(job_type, JobData(data), event).id
         job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
         return job_id, job_exe.id
 
@@ -684,10 +681,8 @@ class QueueManager(models.Manager):
                 raise Exception('Job execution already has a cleanup job')
 
             cleanup_type = JobType.objects.get_cleanup_job_type()
-            data = {
-                'version': '1.0',
-                'input_data': [{'name': 'Job Exe ID', 'value': str(job_exe.id)}]
-            }
+            data = JobData()
+            data.add_property_input('Job Exe ID', str(job_exe.id))
             desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
             event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
             cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event).id
