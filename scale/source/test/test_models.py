@@ -130,30 +130,3 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNone(src_file.meta_data)
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)
-
-
-class TestSourceFileManagerStoreFile(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-    @patch('storage.models.os.path.getsize')
-    @patch('storage.models.os.mkdir')
-    def test_success_new(self, mock_mkdir, mock_getsize):
-        """Tests calling SourceFileManager.store_file() successfully with a new source file"""
-        def new_getsize(path):
-            return 100
-        mock_getsize.side_effect = new_getsize
-
-        workspace = storage_utils.create_workspace()
-        remote_path = 'my/remote/path/file.txt'
-        local_path = 'my/local/path/file.txt'
-        workspace.upload_files = MagicMock()
-
-        src_file = SourceFile.objects.store_file(local_path, [], workspace, remote_path)
-
-        self.assertEqual('file.txt', src_file.file_name)
-        self.assertEqual('3d8e577bddb17db339eae0b3d9bcf180', src_file.uuid)
-        self.assertEqual(remote_path, src_file.file_path)
-        self.assertEqual('text/plain', src_file.media_type)
-        self.assertEqual(workspace.id, src_file.workspace_id)

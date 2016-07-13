@@ -246,7 +246,7 @@ class StrikeConfiguration(object):
             workspace.title = 'Auto Workspace for %s' % mount
             desc = 'This workspace was automatically created for mount %s to support converting Strike from 1.0 to 2.0'
             workspace.description = desc % mount
-            workspace.json_config = '{"version": "1.0", "broker": {"type": "host", "host_path": %s}}' % mount_path
+            workspace.json_config = '{"version": "1.0", "broker": {"type": "host", "host_path": "%s"}}' % mount_path
             workspace.save()
 
         converted_configuration['workspace'] = auto_workspace_name

@@ -21,3 +21,10 @@ class IngestConfig(AppConfig):
 
         # Register ingest trigger rule handler
         register_trigger_rule_handler(IngestTriggerHandler())
+
+        # Registers the Strike monitors with the monitor system
+        import ingest.strike.monitors.factory as factory
+        from ingest.strike.monitors.dir_monitor import DirWatcherMonitor
+
+        # Register monitor types
+        factory.add_monitor_type(DirWatcherMonitor)

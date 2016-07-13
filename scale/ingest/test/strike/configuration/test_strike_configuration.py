@@ -23,6 +23,7 @@ class TestStrikeConfigurationInit(TestCase):
 
         # No exception is success
         StrikeConfiguration({
+            'version': '1.0',
             'mount': 'host:/my/path',
             'transfer_suffix': '_tmp',
             'files_to_ingest': [{
@@ -121,6 +122,7 @@ class TestStrikeConfigurationInit(TestCase):
         '''Tests calling StrikeConfiguration constructor successfully with all information.'''
 
         config = {
+            'version': '1.0',
             'mount': 'host:/my/path',
             'transfer_suffix': '_tmp',
             'files_to_ingest': [{
@@ -132,52 +134,6 @@ class TestStrikeConfigurationInit(TestCase):
         }
         # No exception is success
         StrikeConfiguration(config)
-
-
-class TestStrikeConfigurationMatchFileName(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-    def test_match(self):
-        '''Tests calling StrikeConfiguration.match_file_name() with a match.'''
-
-        data_types_list = ['one', 'two']
-        wksp_path = os.path.join('my', 'path')
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': '.*MY.*PATTERN.*',
-                'data_types': data_types_list,
-                'workspace_path': wksp_path,
-                'workspace_name': self.workspace.name,
-            }],
-        }
-        strike_config = StrikeConfiguration(config)
-
-        result = strike_config.match_file_name('ababMYgggPATTERNxyz')
-        self.assertTupleEqual(result, (data_types_list, wksp_path, self.workspace))
-
-    def test_no_match(self):
-        '''Tests calling StrikeConfiguration.match_file_name() without a match.'''
-
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': '.*MY.*PATTERN.*',
-                'data_types': ['one', 'two'],
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
-            }],
-        }
-        strike_config = StrikeConfiguration(config)
-
-        result = strike_config.match_file_name('ababFOOBARabab')
-        self.assertIsNone(result)
 
 
 class TestStrikeConfigurationValidateWorkspaces(TestCase):
@@ -231,6 +187,7 @@ class TestStrikeConfigurationValidateWorkspaces(TestCase):
         '''Tests calling StrikeConfiguration() successfully.'''
 
         config = {
+            'version': '1.0',
             'mount': 'host:/my/path',
             'transfer_suffix': '_tmp',
             'files_to_ingest': [{
