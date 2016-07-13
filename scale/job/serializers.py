@@ -134,11 +134,18 @@ class JobSerializer(JobBaseSerializer):
     disk_in_required = serializers.FloatField()
     disk_out_required = serializers.FloatField()
 
+    is_superseded = serializers.BooleanField()
+    root_superseded_job = ModelIdSerializer()
+    superseded_job = ModelIdSerializer()
+    superseded_by_job = ModelIdSerializer()
+    delete_superseded = serializers.BooleanField()
+
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
     ended = serializers.DateTimeField()
     last_status_change = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
 
@@ -224,6 +231,10 @@ class JobDetailsSerializer(JobSerializer):
 
     data = serializers.JSONField()
     results = serializers.JSONField()
+
+    root_superseded_job = JobBaseSerializer()
+    superseded_job = JobBaseSerializer()
+    superseded_by_job = JobBaseSerializer()
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional

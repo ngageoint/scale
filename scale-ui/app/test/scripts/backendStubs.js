@@ -109,6 +109,12 @@
                 }
             }
 
+            if (urlParams.status) {
+                ingests.results = _.filter(ingests.results, function (ingest) {
+                    return ingest.status === urlParams.status[0];
+                });
+            }
+
             returnObj[1] = JSON.stringify(ingests);
 
             return returnObj;
@@ -209,6 +215,12 @@
                 });
 
                 jobs.results = _.sortByOrder(jobs.results, fields, orders);
+            }
+
+            if (urlParams.status) {
+                jobs.results = _.filter(jobs.results, function (job) {
+                    return job.status === urlParams.status[0];
+                });
             }
 
             returnObj[1] = JSON.stringify(jobs);
