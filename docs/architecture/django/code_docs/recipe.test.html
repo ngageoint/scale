@@ -380,7 +380,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dl class="method">
 <dt id="recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_both">
 <code class="descname">test_change_to_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_change_to_both" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and the trigger rule</p>
+<dd><p>Tests calling RecipeTypeManager.edit_recipe_type() with a change to both the definition and trigger rule</p>
 </dd></dl>
 
 <dl class="method">
@@ -625,6 +625,12 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dd><p>Tests getting recipes by type name</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe details view for superseded recipes.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -702,23 +708,30 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a job type model for unit testing</p>
+<dd><p>Creates a recipe for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<em>:class:'recipe.models.RecipeType'</em>) &#8211; The associated recipe type</li>
-<li><strong>data</strong> (<em>dict</em>) &#8211; The associated data for the recipe</li>
-<li><strong>event</strong> (<em>:class:'trigger.models.TriggerEvent'</em>) &#8211; The associated event</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe model</p>
-</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
-</td>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_recipe_handler">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_handler</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em>, <em>superseded_recipe=None</em>, <em>delta=None</em>, <em>superseded_jobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a recipe along with its declared jobs for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe handler with created recipe and jobs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.handler.RecipeHandler" title="recipe.handlers.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.handler.RecipeHandler</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -734,7 +747,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The associated recipe</li>
-<li><strong>job_name</strong> &#8211; The associated name for the recipe job</li>
+<li><strong>job_name</strong> (<em>string</em>) &#8211; The associated name for the recipe job</li>
 <li><strong>job</strong> (<em>:class:'job.models.Job'</em>) &#8211; The associated job</li>
 </ul>
 </td>

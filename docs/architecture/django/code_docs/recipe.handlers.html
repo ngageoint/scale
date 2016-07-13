@@ -302,9 +302,9 @@ graphs are provided.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>parent_job_name</strong> (<em>str</em>) &#8211; The name of the parent job</li>
-<li><strong>child_job_name</strong> (<em>str</em>) &#8211; The name of the child job</li>
-<li><strong>connections</strong> (<em>[(str, str)]</em>) &#8211; List of tuples where first item is parent output name and second item is child input name</li>
+<li><strong>parent_job_name</strong> (<em>string</em>) &#8211; The name of the parent job</li>
+<li><strong>child_job_name</strong> (<em>string</em>) &#8211; The name of the child job</li>
+<li><strong>connections</strong> (<em>[(string, string)]</em>) &#8211; List of tuples where first item is parent output name and second item is child input name</li>
 </ul>
 </td>
 </tr>
@@ -335,9 +335,9 @@ graphs are provided.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_name</strong> (<em>str</em>) &#8211; The unique name of the job</li>
-<li><strong>job_type_name</strong> (<em>str</em>) &#8211; The name of the job&#8217;s type</li>
-<li><strong>job_type_version</strong> (<em>str</em>) &#8211; The version of the job&#8217;s type</li>
+<li><strong>job_name</strong> (<em>string</em>) &#8211; The unique name of the job</li>
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job&#8217;s type</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job&#8217;s type</li>
 </ul>
 </td>
 </tr>
@@ -354,9 +354,9 @@ graphs are provided.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_input</strong> (<em>str</em>) &#8211; The name of the recipe input</li>
-<li><strong>job_name</strong> (<em>str</em>) &#8211; The name of the job</li>
-<li><strong>job_input</strong> (<em>str</em>) &#8211; The name of the job input</li>
+<li><strong>recipe_input</strong> (<em>string</em>) &#8211; The name of the recipe input</li>
+<li><strong>job_name</strong> (<em>string</em>) &#8211; The name of the job</li>
+<li><strong>job_input</strong> (<em>string</em>) &#8211; The name of the job input</li>
 </ul>
 </td>
 </tr>
@@ -372,7 +372,7 @@ graphs are provided.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>str</em>) &#8211; The job name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>string</em>) &#8211; The job name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The node</td>
 </tr>
@@ -392,7 +392,7 @@ graphs are provided.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of job names in topological ordering</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[str]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
 </tr>
 </tbody>
 </table>
@@ -585,22 +585,6 @@ that have not changed. All children nodes will be changed as well.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this recipe has been completed, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.handlers.handler.RecipeHandler.recipe_id">
-<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.recipe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the ID of the recipe for this handler</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
