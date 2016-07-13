@@ -3,7 +3,10 @@ from __future__ import unicode_literals
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
+from recipe.handlers.graph import RecipeGraph
+from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -131,24 +134,16 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
 
 
 def create_recipe(recipe_type=None, data=None, event=None):
-    """Creates a job type model for unit testing
+    """Creates a recipe for unit testing
 
-    :param recipe_type: The associated recipe type
-    :type recipe_type: :class:'recipe.models.RecipeType'
-    :param data: The associated data for the recipe
-    :type data: dict
-    :param event: The associated event
-    :type event: :class:'trigger.models.TriggerEvent'
     :returns: The recipe model
     :rtype: :class:`recipe.models.Recipe`
     """
 
-    if not data:
-        data = {}
-
     if not recipe_type:
         recipe_type = create_recipe_type()
-
+    if not data:
+        data = {}
     if not event:
         event = trigger_test_utils.create_trigger_event()
 
@@ -189,3 +184,26 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     recipe_job.recipe = recipe
     recipe_job.save()
     return recipe_job
+
+
+def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_recipe=None, delta=None,
+                          superseded_jobs=None):
+    """Creates a recipe along with its declared jobs for unit testing
+
+    :returns: The recipe handler with created recipe and jobs
+    :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+    """
+
+    if not recipe_type:
+        recipe_type = create_recipe_type()
+    if not data:
+        data = {}
+    if not isinstance(data, RecipeData):
+        data = RecipeData(data)
+    if not event:
+        event = trigger_test_utils.create_trigger_event()
+    if superseded_recipe and not delta:
+        delta = RecipeGraphDelta(RecipeGraph(), RecipeGraph())
+
+    return Recipe.objects.create_recipe(recipe_type, event, data, superseded_recipe=superseded_recipe,
+                                        delta=delta, superseded_jobs=superseded_jobs)

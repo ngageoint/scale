@@ -9,7 +9,9 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from recipe.models import RecipeType
+from recipe.handlers.graph import RecipeGraph
+from recipe.handlers.graph_delta import RecipeGraphDelta
+from recipe.models import RecipeJob, RecipeType
 from rest_framework import status
 
 
@@ -681,9 +683,22 @@ class TestRecipesView(TransactionTestCase):
             }],
         }
 
+        workspace1 = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file(workspace=workspace1)
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': file1.id,
+            }],
+            'workspace_id': workspace1.id,
+        }
+
         self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
-        self.recipe1 = recipe_test_utils.create_recipe(self.recipe_type)
-        self.recipe_job1 = recipe_test_utils.create_recipe_job(recipe=self.recipe1)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        self.recipe1 = recipe_handler.recipe
+        self.recipe1_jobs = recipe_handler.recipe_jobs
 
         self.recipe2 = recipe_test_utils.create_recipe()
 
@@ -731,3 +746,48 @@ class TestRecipesView(TransactionTestCase):
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(results['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertDictEqual(results['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+
+    def test_superseded(self):
+        """Tests successfully calling the recipe details view for superseded recipes."""
+
+        graph1 = RecipeGraph()
+        graph1.add_job('kml', self.job_type1.name, self.job_type1.version)
+        graph2 = RecipeGraph()
+        graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
+        delta = RecipeGraphDelta(graph1, graph2)
+
+        superseded_jobs = {recipe_job.job_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        new_recipe = recipe_test_utils.create_recipe_handler(
+            recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
+        ).recipe
+
+        # Make sure the original recipe was updated
+        url = '/recipes/%i/' % self.recipe1.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(result['is_superseded'])
+        self.assertIsNone(result['root_superseded_recipe'])
+        self.assertIsNotNone(result['superseded_by_recipe'])
+        self.assertEqual(result['superseded_by_recipe']['id'], new_recipe.id)
+        self.assertIsNotNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertTrue(recipe_job['is_original'])
+
+        # Make sure the new recipe has the expected relations
+        url = '/recipes/%i/' % new_recipe.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(result['is_superseded'])
+        self.assertIsNotNone(result['root_superseded_recipe'])
+        self.assertEqual(result['root_superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNotNone(result['superseded_recipe'])
+        self.assertEqual(result['superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertFalse(recipe_job['is_original'])

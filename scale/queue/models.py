@@ -370,7 +370,7 @@ class QueueManager(models.Manager):
                 if jobs_to_queue:
                     self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
-                Recipe.objects.complete(handler.recipe_id, when)
+                Recipe.objects.complete(handler.recipe.id, when)
 
     @transaction.atomic
     def handle_job_failure(self, job_exe_id, when, error=None):
@@ -512,7 +512,7 @@ class QueueManager(models.Manager):
         if jobs_to_queue:
             self._queue_jobs(jobs_to_queue)
 
-        return handler.recipe_id
+        return handler.recipe.id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
