@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import hashlib
 
+import django.utils.timezone as timezone
+
 from job.test import utils as job_utils
 from product.models import FileAncestryLink, ProductFile
 from storage.test import utils as storage_utils
@@ -32,7 +34,7 @@ def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, rec
 
 def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False, uuid=None,
                    file_name='my_test_file.txt', file_path='/file/path/my_test_file.txt', media_type='text/plain',
-                   file_size=100, countries=None):
+                   file_size=100, countries=None, is_superseded=False, superseded=None):
     """Creates a product file model for unit testing
 
     :returns: The product model
@@ -50,10 +52,14 @@ def create_product(job_exe=None, workspace=None, has_been_published=False, is_pu
         builder.update(file_name)
         uuid = builder.hexdigest()
 
+    if is_superseded and not superseded:
+        superseded = timezone.now()
+
     product_file = ProductFile.objects.create(job_exe=job_exe, job=job_exe.job, job_type=job_exe.job.job_type,
                                               has_been_published=has_been_published, is_published=is_published,
                                               uuid=uuid, file_name=file_name, media_type=media_type,
-                                              file_size=file_size, file_path=file_path, workspace=workspace)
+                                              file_size=file_size, file_path=file_path, workspace=workspace,
+                                              is_superseded=is_superseded, superseded=superseded)
     if countries:
         product_file.countries = countries
         product_file.save()
