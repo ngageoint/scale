@@ -352,11 +352,17 @@ These services provide access to information about recipes.
 |                    "mem_required": 15360.0,                                                                             |
 |                    "disk_in_required": 2.0,                                                                             |
 |                    "disk_out_required": 16.0,                                                                           |
+|                    "is_superseded": false,                                                                              |
+|                    "root_superseded_job": null,                                                                         |
+|                    "superseded_job": null,                                                                              |
+|                    "superseded_by_job": null,                                                                           |
+|                    "delete_superseded": true,                                                                           |
 |                    "created": "2015-08-28T17:55:41.005Z",                                                               |
 |                    "queued": "2015-08-28T17:56:41.005Z",                                                                |
 |                    "started": "2015-08-28T17:57:41.005Z",                                                               |
 |                    "ended": "2015-08-28T17:58:41.005Z",                                                                 |
 |                    "last_status_change": "2015-08-28T17:58:45.906Z",                                                    |
+|                    "superseded": null,                                                                                  |
 |                    "last_modified": "2015-08-28T17:58:46.001Z"                                                          |
 |                }                                                                                                        |
 |            },                                                                                                           |

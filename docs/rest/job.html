@@ -171,203 +171,232 @@
 <table border="1" class="docutils" id="rest-job-list">
 <colgroup>
 <col width="17%" />
+<col width="0%" />
 <col width="16%" />
+<col width="0%" />
 <col width="8%" />
-<col width="58%" />
+<col width="59%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Job List</strong></th>
+<tr class="row-odd"><th class="head" colspan="6"><strong>Job List</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of all jobs.</td>
+<tr class="row-even"><td colspan="6">Returns a list of all jobs.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/</td>
+<tr class="row-odd"><td colspan="6"><strong>GET</strong> /jobs/</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
 </tr>
 <tr class="row-odd"><td>page</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
 <tr class="row-even"><td>page_size</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
 <tr class="row-odd"><td>started</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-even"><td>ended</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-odd"><td>order</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-even"><td>status</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a status matching this string.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
 <tr class="row-odd"><td>job_id</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>job_type_id</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>job_type_name</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>job_type_category</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>error_category</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs that failed due to an error with a given category.
 Choices: [SYSTEM, DATA, ALGORITHM].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
+<td colspan="5">200 OK</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>count</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">count</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>next</td>
-<td>URL</td>
+<tr class="row-odd"><td colspan="2">next</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-even"><td>previous</td>
-<td>URL</td>
+<tr class="row-even"><td colspan="2">previous</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-odd"><td>results</td>
-<td>Array</td>
+<tr class="row-odd"><td colspan="2">results</td>
+<td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>.id</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.id</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job_type</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td colspan="2">.job_type</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_type_rev</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.job_type_rev</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
 (See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.event</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td colspan="2">.event</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The trigger event that is associated with the job.</td>
 </tr>
-<tr class="row-even"><td>.error</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.error</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
 (See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.status</td>
-<td>String</td>
+<tr class="row-odd"><td colspan="2">.status</td>
+<td colspan="2">String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td>.priority</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.priority</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The priority of the job.</td>
 </tr>
-<tr class="row-odd"><td>.num_exes</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.num_exes</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-even"><td>.timeout</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.timeout</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-odd"><td>.max_tries</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.max_tries</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
 </tr>
-<tr class="row-even"><td>.cpus_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.cpus_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td>.mem_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.mem_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td>.disk_in_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.disk_in_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-odd"><td>.disk_out_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.disk_out_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.is_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this job has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.root_superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The first job in the current chain of superseded jobs.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The previous job in the chain that was superseded by this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.superseded_by_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The next job in the chain that superseded this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.delete_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the products of the previous job should be deleted when superseded.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.queued</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.queued</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td>.started</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.started</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-odd"><td>.ended</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td>.last_status_change</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.last_status_change</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-odd"><td>.last_modified</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.superseded</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the the job became superseded by another job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.last_modified</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -410,11 +439,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
             <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
         <span class="p">},</span>
         <span class="p">...</span>
@@ -515,25 +550,52 @@ This represents the definition at the time the job was scheduled.
 <td>Decimal</td>
 <td>The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-even"><td>created</td>
+<tr class="row-even"><td>is_superseded</td>
+<td>Boolean</td>
+<td>Whether this job has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-odd"><td>root_superseded_job</td>
+<td>JSON Object</td>
+<td>The first job in the current chain of superseded jobs.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>superseded_job</td>
+<td>JSON Object</td>
+<td>The previous job in the chain that was superseded by this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>superseded_by_job</td>
+<td>JSON Object</td>
+<td>The next job in the chain that superseded this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>delete_superseded</td>
+<td>Boolean</td>
+<td>Whether the products of the previous job should be deleted when superseded.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>queued</td>
+<tr class="row-even"><td>queued</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td>started</td>
+<tr class="row-odd"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job started running.</td>
 </tr>
-<tr class="row-odd"><td>ended</td>
+<tr class="row-even"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td>last_status_change</td>
+<tr class="row-odd"><td>last_status_change</td>
 <td>ISO-8601 Datetime</td>
 <td>When the status of the job was last changed.</td>
+</tr>
+<tr class="row-even"><td>superseded</td>
+<td>ISO-8601 Datetime</td>
+<td>When the the job became superseded by another job.</td>
 </tr>
 <tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
@@ -677,11 +739,17 @@ files type will include a full JSON representation of a Product file object.
     <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">15360.0</span><span class="p">,</span>
     <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">2.0</span><span class="p">,</span>
     <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+    <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -909,195 +977,224 @@ The exact error reason will appear in the response content.</td>
 <table border="1" class="docutils" id="rest-job-updates">
 <colgroup>
 <col width="17%" />
+<col width="0%" />
 <col width="16%" />
+<col width="0%" />
 <col width="8%" />
-<col width="58%" />
+<col width="59%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Job Updates</strong></th>
+<tr class="row-odd"><th class="head" colspan="6"><strong>Job Updates</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of jobs with associated input files that changed status in the given time range.</td>
+<tr class="row-even"><td colspan="6">Returns a list of jobs with associated input files that changed status in the given time range.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/updates/</td>
+<tr class="row-odd"><td colspan="6"><strong>GET</strong> /jobs/updates/</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
 </tr>
 <tr class="row-odd"><td>page</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
 <tr class="row-even"><td>page_size</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
 <tr class="row-odd"><td>started</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-even"><td>ended</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-odd"><td>order</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-even"><td>status</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a status matching this string.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
 <tr class="row-odd"><td>job_type_id</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>job_type_name</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>job_type_category</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
+<td colspan="5">200 OK</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>count</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">count</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>next</td>
-<td>URL</td>
+<tr class="row-odd"><td colspan="2">next</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-even"><td>previous</td>
-<td>URL</td>
+<tr class="row-even"><td colspan="2">previous</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-odd"><td>results</td>
-<td>Array</td>
+<tr class="row-odd"><td colspan="2">results</td>
+<td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>.id</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.id</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job_type</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td colspan="2">.job_type</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_type_rev</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.job_type_rev</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
 (See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.event</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td colspan="2">.event</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The trigger event that is associated with the job.</td>
 </tr>
-<tr class="row-even"><td>.error</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.error</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
 (See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.status</td>
-<td>String</td>
+<tr class="row-odd"><td colspan="2">.status</td>
+<td colspan="2">String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td>.priority</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.priority</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The priority of the job.</td>
 </tr>
-<tr class="row-odd"><td>.num_exes</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.num_exes</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-even"><td>.timeout</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.timeout</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-odd"><td>.max_tries</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.max_tries</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
 </tr>
-<tr class="row-even"><td>.cpus_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.cpus_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td>.mem_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.mem_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td>.disk_in_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.disk_in_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-odd"><td>.disk_out_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.disk_out_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.is_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this job has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.root_superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The first job in the current chain of superseded jobs.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The previous job in the chain that was superseded by this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.superseded_by_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The next job in the chain that superseded this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.delete_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the products of the previous job should be deleted when superseded.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.queued</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.queued</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td>.started</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.started</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-odd"><td>.ended</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td>.last_status_change</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.last_status_change</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-odd"><td>.last_modified</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.superseded</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the the job became superseded by another job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.last_modified</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>.input_files</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.input_files</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">A list of files that the job used as input.
 (See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -1140,11 +1237,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
             <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
                 <span class="p">{</span>
@@ -1183,196 +1286,225 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <table border="1" class="docutils" id="rest-job-with-execution-list">
 <colgroup>
 <col width="17%" />
+<col width="0%" />
 <col width="16%" />
+<col width="0%" />
 <col width="8%" />
-<col width="58%" />
+<col width="59%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Job with Execution List</strong></th>
+<tr class="row-odd"><th class="head" colspan="6"><strong>Job with Execution List</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of all jobs with their latest execution.</td>
+<tr class="row-even"><td colspan="6">Returns a list of all jobs with their latest execution.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /jobs/executions/</td>
+<tr class="row-odd"><td colspan="6"><strong>GET</strong> /jobs/executions/</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
 </tr>
 <tr class="row-odd"><td>page</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
 <tr class="row-even"><td>page_size</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
 <tr class="row-odd"><td>started</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-even"><td>ended</td>
-<td>ISO-8601 Datetime</td>
-<td>Optional</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-odd"><td>order</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-even"><td>status</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a status matching this string.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
 <tr class="row-odd"><td>job_type_id</td>
-<td>Integer</td>
-<td>Optional</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>job_type_name</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>job_type_category</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>error_category</td>
-<td>String</td>
-<td>Optional</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
 <td>Return only jobs that failed due to an error with a given category.
 Choices: [SYSTEM, DATA, ALGORITHM].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
+<td colspan="5">200 OK</td>
 </tr>
 <tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">count</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
-<td>URL</td>
+<tr class="row-even"><td colspan="2">next</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
-<td>URL</td>
+<tr class="row-odd"><td colspan="2">previous</td>
+<td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
-<td>Array</td>
+<tr class="row-even"><td colspan="2">results</td>
+<td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.id</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_type</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.job_type</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the count.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.event</td>
-<td>JSON Object</td>
+<tr class="row-odd"><td colspan="2">.event</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The trigger event that is associated with the count.</td>
 </tr>
-<tr class="row-even"><td>.error</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.error</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the count.
 (See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.status</td>
-<td>String</td>
+<tr class="row-odd"><td colspan="2">.status</td>
+<td colspan="2">String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td>.priority</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.priority</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The priority of the job.</td>
 </tr>
-<tr class="row-odd"><td>.num_exes</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.num_exes</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-even"><td>.timeout</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">.timeout</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-odd"><td>.max_tries</td>
-<td>Integer</td>
+<tr class="row-odd"><td colspan="2">.max_tries</td>
+<td colspan="2">Integer</td>
 <td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
 </tr>
-<tr class="row-even"><td>.cpus_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.cpus_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td>.mem_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.mem_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td>.disk_in_required</td>
-<td>Decimal</td>
+<tr class="row-even"><td colspan="2">.disk_in_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-odd"><td>.disk_out_required</td>
-<td>Decimal</td>
+<tr class="row-odd"><td colspan="2">.disk_out_required</td>
+<td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.is_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this job has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.root_superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The first job in the current chain of superseded jobs.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The previous job in the chain that was superseded by this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.superseded_by_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The next job in the chain that superseded this job.
+(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.delete_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether the products of the previous job should be deleted when superseded.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.created</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.queued</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.queued</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-even"><td>.started</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.started</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-odd"><td>.ended</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-even"><td>.last_status_change</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-odd"><td colspan="2">.last_status_change</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-odd"><td>.last_modified</td>
-<td>ISO-8601 Datetime</td>
+<tr class="row-even"><td colspan="2">.superseded</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When the the job became superseded by another job.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.last_modified</td>
+<td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>.latest_job_exe</td>
-<td>JSON Object</td>
+<tr class="row-even"><td colspan="2">.latest_job_exe</td>
+<td colspan="2">JSON Object</td>
 <td colspan="2">The most recent execution of the job.
 (See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -1418,11 +1550,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
             <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
+            <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;latest_job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
