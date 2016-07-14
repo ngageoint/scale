@@ -49,7 +49,7 @@ class RecipeTypeRevisionSerializer(RecipeTypeRevisionBaseSerializer):
 
 class RecipeBaseSerializer(ModelIdSerializer):
     """Converts recipe model fields to REST output."""
-    recipe_type = ModelIdSerializer()
+    recipe_type = RecipeTypeBaseSerializer()
     recipe_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
 
@@ -58,12 +58,17 @@ class RecipeSerializer(RecipeBaseSerializer):
     """Converts recipe model fields to REST output."""
     from trigger.serializers import TriggerEventBaseSerializer
 
-    recipe_type = RecipeTypeBaseSerializer()
     recipe_type_rev = RecipeTypeRevisionBaseSerializer()
     event = TriggerEventBaseSerializer()
 
+    is_superseded = serializers.BooleanField()
+    root_superseded_recipe = ModelIdSerializer()
+    superseded_recipe = ModelIdSerializer()
+    superseded_by_recipe = ModelIdSerializer()
+
     created = serializers.DateTimeField()
     completed = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
 
@@ -73,6 +78,7 @@ class RecipeJobsSerializer(serializers.Serializer):
 
     job = JobSerializer()
     job_name = serializers.CharField()
+    is_original = serializers.BooleanField()
     recipe = ModelIdSerializer()
 
 
@@ -95,3 +101,7 @@ class RecipeDetailsSerializer(RecipeSerializer):
 
     input_files = ScaleFileBaseSerializer(many=True)
     jobs = RecipeJobsDetailsSerializer(many=True)
+
+    root_superseded_recipe = RecipeBaseSerializer()
+    superseded_recipe = RecipeBaseSerializer()
+    superseded_by_recipe = RecipeBaseSerializer()

@@ -35,12 +35,16 @@ class ProductsView(ListAPIView):
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
         is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
+        is_published = rest_util.parse_bool(request, 'is_published', default_value=True)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        products = ProductFile.objects.get_products(started, ended, job_type_ids, job_type_names, job_type_categories,
-                                                    is_operational, file_name, order)
+        products = ProductFile.objects.get_products(
+            started=started, ended=ended, job_type_ids=job_type_ids, job_type_names=job_type_names,
+            job_type_categories=job_type_categories, is_operational=is_operational, is_published=is_published,
+            file_name=file_name, order=order,
+        )
 
         page = self.paginate_queryset(products)
         serializer = self.get_serializer(page, many=True)
@@ -106,8 +110,10 @@ class ProductUpdatesView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        products = ProductFile.objects.get_products(started, ended, job_type_ids, job_type_names, job_type_categories,
-                                                    is_operational, file_name, order)
+        products = ProductFile.objects.get_products(
+            started=started, ended=ended, job_type_ids=job_type_ids, job_type_names=job_type_names,
+            job_type_categories=job_type_categories, is_operational=is_operational, file_name=file_name, order=order
+        )
 
         page = self.paginate_queryset(products)
         ProductFile.objects.populate_source_ancestors(page)
