@@ -109,9 +109,9 @@ class ScaleScheduler(MesosScheduler):
         recon_thread.daemon = True
         recon_thread.start()
 
-        self._scheduling_thread = SchedulingThread(self._driver, self._job_exe_manager, self._job_type_manager,
-                                                   self._node_manager, self._offer_manager, self._scheduler_manager,
-                                                   self._workspace_manager)
+        self._scheduling_thread = SchedulingThread(self._driver, self._framework_id, self._job_exe_manager,
+                                                   self._job_type_manager, self._node_manager, self._offer_manager,
+                                                   self._scheduler_manager, self._workspace_manager)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()

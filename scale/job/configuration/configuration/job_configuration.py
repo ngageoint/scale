@@ -222,9 +222,11 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('Duplicate workspace %s in pre task' % name)
         self._configuration['pre_task']['workspaces'].append({'name': name, 'mode': mode})
 
-    def configure_workspace_docker_params(self, job_exe_id, workspaces):
+    def configure_workspace_docker_params(self, framework_id, job_exe_id, workspaces):
         """Configures the Docker parameters needed for each workspace in the job execution tasks
 
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         :param workspaces: A dict of all workspaces stored by name
@@ -233,7 +235,8 @@ class JobConfiguration(object):
 
         # Configure pre-task workspaces, any that need volumes will have them created
         created_workspaces = set()
-        for param in self._get_workspace_docker_params(job_exe_id, self.get_pre_task_workspaces(), workspaces, True):
+        for param in self._get_workspace_docker_params(framework_id, job_exe_id, self.get_pre_task_workspaces(),
+                                                       workspaces, True):
             self.add_pre_task_docker_param(param)
         for task_workspace in self.get_pre_task_workspaces():
             created_workspaces.add(task_workspace.name)
@@ -247,9 +250,11 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(job_exe_id, workspaces_already_created, workspaces, False):
+        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_already_created, workspaces,
+                                                       False):
             self.add_job_task_docker_param(param)
-        for param in self._get_workspace_docker_params(job_exe_id, workspaces_not_created, workspaces, True):
+        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_not_created, workspaces,
+                                                       True):
             self.add_job_task_docker_param(param)
 
         # Configure post-task workspaces, creating any volumes that were not created in a previous task
@@ -261,9 +266,11 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(job_exe_id, workspaces_already_created, workspaces, False):
+        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_already_created, workspaces,
+                                                       False):
             self.add_post_task_docker_param(param)
-        for param in self._get_workspace_docker_params(job_exe_id, workspaces_not_created, workspaces, True):
+        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_not_created, workspaces,
+                                                       True):
             self.add_post_task_docker_param(param)
 
     def get_job_task_docker_params(self):
@@ -335,9 +342,11 @@ class JobConfiguration(object):
 
         return self._configuration
 
-    def _get_workspace_docker_params(self, job_exe_id, task_workspaces, workspaces, volume_create):
+    def _get_workspace_docker_params(self, framework_id, job_exe_id, task_workspaces, workspaces, volume_create):
         """Returns the Docker parameters needed for the given task workspaces
 
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         :param task_workspaces: List of the task workspaces
@@ -364,11 +373,11 @@ class JobConfiguration(object):
                     elif volume_create:
                         # Create job_exe workspace volume for first time
                         volume_create_cmd = '$(docker volume create --driver=%s --name=%s %s)'
-                        volume_name = volume_create_cmd % (vol.driver, get_workspace_volume_name(job_exe_id, name),
-                                                           vol.remote_path)
+                        volume_name = get_workspace_volume_name(framework_id, job_exe_id, name)
+                        volume_name = volume_create_cmd % (vol.driver, volume_name, vol.remote_path)
                     else:
                         # Volume already created, re-use name
-                        volume_name = get_workspace_volume_name(job_exe_id, name)
+                        volume_name = get_workspace_volume_name(framework_id, job_exe_id, name)
                     workspace_volume = '%s:%s:%s' % (volume_name, get_workspace_volume_path(name), mode)
                     params.append(DockerParam('volume', workspace_volume))
         return params

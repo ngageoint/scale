@@ -33,7 +33,7 @@ class TestSchedulingThread(TransactionTestCase):
         self._job_type_manager = JobTypeManager()
         self._node_manager = NodeManager()
         self._offer_manager = OfferManager()
-        self._scheduler_manager = SchedulerManager(None)
+        self._scheduler_manager = SchedulerManager()
         self._workspace_manager = WorkspaceManager()
 
         self._scheduler_manager.sync_with_database()
@@ -55,7 +55,7 @@ class TestSchedulingThread(TransactionTestCase):
                                                      disk_out_required=45.0, disk_total_required=445.0)
         self._job_type_manager.sync_with_database()
 
-        self._scheduling_thread = SchedulingThread(self._driver, self._job_exe_manager, self._job_type_manager,
+        self._scheduling_thread = SchedulingThread(self._driver, '123', self._job_exe_manager, self._job_type_manager,
                                                    self._node_manager, self._offer_manager, self._scheduler_manager,
                                                    self._workspace_manager)
 
@@ -64,8 +64,8 @@ class TestSchedulingThread(TransactionTestCase):
         """Tests successfully scheduling tasks"""
         mock_taskinfo.return_value = MagicMock()
 
-        offer_1 = ResourceOffer('offer_1',  self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
-        offer_2 = ResourceOffer('offer_2',  self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
         self._offer_manager.add_new_offers([offer_1, offer_2])
 
         num_tasks = self._scheduling_thread._perform_scheduling()
@@ -76,8 +76,8 @@ class TestSchedulingThread(TransactionTestCase):
         """Tests running the scheduling thread with a paused scheduler"""
         mock_taskinfo.return_value = MagicMock()
 
-        offer_1 = ResourceOffer('offer_1',  self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
-        offer_2 = ResourceOffer('offer_2',  self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
         self._offer_manager.add_new_offers([offer_1, offer_2])
         Scheduler.objects.update(is_paused=True)
         self._scheduler_manager.sync_with_database()
@@ -105,8 +105,8 @@ class TestSchedulingThread(TransactionTestCase):
         # One job of this type is already running
         self._job_exe_manager.add_job_exes([RunningJobExecution(job_exe_1)])
 
-        offer_1 = ResourceOffer('offer_1',  self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
-        offer_2 = ResourceOffer('offer_2',  self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
         self._offer_manager.add_new_offers([offer_1, offer_2])
 
         num_tasks = self._scheduling_thread._perform_scheduling()
