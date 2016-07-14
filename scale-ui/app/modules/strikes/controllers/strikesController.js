@@ -107,6 +107,12 @@
             }
         };
 
+        vm.deleteStrikeIngestFile = function (file) {
+            _.remove(vm.activeStrike.configuration.files_to_ingest, function (f) {
+                return angular.equals(f, file);
+            });
+        };
+
         var getWorkspaces = function () {
             workspacesService.getWorkspaces().then(function (data) {
                 vm.workspaces = data;
