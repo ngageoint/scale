@@ -205,12 +205,19 @@ class StrikeConfiguration(object):
         if monitor_type not in factory.get_monitor_types():
             raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
 
-        workspace_names = {self._configuration['workspace']}
+        monitored_workspace_name = self._configuration['workspace']
+        workspace_names = {monitored_workspace_name}
         for rule in self._file_handler.rules:
             if rule.new_workspace:
                 workspace_names.add(rule.new_workspace)
 
         for workspace in Workspace.objects.filter(name__in=workspace_names):
+            if workspace.name == monitored_workspace_name:
+                broker_type = workspace.get_broker().broker_type
+                monitor = factory.get_monitor(monitor_type)
+                if broker_type not in monitor.supported_broker_types:
+                    msg = 'Monitor type %s does not support broker type %s'
+                    raise InvalidStrikeConfiguration(msg % (monitor_type, broker_type))
             if not workspace.is_active:
                 raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
             workspace_names.remove(workspace.name)

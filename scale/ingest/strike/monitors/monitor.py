@@ -1,4 +1,6 @@
 """Defines the base monitor class"""
+from __future__ import unicode_literals
+
 from abc import ABCMeta
 import logging
 import os
@@ -21,20 +23,23 @@ logger = logging.getLogger(__name__)
 
 class Monitor(object):
     """Abstract class for a monitor that processes incoming files to ingest. Sub-classes must have a no-argument
-    constructor that passes in the correct monitor type and should override the load_configuration(), run(), stop(), and
-    validate_configuration() methods.
+    constructor that passes in the correct monitor type and supported broker types and should override the
+    load_configuration(), run(), stop(), and validate_configuration() methods.
     """
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, monitor_type):
+    def __init__(self, monitor_type, supported_broker_types):
         """Constructor
 
         :param monitor_type: The type of this monitor
         :type monitor_type: string
+        :param supported_broker_types: The broker types supported by this monitor
+        :type supported_broker_types: [string]
         """
 
         self._monitor_type = monitor_type
+        self._supported_broker_types = supported_broker_types
         self._file_handler = None  # The file handler configured for this monitor
         self._monitored_workspace = None  # The workspace model that is being monitored
         self._workspaces = {}  # The workspaces needed by this monitor, stored by workspace name {string: workspace}
@@ -50,6 +55,16 @@ class Monitor(object):
 
         return self._monitor_type
 
+    @property
+    def supported_broker_types(self):
+        """The broker types supported by this monitor
+
+        :returns: The broker types supported by this monitor
+        :rtype: [string]
+        """
+
+        return self._supported_broker_types
+
     def load_configuration(self, configuration):
         """Loads the given configuration
 
@@ -63,7 +78,9 @@ class Monitor(object):
         """Reloads the configuration for this monitor from the database
         """
 
-        if not self.strike_id:
+        if self.strike_id:
+            logger.info('Reloading Strike configuration from database')
+        else:
             logger.warning('Cannot reload Strike configuration from database: missing Strike ID')
 
         strike = Strike.objects.get(id=self.strike_id)
@@ -141,7 +158,8 @@ class Monitor(object):
         if ingest.status != 'TRANSFERRING':
             raise Exception('Invalid ingest status: %s' % ingest.status)
         ingest.status = 'TRANSFERRED'
-        ingest.transfer_started = when
+        ingest.bytes_transferred = bytes_transferred
+        ingest.transfer_ended = when
 
         logger.info('%s has finished transferring to %s, total of %s copied', ingest.file_name, ingest.workspace.name,
                     file_size_to_string(bytes_transferred))
@@ -210,6 +228,7 @@ class Monitor(object):
             self._start_ingest_task(ingest)
         else:
             logger.info('No rule match for %s, file is being deferred', file_name)
+            ingest.status = 'DEFERRED'
             ingest.save()
 
     @transaction.atomic
@@ -242,7 +261,7 @@ class Monitor(object):
 
         logger.info('Successfully created ingest task for %s', ingest.file_name)
 
-    def _start_transfer(self, ingest, when, bytes_transferred):
+    def _start_transfer(self, ingest, when):
         """Starts recording the transfer of the given ingest into a workspace. The database save is the caller's
         responsibility. This method should only be used immediately after _create_ingest().
 
@@ -257,10 +276,8 @@ class Monitor(object):
         if ingest.status != 'TRANSFERRING':
             raise Exception('Invalid ingest status: %s' % ingest.status)
         ingest.transfer_started = when
-        ingest.bytes_transferred = bytes_transferred
 
-        logger.info('%s is transferring to %s, %s copied so far', ingest.file_name, ingest.workspace.name,
-                    file_size_to_string(bytes_transferred))
+        logger.info('%s is transferring to %s', ingest.file_name, ingest.workspace.name)
 
     def _update_transfer(self, ingest, bytes_transferred):
         """Updates how many bytes have currently been transferred for the given ingest. The database save is the
@@ -277,5 +294,4 @@ class Monitor(object):
             raise Exception('Invalid ingest status: %s' % ingest.status)
         ingest.bytes_transferred = bytes_transferred
 
-        logger.info('%s is still transferring to %s, %s copied so far', ingest.file_name, ingest.workspace.name,
-                    file_size_to_string(bytes_transferred))
+        logger.info('%s of %s copied', file_size_to_string(bytes_transferred), ingest.file_name)

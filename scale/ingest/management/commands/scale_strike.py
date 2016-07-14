@@ -56,8 +56,6 @@ class Command(BaseCommand):
         self._monitor.run()
         logger.info('Monitor has stopped running')
 
-        # TODO: eventually implement a REST API call to permanently stop a Strike process, which should allow this
-        # command line method to return 0 and complete successfully
         logger.info('Command completed: scale_strike')
         sys.exit(1)
 

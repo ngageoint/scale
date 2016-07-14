@@ -732,7 +732,7 @@ class Workspace(models.Model):
         :rtype: :class:`storage.brokers.broker.BrokerVolume`
         """
 
-        return self._get_broker().volume
+        return self.get_broker().volume
 
     @property
     def workspace_volume_path(self):
@@ -756,7 +756,7 @@ class Workspace(models.Model):
         """
 
         volume_path = self._get_volume_path()
-        self._get_broker().delete_files(volume_path, files)
+        self.get_broker().delete_files(volume_path, files)
 
     def download_files(self, file_downloads):
         """Downloads the given files to the given local file system paths using the workspace's broker. If this
@@ -778,51 +778,9 @@ class Workspace(models.Model):
                 logger.info('Creating %s', file_download_dir)
                 os.makedirs(file_download_dir, mode=0755)
 
-        self._get_broker().download_files(volume_path, file_downloads)
+        self.get_broker().download_files(volume_path, file_downloads)
 
-    def get_file_system_paths(self, files):
-        """Returns the local file system paths for the given files, if supported by the workspace's broker. If this
-        workspace's broker uses a container volume, the workspace expects this volume file system to already be mounted
-        at workspace_volume_path or an exception will be raised.
-
-        :param files: List of files
-        :type files: [:class:`storage.models.ScaleFile`]
-        :returns: The list of local file system paths if supported, None otherwise
-        :rtype: [string]
-        """
-
-        volume_path = self._get_volume_path()
-        return self._get_broker().get_file_system_paths(volume_path, files)
-
-    def move_files(self, file_moves):
-        """Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
-        this workspace's broker uses a container volume, the workspace expects this volume file system to already be
-        mounted at workspace_volume_path or an exception will be raised.
-
-        :param file_moves: List of files to move
-        :type file_moves: [:class:`storage.brokers.broker.FileMove`]
-
-        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
-        """
-
-        volume_path = self._get_volume_path()
-        self._get_broker().move_files(volume_path, file_moves)
-
-    def upload_files(self, file_uploads):
-        """Uploads the given files from the given local file system paths and saves the ScaleFile models in the
-        database. If this workspace's broker uses a container volume, the workspace expects this volume file system to
-        already be mounted at workspace_volume_path or an exception will be raised.
-
-        :param file_uploads: List of files to upload
-        :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
-
-        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
-        """
-
-        volume_path = self._get_volume_path()
-        self._get_broker().upload_files(volume_path, file_uploads)
-
-    def _get_broker(self):
+    def get_broker(self):
         """Returns the configured broker for this workspace
 
         :returns: The configured broker
@@ -839,6 +797,48 @@ class Workspace(models.Model):
             broker.load_configuration(broker_config)
             self._broker = broker
         return self._broker
+
+    def get_file_system_paths(self, files):
+        """Returns the local file system paths for the given files, if supported by the workspace's broker. If this
+        workspace's broker uses a container volume, the workspace expects this volume file system to already be mounted
+        at workspace_volume_path or an exception will be raised.
+
+        :param files: List of files
+        :type files: [:class:`storage.models.ScaleFile`]
+        :returns: The list of local file system paths if supported, None otherwise
+        :rtype: [string]
+        """
+
+        volume_path = self._get_volume_path()
+        return self.get_broker().get_file_system_paths(volume_path, files)
+
+    def move_files(self, file_moves):
+        """Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
+        this workspace's broker uses a container volume, the workspace expects this volume file system to already be
+        mounted at workspace_volume_path or an exception will be raised.
+
+        :param file_moves: List of files to move
+        :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
+        """
+
+        volume_path = self._get_volume_path()
+        self.get_broker().move_files(volume_path, file_moves)
+
+    def upload_files(self, file_uploads):
+        """Uploads the given files from the given local file system paths and saves the ScaleFile models in the
+        database. If this workspace's broker uses a container volume, the workspace expects this volume file system to
+        already be mounted at workspace_volume_path or an exception will be raised.
+
+        :param file_uploads: List of files to upload
+        :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
+
+        :raises :class:`storage.exceptions.MissingVolumeMount`: If the required volume mount is missing
+        """
+
+        volume_path = self._get_volume_path()
+        self.get_broker().upload_files(volume_path, file_uploads)
 
     def _get_volume_path(self):
         """Returns the local container location for this workspace's container volume if it uses one, otherwise returns

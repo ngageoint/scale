@@ -81,9 +81,9 @@
             "is_long_running": true,
             "is_active": true,
             "is_paused": false,
-            "requires_cleanup": true,
+            "requires_cleanup": false,
             "uses_docker": true,
-            "docker_privileged": true,
+            "docker_privileged": false,
             "docker_image": "scale",
             "interface": {
                  "version": "1.0",
