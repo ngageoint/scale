@@ -50,19 +50,14 @@ class Monitor(object):
 
         return self._monitor_type
 
-    def load_configuration(self, configuration, monitored_workspace, file_handler):
-        """Loads the given configuration. Sub-classes that override this method should make sure that they call
-        self._setup_workspaces().
+    def load_configuration(self, configuration):
+        """Loads the given configuration
 
         :param configuration: The configuration as a dictionary
         :type configuration: dict
-        :param monitored_workspace: The name of the workspace that is being monitored
-        :type monitored_workspace: string
-        :param file_handler: The file handler configured for this monitor
-        :type file_handler: :class:`ingest.strike.handlers.file_handler.FileHandler`
         """
 
-        self._setup_workspaces(monitored_workspace, file_handler)
+        pass
 
     def reload_configuration(self):
         """Reloads the configuration for this monitor from the database
@@ -87,6 +82,28 @@ class Monitor(object):
         """
 
         pass
+
+    def setup_workspaces(self, monitored_workspace, file_handler):
+        """Sets up the workspaces that will be used by this monitor
+
+        :param monitored_workspace: The name of the workspace that is being monitored
+        :type monitored_workspace: string
+        :param file_handler: The file handler configured for this monitor
+        :type file_handler: :class:`ingest.strike.handlers.file_handler.FileHandler`
+        """
+
+        workspace_names = {monitored_workspace}
+        for rule in file_handler.rules:
+            if rule.new_workspace:
+                workspace_names.add(rule.new_workspace)
+
+        workspaces = {}
+        for workspace in Workspace.objects.filter(name__in=workspace_names):
+            workspaces[workspace.name] = workspace
+
+        self._file_handler = file_handler
+        self._workspaces = workspaces
+        self._monitored_workspace = workspaces[monitored_workspace]
 
     def stop(self):
         """Signals the monitor to stop running. Sub-classes that override this method should make it stop the run() call
@@ -194,28 +211,6 @@ class Monitor(object):
         else:
             logger.info('No rule match for %s, file is being deferred', file_name)
             ingest.save()
-
-    def _setup_workspaces(self, monitored_workspace, file_handler):
-        """Sets up the workspaces that will be used by this monitor
-
-        :param monitored_workspace: The name of the workspace that is being monitored
-        :type monitored_workspace: string
-        :param file_handler: The file handler configured for this monitor
-        :type file_handler: :class:`ingest.strike.handlers.file_handler.FileHandler`
-        """
-
-        workspace_names = {monitored_workspace}
-        for rule in file_handler.rules:
-            if rule.new_workspace:
-                workspace_names.add(rule.new_workspace)
-
-        workspaces = {}
-        for workspace in Workspace.objects.filter(name__in=workspace_names):
-            workspaces[workspace.name] = workspace
-
-        self._file_handler = file_handler
-        self._workspaces = workspaces
-        self._monitored_workspace = workspaces[monitored_workspace]
 
     @transaction.atomic
     def _start_ingest_task(self, ingest):

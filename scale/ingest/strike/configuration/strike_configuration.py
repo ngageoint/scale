@@ -183,7 +183,8 @@ class StrikeConfiguration(object):
 
         # Only load configuration if monitor type is unchanged
         if monitor_type == monitor.monitor_type:
-            monitor.load_configuration(monitor_dict, workspace, self._file_handler)
+            monitor.setup_workspaces(workspace, self._file_handler)
+            monitor.load_configuration(monitor_dict)
         else:
             msg = 'Strike monitor type has been changed from %s to %s. Cannot reload configuration.'
             logger.warning(msg, monitor.monitor_type, monitor_type)
