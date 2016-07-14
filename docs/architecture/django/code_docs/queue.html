@@ -954,8 +954,8 @@ be deleted from the database. All database changes occur in an atomic transactio
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>]) &#8211; A list of queued job executions that have been provided nodes and resources on which to
-run</li>
+<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
+<li><strong>job_executions</strong> (list[<a class="reference internal" href="#queue.job_exe.QueuedJobExecution" title="queue.job_exe.QueuedJobExecution"><code class="xref py py-class docutils literal"><span class="pre">queue.job_exe.QueuedJobExecution</span></code></a>]) &#8211; A list of queued job executions that have been given nodes and resources on which to run</li>
 <li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
 </ul>
 </td>

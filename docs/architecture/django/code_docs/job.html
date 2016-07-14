@@ -956,11 +956,11 @@ post-job steps are successfully completed.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stderr</strong> (<em>str</em>) &#8211; The standard error content to append.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stderr</strong> (<em>string</em>) &#8211; The standard error content to append.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The new standard error log after appending new content.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
@@ -974,11 +974,11 @@ post-job steps are successfully completed.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stdout</strong> (<em>str</em>) &#8211; The standard output content to append.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stdout</strong> (<em>string</em>) &#8211; The standard output content to append.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The new standard output log after appending new content.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
@@ -997,14 +997,18 @@ post-job steps are successfully completed.</li>
 
 <dl class="method">
 <dt id="job.models.JobExecution.configure_docker_params">
-<code class="descclassname">JobExecution.</code><code class="descname">configure_docker_params</code><span class="sig-paren">(</span><em>workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.configure_docker_params" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">JobExecution.</code><code class="descname">configure_docker_params</code><span class="sig-paren">(</span><em>framework_id</em>, <em>workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.configure_docker_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configures the Docker parameters needed for each task in the execution. Requires workspace information to
 determine any Docker parameters that might be required by this job execution&#8217;s workspaces.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
+<li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1036,7 +1040,7 @@ determine any Docker parameters that might be required by this job execution&#82
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Docker image for the job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
@@ -1132,7 +1136,7 @@ determine any Docker parameters that might be required by this job execution&#82
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The name of this job&#8217;s type</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
@@ -1371,19 +1375,19 @@ job execution and job models (in that order).</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; Query job executions with the a specific status.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query job executions of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query job executions of the type associated with the name.</li>
-<li><strong>job_type_categorys</strong> (<em>list[str]</em>) &#8211; Query job executions of the type associated with the category.</li>
-<li><strong>node_ids</strong> (<em>list[int]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; Query job executions with the a specific status.</li>
+<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query job executions of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query job executions of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query job executions of the type associated with the category.</li>
+<li><strong>node_ids</strong> (<em>[int]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job executions that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1416,7 +1420,7 @@ job execution and job models (in that order).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> (list[class:<cite>job.models.Job</cite>]) &#8211; The jobs to populate with latest execution models.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> ([class:<cite>job.models.Job</cite>]) &#8211; The jobs to populate with latest execution models.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary that maps each job identifier to its latest execution.</td>
 </tr>
@@ -1508,7 +1512,7 @@ job execution and job models (in that order).</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution whose pre-job steps have filled out the job command</li>
-<li><strong>command_arguments</strong> (<em>str</em>) &#8211; The new job execution command argument string with pre-job step information filled in</li>
+<li><strong>command_arguments</strong> (<em>string</em>) &#8211; The new job execution command argument string with pre-job step information filled in</li>
 </ul>
 </td>
 </tr>
@@ -1554,7 +1558,8 @@ related job, job_type, job_type_rev and node models populated.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_executions</strong> (list[(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, <a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>,
+<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
+<li><strong>job_executions</strong> ([(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, <a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>,
 <a class="reference internal" href="#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a>)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node to
 schedule it on, and the resources it will be given</li>
 <li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
@@ -1564,7 +1569,7 @@ schedule it on, and the resources it will be given</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The scheduled job_exe models with related job, job_type, job_type_rev and node models populated</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1581,11 +1586,11 @@ schedule it on, and the resources it will be given</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-<li><strong>task</strong> (<em>str</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
+<li><strong>task</strong> (<em>string</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task ended</li>
 <li><strong>exit_code</strong> (<em>int</em>) &#8211; The task exit code, possibly None</li>
-<li><strong>stdout</strong> (<em>str</em>) &#8211; The task stdout contents, possibly None</li>
-<li><strong>stderr</strong> (<em>str</em>) &#8211; The task stderr contents, possibly None</li>
+<li><strong>stdout</strong> (<em>string</em>) &#8211; The task stdout contents, possibly None</li>
+<li><strong>stderr</strong> (<em>string</em>) &#8211; The task stderr contents, possibly None</li>
 </ul>
 </td>
 </tr>
@@ -1603,10 +1608,10 @@ schedule it on, and the resources it will be given</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-<li><strong>task</strong> (<em>str</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
+<li><strong>task</strong> (<em>string</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task started</li>
-<li><strong>stdout_url</strong> (<em>str</em>) &#8211; The URL for the task&#8217;s stdout logs</li>
-<li><strong>stderr_url</strong> (<em>str</em>) &#8211; The URL for the task&#8217;s stderr logs</li>
+<li><strong>stdout_url</strong> (<em>string</em>) &#8211; The URL for the task&#8217;s stdout logs</li>
+<li><strong>stderr_url</strong> (<em>string</em>) &#8211; The URL for the task&#8217;s stderr logs</li>
 </ul>
 </td>
 </tr>
@@ -1625,7 +1630,7 @@ the job execution and job models (in that order).</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exes</strong> ([<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]) &#8211; The job executions (with related job models) to update</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; The new status</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; The new status</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the status change occurred</li>
 <li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure (required if status is FAILED, should be None otherwise)</li>
 </ul>
@@ -1719,18 +1724,18 @@ returned job model will have not yet been saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of jobs that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1748,20 +1753,20 @@ returned job model will have not yet been saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em>list[int]</em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>error_categories</strong> (<em>list[str]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em>[string]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of jobs that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -1841,7 +1846,7 @@ caller must have obtained model locks on the job models.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> (list[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The list of jobs to augment with input files.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> ([<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The list of jobs to augment with input files.</td>
 </tr>
 </tbody>
 </table>
@@ -1924,7 +1929,7 @@ superseded will be ignored. All jobs should have their related job_type and job_
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>jobs</strong> ([<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The jobs to update</li>
-<li><strong>status</strong> (<em>str</em>) &#8211; The new status</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; The new status</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the status change occurred</li>
 <li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure (required if status is FAILED, should be None otherwise)</li>
 </ul>
@@ -1982,7 +1987,7 @@ See the mesos prototype file for further information.</li>
 products) for a job of this type</li>
 <li><strong>disk_out_mult_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A multiplier (2x = 2.0) applied to the size of the input files to determine
 additional disk space in MiB required for job output (temp work and products) for a job of this type</li>
-<li><strong>icon_code</strong> (<em>str of a FontAwesome icon code</em>) &#8211; A font-awesome icon code (like &#8216;f013&#8217; for gear) to use when representing this job type</li>
+<li><strong>icon_code</strong> (<em>string of a FontAwesome icon code</em>) &#8211; A font-awesome icon code (like &#8216;f013&#8217; for gear) to use when representing this job type</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was created</li>
 <li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was archived (no longer active)</li>
 <li><strong>paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was paused</li>
@@ -2106,7 +2111,7 @@ combination of name and version</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple representing the natural key</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(str, str)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(string, string)</td>
 </tr>
 </tbody>
 </table>
@@ -2175,8 +2180,8 @@ transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The identifying name of the job type used by clients for queries</li>
-<li><strong>version</strong> (<em>str</em>) &#8211; The version of the job type</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of the job type used by clients for queries</li>
+<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
 <li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
 <li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
@@ -2243,8 +2248,8 @@ invalidates any existing recipe type definitions</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The human-readable name of the job type</li>
-<li><strong>version</strong> (<em>str</em>) &#8211; The version of the job type</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The human-readable name of the job type</li>
+<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
 </ul>
 </td>
 </tr>
@@ -2321,7 +2326,7 @@ count of associated jobs and the last status change of a running job.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of each job type with additional statistic fields.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.models.JobTypeFailedStatus" title="job.models.JobTypeFailedStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeFailedStatus</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.models.JobTypeFailedStatus" title="job.models.JobTypeFailedStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeFailedStatus</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -2338,16 +2343,16 @@ count of associated jobs and the last status change of a running job.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
-<li><strong>names</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>categories</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job types that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -2362,11 +2367,18 @@ count of associated jobs and the last status change of a running job.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the job type.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the job type.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of job counts organized by status.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of job counts organized by status.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.models.JobTypeStatusCounts" title="job.models.JobTypeStatusCounts"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatusCounts</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobTypeStatusCounts" title="job.models.JobTypeStatusCounts"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatusCounts</span></code></a>]</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -2384,7 +2396,7 @@ count of associated jobs and the longest running job.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of each job type with additional statistic fields.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#job.models.JobTypeRunningStatus" title="job.models.JobTypeRunningStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRunningStatus</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.models.JobTypeRunningStatus" title="job.models.JobTypeRunningStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRunningStatus</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -2408,7 +2420,7 @@ count of associated jobs and the longest running job.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job types with supplemented statistics.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#job.models.JobTypeStatus" title="job.models.JobTypeStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatus</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobTypeStatus" title="job.models.JobTypeStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatus</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -2424,8 +2436,8 @@ count of associated jobs and the longest running job.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; The system name of the job type</li>
-<li><strong>version</strong> (<em>str</em>) &#8211; The version of the job type</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The system name of the job type</li>
+<li><strong>version</strong> (<em>string</em>) &#8211; The version of the job type</li>
 <li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; The interface for mapping error exit codes</li>
 <li><strong>trigger_config</strong> (<a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a>) &#8211; The trigger rule configuration, possibly None</li>
@@ -2435,7 +2447,7 @@ count of associated jobs and the longest running job.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -2540,7 +2552,7 @@ number</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple representing the natural key</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(str, int)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(string, int)</td>
 </tr>
 </tbody>
 </table>
@@ -2654,7 +2666,7 @@ updated. The caller must have obtained a lock using select_for_update() on the g
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type being counted.</li>
-<li><strong>job_counts</strong> (list[<a class="reference internal" href="#job.models.JobTypeStatusCounts" title="job.models.JobTypeStatusCounts"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatusCounts</span></code></a>]) &#8211; A list of counts for the jobs of the given job type organized by status.</li>
+<li><strong>job_counts</strong> ([<a class="reference internal" href="#job.models.JobTypeStatusCounts" title="job.models.JobTypeStatusCounts"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeStatusCounts</span></code></a>]) &#8211; A list of counts for the jobs of the given job type organized by status.</li>
 </ul>
 </td>
 </tr>
@@ -2672,10 +2684,10 @@ updated. The caller must have obtained a lock using select_for_update() on the g
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>status</strong> (<em>str</em>) &#8211; The job execution status being counted.</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; The job execution status being counted.</li>
 <li><strong>count</strong> (<em>int</em>) &#8211; The number of job executions for the associated status.</li>
 <li><strong>most_recent</strong> (<em>datetime.datetime</em>) &#8211; The date/time of the last job execution for the associated status.</li>
-<li><strong>category</strong> (<em>str</em>) &#8211; The category of the job execution status being counted. Note that currently this will only be
+<li><strong>category</strong> (<em>string</em>) &#8211; The category of the job execution status being counted. Note that currently this will only be
 populated for types of ERROR status values.</li>
 </ul>
 </td>
