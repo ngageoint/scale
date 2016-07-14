@@ -12,7 +12,6 @@
         'ui.grid.selection',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
-        'ngAside',
         'cfp.hotkeys',
         'toggle-switch'
     ]);
