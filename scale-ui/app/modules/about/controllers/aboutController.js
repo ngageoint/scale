@@ -1,9 +1,11 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aboutController', function($scope, $location, $window, navService, stateService) {
-        $scope.stateService = stateService;
-        $scope.version = '';
+    angular.module('scaleApp').controller('aboutController', function($scope, $location, navService, stateService) {
+        var vm = this;
+        
+        vm.stateService = stateService;
+        vm.version = '';
 
         var initialize = function() {
             navService.updateLocation('about');
@@ -11,8 +13,8 @@
 
         initialize();
 
-        $scope.$watch('stateService.getVersion()', function (newValue) {
-            $scope.version = newValue;
+        $scope.$watch('vm.stateService.getVersion()', function (newValue) {
+            vm.version = newValue;
         });
     });
 })();

@@ -109,7 +109,49 @@
                 }
             }
 
+            if (urlParams.status) {
+                ingests.results = _.filter(ingests.results, function (ingest) {
+                    return ingest.status === urlParams.status[0];
+                });
+            }
+
             returnObj[1] = JSON.stringify(ingests);
+
+            return returnObj;
+        });
+
+        // Source details
+        var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
+        var sourceDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/.*/', 'i');
+        $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
+            // // get the jobType.id from the url
+            // url = url.toString();
+            // var filename = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            // sourceDetailsOverrideUrl = 'test/data/source-details/' + filename + '.json';
+            return getSync(sourceDetailsOverrideUrl);
+        });
+        
+        // Sources
+        var sourcesOverrideUrl = 'test/data/sources.json';
+        var sourcesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/', 'i');
+        $httpBackend.whenGET(sourcesRegex).respond(function (method, url) {
+            //return getSync(sourcesOverrideUrl);
+            var urlParams = getUrlParams(url),
+                returnObj = getSync(sourcesOverrideUrl),
+                sources = JSON.parse(returnObj[1]);
+
+            if (urlParams.file_name && urlParams.file_name.length > 0) {
+                var orders = ['file_name'],
+                    fields = ['asc'];
+
+                sources.results = _.filter(sources.results, function (r) {
+                    return r.file_name.toLowerCase().includes(urlParams.file_name[0].toLowerCase());
+                });
+
+                sources.results = _.sortByOrder(sources.results, fields, orders);
+            }
+
+            returnObj[1] = JSON.stringify(sources);
 
             return returnObj;
         });
@@ -173,6 +215,12 @@
                 });
 
                 jobs.results = _.sortByOrder(jobs.results, fields, orders);
+            }
+
+            if (urlParams.status) {
+                jobs.results = _.filter(jobs.results, function (job) {
+                    return job.status === urlParams.status[0];
+                });
             }
 
             returnObj[1] = JSON.stringify(jobs);

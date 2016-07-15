@@ -25,7 +25,6 @@ script: ./travis-build.sh
 branches:
   only:
   - master
-  - develop
 
 notifications:
   webhooks:

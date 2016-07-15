@@ -370,7 +370,7 @@ class QueueManager(models.Manager):
                 if jobs_to_queue:
                     self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
-                Recipe.objects.complete(handler.recipe_id, when)
+                Recipe.objects.complete(handler.recipe.id, when)
 
     @transaction.atomic
     def handle_job_failure(self, job_exe_id, when, error=None):
@@ -515,7 +515,7 @@ class QueueManager(models.Manager):
         if jobs_to_queue:
             self._queue_jobs(jobs_to_queue)
 
-        return handler.recipe_id
+        return handler.recipe.id
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -595,12 +595,13 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions, workspaces):
+    def schedule_job_executions(self, framework_id, job_executions, workspaces):
         """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
         be deleted from the database. All database changes occur in an atomic transaction.
 
-        :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
-            run
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
@@ -654,7 +655,7 @@ class QueueManager(models.Manager):
 
         # Schedule job executions
         scheduled_job_exes = []
-        for job_exe in JobExecution.objects.schedule_job_executions(executions_to_schedule, workspaces):
+        for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
             scheduled_job_exes.append(RunningJobExecution(job_exe))
 
         # Clear the job executions from the queue

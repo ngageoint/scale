@@ -169,7 +169,7 @@ class ProductFileManager(models.GeoManager):
     """
 
     def get_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
-                     is_operational=None, file_name=None, order=None):
+                     is_operational=None, is_published=None, file_name=None, order=None):
         """Returns a list of product files within the given time range.
 
         :param started: Query product files updated after this amount of time.
@@ -184,6 +184,8 @@ class ProductFileManager(models.GeoManager):
         :type job_type_categories: list[str]
         :param is_operational: Query product files flagged as operational or R&D only.
         :type is_operational: bool
+        :param is_published: Query product files flagged as currently exposed for publication.
+        :type is_published: bool
         :param file_name: Query product files with the given file name.
         :type file_name: str
         :param order: A list of fields to control the sort order.
@@ -193,7 +195,7 @@ class ProductFileManager(models.GeoManager):
         """
 
         # Fetch a list of product files
-        products = ProductFile.objects.filter(has_been_published=True)
+        products = ProductFile.objects.filter(has_been_published=True, is_superseded=False)
         products = products.select_related('workspace', 'job_type').defer('workspace__json_config')
         products = products.prefetch_related('countries')
 
@@ -211,6 +213,8 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(job_type__category__in=job_type_categories)
         if is_operational is not None:
             products = products.filter(job_type__is_operational=is_operational)
+        if is_published is not None:
+            products = products.filter(is_published=is_published)
         if file_name:
             products = products.filter(file_name=file_name)
 
