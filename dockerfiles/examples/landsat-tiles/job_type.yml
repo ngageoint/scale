@@ -1,0 +1,24 @@
+name: landsat-tiles
+version: "1.0.0"
+title: Landsat Tiles
+description: Generate map tiles for a landsat 8 product.
+author_name: "tclarke@ball.com"
+docker_image: "geoint/landsat-tiles"
+priority: 250
+timeout: 300
+max_tries: 3
+cpus_required: 0.5
+mem_required: 512.0
+interface:
+  version: "1.0"
+  command: "./landsat_tiles.sh"
+  command_arguments: '${image} ${job_output_dir}'
+  input_data:
+    - media_types: [ "image/tiff" ]
+      required: true
+      type: file
+      name: image
+  output_data:
+    - name: tiles
+      required: true
+      type: files
