@@ -555,7 +555,7 @@ class TestWorkspaceManager(TransactionTestCase):
         workspace = storage_test_utils.create_workspace(json_config=config)
 
         # No exceptions indicates success
-        workspace._get_broker()
+        workspace.get_broker()
 
     def test_broker_validation_error(self):
         """Tests that attempting to get a bad broker instance raises an error."""
@@ -569,4 +569,4 @@ class TestWorkspaceManager(TransactionTestCase):
         workspace = storage_test_utils.create_workspace(json_config=config)
 
         # No exceptions indicates success
-        self.assertRaises(InvalidBrokerConfiguration, workspace._get_broker)
+        self.assertRaises(InvalidBrokerConfiguration, workspace.get_broker)
