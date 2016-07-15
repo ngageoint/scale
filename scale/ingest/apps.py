@@ -25,6 +25,8 @@ class IngestConfig(AppConfig):
         # Registers the Strike monitors with the monitor system
         import ingest.strike.monitors.factory as factory
         from ingest.strike.monitors.dir_monitor import DirWatcherMonitor
+        from ingest.strike.monitors.s3_monitor import S3Monitor
 
         # Register monitor types
         factory.add_monitor_type(DirWatcherMonitor)
+        factory.add_monitor_type(S3Monitor)
