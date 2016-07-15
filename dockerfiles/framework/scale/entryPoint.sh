@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
 then
@@ -46,6 +46,11 @@ then
     /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
     ./manage.py migrate
     ./manage.py load_all_data
+fi
+if [[ ${LOAD_COUNTRY_DATA} == 'true' ]]
+then
+    bunzip2 country_data.json.bz2
+    ./manage.py loaddata country_data.json
 fi
 
 if [[ ${ENABLE_HTTPD} == 'true' ]]

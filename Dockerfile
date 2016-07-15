@@ -12,6 +12,7 @@ EXPOSE 5051
 # ENABLE_HTTPD to start the Apache HTTP server
 # DEPLOY_DB to start the database container (for DC/OS use)
 # INIT_DB to initialize the database (migrate, load, etc.)
+# LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
 # SCALE_SECRET_KEY
 # SCALE_DEBUG
 # SCALE_API_URL
