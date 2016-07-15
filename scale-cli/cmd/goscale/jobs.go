@@ -419,7 +419,7 @@ func jobs_deploy(c *cli.Context) error {
     cmd := exec.Command("docker", "inspect", "-f", "{{(index .Config.Labels \"com.ngageoint.scale.job-type\")}}", docker_image)
     output, err := cmd.CombinedOutput()
     if err != nil {
-        log.Debug(output)
+        log.Debug(string(output))
         return cli.NewExitError(err.Error(), 1)
     }
     json_value := strings.Replace(string(output), "$ {", "${", -1)

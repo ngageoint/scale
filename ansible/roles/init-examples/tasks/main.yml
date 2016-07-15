@@ -5,26 +5,26 @@
 # deploy the landsat jobs
 - name: Deploy the landsat-parse job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/landsat-parse
+  command: /scale/bin/goscale jobs deploy -p -i geoint/parse-landsat
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the landsat-ndwi job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/landsat-ndwi
+  command: /scale/bin/goscale jobs deploy -p -i geoint/landsat-ndwi
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the landsat-tiles job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/landsat-tiles
+  command: /scale/bin/goscale jobs deploy -p -i geoint/landsat-tiles
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 # deploy the landsat recipe
@@ -56,50 +56,50 @@
 # deploy other jobs
 - name: Deploy the binary-parse job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/binary-parse
+  command: /scale/bin/goscale jobs deploy -p -i geoint/binary-parse
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the ace job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/ace
+  command: /scale/bin/goscale jobs deploy -p -i geoint/ace
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the jpl-signatures job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/jpl-signatures
+  command: /scale/bin/goscale jobs deploy -p -i geoint/jpl-signatures
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the pca job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/pca
+  command: /scale/bin/goscale jobs deploy -p -i geoint/pca
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the tad job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/tad
+  command: /scale/bin/goscale jobs deploy -p -i geoint/tad
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Deploy the vash job
   tags: init-examples
-  command: /scale/bin/goscale jobs deploy -p geoint/vash
+  command: /scale/bin/goscale jobs deploy -p -i geoint/vash
   become: true
   environment:
-    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/'. '') }}"
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
     SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 # configure the binary strike

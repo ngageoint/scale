@@ -8,6 +8,7 @@ db_name: scale
 db_username: scale
 db_password: scale
 db_host: localhost
+db_port: 5432
 django_debug: 'False'
 scale_build_root: '/scale'
 django_build_dir: '{{ scale_build_root }}/scale'
