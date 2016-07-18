@@ -34,12 +34,14 @@ class SchedulingThread(object):
     SCHEDULE_LOOP_WARN_THRESHOLD = datetime.timedelta(seconds=1)
     SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, driver, job_exe_manager, job_type_manager, node_manager, offer_manager, scheduler_manager,
-                 workspace_manager):
+    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, node_manager, offer_manager,
+                 scheduler_manager, workspace_manager):
         """Constructor
 
         :param driver: The Mesos scheduler driver
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param job_exe_manager: The running job execution manager
         :type job_exe_manager: :class:`job.execution.running.manager.RunningJobExecutionManager`
         :param job_type_manager: The job type manager
@@ -55,6 +57,7 @@ class SchedulingThread(object):
         """
 
         self._driver = driver
+        self._framework_id = framework_id
         self._job_exe_manager = job_exe_manager
         self._job_type_manager = job_type_manager
         self._node_manager = node_manager
@@ -243,8 +246,7 @@ class SchedulingThread(object):
     def _schedule_queued_job_executions(self, job_executions, workspaces):
         """Schedules the given queued job executions
 
-        :param job_executions: A list of queued job executions that have been provided nodes and resources on which to
-            run
+        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
         :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
@@ -254,7 +256,7 @@ class SchedulingThread(object):
 
         started = now()
 
-        scheduled_job_executions = Queue.objects.schedule_job_executions(job_executions, workspaces)
+        scheduled_job_executions = Queue.objects.schedule_job_executions(self._framework_id, job_executions, workspaces)
 
         duration = now() - started
         msg = 'Query to schedule job executions took %.3f seconds'

@@ -38,25 +38,10 @@
 # start mesos master and slaves
 - include: mesos.yml
 
-# build scale
-- hosts: build
-  roles:
-    - build-scale
-
-# migrate database changes
-- hosts: build
-  roles:
-    - migrate
-
-# load initial database data
-- hosts: build
-  roles:
-    - load-initial-data
+# start scale components
+- include: scale.yml
 
 # initialize example data
 - hosts: build
   roles:
     - init-examples
-
-# start scale components
-- include: scale.yml
