@@ -46,6 +46,7 @@ COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
          systemd-container-EOL \
+         bzip2 \
          gdal-python \
          geos \
          httpd \
