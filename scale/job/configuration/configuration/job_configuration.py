@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.conf import settings
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
@@ -272,6 +274,23 @@ class JobConfiguration(object):
         for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_not_created, workspaces,
                                                        True):
             self.add_post_task_docker_param(param)
+
+    def configure_logging_docker_params(self, job_exe_id):
+        """Configures the Docker parameters needed for job execution logging
+         
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        """
+        if settings.LOGGING_ADDRESS is not None:
+            self.add_pre_task_docker_param(DockerParam("log-driver", "gelf"))
+            self.add_pre_task_docker_param(DockerParam("log-opt", "gelf-address=%s" % settings.LOGGING_ADDRESS))
+            self.add_pre_task_docker_param(DockerParam("log-opt", "tag=%d_pre" % job_exe_id))
+            self.add_job_task_docker_param(DockerParam("log-driver", "gelf"))
+            self.add_job_task_docker_param(DockerParam("log-opt", "gelf-address=%s" % settings.LOGGING_ADDRESS))
+            self.add_job_task_docker_param(DockerParam("log-opt", "tag=%d_job" % job_exe_id))
+            self.add_post_task_docker_param(DockerParam("log-driver", "gelf"))
+            self.add_post_task_docker_param(DockerParam("log-opt", "gelf-address=%s" % settings.LOGGING_ADDRESS))
+            self.add_post_task_docker_param(DockerParam("log-opt", "tag=%d_post" % job_exe_id))
 
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task
