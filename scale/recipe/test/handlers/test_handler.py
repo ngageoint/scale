@@ -203,7 +203,8 @@ class TestRecipeHandler(TestCase):
         }
         job_type_2 = job_test_utils.create_job_type(interface=interface_2)
         job_2 = job_test_utils.create_job(job_type=job_type_2)
-        file_1 = storage_test_utils.create_file(media_type='text/plain')
+        workspace = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace, media_type='text/plain')
 
         definition = {
             'version': '1.0',
@@ -243,7 +244,7 @@ class TestRecipeHandler(TestCase):
                 'name': 'Recipe Input',
                 'file_id': file_1.id,
             }],
-            'workspace_id': 1,
+            'workspace_id': workspace.id,
         }
         recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
@@ -265,7 +266,7 @@ class TestRecipeHandler(TestCase):
             }],
             'output_data': [{
                 'name': output_name_1,
-                'workspace_id': 1,
+                'workspace_id': workspace.id,
             }],
         })
 

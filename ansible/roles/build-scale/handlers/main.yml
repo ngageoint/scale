@@ -3,21 +3,6 @@
 - name: push scale
   command: sh -c 'docker tag -f scale:{{ scale_docker_version }} {{ docker_registry }}scale:{{ scale_docker_version }}; docker push {{ docker_registry }}scale:{{ scale_docker_version }}'
 
-- name: push scale-web-static
-  command: sh -c 'docker tag -f scale-web-static:{{ scale_docker_version }} {{ docker_registry }}scale-web-static:{{ scale_docker_version }}; docker push {{ docker_registry }}scale-web-static:{{ scale_docker_version }}'
-
 - name: push landsat-base
   command: sh -c 'docker tag -f landsat-base:{{ scale_docker_version }} {{ docker_registry }}landsat-base:{{ scale_docker_version }}; docker push {{ docker_registry }}landsat-base:{{ scale_docker_version }}'
-
-- name: push landsat-parse
-  command: sh -c 'docker tag -f landsat-parse:{{ scale_docker_version }} {{ docker_registry }}landsat-parse:{{ scale_docker_version }}; docker push {{ docker_registry }}landsat-parse:{{ scale_docker_version }}'
-
-- name: push landsat-ndwi
-  command: sh -c 'docker tag -f landsat-ndwi:{{ scale_docker_version }} {{ docker_registry }}landsat-ndwi:{{ scale_docker_version }}; docker push {{ docker_registry }}landsat-ndwi:{{ scale_docker_version }}'
-
-- name: push landsat-tiles
-  command: sh -c 'docker tag -f landsat-tiles:{{ scale_docker_version }} {{ docker_registry }}landsat-tiles:{{ scale_docker_version }}; docker push {{ docker_registry }}landsat-tiles:{{ scale_docker_version }}'
-
-- name: push pca
-  command: sh -c 'docker tag -f pca:{{ scale_docker_version }} {{ docker_registry }}pca:{{ scale_docker_version }}; docker push {{ docker_registry }}pca:{{ scale_docker_version }}'
 

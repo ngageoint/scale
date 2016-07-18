@@ -2,14 +2,14 @@
 .. _rest_product:
 
 Product Services
-========================================================================================================================
+================
 
 These services provide access to information about products that Scale has produced.
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Product List**                                                                                                        |
 +=========================================================================================================================+
-| Returns a list of all products                                                                                          |
+| Returns a list of all products, excluding superseded results                                                            |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/                                                                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -43,6 +43,10 @@ These services provide access to information about products that Scale has produ
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_operational     | Boolean           | Optional | Return only products flagged as operational status versus R&D.      |
+|                    |                   |          | Default is include all types of products.                           |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_published       | Boolean           | Optional | Return only products flagged as currently exposed for publication.  |
+|                    |                   |          | Default is True, include only published products.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Return only products with a given file name.                        |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -465,6 +469,7 @@ These services provide access to information about products that Scale has produ
 | **Product Updates**                                                                                                     |
 +=========================================================================================================================+
 | Returns the product updates (published, unpublished, and deleted products) that have occurred in the given time range.  |
+| Note that superseded results are excluded.                                                                              |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/updates/                                                                                              |
 +-------------------------------------------------------------------------------------------------------------------------+

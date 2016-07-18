@@ -7,11 +7,12 @@ EXPOSE 8000
 EXPOSE 5051
 
 # allowed environment variables
-# ENABLE_NFS=1 to turn on NFS client locking
-# ENABLE_GUNICORN to start the RESTful API server
-# ENABLE_HTTPD to start the Apache HTTP server
+# ENABLE_NFS=true to turn on NFS client locking
+# ENABLE_GUNICORN=1 to start the RESTful API server
+# ENABLE_HTTPD=true to start the Apache HTTP server
 # DEPLOY_DB to start the database container (for DC/OS use)
 # INIT_DB to initialize the database (migrate, load, etc.)
+# LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
 # SCALE_SECRET_KEY
 # SCALE_DEBUG
 # SCALE_API_URL
@@ -69,6 +70,7 @@ COPY dockerfiles/framework/scale/deployDb.py /opt/scale/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale
+COPY dockerfiles/framework/scale/country_data.json.bz2 /opt/scale/
 
 # set the build number
 RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'

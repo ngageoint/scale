@@ -405,12 +405,13 @@ func jobs_deploy(c *cli.Context) error {
             docker_image = docker_image + ":" + c.GlobalString("tag")
         }
     }
+    log.Info("Using docker image:", docker_image)
     if c.Bool("pull") {
         log.Info("Pulling", docker_image)
         cmd := exec.Command("docker", "pull", docker_image)
         _, err = cmd.CombinedOutput()
         if err != nil {
-            log.Warning("Unable to pull the image. Checking if it is locally available.")
+            log.Warning("Unable to pull the image. Checking if it is locally available.", err)
         }
     }
 
@@ -418,11 +419,12 @@ func jobs_deploy(c *cli.Context) error {
     cmd := exec.Command("docker", "inspect", "-f", "{{(index .Config.Labels \"com.ngageoint.scale.job-type\")}}", docker_image)
     output, err := cmd.CombinedOutput()
     if err != nil {
+        log.Debug(string(output))
         return cli.NewExitError(err.Error(), 1)
     }
     json_value := strings.Replace(string(output), "$ {", "${", -1)
     if strings.TrimSpace(json_value) == "" {
-        return cli.NewExitError(fmt.Sprint("Scale job type information not found in", docker_image), 1)
+        return cli.NewExitError(fmt.Sprint("Scale job type information not found in ", docker_image), 1)
     }
     var job_type scalecli.JobType
     err = json.Unmarshal([]byte(json_value), &job_type)

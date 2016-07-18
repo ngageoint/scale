@@ -13,6 +13,7 @@ from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 
+import job.execution.container as job_exe_container
 from error.models import Error
 from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.data.job_data import JobData
@@ -21,8 +22,7 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
-from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, SCALE_JOB_EXE_INPUT_PATH,\
-    SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -118,21 +118,21 @@ class JobManager(models.Manager):
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param status: Query jobs with the a specific execution status.
-        :type status: str
+        :type status: string
         :param job_ids: Query jobs associated with the identifier.
-        :type job_ids: list[int]
+        :type job_ids: [int]
         :param job_type_ids: Query jobs of the type associated with the identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query jobs of the type associated with the name.
-        :type job_type_names: list[str]
+        :type job_type_names: [string]
         :param job_type_categories: Query jobs of the type associated with the category.
-        :type job_type_categories: list[str]
+        :type job_type_categories: [string]
         :param error_categories: Query jobs that failed due to errors associated with the category.
-        :type error_categories: list[str]
+        :type error_categories: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of jobs that match the time range.
-        :rtype: list[:class:`job.models.Job`]
+        :rtype: [:class:`job.models.Job`]
         """
 
         # Fetch a list of jobs
@@ -177,7 +177,10 @@ class JobManager(models.Manager):
         """
 
         # Attempt to fetch the requested job
-        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error').get(pk=job_id)
+        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error',
+                                         'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job',
+                                         'superseded_job__job_type', 'superseded_by_job',
+                                         'superseded_by_job__job_type').get(pk=job_id)
 
         # Attempt to get related job executions
         job.job_exes = JobExecution.objects.filter(job=job).order_by('-created')
@@ -229,17 +232,17 @@ class JobManager(models.Manager):
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param status: Query jobs with the a specific execution status.
-        :type status: str
+        :type status: string
         :param job_type_ids: Query jobs of the type associated with the identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_categories: Query jobs of the type associated with the category.
-        :type job_type_categories: list[str]
+        :type job_type_categories: [string]
         :param job_type_names: Query jobs of the type associated with the name.
-        :type job_type_names: list[str]
+        :type job_type_names: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of jobs that match the time range.
-        :rtype: list[:class:`job.models.Job`]
+        :rtype: [:class:`job.models.Job`]
         """
         if not order:
             order = ['last_status_change']
@@ -425,7 +428,7 @@ class JobManager(models.Manager):
         """Populates each of the given jobs with its input file references in a field called "input_files".
 
         :param jobs: The list of jobs to augment with input files.
-        :type jobs: list[:class:`job.models.Job`]
+        :type jobs: [:class:`job.models.Job`]
         """
 
         # Build a unique set of all input file identifiers
@@ -488,7 +491,7 @@ class JobManager(models.Manager):
         :param jobs: The jobs to update
         :type jobs: [:class:`job.models.Job`]
         :param status: The new status
-        :type status: str
+        :type status: string
         :param when: The time that the status change occurred
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
@@ -787,19 +790,19 @@ class JobExecutionManager(models.Manager):
         :param ended: Query job executions updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param status: Query job executions with the a specific status.
-        :type status: str
+        :type status: string
         :param job_type_ids: Query job executions of the type associated with the identifier.
-        :type job_type_ids: list[int]
+        :type job_type_ids: [int]
         :param job_type_names: Query job executions of the type associated with the name.
-        :type job_type_names: list[str]
-        :param job_type_categorys: Query job executions of the type associated with the category.
-        :type job_type_categorys: list[str]
+        :type job_type_names: [string]
+        :param job_type_categories: Query job executions of the type associated with the category.
+        :type job_type_categories: [string]
         :param node_ids: Query job executions that ran on a node with the identifier.
-        :type node_ids: list[int]
+        :type node_ids: [int]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of job executions that match the time range.
-        :rtype: list[:class:`job.models.JobExecution`]
+        :rtype: [:class:`job.models.JobExecution`]
         """
 
         # Fetch a list of job executions
@@ -910,7 +913,7 @@ class JobExecutionManager(models.Manager):
         """Gets the latest job execution associated with each given job.
 
         :param jobs: The jobs to populate with latest execution models.
-        :type jobs: list[class:`job.models.Job`]
+        :type jobs: [class:`job.models.Job`]
         :returns: A dictionary that maps each job identifier to its latest execution.
         :rtype: dict of int -> class:`job.models.JobExecution`
         """
@@ -959,7 +962,7 @@ class JobExecutionManager(models.Manager):
         :param job_exe_id: The job execution whose pre-job steps have filled out the job command
         :type job_exe_id: int
         :param command_arguments: The new job execution command argument string with pre-job step information filled in
-        :type command_arguments: str
+        :type command_arguments: string
         """
 
         modified = timezone.now()
@@ -1005,20 +1008,22 @@ class JobExecutionManager(models.Manager):
         return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
 
     @transaction.atomic
-    def schedule_job_executions(self, job_executions, workspaces):
+    def schedule_job_executions(self, framework_id, job_executions, workspaces):
         """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
         Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
         will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
         related job, job_type, job_type_rev and node models populated.
 
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
             schedule it on, and the resources it will be given
-        :type job_executions: list[(:class:`job.models.JobExecution`, :class:`node.models.Node`,
+        :type job_executions: [(:class:`job.models.JobExecution`, :class:`node.models.Node`,
             :class:`job.resources.JobResources`)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
-        :rtype: list[:class:`job.models.JobExecution`]
+        :rtype: [:class:`job.models.JobExecution`]
         """
 
         started = timezone.now()
@@ -1056,7 +1061,7 @@ class JobExecutionManager(models.Manager):
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node = node
-            job_exe.configure_docker_params(workspaces)
+            job_exe.configure_docker_params(framework_id, workspaces)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1075,15 +1080,15 @@ class JobExecutionManager(models.Manager):
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: str
+        :type task: string
         :param when: The time that the task ended
         :type when: :class:`datetime.datetime`
         :param exit_code: The task exit code, possibly None
         :type exit_code: int
         :param stdout: The task stdout contents, possibly None
-        :type stdout: str
+        :type stdout: string
         :param stderr: The task stderr contents, possibly None
-        :type stderr: str
+        :type stderr: string
         """
 
         # TODO: once we no longer have stdout and stderr in job execution model, transition this from selecting with
@@ -1114,13 +1119,13 @@ class JobExecutionManager(models.Manager):
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: str
+        :type task: string
         :param when: The time that the task started
         :type when: :class:`datetime.datetime`
         :param stdout_url: The URL for the task's stdout logs
-        :type stdout_url: str
+        :type stdout_url: string
         :param stderr_url: The URL for the task's stderr logs
-        :type stderr_url: str
+        :type stderr_url: string
         """
 
         job_exe_qry = self.filter(id=job_exe_id)
@@ -1139,7 +1144,7 @@ class JobExecutionManager(models.Manager):
         :param job_exes: The job executions (with related job models) to update
         :type job_exes: [:class:`job.models.JobExecution`]
         :param status: The new status
-        :type status: str
+        :type status: string
         :param when: The time that the status change occurred
         :type when: :class:`datetime.datetime`
         :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
@@ -1325,10 +1330,12 @@ class JobExecution(models.Model):
 
     objects = JobExecutionManager()
 
-    def configure_docker_params(self, workspaces):
+    def configure_docker_params(self, framework_id, workspaces):
         """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
         determine any Docker parameters that might be required by this job execution's workspaces.
 
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         """
@@ -1357,8 +1364,8 @@ class JobExecution(models.Model):
 
         if not self.job.job_type.is_system:
             # Non-system jobs get named Docker volumes for input and output data
-            input_vol_name = get_job_exe_input_vol_name(self.id)
-            output_vol_name = get_job_exe_output_vol_name(self.id)
+            input_vol_name = job_exe_container.get_job_exe_input_vol_name(framework_id, self.id)
+            output_vol_name = job_exe_container.get_job_exe_output_vol_name(framework_id, self.id)
             input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
@@ -1370,7 +1377,7 @@ class JobExecution(models.Model):
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(self.id, workspaces)
+        configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
 
         # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
         # jobs no longer mount within the container.
@@ -1383,7 +1390,7 @@ class JobExecution(models.Model):
         """Gets the Docker image for the job execution
 
         :returns: The Docker image for the job execution
-        :rtype: str
+        :rtype: string
         """
 
         return self.job.job_type.docker_image
@@ -1437,7 +1444,7 @@ class JobExecution(models.Model):
         """Returns the name of this job's type
 
         :returns: The name of this job's type
-        :rtype: str
+        :rtype: string
         """
 
         return self.job.job_type.name
@@ -1496,9 +1503,9 @@ class JobExecution(models.Model):
         """Appends the given string content to the standard output field.
 
         :param stdout: The standard output content to append.
-        :type stdout: str
+        :type stdout: string
         :returns: The new standard output log after appending new content.
-        :rtype: str
+        :rtype: string
         """
         if stdout:
             if self.stdout:
@@ -1511,9 +1518,9 @@ class JobExecution(models.Model):
         """Appends the given string content to the standard error field.
 
         :param stderr: The standard error content to append.
-        :type stderr: str
+        :type stderr: string
         :returns: The new standard error log after appending new content.
-        :rtype: str
+        :rtype: string
         """
         if stderr:
             if self.stderr:
@@ -1531,14 +1538,14 @@ class JobTypeStatusCounts(object):
     """Represents job counts for a job type.
 
     :keyword status: The job execution status being counted.
-    :type status: str
+    :type status: string
     :keyword count: The number of job executions for the associated status.
     :type count: int
     :keyword most_recent: The date/time of the last job execution for the associated status.
     :type most_recent: datetime.datetime
     :keyword category: The category of the job execution status being counted. Note that currently this will only be
         populated for types of ERROR status values.
-    :type category: str
+    :type category: string
     """
     def __init__(self, status, count=0, most_recent=None, category=None):
         self.status = status
@@ -1553,7 +1560,7 @@ class JobTypeStatus(object):
     :keyword job_type: The job type being counted.
     :type job_type: :class:`job.models.JobType`
     :keyword job_counts: A list of counts for the jobs of the given job type organized by status.
-    :type job_counts: list[:class:`job.models.JobTypeStatusCounts`]
+    :type job_counts: [:class:`job.models.JobTypeStatusCounts`]
     """
     def __init__(self, job_type, job_counts=None):
         self.job_type = job_type
@@ -1606,9 +1613,9 @@ class JobTypeManager(models.Manager):
         transaction.
 
         :param name: The identifying name of the job type used by clients for queries
-        :type name: str
+        :type name: string
         :param version: The version of the job type
-        :type version: str
+        :type version: string
         :param interface: The interface for running a job of this type
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
@@ -1709,7 +1716,7 @@ class JobTypeManager(models.Manager):
         if interface:
             # New job interface, validate all existing recipes
             job_type.interface = interface.get_dict()
-            job_type.revision_num = job_type.revision_num + 1
+            job_type.revision_num += 1
             job_type.save()
             for recipe_type in recipe_types:
                 recipe_type.get_recipe_definition().validate_job_interfaces()
@@ -1747,9 +1754,9 @@ class JobTypeManager(models.Manager):
         """Django method to retrieve a job type for the given natural key
 
         :param name: The human-readable name of the job type
-        :type name: str
+        :type name: string
         :param version: The version of the job type
-        :type version: str
+        :type version: string
         :returns: The job type defined by the natural key
         :rtype: :class:`job.models.JobType`
         """
@@ -1781,13 +1788,13 @@ class JobTypeManager(models.Manager):
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param names: Query jobs of the type associated with the name.
-        :type names: list[str]
+        :type names: [string]
         :param categories: Query jobs of the type associated with the category.
-        :type categories: list[str]
+        :type categories: [string]
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of job types that match the time range.
-        :rtype: list[:class:`job.models.JobType`]
+        :rtype: [:class:`job.models.JobType`]
         """
 
         # Fetch a list of job types
@@ -1843,8 +1850,12 @@ class JobTypeManager(models.Manager):
 
         :param job_type_id: The unique identifier of the job type.
         :type job_type_id: int
+        :param started: Query job types updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query job types updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
         :returns: A list of job counts organized by status.
-        :rtype: list[:class:`job.models.JobTypeStatusCounts`]
+        :rtype: [:class:`job.models.JobTypeStatusCounts`]
         """
         count_dicts = Job.objects.values('job_type__id', 'status', 'error__category')
         count_dicts = count_dicts.filter(job_type_id=job_type_id, last_status_change__gte=started)
@@ -1869,7 +1880,7 @@ class JobTypeManager(models.Manager):
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :returns: The list of job types with supplemented statistics.
-        :rtype: list[:class:`job.models.JobTypeStatus`]
+        :rtype: [:class:`job.models.JobTypeStatus`]
         """
 
         # Build a mapping of all job type identifier -> status model
@@ -1904,7 +1915,7 @@ class JobTypeManager(models.Manager):
         count of associated jobs and the longest running job.
 
         :returns: The list of each job type with additional statistic fields.
-        :rtype: list[:class:`job.models.JobTypeRunningStatus`]
+        :rtype: [:class:`job.models.JobTypeRunningStatus`]
         """
 
         # Fetch a count of all running jobs with type information
@@ -1932,7 +1943,7 @@ class JobTypeManager(models.Manager):
         count of associated jobs and the last status change of a running job.
 
         :returns: The list of each job type with additional statistic fields.
-        :rtype: list[:class:`job.models.JobTypeFailedStatus`]
+        :rtype: [:class:`job.models.JobTypeFailedStatus`]
         """
 
         # Make a list of all the basic error fields to fetch
@@ -1969,9 +1980,9 @@ class JobTypeManager(models.Manager):
         """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
-        :type name: str
+        :type name: string
         :param version: The version of the job type
-        :type version: str
+        :type version: string
         :param interface: The interface for running a job of this type
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :param error_mapping: The interface for mapping error exit codes
@@ -1979,7 +1990,7 @@ class JobTypeManager(models.Manager):
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
             type for creating jobs
@@ -2112,7 +2123,7 @@ class JobType(models.Model):
     :type disk_out_mult_required: :class:`django.db.models.FloatField`
 
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
-    :type icon_code: str of a FontAwesome icon code
+    :type icon_code: string of a FontAwesome icon code
 
     :keyword created: When the job type was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -2192,9 +2203,9 @@ class JobType(models.Model):
         combination of name and version
 
         :returns: A tuple representing the natural key
-        :rtype: tuple(str, str)
+        :rtype: tuple(string, string)
         """
-        return (self.name, self.version)
+        return self.name, self.version
 
     class Meta(object):
         """meta information for the db"""
@@ -2283,10 +2294,10 @@ class JobTypeRevision(models.Model):
         number
 
         :returns: A tuple representing the natural key
-        :rtype: tuple(str, int)
+        :rtype: tuple(string, int)
         """
 
-        return (self.job_type, self.revision_num)
+        return self.job_type, self.revision_num
 
     class Meta(object):
         """meta information for the db"""

@@ -222,7 +222,7 @@ class RecipeManager(models.Manager):
         :param job_ids: The job IDs
         :type job_ids: [int]
         :returns: The recipe handlers
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+        :rtype: [:class:`recipe.handlers.handler.RecipeHandler`]
         """
 
         # Figure out the non-superseded recipe ID (if applicable) for each job ID
@@ -303,9 +303,13 @@ class RecipeManager(models.Manager):
         :returns: A recipe with additional information.
         :rtype: :class:`recipe.models.Recipe`
         """
-        recipe = Recipe.objects.all()
-        recipe = recipe.select_related('recipe_type', 'recipe_type_rev', 'event', 'event__rule')
-        recipe = recipe.get(pk=recipe_id)
+
+        # Attempt to fetch the requested recipe
+        recipe = Recipe.objects.select_related(
+            'recipe_type', 'recipe_type_rev', 'event', 'event__rule', 'root_superseded_recipe',
+            'root_superseded_recipe__recipe_type', 'superseded_recipe', 'superseded_recipe__recipe_type',
+            'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
+        ).get(pk=recipe_id)
 
         # Update the recipe with source file models
         input_file_ids = recipe.get_recipe_data().get_input_file_ids()

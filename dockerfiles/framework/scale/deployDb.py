@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+__doc__ = """
+This script executes a Marathon tasks for the postgis database and is meant for use with DC/OS deployments only.
+"""
 import requests, os, json, time
 
 r = requests.get('http://marathon.mesos:8080/v2/apps/')

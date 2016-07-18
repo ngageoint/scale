@@ -22,13 +22,21 @@ class TestProductsView(TestCase):
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          file_name='test.txt', countries=[self.country])
+                                                          is_published=True, file_name='test.txt',
+                                                          countries=[self.country])
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
-                                                          countries=[self.country])
+        self.product2a = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=False, countries=[self.country])
+
+        self.product2b = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, is_superseded=True,
+                                                           countries=[self.country])
+
+        self.product2c = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, countries=[self.country])
 
     def test_invalid_started(self):
         """Tests calling the product files view when the started parameter is invalid."""
@@ -114,6 +122,18 @@ class TestProductsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['is_operational'], self.job_type1.is_operational)
 
+    def test_is_published(self):
+        """Tests successfully calling the product files view filtered by is_published flag."""
+
+        url = '/products/?is_published=false'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.product2a.id)
+        self.assertFalse(result['results'][0]['is_published'])
+
     def test_file_name(self):
         """Tests successfully calling the product files view filtered by file name."""
 
@@ -136,6 +156,12 @@ class TestProductsView(TestCase):
         self.assertEqual(len(result['results']), 2)
 
         for entry in result['results']:
+
+            # Make sure unpublished and superseded products are not included
+            self.assertNotEqual(entry['id'], self.product2a.id)
+            self.assertNotEqual(entry['id'], self.product2b.id)
+
+            # Make sure country info is included
             self.assertEqual(entry['countries'][0], self.country.iso3)
 
 
@@ -222,13 +248,19 @@ class TestProductsUpdatesView(TestCase):
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          file_name='test.txt', countries=[self.country])
+                                                          is_published=True, file_name='test.txt',
+                                                          countries=[self.country])
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2 = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
-                                                          countries=[self.country])
+        self.product2a = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=False, countries=[self.country])
+        self.product2b = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, is_superseded=True,
+                                                           countries=[self.country])
+        self.product2c = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
+                                                           is_published=True, countries=[self.country])
 
     def test_invalid_started(self):
         """Tests calling the product file updates view when the started parameter is invalid."""
@@ -333,9 +365,14 @@ class TestProductsUpdatesView(TestCase):
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 3)
 
         for entry in result['results']:
+
+            # Make sure superseded products are not included
+            self.assertNotEqual(entry['id'], self.product2b.id)
+
+            # Make sure additional attributes are present
             self.assertIsNotNone(entry['update'])
             self.assertIsNotNone(entry['source_files'])
             self.assertEqual(entry['countries'][0], self.country.iso3)

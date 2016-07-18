@@ -1,15 +1,15 @@
 ---
 # scale-scheduler/tasks/main.yml
-- name: Kill scheduler
+- name: Kill scale
   tags: scale-scheduler
   docker:
-    name: scale-scheduler
+    name: scale
     docker_api_version: '{{ docker_api_version }}'
     image: '{{ docker_registry }}geoint/scale:{{ scale_docker_version }}'
     state: killed
   become: true
 
-- name: Start scheduler
+- name: Start scale
   tags: [ scale-scheduler, restart-scale ]
   docker:
     name: scale-scheduler
@@ -20,12 +20,18 @@
     pull: always
     command: 'scale_scheduler'
     env:
-      SCALE_SECRET_KEY: '$6$D6zJhmUX3htFBnBk$Mkl/xVyXS2In5eHrwXz2QzzspaHPQPMFrfoA7DPxifGx.5O4kzedqx1DO5PrdSF0VuO1XqMEmpAhrXecPC5y51'
-      SCALE_DEBUG: 'False'
-      SCALE_DB_USER: '{{ db_username }}'
-      SCALE_DB_PASS: '{{ db_password }}'
-      SCALE_DB_HOST: '{{ db_host }}'
-      MESOS_MASTER_URL: 'zk://scalemaster:2181/mesos'
-      SCALE_DOCKER_IMAGE: '{{ docker_registry }}geoint/scale'
       ENABLE_GUNICORN: '1'
+      ENABLE_NFS: "true"
+      ENABLE_GUNICORN: "true"
+      ENABLE_HTTPD: "true"
+      SCALE_DB_USER: "{{ db_username }}"
+      SCALE_DB_PASS: "{{ db_password }}"
+      SCALE_DB_HOST: "{{ db_host }}"
+      SCALE_DB_PORT: "{{ db_port }}"
+      MESOS_MASTER_URL: "{{ mesos_zk }}"
+      SCALE_DOCKER_IMAGE: '{{ docker_registry }}geoint/scale'
+      SCALE_SECRET_KEY: '$6$D6zJhmUX3htFBnBk$Mkl/xVyXS2In5eHrwXz2QzzspaHPQPMFrfoA7DPxifGx.5O4kzedqx1DO5PrdSF0VuO1XqMEmpAhrXecPC5y51'
+      INIT_DB: "true"
+      LOAD_COUNTRY_DATA: "true"
+
   become: true
