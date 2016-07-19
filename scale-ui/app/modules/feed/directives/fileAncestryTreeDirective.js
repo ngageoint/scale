@@ -11,10 +11,23 @@
             //console.log(vm.source);
         });
 
+        function formatFileName(filename){
+            var maxlen = 25;
+            var newfname = filename;
+            if(filename.length > 30){
+                var ext = filename.substring(filename.lastIndexOf('.')+1);
+                var firstpart = filename.substring(0, filename.lastIndexOf('.'));
+                var firstpartLen = maxlen - ext.length;
+                var newfname = filename.substring(0,firstpartLen-1) + '...' + ext;
+            }
+            return newfname;
+        };
+
         function getNodeHtml(file) {
             var iconHtml = scaleService.getMediaTypeHtml(file.media_type);
+            var fname = formatFileName(file.file_name);
             var html = "<div class='graph'>";
-            html += "<span class='name'><a ng-show='" + file.url + "' href='" + file.url + "' target='_jobfile'>" + iconHtml + ' ' + file.file_name + "</a></span>";
+            html += "<span class='name'><a ng-show='" + file.url + "' href='" + file.url + "' target='_jobfile'>" + iconHtml + ' ' + fname + "</a></span>";
             html += "</div>";
 
             return html;
@@ -22,7 +35,7 @@
 
         function getJobNodeHtml(jobtype, jobid){
             var html = "<div>";
-            html += "<span class='status'></span><span class='job-name'>" + jobtype.name + ":" + jobid + "</span>";
+            html += "<span class='status'></span><span class='job-name'><a href='#/jobs/job/" + jobid + "'>" + jobtype.name + "</a></span>";
             html += "</div>";
 
             return html;
@@ -62,9 +75,9 @@
                     label: html,
                     rx: 10,
                     ry: 10,
-                    padding: 10
-                    //width: 150,
-                    //height: 50
+                    padding: 10,
+                    width: 250,
+                    height: 20
                 });
 
                 // Products
@@ -77,9 +90,9 @@
                         label: jobNodeHtml,
                         rx: 10,
                         ry: 10,
-                        padding: 10
-                        //width: 150,
-                        //height: 50
+                        padding: 10,
+                        width: 200,
+                        height: 20
                     });
                     g.setEdge('file-'+vm.source.id, 'job-'+prod.job.id, {
                         //labelType: "html",
@@ -94,9 +107,9 @@
                         label: html,
                         rx: 10,
                         ry: 10,
-                        padding: 10
-                        //width: 150,
-                        //height: 50
+                        padding: 10,
+                        width: 250,
+                        height: 20
                     });
                     g.setEdge('job-'+prod.job.id, 'file-'+prod.id, {
                         //labelType: "html",

@@ -4,13 +4,13 @@
         "id": 1,
         "name": "Raw Source"
     },
-    "file_name": "my_super_long_file_name_should_fit.kml",
+    "file_name": "20160719-1201z-500-google-earth-vector.kml",
     "media_type": "application/vnd.google-earth.kml+xml",
     "file_size": 100,
     "data_type": ["landsat"],
     "is_deleted": false,
     "uuid": "c8928d9183fc99122948e7840ec9a0fd",
-    "url": "http://host.com/file/path/my_file.kml",
+    "url": "http://fake.host/file/path/my_file.kml",
     "created": "1970-01-01T00:00:00Z",
     "deleted": null,
     "data_started": null,
@@ -52,13 +52,13 @@
                 "id": 2,
                 "name": "Products"
             },
-            "file_name": "my_file.png",
+            "file_name": "20160719-1201z-500-google-earth-raster.png",
             "media_type": "image/png",
             "file_size": 50,
             "data_type": [],
             "is_deleted": false,
             "uuid": "03696f8c30b1757c9108fb9a7d67924f",
-            "url": "http://host.com/file/path/my_file.png",
+            "url": "http://fake.host/file/path/20160719-1201z-500-google-earth-raster.png",
             "created": "1970-01-01T00:00:00Z",
             "deleted": null,
             "data_started": "1970-01-01T00:00:00Z",
@@ -101,13 +101,13 @@
                 "id": 2,
                 "name": "Products"
             },
-            "file_name": "my_super_long_product_filename_2.png",
+            "file_name": "my_super_long_product_filename_3.png",
             "media_type": "image/png",
             "file_size": 50,
             "data_type": [],
             "is_deleted": false,
             "uuid": "03696f8c30b1757c9108fb9a7d67924f",
-            "url": "http://host.com/file/path/my_file.png",
+            "url": "http://fake.host/file/path/my_file.png",
             "created": "1970-01-01T00:00:00Z",
             "deleted": null,
             "data_started": "1970-01-01T00:00:00Z",
@@ -122,10 +122,10 @@
             "published": "1970-01-01T00:00:00Z",
             "unpublished": null,
             "job_type": {
-                "id": 6,
-                "name": "kml-parse",
+                "id": 7,
+                "name": "png-parse",
                 "version": "1.0.0",
-                "title": "KML Parse",
+                "title": "PNG Parse",
                 "description": "Parse KML into a PNG image",
                 "category": null,
                 "author_name": null,
@@ -138,10 +138,10 @@
                 "icon_code": null
             },
             "job": {
-                "id": 6
+                "id": 7
             },
             "job_exe": {
-                "id": 6
+                "id": 7
             }
         },
         {
@@ -150,13 +150,13 @@
                 "id": 2,
                 "name": "Products"
             },
-            "file_name": "my_super_long_product_filename_2.png",
+            "file_name": "my_super_long_product_filename_4.png",
             "media_type": "image/png",
             "file_size": 50,
             "data_type": [],
             "is_deleted": false,
             "uuid": "03696f8c30b1757c9108fb9a7d67924f",
-            "url": "http://host.com/file/path/my_file.png",
+            "url": "http://fake.host/file/path/my_file.png",
             "created": "1970-01-01T00:00:00Z",
             "deleted": null,
             "data_started": "1970-01-01T00:00:00Z",
@@ -199,13 +199,13 @@
                 "id": 2,
                 "name": "Products"
             },
-            "file_name": "my_super_long_product_filename_2.png",
+            "file_name": "my_super_long_product_filename_5.png",
             "media_type": "image/png",
             "file_size": 50,
             "data_type": [],
             "is_deleted": false,
             "uuid": "03696f8c30b1757c9108fb9a7d67924f",
-            "url": "http://host.com/file/path/my_file.png",
+            "url": "http://fake.host/file/path/my_file.png",
             "created": "1970-01-01T00:00:00Z",
             "deleted": null,
             "data_started": "1970-01-01T00:00:00Z",
@@ -248,13 +248,13 @@
                 "id": 2,
                 "name": "Products"
             },
-            "file_name": "my_super_long_product_filename_2.png",
+            "file_name": "kml-to-png-output.png",
             "media_type": "image/png",
             "file_size": 50,
             "data_type": [],
             "is_deleted": false,
             "uuid": "03696f8c30b1757c9108fb9a7d67924f",
-            "url": "http://host.com/file/path/my_file.png",
+            "url": "http://fake.host/file/path/my_file.png",
             "created": "1970-01-01T00:00:00Z",
             "deleted": null,
             "data_started": "1970-01-01T00:00:00Z",
