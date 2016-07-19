@@ -20,9 +20,10 @@ class JobTask(Task):
 
         super(JobTask, self).__init__('%i_job' % job_exe.id, job_exe)
 
+        self._is_system = job_exe.job.job_type.is_system
         self._uses_docker = job_exe.uses_docker()
         if self._uses_docker:
-            if job_exe.job.job_type.is_system:
+            if self._is_system:
                 self._docker_image = self.create_scale_image_name()
             else:
                 self._docker_image = job_exe.get_docker_image()
@@ -59,7 +60,8 @@ class JobTask(Task):
 
         if not error and self.is_running:
             # If the task successfully started, use job's error mapping here to determine error
-            error = self._error_mapping.get_error(task_results.exit_code)
+            default_error_name = 'unknown' if self._is_system else 'algorithm-unknown'
+            error = self._error_mapping.get_error(task_results.exit_code, default_error_name)
         if not error:
             error = self.consider_general_error(task_results)
 
