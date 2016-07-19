@@ -109,7 +109,7 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
+    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, error_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -117,8 +117,8 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query jobs with the a specific execution status.
-        :type status: string
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
         :type job_ids: [int]
         :param job_type_ids: Query jobs of the type associated with the identifier.
@@ -145,8 +145,8 @@ class JobManager(models.Manager):
         if ended:
             jobs = jobs.filter(last_modified__lte=ended)
 
-        if status:
-            jobs = jobs.filter(status=status)
+        if statuses:
+            jobs = jobs.filter(status__in=statuses)
         if job_ids:
             jobs = jobs.filter(id__in=job_ids)
         if job_type_ids:
@@ -223,7 +223,7 @@ class JobManager(models.Manager):
         job.products = output_files
         return job
 
-    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None,
+    def get_job_updates(self, started=None, ended=None, statuses=None, job_type_ids=None,
                         job_type_names=None, job_type_categories=None, order=None):
         """Returns a list of jobs that changed status within the given time range.
 
@@ -231,8 +231,8 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query jobs with the a specific execution status.
-        :type status: string
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
         :param job_type_ids: Query jobs of the type associated with the identifier.
         :type job_type_ids: [int]
         :param job_type_categories: Query jobs of the type associated with the category.
@@ -246,7 +246,7 @@ class JobManager(models.Manager):
         """
         if not order:
             order = ['last_status_change']
-        return self.get_jobs(started=started, ended=ended, status=status, job_type_ids=job_type_ids,
+        return self.get_jobs(started=started, ended=ended, statuses=statuses, job_type_ids=job_type_ids,
                              job_type_names=job_type_names, job_type_categories=job_type_categories, order=order)
 
     def get_locked_job(self, job_id):
@@ -781,7 +781,7 @@ class JobExecutionManager(models.Manager):
         # Update job model
         Job.objects.complete_job(job_exe.job, when, JobResults(job_exe.results))
 
-    def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
+    def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -789,8 +789,8 @@ class JobExecutionManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job executions updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query job executions with the a specific status.
-        :type status: string
+        :param statuses: Query job executions with the a specific status.
+        :type statuses: [string]
         :param job_type_ids: Query job executions of the type associated with the identifier.
         :type job_type_ids: [int]
         :param job_type_names: Query job executions of the type associated with the name.
@@ -815,8 +815,8 @@ class JobExecutionManager(models.Manager):
         if ended:
             job_exes = job_exes.filter(last_modified__lte=ended)
 
-        if status:
-            job_exes = job_exes.filter(status=status)
+        if statuses:
+            job_exes = job_exes.filter(status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job__job_type_id__in=job_type_ids)
         if job_type_names:
