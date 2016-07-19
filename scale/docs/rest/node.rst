@@ -69,7 +69,7 @@ These services provide access to information about the nodes.
 | .is_paused         | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
+| .is_paused_errors  | Boolean           | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_active         | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -139,7 +139,7 @@ These services provide access to information about the nodes.
 | is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
+| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -167,7 +167,7 @@ These services provide access to information about the nodes.
 | ..cpus             | Float             | The scheduled number of CPUs at this node                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..mem              | Float             | The scheduled amount of RAM in MiB at this node                                |
-+--------------------------+-------------+--------------------------------------------------------------------------------+
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..disk             | Float             | The scheduled amount of disk space in MiB at this node                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .used              | JSON Object       | The used hardware resources for all nodes in the cluster                       |
@@ -335,7 +335,7 @@ These services provide access to information about the nodes.
 | is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
+| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -401,7 +401,7 @@ These services provide access to information about the nodes.
 | is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .is_paused_errors  |                   | True if the node was automatically paused due to a high error rate.            |
+| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
