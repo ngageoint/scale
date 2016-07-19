@@ -27,7 +27,9 @@
             var iconHtml = scaleService.getMediaTypeHtml(file.media_type);
             var fname = formatFileName(file.file_name);
             var html = "<div class='graph'>";
-            html += "<span class='name'><a ng-show='" + file.url + "' href='" + file.url + "' target='_jobfile'>" + iconHtml + ' ' + fname + "</a></span>";
+            html += "<span class='name' title='" + file.file_name + "'>";
+            html += "<a ng-show='" + file.url + "' href='" + file.url + "' target='_jobfile'>" + iconHtml + " " + fname + "</a>";
+            html += "</span>";
             html += "</div>";
 
             return html;
