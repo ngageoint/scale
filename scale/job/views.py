@@ -19,7 +19,7 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.exceptions import InvalidJobField
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
-                             JobTypeFailedStatusSerializer, JobTypeSerializer,
+                             JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
                              JobExecutionDetailsSerializer, JobExecutionLogSerializer)
@@ -331,6 +331,29 @@ class JobTypesValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
+
+
+class JobTypesPendingView(ListAPIView):
+    """This view is the endpoint for retrieving the status of all currently pending job types."""
+    queryset = JobType.objects.all()
+    serializer_class = JobTypePendingStatusSerializer
+
+    def list(self, request):
+        """Retrieves the current status of pending job types and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        # Get all the pending job types with statistics
+        pending_status = JobType.objects.get_pending_status()
+
+        # Wrap the response with paging information
+        page = self.paginate_queryset(pending_status)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class JobTypesRunningView(ListAPIView):
