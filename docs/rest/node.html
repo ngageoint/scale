@@ -278,7 +278,7 @@ field for presentation to the user.</td>
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
 <tr class="row-odd"><td>.is_paused_errors</td>
-<td>&nbsp;</td>
+<td>Boolean</td>
 <td colspan="2">True if the node was automatically paused due to a high error rate.</td>
 </tr>
 <tr class="row-even"><td>.is_active</td>
@@ -331,147 +331,148 @@ Remaining tasks for a previously executing job will complete.</td>
 <table border="1" class="docutils" id="rest-node-details">
 <colgroup>
 <col width="17%" />
-<col width="4%" />
-<col width="11%" />
-<col width="68%" />
+<col width="16%" />
+<col width="67%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Node Details</strong></th>
+<tr class="row-odd"><th class="head" colspan="3"><strong>Node Details</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a specific job and all its related model information including resource usage.</td>
+<tr class="row-even"><td colspan="3">Returns a specific job and all its related model information including resource usage.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /nodes/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
+<td colspan="2">200 OK</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
 <tr class="row-even"><td>id</td>
-<td colspan="2">Integer</td>
+<td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>hostname</td>
-<td colspan="2">String</td>
+<td>String</td>
 <td>The full domain-qualified hostname of the node.</td>
 </tr>
 <tr class="row-even"><td>port</td>
-<td colspan="2">Integer</td>
+<td>Integer</td>
 <td>The port being used by the executor on this node.</td>
 </tr>
 <tr class="row-odd"><td>slave_id</td>
-<td colspan="2">String</td>
+<td>String</td>
 <td>The slave ID used by Mesos for the node.</td>
 </tr>
 <tr class="row-even"><td>pause_reason</td>
-<td colspan="2">String</td>
+<td>String</td>
 <td>The reason this node is paused if is_paused is true. This is a descriptive
 field for presentation to the user.</td>
 </tr>
 <tr class="row-odd"><td>is_paused</td>
-<td colspan="2">Boolean</td>
+<td>Boolean</td>
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-even"><td>.is_paused_errors</td>
-<td colspan="2">&nbsp;</td>
+<tr class="row-even"><td>is_paused_errors</td>
+<td>Boolean</td>
 <td>True if the node was automatically paused due to a high error rate.</td>
 </tr>
 <tr class="row-odd"><td>is_active</td>
-<td colspan="2">Boolean</td>
+<td>Boolean</td>
 <td>True if the node is actively participating in the cluster.</td>
 </tr>
 <tr class="row-even"><td>archived</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<td>ISO-8601 Datetime</td>
 <td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
 </tr>
 <tr class="row-odd"><td>created</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
 <tr class="row-even"><td>last_offer</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<td>ISO-8601 Datetime</td>
 <td>When the node last received an offer from Mesos.</td>
 </tr>
 <tr class="row-odd"><td>last_modified</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
 <tr class="row-even"><td>resources</td>
-<td colspan="2">JSON Object</td>
+<td>JSON Object</td>
 <td>(Optional) Information about the hardware resources of the node
 NOTE: Resource information may not always be available</td>
 </tr>
 <tr class="row-odd"><td>.total</td>
-<td colspan="2">JSON Object</td>
+<td>JSON Object</td>
 <td>The total hardware resources for the node</td>
 </tr>
 <tr class="row-even"><td>..cpus</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The total number of CPUs at this node</td>
 </tr>
 <tr class="row-odd"><td>..mem</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The total amount of RAM in MiB at this node</td>
 </tr>
 <tr class="row-even"><td>..disk</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The total amount of disk space in MiB at this node</td>
 </tr>
 <tr class="row-odd"><td>.scheduled</td>
-<td colspan="2">JSON Object</td>
+<td>JSON Object</td>
 <td>The scheduled hardware resources for the node</td>
 </tr>
 <tr class="row-even"><td>..cpus</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The scheduled number of CPUs at this node</td>
 </tr>
-<tr class="row-odd"><td colspan="3">..mem              | Float</td>
+<tr class="row-odd"><td>..mem</td>
+<td>Float</td>
 <td>The scheduled amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-even"><td colspan="3">..disk             | Float</td>
+<tr class="row-even"><td>..disk</td>
+<td>Float</td>
 <td>The scheduled amount of disk space in MiB at this node</td>
 </tr>
 <tr class="row-odd"><td>.used</td>
-<td colspan="2">JSON Object</td>
+<td>JSON Object</td>
 <td>The used hardware resources for all nodes in the cluster
 NOTE: Real-time resource usage is not currently available and will be all zero</td>
 </tr>
 <tr class="row-even"><td>..cpus</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The used number of CPUs at this node</td>
 </tr>
 <tr class="row-odd"><td>..mem</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The used amount of RAM in MiB at this node</td>
 </tr>
 <tr class="row-even"><td>..disk</td>
-<td colspan="2">Float</td>
+<td>Float</td>
 <td>The used amount of disk space in MiB at this node</td>
 </tr>
 <tr class="row-odd"><td>disconnected</td>
-<td colspan="2">Boolean</td>
+<td>Boolean</td>
 <td>(Optional) If present and true, there is an active Node entry in the scale
 database but mesos does not have a corresponding active slave.</td>
 </tr>
 <tr class="row-even"><td>.job_exes_running</td>
-<td colspan="2">Array</td>
+<td>Array</td>
 <td>A list of job executions currently running on the node.
 (See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;host.com&quot;</span><span class="p">,</span>
     <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">5051</span><span class="p">,</span>
@@ -565,15 +566,15 @@ database but mesos does not have a corresponding active slave.</td>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Error Responses</strong></td>
+<tr class="row-even"><td colspan="3"><strong>Error Responses</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">404 NOT FOUND</td>
+<td colspan="2">404 NOT FOUND</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>text/plain</em></td>
+<td colspan="2"><em>text/plain</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4">The specified slave_id does not exist in the database.</td>
+<tr class="row-odd"><td colspan="3">The specified slave_id does not exist in the database.</td>
 </tr>
 </tbody>
 </table>
@@ -658,8 +659,8 @@ field for presentation to the user.</td>
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-odd"><td>.is_paused_errors</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td>is_paused_errors</td>
+<td>Boolean</td>
 <td>True if the node was automatically paused due to a high error rate.</td>
 </tr>
 <tr class="row-even"><td>created</td>
@@ -766,8 +767,8 @@ for execution. Remaining tasks for a previously executing job will complete.</td
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-even"><td>.is_paused_errors</td>
-<td>&nbsp;</td>
+<tr class="row-even"><td>is_paused_errors</td>
+<td>Boolean</td>
 <td>True if the node was automatically paused due to a high error rate.</td>
 </tr>
 <tr class="row-odd"><td>created</td>

@@ -1366,7 +1366,7 @@ job execution and job models (in that order).</p>
 
 <dl class="method">
 <dt id="job.models.JobExecutionManager.get_exes">
-<code class="descname">get_exes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>status=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>node_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_exes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_exes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>node_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of jobs within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1375,7 +1375,7 @@ job execution and job models (in that order).</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
-<li><strong>status</strong> (<em>string</em>) &#8211; Query job executions with the a specific status.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query job executions with the a specific status.</li>
 <li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query job executions of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query job executions of the type associated with the name.</li>
 <li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query job executions of the type associated with the category.</li>
@@ -1715,7 +1715,7 @@ returned job model will have not yet been saved in the database.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.get_job_updates">
-<code class="descname">get_job_updates</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>status=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_job_updates" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_updates</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_job_updates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of jobs that changed status within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1724,7 +1724,7 @@ returned job model will have not yet been saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>status</strong> (<em>string</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query jobs with the a specific execution status.</li>
 <li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
 <li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
@@ -1744,7 +1744,7 @@ returned job model will have not yet been saved in the database.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.get_jobs">
-<code class="descname">get_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>status=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of jobs within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1753,7 +1753,7 @@ returned job model will have not yet been saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>status</strong> (<em>string</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query jobs with the a specific execution status.</li>
 <li><strong>job_ids</strong> (<em>[int]</em>) &#8211; Query jobs associated with the identifier.</li>
 <li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
