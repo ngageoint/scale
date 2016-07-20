@@ -565,7 +565,7 @@ spaces.</p>
 
 <dl class="method">
 <dt id="ingest.models.IngestManager.get_ingests">
-<code class="descname">get_ingests</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>status=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_ingests" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_ingests</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>strike_ids=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_ingests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of ingests within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -574,7 +574,8 @@ spaces.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
-<li><strong>status</strong> (<em>string</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>strike_ids</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with the a specific file name.</li>
 <li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>

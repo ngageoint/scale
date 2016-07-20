@@ -2360,6 +2360,24 @@ count of associated jobs and the last status change of a running job.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobTypeManager.get_pending_status">
+<code class="descname">get_pending_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_pending_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a status overview of all currently pending job types.</p>
+<p>The results consist of standard job type models, plus additional computed statistics fields including a total
+count of associated jobs and the longest pending job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of each job type with additional statistic fields.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.models.JobTypePendingStatus" title="job.models.JobTypePendingStatus"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypePendingStatus</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobTypeManager.get_performance">
 <code class="descname">get_performance</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>started</em>, <em>ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_performance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job count statistics for a given job type and time range.</p>
@@ -2464,6 +2482,26 @@ count of associated jobs and the longest running job.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="job.models.JobTypePendingStatus">
+<em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">JobTypePendingStatus</code><span class="sig-paren">(</span><em>job_type</em>, <em>count=0</em>, <em>longest_pending=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypePendingStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents job type pending statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type being counted.</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of job executions pending for the associated job type.</li>
+<li><strong>longest_pending</strong> (<em>datetime.datetime</em>) &#8211; The date/time of the last job execution for the associated job type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -2956,6 +2994,13 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="class">
+<dt id="job.serializers.JobTypePendingStatusSerializer">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypePendingStatusSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypePendingStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts job type pending status model and extra statistic fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="job.serializers.JobTypeRevisionBaseSerializer">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeRevisionBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeRevisionBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -3273,6 +3318,42 @@ populated for types of ERROR status values.</li>
 <dt id="job.views.JobTypeDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobTypeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobTypeDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.views.JobTypesPendingView">
+<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobTypesPendingView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesPendingView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>This view is the endpoint for retrieving the status of all currently pending job types.</p>
+<dl class="method">
+<dt id="job.views.JobTypesPendingView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesPendingView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the current status of pending job types and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobTypesPendingView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#job.views.JobTypesPendingView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobTypesPendingView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobTypesPendingView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobTypePendingStatusSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
