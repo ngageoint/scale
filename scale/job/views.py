@@ -422,7 +422,7 @@ class JobsView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
@@ -431,7 +431,7 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
+        jobs = Job.objects.get_jobs(started, ended, job_statuses, job_ids, job_type_ids, job_type_names,
                                     job_type_categories, error_categories, order)
 
         page = self.paginate_queryset(jobs)
@@ -509,14 +509,14 @@ class JobUpdatesView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_job_updates(started, ended, job_status, job_type_ids, job_type_names,
+        jobs = Job.objects.get_job_updates(started, ended, job_statuses, job_type_ids, job_type_names,
                                            job_type_categories, order)
 
         page = self.paginate_queryset(jobs)
@@ -542,7 +542,7 @@ class JobsWithExecutionView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
@@ -551,7 +551,7 @@ class JobsWithExecutionView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs(started, ended, job_status, job_ids, job_type_ids, job_type_names,
+        jobs = Job.objects.get_jobs(started, ended, job_statuses, job_ids, job_type_ids, job_type_names,
                                     job_type_categories, error_categories, order)
 
         # Add the latest execution for each matching job
@@ -580,7 +580,7 @@ class JobExecutionsView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
@@ -589,7 +589,7 @@ class JobExecutionsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        job_exes = JobExecution.objects.get_exes(started, ended, job_status, job_type_ids, job_type_names,
+        job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, job_type_names,
                                                  job_type_categories, node_ids, order)
 
         page = self.paginate_queryset(job_exes)
