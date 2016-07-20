@@ -220,18 +220,24 @@
 
 <dl class="method">
 <dt id="job.configuration.interface.error_interface.ErrorInterface.get_error">
-<code class="descname">get_error</code><span class="sig-paren">(</span><em>exit_code=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method retrieves the error that maps to the given exit code. If the exit code is non-zero (success) None
-is returned. For a failure exit code with no mapping, a general algorithm error is returned.</p>
+<code class="descname">get_error</code><span class="sig-paren">(</span><em>exit_code=None</em>, <em>default_error_name=u'algorithm-unknown'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method retrieves the error that maps to the given exit code. If the exit code is zero (success) None is
+returned. For a failure exit code with no mapping, the given default error is returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exit_code</strong> (<em>int</em>) &#8211; The exit code from a task</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>exit_code</strong> (<em>int</em>) &#8211; The exit code from a task</li>
+<li><strong>default_error_name</strong> (<em>string</em>) &#8211; The name of the error to use if no mapping exists for the exit code.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error model mapped to the given exit code, possibly None</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The error model mapped to the given exit code, possibly None</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -247,7 +253,7 @@ is returned. For a failure exit code with no mapping, a general algorithm error 
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of error names</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[string]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string}</td>
 </tr>
 </tbody>
 </table>
@@ -263,7 +269,7 @@ is returned. For a failure exit code with no mapping, a general algorithm error 
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
 </tr>
 </tbody>
 </table>

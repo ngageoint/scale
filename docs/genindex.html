@@ -2528,8 +2528,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_type">get_metrics_type() (in module metrics.registry)</a>
   </dt>
@@ -2552,6 +2550,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_types">get_metrics_types() (in module metrics.registry)</a>
   </dt>
@@ -2796,6 +2796,10 @@
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.get_pending_jobs">get_pending_jobs() (recipe.handlers.handler.RecipeHandler method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.get_pending_status">get_pending_status() (job.models.JobTypeManager method)</a>
   </dt>
 
       
@@ -4438,12 +4442,12 @@
   <dt><a href="architecture/django/code_docs/job.html#module-job.urls">job.urls (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#module-job.views">job.views (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.job_exe">job_exe (product.models.FileAncestryLink attribute)</a>
   </dt>
@@ -4835,6 +4839,14 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypePendingStatus">JobTypePendingStatus (class in job.models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.serializers.JobTypePendingStatusSerializer">JobTypePendingStatusSerializer (class in job.serializers)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision">JobTypeRevision (class in job.models)</a>
   </dt>
 
@@ -4872,6 +4884,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializer">JobTypeSerializer (class in job.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView">JobTypesPendingView (class in job.views)</a>
   </dt>
 
       
@@ -5023,6 +5039,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.html#job.views.JobExecutionsView.list">(job.views.JobExecutionsView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView.list">(job.views.JobTypesPendingView method)</a>
   </dt>
 
         
@@ -7352,6 +7372,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView.queryset">(job.views.JobTypesPendingView attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesRunningView.queryset">(job.views.JobTypesRunningView attribute)</a>
   </dt>
 
@@ -8796,6 +8820,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView.serializer_class">(job.views.JobTypesPendingView attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesRunningView.serializer_class">(job.views.JobTypesRunningView attribute)</a>
   </dt>
 
@@ -9195,6 +9223,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.setUp">(job.test.test_views.TestJobTypeDetailsView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPendingView.setUp">(job.test.test_views.TestJobTypesPendingView method)</a>
   </dt>
 
         
@@ -11557,6 +11589,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing_default">test_get_error_missing_default() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names">test_get_error_names() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
   </dt>
 
@@ -13774,6 +13810,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPendingView.test_successful">(job.test.test_views.TestJobTypesPendingView method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesRunningView.test_successful">(job.test.test_views.TestJobTypesRunningView method)</a>
   </dt>
 
@@ -14836,6 +14876,10 @@
 
       
   <dt><a href="architecture/django/code_docs/shared_resource.test.html#shared_resource.test.test_models.SharedResourceManagerTest.testJobTypesForSpecialAccessNode">testJobTypesForSpecialAccessNode() (shared_resource.test.test_models.SharedResourceManagerTest method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesPendingView">TestJobTypesPendingView (class in job.test.test_views)</a>
   </dt>
 
       
