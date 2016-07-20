@@ -1567,6 +1567,22 @@ class JobTypeStatus(object):
         self.job_counts = job_counts
 
 
+class JobTypePendingStatus(object):
+    """Represents job type pending statistics.
+
+    :keyword job_type: The job type being counted.
+    :type job_type: :class:`job.models.JobType`
+    :keyword count: The number of job executions pending for the associated job type.
+    :type count: int
+    :keyword longest_pending: The date/time of the last job execution for the associated job type.
+    :type longest_pending: datetime.datetime
+    """
+    def __init__(self, job_type, count=0, longest_pending=None):
+        self.job_type = job_type
+        self.count = count
+        self.longest_pending = longest_pending
+
+
 class JobTypeRunningStatus(object):
     """Represents job type running statistics.
 
@@ -1907,6 +1923,34 @@ class JobTypeManager(models.Manager):
             status.job_counts.append(counts)
 
         return [status_dict[job_type.id] for job_type in job_types]
+
+    def get_pending_status(self):
+        """Returns a status overview of all currently pending job types.
+
+        The results consist of standard job type models, plus additional computed statistics fields including a total
+        count of associated jobs and the longest pending job.
+
+        :returns: The list of each job type with additional statistic fields.
+        :rtype: [:class:`job.models.JobTypePendingStatus`]
+        """
+
+        # Fetch a count of all pending jobs with type information
+        # We have to specify values to workaround the JSON fields throwing an error when used with annotate
+        job_dicts = Job.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
+        job_dicts = job_dicts.filter(status='PENDING')
+        job_dicts = job_dicts.annotate(count=models.Count('job_type'),
+                                       longest_pending=models.Min('last_status_change'))
+        job_dicts = job_dicts.order_by('longest_pending')
+
+        # Convert each result to a real job type model with added statistics
+        results = []
+        for job_dict in job_dicts:
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
+            job_type = JobType(**job_type_dict)
+
+            status = JobTypePendingStatus(job_type, job_dict['count'], job_dict['longest_pending'])
+            results.append(status)
+        return results
 
     def get_running_status(self):
         """Returns a status overview of all currently running job types.

@@ -1310,6 +1310,27 @@ class TestJobTypesStatusView(TestCase):
                 self.fail('Found unexpected job type count status: %s' % entry['status'])
 
 
+class TestJobTypesPendingView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job = job_test_utils.create_job(status='PENDING')
+
+    def test_successful(self):
+        """Tests successfully calling the pending status view."""
+
+        url = '/job-types/pending/'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
+        self.assertEqual(result['results'][0]['count'], 1)
+        self.assertIsNotNone(result['results'][0]['longest_pending'])
+
+
 class TestJobTypesRunningView(TestCase):
 
     def setUp(self):
@@ -1328,6 +1349,7 @@ class TestJobTypesRunningView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job.job_type.name)
         self.assertEqual(result['results'][0]['count'], 1)
+        self.assertIsNotNone(result['results'][0]['longest_running'])
 
 
 class TestJobTypesSystemFailuresView(TestCase):
