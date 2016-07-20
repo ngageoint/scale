@@ -68,8 +68,8 @@ class ErrorInterface(object):
         return self.definition
 
     def get_error(self, exit_code=None, default_error_name='algorithm-unknown'):
-        """This method retrieves the error that maps to the given exit code. If the exit code is non-zero (success) None
-        is returned. For a failure exit code with no mapping, a general algorithm error is returned.
+        """This method retrieves the error that maps to the given exit code. If the exit code is zero (success) None is
+        returned. For a failure exit code with no mapping, the given default error is returned.
 
         :param exit_code: The exit code from a task
         :type exit_code: int
