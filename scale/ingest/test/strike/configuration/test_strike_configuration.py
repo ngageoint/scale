@@ -8,6 +8,7 @@ from django.test import TestCase
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from storage.models import Workspace
 
 
 class TestStrikeConfiguration(TestCase):
@@ -211,3 +212,47 @@ class TestStrikeConfiguration(TestCase):
 
         # No exception is success
         StrikeConfiguration(config).validate()
+
+    def test_conversion_from_1_0(self):
+        """Tests calling StrikeConfiguration.validate() after converting from schema version 1.0"""
+
+        old_config = {
+            'version': '1.0',
+            'transfer_suffix': '_tmp',
+            'mount': 'host:/my/path',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'workspace_path': os.path.join('my', 'path'),
+                'workspace_name': self.new_workspace.name,
+            }],
+        }
+
+        strike_config = StrikeConfiguration(old_config)
+        strike_config.validate()
+
+        auto_workspace = Workspace.objects.get(name__contains='auto')
+        new_config = {
+            'version': '2.0',
+            'workspace': auto_workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.new_workspace.name,
+            }]
+        }
+        self.assertDictEqual(strike_config._configuration, new_config)
+
+        auto_workspace_config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'host',
+                'host_path': '/my/path'
+            }
+        }
+        self.assertDictEqual(auto_workspace.json_config, auto_workspace_config)
