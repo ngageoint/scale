@@ -110,7 +110,6 @@ class Command(BaseCommand):
 
         try:
             status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
-
         except:
             status = 1
             logger.exception('Mesos Scheduler Driver returned an exception')
