@@ -49,7 +49,10 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
     if not description:
         description = 'Test description'
     if not configuration:
-        configuration = {'version': '1.0'}
+        workspace = storage_test_utils.create_workspace()
+        configuration = {'version': '1.0', 'mount': 'host:/my/path', 'transfer_suffix': '_tmp',
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
+                                              'workspace_path': 'wksp/path'}]}
     if not job:
         job = job_utils.create_job()
 

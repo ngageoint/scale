@@ -95,7 +95,6 @@ class ValidationWarning(object):
         self.details = details
 
 
-# TODO: unit tests, make sure to include 1.0 -> 2.0 conversions
 class StrikeConfiguration(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to

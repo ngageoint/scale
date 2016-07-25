@@ -406,7 +406,7 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], self.strike.configuration)
+        self.assertDictEqual(result['configuration'], StrikeConfiguration(self.strike.configuration).get_dict())
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertEqual(strike.title, 'Title EDIT')

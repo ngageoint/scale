@@ -570,6 +570,15 @@ class Strike(models.Model):
 
         return StrikeConfiguration(self.configuration)
 
+    def get_strike_configuration_as_dict(self):
+        """Returns the configuration for this Strike process as a dict
+
+        :returns: The configuration for this Strike process
+        :rtype: dict
+        """
+
+        return self.get_strike_configuration().get_dict()
+
     class Meta(object):
         """meta information for database"""
         db_table = 'strike'
