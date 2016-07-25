@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 import signal
 import sys
+import traceback
 from optparse import make_option
 
 from django.conf import settings
@@ -107,10 +108,16 @@ class Command(BaseCommand):
         else:
             self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master)
 
-        status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
+        try:
+            status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
 
-        # Perform any required clean up operations like stopping background threads
-        status = status or self._shutdown()
+        except:
+            status = 1
+            logger.exception('Mesos Scheduler Driver returned an exception')
+
+        #Perform a shut down and return any non-zero status
+        shutdown_status = self._shutdown
+        status = status or shutdown_status
 
         logger.info('Exiting...')
         sys.exit(status)
