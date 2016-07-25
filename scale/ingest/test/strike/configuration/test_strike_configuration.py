@@ -142,6 +142,22 @@ class TestStrikeConfiguration(TestCase):
 
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
 
+    def test_validate_mismatched_monitor_type(self):
+        """Tests calling StrikeConfiguration.validate() with a monitor type that does not match the broker type"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 's3',
+                'sqs_name': 'my-sqs',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+            }],
+        }
+
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
+
     def test_validate_bad_workspace(self):
         """Tests calling StrikeConfiguration.validate() with a bad workspace"""
 
@@ -193,4 +209,5 @@ class TestStrikeConfiguration(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
+        # No exception is success
+        StrikeConfiguration(config).validate()
