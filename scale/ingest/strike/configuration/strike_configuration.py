@@ -95,7 +95,7 @@ class ValidationWarning(object):
         self.details = details
 
 
-# TODO: unit tests
+# TODO: unit tests, make sure to include 1.0 -> 2.0 conversions
 class StrikeConfiguration(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
@@ -127,13 +127,6 @@ class StrikeConfiguration(object):
             msg = 'Invalid Strike configuration: %s is an unsupported version number'
             raise InvalidStrikeConfiguration(msg % self._configuration['version'])
 
-        # Normalize paths
-        for file_dict in self._configuration['files_to_ingest']:
-            if os.path.isabs(file_dict['new_file_path']):
-                msg = 'Invalid Strike configuration: new_file_path may not be an absolute path'
-                raise InvalidStrikeConfiguration(msg)
-            file_dict['new_file_path'] = os.path.normpath(file_dict['new_file_path'])
-
         self._file_handler = FileHandler()
         for file_dict in self._configuration['files_to_ingest']:
             try:
@@ -145,6 +138,10 @@ class StrikeConfiguration(object):
                 new_workspace = file_dict['new_workspace']
             new_file_path = None
             if 'new_file_path' in file_dict:
+                if os.path.isabs(file_dict['new_file_path']):
+                    msg = 'Invalid Strike configuration: new_file_path may not be an absolute path'
+                    raise InvalidStrikeConfiguration(msg)
+                file_dict['new_file_path'] = os.path.normpath(file_dict['new_file_path'])
                 new_file_path = file_dict['new_file_path']
             rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
             self._file_handler.add_rule(rule)
