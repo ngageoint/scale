@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 import signal
 import sys
-import traceback
+
 from optparse import make_option
 
 from django.conf import settings
