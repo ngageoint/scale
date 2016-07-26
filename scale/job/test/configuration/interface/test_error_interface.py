@@ -21,7 +21,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.error_3 = error_test_utils.create_error(name='error_3', category='ALGORITHM')
 
     def test_get_error_zero(self):
-        ''' Tests that no error is returned when the exit_code is 0'''
+        """ Tests that no error is returned when the exit_code is 0"""
 
         error_interface_dict = {
             'version': '1.0',
@@ -38,7 +38,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertIsNone(error)
 
     def test_get_error_found(self):
-        ''' Tests that an error model is returned given an exit_code other than 0'''
+        """ Tests that an error model is returned given an exit_code other than 0"""
 
         error_interface_dict = {
             'version': '1.0',
@@ -56,7 +56,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertEqual(error.name, self.error_1.name)
 
     def test_get_error_missing(self):
-        '''Tests that general algorithm error is returned when a non-registered name is found in the mapping'''
+        """Tests that general algorithm error is returned when a non-registered name is found in the mapping"""
 
         # Clear error cache so test works correctly
         CACHED_BUILTIN_ERRORS.clear()
@@ -76,8 +76,30 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertIsNotNone(error)
         self.assertEqual(error.name, 'algorithm-unknown')
 
+    def test_get_error_missing_default(self):
+        """Tests that custom error is returned when a non-registered name is found in the mapping"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        error_interface_dict = {
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error_1.name,
+                '2': self.error_2.name,
+                '3': self.error_3.name,
+            },
+        }
+
+        default_error = error_test_utils.create_error()
+        error_interface = ErrorInterface(error_interface_dict)
+        error = error_interface.get_error(4, default_error.name)
+
+        self.assertIsNotNone(error)
+        self.assertEqual(error.name, default_error.name)
+
     def test_get_error_names(self):
-        '''Tests getting error names from the mapping.'''
+        """Tests getting error names from the mapping."""
 
         error_interface_dict = {
             'version': '1.0',
@@ -93,7 +115,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertSetEqual(error_names, {self.error_1.name, self.error_2.name})
 
     def test_get_error_names_none(self):
-        '''Tests getting error names when there is no error interface.'''
+        """Tests getting error names when there is no error interface."""
 
         error_interface_dict = {}
 
@@ -103,7 +125,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertSetEqual(error_names, set())
 
     def test_get_error_names_empty(self):
-        '''Tests getting error names when there are no exit codes defined.'''
+        """Tests getting error names when there are no exit codes defined."""
 
         error_interface_dict = {
             'version': '1.0',
@@ -116,7 +138,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertSetEqual(error_names, set())
 
     def test_get_error_names_unique(self):
-        '''Tests getting error names without duplicates.'''
+        """Tests getting error names without duplicates."""
 
         error_interface_dict = {
             'version': '1.0',
@@ -133,7 +155,7 @@ class TestErrorInterfaceValidate(TestCase):
         self.assertSetEqual(error_names, {self.error_1.name, self.error_2.name})
 
     def test_validate_empty(self):
-        '''Tests validating no error names.'''
+        """Tests validating no error names."""
 
         error_interface_dict = {
             'version': '1.0',
@@ -147,7 +169,7 @@ class TestErrorInterfaceValidate(TestCase):
         error_interface.validate()
 
     def test_validate_success(self):
-        '''Tests validating all error names.'''
+        """Tests validating all error names."""
 
         error_interface_dict = {
             'version': '1.0',
@@ -164,7 +186,7 @@ class TestErrorInterfaceValidate(TestCase):
         error_interface.validate()
 
     def test_validate_missing(self):
-        '''Tests validating when some error names are missing.'''
+        """Tests validating when some error names are missing."""
 
         error_interface_dict = {
             'version': '1.0',

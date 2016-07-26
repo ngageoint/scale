@@ -1,4 +1,4 @@
-'''Defines the interface for translating a job's exit codes to error types'''
+"""Defines the interface for translating a job's exit codes to error types"""
 from __future__ import unicode_literals
 
 import logging
@@ -32,17 +32,17 @@ ERROR_INTERFACE_SCHEMA = {
 
 
 class ErrorInterface(object):
-    '''Represents the interface for translating a job's exit code to an error type'''
+    """Represents the interface for translating a job's exit code to an error type"""
 
     def __init__(self, definition):
-        '''Creates an error interface from the given definition.
+        """Creates an error interface from the given definition.
 
         If the definition is invalid, a :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`
         exception will be thrown.
 
         :param definition: The interface definition
         :type definition: dict
-        '''
+        """
         if definition is None:
             definition = {}
 
@@ -59,23 +59,25 @@ class ErrorInterface(object):
             raise InvalidInterfaceDefinition('%s is an unsupported version number' % self.definition['version'])
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this error mapping
+        """Returns the internal dictionary that represents this error mapping
 
         :returns: The internal dictionary
         :rtype: dict
-        '''
+        """
 
         return self.definition
 
-    def get_error(self, exit_code=None):
-        '''This method retrieves the error that maps to the given exit code. If the exit code is non-zero (success) None
-        is returned. For a failure exit code with no mapping, a general algorithm error is returned.
+    def get_error(self, exit_code=None, default_error_name='algorithm-unknown'):
+        """This method retrieves the error that maps to the given exit code. If the exit code is zero (success) None is
+        returned. For a failure exit code with no mapping, the given default error is returned.
 
         :param exit_code: The exit code from a task
         :type exit_code: int
+        :param default_error_name: The name of the error to use if no mapping exists for the exit code.
+        :type default_error_name: string
         :returns: The error model mapped to the given exit code, possibly None
         :rtype: :class:`error.models.Error`
-        '''
+        """
 
         error = None
         if exit_code is not None:
@@ -93,17 +95,17 @@ class ErrorInterface(object):
                     error = self._lookup_error(error_name)
 
             if not error:
-                # No exit code match, so return general algorithm error
-                error = Error.objects.get_builtin_error('algorithm-unknown')
+                # No exit code match, so return the given default error
+                error = Error.objects.get_builtin_error(default_error_name)
 
         return error
 
     def get_error_names(self):
-        '''Returns a set of all error names for this interface
+        """Returns a set of all error names for this interface
 
         :returns: Set of error names
-        :rtype: set[string]
-        '''
+        :rtype: {string}
+        """
         if 'exit_codes' not in self.definition:
             return set()
 
@@ -111,13 +113,13 @@ class ErrorInterface(object):
         return {error_name for error_name in codes.itervalues()}
 
     def validate(self):
-        '''Validates the error mappings to ensure that all referenced errors actually exist.
+        """Validates the error mappings to ensure that all referenced errors actually exist.
 
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`: If there is a missing error.
-        '''
+        """
         error_names = self.get_error_names()
         error_map = {error.name: error for error in Error.objects.filter(name__in=error_names)}
 
@@ -127,13 +129,13 @@ class ErrorInterface(object):
         return []
 
     def _lookup_error(self, name):
-        '''This method looks up error by name
+        """This method looks up error by name
 
         :param name: The name of the error to retrieve
         :type name: string
         :return: The error model with the given name.
         :rtype: :class:`error.models.Error`
-        '''
+        """
         try:
             return Error.objects.get_builtin_error(name)
         except Error.DoesNotExist:
@@ -141,7 +143,7 @@ class ErrorInterface(object):
             return None
 
     def _populate_default_values(self):
-        '''Goes through the definition and fills in any missing default values'''
+        """Goes through the definition and fills in any missing default values"""
         if 'version' not in self.definition:
             self.definition['version'] = '1.0'
         if 'exit_codes' not in self.definition:

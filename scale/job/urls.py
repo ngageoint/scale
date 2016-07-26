@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful job services'''
+"""Defines the URLs for the RESTful job services"""
 from django.conf.urls import patterns, url
 
 import job.views as views
@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'^job-types/(\d+)/$', views.JobTypeDetailsView.as_view(), name='job_type_details_view'),
     url(r'^job-types/validation/$', views.JobTypesValidationView.as_view(), name='job_types_validation_view'),
     url(r'^job-types/status/$', views.JobTypesStatusView.as_view(), name='job_types_status_view'),
+    url(r'^job-types/pending/$', views.JobTypesPendingView.as_view(), name='job_types_pending_view'),
     url(r'^job-types/running/$', views.JobTypesRunningView.as_view(), name='job_types_running_view'),
     url(r'^job-types/system-failures/$', views.JobTypesSystemFailuresView.as_view(),
         name='job_types_system_failures_view'),
