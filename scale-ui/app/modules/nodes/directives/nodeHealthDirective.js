@@ -1,7 +1,7 @@
 (function (){
     'use strict';
 
-    angular.module('scaleApp').controller('aisNodeHealthController', function ($rootScope, $scope, nodeService) {
+    angular.module('scaleApp').controller('aisNodeHealthController', function ($rootScope, $scope) {
         var vm = this;
         
         vm.nodes = [];
@@ -113,7 +113,8 @@
              scope: {
                  data: '=',
                  duration: '=',
-                 showDescription: '='
+                 showDescription: '=',
+                 loading: '='
              }
          };
     });

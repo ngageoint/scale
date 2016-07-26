@@ -1,7 +1,6 @@
 <ais-header name="'Nodes'" loading="vm.loading"></ais-header>
 <div class="row">
     <div class="col-xs-9">
-        <ais-node-status-grid data="vm.gridOptions.data" cell-size="10px"></ais-node-status-grid>
         <div class="clearfix margin-bottom-md"></div>
         <div class="row">
             <div class="col-xs-12">
@@ -13,7 +12,13 @@
         </div>
     </div>
     <div class="col-xs-3 text-center">
-        <h3 class="no-margin">Node Health</h3>
-        <ais-node-health data="vm.gridOptions.data" duration="'PT3H'" show-description="true"></ais-node-health>
+        <div class="node-health-container">
+            <h3 class="no-margin">Node Health</h3>
+            <ais-node-health data="vm.gridOptions.data" duration="'PT3H'" show-description="true"></ais-node-health>
+            <div class="margin-top-lg">
+                <h5><b>Status Overview</b></h5>
+                <ais-node-status-grid data="vm.gridOptions.data" cell-size="10px"></ais-node-status-grid>
+            </div>
+        </div>
     </div>
 </div>

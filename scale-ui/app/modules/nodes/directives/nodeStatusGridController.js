@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodeStatusGridController', function ($scope) {
+    angular.module('scaleApp').controller('nodeStatusGridController', function ($scope, $location) {
         var vm = this,
             cellSize = $scope.cellSize || '10px';
 
@@ -24,6 +24,10 @@
                 }
             }
             return 'online';
+        };
+
+        vm.viewNode = function (id) {
+            $location.path('nodes/' + id);
         };
 
         $scope.$watch('data', function (newValue, oldValue) {
