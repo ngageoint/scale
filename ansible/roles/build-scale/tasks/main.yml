@@ -10,18 +10,8 @@
   notify:
     - push scale
 
-- name: Build scale-web-static docker image
-  tags: [ build-scale, build-scale-docker ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/framework/scale-web-static"
-    name: "scale-web-static"
-    tag: "{{ scale_docker_version }}"
-    state: build
-  notify:
-    - push scale-web-static
-
 - name: Install git
-  tags: common
+  tags: [ build-scale, common, build-scale-cli ]
   yum: name=git
   become: true
 
@@ -88,74 +78,63 @@
 
 - name: Build landsat-parse docker image
   tags: [ build-scale, build-examples ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-parse"
-    name: "landsat-parse"
-    tag: "{{ example_image_tag }}"
-    state: build
-  notify:
-    - push landsat-parse
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/landsat-parse"
+  environment:
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build landsat-ndwi docker image
   tags: [ build-scale, build-examples ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-ndwi"
-    name: "landsat-ndwi"
-    tag: "{{ example_image_tag }}"
-    state: build
-  notify:
-    - push landsat-ndwi
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/landsat-ndwi"
+  environment:
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build landsat-tiles docker image
   tags: [ build-scale, build-examples ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/landsat-tiles"
-    name: "landsat-tiles"
-    tag: "{{ example_image_tag }}"
-    state: build
-  notify:
-    - push landsat-tiles
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/landsat-tiles"
+  environment:
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build pca docker image
   tags: [ build-scale, build-examples ]
-  docker_image:
-    path: "{{ scale_build_root }}/dockerfiles/examples/pca"
-    name: "pca"
-    tag: "{{ example_image_tag }}"
-  notify:
-    - push pca
+  command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/pca"
+  environment:
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build ace docker image
   tags: [ build-scale, build-examples ]
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/ace"
   environment:
-    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
-    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build tad docker image
   tags: [ build-scale, build-examples ]
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/tad"
   environment:
-    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
-    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build jpl-signatures docker image
   tags: [ build-scale, build-examples ]
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/jpl-signatures"
   environment:
-    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
-    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build parse-binary docker image
   tags: [ build-scale, build-examples ]
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/binary-parse"
   environment:
-    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
-    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'
 
 - name: Build vash docker image
   tags: [ build-scale, build-examples ]
   command: /scale/bin/goscale jobs commit -p chdir="{{ scale_build_root }}/dockerfiles/examples/vash"
   environment:
-    DOCKER_REGISTRY: "{{ docker_registry | replace('/', '') }}"
-    SCALE_URL: 'http://{{ mesos_master_ip }}/api/v3'
+    DOCKER_REGISTRY: "{{ example_docker_registry | replace('/', '') }}"
+    SCALE_URL: 'http://{{ scale_host }}/api/v3'

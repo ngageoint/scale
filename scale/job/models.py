@@ -109,7 +109,7 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_jobs(self, started=None, ended=None, status=None, job_ids=None, job_type_ids=None, job_type_names=None,
+    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, error_categories=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -117,8 +117,8 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query jobs with the a specific execution status.
-        :type status: string
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
         :type job_ids: [int]
         :param job_type_ids: Query jobs of the type associated with the identifier.
@@ -145,8 +145,8 @@ class JobManager(models.Manager):
         if ended:
             jobs = jobs.filter(last_modified__lte=ended)
 
-        if status:
-            jobs = jobs.filter(status=status)
+        if statuses:
+            jobs = jobs.filter(status__in=statuses)
         if job_ids:
             jobs = jobs.filter(id__in=job_ids)
         if job_type_ids:
@@ -223,7 +223,7 @@ class JobManager(models.Manager):
         job.products = output_files
         return job
 
-    def get_job_updates(self, started=None, ended=None, status=None, job_type_ids=None,
+    def get_job_updates(self, started=None, ended=None, statuses=None, job_type_ids=None,
                         job_type_names=None, job_type_categories=None, order=None):
         """Returns a list of jobs that changed status within the given time range.
 
@@ -231,8 +231,8 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query jobs with the a specific execution status.
-        :type status: string
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
         :param job_type_ids: Query jobs of the type associated with the identifier.
         :type job_type_ids: [int]
         :param job_type_categories: Query jobs of the type associated with the category.
@@ -246,7 +246,7 @@ class JobManager(models.Manager):
         """
         if not order:
             order = ['last_status_change']
-        return self.get_jobs(started=started, ended=ended, status=status, job_type_ids=job_type_ids,
+        return self.get_jobs(started=started, ended=ended, statuses=statuses, job_type_ids=job_type_ids,
                              job_type_names=job_type_names, job_type_categories=job_type_categories, order=order)
 
     def get_locked_job(self, job_id):
@@ -774,7 +774,7 @@ class JobExecutionManager(models.Manager):
         # Update job model
         Job.objects.complete_job(job_exe.job, when, JobResults(job_exe.results))
 
-    def get_exes(self, started=None, ended=None, status=None, job_type_ids=None, job_type_names=None,
+    def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -782,8 +782,8 @@ class JobExecutionManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job executions updated before this amount of time.
         :type ended: :class:`datetime.datetime`
-        :param status: Query job executions with the a specific status.
-        :type status: string
+        :param statuses: Query job executions with the a specific status.
+        :type statuses: [string]
         :param job_type_ids: Query job executions of the type associated with the identifier.
         :type job_type_ids: [int]
         :param job_type_names: Query job executions of the type associated with the name.
@@ -808,8 +808,8 @@ class JobExecutionManager(models.Manager):
         if ended:
             job_exes = job_exes.filter(last_modified__lte=ended)
 
-        if status:
-            job_exes = job_exes.filter(status=status)
+        if statuses:
+            job_exes = job_exes.filter(status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job__job_type_id__in=job_type_ids)
         if job_type_names:
@@ -1560,6 +1560,22 @@ class JobTypeStatus(object):
         self.job_counts = job_counts
 
 
+class JobTypePendingStatus(object):
+    """Represents job type pending statistics.
+
+    :keyword job_type: The job type being counted.
+    :type job_type: :class:`job.models.JobType`
+    :keyword count: The number of job executions pending for the associated job type.
+    :type count: int
+    :keyword longest_pending: The date/time of the last job execution for the associated job type.
+    :type longest_pending: datetime.datetime
+    """
+    def __init__(self, job_type, count=0, longest_pending=None):
+        self.job_type = job_type
+        self.count = count
+        self.longest_pending = longest_pending
+
+
 class JobTypeRunningStatus(object):
     """Represents job type running statistics.
 
@@ -1900,6 +1916,34 @@ class JobTypeManager(models.Manager):
             status.job_counts.append(counts)
 
         return [status_dict[job_type.id] for job_type in job_types]
+
+    def get_pending_status(self):
+        """Returns a status overview of all currently pending job types.
+
+        The results consist of standard job type models, plus additional computed statistics fields including a total
+        count of associated jobs and the longest pending job.
+
+        :returns: The list of each job type with additional statistic fields.
+        :rtype: [:class:`job.models.JobTypePendingStatus`]
+        """
+
+        # Fetch a count of all pending jobs with type information
+        # We have to specify values to workaround the JSON fields throwing an error when used with annotate
+        job_dicts = Job.objects.values(*['job_type__%s' % f for f in JobType.BASE_FIELDS])
+        job_dicts = job_dicts.filter(status='PENDING')
+        job_dicts = job_dicts.annotate(count=models.Count('job_type'),
+                                       longest_pending=models.Min('last_status_change'))
+        job_dicts = job_dicts.order_by('longest_pending')
+
+        # Convert each result to a real job type model with added statistics
+        results = []
+        for job_dict in job_dicts:
+            job_type_dict = {f: job_dict['job_type__%s' % f] for f in JobType.BASE_FIELDS}
+            job_type = JobType(**job_type_dict)
+
+            status = JobTypePendingStatus(job_type, job_dict['count'], job_dict['longest_pending'])
+            results.append(status)
+        return results
 
     def get_running_status(self):
         """Returns a status overview of all currently running job types.

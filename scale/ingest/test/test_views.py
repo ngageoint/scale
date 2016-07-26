@@ -55,6 +55,17 @@ class TestIngestsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['status'], self.ingest1.status)
 
+    def test_strike_id(self):
+        """Tests successfully calling the ingests view filtered by strike processor."""
+
+        url = '/ingests/?strike_id=%i' % self.ingest1.strike.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
+
     def test_file_name(self):
         """Tests successfully calling the ingests view filtered by file name."""
 

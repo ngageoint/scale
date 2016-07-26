@@ -7,14 +7,18 @@ mesos_zk: 'zk://10.4.4.10:2181/mesos'
 scheduler_zk: 'zk://10.4.4.10:2181/scale'
 
 # The internal docker registry where framework images are stored. Note the trailing /
-docker_registry: '10.4.4.10:5000/'
+#docker_registry: '10.4.4.10:5000/'
 
-# The docker registry where example images are stored. Note the trailing /
-example_docker_registry: '{{ docker_registry }}'
+# The docker registry where example images are stored. Defaults to docker_registry
+# comment this out to perform local builds
+#example_docker_registry: '10.4.4.10:5000'
+
+# Scale http host
+scale_host: '{{ mesos_master_ip }}'
 
 # The tag associated with the framework images and the embedded version tag.
-scale_version: '3, 0, 0, "-snapshot"'
-scale_docker_version: '3.0.0-snapshot'
+scale_version: '3, 1, 0, "-snapshot"'
+scale_docker_version: '3.1.0-snapshot'
 
 # The IP address of the mesos master. This must be an IP address.
 mesos_master_ip: '10.4.4.10' #'{{ ansible_all_ipv4_addresses[-1] }}'

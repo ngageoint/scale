@@ -38,6 +38,10 @@ These services provide access to information about ingested files processed by t
 | status             | String            | Optional | Return only ingests with a status matching this string.             |
 |                    |                   |          | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, |
 |                    |                   |          | ERRORED, DUPLICATE].                                                |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| strike_id          | Integer           | Optional | Return only ingests created by a given strike process identifier.   |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Return only ingests with a specific file name.                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+

@@ -40,11 +40,12 @@ class IngestsView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
-        ingest_status = rest_util.parse_string(request, 'status', required=False)
+        ingest_statuses = rest_util.parse_string_list(request, 'status', required=False)
+        strike_ids = rest_util.parse_int_list(request, 'strike_id', required=False)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        ingests = Ingest.objects.get_ingests(started, ended, ingest_status, file_name, order)
+        ingests = Ingest.objects.get_ingests(started, ended, ingest_statuses, strike_ids, file_name, order)
 
         page = self.paginate_queryset(ingests)
         serializer = self.get_serializer(page, many=True)
