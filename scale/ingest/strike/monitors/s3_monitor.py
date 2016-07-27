@@ -89,7 +89,7 @@ class S3Monitor(Monitor):
                         # Remove message from queue when unrecognized
                         message.delete()
                 except S3NoDataNotificationError:
-                    logger.exception()
+                    logger.exception('Unable to process message. File size of 0')
                     message.delete()
 
     def stop(self):
