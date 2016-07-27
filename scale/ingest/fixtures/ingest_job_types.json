@@ -22,7 +22,7 @@
 			     "command_arguments": "scale_ingest ${-i :Ingest ID}",
 			     "input_data": [ { "name": "Ingest ID", "type": "property" } ]
 			},
-			"revision_num": 1,
+			"revision_num": 2,
             "error_mapping": null,
 			"priority": 10,
             "max_scheduled": 50,

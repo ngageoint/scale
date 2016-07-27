@@ -259,6 +259,7 @@ class DirWatcherMonitor(Monitor):
 
         if ingest.status == 'TRANSFERRED':
             ingest_path = os.path.join(self._ingest_dir, file_name)
+            rel_ingest_path = os.path.relpath(ingest_path, self._strike_dir)
             logger.info('%s is being prepared for ingest', file_path)
             if not ingest.status == 'TRANSFERRED':
                 raise Exception('Cannot ingest %s unless it has TRANSFERRED status' % file_path)
@@ -279,7 +280,7 @@ class DirWatcherMonitor(Monitor):
                     logger.info('Ingest for %s marked as ERRORED', file_name)
                     return
 
-            self._process_ingest(ingest, ingest_path, ingest.file_size)
+            self._process_ingest(ingest, rel_ingest_path, ingest.file_size)
 
         if ingest.status == 'DEFERRED':
             self._move_deferred_file(ingest)
