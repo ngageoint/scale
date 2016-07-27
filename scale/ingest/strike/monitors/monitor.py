@@ -160,6 +160,7 @@ class Monitor(object):
         ingest.status = 'TRANSFERRED'
         ingest.bytes_transferred = bytes_transferred
         ingest.transfer_ended = when
+        ingest.file_size = bytes_transferred
 
         logger.info('%s has finished transferring to %s, total of %s copied', ingest.file_name, ingest.workspace.name,
                     file_size_to_string(bytes_transferred))

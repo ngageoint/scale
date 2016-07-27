@@ -254,6 +254,7 @@ class DirWatcherMonitor(Monitor):
                 # Transfer is complete, will move on to next section
                 last_modified = os.path.getmtime(file_path)
                 self._complete_transfer(ingest, datetime.utcfromtimestamp(last_modified), size)
+                ingest.save()
                 logger.info('Transfer complete: %s', file_path)
 
         if ingest.status == 'TRANSFERRED':
