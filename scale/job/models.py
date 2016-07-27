@@ -1369,13 +1369,15 @@ class JobExecution(models.Model):
             configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
+        # Configure Strike workspace based on current configuration
+        if self.job.job_type.name == 'scale-strike':
+            from ingest.models import Strike
+            strike = Strike.objects.get(job_id=self.job_id)
+            workspace_name = strike.get_strike_configuration().get_workspace()
+            configuration.add_job_task_workspace(workspace_name, MODE_RW)
+
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
-
-        # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
-        # jobs no longer mount within the container.
-        if self.job.job_type.name in ['scale-strike', 'scale-ingest']:
-            configuration.add_job_task_docker_param(DockerParam('env', 'ENABLE_NFS=1'))
 
         self.configuration = configuration.get_dict()
 

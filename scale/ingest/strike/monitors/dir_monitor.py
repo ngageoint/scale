@@ -228,7 +228,7 @@ class DirWatcherMonitor(Monitor):
         if ingest is None:
             msg = 'New file %s has arrived, creating ingest for %s'
             logger.info(msg, file_path, final_name)
-            self._create_ingest(final_name)
+            ingest = self._create_ingest(final_name)
             # TODO: investigate better way to get start time of transfer
             last_access = os.path.getatime(file_path)
             self._start_transfer(ingest, datetime.utcfromtimestamp(last_access))

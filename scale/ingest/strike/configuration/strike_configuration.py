@@ -166,6 +166,15 @@ class StrikeConfiguration(object):
         self.load_monitor_configuration(monitor)
         return monitor
 
+    def get_workspace(self):
+        """Returns the monitored workspace name for this Strike configuration
+
+        :returns: The monitored workspace name
+        :rtype: string
+        """
+
+        return self._configuration['workspace']
+
     def load_monitor_configuration(self, monitor):
         """Loads the configuration into the given monitor
 
@@ -241,13 +250,16 @@ class StrikeConfiguration(object):
         transfer_suffix = converted_configuration['transfer_suffix']
         del converted_configuration['mount']
         del converted_configuration['transfer_suffix']
-        auto_workspace_name = 'auto_workspace_for_%s' % mount.replace(':', '_').replace('/', '_')
+        auto_workspace_name = 'auto_wksp_for_%s' % mount.replace(':', '_').replace('/', '_')
+        auto_workspace_name = auto_workspace_name[:50]  # Truncate to max name length of 50 chars
+        title = 'Auto Workspace for %s' % mount
+        title = title[:50]  # Truncate to max title length of 50 chars
         try:
             Workspace.objects.get(name=auto_workspace_name)
         except Workspace.DoesNotExist:
             workspace = Workspace()
             workspace.name = auto_workspace_name
-            workspace.title = 'Auto Workspace for %s' % mount
+            workspace.title = title
             desc = 'This workspace was automatically created for mount %s to support converting Strike from 1.0 to 2.0'
             workspace.description = desc % mount
             workspace.json_config = '{"version": "1.0", "broker": {"type": "host", "host_path": "%s"}}' % mount_path

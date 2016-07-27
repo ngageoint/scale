@@ -19,7 +19,7 @@ class Command(BaseCommand):
     """
 
     option_list = BaseCommand.option_list + (
-        make_option('-i', '--strike-id', action='store', type='int', help=('ID of the Strike process to run'))
+        make_option('-i', '--strike-id', action='store', type='int', help=('ID of the Strike process to run')),
     )
 
     help = 'Executes the Strike processor to monitor and process incoming files for ingest'

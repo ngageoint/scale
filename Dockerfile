@@ -7,8 +7,7 @@ EXPOSE 8000
 EXPOSE 5051
 
 # allowed environment variables
-# ENABLE_NFS=true to turn on NFS client locking
-# ENABLE_GUNICORN=1 to start the RESTful API server
+# ENABLE_GUNICORN=true to start the RESTful API server
 # ENABLE_HTTPD=true to start the Apache HTTP server
 # DEPLOY_DB to start the database container (for DC/OS use)
 # INIT_DB to initialize the database (migrate, load, etc.)
