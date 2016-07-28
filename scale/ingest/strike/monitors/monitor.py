@@ -226,6 +226,8 @@ class Monitor(object):
             else:
                 logger.info('Rule match, %s will be registered as %s on workspace %s', file_name, file_path,
                             workspace_name)
+            if not ingest.id:
+                ingest.save()
             self._start_ingest_task(ingest)
         else:
             logger.info('No rule match for %s, file is being deferred', file_name)
