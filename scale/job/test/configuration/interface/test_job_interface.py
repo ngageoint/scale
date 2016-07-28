@@ -13,6 +13,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.interface.job_interface_1_0 import JobInterface as JobInterface_1_0
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
@@ -39,6 +40,39 @@ class TestJobInterfaceAddOutputToConnection(TestCase):
 
         job_interface.add_output_to_connection('Output 1', job_conn, 'Input 1')
         job_conn.add_input_file.assert_called_with('Input 1', False, [], False)
+
+
+class TestJobInterfaceConvert(TestCase):
+    """Tests performing conversion from lower to higher minor versions of interface schema."""
+
+    def setUp(self):
+        self.job_interface_dict = {
+            'command': 'simple-command',
+            'command_arguments': '',
+            'version': '1.0',
+            'input_data': [
+                {
+                    'name': 'Input 1',
+                    'type': 'file'
+                },
+                {
+                    'name': 'Input 2',
+                    'type': 'property'
+                }
+            ],
+            'output_data': []
+        }
+
+        django.setup()
+
+    @patch('job.configuration.interface.job_interface_1_0.JobInterface.get_dict')
+    def test_successful(self, mock_get_dict):
+        """Tests calling JobInterface.update() successfully."""
+        mock_get_dict.return_value = self.job_interface_dict
+        job_interface = JobInterface.convert_interface(self.job_interface_dict)
+        self.assertEqual(job_interface['version'], '1.1')
+        self.assertIn('partial', job_interface['input_data'][0])
+        self.assertTrue(job_interface['input_data'][0]['partial'])
 
 
 class TestJobInterfacePostSteps(TestCase):

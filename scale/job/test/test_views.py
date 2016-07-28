@@ -809,7 +809,7 @@ class TestJobTypeDetailsView(TestCase):
         django.setup()
 
         self.interface = {
-            'version': '1.0',
+            'version': '1.1',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'input_data': [],
