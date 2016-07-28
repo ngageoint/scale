@@ -65,7 +65,7 @@ def perform_ingest(ingest_id):
                 logger.info('Copying %s in workspace %s to %s in workspace %s', ingest.file_path, ingest.workspace.name,
                             source_file.file_path, ingest.new_workspace.name)
                 file_upload = FileUpload(source_file, local_path)
-                ScaleFile.objects.upload_files(ingest.workspace, [file_upload])
+                ScaleFile.objects.upload_files(ingest.new_workspace, [file_upload])
             elif ingest.new_file_path:
                 logger.info('Moving %s to %s in workspace %s', ingest.file_path, ingest.new_file_path,
                             ingest.workspace.name)
@@ -77,7 +77,10 @@ def perform_ingest(ingest_id):
 
         if ingest.new_workspace:
             # Copied file to new workspace, so delete file in old workspace (if workspace provides local path to do so)
-            paths = ingest.workspace.get_file_system_paths([source_file])
+            file_with_old_path = SourceFile()
+            file_with_old_path.file_name = file_name
+            file_with_old_path.file_path = ingest.file_path
+            paths = ingest.workspace.get_file_system_paths([file_with_old_path])
             if paths:
                 _delete_file(paths[0])
 
@@ -186,6 +189,11 @@ def _start_ingest(ingest):
                 return
         else:
             logger.info('Ingesting %s for the first time', file_name)
+            # Set required attributes to save the model for the first time
+            source_file.set_basic_fields(file_name, ingest.file_size, ingest.media_type, ingest.get_data_type_tags())
+            source_file.update_uuid(file_name)  # Add a stable identifier based on the file name
+            source_file.workspace = ingest.workspace
+            source_file.file_path = ingest.file_path
             source_file.save()
         ingest.source_file = source_file
     else:
