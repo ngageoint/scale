@@ -331,7 +331,7 @@ class Ingest(models.Model):
     strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
-    bytes_transferred = models.BigIntegerField()
+    bytes_transferred = models.BigIntegerField(blank=True, null=True)
     transfer_started = models.DateTimeField(blank=True, null=True)
     transfer_ended = models.DateTimeField(blank=True, null=True)
 
