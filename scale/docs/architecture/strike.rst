@@ -8,7 +8,7 @@ Strike is the name of Scale's system job that monitors and handles incoming sour
 Scale. A Strike job monitors a given workspace for new files. Scale administrators will want to create a Strike job for
 each data feed that will be processed by Scale.
 
-When a new file is copied into the monitored workspace, its file name is checked against a number rules using regular
+When a new file is copied into the monitored workspace, its file name is checked against a number of rules using regular
 expressions configured for that Strike job. When the first rule that matches the new file's name is reached, that rule's
 other fields indicate how Strike should handle the file, such as tagging it with data type tags or moving the file to a
 new location in a different workspace.
@@ -52,7 +52,7 @@ A valid Strike configuration is a JSON document with the following structure:
 **workspace**: JSON string
 
     The *workspace* field is a required string that specifies the name of the workspace that is being monitored. The
-    type of the workspace (its broker type) will determine how incoming files can be monitored.
+    type of the workspace (its broker type) will determine which types of monitor can be used.
 
 **monitor**: JSON object
 
