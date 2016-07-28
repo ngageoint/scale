@@ -165,10 +165,11 @@ prescribed in the Scale documentation.</p>
 <p>Below are examples of wrapper scripts if you cannot modify the algorithm.  These should only be used if you do not have
 access to the source code for your algorithm.</p>
 <p><strong>ONLY FILES IN THE RESULTS MANIFEST WILL BE SAVED BY SCALE</strong></p>
-<p>File paths listed in the results manifest must be absolute paths to the file.  The results manifest must be called
-&#8220;results_manifest.json&#8221; and must be present in the root of the output directory provided by Scale.
-The output names in the results manifest must match the <strong>output_data</strong> field in the
-<a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>job interface</span></a>.</p>
+<p>File paths listed in the results manifest must be absolute paths to the file and the files must exist within the output
+directory provided by Scale. The results manifest must be called &#8220;results_manifest.json&#8221; and must be present in the root
+of the output directory. All output files and the results manifest must have full read permission (as well as execute
+for any directories) granted for ALL users, allowing the Scale post task to read the outputs. The output names in the
+results manifest must match the <strong>output_data</strong> field in the <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>job interface</span></a>.</p>
 <div class="section" id="simple-results-manifest-example">
 <h2>Simple Results Manifest Example<a class="headerlink" href="#simple-results-manifest-example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
