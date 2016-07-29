@@ -9,14 +9,20 @@ import (
 type StrikeIngestFile struct {
     FileNameRegex   string `json:"filename_regex"`
     DataTypes       []string `json:"data_types,omitempty"`
-    WorkspacePath   string `json:"workspace_path"`
-    WorkspaceName   string `json:"workspace_name"`
+    NewFilePath     string `json:"new_file_path,omitempty"`
+    NewWorkspace    string `json:"new_workspace,omitempty"`
+}
+
+type StrikeMonitor struct {
+    Type            string `json:"type"`
+    TransferSuffix  string `json:"transfer_suffix,omitempty"`
+    SqsName         string `json:"sqs_name,omitempty"`
 }
 
 type StrikeConfiguration struct {
     Version         string `json:"version,omitempty"`
-    Mount           string `json:"mount"`
-    TransferSuffix  string `json:"transfer_suffix"`
+    Workspace       string `json:"workspace"`
+    Monitor         StrikeMonitor `json:"monitor"`
     FilesToIngest   []StrikeIngestFile `json:"files_to_ingest"`
 }
 
