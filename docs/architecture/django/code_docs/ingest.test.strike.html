@@ -105,7 +105,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -200,84 +199,15 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.strike.monitors.html">ingest.test.strike.monitors package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.monitors.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.monitors.html#module-ingest.test.strike.monitors.test_dir_monitor">ingest.test.strike.monitors.test_dir_monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.monitors.html#module-ingest.test.strike.monitors.test_s3_monitor">ingest.test.strike.monitors.test_s3_monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.monitors.html#module-ingest.test.strike.monitors">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-ingest.test.strike.test_strike_processor">
-<span id="ingest-test-strike-test-strike-processor-module"></span><h2>ingest.test.strike.test_strike_processor module<a class="headerlink" href="#module-ingest.test.strike.test_strike_processor" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile">
-<em class="property">class </em><code class="descclassname">ingest.test.strike.test_strike_processor.</code><code class="descname">TestStrikeDeferFile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_duplicate">
-<code class="descname">test_complete_transfer_duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_duplicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests failing to complete an ingest in the wrong state.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_successful">
-<code class="descname">test_complete_transfer_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_complete_transfer_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully completing an ingest transfer.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_config_bad_filename_regex">
-<code class="descname">test_config_bad_filename_regex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_config_bad_filename_regex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests failing validation for invalid filename regex.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_defer_file_successful">
-<code class="descname">test_defer_file_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeDeferFile.test_defer_file_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully deferring a file.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification">
-<em class="property">class </em><code class="descclassname">ingest.test.strike.test_strike_processor.</code><code class="descname">TestStrikeSQSNotification</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_invalid_failure">
-<code class="descname">test_ingest_s3_notification_object_invalid_failure</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_invalid_failure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test failing to ingest an invalid S3 object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_nodata_failure">
-<code class="descname">test_ingest_s3_notification_object_nodata_failure</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_nodata_failure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test failing to ingest a no-data S3 object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_success">
-<code class="descname">test_ingest_s3_notification_object_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_ingest_s3_notification_object_success" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test successfully ingesting an S3 object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_process_s3_notification">
-<code class="descname">test_process_s3_notification</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.test_strike_processor.TestStrikeSQSNotification.test_process_s3_notification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test failing to process an invalid S3 notification</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-ingest.test.strike">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.test.strike" title="Permalink to this headline">¶</a></h2>

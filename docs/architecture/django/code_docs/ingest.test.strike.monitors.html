@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.triggers.configuration package &mdash; Scale 3.1.0-snapshot documentation</title>
+  <title>ingest.test.strike.monitors package &mdash; Scale 3.1.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="ingest.triggers package" href="ingest.triggers.html"/>
-        <link rel="next" title="job package" href="job.html"/>
-        <link rel="prev" title="ingest.triggers package" href="ingest.triggers.html"/> 
+        <link rel="up" title="ingest.test.strike package" href="ingest.test.strike.html"/>
+        <link rel="next" title="ingest.test.triggers package" href="ingest.test.triggers.html"/>
+        <link rel="prev" title="ingest.test.strike.configuration package" href="ingest.test.strike.configuration.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -171,13 +171,15 @@
       
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
       
-          <li><a href="ingest.triggers.html">ingest.triggers package</a> &raquo;</li>
+          <li><a href="ingest.test.html">ingest.test package</a> &raquo;</li>
       
-    <li>ingest.triggers.configuration package</li>
+          <li><a href="ingest.test.strike.html">ingest.test.strike package</a> &raquo;</li>
+      
+    <li>ingest.test.strike.monitors package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/ingest.triggers.configuration.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.test.strike.monitors.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -187,90 +189,89 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ingest-triggers-configuration-package">
-<h1>ingest.triggers.configuration package<a class="headerlink" href="#ingest-triggers-configuration-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="ingest-test-strike-monitors-package">
+<h1>ingest.test.strike.monitors package<a class="headerlink" href="#ingest-test-strike-monitors-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ingest.triggers.configuration.ingest_trigger_rule">
-<span id="ingest-triggers-configuration-ingest-trigger-rule-module"></span><h2>ingest.triggers.configuration.ingest_trigger_rule module<a class="headerlink" href="#module-ingest.triggers.configuration.ingest_trigger_rule" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for an ingest trigger</p>
+<div class="section" id="module-ingest.test.strike.monitors.test_dir_monitor">
+<span id="ingest-test-strike-monitors-test-dir-monitor-module"></span><h2>ingest.test.strike.monitors.test_dir_monitor module<a class="headerlink" href="#module-ingest.test.strike.monitors.test_dir_monitor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration">
-<em class="property">class </em><code class="descclassname">ingest.triggers.configuration.ingest_trigger_rule.</code><code class="descname">IngestTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></code></a></p>
-<p>Represents a rule that triggers when ingested source files meet the defined conditions</p>
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor">
+<em class="property">class </em><code class="descclassname">ingest.test.strike.monitors.test_dir_monitor.</code><code class="descname">TestDirWatcherMonitor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_condition">
-<code class="descname">get_condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_condition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the condition for this ingest trigger rule</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The trigger condition</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.triggers.html#ingest.triggers.ingest_trigger_condition.IngestTriggerCondition" title="ingest.triggers.ingest_trigger_condition.IngestTriggerCondition"><code class="xref py py-class docutils literal"><span class="pre">ingest.triggers.ingest_trigger_condition.IngestTriggerCondition</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_bad_transfer_suffix">
+<code class="descname">test_validate_configuration_bad_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_bad_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling DirWatcherMonitor.validate_configuration() with bad type for transfer_suffix</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_input_data_name">
-<code class="descname">get_input_data_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_input_data_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name of the input data that the ingested file should be passed to</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_empty_transfer_suffix">
+<code class="descname">test_validate_configuration_empty_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_empty_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling DirWatcherMonitor.validate_configuration() with empty transfer_suffix</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_workspace_name">
-<code class="descname">get_workspace_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_workspace_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name of the workspace to use for the triggered job/recipe</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_missing_transfer_suffix">
+<code class="descname">test_validate_configuration_missing_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_missing_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling DirWatcherMonitor.validate_configuration() with missing transfer_suffix</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate"><code class="xref py py-meth docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_job">
-<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job"><code class="xref py py-meth docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_recipe">
-<code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe"><code class="xref py py-meth docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe()</span></code></a></p>
+<dt id="ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_success">
+<code class="descname">test_validate_configuration_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling DirWatcherMonitor.validate_configuration() successfully</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.triggers.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.triggers.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ingest.test.strike.monitors.test_s3_monitor">
+<span id="ingest-test-strike-monitors-test-s3-monitor-module"></span><h2>ingest.test.strike.monitors.test_s3_monitor module<a class="headerlink" href="#module-ingest.test.strike.monitors.test_s3_monitor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor">
+<em class="property">class </em><code class="descclassname">ingest.test.strike.monitors.test_s3_monitor.</code><code class="descname">TestS3Monitor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_bad_sqs_name">
+<code class="descname">test_validate_configuration_bad_sqs_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_bad_sqs_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor.validate_configuration() with bad type for sqs_name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_empty_sqs_name">
+<code class="descname">test_validate_configuration_empty_sqs_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_empty_sqs_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor.validate_configuration() with empty sqs_name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_missing_sqs_name">
+<code class="descname">test_validate_configuration_missing_sqs_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_missing_sqs_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor.validate_configuration() with missing sqs_name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_success">
+<code class="descname">test_validate_configuration_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor.validate_configuration() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.test.strike.monitors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.test.strike.monitors" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -281,10 +282,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.html" class="btn btn-neutral float-right" title="job package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.test.triggers.html" class="btn btn-neutral float-right" title="ingest.test.triggers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.triggers.html" class="btn btn-neutral" title="ingest.triggers package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.test.strike.configuration.html" class="btn btn-neutral" title="ingest.test.strike.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

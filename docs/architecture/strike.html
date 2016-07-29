@@ -96,7 +96,9 @@
 <li class="toctree-l2"><a class="reference internal" href="jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="port.html">Import/Export</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Strike</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#strike-configuration-specification-version-1-0">Strike Configuration Specification Version 1.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#strike-configuration-specification-version-2-0">Strike Configuration Specification Version 2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directory-watching-monitor">Directory Watching Monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#s3-monitor">S3 Monitor</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
@@ -155,58 +157,33 @@
             
   <div class="section" id="strike">
 <span id="architecture-strike"></span><h1>Strike<a class="headerlink" href="#strike" title="Permalink to this headline">¶</a></h1>
-<p>Strike is the name of Scale&#8217;s directory watching capability. A Strike process monitors a given directory on a Network
-File System (NFS) for new files and ingests those files into a Scale workspace if they meet certain criteria. When a new
-Strike process is created, a new job is created and executed to run the new process. A Strike process contains
-configuration specifying the details of the NFS directory to monitor and how to ingest and store the files that appear
-in the directory.</p>
-<p><strong>Example Strike configuration:</strong></p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/my/path&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
-       <span class="p">{</span>
-           <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*h5&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[],</span>
-           <span class="s2">&quot;workspace_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/wrksp/path&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
-       <span class="p">}</span>
-   <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>The <em>mount</em> field specifies the NFS host and path that should be mounted in order to access the directory to be
-monitored. The <em>transfer_suffix</em> field defines a suffix that is used on the file names to indicate that they are still
-transferring and have not yet finished being copied into the monitored directory. The <em>files_to_ingest</em> value is a list
-detailing the different files to ingest and how to ingest them. The <em>filename_regex</em> field defines a regular expression
-to check against the names of newly copied files. If the expression matches a newly copied file name in the directory,
-that file is ingested according to the other fields in the JSON object. The <em>data_types</em> field is list of strings. Any
-file that matches the corresponding regular expression will have the data type strings &#8220;tagged&#8221; with the file. The data
-type tags are used to categorize files and control which jobs and recipes they go to. The <em>workspace_path</em> specifies a
-relative path within the workspace where each file will be stored. Three additional and dynamically named directories,
-for the current year, month, and day, will be appended to the <em>workspace_path</em> value automatically by the Scale system
-when a file is ingested (i.e. workspace_path/YYYY/MM/DD). The <em>workspace_name</em> field is the system name of the unique
-workspace that should ingest the file. To see all of the options for a Strike process&#8217;s configuration, please refer to
-the Strike Configuration Specification below.</p>
-<div class="section" id="strike-configuration-specification-version-1-0">
-<span id="architecture-strike-spec"></span><h2>Strike Configuration Specification Version 1.0<a class="headerlink" href="#strike-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>Strike is the name of Scale&#8217;s system job that monitors and handles incoming source data files that are ingested into
+Scale. A Strike job monitors a given workspace for new files. Scale administrators will want to create a Strike job for
+each data feed that will be processed by Scale.</p>
+<p>When a new file is copied into the monitored workspace, its file name is checked against a number of rules using regular
+expressions configured for that Strike job. When the first rule that matches the new file&#8217;s name is reached, that rule&#8217;s
+other fields indicate how Strike should handle the file, such as tagging it with data type tags or moving the file to a
+new location in a different workspace.</p>
+<div class="section" id="strike-configuration-specification-version-2-0">
+<span id="architecture-strike-spec"></span><h2>Strike Configuration Specification Version 2.0<a class="headerlink" href="#strike-configuration-specification-version-2-0" title="Permalink to this headline">¶</a></h2>
 <p>A valid Strike configuration is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-   <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-   <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
-       <span class="p">{</span>
-           <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-           <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-              <span class="nx">STRING</span><span class="p">,</span>
-              <span class="nx">STRING</span>
-           <span class="p">],</span>
-           <span class="s2">&quot;workspace_path&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-           <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
-       <span class="p">}</span>
-   <span class="p">]</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+            <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="nx">STRING</span><span class="p">,</span>
+                <span class="nx">STRING</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -215,44 +192,136 @@ the Strike Configuration Specification below.</p>
 <div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
 be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
 version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
-version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+version, which is currently 2.0. It is recommended, though not required, that you include the <em>version</em> so that
 future changes to the specification will still accept your Strike configuration.</div></blockquote>
-<p><strong>mount</strong>: JSON string</p>
+<p><strong>workspace</strong>: JSON string</p>
 <blockquote>
-<div>The <em>mount</em> field is a required string that specifies the NFS host and path that should be mounted in order to
-access the monitored directory (format is <em>host:/file/path</em>).</div></blockquote>
-<p><strong>transfer_suffix</strong>: JSON string</p>
+<div>The <em>workspace</em> field is a required string that specifies the name of the workspace that is being monitored. The
+type of the workspace (its broker type) will determine which types of monitor can be used.</div></blockquote>
+<p><strong>monitor</strong>: JSON object</p>
 <blockquote>
-<div>The <em>transfer_suffix</em> field is a required string that defines a suffix that is used on the file names (by the
-system or process that is transferring files into the directory) to indicate that the files are still transferring
-and have not yet finished being copied into the monitored directory.</div></blockquote>
+<div><p>The <em>monitor</em> field is a required object that specifies the type and configuration of the monitor that will watch
+<em>workspace</em> for new files.</p>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>type</em> is a required string that specifies the type of the monitor to use. The other fields that configure
+the monitor are based upon the type of the monitor in the <em>type</em> field. Certain monitor types may only be used
+on workspaces with corresponding broker types. The valid monitor types are:</p>
+<p><strong>dir-watcher</strong></p>
+<blockquote>
+<div>A &#8220;dir-watcher&#8221; monitor watches a file directory for incoming files. This monitor may only be used with a
+<em>host</em> workspace.</div></blockquote>
+<p><strong>s3</strong></p>
+<blockquote>
+<div>An &#8220;s3&#8221; monitor utilizes an Amazon Web Services (AWS) Simple Queue Service (SQS) to receive AWS S3 file
+notification events. This monitor may only be used with an <em>s3</em> workspace.</div></blockquote>
+<p>Additional <em>monitor</em> fields may be required depending on the type of monitor selected. See below for more
+information on each monitor type.</p>
+</div></blockquote>
+</div></blockquote>
 <p><strong>files_to_ingest</strong>: JSON array</p>
 <blockquote>
-<div><p>The <em>files_to_ingest</em> field is a list of JSON objects that define the rules for which files to ingest and how to
-ingest them. The array must contain at least one item. Each JSON object has the following fields:</p>
+<div><p>The <em>files_to_ingest</em> field is a list of JSON objects that define the rules for how to handle files that appear in
+the monitored workspace. The array must contain at least one item. Each JSON object has the following fields:</p>
 <p><strong>filename_regex</strong>: JSON string</p>
 <blockquote>
 <div>The <em>filename_regex</em> field is a required string that defines a regular expression to check against the names of
-newly copied files. When a new file is copied in the monitored directory, each expression is checked against the
-file name in order of the <em>files_to_ingest</em> array. If an expression matches a newly copied file name in the
-directory, that file is ingested according to the other fields in the JSON object and all subsequent
-rules/expressions in the list are ignored.</div></blockquote>
+new files in the monitored workspace. When a new file appears in the workspace, the file&#8217;s name is checked
+against each expression in order of the <em>files_to_ingest</em> array. If an expression matches the new file name in
+the workspace, that file is ingested according to the other fields in the JSON object and all subsequent rules
+in the list are ignored (first rule matched is applied).</div></blockquote>
 <p><strong>data_types</strong>: JSON array</p>
 <blockquote>
 <div>The <em>data_types</em> field is an optional list of strings. Any file that matches the corresponding file name regular
 expression will have these data type strings &#8220;tagged&#8221; with the file. If not provided, <em>data_types</em> defaults to
 an empty array.</div></blockquote>
-<p><strong>workspace_path</strong>: JSON string</p>
+<p><strong>new_workspace</strong>: JSON string</p>
 <blockquote>
-<div>The <em>workspace_path</em> field is a required string that specifies a relative path within the workspace where each
-file will be stored. Three additional and dynamically named directories, for the current year, month, and day,
-will be appended to the <em>workspace_path</em> value automatically by the Scale system when a file is ingested
-(i.e. workspace_path/YYYY/MM/DD).</div></blockquote>
-<p><strong>workspace_name</strong>: JSON string</p>
+<div>The <em>new_workspace</em> field optionally specifies the name of a new workspace to which the file should be copied.
+This allows the ingest process to move files to a different workspace after they appear in the monitored
+workspace.</div></blockquote>
+<p><strong>new_file_path</strong>: JSON string</p>
 <blockquote>
-<div>The <em>workspace_name</em> field is required and contains the unique system name of the workspace that should store
-each file that matches the corresponding file name regular expression.</div></blockquote>
+<div>The <em>new_file_path</em> field is an optional string that specifies a new relative path for storing new files. If
+<em>new_workspace</em> is also specified, the file is moved to the new workspace at this new path location (instead of
+using the current path the new file originally came in on). If <em>new_workspace</em> is not specified, the file is
+moved to this new path location within the original monitored workspace. In either of these cases, three
+additional and dynamically named directories, for the current year, month, and day, will be appended to the
+<em>new_file_path</em> value automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</div></blockquote>
 </div></blockquote>
+</div>
+<div class="section" id="directory-watching-monitor">
+<h2>Directory Watching Monitor<a class="headerlink" href="#directory-watching-monitor" title="Permalink to this headline">¶</a></h2>
+<p>The directory watching monitor uses a workspace that mounts a host directory into the container and watches that
+directory for new files. Therefore this monitor only works with a host workspace. When a new file appears in the mounted
+host directory, its file name is checked for the trailing file name suffix specified in the <em>transfer_suffix</em>
+configuration field. While the file name contains the suffix, the monitor will continue tracking the size of the file
+and how long it takes to copy the file into the directory. Whenever the file copy is complete, the process copying the
+file should rename the file and remove the <em>transfer_suffix</em>. Once the monitor sees the renamed file, it will apply the
+<em>files_to_ingest</em> rules against it. The monitor will create two sub-directories in the host directory, <em>deferred</em> and
+<em>ingesting</em>.  If a copied file does not match any of the ingest rules, it is moved to the <em>deferred</em> directory. If the
+file matches an ingest rule, it is moved to <em>ingesting</em> and an ingest job is created to ingest it.</p>
+<p>Example directory watching monitor configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host-workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.h5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;data type 1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data type 2&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/new/file/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The directory watching monitor requires one additional field in its configuration:</p>
+<p><strong>transfer_suffix</strong>: JSON string</p>
+<blockquote>
+<div>The <em>transfer_suffix</em> field is a required string that defines a suffix that is used on the file names (by the
+system or process that is transferring files into the directory) to indicate that the files are still transferring
+and have not yet finished being copied into the monitored directory.</div></blockquote>
+</div>
+<div class="section" id="s3-monitor">
+<h2>S3 Monitor<a class="headerlink" href="#s3-monitor" title="Permalink to this headline">¶</a></h2>
+<p>The S3 monitor polls an AWS SQS queue for object creation notifications that describe new source data files available in
+an AWS S3 bucket (so this monitor only works with an S3 workspace). After the monitor finds a new file in the S3 bucket,
+it applies the file against the configured Strike rules.</p>
+<p>Example S3 monitor configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host-workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sqs_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-sqs&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.h5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;data type 1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data type 2&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/new/file/path&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The S3 monitor requires one additional field in its configuration:</p>
+<p><strong>sqs_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>sqs_name</em> field is a required string that defines the name of the SQS queue that should be polled for object
+creation notifications that describe new files in the S3 bucket.</div></blockquote>
 </div>
 </div>
 

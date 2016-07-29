@@ -20,6 +20,30 @@ ingest.migrations.0002_auto_20160414_0937 module
     :undoc-members:
     :show-inheritance:
 
+ingest.migrations.0003_auto_20160711_1044 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0003_auto_20160711_1044
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.migrations.0004_auto_20160711_1058 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0004_auto_20160711_1058
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.migrations.0005_auto_20160728_1243 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0005_auto_20160728_1243
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -105,7 +105,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -224,6 +223,68 @@
 <dl class="attribute">
 <dt id="ingest.migrations.0002_auto_20160414_0937.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=False, name=u'strike', model_name=u'ingest'&gt;]</em><a class="headerlink" href="#ingest.migrations.0002_auto_20160414_0937.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.migrations.0003_auto_20160711_1044">
+<span id="ingest-migrations-0003-auto-20160711-1044-module"></span><h2>ingest.migrations.0003_auto_20160711_1044 module<a class="headerlink" href="#module-ingest.migrations.0003_auto_20160711_1044" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0003_auto_20160711_1044.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0003_auto_20160711_1044.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0003_auto_20160711_1044.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0003_auto_20160711_1044.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0002_workspace_is_move_enabled'), (u'ingest', u'0002_auto_20160414_0937')]</em><a class="headerlink" href="#ingest.migrations.0003_auto_20160711_1044.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0003_auto_20160711_1044.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'ingest_path', model_name=u'ingest'&gt;, &lt;RemoveField  name=u'transfer_path', model_name=u'ingest'&gt;, &lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'new_file_path', model_name=u'ingest'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'new_workspace', model_name=u'ingest'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'transfer_started', model_name=u'ingest'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'workspace', model_name=u'ingest'&gt;]</em><a class="headerlink" href="#ingest.migrations.0003_auto_20160711_1044.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.migrations.0004_auto_20160711_1058">
+<span id="ingest-migrations-0004-auto-20160711-1058-module"></span><h2>ingest.migrations.0004_auto_20160711_1058 module<a class="headerlink" href="#module-ingest.migrations.0004_auto_20160711_1058" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0004_auto_20160711_1058.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0004_auto_20160711_1058.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0004_auto_20160711_1058.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0003_auto_20160711_1044')]</em><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0004_auto_20160711_1058.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_new_workspace at 0x2b1dc0505d70&gt;&gt;]</em><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.migrations.0004_auto_20160711_1058.Migration.populate_new_workspace">
+<code class="descname">populate_new_workspace</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration.populate_new_workspace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.migrations.0005_auto_20160728_1243">
+<span id="ingest-migrations-0005-auto-20160728-1243-module"></span><h2>ingest.migrations.0005_auto_20160728_1243 module<a class="headerlink" href="#module-ingest.migrations.0005_auto_20160728_1243" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0005_auto_20160728_1243.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0005_auto_20160728_1243.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0005_auto_20160728_1243.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0005_auto_20160728_1243.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0004_auto_20160711_1058')]</em><a class="headerlink" href="#ingest.migrations.0005_auto_20160728_1243.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0005_auto_20160728_1243.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.BigIntegerField&gt;, preserve_default=True, name=u'bytes_transferred', model_name=u'ingest'&gt;]</em><a class="headerlink" href="#ingest.migrations.0005_auto_20160728_1243.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

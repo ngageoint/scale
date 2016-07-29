@@ -122,7 +122,6 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.models">storage.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.nfs">storage.nfs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.serializers">storage.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.settings">storage.settings module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.urls">storage.urls module</a></li>
@@ -224,9 +223,9 @@
 <code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given files.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
-that volume file system is mounted. This means that the remote path to where a ScaleFile currently exists is the
-result of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None
-will be given for volume_path.</p>
+that volume file system is mounted. This means that the path to where a ScaleFile currently exists is the result
+of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None will be
+given for volume_path.</p>
 <p>The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
 each file itself and not any parent directories. Each file model should be updated and saved when a delete is
 successful, including fields such as is_deleted and deleted.</p>
@@ -250,9 +249,9 @@ None if this broker does not use a container volume</li>
 <code class="descname">download_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.download_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads the given files to the given local file system paths.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
-that volume file system is mounted. This means that the remote path to a ScaleFile that is accessible to the
-container is the result of os.path.join(volume_path, file_downloads[i].file.file_path). If this broker does not
-use a container volume, None will be given for volume_path.</p>
+that volume file system is mounted. This means that the path to a ScaleFile that is accessible to the container
+is the result of os.path.join(volume_path, file_downloads[i].file.file_path). If this broker does not use a
+container volume, None will be given for volume_path.</p>
 <p>The file_downloads list contains named tuples that each contain a ScaleFile model to be downloaded and the
 absolute local container path where the file should be downloaded. Typically, no changes are needed to file
 models during a download, but any changes should be saved by the broker. Any directories in the absolute local
@@ -266,6 +265,36 @@ container paths should already exist.</p>
 None if this broker does not use a container volume</li>
 <li><strong>file_downloads</strong> ([<a class="reference internal" href="#storage.brokers.broker.FileDownload" title="storage.brokers.broker.FileDownload"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.FileDownload</span></code></a>]) &#8211; List of files to download</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.broker.Broker.get_file_system_paths">
+<code class="descname">get_file_system_paths</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.get_file_system_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the local file system paths for the given files, if supported by the broker.</p>
+<p>If this broker uses a container volume, volume_path will contain the absolute local container location where
+that volume file system is mounted. This means that the path to a ScaleFile that is accessible to the container
+is the result of os.path.join(volume_path, scale_files[i].file_path). If this broker does not use a container
+volume, None will be given for volume_path. If this method is not supported by the broker, None will be
+returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>volume_path</strong> (<em>string</em>) &#8211; Absolute path to the local container location onto which the volume file system was mounted,
+None if this broker does not use a container volume</li>
+<li><strong>files</strong> ([<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]) &#8211; List of files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of local file system paths if supported, None otherwise</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[string]</p>
 </td>
 </tr>
 </tbody>
@@ -291,8 +320,8 @@ None if this broker does not use a container volume</li>
 <code class="descname">move_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the given files to the new file system paths.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
-that volume file system is mounted. This means that the remote path to where a ScaleFile currently exists is the
-result of os.path.join(volume_path, files_moves[i].file.file_path) and the new path is given by
+that volume file system is mounted. This means that the path to where a ScaleFile currently exists is the result
+of os.path.join(volume_path, files_moves[i].file.file_path) and the new path is given by
 os.path.join(volume_path, files_moves[i].file.new_path). If this broker does not use a container volume, None
 will be given for volume_path.</p>
 <p>The file_moves list contains named tuples that each contain a ScaleFile model to be moved and the new relative
@@ -320,8 +349,8 @@ None if this broker does not use a container volume</li>
 <code class="descname">upload_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.upload_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the given files from the given local file system paths.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
-that volume file system is mounted. This means that the remote path to where a ScaleFile should be uploaded is
-the result of os.path.join(volume_path, file_uploads[i].file.file_path). If this broker does not use a container
+that volume file system is mounted. This means that the path to where a ScaleFile should be uploaded is the
+result of os.path.join(volume_path, file_uploads[i].file.file_path). If this broker does not use a container
 volume, None will be given for volume_path.</p>
 <p>The file_uploads list contains named tuples that each contain a ScaleFile model to be uploaded and the absolute
 local container path where the file currently exists. The broker is free to alter the ScaleFile fields of the
@@ -530,6 +559,12 @@ None.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.brokers.host_broker.HostBroker.get_file_system_paths">
+<code class="descname">get_file_system_paths</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.get_file_system_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.get_file_system_paths" title="storage.brokers.broker.Broker.get_file_system_paths"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.get_file_system_paths()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.brokers.host_broker.HostBroker.load_configuration">
 <code class="descname">load_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.load_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.load_configuration" title="storage.brokers.broker.Broker.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.load_configuration()</span></code></a></p>
@@ -575,6 +610,12 @@ mount an NFS volume into the task container</p>
 <dt id="storage.brokers.nfs_broker.NfsBroker.download_files">
 <code class="descname">download_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.download_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.download_files" title="storage.brokers.broker.Broker.download_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.download_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.nfs_broker.NfsBroker.get_file_system_paths">
+<code class="descname">get_file_system_paths</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.get_file_system_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.get_file_system_paths" title="storage.brokers.broker.Broker.get_file_system_paths"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.get_file_system_paths()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">

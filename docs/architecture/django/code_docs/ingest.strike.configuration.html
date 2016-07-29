@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest.strike package" href="ingest.strike.html"/>
-        <link rel="next" title="ingest.test package" href="ingest.test.html"/>
+        <link rel="next" title="ingest.strike.handlers package" href="ingest.strike.handlers.html"/>
         <link rel="prev" title="ingest.strike package" href="ingest.strike.html"/> 
 
   
@@ -105,7 +105,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -231,8 +230,110 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount">
-<code class="descname">get_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_monitor">
+<code class="descname">get_monitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configured monitor for this Strike configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configured monitor</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor" title="ingest.strike.monitors.monitor.Monitor"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.monitors.monitor.Monitor</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace">
+<code class="descname">get_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the monitored workspace name for this Strike configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The monitored workspace name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration">
+<code class="descname">load_monitor_configuration</code><span class="sig-paren">(</span><em>monitor</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the configuration into the given monitor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>monitor</strong> (<a class="reference internal" href="ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor" title="ingest.strike.monitors.monitor.Monitor"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.monitors.monitor.Monitor</span></code></a>) &#8211; The configuration as a dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the Strike configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#ingest.strike.configuration.strike_configuration.ValidationWarning" title="ingest.strike.configuration.strike_configuration.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.strike.configuration.strike_configuration.ValidationWarning">
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks Strike configuration warnings during validation that may prevent the process from working.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.strike.configuration.strike_configuration_1_0">
+<span id="ingest-strike-configuration-strike-configuration-1-0-module"></span><h2>ingest.strike.configuration.strike_configuration_1_0 module<a class="headerlink" href="#module-ingest.strike.configuration.strike_configuration_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the configuration for running an instance of Strike</p>
+<dl class="class">
+<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration">
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration_1_0.</code><code class="descname">StrikeConfiguration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the configuration for a running Strike instance. The configuration includes details about mounting the
+transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
+identify files to ingest and how to store them.</p>
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount">
+<code class="descname">get_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the &#8220;mount&#8221; value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -247,8 +348,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix">
-<code class="descname">get_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_transfer_suffix">
+<code class="descname">get_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the &#8220;transfer_suffix&#8221; value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -263,8 +364,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name">
-<code class="descname">match_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name">
+<code class="descname">match_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to match the given file name against this configuration and if a match is made, returns the details
 about how to ingest the file. If no match is found, None is returned</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -285,8 +386,8 @@ workspace, and the workspace, or None if no file name match is found</td>
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.strike.configuration.strike_configuration.ValidationWarning">
-<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.strike_configuration_1_0.ValidationWarning">
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration_1_0.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.ValidationWarning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Tracks Strike configuration warnings during validation that may not prevent the process from working.</p>
 </dd></dl>
@@ -304,7 +405,7 @@ workspace, and the workspace, or None if no file name match is found</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.test.html" class="btn btn-neutral float-right" title="ingest.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.strike.handlers.html" class="btn btn-neutral float-right" title="ingest.strike.handlers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ingest.strike.html" class="btn btn-neutral" title="ingest.strike package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

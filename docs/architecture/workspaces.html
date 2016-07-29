@@ -100,7 +100,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="">Workspaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#workspace-configuration-specification-version-1-0">Workspace Configuration Specification Version 1.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#host-broker">Host Broker</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#nfs-broker">NFS Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nfs-broker-experimental">NFS Broker <em>(experimental)</em></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#s3-broker-experimental">S3 Broker <em>(experimental)</em></a></li>
 </ul>
 </li>
@@ -243,8 +243,8 @@ that you use another broker type if possible.</p>
 <div>The <em>host_path</em> is a required string that specifies the absolute path of the host&#8217;s local directory that should be
 mounted into a job&#8217;s container in order to access the workspace&#8217;s files.</div></blockquote>
 </div>
-<div class="section" id="nfs-broker">
-<h2>NFS Broker<a class="headerlink" href="#nfs-broker" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="nfs-broker-experimental">
+<h2>NFS Broker <em>(experimental)</em><a class="headerlink" href="#nfs-broker-experimental" title="Permalink to this headline">¶</a></h2>
 <p>The NFS broker mounts a remote network file system volume into the job&#8217;s container.</p>
 <p><strong>Plugin Required</strong></p>
 <p>In order to use Scale&#8217;s NFS broker, you must install and run the Netshare Docker plugin. Please see

@@ -121,6 +121,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-util.apps">util.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.file_size">util.file_size module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.middleware">util.middleware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.parse">util.parse module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.rest">util.rest module</a></li>
@@ -262,6 +263,28 @@
 <em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">RollbackTransaction</code><a class="headerlink" href="#util.exceptions.RollbackTransaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception that can be thrown and swallowed to explicitly rollback a transaction</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.file_size">
+<span id="util-file-size-module"></span><h2>util.file_size module<a class="headerlink" href="#module-util.file_size" title="Permalink to this headline">¶</a></h2>
+<p>Defines a utility method for displaying file sizes</p>
+<dl class="function">
+<dt id="util.file_size.file_size_to_string">
+<code class="descclassname">util.file_size.</code><code class="descname">file_size_to_string</code><span class="sig-paren">(</span><em>file_size</em><span class="sig-paren">)</span><a class="headerlink" href="#util.file_size.file_size_to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the given file size as a human-readable string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_size</strong> (<em>long</em>) &#8211; The file size</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The human-readable string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

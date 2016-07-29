@@ -35,6 +35,14 @@ util.exceptions module
     :undoc-members:
     :show-inheritance:
 
+util.file_size module
+---------------------
+
+.. automodule:: util.file_size
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util.middleware module
 ----------------------
 

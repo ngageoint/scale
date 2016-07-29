@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest.test.strike package" href="ingest.test.strike.html"/>
-        <link rel="next" title="ingest.test.triggers package" href="ingest.test.triggers.html"/>
+        <link rel="next" title="ingest.test.strike.monitors package" href="ingest.test.strike.monitors.html"/>
         <link rel="prev" title="ingest.test.strike package" href="ingest.test.strike.html"/> 
 
   
@@ -105,7 +105,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -198,112 +197,90 @@
 <div class="section" id="module-ingest.test.strike.configuration.test_strike_configuration">
 <span id="ingest-test-strike-configuration-test-strike-configuration-module"></span><h2>ingest.test.strike.configuration.test_strike_configuration module<a class="headerlink" href="#module-ingest.test.strike.configuration.test_strike_configuration" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit">
-<em class="property">class </em><code class="descclassname">ingest.test.strike.configuration.test_strike_configuration.</code><code class="descname">TestStrikeConfigurationInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration">
+<em class="property">class </em><code class="descclassname">ingest.test.strike.configuration.test_strike_configuration.</code><code class="descname">TestStrikeConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_absolute_workspace_path">
-<code class="descname">test_absolute_workspace_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_absolute_workspace_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with absolute workspace_path.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_absolute_workspace_path">
+<code class="descname">test_absolute_workspace_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_absolute_workspace_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor with absolute new_file_path.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_bad_version">
-<code class="descname">test_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_bad_version" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bad_version">
+<code class="descname">test_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bad_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling StrikeConfiguration constructor with bad version number.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_bare_min">
-<code class="descname">test_bare_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_bare_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with bare minimum JSON.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bare_min">
+<code class="descname">test_bare_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bare_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor with bare minimum JSON</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_filename_regex">
-<code class="descname">test_blank_filename_regex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_filename_regex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with blank filename_regex.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_blank_filename_regex">
+<code class="descname">test_blank_filename_regex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_blank_filename_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor with blank filename_regex</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_mount">
-<code class="descname">test_blank_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with blank mount.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_conversion_from_1_0">
+<code class="descname">test_conversion_from_1_0</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_conversion_from_1_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() after converting from schema version 1.0</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_transfer_suffix">
-<code class="descname">test_blank_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_transfer_suffix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with blank transfer_suffix.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_monitor">
+<code class="descname">test_missing_monitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor with missing monitor</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_workspace_path">
-<code class="descname">test_blank_workspace_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_blank_workspace_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor with blank workspace_path.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_workspace">
+<code class="descname">test_missing_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor with missing workspace</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration constructor successfully with all information.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName">
-<em class="property">class </em><code class="descclassname">ingest.test.strike.configuration.test_strike_configuration.</code><code class="descname">TestStrikeConfigurationMatchFileName</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.test_match">
-<code class="descname">test_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.test_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration.match_file_name() with a match.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_successful_all">
+<code class="descname">test_successful_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_successful_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration constructor successfully with all information</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.test_no_match">
-<code class="descname">test_no_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationMatchFileName.test_no_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration.match_file_name() without a match.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces">
-<em class="property">class </em><code class="descclassname">ingest.test.strike.configuration.test_strike_configuration.</code><code class="descname">TestStrikeConfigurationValidateWorkspaces</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_invalid_workspace">
-<code class="descname">test_invalid_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_invalid_workspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration() with an invalid workspace name.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_monitor_type">
+<code class="descname">test_validate_bad_monitor_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_monitor_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() with a bad monitor type</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration() successfully.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_workspace">
+<code class="descname">test_validate_bad_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() with a bad workspace</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_workspace_not_active">
-<code class="descname">test_workspace_not_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfigurationValidateWorkspaces.test_workspace_not_active" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling StrikeConfiguration() with a workspace that is not active.</p>
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type">
+<code class="descname">test_validate_mismatched_monitor_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() with a monitor type that does not match the broker type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_successful_all">
+<code class="descname">test_validate_successful_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_successful_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() successfully with all information</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_workspace_not_active">
+<code class="descname">test_validate_workspace_not_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_workspace_not_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling StrikeConfiguration.validate() with a new workspace that is not active</p>
 </dd></dl>
 
 </dd></dl>
@@ -321,7 +298,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.test.triggers.html" class="btn btn-neutral float-right" title="ingest.test.triggers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.test.strike.monitors.html" class="btn btn-neutral float-right" title="ingest.test.strike.monitors package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ingest.test.strike.html" class="btn btn-neutral" title="ingest.test.strike package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

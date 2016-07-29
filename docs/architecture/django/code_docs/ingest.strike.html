@@ -105,7 +105,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.container">ingest.container module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
@@ -196,67 +195,29 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions">ingest.strike.configuration.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.strike.handlers.html">ingest.strike.handlers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_handler">ingest.strike.handlers.file_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_rule">ingest.strike.handlers.file_rule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.strike.monitors.html">ingest.strike.monitors package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors.dir_monitor">ingest.strike.monitors.dir_monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors.exceptions">ingest.strike.monitors.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors.factory">ingest.strike.monitors.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors.monitor">ingest.strike.monitors.monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors.s3_monitor">ingest.strike.monitors.s3_monitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.strike.monitors.html#module-ingest.strike.monitors">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-ingest.strike.exceptions">
-<span id="ingest-strike-exceptions-module"></span><h2>ingest.strike.exceptions module<a class="headerlink" href="#module-ingest.strike.exceptions" title="Permalink to this headline">¶</a></h2>
-<dl class="exception">
-<dt id="ingest.strike.exceptions.S3NoDataNotificationError">
-<em class="property">exception </em><code class="descclassname">ingest.strike.exceptions.</code><code class="descname">S3NoDataNotificationError</code><a class="headerlink" href="#ingest.strike.exceptions.S3NoDataNotificationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Error class used when there is no data associated with an S3 notification.</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="ingest.strike.exceptions.SQSNotificationError">
-<em class="property">exception </em><code class="descclassname">ingest.strike.exceptions.</code><code class="descname">SQSNotificationError</code><a class="headerlink" href="#ingest.strike.exceptions.SQSNotificationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Error class used when there is a problem processing an SQS S3 notification.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.strike.strike_processor">
-<span id="ingest-strike-strike-processor-module"></span><h2>ingest.strike.strike_processor module<a class="headerlink" href="#module-ingest.strike.strike_processor" title="Permalink to this headline">¶</a></h2>
-<p>Defines the Strike Processor which watches a directory for incoming files and prepares them to be ingested after they
-are fully transferred</p>
-<dl class="class">
-<dt id="ingest.strike.strike_processor.StrikeProcessor">
-<em class="property">class </em><code class="descclassname">ingest.strike.strike_processor.</code><code class="descname">StrikeProcessor</code><span class="sig-paren">(</span><em>strike_id</em>, <em>job_exe_id</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.strike_processor.StrikeProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class processes files in a given directory (the Strike directory)
-by waiting until a file has been completely transferred to the Strike
-directory (tracking progress along the way) and then determining if the
-file should be ingested (by creating an ingest task) or deferred for later
-evaluation.</p>
-<dl class="method">
-<dt id="ingest.strike.strike_processor.StrikeProcessor.load_configuration">
-<code class="descname">load_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.strike_processor.StrikeProcessor.load_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the given configuration</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="ingest.strike.configuration.strike_configuration.StrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.StrikeConfiguration</span></code></a>) &#8211; The Strike configuration</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.strike.strike_processor.StrikeProcessor.mount_and_process_dir">
-<code class="descname">mount_and_process_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.strike_processor.StrikeProcessor.mount_and_process_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mounts NFS and processes the current files in the Strike directory</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-ingest.strike">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.strike" title="Permalink to this headline">¶</a></h2>

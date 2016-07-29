@@ -1,0 +1,54 @@
+ingest.strike.monitors package
+==============================
+
+Submodules
+----------
+
+ingest.strike.monitors.dir_monitor module
+-----------------------------------------
+
+.. automodule:: ingest.strike.monitors.dir_monitor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.strike.monitors.exceptions module
+----------------------------------------
+
+.. automodule:: ingest.strike.monitors.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.strike.monitors.factory module
+-------------------------------------
+
+.. automodule:: ingest.strike.monitors.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.strike.monitors.monitor module
+-------------------------------------
+
+.. automodule:: ingest.strike.monitors.monitor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.strike.monitors.s3_monitor module
+----------------------------------------
+
+.. automodule:: ingest.strike.monitors.s3_monitor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.strike.monitors
+    :members:
+    :undoc-members:
+    :show-inheritance:

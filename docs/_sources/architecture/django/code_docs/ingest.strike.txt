@@ -7,26 +7,8 @@ Subpackages
 .. toctree::
 
     ingest.strike.configuration
-
-Submodules
-----------
-
-ingest.strike.exceptions module
--------------------------------
-
-.. automodule:: ingest.strike.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ingest.strike.strike_processor module
--------------------------------------
-
-.. automodule:: ingest.strike.strike_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+    ingest.strike.handlers
+    ingest.strike.monitors
 
 Module contents
 ---------------

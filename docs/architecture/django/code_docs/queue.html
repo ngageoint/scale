@@ -793,19 +793,17 @@ Otherwise it is marked failed. All database changes occur in an atomic transacti
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job">
 <code class="descname">queue_new_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The given
-job_type model must have already been saved in the database (it must have an ID). The given event model must
-have already been saved in the database (it must have an ID). The new job, job_exe, and queue models are saved
-in the database in an atomic transaction. If the data is invalid, a
-<a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a> will be thrown.</p>
+<dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
+job_exe, and queue models are saved in the database in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
-<li><strong>data</strong> (<em>dict</em>) &#8211; JSON description defining the job data to run on</li>
+<li><strong>data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data to run on</li>
 <li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a>) &#8211; The optional initial job configuration</li>
 </ul>
 </td>
 </tr>

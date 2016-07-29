@@ -63,14 +63,6 @@ storage.models module
     :undoc-members:
     :show-inheritance:
 
-storage.nfs module
-------------------
-
-.. automodule:: storage.nfs
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 storage.serializers module
 --------------------------
 

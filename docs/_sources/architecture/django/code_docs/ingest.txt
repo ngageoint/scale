@@ -24,14 +24,6 @@ ingest.apps module
     :undoc-members:
     :show-inheritance:
 
-ingest.container module
------------------------
-
-.. automodule:: ingest.container
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ingest.ingest_job module
 ------------------------
 

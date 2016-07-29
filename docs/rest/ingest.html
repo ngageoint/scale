@@ -490,19 +490,15 @@ DUPLICATE].</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>transfer_path</td>
+<tr class="row-even"><td>file_path</td>
 <td>String</td>
-<td>The absolute path of the destination where the file is being transferred.</td>
+<td>The relative path for where the file is stored in the workspace.</td>
 </tr>
-<tr class="row-odd"><td>file_path</td>
+<tr class="row-odd"><td>new_file_path</td>
 <td>String</td>
-<td>The relative path for where the file will be stored in the workspace.</td>
+<td>The relative path for where the file should be moved as part of ingesting.</td>
 </tr>
-<tr class="row-even"><td>ingest_path</td>
-<td>String</td>
-<td>The absolute path of the file when it is ready to be ingested.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -591,9 +587,8 @@ DUPLICATE].</td>
     <span class="p">},</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:47.412Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;transfer_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/mounts/transfer/file_name.txt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;path/file_name.txt&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ingest_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/mounts/transfer/ingesting/file_name.txt&quot;</span>
+    <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;new/path/file_name.txt&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
