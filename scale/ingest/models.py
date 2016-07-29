@@ -9,7 +9,8 @@ import django.utils.timezone as timezone
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration, ValidationWarning
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -275,19 +276,15 @@ class Ingest(models.Model):
     :type file_name: :class:`django.db.models.CharField`
     :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
-    :keyword job: The ingest job that is processing this ingest
-    :type job: :class:`django.db.models.ForeignKey`
     :keyword status: The status of the file ingest process
     :type status: :class:`django.db.models.CharField`
 
-    :keyword transfer_path: The relative path of the destination where the file is being transferred
-    :type transfer_path: :class:`django.db.models.CharField`
+    :keyword transfer_started: When the transfer to the workspace started
+    :type transfer_started: :class:`django.db.models.DateTimeField`
+    :keyword transfer_ended: When the transfer to the workspace ended
+    :type transfer_ended: :class:`django.db.models.DateTimeField`
     :keyword bytes_transferred: The total number of bytes transferred so far
     :type bytes_transferred: :class:`django.db.models.BigIntegerField`
-    :keyword transfer_started: When the transfer was started
-    :type transfer_started: :class:`django.db.models.DateTimeField`
-    :keyword transfer_ended: When the transfer ended
-    :type transfer_ended: :class:`django.db.models.DateTimeField`
 
     :keyword media_type: The IANA media type of the file
     :type media_type: :class:`django.db.models.CharField`
@@ -295,13 +292,18 @@ class Ingest(models.Model):
     :type file_size: :class:`django.db.models.BigIntegerField`
     :keyword data_type: A comma-separated string listing the data type "tags" for the file
     :type data_type: :class:`django.db.models.TextField`
-    :keyword file_path: The relative path for where the file will be stored in the workspace
-    :type file_path: :class:`django.db.models.CharField`
-    :keyword workspace: The workspace that will store the file
-    :type workspace: :class:`django.db.models.ForeignKey`
 
-    :keyword ingest_path: The relative path of the file when it is ready to be ingested
-    :type ingest_path: :class:`django.db.models.CharField`
+    :keyword file_path: The relative path for where the file is stored in the workspace
+    :type file_path: :class:`django.db.models.CharField`
+    :keyword workspace: The workspace where the file was transferred
+    :type workspace: :class:`django.db.models.ForeignKey`
+    :keyword new_file_path: The relative path for where the file should be moved as part of ingesting
+    :type new_file_path: :class:`django.db.models.CharField`
+    :keyword new_workspace: The new workspace to move the file into as part of ingesting
+    :type new_workspace: :class:`django.db.models.ForeignKey`
+
+    :keyword job: The ingest job that is processing this ingest
+    :type job: :class:`django.db.models.ForeignKey`
     :keyword ingest_started: When the ingest was started
     :type ingest_started: :class:`django.db.models.DateTimeField`
     :keyword ingest_ended: When the ingest ended
@@ -327,21 +329,22 @@ class Ingest(models.Model):
 
     file_name = models.CharField(max_length=250, db_index=True)
     strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', blank=True, null=True)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
-    transfer_path = models.CharField(max_length=1000)
-    bytes_transferred = models.BigIntegerField()
-    transfer_started = models.DateTimeField()
+    bytes_transferred = models.BigIntegerField(blank=True, null=True)
+    transfer_started = models.DateTimeField(blank=True, null=True)
     transfer_ended = models.DateTimeField(blank=True, null=True)
 
     media_type = models.CharField(max_length=250, blank=True)
     file_size = models.BigIntegerField(blank=True, null=True)
     data_type = models.TextField(blank=True)
-    file_path = models.CharField(max_length=1000, blank=True)
-    workspace = models.ForeignKey('storage.Workspace', blank=True, null=True)
 
-    ingest_path = models.CharField(max_length=1000, blank=True)
+    file_path = models.CharField(max_length=1000, blank=True)
+    workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
+    new_file_path = models.CharField(max_length=1000, blank=True)
+    new_workspace = models.ForeignKey('storage.Workspace', blank=True, null=True, related_name='+')
+
+    job = models.ForeignKey('job.Job', blank=True, null=True)
     ingest_started = models.DateTimeField(blank=True, null=True)
     ingest_ended = models.DateTimeField(blank=True, null=True)
     source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
@@ -420,22 +423,19 @@ class StrikeManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        StrikeConfiguration(configuration)
+        config = StrikeConfiguration(configuration)
+        config.validate()
 
         strike = Strike()
         strike.name = name
         strike.title = title
         strike.description = description
-        strike.configuration = configuration
+        strike.configuration = config.get_dict()
         strike.save()
 
         strike_type = self.get_strike_job_type()
-        job_data = {
-            'input_data': [{
-                'name': 'Strike ID',
-                'value': unicode(strike.id),
-            }],
-        }
+        job_data = JobData()
+        job_data.add_property_input('Strike ID', unicode(strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
@@ -466,6 +466,7 @@ class StrikeManager(models.Manager):
         # Validate the configuration, no exception is success
         if configuration:
             config = StrikeConfiguration(configuration)
+            config.validate()
             strike.configuration = config.get_dict()
 
         # Update editable fields
@@ -530,37 +531,6 @@ class StrikeManager(models.Manager):
 
         return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
 
-    def validate_strike(self, name, configuration):
-        """Validates a new Strike process prior to attempting a save
-
-        :param name: The identifying name of a Strike process to validate
-        :type name: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
-        :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
-
-        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
-            invalid.
-        """
-        warnings = []
-
-        # Validate the configuration, no exception is success
-        StrikeConfiguration(configuration)
-
-        # Check for issues when changing an existing Strike configuration
-        try:
-            strike = Strike.objects.get(name=name)
-
-            if (configuration['mount'] and strike.configuration['mount'] and
-                    configuration['mount'] != strike.configuration['mount']):
-                warnings.append(ValidationWarning('mount_change',
-                                                  'Changing the mount path may disrupt file monitoring.'))
-        except Strike.DoesNotExist:
-            pass
-
-        return warnings
-
 
 class Strike(models.Model):
     """Represents an instance of a Strike process which will run and detect incoming files in a directory for ingest
@@ -603,6 +573,15 @@ class Strike(models.Model):
         """
 
         return StrikeConfiguration(self.configuration)
+
+    def get_strike_configuration_as_dict(self):
+        """Returns the configuration for this Strike process as a dict
+
+        :returns: The configuration for this Strike process
+        :rtype: dict
+        """
+
+        return self.get_strike_configuration().get_dict()
 
     class Meta(object):
         """meta information for database"""

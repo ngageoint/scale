@@ -391,7 +391,7 @@ class JobManager(models.Manager):
         disk_out_required = max(output_size_mb, MIN_DISK)
 
         # Configure workspaces needed for the job
-        configuration = JobConfiguration()
+        configuration = job.get_job_configuration()
         for name in input_workspaces:
             configuration.add_job_task_workspace(name, MODE_RO)
         if not job.job_type.is_system:
@@ -404,13 +404,6 @@ class JobManager(models.Manager):
             for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
                 if workspace.name not in input_workspaces:
                     configuration.add_post_task_workspace(workspace.name, MODE_RW)
-        elif job.job_type.name == 'scale-ingest':
-            # TODO: This is an ugly hack. Figure out a better way for an ingest job type to pass along that it requires
-            # a certain workspace. Not sure I like using job data for this.
-            ingest_id = data.get_property_values(['Ingest ID'])['Ingest ID']
-            from ingest.models import Ingest
-            ingest = Ingest.objects.select_related('workspace').get(id=ingest_id)
-            configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
 
         # Update job model in memory
         job.data = data.get_dict()
@@ -1376,13 +1369,15 @@ class JobExecution(models.Model):
             configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
 
+        # Configure Strike workspace based on current configuration
+        if self.job.job_type.name == 'scale-strike':
+            from ingest.models import Strike
+            strike = Strike.objects.get(job_id=self.job_id)
+            workspace_name = strike.get_strike_configuration().get_workspace()
+            configuration.add_job_task_workspace(workspace_name, MODE_RW)
+
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
-
-        # TODO: This is needed to allow Strike and ingest jobs to mount inside their containers. Remove this when those
-        # jobs no longer mount within the container.
-        if self.job.job_type.name in ['scale-strike', 'scale-ingest']:
-            configuration.add_job_task_docker_param(DockerParam('env', 'ENABLE_NFS=1'))
 
         self.configuration = configuration.get_dict()
 

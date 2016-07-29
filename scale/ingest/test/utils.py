@@ -33,12 +33,10 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
     job = job_utils.create_job(job_type=job_type)
     job_utils.create_job_exe(job=job)
 
-    return Ingest.objects.create(file_name=file_name, file_size=source_file.file_size, status=status,
-                                 transfer_path='/test/transfer', job=job, bytes_transferred=source_file.file_size,
-                                 transfer_started=transfer_started, transfer_ended=transfer_ended,
-                                 media_type='text/plain', ingest_path='/test/ingest',
-                                 ingest_started=ingest_started, ingest_ended=ingest_ended,
-                                 workspace=workspace, strike=strike, source_file=source_file)
+    return Ingest.objects.create(file_name=file_name, file_size=source_file.file_size, status=status, job=job,
+                                 bytes_transferred=source_file.file_size, transfer_started=transfer_started,
+                                 transfer_ended=transfer_ended, media_type='text/plain', ingest_started=ingest_started,
+                                 ingest_ended=ingest_ended, workspace=workspace, strike=strike, source_file=source_file)
 
 
 def create_strike(name=None, title=None, description=None, configuration=None, job=None):
@@ -51,7 +49,10 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
     if not description:
         description = 'Test description'
     if not configuration:
-        configuration = {'version': '1.0'}
+        workspace = storage_test_utils.create_workspace()
+        configuration = {'version': '1.0', 'mount': 'host:/my/path', 'transfer_suffix': '_tmp',
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
+                                              'workspace_path': 'wksp/path'}]}
     if not job:
         job = job_utils.create_job()
 

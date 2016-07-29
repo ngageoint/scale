@@ -25,7 +25,7 @@ class StrikeSerializer(StrikeBaseSerializer):
 
 class StrikeDetailsSerializer(StrikeSerializer):
     """Converts strike model fields to REST output"""
-    configuration = serializers.JSONField()
+    configuration = serializers.JSONField(source='get_strike_configuration_as_dict')
 
 
 class IngestBaseSerializer(ModelIdSerializer):
@@ -64,9 +64,8 @@ class IngestDetailsSerializer(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
     from source.serializers import SourceFileSerializer
 
-    transfer_path = serializers.CharField()
     file_path = serializers.CharField()
-    ingest_path = serializers.CharField()
+    new_file_path = serializers.CharField()
 
     strike = StrikeDetailsSerializer()
     source_file = SourceFileSerializer()

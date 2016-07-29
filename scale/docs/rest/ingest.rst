@@ -211,11 +211,9 @@ These services provide access to information about ingested files processed by t
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| transfer_path      | String            | The absolute path of the destination where the file is being transferred.      |
+| file_path          | String            | The relative path for where the file is stored in the workspace.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_path          | String            | The relative path for where the file will be stored in the workspace.          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| ingest_path        | String            | The absolute path of the file when it is ready to be ingested.                 |
+| new_file_path      | String            | The relative path for where the file should be moved as part of ingesting.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -308,9 +306,8 @@ These services provide access to information about ingested files processed by t
 |        },                                                                                                               |
 |        "created": "2015-09-10T15:24:47.412Z",                                                                           |
 |        "last_modified": "2015-09-10T15:24:53.987Z",                                                                     |
-|        "transfer_path": "/mounts/transfer/file_name.txt",                                                               |
 |        "file_path": "path/file_name.txt",                                                                               |
-|        "ingest_path": "/mounts/transfer/ingesting/file_name.txt"                                                        |
+|        "new_file_path": "new/path/file_name.txt"                                                                        |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 
