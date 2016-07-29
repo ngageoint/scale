@@ -1,14 +1,23 @@
 <ais-header name="'Nodes'" loading="vm.loading"></ais-header>
 <div class="row">
-    <div class="nodes col-xs-9">
-        <ais-grid-chart data="vm.nodeData" scale="1.5" mode="zoom" reveal="true"></ais-grid-chart>
+    <div class="col-xs-9">
+        <div class="clearfix margin-bottom-md"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="grid-container">
+                    <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+                </div>
+                <ais-grid-pagination></ais-grid-pagination>
+            </div>
+        </div>
     </div>
-    <div class="node-health col-xs-3 text-center">
-        <h3>Node Health</h3>
-        <div class="ov-chart">
-            <div ng-show="vm.nodesError" class="alert alert-danger"><strong>{{ vm.nodesError }}</strong> {{ vm.nodesErrorStatus }}</div>
-            <div ng-show="!vm.nodesError">
-                <ais-node-health duration="'PT3H'" show-description="true"></ais-node-health>
+    <div class="col-xs-3 text-center">
+        <div class="node-health-container">
+            <h3 class="no-margin">Node Health</h3>
+            <ais-node-health data="vm.gridOptions.data" duration="'PT3H'" show-description="true"></ais-node-health>
+            <div class="margin-top-lg">
+                <h5><b>Status Overview</b></h5>
+                <ais-node-status-grid data="vm.gridOptions.data" cell-size="10px"></ais-node-status-grid>
             </div>
         </div>
     </div>

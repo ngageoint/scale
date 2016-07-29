@@ -11,6 +11,8 @@
             recipesParams = {},
             ingestsColDefs = [],
             ingestsParams = {},
+            nodesColDefs = [],
+            nodeStatusParams = {},
             showActiveWorkspaces = true;
 
         var updateQuerystring = function (data) {
@@ -94,6 +96,15 @@
             };
         };
 
+        var initNodeStatusParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(3, 'hours').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().toISOString()
+            };
+        };
+
         return {
             getVersion: function () {
                 return version;
@@ -170,6 +181,22 @@
             setIngestsParams: function (data) {
                 ingestsParams = initIngestsParams(data);
                 updateQuerystring(ingestsParams);
+            },
+            getNodesColDefs: function () {
+                return nodesColDefs;
+            },
+            setNodesColDefs: function (data) {
+                nodesColDefs = data;
+            },
+            getNodeStatusParams: function () {
+                if (_.keys(nodeStatusParams).length === 0) {
+                    return initNodeStatusParams($location.search());
+                }
+                return nodeStatusParams;
+            },
+            setNodeStatusParams: function (data) {
+                nodeStatusParams = initNodeStatusParams(data);
+                updateQuerystring(nodeStatusParams);
             },
             getShowActiveWorkspaces: function () {
                 return showActiveWorkspaces;

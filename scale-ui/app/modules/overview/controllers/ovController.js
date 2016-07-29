@@ -8,7 +8,11 @@
         vm.jobError = null;
         vm.jobErrorStatus = null;
         vm.loadingJobs = true;
+        vm.loadingNodeHealth = true;
         vm.jobTypes = [];
+        vm.nodes = [];
+        vm.nodeHealthError = null;
+        vm.nodeHealthErrorStatus = '';
         vm.hourValue = 3;
         vm.jobData = {
             data: null,
@@ -109,6 +113,21 @@
             });
         };
 
+        var getNodeStatus = function () {
+            nodeService.getNodeStatus(null, null, 'PT' + vm.hours + 'H', null).then(null, null, function (data) {
+                if (data.$resolved) {
+                    vm.nodeHealthError = null;
+                    vm.nodes = data.results;
+                } else {
+                    if (data.statusText && data.statusText !== '') {
+                        vm.nodeHealthErrorStatus = data.statusText;
+                    }
+                    vm.nodeHealthError = 'Unable to retrieve nodes.';
+                }
+                vm.loadingNodeHealth = false;
+            });
+        };
+
         $rootScope.$on('jobTypeStatus', function (event, data) {
             vm.jobData.status = data;
             redrawGrid();
@@ -117,6 +136,7 @@
         var initialize = function () {
             getJobTypes();
             getStatus();
+            getNodeStatus();
             navService.updateLocation('overview');
         };
 
