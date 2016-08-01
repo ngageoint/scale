@@ -1380,8 +1380,6 @@ class JobExecution(models.Model):
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
 
-
-
         self.configuration = configuration.get_dict()
 
     def get_docker_image(self):
