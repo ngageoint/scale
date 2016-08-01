@@ -2,11 +2,17 @@
 from __future__ import unicode_literals
 
 import logging
-from mesos.interface import mesos_pb2
 
 
 logger = logging.getLogger(__name__)
 
+
+try:
+    from mesos.interface import mesos_pb2
+    logger.info('Successfully imported native Mesos bindings')
+except ImportError:
+    logger.info('No native Mesos bindings, falling back to stubs')
+    import mesos_api.mesos_pb2 as mesos_pb2
 
 
 def create_mesos_task(task):
