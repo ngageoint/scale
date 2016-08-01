@@ -7,8 +7,6 @@ import threading
 
 from django.db import DatabaseError
 from django.utils.timezone import now
-from mesos.interface import Scheduler as MesosScheduler
-from mesos.interface import mesos_pb2
 
 from error.models import Error
 from job.execution.running.job_exe import RunningJobExecution
@@ -34,6 +32,15 @@ from scheduler.threads.schedule import SchedulingThread
 
 logger = logging.getLogger(__name__)
 
+
+try:
+    from mesos.interface import Scheduler as MesosScheduler
+    from mesos.interface import mesos_pb2
+    logger.info('Successfully imported native Mesos bindings')
+except ImportError:
+    logger.info('No native Mesos bindings, falling back to stubs')
+    from mesos_api.mesos import Scheduler as MesosScheduler
+    import mesos_api.mesos_pb2 as mesos_pb2
 
 
 class ScaleScheduler(MesosScheduler):

@@ -8,14 +8,25 @@ from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from mesos.interface import mesos_pb2
-from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
 
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
 
-
+# Try to import production Mesos bindings, fall back to stubs
+try:
+    from mesos.interface import mesos_pb2
+    from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
+    logger.info('Successfully imported pesos bindings')
+except ImportError:
+    try:
+       from mesos.interface import mesos_pb2
+       from mesos.native import MesosSchedulerDriver
+       logger.info('Successfully imported native Mesos bindings')
+    except ImportError:
+       logger.info('No native Mesos bindings, falling back to stubs')
+       import mesos_api.mesos_pb2 as mesos_pb2
+       from mesos_api.mesos import MesosSchedulerDriver
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False
