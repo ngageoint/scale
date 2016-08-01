@@ -8,7 +8,6 @@ django-filter>=0.7,<=0.8
 djangorestframework>=3.3.0,<3.4.0
 djorm-ext-pgjson>=0.2,<0.3
 jsonschema>=2.3,<2.4
-mesos.interface>=0.21.1,<=0.25
 pytz
 
 # These libraries contain native code and must be manually installed into your Python environment
