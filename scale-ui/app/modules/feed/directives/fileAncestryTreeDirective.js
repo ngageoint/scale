@@ -52,6 +52,7 @@
                 var zoom = d3.behavior.zoom()
                     .on("zoom", function() {
                         // don't zoom on WheelEvent or MouseEvent, just window sizing
+                        console.log('zoomed');
                         if(d3.event.sourceEvent === null){
                             inner.attr("transform", "translate(" + d3.event.translate + ")" +
                                 "scale(" + d3.event.scale + ")");
@@ -140,20 +141,29 @@
                     svg.attr('viewBox', vbx[0] + ' ' + vbx[1] + ' ' + vbx[2] + ' ' + gheight*1.1);
                 }
 
-                // Scale graph based on min ratio of vbox width over graph width
-                //   or vbox height over graph height
-                //   ensures graph fits within current vbox
+                // Scale graph based on width or height based on which exceeds
+                // viewbox by most pixels
                 var initialScale = Math.min((vbx[2]*0.95)/gwidth,(vbx[3]*0.95)/gheight);
-                //var initialScale = Math.min((vbx[2])/gwidth,(vbx[3])/gheight);
                 zoom
                     .translate([(vbx[2]*0.02), (vbx[3]*0.02)])
                     .scale(initialScale)
                     .event(svg);
 
-
                 // set appropriate class for job nodes
                 $('.job-name').closest('.node').children('rect').attr('class', 'job'); //.addClass('job');
 
+                // clear zoom handler and mousewheel events
+                // so they don't interfere with scrolling
+                zoom.on('zoom', null);
+                svg.on("mousedown.zoom", null)
+                    .on("mousewheel.zoom", null)
+                    .on("mousemove.zoom", null)
+                    .on("DOMMouseScroll.zoom", null)
+                    .on("dblclick.zoom", null)
+                    .on("touchstart.zoom", null)
+                    .on("touchmove.zoom", null)
+                    .on("touchend.zoom", null)
+                    .on("wheel.zoom", null);
             }
 
         }
