@@ -9,7 +9,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from mesos.interface import mesos_pb2
-from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
+from mesos.native import MesosSchedulerDriver
 
 from scheduler.scale_scheduler import ScaleScheduler
 
