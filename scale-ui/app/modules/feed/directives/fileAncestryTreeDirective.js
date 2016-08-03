@@ -131,13 +131,22 @@
                 var gwidth = g.graph().width;
                 var gheight = g.graph().height;
                 var ratio = gheight/gwidth;
-                var vbxheight = vbx[2]*ratio;
-                svg.attr('viewBox', vbx[0] + ' ' + vbx[1] + ' ' + vbx[2] + ' ' + vbxheight);
 
-                var initialScale = vbx[2]/gwidth;
+                console.log(gheight);
+                console.log(vbx[3]);
 
+                // If graph is shorter than container, shrink the container height
+                if( gheight < vbx[3] ){
+                    svg.attr('viewBox', vbx[0] + ' ' + vbx[1] + ' ' + vbx[2] + ' ' + gheight*1.1);
+                }
+
+                // Scale graph based on min ratio of vbox width over graph width
+                //   or vbox height over graph height
+                //   ensures graph fits within current vbox
+                var initialScale = Math.min((vbx[2]*0.95)/gwidth,(vbx[3]*0.95)/gheight);
+                //var initialScale = Math.min((vbx[2])/gwidth,(vbx[3])/gheight);
                 zoom
-                    .translate([0, 0])
+                    .translate([(vbx[2]*0.02), (vbx[3]*0.02)])
                     .scale(initialScale)
                     .event(svg);
 
