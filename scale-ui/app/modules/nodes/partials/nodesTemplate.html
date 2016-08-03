@@ -12,12 +12,18 @@
         </div>
     </div>
     <div class="col-xs-3 text-center">
-        <div class="node-health-container">
+        <div ng-show="vm.loadingStatus" class="loading-component">
+            <h4>
+                <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+                Loading
+            </h4>
+        </div>
+        <div class="node-health-container" ng-show="!vm.loadingStatus">
             <h3 class="no-margin">Node Health</h3>
-            <ais-node-health data="vm.gridOptions.data" duration="'PT3H'" show-description="true"></ais-node-health>
+            <ais-node-health data="vm.nodeStatus" duration="'PT3H'" show-description="true"></ais-node-health>
             <div class="margin-top-lg">
                 <h5><b>Status Overview</b></h5>
-                <ais-node-status-grid data="vm.gridOptions.data" cell-size="10px"></ais-node-status-grid>
+                <ais-node-status-grid data="vm.nodeStatus" cell-size="10px"></ais-node-status-grid>
             </div>
         </div>
     </div>
