@@ -515,8 +515,12 @@ These services provide access to information about "all", "currently running" an
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Request Header Fields**                                                                                                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| Accept               | String            | Should be *text/plain* or *text/html* and determines if div entries are        |
-|                      |                   | added to distinguish stdout from stderr.                                       |
+| Accept               | String            | Should be *application/json*, *text/plain*, or *text/html*.                    |
+|                      |                   | *application/json* will return the raw Elasticsearch results.                  |
+|                      |                   | *text/plain* will return the log entries, one per line, as UTF-8.              |
+|                      |                   | *text/html* will return a simple HTML document with stdout/stderr CSS          |
+|                      |                   |             classes to distinguish stdout and stderr. stderr will be           |
+|                      |                   |             colored red by default.                                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | If-Modified-Since    | HTTP Date         | If new log data exists after the specified date, return as normal, otherwise   |
 |                      |                   | return *304 Not Modified*                                                      |
@@ -533,10 +537,15 @@ These services provide access to information about "all", "currently running" an
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Status**           | 200 OK                                                                                             |
 +----------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**     | *text/plain* or *text/html* depending on requested encoding                                        |
+| **Header Fields**                                                                                                         |
++----------------------+----------------------------------------------------------------------------------------------------+
+| Content-Type         | content type as requested                                                                          |
++----------------------+----------------------------------------------------------------------------------------------------+
+| Last-Modified        | The latest timestamp in the returned log entries                                                   |
 +----------------------+----------------------------------------------------------------------------------------------------+
 | **Return description**                                                                                                    |
 +---------------------------------------------------------------------------------------------------------------------------+
+| If the requested encoding is *application/json* the raw Elasticsearch results are returned.                               |
 | If the requested encoding is *text/plain* then the plain text of the requested log will be returned. This will be the     |
 | complete text from the requested timestamp or the complete log since start of execution be default.                       |
 | If *text/html* is requested as a valid encoding then each line of the log in the combined output will be wrapped in a     |
