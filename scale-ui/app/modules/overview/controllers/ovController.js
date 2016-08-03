@@ -114,7 +114,7 @@
         };
 
         var getNodeStatus = function () {
-            nodeService.getNodeStatus(null, null, 'PT' + vm.hours + 'H', null).then(null, null, function (data) {
+            nodeService.getNodeStatus(null, null, 'PT3H', null).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodeHealthError = null;
                     vm.nodes = data.results;
