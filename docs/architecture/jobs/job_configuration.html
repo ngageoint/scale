@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Job Configuration &mdash; Scale 3.1.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../index.html"/>
+        <link rel="up" title="Jobs and Recipes" href="index.html"/>
+        <link rel="next" title="Recipe Definition" href="recipe_definition.html"/>
+        <link rel="prev" title="Job Data" href="job_data.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">Job Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#job-configuration-specification-version-1-0">Job Configuration Specification Version 1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../django/index.html">Django/Code Base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="index.html">Jobs and Recipes</a> &raquo;</li>
+      
+    <li>Job Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/architecture/jobs/job_configuration.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-configuration">
+<span id="architecture-jobs-job-configuration"></span><h1>Job Configuration<a class="headerlink" href="#job-configuration" title="Permalink to this headline">¶</a></h1>
+<p>The job configuration is a JSON document that defines the environment and configuration on which a specific job
+execution will run. This configuration includes information such as Docker parameters required by the job execution&#8217;s
+container. This JSON schema is used internally by the Scale system and is not exposed through the REST API.</p>
+<div class="section" id="job-configuration-specification-version-1-0">
+<span id="architecture-jobs-job-configuration-spec"></span><h2>Job Configuration Specification Version 1.0<a class="headerlink" href="#job-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid job configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;pre_task&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;job_task&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;post_task&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
+allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
+recognize an older version and convert it to the current version. The default value for <em>version</em> if it is not
+included is the latest version, which is currently 1.0.</div></blockquote>
+<p><strong>pre_task</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>pre_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the pre task. It has
+the following fields:</p>
+<p><strong>docker_params</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>docker_params</em> field is a required list of JSON objects that define the parameters to pass to Docker. Each
+JSON object has the following fields:</p>
+<p><strong>flag</strong>: JSON string</p>
+<blockquote>
+<div>The <em>flag</em> is a required string describing the command line flag (long form) to use for passing the
+parameter without the preceding dashes (e.g. use &#8220;volume&#8221; for passing &#8220;&#8211;volume=...&#8221;).</div></blockquote>
+<p><strong>value</strong>: JSON string</p>
+<blockquote>
+<div>The <em>value</em> is a required string describing the value to pass to the parameter on the Docker command line.</div></blockquote>
+</div></blockquote>
+<p><strong>workspaces</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>workspaces</em> field is a required list of JSON objects that define the workspaces used by the task. Each JSON
+object has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string defining the unique name of the workspace.</div></blockquote>
+<p><strong>mode</strong>: JSON string</p>
+<blockquote>
+<div>The <em>mode</em> is a required string describing in what mode the workspace will be used. There are two valid
+values: &#8220;ro&#8221; for read-only mode and &#8220;rw&#8221; for read-write mode.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p><strong>job_task</strong>: JSON object</p>
+<blockquote>
+<div>The <em>job_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
+performs the primary job/algorithm). It is identical in structure to <em>pre_task</em>.</div></blockquote>
+<p><strong>post_task</strong>: JSON object</p>
+<blockquote>
+<div>The <em>post_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the post task. It is
+identical in structure to <em>pre_task</em>.</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe_definition.html" class="btn btn-neutral float-right" title="Recipe Definition" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job_data.html" class="btn btn-neutral" title="Job Data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.1.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
