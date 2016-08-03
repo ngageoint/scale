@@ -13,5 +13,6 @@ jobs that allow jobs to depend upon one another and for files produced by one jo
    error_interface
    job_interface
    job_data
+   job_configuration
    recipe_definition
    recipe_data
