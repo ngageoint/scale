@@ -295,9 +295,6 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
 
     results = serializers.JSONField()
 
-    current_stdout_url = serializers.CharField()
-    current_stderr_url = serializers.CharField()
-
     results_manifest = serializers.JSONField()
 
 

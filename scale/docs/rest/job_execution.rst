@@ -264,10 +264,6 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | results              | JSON Object       | An interface description for all the possible job results meta-data.           |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| current_stdout_url   | URL               | The URL of the standard output log for the execution.                          |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| current_stderr_url   | URL               | The URL of the standard error log for the job execution.                       |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | results_manifest     | JSON Object       | An interface description for all the actual job results meta-data.             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                |
@@ -347,8 +343,6 @@ These services provide access to information about "all", "currently running" an
 |          ],                                                                                                               |
 |          "version": "1.0"                                                                                                 |
 |      },                                                                                                                   |
-|      "current_stdout_url": "http://host/out.txt",                                                                         |
-|      "current_stderr_url": "http://host/error.txt",                                                                       |
 |      "results_manifest": {                                                                                                |
 |          "output_data": [],                                                                                               |
 |          "version": "1.1",                                                                                                |
@@ -367,6 +361,9 @@ These services provide access to information about "all", "currently running" an
 | This will dynamically load the stdout and stderr for the currently running Mesos task if this job execution has not       |
 | completed. These additional calls can add some overhead and processing so care should be taken not to poll this           |
 | with high frequency.                                                                                                      |
++---------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED** This interface is deprecated in favor of the stdout/stderr/combined interfaces below.                      |
+|                It is being maintened for access to old job executions and will be removed in a future release.            |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **GET** /job-executions/{id}/logs/                                                                                        |
 |         Where {id} is the unique identifier of an existing model.                                                         |

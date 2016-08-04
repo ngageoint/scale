@@ -279,21 +279,17 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
 
     @retry_database_query
-    def task_running(self, task_id, when, stdout_url, stderr_url):
+    def task_running(self, task_id, when):
         """Tells this job execution that one of its tasks has started running
 
         :param task_id: The ID of the task
         :type task_id: str
         :param when: The time that the task started running
         :type when: :class:`datetime.datetime`
-        :param stdout_url: The URL for the task's stdout logs
-        :type stdout_url: str
-        :param stderr_url: The URL for the task's stderr logs
-        :type stderr_url: str
         """
 
         current_task = self._current_task
         if not current_task or current_task.id != task_id:
             return
 
-        current_task.running(when, stdout_url, stderr_url)
+        current_task.running(when)

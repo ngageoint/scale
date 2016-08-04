@@ -106,6 +106,7 @@ class Command(BaseCommand):
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()
+        # TODO: fix this
         stdout_and_stderr = (job_exe.stdout or '') + '\n' + (job_exe.stderr or '')
 
         with transaction.atomic():

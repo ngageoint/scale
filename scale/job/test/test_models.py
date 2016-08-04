@@ -560,55 +560,6 @@ class TestJobExecutionManager(TransactionTestCase):
         self.assertEqual(len(job_exes[0].get_job_configuration().get_post_task_docker_params()), 0)
 
 
-class TestJobExecution(TransactionTestCase):
-    """Tests for the job execution model"""
-
-    def setUp(self):
-        django.setup()
-
-    def test_append_stdout_initial(self):
-        """Tests appending output for the first time."""
-        job_exe = JobExecution()
-        job_exe.append_stdout(stdout='initial')
-        
-        self.assertEqual(job_exe.stdout, 'initial')
-
-    def test_append_stdout_join(self):
-        """Tests appending output to existing output."""
-        job_exe = JobExecution(stdout='initial')
-        job_exe.append_stdout('-test1')
-        
-        self.assertEqual(job_exe.stdout, 'initial-test1')
-
-    def test_append_stdout_none(self):
-        """Tests skipping append when no output is provided."""
-        job_exe = JobExecution(stdout='initial')
-        job_exe.append_stdout(None)
-        
-        self.assertEqual(job_exe.stdout, 'initial')
-
-    def test_append_stderr_initial(self):
-        """Tests appending error for the first time."""
-        job_exe = JobExecution()
-        job_exe.append_stderr(stderr='initial')
-        
-        self.assertEqual(job_exe.stderr, 'initial')
-
-    def test_append_stderr_join(self):
-        """Tests appending error to existing error."""
-        job_exe = JobExecution(stderr='initial')
-        job_exe.append_stderr('-test1')
-        
-        self.assertEqual(job_exe.stderr, 'initial-test1')
-
-    def test_append_stderr_none(self):
-        """Tests skipping append when no error is provided."""
-        job_exe = JobExecution(stderr='initial')
-        job_exe.append_stderr(None)
-        
-        self.assertEqual(job_exe.stderr, 'initial')
-
-
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
     def setUp(self):

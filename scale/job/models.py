@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
+import json
 import logging
 import math
-import urllib
+import urllib2
 
 import django.utils.timezone as timezone
+import django.utils.html
 import djorm_pgjson.fields
 from django.conf import settings
 from django.db import models, transaction
@@ -28,6 +30,7 @@ from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction
+import util.parse
 
 
 logger = logging.getLogger(__name__)
@@ -870,32 +873,6 @@ class JobExecutionManager(models.Manager):
         job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
         job_exe = job_exe.get(pk=job_exe_id)
 
-        # Add the standard output log
-        if job_exe.current_stdout_url:
-            try:
-                response = urllib.urlopen(job_exe.current_stdout_url)
-                if response.code == 200:
-                    job_exe.stdout = response.read()
-                else:
-                    logger.error('Received invalid standard output log response: %i -> %s -> %i', job_exe.id,
-                                 job_exe.current_stdout_url, response.code)
-            except:
-                logger.exception('Unable to fetch job execution standard output log: %i -> %s', job_exe.id,
-                                 job_exe.current_stdout_url)
-
-        # Add the standard error log
-        if job_exe.current_stderr_url:
-            try:
-                response = urllib.urlopen(job_exe.current_stderr_url)
-                if response.code == 200:
-                    job_exe.stderr = response.read()
-                else:
-                    logger.error('Received invalid standard error log response: %i -> %s -> %i', job_exe.id,
-                                 job_exe.current_stderr_url, response.code)
-            except:
-                logger.exception('Unable to fetch job execution standard error log: %i -> %s', job_exe.id,
-                                 job_exe.current_stderr_url)
-
         return job_exe
 
     def get_job_exe_with_job_and_job_type(self, job_exe_id):
@@ -1074,7 +1051,7 @@ class JobExecutionManager(models.Manager):
 
         return job_exes
 
-    def task_ended(self, job_exe_id, task, when, exit_code, stdout, stderr):
+    def task_ended(self, job_exe_id, task, when, exit_code):
         """Updates the given job execution to reflect that the given task has ended
 
         :param job_exe_id: The job execution ID
@@ -1085,10 +1062,6 @@ class JobExecutionManager(models.Manager):
         :type when: :class:`datetime.datetime`
         :param exit_code: The task exit code, possibly None
         :type exit_code: int
-        :param stdout: The task stdout contents, possibly None
-        :type stdout: string
-        :param stderr: The task stderr contents, possibly None
-        :type stderr: string
         """
 
         # TODO: once we no longer have stdout and stderr in job execution model, transition this from selecting with
@@ -1107,13 +1080,9 @@ class JobExecutionManager(models.Manager):
                 job_exe.post_completed = when
                 job_exe.post_exit_code = exit_code
 
-            job_exe.append_stdout(stdout)
-            job_exe.append_stderr(stderr)
-            job_exe.current_stdout_url = None
-            job_exe.current_stderr_url = None
             job_exe.save()
 
-    def task_started(self, job_exe_id, task, when, stdout_url, stderr_url):
+    def task_started(self, job_exe_id, task, when):
         """Updates the given job execution to reflect that the given task has started
 
         :param job_exe_id: The job execution ID
@@ -1122,20 +1091,16 @@ class JobExecutionManager(models.Manager):
         :type task: string
         :param when: The time that the task started
         :type when: :class:`datetime.datetime`
-        :param stdout_url: The URL for the task's stdout logs
-        :type stdout_url: string
-        :param stderr_url: The URL for the task's stderr logs
-        :type stderr_url: string
         """
 
         job_exe_qry = self.filter(id=job_exe_id)
 
         if task == 'pre':
-            job_exe_qry.update(pre_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
+            job_exe_qry.update(pre_started=when)
         elif task == 'job':
-            job_exe_qry.update(job_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
+            job_exe_qry.update(job_started=when)
         elif task == 'post':
-            job_exe_qry.update(post_started=when, current_stdout_url=stdout_url, current_stderr_url=stderr_url)
+            job_exe_qry.update(post_started=when)
 
     def update_status(self, job_exes, status, when, error=None):
         """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
@@ -1246,10 +1211,6 @@ class JobExecution(models.Model):
     :keyword stderr: The stderr contents of the entire job execution. This field should normally be deferred when
         querying for job executions since it can be large and often is not needed.
     :type stderr: :class:`django.db.models.TextField`
-    :keyword current_stdout_url: URL for gettng the current stdout log contents
-    :type current_stdout_url: :class:`django.db.models.URLField`
-    :keyword current_stderr_url: URL for gettng the current stderr log contents
-    :type current_stderr_url: :class:`django.db.models.URLField`
 
     :keyword results_manifest: The results manifest generated by the job's algorithm
     :type results_manifest: :class:`djorm_pgjson.fields.JSONField`
@@ -1313,10 +1274,8 @@ class JobExecution(models.Model):
     post_completed = models.DateTimeField(blank=True, null=True)
     post_exit_code = models.IntegerField(blank=True, null=True)
 
-    stdout = models.TextField(blank=True, null=True)
-    stderr = models.TextField(blank=True, null=True)
-    current_stdout_url = models.URLField(null=True, max_length=600)
-    current_stderr_url = models.URLField(null=True, max_length=600)
+    stdout = models.TextField(blank=True, null=True) #deprecated
+    stderr = models.TextField(blank=True, null=True) #deprecated
 
     results_manifest = djorm_pgjson.fields.JSONField()
     results = djorm_pgjson.fields.JSONField()
@@ -1502,35 +1461,74 @@ class JobExecution(models.Model):
 
         return self.job.job_type.uses_docker
 
-    def append_stdout(self, stdout):
-        """Appends the given string content to the standard output field.
+    def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
+        '''Get log data from elasticsearch as a dict (from the raw JSON).
 
-        :param stdout: The standard output content to append.
-        :type stdout: string
-        :returns: The new standard output log after appending new content.
-        :rtype: string
-        """
-        if stdout:
-            if self.stdout:
-                self.stdout += stdout
-            else:
-                self.stdout = stdout
-        return self.stdout
+        :param include_stdout: If True, include stdout in the result
+        :type include_stdout: bool
+        :param include_stderr: If True include stderr in the result
+        :type include_stderr: bool
+        :param since: If present, only retrieve logs since this timestamp (non-inclusive).
+        :type since: :class:`datetime.datetime` or None
+        :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
+        '''
+        q = {
+                "size": 10000,
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"match": {"tag": "%d_job" % job_exe.pk}}
+                        ]
+                    }
+                },
+                "_source": ["@timestamp", "message", "level", "tag"]
+            }
+        if not include_stdout and not include_stderr:
+            return None, util.parse.datetime.datetime.utcnow()
+        elif include_stdout and not include_stderr:
+            q["query"]["bool"]["must"].append({"match": {"level": 6}})
+        elif include_stderr and not include_stdout:
+            q["query"]["bool"]["must"].append({"match": {"level": 3}})
+        if since is not None:
+            q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
 
-    def append_stderr(self, stderr):
-        """Appends the given string content to the standard error field.
+        esr = urllib2.urlopen(
+            urllib2.Request(settings.ELASTICSEARCH_URL,
+                            data=json.dumps(q),
+                            headers={"Accept": "application/json", "Content-type": "application/json"}))
 
-        :param stderr: The standard error content to append.
-        :type stderr: string
-        :returns: The new standard error log after appending new content.
-        :rtype: string
-        """
-        if stderr:
-            if self.stderr:
-                self.stderr += stderr
-            else:
-                self.stderr = stderr
-        return self.stderr
+        hits = json.loads(esr.read())
+        if hits["hits"]["total"] == 0:
+            return None, util.parse.datetime.datetime.utcnow()
+        last_modified = max([util.parse.parse_datetime(h["_source"]["@timestamp"]) for h in hits["hits"]["hits"]])
+        return hits, last_modified
+
+    def get_log_text(self, include_stdout=True, include_stderr=True, since=None, html=False):
+        '''Get log data from elasticsearch.
+
+        :param include_stdout: If True, include stdout in the result
+        :type include_stdout: bool
+        :param include_stderr: If True include stderr in the result
+        :type include_stderr: bool
+        :param since: If present, only retrieve logs since this timestamp (non-inclusive).
+        :type since: :class:`datetime.datetime` or None
+        :param html: If True, wrap the lines in div elements with stdout/stderr css classes, otherwise use plain text
+        :type html: bool
+        :rtype: tuple of (str, :class:`datetime.datetime`) with the log or None and last modified timestamp
+        '''
+
+        hits, last_modified = self.get_log_json(include_stdout, include_stderr, since)
+        if hits is None:
+            return None, last_modified
+        if html:
+            d = ""
+            for h in hits["hits"]["hits"]:
+                cls = "stdout"
+                if h["_source"]["level"] <= 3:
+                    cls = "stderr"
+                d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h["_source"]["message"]))
+            return d, last_modified
+        return "\n".join(h["_source"]["message"] for h in hits["hits"]["hits"]), last_modified
 
     class Meta(object):
         """Meta information for the database"""

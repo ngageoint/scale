@@ -1618,8 +1618,6 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(results['id'], self.job_exe_1b.id)
         self.assertEqual(results['status'], self.job_exe_1b.status)
-        self.assertEqual(results['stdout'], self.job_exe_1b.stdout)
-        self.assertEqual(results['stderr'], self.job_exe_1b.stderr)
 
     def test_get_job_execution_logs_bad_id(self):
         url = '/job-executions/999999/logs/'

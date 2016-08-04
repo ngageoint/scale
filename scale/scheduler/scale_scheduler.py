@@ -15,7 +15,6 @@ from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
 from job.resources import NodeResources
 from mesos_api import utils
-from mesos_api.api import get_slave_task_directory, get_slave_task_url, get_slave_task_file
 from queue.models import Queue
 from scheduler.initialize import initialize_system
 from scheduler.models import Scheduler
@@ -259,28 +258,9 @@ class ScaleScheduler(MesosScheduler):
                 results = TaskResults(task_id)
                 results.exit_code = utils.parse_exit_code(status)
                 results.when = utils.get_status_timestamp(status)
-                if status.state in [mesos_pb2.TASK_FINISHED, mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED,
-                                    mesos_pb2.TASK_KILLED]:
-                    try:
-                        log_start_time = now()
-                        hostname = running_job_exe._node_hostname
-                        port = running_job_exe._node_port
-                        task_dir = get_slave_task_directory(hostname, port, task_id)
-                        results.stdout = get_slave_task_file(hostname, port, task_dir, 'stdout')
-                        results.stderr = get_slave_task_file(hostname, port, task_dir, 'stderr')
-                        log_end_time = now()
-                        logger.debug('Time to pull logs for task: %s', str(log_end_time - log_start_time))
-                    except Exception:
-                        logger.exception('Error pulling logs for task %s', task_id)
-
                 # Apply status update to running job execution
                 if status.state == mesos_pb2.TASK_RUNNING:
-                    hostname = running_job_exe._node_hostname
-                    port = running_job_exe._node_port
-                    task_dir = get_slave_task_directory(hostname, port, task_id)
-                    stdout_url = get_slave_task_url(hostname, port, task_dir, 'stdout')
-                    stderr_url = get_slave_task_url(hostname, port, task_dir, 'stderr')
-                    running_job_exe.task_running(task_id, results.when, stdout_url, stderr_url)
+                    running_job_exe.task_running(task_id, results.when)
                 elif status.state == mesos_pb2.TASK_FINISHED:
                     running_job_exe.task_complete(results)
                 elif status.state == mesos_pb2.TASK_LOST:
