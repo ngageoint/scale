@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, navService, nodeService, stateService, userService, gridFactory) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, navService, nodeService, stateService, userService, gridFactory, toastr) {
         var vm = this;
 
         vm.nodeStatus = [];
@@ -25,7 +25,7 @@
                 displayName: 'Hostname',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity.id)"><i class="fa fa-pause"></i></button></div> {{ row.entity.hostname }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity.id)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused && !row.entity.is_paused_errors, \'fa-play\': row.entity.is_paused || row.entity.is_paused_errors }"></i></button></div> {{ row.entity.hostname }}</div>'
             },
             {
                 field: 'is_online',
@@ -54,8 +54,17 @@
 
         vm.pauseNode = function (id) {
             vm.actionClicked = true;
-            var node = _.find(vm.nodeStatus, { node: { id: id } });
-            node.pauseResumeCell();
+            var nodeStatus = _.find(vm.nodeStatus, { node: { id: id } });
+            nodeStatus.pauseResumeCell().then(function (result) {
+                var node = _.find(vm.gridOptions.data, { id: result.id });
+                node.is_paused = result.is_paused;
+                node.is_paused_errors = result.is_paused_errors;
+                if (node.isPaused()) {
+                    toastr.info(node.hostname + ' Paused');
+                } else {
+                    toastr.info(node.hostname + ' Resumed');
+                }
+            });
         };
 
         vm.getStatusLabel = function (status) {

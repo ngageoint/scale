@@ -379,6 +379,9 @@
         $httpBackend.whenGET(nodeRegex).respond(function () {
             return getSync(nodeOverrideUrl);
         });
+        $httpBackend.whenPATCH(nodeRegex).respond(function () {
+            return getSync(nodeOverrideUrl);
+        });
 
         // Nodes
         var nodesOverrideUrl = 'test/data/nodes.json';
