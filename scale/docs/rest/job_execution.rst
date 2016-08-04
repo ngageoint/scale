@@ -495,3 +495,61 @@ These services provide access to information about "all", "currently running" an
 |      "stderr": ""                                                                                                         |
 |  }                                                                                                                        |
 +---------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_specified_job_execution_logs:
+
++---------------------------------------------------------------------------------------------------------------------------+
+| **Specific Job Execution Logs**                                                                                           |
++===========================================================================================================================+
+| Returns just job execution logs for stdout, stderr, or a combined view.                                                   |
+| This will return the text of the stdout, stderr, or a combined view of both logs.                                         |
+| More advanced log polling can be accomplished by directly querying the elasticsearch database.                            |
++---------------------------------------------------------------------------------------------------------------------------+
+| **GET** /job-executions/{id}/logs/stdout/                                                                                 |
+|         Where {id} is the unique identifier of an existing model.                                                         |
++---------------------------------------------------------------------------------------------------------------------------+
+| **GET** /job-executions/{id}/logs/stderr/                                                                                 |
+|         Where {id} is the unique identifier of an existing model.                                                         |
++---------------------------------------------------------------------------------------------------------------------------+
+| **GET** /job-executions/{id}/logs/combined/                                                                               |
+|         Where {id} is the unique identifier of an existing model.                                                         |
++---------------------------------------------------------------------------------------------------------------------------+
+| **Request Header Fields**                                                                                                 |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| Accept               | String            | Should be *application/json*, *text/plain*, or *text/html*.                    |
+|                      |                   | *application/json* will return the raw Elasticsearch results.                  |
+|                      |                   | *text/plain* will return the log entries, one per line, as UTF-8.              |
+|                      |                   | *text/html* will return a simple HTML document with stdout/stderr CSS          |
+|                      |                   |             classes to distinguish stdout and stderr. stderr will be           |
+|                      |                   |             colored red by default.                                            |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| If-Modified-Since    | HTTP Date         | If new log data exists after the specified date, return as normal, otherwise   |
+|                      |                   | return *304 Not Modified*                                                      |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                   |
++----------------------+----------------------------------------------------------------------------------------------------+
+| **Status**           | 304 Not Modified                                                                                   |
++----------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**     | No content returned                                                                                |
++----------------------+----------------------------------------------------------------------------------------------------+
+| **Return description**                                                                                                    |
++---------------------------------------------------------------------------------------------------------------------------+
+| No log data newer than the specified date is available.                                                                   |
++---------------------------------------------------------------------------------------------------------------------------+
+| **Status**           | 200 OK                                                                                             |
++----------------------+----------------------------------------------------------------------------------------------------+
+| **Header Fields**                                                                                                         |
++----------------------+----------------------------------------------------------------------------------------------------+
+| Content-Type         | content type as requested                                                                          |
++----------------------+----------------------------------------------------------------------------------------------------+
+| Last-Modified        | The latest timestamp in the returned log entries                                                   |
++----------------------+----------------------------------------------------------------------------------------------------+
+| **Return description**                                                                                                    |
++---------------------------------------------------------------------------------------------------------------------------+
+| If the requested encoding is *application/json* the raw Elasticsearch results are returned.                               |
+| If the requested encoding is *text/plain* then the plain text of the requested log will be returned. This will be the     |
+| complete text from the requested timestamp or the complete log since start of execution be default.                       |
+| If *text/html* is requested as a valid encoding then each line of the log in the combined output will be wrapped in a     |
+| *div* element with a *class* of *stdout* or *stderr* as appropriate. This can be used to modify the color or rendering    |
+| style to distinguish error and regular output.                                                                            |
++---------------------------------------------------------------------------------------------------------------------------+

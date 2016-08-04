@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 import datetime
 
+from django.utils.encoding import smart_unicode
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
+import rest_framework.renderers as renderers
 import rest_framework.serializers as serializers
 import rest_framework.status as status
 from django.conf import settings
@@ -547,3 +549,15 @@ def _check_accepted_values(name, values, accepted_values):
     if values and accepted_values:
         for value in values:
             _check_accepted_value(name, value, accepted_values)
+
+
+class PlainTextRenderer(renderers.BaseRenderer):
+    '''A django rest framework renderer which encodes a string using the requested character set
+       and returns is as text/plain.
+    '''
+    media_type = 'text/plain'
+    format = 'txt'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data.encode(self.charset)
+

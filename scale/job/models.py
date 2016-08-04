@@ -1336,6 +1336,9 @@ class JobExecution(models.Model):
 
         configuration = self.get_job_configuration()
 
+        # setup remote task logging
+        configuration.configure_logging_docker_params(self.id)
+
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
         if self.job.job_type.is_system:

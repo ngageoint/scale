@@ -5,14 +5,17 @@ from datetime import datetime
 
 import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
+from django.conf import settings
 from django.db import transaction
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
+from django.utils import html
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from rest_framework.renderers import StaticHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
-import util.rest as rest_util
+import json
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
@@ -26,6 +29,9 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
 from models import Job, JobExecution, JobType
 from queue.models import Queue
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
+import urllib2
+import util.parse
+import util.rest as rest_util
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -666,3 +672,83 @@ class JobExecutionLogView(RetrieveAPIView):
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
+
+
+class JobExecutionSpecificLogView(RetrieveAPIView):
+    """This view is the endpoint for viewing the text of specific job execution logs"""
+    renderer_classes = (rest_util.PlainTextRenderer, JSONRenderer, StaticHTMLRenderer)
+
+    def retrieve(self, request, job_exe_id, log_id):
+        """Gets job execution log specified.
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_exe_id: the job execution id
+        :type job_exe_id: int
+        :param log_id: the log name to get (stdout, stderr, or combined)
+        :type log_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            job_exe = JobExecution.objects.get_logs(job_exe_id)
+        except JobExecution.DoesNotExist:
+            raise Http404
+
+        q = {
+                "size": 10000,
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"match": {"tag": "%d_job" % job_exe.pk}}
+                        ]
+                    }
+                },
+                "_source": ["@timestamp", "message", "level", "tag"]
+            }
+        if log_id == "stdout":
+            q["query"]["bool"]["must"].append({"match": {"level": 6}})
+        elif log_id == "stderr":
+            q["query"]["bool"]["must"].append({"match": {"level": 3}})
+        mod = request.META.get('HTTP_IF_MODIFIED_SINCE', '')
+        if len(mod) > 0:
+            mod = util.parse.datetime.datetime.strptime(mod, "%a, %d %b %Y %X %Z")
+            q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": mod.isoformat()}}})
+
+        print json.dumps(q)
+        esr = urllib2.urlopen(urllib2.Request(
+            settings.ELASTICSEARCH_URL, data=json.dumps(q), headers={"Accept": "application/json", "Content-type": "application/json"}))
+
+        hits = json.loads(esr.read())
+        if hits["hits"]["total"] == 0:
+            rsp = HttpResponse(status=304)
+            rsp["Last-Modified"] = util.parse.datetime.datetime.utcnow().strftime("%a, %d %b %Y %X %Z")
+            return rsp
+        last_modified = max([util.parse.parse_datetime(h["_source"]["@timestamp"]) for h in hits["hits"]["hits"]])
+
+        if request.accepted_renderer.format == 'json':
+            rsp = Response(data=hits, headers={'Last-Modified': last_modified.strftime("%a, %d %b %Y %X %Z")})
+        elif request.accepted_renderer.format == 'txt':
+            rsp = Response(data="\n".join([h["_source"]["message"] for h in hits["hits"]["hits"]]),
+                           headers={'Last-Modified': last_modified.strftime("%a, %d %b %Y %X %Z")})
+        elif request.accepted_renderer.format == 'html':
+            d = '''<html><head><style>
+        .stdout {}
+        .stderr {color: red;}
+                </style></head><body>
+                '''
+            for h in hits["hits"]["hits"]:
+                cls = "stdout"
+                if h["_source"]["level"] <= 3:
+                    cls = "stderr"
+                d += '<div class="%s">%s [%s][%d] %s</div>\n' % (cls,
+                                                                 h["_source"]["@timestamp"],
+                                                                 h["_source"]["tag"],
+                                                                 h["_source"]["level"],
+                                                                 html.escape(h["_source"]["message"]))
+            d += "</body></html>"
+            rsp = Response(data=d, headers={'Last-Modified': last_modified.strftime("%a, %d %b %Y %X %Z")})
+        else:
+            return HttpResponse("%s is not a valid content type request." % request.accepted_renderer.content_type,
+                                content_type="text/plain", status=406)
+        return rsp
