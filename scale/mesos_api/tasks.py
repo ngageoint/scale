@@ -8,7 +8,6 @@ from mesos.interface import mesos_pb2
 logger = logging.getLogger(__name__)
 
 
-
 def create_mesos_task(task):
     """Creates and returns a Mesos task from a Scale task
 
