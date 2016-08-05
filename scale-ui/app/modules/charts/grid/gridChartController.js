@@ -718,42 +718,6 @@
                     .on('mouseout', function () {
                         d3.select(this)
                             .style('fill', 'white');
-                    })
-                    .on('click', function (target) {
-                        var pauseResume = function () {
-                            var targetData = {};
-                            if (target && target.status) {
-                                targetData = target;
-                                targetData.status.pauseResumeCell(vm.pauseReason).then(function (updatedData) {
-                                    if (targetData.toString() === 'Node') {
-                                        // update target data values
-                                        targetData.is_paused = updatedData.is_paused;
-                                        targetData.pause_reason = updatedData.pause_reason;
-                                        targetData.status.node = updatedData;
-                                        $rootScope.$broadcast('updateNodeHealth');
-                                    }
-                                    // update grid cell
-                                    updateCellFill();
-                                    updatePauseResume();
-                                    updateCellStatus();
-                                });
-                            }
-                        };
-
-                        // only prompt for reason when pausing (not resuming)
-                        if (!target.is_paused) {
-                            var modalInstance = $uibModal.open({
-                                animation: true,
-                                templateUrl: 'pauseDialog.html',
-                                scope: $scope
-                            });
-
-                            modalInstance.result.then(function () {
-                                pauseResume();
-                            });
-                        } else {
-                            pauseResume();
-                        }
                     });
             }
 

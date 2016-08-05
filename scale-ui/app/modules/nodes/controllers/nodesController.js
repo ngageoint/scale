@@ -1,9 +1,12 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, navService, nodeService, stateService, userService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, stateService, userService, gridFactory, toastr) {
         var vm = this;
 
+        vm.nodesParams = stateService.getNodesParams();
+
+        vm.stateService = stateService;
         vm.nodeStatus = [];
         vm.loading = true;
         vm.loadingStatus = true;
@@ -12,19 +15,21 @@
         vm.nodesErrorStatus = null;
         vm.statusError = null;
         vm.statusErrorStatus = null;
-        vm.nodeStatusParams = stateService.getNodeStatusParams();
         vm.actionClicked = false;
         vm.gridOptions = gridFactory.defaultGridOptions();
-        vm.gridOptions.paginationCurrentPage = vm.nodeStatusParams.page || 1;
-        vm.gridOptions.paginationPageSize = vm.nodeStatusParams.page_size || vm.gridOptions.paginationPageSize;
+        vm.gridOptions.paginationCurrentPage = vm.nodesParams.page || 1;
+        vm.gridOptions.paginationPageSize = vm.nodesParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+
+        $scope.pauseReason = '';
+
+        var filteredByOrder = vm.nodesParams.order ? true : false;
 
         vm.colDefs = [
             {
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                enableSorting: false,
                 cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity.id)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused && !row.entity.is_paused_errors, \'fa-play\': row.entity.is_paused || row.entity.is_paused_errors }"></i></button></div> {{ row.entity.hostname }}</div>'
             },
             {
@@ -35,36 +40,58 @@
                 cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.statusLabel"></span></div>'
             },
             {
-                field: 'created',
-                displayName: 'Created (Z)',
+                field: 'id',
+                displayName: 'Statistics',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.created }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status">{{ row.entity.status.getCellError() }} / {{ row.entity.status.getCellTotal() }}</div>'
             },
             {
-                field: 'last_modified',
-                displayName: 'Last Modified (Z)',
+                field: 'id',
+                displayName: 'Current Jobs',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.status.getCellJobs()"></span></div>'
             }
         ];
 
         vm.gridOptions.columnDefs = vm.colDefs;
 
         vm.pauseNode = function (id) {
+            $scope.pauseReason = '';
             vm.actionClicked = true;
             var nodeStatus = _.find(vm.nodeStatus, { node: { id: id } });
-            nodeStatus.pauseResumeCell().then(function (result) {
-                var node = _.find(vm.gridOptions.data, { id: result.id });
-                node.is_paused = result.is_paused;
-                node.is_paused_errors = result.is_paused_errors;
-                if (node.isPaused()) {
-                    toastr.info(node.hostname + ' Paused');
-                } else {
-                    toastr.info(node.hostname + ' Resumed');
-                }
-            });
+
+            $scope.updateReason = function (value) {
+                $scope.pauseReason = value;
+            };
+
+            var pauseResume = function () {
+                nodeStatus.pauseResumeCell($scope.pauseReason).then(function (result) {
+                    var node = _.find(vm.gridOptions.data, { id: result.id });
+                    node.is_paused = result.is_paused;
+                    if (node.isPaused()) {
+                        toastr.info(node.hostname + ' Paused');
+                    } else {
+                        toastr.info(node.hostname + ' Resumed');
+                    }
+                });
+            };
+
+            // only prompt for reason when pausing (not resuming)
+            if (!nodeStatus.node.is_paused && !nodeStatus.node.is_paused_errors) {
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'pauseDialog.html',
+                    scope: $scope
+                });
+
+                modalInstance.result.then(function () {
+                    pauseResume();
+                });
+            } else {
+                pauseResume();
+            }
         };
 
         vm.getStatusLabel = function (status) {
@@ -75,9 +102,19 @@
         };
 
         vm.filterResults = function () {
-            stateService.setNodeStatusParams(vm.nodeStatusParams);
+            stateService.setNodesParams(vm.nodesParams);
             vm.loading = true;
-            getNodeStatus();
+            getNodes();
+        };
+
+        vm.updateColDefs = function () {
+            vm.gridOptions.columnDefs = gridFactory.applySortConfig(vm.colDefs, vm.nodesParams);
+        };
+
+        vm.updateNodeOrder = function (sortArr) {
+            vm.nodesParams.order = sortArr.length > 0 ? sortArr : null;
+            filteredByOrder = sortArr.length > 0;
+            vm.filterResults();
         };
 
         vm.gridOptions.onRegisterApi = function (gridApi) {
@@ -87,18 +124,30 @@
                 if (vm.actionClicked) {
                     vm.actionClicked = false;
                 } else {
+                    $location.search({});
                     $location.path('/nodes/' + row.entity.id);
                 }
             });
             vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                vm.nodeStatusParams.page = currentPage;
-                vm.nodeStatusParams.page_size = pageSize;
+                vm.nodesParams.page = currentPage;
+                vm.nodesParams.page_size = pageSize;
                 vm.filterResults();
+            });
+            vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                _.forEach(vm.gridApi.grid.columns, function (col) {
+                    col.colDef.sort = col.sort;
+                });
+                stateService.setNodesColDefs(vm.gridApi.grid.options.columnDefs);
+                var sortArr = [];
+                _.forEach(sortColumns, function (col) {
+                    sortArr.push(col.sort.direction === 'desc' ? '-' + col.field : col.field);
+                });
+                vm.updateNodeOrder(sortArr);
             });
         };
 
         var getNodes = function () {
-            nodeService.getNodes().then(null, null, function (data) {
+            nodeService.getNodes(vm.nodesParams).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
                     vm.gridOptions.totalItems = data.count;
@@ -131,6 +180,8 @@
         };
 
         var initialize = function () {
+            stateService.setNodesParams(vm.nodesParams);
+            vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
             getNodes();
@@ -140,11 +191,20 @@
 
         initialize();
 
-        $scope.$watchCollection('vm.stateService.getJobsParams()', function (newValue, oldValue) {
+        $scope.$watchCollection('vm.stateService.getNodesColDefs()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            vm.nodeStatusParams = newValue;
+            vm.colDefs = newValue;
+            vm.updateColDefs();
+        });
+
+        $scope.$watchCollection('vm.stateService.getNodesParams()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.nodesParams = newValue;
+            vm.updateColDefs();
         });
 
         $scope.$watchCollection('vm.nodeStatus', function (newValue, oldValue) {
