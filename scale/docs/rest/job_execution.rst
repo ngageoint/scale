@@ -544,8 +544,8 @@ These services provide access to information about "all", "currently running" an
 +---------------------------------------------------------------------------------------------------------------------------+
 | If the requested encoding is *application/json* the raw Elasticsearch results are returned.                               |
 | If the requested encoding is *text/plain* then the plain text of the requested log will be returned. This will be the     |
-| complete text from the requested timestamp or the complete log since start of execution be default.                       |
+| complete text from the requested timestamp or the complete log since start of execution by default.                       |
 | If *text/html* is requested as a valid encoding then each line of the log in the combined output will be wrapped in a     |
 | *div* element with a *class* of *stdout* or *stderr* as appropriate. This can be used to modify the color or rendering    |
-| style to distinguish error and regular output.                                                                            |
+| style to distinguish error and standard output.                                                                            |
 +---------------------------------------------------------------------------------------------------------------------------+
