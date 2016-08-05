@@ -362,12 +362,13 @@ class ProductFileManager(models.GeoManager):
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
             product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
-            product.media_type = media_type
+            file_name = os.path.basename(local_path)
+            file_size = os.path.getsize(local_path)
+            product.set_basic_fields(file_name, file_size, media_type)
             product.file_path = remote_path
 
             # Add a stable identifier based on the job type, input files, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
-            file_name = os.path.basename(local_path)
             product.update_uuid(job_exe.job.job_type.id, file_name, *input_file_uuids)
 
             # Add geospatial info to product if available

@@ -75,6 +75,13 @@ class JobTypeStatusSerializer(serializers.Serializer):
     job_counts = JobTypeStatusCountsSerializer(many=True)
 
 
+class JobTypePendingStatusSerializer(serializers.Serializer):
+    """Converts job type pending status model and extra statistic fields to REST output."""
+    job_type = JobTypeBaseSerializer()
+    count = serializers.IntegerField()
+    longest_pending = serializers.DateTimeField()
+
+
 class JobTypeRunningStatusSerializer(serializers.Serializer):
     """Converts job type running status model and extra statistic fields to REST output."""
     job_type = JobTypeBaseSerializer()

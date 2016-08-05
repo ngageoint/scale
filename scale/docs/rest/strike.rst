@@ -144,13 +144,14 @@ These services allow a user to create, view, and manage Strike processes.
 |        "title": "My Strike Process",                                                                                    |
 |        "description": "This is my Strike process for detecting my favorite files!",                                     |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -202,13 +203,14 @@ These services allow a user to create, view, and manage Strike processes.
 |            "num_exes": 1                                                                                                |
 |        },                                                                                                               |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -287,13 +289,14 @@ These services allow a user to create, view, and manage Strike processes.
 |            "num_exes": 1                                                                                                |
 |        },                                                                                                               |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -328,13 +331,14 @@ These services allow a user to create, view, and manage Strike processes.
 |        "title": "My Strike Process",                                                                                    |
 |        "description": "This is my Strike process for detecting my favorite files!",                                     |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -390,13 +394,14 @@ These services allow a user to create, view, and manage Strike processes.
 |        "title": "My Strike Process",                                                                                    |
 |        "description": "This is my Strike process for detecting my favorite files!",                                     |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
@@ -448,13 +453,14 @@ These services allow a user to create, view, and manage Strike processes.
 |            "num_exes": 1                                                                                                |
 |        },                                                                                                               |
 |        "configuration": {                                                                                               |
-|            "version": "1.0",                                                                                            |
-|            "mount": "host:/my/path",                                                                                    |
-|            "transfer_suffix": "_tmp",                                                                                   |
+|            "version": "2.0",                                                                                            |
+|            "workspace": "my-workspace",                                                                                 |
+|            "monitor": {                                                                                                 |
+|                "type": "dir-watcher",                                                                                   |
+|                "transfer_suffix": "_tmp"                                                                                |
+|            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
-|                "filename_regex": ".*txt",                                                                               |
-|                "workspace_path": "my/path",                                                                             |
-|                "workspace_name": "raw"                                                                                  |
+|                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |

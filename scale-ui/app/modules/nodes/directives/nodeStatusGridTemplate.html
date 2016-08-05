@@ -1,0 +1,3 @@
+<div class="node-status-grid-container" ng-if="vm.nodes.length > 0">
+    <div class="node-cell" ng-style="vm.cellStyle" ng-class="node.class" ng-repeat="node in vm.nodes" ng-click="vm.viewNode(node.node.id)"></div>
+</div>

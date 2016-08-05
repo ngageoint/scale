@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import os
@@ -9,240 +8,251 @@ from django.test import TestCase
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from storage.models import Workspace
 
 
-class TestStrikeConfigurationInit(TestCase):
+class TestStrikeConfiguration(TestCase):
 
     def setUp(self):
         django.setup()
 
         self.workspace = storage_test_utils.create_workspace()
+        self.new_workspace = storage_test_utils.create_workspace()
+        self.inactive_workspace = storage_test_utils.create_workspace(is_active=False)
 
     def test_bare_min(self):
-        '''Tests calling StrikeConfiguration constructor with bare minimum JSON.'''
+        """Tests calling StrikeConfiguration constructor with bare minimum JSON"""
 
         # No exception is success
         StrikeConfiguration({
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt'
             }],
         })
 
     def test_bad_version(self):
-        '''Tests calling StrikeConfiguration constructor with bad version number.'''
+        """Tests calling StrikeConfiguration constructor with bad version number."""
 
         config = {
             'version': 'BAD VERSION',
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt'
             }],
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
 
-    def test_blank_mount(self):
-        '''Tests calling StrikeConfiguration constructor with blank mount.'''
+    def test_missing_workspace(self):
+        """Tests calling StrikeConfiguration constructor with missing workspace"""
 
         config = {
-            'mount': '',
-            'transfer_suffix': '_tmp',
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt'
             }],
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
 
-    def test_blank_transfer_suffix(self):
-        '''Tests calling StrikeConfiguration constructor with blank transfer_suffix.'''
+    def test_missing_monitor(self):
+        """Tests calling StrikeConfiguration constructor with missing monitor"""
 
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '',
+            'workspace': self.workspace.name,
             'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt'
             }],
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
 
     def test_blank_filename_regex(self):
-        '''Tests calling StrikeConfiguration constructor with blank filename_regex.'''
+        """Tests calling StrikeConfiguration constructor with blank filename_regex"""
 
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': '',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
-            }],
-        }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
-
-    def test_blank_workspace_path(self):
-        '''Tests calling StrikeConfiguration constructor with blank workspace_path.'''
-
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': '',
-                'workspace_name': self.workspace.name,
+                'filename_regex': ''
             }],
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
 
     def test_absolute_workspace_path(self):
-        '''Tests calling StrikeConfiguration constructor with absolute workspace_path.'''
+        """Tests calling StrikeConfiguration constructor with absolute new_file_path."""
 
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'version': 'BAD VERSION',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('/my', 'path'),
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt',
+                'new_file_path': '/absolute/path'
             }],
         }
         self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
 
-    def test_successful(self):
-        '''Tests calling StrikeConfiguration constructor successfully with all information.'''
+    def test_successful_all(self):
+        """Tests calling StrikeConfiguration constructor successfully with all information"""
 
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': 'hello',
+                'filename_regex': '.*txt',
                 'data_types': ['one', 'two'],
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.workspace.name,
             }],
         }
         # No exception is success
         StrikeConfiguration(config)
 
+    def test_validate_bad_monitor_type(self):
+        """Tests calling StrikeConfiguration.validate() with a bad monitor type"""
 
-class TestStrikeConfigurationMatchFileName(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-
-    def test_match(self):
-        '''Tests calling StrikeConfiguration.match_file_name() with a match.'''
-
-        data_types_list = ['one', 'two']
-        wksp_path = os.path.join('my', 'path')
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'BAD',
+                'transfer_suffix': '_tmp',
+            },
             'files_to_ingest': [{
-                'filename_regex': '.*MY.*PATTERN.*',
-                'data_types': data_types_list,
-                'workspace_path': wksp_path,
-                'workspace_name': self.workspace.name,
+                'filename_regex': '.*txt',
             }],
         }
-        strike_config = StrikeConfiguration(config)
 
-        result = strike_config.match_file_name('ababMYgggPATTERNxyz')
-        self.assertTupleEqual(result, (data_types_list, wksp_path, self.workspace))
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
 
-    def test_no_match(self):
-        '''Tests calling StrikeConfiguration.match_file_name() without a match.'''
+    def test_validate_mismatched_monitor_type(self):
+        """Tests calling StrikeConfiguration.validate() with a monitor type that does not match the broker type"""
 
         config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 's3',
+                'sqs_name': 'my-sqs',
+            },
             'files_to_ingest': [{
-                'filename_regex': '.*MY.*PATTERN.*',
+                'filename_regex': '.*txt',
+            }],
+        }
+
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
+
+    def test_validate_bad_workspace(self):
+        """Tests calling StrikeConfiguration.validate() with a bad workspace"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_workspace': 'BADWORKSPACE',
+            }],
+        }
+
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
+
+    def test_validate_workspace_not_active(self):
+        """Tests calling StrikeConfiguration.validate() with a new workspace that is not active"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_workspace': self.inactive_workspace.name,
+            }],
+        }
+
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration(config).validate)
+
+    def test_validate_successful_all(self):
+        """Tests calling StrikeConfiguration.validate() successfully with all information"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
                 'data_types': ['one', 'two'],
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace.name,
-            }],
-        }
-        strike_config = StrikeConfiguration(config)
-
-        result = strike_config.match_file_name('ababFOOBARabab')
-        self.assertIsNone(result)
-
-
-class TestStrikeConfigurationValidateWorkspaces(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace_1 = storage_test_utils.create_workspace()
-        self.workspace_2 = storage_test_utils.create_workspace()
-        self.workspace_3 = storage_test_utils.create_workspace(is_active=False)
-
-    def test_workspace_not_active(self):
-        '''Tests calling StrikeConfiguration() with a workspace that is not active.'''
-
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace_1.name,
-            }, {
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace_3.name,
-            }],
-        }
-
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
-
-    def test_invalid_workspace(self):
-        '''Tests calling StrikeConfiguration() with an invalid workspace name.'''
-
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace_1.name,
-            }, {
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': 'BAD_NAME',
-            }],
-        }
-
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfiguration, config)
-
-    def test_successful(self):
-        '''Tests calling StrikeConfiguration() successfully.'''
-
-        config = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace_1.name,
-            }, {
-                'filename_regex': 'hello',
-                'workspace_path': os.path.join('my', 'path'),
-                'workspace_name': self.workspace_2.name,
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.new_workspace.name,
             }],
         }
 
         # No exception is success
-        StrikeConfiguration(config)
+        StrikeConfiguration(config).validate()
+
+    def test_conversion_from_1_0(self):
+        """Tests calling StrikeConfiguration.validate() after converting from schema version 1.0"""
+
+        old_config = {
+            'version': '1.0',
+            'transfer_suffix': '_tmp',
+            'mount': 'host:/my/path',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'workspace_path': os.path.join('my', 'path'),
+                'workspace_name': self.new_workspace.name,
+            }],
+        }
+
+        strike_config = StrikeConfiguration(old_config)
+        strike_config.validate()
+
+        auto_workspace = Workspace.objects.get(name__contains='auto')
+        new_config = {
+            'version': '2.0',
+            'workspace': auto_workspace.name,
+            'monitor': {
+                'type': 'dir-watcher',
+                'transfer_suffix': '_tmp'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.new_workspace.name,
+            }]
+        }
+        self.assertDictEqual(strike_config._configuration, new_config)
+
+        auto_workspace_config = {
+            'version': '1.0',
+            'broker': {
+                'type': 'host',
+                'host_path': '/my/path'
+            }
+        }
+        self.assertDictEqual(auto_workspace.json_config, auto_workspace_config)

@@ -360,12 +360,12 @@ class TestScaleFileManagerUploadFiles(TestCase):
 
         workspace = storage_test_utils.create_workspace()
         file_1 = ScaleFile()
-        file_1.media_type = None  # Scale should auto-detect text/plain
+        file_1.set_basic_fields('file.txt', 100, None)  # Scale should auto-detect text/plain
         remote_path_1 = 'my/remote/path/file.txt'
         local_path_1 = 'my/local/path/file.txt'
         file_1.file_path = remote_path_1
         file_2 = ScaleFile()
-        file_2.media_type = 'application/json'
+        file_2.set_basic_fields('file.json', 100, 'application/json')
         remote_path_2 = 'my/remote/path/2/file.json'
         local_path_2 = 'my/local/path/2/file.json'
         file_2.file_path = remote_path_2
@@ -555,7 +555,7 @@ class TestWorkspaceManager(TransactionTestCase):
         workspace = storage_test_utils.create_workspace(json_config=config)
 
         # No exceptions indicates success
-        workspace._get_broker()
+        workspace.get_broker()
 
     def test_broker_validation_error(self):
         """Tests that attempting to get a bad broker instance raises an error."""
@@ -569,4 +569,4 @@ class TestWorkspaceManager(TransactionTestCase):
         workspace = storage_test_utils.create_workspace(json_config=config)
 
         # No exceptions indicates success
-        self.assertRaises(InvalidBrokerConfiguration, workspace._get_broker)
+        self.assertRaises(InvalidBrokerConfiguration, workspace.get_broker)

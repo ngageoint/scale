@@ -3,29 +3,19 @@ from __future__ import unicode_literals
 import logging
 import signal
 import sys
+
 from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from mesos.interface import mesos_pb2
+from mesos.native import MesosSchedulerDriver
 
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
 
-# Try to import production Mesos bindings, fall back to stubs
-try:
-    from mesos.interface import mesos_pb2
-    from pesos.scheduler import PesosSchedulerDriver as MesosSchedulerDriver
-    logger.info('Successfully imported pesos bindings')
-except ImportError:
-    try:
-       from mesos.interface import mesos_pb2
-       from mesos.native import MesosSchedulerDriver
-       logger.info('Successfully imported native Mesos bindings')
-    except ImportError:
-       logger.info('No native Mesos bindings, falling back to stubs')
-       import mesos_api.mesos_pb2 as mesos_pb2
-       from mesos_api.mesos import MesosSchedulerDriver
+
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False
@@ -107,10 +97,15 @@ class Command(BaseCommand):
         else:
             self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master)
 
-        status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
+        try:
+            status = 0 if self.driver.run() == mesos_pb2.DRIVER_STOPPED else 1
+        except:
+            status = 1
+            logger.exception('Mesos Scheduler Driver returned an exception')
 
-        # Perform any required clean up operations like stopping background threads
-        status = status or self._shutdown()
+        #Perform a shut down and return any non-zero status
+        shutdown_status = self._shutdown
+        status = status or shutdown_status
 
         logger.info('Exiting...')
         sys.exit(status)

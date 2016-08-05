@@ -40,7 +40,7 @@ class JobData(object):
     connect shared resources to resource instances in Scale, and details needed to store all resulting output.
     """
 
-    def __init__(self, data):
+    def __init__(self, data=None):
         """Creates a job data object from the given dictionary. The general format is checked for correctness, but the
         actual input and output details are not checked for correctness against the job interface. If the data is
         invalid, a :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
@@ -48,6 +48,9 @@ class JobData(object):
         :param data: The job data
         :type data: dict
         """
+
+        if not data:
+            data = {}
 
         self.data_dict = data
         self.param_names = set()

@@ -3,12 +3,7 @@ import re
 from datetime import datetime, timedelta
 
 from django.utils.timezone import utc
-
-
-try:
-    from mesos.interface import mesos_pb2
-except ImportError:
-    import mesos_api.mesos_pb2 as mesos_pb2
+from mesos.interface import mesos_pb2
 
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)

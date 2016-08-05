@@ -7,8 +7,7 @@ EXPOSE 8000
 EXPOSE 5051
 
 # allowed environment variables
-# ENABLE_NFS=true to turn on NFS client locking
-# ENABLE_GUNICORN=1 to start the RESTful API server
+# ENABLE_GUNICORN=true to start the RESTful API server
 # ENABLE_HTTPD=true to start the Apache HTTP server
 # DEPLOY_DB to start the database container (for DC/OS use)
 # INIT_DB to initialize the database (migrate, load, etc.)
@@ -46,6 +45,7 @@ COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
          systemd-container-EOL \
+         bzip2 \
          gdal-python \
          geos \
          httpd \
@@ -98,7 +98,7 @@ RUN yum -y history undo last \
  && rm -rf /opt/scale-ui
 
 # setup ownership and permissions. create some needed directories
-RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/ingest_mount /scale/workspace_mounts \
+RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
  && chmod a+x manage.py entryPoint.sh deployDb.py

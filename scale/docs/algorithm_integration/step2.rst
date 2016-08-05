@@ -16,10 +16,11 @@ access to the source code for your algorithm.
 
 **ONLY FILES IN THE RESULTS MANIFEST WILL BE SAVED BY SCALE**
 
-File paths listed in the results manifest must be absolute paths to the file.  The results manifest must be called
-"results_manifest.json" and must be present in the root of the output directory provided by Scale.
-The output names in the results manifest must match the **output_data** field in the
-:ref:`job interface <architecture_jobs_interface_spec>`.
+File paths listed in the results manifest must be absolute paths to the file and the files must exist within the output
+directory provided by Scale. The results manifest must be called "results_manifest.json" and must be present in the root
+of the output directory. All output files and the results manifest must have full read permission (as well as execute
+for any directories) granted for ALL users, allowing the Scale post task to read the outputs. The output names in the
+results manifest must match the **output_data** field in the :ref:`job interface <architecture_jobs_interface_spec>`.
 
 Simple Results Manifest Example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

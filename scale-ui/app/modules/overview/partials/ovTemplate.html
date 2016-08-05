@@ -63,7 +63,18 @@
             </div>
             <div class="col-xs-6 text-center">
                 <h3>Nodes</h3>
-                <ais-node-health duration="'PT3H'" show-description="false"></ais-node-health>
+                <div ng-show="vm.loadingNodeHealth" class="loading-component">
+                    <h4>
+                        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+                        Loading
+                    </h4>
+                </div>
+                <div ng-class="{ 'visible': !vm.loadingNodeHealth, 'invisible': vm.loadingNodeHealth }" class="ov-chart form-inline">
+                    <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
+                    <div ng-show="!vm.nodeHealthError">
+                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" duration="'PT3H'" show-description="false"></ais-node-health>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

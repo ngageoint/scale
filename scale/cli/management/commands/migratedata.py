@@ -80,7 +80,6 @@ class Command(BaseCommand):
             logger.info("Generating ingest record for %s" % filename)
             ingest = Ingest()
             ingest.file_name = os.path.basename(filename)
-            ingest.transfer_path = filename
             ingest.file_path = os.path.join(workspace_path, os.path.relpath(filename, local_path))
             ingest.transfer_started = datetime.utcfromtimestamp(os.path.getatime(filename))
             ingest.file_size = ingest.bytes_transferred = os.path.getsize(filename)
