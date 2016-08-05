@@ -6,7 +6,6 @@ from mesos.interface import mesos_pb2
 from django.conf import settings
 
 
-
 logger = logging.getLogger(__name__)
 
 
