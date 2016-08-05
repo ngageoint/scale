@@ -30,7 +30,8 @@ SCHEDULER_ZK = None
 SCALE_DOCKER_IMAGE = 'geoint/scale'
 
 # The location of the config file containing Docker credentials
-CONFIG_URI = os.environ.get('CONFIG_URI', None)
+# The URI value should be something like this 'http://marathon-ip:8080/v2/artifacts/.dockercfg'
+CONFIG_URI = None
 
 # Directory for rotating metrics storage
 METRICS_DIR = None
