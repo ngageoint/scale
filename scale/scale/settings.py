@@ -29,6 +29,9 @@ SCHEDULER_ZK = None
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = 'geoint/scale'
 
+# The location of the config file containing Docker credentials
+CONFIG_URI = os.environ.get('CONFIG_URI', None)
+
 # Directory for rotating metrics storage
 METRICS_DIR = None
 

@@ -58,4 +58,4 @@ SCHEDULER_ZK = None
 SCALE_DOCKER_IMAGE = 'geoint/scale'
 
 # The location of the config file containing Docker credentials
-CONFIG_URI = os.environ.get('CONFIG_URI', None)
+CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)
