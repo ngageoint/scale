@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
-
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
