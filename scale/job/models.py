@@ -1064,23 +1064,13 @@ class JobExecutionManager(models.Manager):
         :type exit_code: int
         """
 
-        # TODO: once we no longer have stdout and stderr in job execution model, transition this from selecting with
-        # lock to using a single update query as in task_started()
-        with transaction.atomic():
-            # Acquire model lock
-            job_exe = JobExecution.objects.select_for_update().get(pk=job_exe_id)
-
-            if task == 'pre':
-                job_exe.pre_completed = when
-                job_exe.pre_exit_code = exit_code
-            elif task == 'job':
-                job_exe.job_completed = when
-                job_exe.job_exit_code = exit_code
-            elif task == 'post':
-                job_exe.post_completed = when
-                job_exe.post_exit_code = exit_code
-
-            job_exe.save()
+        job_exe_qry = self.filter(id=job_exe_id)
+        if task == 'pre':
+            job_exe_qry.update(pre_completed=when, pre_exit_code=exit_code)
+        elif task == 'job':
+            job_exe_qry.update(job_completed=when, job_exit_code=exit_code)
+        elif task == 'post':
+            job_exe_qry.update(post_completed=when, post_exit_code=exit_code)
 
     def task_started(self, job_exe_id, task, when):
         """Updates the given job execution to reflect that the given task has started
@@ -1462,7 +1452,7 @@ class JobExecution(models.Model):
         return self.job.job_type.uses_docker
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
-        '''Get log data from elasticsearch as a dict (from the raw JSON).
+        """Get log data from elasticsearch as a dict (from the raw JSON).
 
         :param include_stdout: If True, include stdout in the result
         :type include_stdout: bool
@@ -1471,7 +1461,7 @@ class JobExecution(models.Model):
         :param since: If present, only retrieve logs since this timestamp (non-inclusive).
         :type since: :class:`datetime.datetime` or None
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
-        '''
+        """
         q = {
                 "size": 10000,
                 "query": {
@@ -1504,7 +1494,7 @@ class JobExecution(models.Model):
         return hits, last_modified
 
     def get_log_text(self, include_stdout=True, include_stderr=True, since=None, html=False):
-        '''Get log data from elasticsearch.
+        """Get log data from elasticsearch.
 
         :param include_stdout: If True, include stdout in the result
         :type include_stdout: bool
@@ -1515,7 +1505,7 @@ class JobExecution(models.Model):
         :param html: If True, wrap the lines in div elements with stdout/stderr css classes, otherwise use plain text
         :type html: bool
         :rtype: tuple of (str, :class:`datetime.datetime`) with the log or None and last modified timestamp
-        '''
+        """
 
         hits, last_modified = self.get_log_json(include_stdout, include_stderr, since)
         if hits is None:
