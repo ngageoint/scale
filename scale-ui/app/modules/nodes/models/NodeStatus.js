@@ -73,8 +73,6 @@
             },
             pauseResumeCell: function (pause_reason) {
                 var updateData = {
-                    hostname: this.node.hostname,
-                    port: this.node.port,
                     pause_reason: pause_reason || '',
                     is_paused: !this.node.is_paused
                 };

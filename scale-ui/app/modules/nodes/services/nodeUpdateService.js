@@ -2,10 +2,8 @@
     'use strict';
 
     angular.module('scaleApp').service('nodeUpdateService', function ($http, $q, scaleConfig, Node) {
-        var getNodeUpdateData = function (hostname, port, pause_reason, is_paused) {
+        var getNodeUpdateData = function (pause_reason, is_paused) {
             return {
-                hostname: hostname,
-                port: port,
                 pause_reason: pause_reason,
                 is_paused: is_paused
             };
