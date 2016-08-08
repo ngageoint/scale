@@ -19,6 +19,7 @@
                             if (vm.scrollDiff >= 0) {
                                 vm.forceScroll = true;
                             }
+                            debugger;
                             vm.execLog = logResult;
                         } else {
                             if (result.statusText && result.statusText !== '') {

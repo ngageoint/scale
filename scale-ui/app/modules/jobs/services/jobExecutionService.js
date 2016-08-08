@@ -56,12 +56,18 @@
                 return d.promise;
             },
             getLog: function(execId){
-                var url = url || scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/';
+                var url = url || scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/combined/';
 
                 // Update view. Since a promise can only be resolved or rejected once but we want
                 // to keep track of all requests, poller service uses the notifyCallback. By default
                 // poller only gets notified of success responses.
-                var jobExecutionLogResource = $resource(url);
+                var jobExecutionLogResource = $resource(url,{},{
+                    get:{
+                        method:"GET",
+                        headers:{'Accept':'text/html'}
+                    }
+                });
+
                 var jobExecutionLogPoller = poller.get(jobExecutionLogResource, {
                         delay: scaleConfig.pollIntervals.jobExecutionLog
                     });

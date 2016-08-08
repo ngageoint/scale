@@ -15,6 +15,9 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-xs-12">{{vm.execLog}}</div>
+    </div>
+    <div class="row">
         <div class="col-xs-6">
             <div ng-show="vm.execLog.stdout" class="log">
                 <h4>stdout <span class="label label-success" ng-show="vm.execLog.is_finished">Finished</span></h4>
