@@ -30,7 +30,7 @@ SCHEDULER_ZK = None
 SCALE_DOCKER_IMAGE = 'geoint/scale'
 
 # The location of the config file containing Docker credentials
-# The URI value should be something like this 'http://marathon-ip:8080/v2/artifacts/.dockercfg'
+# The URI value should point to an externally hosted location such as a webserver or hosted S3 bucket. The value will be an http URL such as 'http://static.mysite.com/foo/.dockercfg'
 CONFIG_URI = None
 
 # Directory for rotating metrics storage
