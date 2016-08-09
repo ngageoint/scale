@@ -14,21 +14,9 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12">{{vm.execLog}}</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-6">
-            <div ng-show="vm.execLog.stdout" class="log">
-                <h4>stdout <span class="label label-success" ng-show="vm.execLog.is_finished">Finished</span></h4>
-                <pre class="bash">{{ vm.execLog.stdout }}</pre>
-            </div>
-        </div>
-        <div class="col-xs-6">
-            <div ng-show="vm.execLog.stderr" class="log">
-                <h4>stderr <span class="label label-success" ng-show="vm.execLog.is_finished">Finished</span></h4>
-                <pre class="bash">{{ vm.execLog.stderr }}</pre>
-            </div>
+    <div class="row log">
+        <div class="col-xs-12 bash">
+            <div ng-class="line._source.level == 3 ? 'stderr' : 'stdout'" ng-repeat="line in vm.execLog.hits.hits">{{line._source.message}}</div>
         </div>
     </div>
 </div>

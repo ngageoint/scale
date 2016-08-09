@@ -48,7 +48,10 @@
             getLogOnce: function(execId){
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/').success(function (data) {
+                $http({
+                    method: 'GET',
+                    url: scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/combined/'
+                }).success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
@@ -63,12 +66,15 @@
                 // poller only gets notified of success responses.
                 var jobExecutionLogResource = $resource(url,{},{
                     get:{
-                        method:"GET",
-                        headers:{'Accept':'text/html'}
+                        method:'GET',
+                        headers:{
+                            Accept: 'text/html'
+                        }
                     }
                 });
 
                 var jobExecutionLogPoller = poller.get(jobExecutionLogResource, {
+                        action: 'get',
                         delay: scaleConfig.pollIntervals.jobExecutionLog
                     });
 
