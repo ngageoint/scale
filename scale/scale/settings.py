@@ -37,6 +37,11 @@ METRICS_DIR = None
 # An invalid or None entry will disable gathering of these statistics
 INFLUXDB_BASE_URL = None
 
+# URL for logstash, or None to disable logstash
+LOGGING_ADDRESS = None
+# Base URL for elasticsearch
+ELASTICSEARCH_URL = None
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 

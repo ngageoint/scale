@@ -217,30 +217,6 @@ def get_slave(hostname, port, slave_id, resources=False):
     return slave_info
 
 
-def get_slave_task_directory(hostname, port, task_id):
-    """Queries the Mesos slave REST API to get the directory for the stdout and stderr files for the given task
-
-    :param hostname: The hostname of the slave
-    :type hostname: str
-    :param port: The port of the slave
-    :type port: int
-    :param task_id: The ID of the Mesos task
-    :type task_id: str
-    :returns: The directory on the slave, possibly None
-    :rtype: str
-    :raises MesosError: If the task cannot be found
-    """
-    url = 'http://%s:%i/state.json' % (hostname, port)
-    response = urllib2.urlopen(url)
-    state_dict = json.load(response)
-    for framework in state_dict['frameworks']:
-        for executor in framework['executors']:
-            if executor['id'] == task_id:
-                return executor['directory'].replace('\\', '')
-
-    raise MesosError('Task not found: %s' % task_id)
-
-
 def get_slave_task_run_id(hostname, port, task_id):
     """Queries the Mesos slave REST API to get the run ID for the given task
 

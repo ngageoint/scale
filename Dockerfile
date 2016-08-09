@@ -10,6 +10,7 @@ EXPOSE 5051
 # ENABLE_GUNICORN=true to start the RESTful API server
 # ENABLE_HTTPD=true to start the Apache HTTP server
 # DEPLOY_DB to start the database container (for DC/OS use)
+# DEPLOY_LOGGING to start up the logstash system
 # INIT_DB to initialize the database (migrate, load, etc.)
 # LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
 # SCALE_SECRET_KEY
@@ -23,6 +24,7 @@ EXPOSE 5051
 # SCALE_DB_NAME
 # SCALE_DB_USER
 # SCALE_DB_PASS
+# SCALE_LOGGING_ADDRESS
 # MESOS_MASTER_URL
 # SCALE_ZK_URL
 # SCALE_DOCKER_IMAGE
@@ -66,7 +68,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
-COPY dockerfiles/framework/scale/deployDb.py /opt/scale/
+COPY dockerfiles/framework/scale/deploy*.py /opt/scale/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale

@@ -11,15 +11,15 @@
             $scope.$watch('execution', function () {
                 if ($scope.execution) {
                     jobExecutionService.getLog($scope.execution.id).then(null, null, function (result) {
-                        // get difference of max scroll length and current scroll length.
-                        var logResult = result.execution_log;
-                        if (result.$resolved) {
+                        // get difference of max scroll length and current scroll length.var  = result.data;
+                        if (result) {
                             var div = $($element[0]).find('.bash');
                             vm.scrollDiff = (div.scrollTop() + div.prop('offsetHeight')) - div.prop('scrollHeight');
                             if (vm.scrollDiff >= 0) {
                                 vm.forceScroll = true;
                             }
-                            vm.execLog = logResult;
+
+                            vm.execLog = result;
                         } else {
                             if (result.statusText && result.statusText !== '') {
                                 vm.jobLogErrorStatus = result.statusText;
