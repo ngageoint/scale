@@ -30,6 +30,10 @@ SCHEDULER_ZK = None
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = 'geoint/scale'
 
+# The location of the config file containing Docker credentials
+# The URI value should point to an externally hosted location such as a webserver or hosted S3 bucket. The value will be an http URL such as 'http://static.mysite.com/foo/.dockercfg'
+CONFIG_URI = None
+
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
