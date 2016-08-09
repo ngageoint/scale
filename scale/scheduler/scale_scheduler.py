@@ -253,7 +253,7 @@ class ScaleScheduler(MesosScheduler):
                 results.when = utils.get_status_timestamp(status)
                 # Apply status update to running job execution
                 if status.state == mesos_pb2.TASK_RUNNING:
-                    running_job_exe.task_running(task_id, results.when)
+                    running_job_exe.task_start(task_id, results.when)
                 elif status.state == mesos_pb2.TASK_FINISHED:
                     running_job_exe.task_complete(results)
                 elif status.state == mesos_pb2.TASK_LOST:

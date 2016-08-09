@@ -1044,47 +1044,6 @@ class JobExecutionManager(models.Manager):
 
         return job_exes
 
-    def task_ended(self, job_exe_id, task, when, exit_code):
-        """Updates the given job execution to reflect that the given task has ended
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: string
-        :param when: The time that the task ended
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The task exit code, possibly None
-        :type exit_code: int
-        """
-
-        job_exe_qry = self.filter(id=job_exe_id)
-        if task == 'pre':
-            job_exe_qry.update(pre_completed=when, pre_exit_code=exit_code)
-        elif task == 'job':
-            job_exe_qry.update(job_completed=when, job_exit_code=exit_code)
-        elif task == 'post':
-            job_exe_qry.update(post_completed=when, post_exit_code=exit_code)
-
-    def task_started(self, job_exe_id, task, when):
-        """Updates the given job execution to reflect that the given task has started
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: string
-        :param when: The time that the task started
-        :type when: :class:`datetime.datetime`
-        """
-
-        job_exe_qry = self.filter(id=job_exe_id)
-
-        if task == 'pre':
-            job_exe_qry.update(pre_started=when)
-        elif task == 'job':
-            job_exe_qry.update(job_started=when)
-        elif task == 'post':
-            job_exe_qry.update(post_started=when)
-
     def update_status(self, job_exes, status, when, error=None):
         """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
         the job execution and job models (in that order).

@@ -18,15 +18,18 @@ class Task(object):
         """Constructor
 
         :param task_id: The unique ID of the task
-        :type task_id: str
+        :type task_id: string
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type, and
             job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
         """
 
         self._task_id = task_id
-        self._task_name = 'Job Execution %i (%s)' % (job_exe.id, job_exe.get_job_type_name())
-        self._is_running = False
+        self._task_name = 'Scale %s %s (%s)' % (job_exe.job.job_type.title, job_exe.job.job_type.version, task_id)
+        self._has_started = False
+        self._started = None
+        self._has_ended = False
+        self._results = None
 
         # Keep job execution values that should not change
         self._job_exe_id = job_exe.id
@@ -53,7 +56,7 @@ class Task(object):
         """Returns the ID of the agent that the task is running on
 
         :returns: The agent ID
-        :rtype: str
+        :rtype: string
         """
 
         return self._agent_id
@@ -63,7 +66,7 @@ class Task(object):
         """Returns the command to execute for the task
 
         :returns: The command to execute
-        :rtype: str
+        :rtype: string
         """
 
         return self._command
@@ -73,7 +76,7 @@ class Task(object):
         """Returns the command to execute for the task
 
         :returns: The command to execute
-        :rtype: str
+        :rtype: string
         """
 
         return self._command_arguments
@@ -83,7 +86,7 @@ class Task(object):
         """Returns the name of the Docker image to run for this task, possibly None
 
         :returns: The Docker image name
-        :rtype: str
+        :rtype: string
         """
 
         return self._docker_image
@@ -99,11 +102,31 @@ class Task(object):
         return self._docker_params
 
     @property
+    def has_ended(self):
+        """Indicates whether this task has ended
+
+        :returns: True if this task has ended, False otherwise
+        :rtype: bool
+        """
+
+        return self._has_ended
+
+    @property
+    def has_started(self):
+        """Indicates whether this task has started
+
+        :returns: True if this task has started, False otherwise
+        :rtype: bool
+        """
+
+        return self._has_started
+
+    @property
     def id(self):
         """Returns the unique ID of the task
 
         :returns: The task ID
-        :rtype: str
+        :rtype: string
         """
 
         return self._task_id
@@ -117,16 +140,6 @@ class Task(object):
         """
 
         return self._is_docker_privileged
-
-    @property
-    def is_running(self):
-        """Indicates whether this task is currently running
-
-        :returns: True if the task is running, False otherwise
-        :rtype: bool
-        """
-
-        return self._is_running
 
     @property
     def job_exe_id(self):
@@ -143,10 +156,30 @@ class Task(object):
         """Returns the name of the task
 
         :returns: The task name
-        :rtype: str
+        :rtype: string
         """
 
         return self._task_name
+
+    @property
+    def results(self):
+        """The results of this task, possibly None
+
+        :returns: The results of this task
+        :rtype: :class:`job.execution.running.tasks.results.TaskResults`
+        """
+
+        return self._results
+
+    @property
+    def started(self):
+        """When this task started, possibly None
+
+        :returns: When this task started
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._started
 
     @property
     def uses_docker(self):
@@ -158,7 +191,6 @@ class Task(object):
 
         return self._uses_docker
 
-    @abstractmethod
     def complete(self, task_results):
         """Completes this task and indicates whether following tasks should update their cached job execution values
 
@@ -168,7 +200,13 @@ class Task(object):
         :rtype: bool
         """
 
-        raise NotImplementedError()
+        if self._task_id != task_results.task_id:
+            return
+
+        self._has_ended = True
+        self._results = task_results
+
+        return False
 
     def consider_general_error(self, task_results):
         """Looks at the task results and considers a general task error for the cause of the failure. This is the
@@ -181,8 +219,8 @@ class Task(object):
         :rtype: :class:`error.models.Error`
         """
 
-        if not self.is_running:
-            if self.uses_docker:
+        if not self._has_started:
+            if self._uses_docker:
                 return Error.objects.get_builtin_error('docker-task-launch')
             else:
                 return Error.objects.get_builtin_error('task-launch')
@@ -221,6 +259,16 @@ class Task(object):
 
         raise NotImplementedError()
 
+    @abstractmethod
+    def populate_job_exe_model(self, job_exe):
+        """Populates the job execution model with the relevant information from this task
+
+        :param job_exe: The job execution model
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        raise NotImplementedError()
+
     def refresh_cached_values(self, job_exe):
         """Refreshes the task's cached job execution values with the given model
 
@@ -230,11 +278,16 @@ class Task(object):
 
         pass
 
-    def running(self, when):
-        """Marks this task as having started running
+    def start(self, when):
+        """Starts this task and marks it as running
 
         :param when: The time that the task started running
         :type when: :class:`datetime.datetime`
         """
 
-        self._is_running = True
+        if self._has_ended:
+            raise Exception('Trying to start a task that has already ended')
+
+        # Duplicate calls to start() are OK
+        self._has_started = True
+        self._started = when

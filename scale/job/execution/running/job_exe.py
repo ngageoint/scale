@@ -50,13 +50,16 @@ class RunningJobExecution(object):
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
         self._current_task = None
         self._remaining_tasks = []
+        self._all_tasks = []
 
         # Create tasks
         if not job_exe.is_system:
-            self._remaining_tasks.append(PreTask(job_exe))
-        self._remaining_tasks.append(JobTask(job_exe))
+            self._all_tasks.append(PreTask(job_exe))
+        self._all_tasks.append(JobTask(job_exe))
         if not job_exe.is_system:
-            self._remaining_tasks.append(PostTask(job_exe))
+            self._all_tasks.append(PostTask(job_exe))
+        for task in self._all_tasks:
+            self._remaining_tasks.append(task)
 
     @property
     def current_task(self):
@@ -98,12 +101,20 @@ class RunningJobExecution(object):
 
         return self._node_id
 
+    @retry_database_query
     def execution_canceled(self):
         """Cancels this job execution and returns the current task
 
         :returns: The current task, possibly None
         :rtype: :class:`job.execution.running.tasks.base_task.Task`
         """
+
+        # Saves this job execution's task info to the database
+        with transaction.atomic():
+            job_exe = JobExecution.objects.get_locked_job_exe(self._id)
+            for task in self._all_tasks:
+                task.populate_job_exe_model(job_exe)
+            job_exe.save()
 
         with self._lock:
             task = self._current_task
@@ -123,7 +134,7 @@ class RunningJobExecution(object):
 
         error = Error.objects.get_builtin_error('node-lost')
         from queue.models import Queue
-        Queue.objects.handle_job_failure(self._id, when, error)
+        Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
             task = self._current_task
@@ -143,7 +154,7 @@ class RunningJobExecution(object):
 
         error = Error.objects.get_builtin_error('timeout')
         from queue.models import Queue
-        Queue.objects.handle_job_failure(self._id, when, error)
+        Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
             task = self._current_task
@@ -224,7 +235,7 @@ class RunningJobExecution(object):
                     task.refresh_cached_values(job_exe)
             if not remaining_tasks:
                 from queue.models import Queue
-                Queue.objects.handle_job_completion(self._id, task_results.when)
+                Queue.objects.handle_job_completion(self._id, task_results.when, self._all_tasks)
 
         with self._lock:
             if self._current_task and self._current_task.id == task_results.task_id:
@@ -247,7 +258,7 @@ class RunningJobExecution(object):
         with transaction.atomic():
             error = current_task.fail(task_results, error)
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self._id, task_results.when, error)
+            Queue.objects.handle_job_failure(self._id, task_results.when, self._all_tasks, error)
 
             # TODO: move this somewhere else and refactor it
             from scheduler.models import Scheduler
@@ -279,7 +290,7 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
 
     @retry_database_query
-    def task_running(self, task_id, when):
+    def task_start(self, task_id, when):
         """Tells this job execution that one of its tasks has started running
 
         :param task_id: The ID of the task
@@ -292,4 +303,4 @@ class RunningJobExecution(object):
         if not current_task or current_task.id != task_id:
             return
 
-        current_task.running(when)
+        current_task.start(when)

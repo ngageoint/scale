@@ -45,7 +45,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -71,7 +71,7 @@ class TestRunningJobExecution(TestCase):
 
         # Job-task running
         job_task_started = pre_task_completed + timedelta(seconds=1)
-        running_job_exe.task_running(job_task_id, job_task_started)
+        running_job_exe.task_start(job_task_id, job_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -92,7 +92,7 @@ class TestRunningJobExecution(TestCase):
 
         # Post-task running
         post_task_started = job_task_completed + timedelta(seconds=1)
-        running_job_exe.task_running(post_task_id, post_task_started)
+        running_job_exe.task_start(post_task_id, post_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -135,7 +135,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -166,7 +166,7 @@ class TestRunningJobExecution(TestCase):
         task = running_job_exe.start_next_task()
         pre_task_id = task.id
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         pre_task_completed = pre_task_started + timedelta(seconds=1)
         pre_task_results = TaskResults(pre_task_id)
         pre_task_results.exit_code = 0
@@ -196,7 +196,7 @@ class TestRunningJobExecution(TestCase):
         task = running_job_exe.start_next_task()
         pre_task_id = task.id
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         pre_task_completed = pre_task_started + timedelta(seconds=1)
         pre_task_results = TaskResults(pre_task_id)
         pre_task_results.exit_code = 0
@@ -226,7 +226,7 @@ class TestRunningJobExecution(TestCase):
         task = running_job_exe.start_next_task()
         pre_task_id = task.id
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         pre_task_completed = pre_task_started + timedelta(seconds=1)
         pre_task_results = TaskResults(pre_task_id)
         pre_task_results.exit_code = 0
@@ -279,7 +279,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
 
         # Complete pre-task
         pre_task_completed = pre_task_started + timedelta(seconds=1)
@@ -318,7 +318,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
 
         # Complete pre-task
         pre_task_completed = pre_task_started + timedelta(seconds=1)
@@ -333,7 +333,7 @@ class TestRunningJobExecution(TestCase):
 
         # Job-task running
         job_task_started = now()
-        running_job_exe.task_running(job_task_id, job_task_started)
+        running_job_exe.task_start(job_task_id, job_task_started)
 
         # Complete job-task
         job_task_completed = job_task_started + timedelta(seconds=1)
@@ -373,7 +373,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now()
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
 
         # Complete pre-task
         pre_task_completed = pre_task_started + timedelta(seconds=1)
@@ -388,7 +388,7 @@ class TestRunningJobExecution(TestCase):
 
         # Job-task running
         job_task_started = now()
-        running_job_exe.task_running(job_task_id, job_task_started)
+        running_job_exe.task_start(job_task_id, job_task_started)
 
         # Fail job-task
         job_task_failed = job_task_started + timedelta(seconds=1)
