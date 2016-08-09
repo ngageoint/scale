@@ -3,30 +3,32 @@
 <div class="row ov-margin-fix">
     <div id="ov-status" class="col-xs-12 col-md-6">
         <h2>Status</h2>
-        <div ng-show="loadingStatus" class="loading-component">
+        <div ng-show="vm.loadingStatus" class="loading-component">
             <h4>
                 <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
                 Loading
             </h4>
         </div>
-        <div ng-show="!loadingStatus">
+        <div ng-show="!vm.loadingStatus">
             <div class="widget-label-left">Cluster status and resource utilization</div>
             <div class="row overview-alert">
                 <div class="col-xs-6 text-center">
-                    <div class="alert" ng-class="masterStatusClass">
-                        <h4>Master is {{ masterStatus }}</h4>
-                        {{ status.master.hostname }}
+                    <div class="alert" ng-class="vm.masterStatusClass">
+                        <h4>{{ vm.masterStatus }}</h4>
+                        <div ng-show="!vm.statusError">{{ vm.status.master.hostname }}</div>
+                        <div ng-show="vm.statusError">{{ vm.statusError }}</div>
                     </div>
                 </div>
                 <div class="col-xs-6 text-center">
-                    <div class="alert" ng-class="schedulerStatusClass">
+                    <div class="alert" ng-class="vm.schedulerStatusClass">
                         <div class="row">
-                            <div ng-class="schedulerContainerClass">
-                                <h4>Scheduler is {{ schedulerStatus }}</h4>
-                                {{ status.scheduler.hostname }}
+                            <div ng-class="vm.schedulerContainerClass">
+                                <h4>{{ vm.schedulerStatus }}</h4>
+                                <div ng-show="!vm.statusError">{{ vm.status.scheduler.hostname }}</div>
+                                <div ng-show="vm.statusError">{{ vm.statusError }}</div>
                             </div>
-                            <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="user.is_admin">
-                                <button class="btn btn-default margin-top-sm" ng-click="toggleScheduler()"><i class="fa" ng-class="schedulerBtnClass"></i></button>
+                            <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="vm.user.is_admin && !vm.statusError">
+                                <button class="btn btn-default margin-top-sm" ng-click="vm.toggleScheduler()"><i class="fa" ng-class="vm.schedulerBtnClass"></i></button>
                             </div>
                         </div>
                     </div>
@@ -35,16 +37,19 @@
             <div class="row">
                 <div class="col-xs-4 text-center">
                     <span id="cpuGaugeContainer"></span>
-                    <div><strong>{{ status.resources.scheduled.cpus }} / {{ status.resources.total.cpus }}</strong></div>
+                    <div ng-show="!vm.statusError"><strong>{{ vm.status.resources.scheduled.cpus }} / {{ vm.status.resources.total.cpus }}</strong></div>
                 </div>
                 <div class="col-xs-4 text-center">
                     <span id="memoryGaugeContainer"></span>
-                    <div><strong>{{ memCalc }}</strong></div>
+                    <div ng-show="!vm.statusError"><strong>{{ vm.memCalc }}</strong></div>
                 </div>
                 <div class="col-xs-4 text-center">
                     <span id="diskGaugeContainer"></span>
-                    <div><strong>{{ diskCalc }}</strong></div>
+                    <div ng-show="!vm.statusError"><strong>{{ vm.diskCalc }}</strong></div>
                 </div>
+            </div>
+            <div class="text-center" ng-show="vm.statusError">
+                <strong>{{ vm.statusError }}</strong>
             </div>
         </div>
     </div>
@@ -58,7 +63,18 @@
             </div>
             <div class="col-xs-6 text-center">
                 <h3>Nodes</h3>
-                <ais-node-health duration="'PT3H'" show-description="false"></ais-node-health>
+                <div ng-show="vm.loadingNodeHealth" class="loading-component">
+                    <h4>
+                        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+                        Loading
+                    </h4>
+                </div>
+                <div ng-class="{ 'visible': !vm.loadingNodeHealth, 'invisible': vm.loadingNodeHealth }" class="ov-chart form-inline">
+                    <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
+                    <div ng-show="!vm.nodeHealthError">
+                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" duration="'PT3H'" show-description="false"></ais-node-health>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -72,20 +88,20 @@
             </div>
             <div class="col-xs-12 col-md-6">
                 <h2>Jobs</h2>
-                <div ng-if="loadingJobs" class="loading-component">
+                <div ng-if="vm.loadingJobs" class="loading-component">
                     <h4>
                         <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
                         Loading
                     </h4>
                 </div>
-                <div ng-if="!loadingJobs">
-                    <div ng-show="jobError" class="alert alert-danger text-center"><strong>{{ jobError }}</strong> {{ jobErrorStatus }}</div>
-                    <div ng-show="!jobError">
+                <div class="ov-jobs" ng-if="!vm.loadingJobs">
+                    <div ng-show="vm.jobError" class="alert alert-danger text-center"><strong>{{ vm.jobError }}</strong> {{ vm.jobErrorStatus }}</div>
+                    <div ng-show="!vm.jobError">
                         <div class="margin-bottom-md">
                             Performance and activity status for all current job types.
                         </div>
                     </div>
-                    <ais-grid-chart data="jobData" icons="true" scale="1" mode="tooltip"></ais-grid-chart>
+                    <ais-grid-chart data="vm.jobData" icons="true" scale="1" mode="tooltip"></ais-grid-chart>
                 </div>
             </div>
         </div>
