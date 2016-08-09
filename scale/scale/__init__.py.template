@@ -13,6 +13,10 @@ VERSION = version_info_t(3, 1, 0, '-snapshot___BUILDNUM___')
 
 __version__ = '{0.major}.{0.minor}.{0.patch}{0.qualifier}'.format(VERSION)
 
+# The Scale version is tagged on the Scale Docker image
+# Docker tags cannot support + chars, so replace it with an underscore
+__docker_version__ = __version__.replace('+', '_')
+
 __author__ = 'NGA'
 __contact__ = ''
 __homepage__ = 'https://ngageoint.github.io/scale'
