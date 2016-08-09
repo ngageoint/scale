@@ -17,6 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Project version
 VERSION = scale.__version__
+DOCKER_VERSION = scale.__docker_version__
 
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
