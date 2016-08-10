@@ -33,6 +33,7 @@ class PreTask(Task):
         if self._task_id != task_results.task_id:
             return
 
+        # Support duplicate calls to complete(), task updates may repeat
         self._has_ended = True
         self._results = task_results
 
@@ -53,6 +54,7 @@ class PreTask(Task):
         if self._task_id != task_results.task_id:
             return None
 
+        # Support duplicate calls to fail(), task updates may repeat
         if not error and self._has_started:
             # Check scale_pre_steps command to see if exit code maps to a specific error
             if task_results.exit_code and task_results.exit_code in PRE_EXIT_CODE_DICT:

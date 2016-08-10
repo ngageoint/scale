@@ -203,6 +203,7 @@ class Task(object):
         if self._task_id != task_results.task_id:
             return
 
+        # Support duplicate calls to complete(), task updates may repeat
         self._has_ended = True
         self._results = task_results
 
@@ -288,6 +289,6 @@ class Task(object):
         if self._has_ended:
             raise Exception('Trying to start a task that has already ended')
 
-        # Duplicate calls to start() are OK
+        # Support duplicate calls to start(), task updates may repeat
         self._has_started = True
         self._started = when

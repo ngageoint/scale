@@ -45,6 +45,7 @@ class JobTask(Task):
         if self._task_id != task_results.task_id:
             return None
 
+        # Support duplicate calls to fail(), task updates may repeat
         if not error and self._has_started:
             # If the task successfully started, use job's error mapping here to determine error
             default_error_name = 'unknown' if self._is_system else 'algorithm-unknown'
