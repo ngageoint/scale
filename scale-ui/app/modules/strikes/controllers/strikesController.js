@@ -9,6 +9,7 @@
         vm.scaleConfig = scaleConfig;
         vm.strikes = [];
         vm.workspaces = [];
+        vm.activeWorkspace = {};
         vm.localStrikes = [];
         vm.activeStrike = new Strike();
         vm.activeStrikeIngestFile = new StrikeIngestFile();
@@ -135,6 +136,22 @@
             });
         };
 
+        var getWorkspaceDetails = function (id) {
+            vm.loading = true;
+            workspacesService.getWorkspaceDetails(id).then(function (data) {
+                vm.activeWorkspace = data;
+                if (vm.activeWorkspace.json_config.broker.type === 'host') {
+                    vm.activeStrike.configuration.monitor.type = 'dir-watcher';
+                } else if (vm.activeWorkspace.json_config.broker.type === 's3') {
+                    vm.activeStrike.configuration.monitor.type = 's3';
+                }
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                vm.loading = false;
+            });
+        };
+
         var getStrikes = function () {
             vm.loading = true;
             strikeService.getStrikes().then(function (data) {
@@ -189,6 +206,13 @@
                 containerMaxHeight = viewport.height - offset + 60;
 
             vm.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
+        });
+
+        $scope.$watchCollection('vm.activeStrike.configuration.workspace', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            getWorkspaceDetails(newValue.id);
         });
     });
 })();

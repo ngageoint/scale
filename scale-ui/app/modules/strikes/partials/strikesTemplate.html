@@ -69,22 +69,20 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6">
-                            <div class="form-group" ng-class="{ 'has-error': strikesForm.scVersion.$invalid }">
-                                <label for="scVersion">Version</label>
-                                <input id="scVersion" name="scVersion" type="text" class="form-control" ng-model="vm.activeStrike.configuration.version" placeholder="Version" required>
-                                <p ng-show="strikesForm.scVersion.$invalid && !strikesForm.scVersion.$pristine" class="help-block">Version is required.</p>
-                            </div>
                             <div class="form-group" ng-class="{ 'has-error': strikesForm.scWorkspace.$invalid }">
                                 <label for="scWorkspace">Workspace</label>
-                                <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces"></select>
+                                <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w as w.title for w in vm.workspaces" required></select>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="vm.activeStrike.configuration.workspace !== null">
                         <div class="col-xs-12 col-md-6">
-                            <div class="form-group" ng-class="{ 'has-error': strikesForm.scMonitorType.$invalid }">
-                                <label for="scMonitorType">Monitor Type</label>
-                                <select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>
+                            <div class="form-group">
+                                <label>Monitor Type:</label>
+                                <input type="text" class="form-control" value="S3" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                <input type="text" class="form-control" value="Directory Watcher" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">
+                                <input type="text" class="form-control" value="Unavailable for NFS workspaces" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">
+                                <!--<select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>-->
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6">
@@ -92,13 +90,9 @@
                                 <label for="sqs_name">SQS Name</label>
                                 <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
                             </div>
-                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nfs'">
-                                <label for="nfs_field">NFS Field (TBD)</label>
-                                <input id="nfs_field" name="nfs_field" type="text" class="form-control" placeholder="NFS Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.nfs_field">
-                            </div>
-                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'host'">
-                                <label for="host_field">Host Field (TBD)</label>
-                                <input id="host_field" name="host_field" type="text" class="form-control" placeholder="Host Field (TBD)" ng-model="vm.activeStrike.configuration.monitor.host_field">
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'dir-watcher'">
+                                <label for="transfer_suffix">Transfer Suffix</label>
+                                <input id="transfer_suffix" name="transfer_suffix" type="text" class="form-control" placeholder="Transfer Suffix" ng-model="vm.activeStrike.configuration.monitor.transfer_suffix">
                             </div>
                         </div>
                     </div>

@@ -1,11 +1,11 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').factory('StrikeConfiguration', function (StrikeIngestFile) {
-        var StrikeConfiguration = function (version, workspace, monitor, files_to_ingest) {
-            this.version = version;
-            this.workspace = workspace;
-            this.monitor = monitor;
+    angular.module('scaleApp').factory('StrikeConfiguration', function (scaleConfig, StrikeIngestFile) {
+        var StrikeConfiguration = function (workspace, monitor, files_to_ingest) {
+            this.version = scaleConfig.strikeConfigurationVersion;
+            this.workspace = workspace ? workspace.name : null;
+            this.monitor = monitor ? monitor : { type: '' };
             this.files_to_ingest = files_to_ingest ? StrikeIngestFile.transformer(files_to_ingest) : [];
         };
 
@@ -17,7 +17,6 @@
         StrikeConfiguration.build = function (data) {
             if (data) {
                 return new StrikeConfiguration(
-                    data.version,
                     data.workspace,
                     data.monitor,
                     data.files_to_ingest
