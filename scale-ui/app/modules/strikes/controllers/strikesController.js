@@ -11,7 +11,8 @@
         vm.workspaces = [];
         vm.localStrikes = [];
         vm.activeStrike = new Strike();
-        vm.activeStrikeIngestFile = {};
+        vm.activeStrikeIngestFile = new StrikeIngestFile();
+        vm.dataType = '';
         vm.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
         vm.addBtnClass = 'btn-primary';
         vm.addBtnIcon = 'fa-plus-circle';
@@ -103,13 +104,24 @@
         vm.addStrikeIngestFile = function () {
             if (_.keys(vm.activeStrikeIngestFile).length > 0) {
                 vm.activeStrike.configuration.files_to_ingest.push(StrikeIngestFile.transformer(vm.activeStrikeIngestFile));
-                vm.activeStrikeIngestFile = {};
+                vm.activeStrikeIngestFile = new StrikeIngestFile();
             }
         };
 
         vm.deleteStrikeIngestFile = function (file) {
             _.remove(vm.activeStrike.configuration.files_to_ingest, function (f) {
                 return angular.equals(f, file);
+            });
+        };
+
+        vm.addDataType = function () {
+            vm.activeStrikeIngestFile.data_types.push(vm.dataType);
+            vm.dataType = '';
+        };
+
+        vm.removeDataType = function (dataType) {
+            _.remove(vm.activeStrikeIngestFile.data_types, function (d) {
+                return d === dataType;
             });
         };
 

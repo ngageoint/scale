@@ -120,10 +120,19 @@
                                 </div>
                             </div>
                             <div class="col-xs-6">
-                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifDataTypes.$invalid }">
+                                <div class="form-group" ng-class="{ 'has-error': vm.activeStrikeIngestFile.data_types.length === 0 }">
                                     <label for="scifDataTypes">Data Types</label>
-                                    <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.data_types" placeholder="Data Types" required>
-                                    <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings “tagged” with the file.</p>
+                                    <div class="input-group">
+                                        <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.dataType" placeholder="Data Types">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" ng-click="vm.addDataType()"><i class="fa fa-plus"></i></button>
+                                        </span>
+                                    </div>
+                                    <div class="help-block">
+                                        <ul class="list-inline">
+                                            <li ng-repeat="dataType in vm.activeStrikeIngestFile.data_types"><span class="label label-default strike-data-type" ng-click="vm.removeDataType(dataType)">{{ dataType }} <i class="fa fa-close"></i></span></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +152,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-4 col-xs-offset-4">
-                                <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addStrikeIngestFile()" ng-disabled="ingestFileForm.$invalid"><i class="fa fa-plus"></i> Add File to Configuration</button>
+                                <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addStrikeIngestFile()" ng-disabled="ingestFileForm.$invalid || vm.activeStrikeIngestFile.data_types.length === 0"><i class="fa fa-plus"></i> Add File to Configuration</button>
                             </div>
                         </div>
                         <b class="margin-bottom-md">Current Files</b>
