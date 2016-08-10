@@ -108,72 +108,6 @@ class TestNodeDetailsView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @patch('mesos_api.api.get_slave', return_value=None)
-    def test_replace_node_success(self, mock_get_slave):
-        '''Test successfully calling the Replace Node method.'''
-
-        url = '/nodes/%d/' % self.node2.id
-        response = self.client.get(url)
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(result['is_paused'], False)
-
-        data = {'hostname': result['hostname'],
-                'port': result['port'],
-                'pause_reason': 'Test reason',
-                'is_paused': True,
-                'is_active': True}
-        response = self.client.put(url, json.dumps(data), "application/json")
-        result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertEqual(result['is_paused'], True)
-        self.assertEqual(result['pause_reason'], data['pause_reason'])
-
-    def test_replace_node_not_found(self):
-        '''Test calling the Replace Node method with a bad node id.'''
-
-        url = '/nodes/9999/'
-        data = {'hostname': '',
-                'port': 1111,
-                'is_paused': False,
-                'is_active': True}
-        response = self.client.put(url, json.dumps(data), "application/json")
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_replace_node_missing_fields(self):
-        '''Test calling the Replace Node method with missing fields.'''
-
-        url = '/nodes/%d/' % self.node2.id
-        data = {'is_paused': True}
-        response = self.client.put(url, json.dumps(data), "application/json")
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, '"Missing required fields: hostname, port, is_active"')
-
-    @patch('mesos_api.api.get_slave', return_value=None)
-    def test_replace_node_extra_fields(self, mock_get_slave):
-        '''Test calling the Replace Node method with extra fields.'''
-
-        url = '/nodes/%d/' % self.node2.id
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['is_paused'], False)
-
-        data = {'hostname': result['hostname'],
-                'port': result['port'],
-                'is_paused': result['is_paused'],
-                'is_active': result['is_active'],
-                'foo': 'bar'}
-        response = self.client.put(url, json.dumps(data), "application/json")
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, '"Unexpected fields: foo"')
-
     def test_update_node_success(self):
         '''Test successfully calling the Update Node method.'''
 
@@ -182,7 +116,7 @@ class TestNodeDetailsView(TransactionTestCase):
         response = self.client.patch(url, json.dumps(data), "application/json")
         data = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(data['is_paused'], True)
         self.assertEqual(data['pause_reason'], data['pause_reason'])
     
@@ -194,7 +128,7 @@ class TestNodeDetailsView(TransactionTestCase):
         response = self.client.patch(url, json.dumps(data), "application/json")
         data = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(data['is_paused'], False)
         self.assertIsNone(data['pause_reason'])
 
@@ -234,7 +168,7 @@ class TestNodeDetailsView(TransactionTestCase):
         data = {'is_active': False}
         response = self.client.patch(url, json.dumps(data), "application/json")
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         data = json.loads(response.content)
         self.assertEqual(data['is_active'], False)
         self.assertIn('archived', data)
