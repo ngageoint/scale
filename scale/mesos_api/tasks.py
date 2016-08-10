@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 from mesos.interface import mesos_pb2
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -103,6 +104,7 @@ def _create_docker_task(task):
     arguments = task.command_arguments.split(" ")
     for argument in arguments:
         mesos_task.command.arguments.append(argument)
+    mesos_task.command.uris.add().value = settings.CONFIG_URI
 
     mesos_task.container.docker.network = mesos_pb2.ContainerInfo.DockerInfo.Network.Value('BRIDGE')
     mesos_task.container.docker.force_pull_image = True
