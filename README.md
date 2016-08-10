@@ -61,6 +61,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | MESOS_MASTER_URL         | 'zk://localhost:2181/scale'     | Mesos master location                    |
 | SCALE_ZK_URL             | None                            | Scale master location                    |
 | SCALE_DOCKER_IMAGE       | 'geoint/scale'                  | Scale docker image name                  |
+| CONFIG_URI               | None                            | A URI or URL to docker credentials file  |
 
 Quick Start
 ===========

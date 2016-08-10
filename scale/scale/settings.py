@@ -17,6 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Project version
 VERSION = scale.__version__
+DOCKER_VERSION = scale.__docker_version__
 
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
@@ -28,6 +29,10 @@ SCHEDULER_ZK = None
 
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = 'geoint/scale'
+
+# The location of the config file containing Docker credentials
+# The URI value should point to an externally hosted location such as a webserver or hosted S3 bucket. The value will be an http URL such as 'http://static.mysite.com/foo/.dockercfg'
+CONFIG_URI = None
 
 # Directory for rotating metrics storage
 METRICS_DIR = None
