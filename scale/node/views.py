@@ -87,37 +87,6 @@ class NodeDetailsView(GenericAPIView):
 
         return Response(result)
 
-    def put(self, request, node_id):
-        """Modify node info by replacing an object
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param node_id: The ID for the node.
-        :type node_id: str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        missing = filter(lambda x, y=request.data.keys(): x not in y, self.required_fields)
-        if len(missing):
-            return Response('Missing required fields: %s' % ', '.join(missing), status=status.HTTP_400_BAD_REQUEST)
-
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
-        if len(extra):
-            return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            Node.objects.get(id=node_id)
-        except Node.DoesNotExist:
-            raise Http404
-
-        Node.objects.update_node(dict(request.data), node_id=node_id)
-
-        node = Node.objects.get(id=node_id)
-        serializer = NodeSerializer(node)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers={'Location': request.build_absolute_uri()})
-
     def patch(self, request, node_id):
         """Modify node info with a subset of fields
 
