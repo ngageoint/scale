@@ -113,7 +113,7 @@ class NodeDetailsView(GenericAPIView):
         Node.objects.update_node(dict(request.data), node_id=node_id)
         node = Node.objects.get(id=node_id)
         serializer = NodeSerializer(node)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
+        return Response(serializer.data, status=status.HTTP_200_CREATED,
                         headers={'Location': request.build_absolute_uri()})
 
 
