@@ -1,0 +1,27 @@
+{
+  "packagingVersion": "2.0",
+  "scm": "https://github.com/ngageoint/scale.git",
+  "postInstallNotes": "The Scale DCOS Service has been successfully installed!\n\n\tDocumentation: https://ngageoint.github.io/scale/\n\tIssues: https://github.com/ngageoint/scale/issues",
+  "maintainer": "http://www.nga.mil",
+  "name": "scale",
+  "tags": [
+    "bigdata",
+    "batch",
+    "analytics",
+    "remotesensing",
+    "algorithms",
+    "geospatial"
+  ],
+  "framework": true,
+  "version": "3.2.0",
+  "postUninstallNotes": "The Scale DCOS Service has been uninstalled and will no longer run.",
+  "preInstallNotes": "We recommend a minimum of three nodes with at least 2 CPU and 2GB of RAM available for the Scale Service and running Scale jobs.",
+  "licenses": [
+    {
+      "url": "https://github.com/ngageoint/scale/blob/master/LICENSE",
+      "name": "Apache License Version 2.0"
+    }
+  ],
+  "description": "Scale enables on-demand, near real-time, automated processing of large datasets (satellite, medical, audio, video, ...) using a dynamic bank of algorithms. Algorithm execution is seamlessly distributed across thousands of CPU cores. Docker provides algorithm containerization. Apache Mesos enables optimum resource utilization.",
+  "selected": false
+}

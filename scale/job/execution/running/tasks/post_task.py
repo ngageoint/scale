@@ -34,8 +34,7 @@ class PostTask(Task):
         if self._task_id != task_results.task_id:
             return
 
-        JobExecution.objects.task_ended(self._job_exe_id, 'post', task_results.when, task_results.exit_code,
-                                        task_results.stdout, task_results.stderr)
+        JobExecution.objects.task_ended(self._job_exe_id, 'post', task_results.when, task_results.exit_code)
 
         return False
 
@@ -60,14 +59,13 @@ class PostTask(Task):
         if not error:
             error = self.consider_general_error(task_results)
 
-        JobExecution.objects.task_ended(self._job_exe_id, 'post', task_results.when, task_results.exit_code,
-                                        task_results.stdout, task_results.stderr)
+        JobExecution.objects.task_ended(self._job_exe_id, 'post', task_results.when, task_results.exit_code)
 
         return error
 
-    def running(self, when, stdout_url, stderr_url):
+    def running(self, when):
         """See :meth:`job.execution.running.tasks.base_task.Task.running`
         """
 
-        super(PostTask, self).running(when, stdout_url, stderr_url)
-        JobExecution.objects.task_started(self._job_exe_id, 'post', when, stdout_url, stderr_url)
+        super(PostTask, self).running(when)
+        JobExecution.objects.task_started(self._job_exe_id, 'post', when)

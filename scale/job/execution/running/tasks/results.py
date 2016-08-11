@@ -15,8 +15,6 @@ class TaskResults(object):
         self._task_id = task_id
         self._exit_code = None
         self._when = None
-        self._stdout = None
-        self._stderr = None
 
     @property
     def exit_code(self):
@@ -47,46 +45,6 @@ class TaskResults(object):
         """
 
         return self._task_id
-
-    @property
-    def stderr(self):
-        """Returns the task's stderr log contents, possibly None
-
-        :returns: The task's stderr log contents
-        :rtype: str
-        """
-
-        return self._stderr
-
-    @stderr.setter
-    def stderr(self, value):
-        """Sets the task's stderr log contents
-
-        :param value: The task's stderr log contents
-        :type value: str
-        """
-
-        self._stderr = value
-
-    @property
-    def stdout(self):
-        """Returns the task's stdout log contents, possibly None
-
-        :returns: The task's stdout log contents
-        :rtype: str
-        """
-
-        return self._stdout
-
-    @stdout.setter
-    def stdout(self, value):
-        """Sets the task's stdout log contents
-
-        :param value: The task's stdout log contents
-        :type value: str
-        """
-
-        self._stdout = value
 
     @property
     def when(self):

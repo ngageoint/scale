@@ -22,7 +22,7 @@ func strike_create(c *cli.Context) error {
     if err != nil {
         return cli.NewExitError(err.Error(), 1)
     }
-    color.Blue(fmt.Sprintf("Strike proess %d created.", strike_process_id))
+    color.Blue(fmt.Sprintf("Strike process %d created.", strike_process_id))
     return nil
 }
 

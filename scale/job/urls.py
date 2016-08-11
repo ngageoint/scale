@@ -28,4 +28,5 @@ urlpatterns = patterns(
     url(r'^job-executions/$', views.JobExecutionsView.as_view(), name=u'job_executions_view'),
     url(r'^job-executions/(\d+)/$', views.JobExecutionDetailsView.as_view(), name=u'job_execution_details_view'),
     url(r'^job-executions/(\d+)/logs/$', views.JobExecutionLogView.as_view(), name=u'job_execution_log_view'),
+    url(r'^job-executions/(\d+)/logs/(stdout|stderr|combined)/$', views.JobExecutionSpecificLogView.as_view(), name=u'job_execution_log_view'),
 )

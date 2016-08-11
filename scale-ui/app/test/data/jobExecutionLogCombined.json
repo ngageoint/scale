@@ -1,0 +1,17 @@
+{
+  "hits": {
+    "total":      1,
+    "max_score":  0.30685282,
+    "hits": [{
+        "_source": {
+          "message":  "this is a stdout message",
+          "level":   6
+        }
+    },{
+      "_source": {
+        "message":  "this is a stderr message",
+        "level":   3
+      }
+    }]
+  }
+}

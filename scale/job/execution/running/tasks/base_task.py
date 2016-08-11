@@ -230,15 +230,11 @@ class Task(object):
 
         pass
 
-    def running(self, when, stdout_url, stderr_url):
+    def running(self, when):
         """Marks this task as having started running
 
         :param when: The time that the task started running
         :type when: :class:`datetime.datetime`
-        :param stdout_url: The URL for the task's stdout logs
-        :type stdout_url: str
-        :param stderr_url: The URL for the task's stderr logs
-        :type stderr_url: str
         """
 
         self._is_running = True
