@@ -24,8 +24,10 @@ except ImportError:
        logger.info('Successfully imported native Mesos bindings')
     except ImportError:
        logger.info('No native Mesos bindings, falling back to stubs')
-       import mesos_api.mesos_pb2 as mesos_pb2
-       from mesos_api.mesos import MesosSchedulerDriver
+       import mesos.interface as mesos_pb2
+       class MesosSchedulerDriver(object):
+           def __init__(self, *args, **kargs):
+               pass
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False

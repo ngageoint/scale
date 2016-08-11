@@ -516,8 +516,8 @@ These services provide access to information about "all", "currently running" an
 |                      |                   | *application/json* will return the raw Elasticsearch results.                  |
 |                      |                   | *text/plain* will return the log entries, one per line, as UTF-8.              |
 |                      |                   | *text/html* will return a simple HTML document with stdout/stderr CSS          |
-|                      |                   |             classes to distinguish stdout and stderr. stderr will be           |
-|                      |                   |             colored red by default.                                            |
+|                      |                   | classes to distinguish stdout and stderr. stderr will be                       |
+|                      |                   | colored red by default.                                                        |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | If-Modified-Since    | HTTP Date         | If new log data exists after the specified date, return as normal, otherwise   |
 |                      |                   | return *304 Not Modified*                                                      |

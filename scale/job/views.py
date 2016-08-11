@@ -651,7 +651,7 @@ class JobExecutionLogView(RetrieveAPIView):
 
 class JobExecutionSpecificLogView(RetrieveAPIView):
     """This view is the endpoint for viewing the text of specific job execution logs"""
-    renderer_classes = (rest_util.PlainTextRenderer, JSONRenderer, StaticHTMLRenderer)
+    renderer_classes = (JSONRenderer, rest_util.PlainTextRenderer, StaticHTMLRenderer)
 
     def retrieve(self, request, job_exe_id, log_id):
         """Gets job execution log specified.
