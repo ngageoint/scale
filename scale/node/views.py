@@ -142,7 +142,7 @@ class NodeDetailsView(GenericAPIView):
             raise Http404
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
-        node = Node.objects.get(id=node_id)
+        node = Node.objects.get_details(node_id)
         serializer = NodeSerializer(node)
         return Response(serializer.data, status=status.HTTP_201_CREATED,
                         headers={'Location': request.build_absolute_uri()})

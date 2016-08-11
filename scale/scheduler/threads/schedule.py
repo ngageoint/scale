@@ -7,6 +7,7 @@ import time
 
 from django.db import OperationalError
 from django.utils.timezone import now
+from mesos.interface import mesos_pb2
 
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
@@ -17,13 +18,6 @@ from util.retry import retry_database_query
 
 logger = logging.getLogger(__name__)
 
-
-try:
-    from mesos.interface import mesos_pb2
-    logger.info('Successfully imported native Mesos bindings')
-except ImportError:
-    logger.info('No native Mesos bindings, falling back to stubs')
-    import mesos_api.mesos_pb2 as mesos_pb2
 
 
 class SchedulingThread(object):

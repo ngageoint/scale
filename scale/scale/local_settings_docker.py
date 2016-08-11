@@ -58,3 +58,6 @@ SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', None)
 
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = os.environ.get('SCALE_DOCKER_IMAGE', SCALE_DOCKER_IMAGE)
+
+# The location of the config file containing Docker credentials
+CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)

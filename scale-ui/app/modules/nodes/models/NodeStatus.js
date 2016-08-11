@@ -63,8 +63,8 @@
                 var text = '';
                 _.forEach(this.job_exes_running, function (jobExecution) {
                     text = jobExecution.job.job_type.icon_code ?
-                    text + ' ' + '&#x' + jobExecution.job.job_type.icon_code + ';' :
-                    text + ' ' + '&#x' + scaleConfig.defaultIconCode + ';';
+                    text + ' ' + '<i class="fa fa-fw">&#x' + jobExecution.job.job_type.icon_code + '</i>' :
+                    text + ' ' + '<i class="fa fa-fw">&#x' + scaleConfig.defaultIconCode + '</i>';
                 });
                 return text;
             },
@@ -73,8 +73,6 @@
             },
             pauseResumeCell: function (pause_reason) {
                 var updateData = {
-                    hostname: this.node.hostname,
-                    port: this.node.port,
                     pause_reason: pause_reason || '',
                     is_paused: !this.node.is_paused
                 };

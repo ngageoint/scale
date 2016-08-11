@@ -1233,6 +1233,7 @@ class JobExecution(models.Model):
     configuration = djorm_pgjson.fields.JSONField()
 
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
+    # TODO: Remove this unused field. This will force changes through the REST API though, so coordinate with UI
     environment = djorm_pgjson.fields.JSONField()
     cpus_scheduled = models.FloatField(blank=True, null=True)
     mem_scheduled = models.FloatField(blank=True, null=True)
