@@ -111,8 +111,13 @@ class NodeDetailsView(GenericAPIView):
             raise Http404
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
-        node = Node.objects.get(id=node_id)
-        serializer = NodeSerializer(node)
+
+        # Fetch the basic node attributes
+        try:
+            node = Node.objects.get_details(node_id)
+        except Node.DoesNotExist:
+            raise Http404
+        serializer = self.get_serializer(node)
         result = serializer.data
 
         # Attempt to fetch resource usage for the node
