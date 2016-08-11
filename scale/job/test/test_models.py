@@ -540,8 +540,7 @@ class TestJobExecutionManager(TransactionTestCase):
                                    DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']),
                                    DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']),
                                    DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']),
-                                   DockerParam('volume', workspace_volume_create),
-                                   DockerParam('env', 'ENABLE_NFS=1')]
+                                   DockerParam('volume', workspace_volume_create)]
 
         node = node_test_utils.create_node()
         resources = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)

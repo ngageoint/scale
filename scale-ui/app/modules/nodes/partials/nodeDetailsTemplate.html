@@ -49,11 +49,11 @@
                             <div class="col-xs-11">
                                 <dl class="dl-horizontal">
                                     <dt>Scheduled</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.scheduled.mem) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.mem) }}</dd>
                                     <dt>Used</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.used.mem) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.mem) }}</dd>
                                     <dt>Total</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.total.mem) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.mem) }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -64,11 +64,11 @@
                             <div class="col-xs-11">
                                 <dl class="dl-horizontal">
                                     <dt>Scheduled</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.scheduled.disk) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.disk) }}</dd>
                                     <dt>Used</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.used.disk) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.disk) }}</dd>
                                     <dt>Total</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(node.resources.total.disk) }}</dd>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.disk) }}</dd>
                                 </dl>
                             </div>
                         </div>

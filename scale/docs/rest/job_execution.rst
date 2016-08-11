@@ -37,6 +37,7 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | status             | String            | Optional | Return only executions with a status matching this string.          |
 |                    |                   |          | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].            |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_id        | Integer           | Optional | Return only jobs with a given job type identifier.                  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |

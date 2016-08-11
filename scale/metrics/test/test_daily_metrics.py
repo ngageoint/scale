@@ -27,8 +27,11 @@ class TestDailyMetricsProcessor(TestCase):
 
         self.processor.process_event(event, None)
 
-        job_data = {u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}]}
-        mock_Queue.objects.queue_new_job.assert_called_with(self.job_type, job_data, event)
+        call_args = mock_Queue.objects.queue_new_job.call_args[0]
+        self.assertEqual(self.job_type, call_args[0])
+        self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
+                              u'version': u'1.0'}, call_args[1].get_dict())
+        self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
@@ -39,8 +42,11 @@ class TestDailyMetricsProcessor(TestCase):
 
         self.processor.process_event(event, last)
 
-        job_data = {u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}]}
-        mock_Queue.objects.queue_new_job.assert_called_with(self.job_type, job_data, event)
+        call_args = mock_Queue.objects.queue_new_job.call_args[0]
+        self.assertEqual(self.job_type, call_args[0])
+        self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
+                              u'version': u'1.0'}, call_args[1].get_dict())
+        self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
@@ -51,12 +57,22 @@ class TestDailyMetricsProcessor(TestCase):
 
         self.processor.process_event(event, last)
 
-        calls = [
-            call(self.job_type, {u'input_data': [{u'name': u'Day', u'value': u'2015-01-07'}]}, event),
-            call(self.job_type, {u'input_data': [{u'name': u'Day', u'value': u'2015-01-08'}]}, event),
-            call(self.job_type, {u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}]}, event),
-        ]
-        mock_Queue.objects.queue_new_job.assert_has_calls(calls)
+        i = 1
+        for call_args in mock_Queue.objects.queue_new_job.call_args_list:
+            args = call_args[0]
+            self.assertEqual(self.job_type, args[0])
+            self.assertEqual(event, args[2])
+            if i == 1:
+                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-07'}], u'output_data': [],
+                                      u'version': u'1.0'}, args[1].get_dict())
+            if i == 2:
+                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-08'}], u'output_data': [],
+                                      u'version': u'1.0'}, args[1].get_dict())
+            if i == 3:
+                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
+                                      u'version': u'1.0'}, args[1].get_dict())
+            i += 1
+
         self.assertEqual(mock_Queue.objects.queue_new_job.call_count, 3)
 
     @patch('metrics.daily_metrics.Queue')

@@ -22,7 +22,7 @@ if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then
 fi
 
 git diff-index --quiet HEAD
-if [[ $? ]]; then
+if [[ $? != 0 ]]; then
     tput setaf 1
     echo "Current index is not clean!"
     tput sgr0

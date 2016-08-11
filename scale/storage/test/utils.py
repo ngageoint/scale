@@ -75,8 +75,8 @@ def create_workspace(name=None, title=None, json_config=None, base_url=None, is_
         json_config = {
             'version': '1.0',
             'broker': {
-                'type': 'nfs',
-                'nfs_path': '/host/path',
+                'type': 'host',
+                'host_path': '/host/path',
             }
         }
     if is_active is False and not archived:

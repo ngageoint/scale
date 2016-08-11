@@ -49,6 +49,15 @@ class NfsBroker(Broker):
             logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
             execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
 
+    def get_file_system_paths(self, volume_path, files):
+        """See :meth:`storage.brokers.broker.Broker.get_file_system_paths`
+        """
+
+        paths = []
+        for scale_file in files:
+            paths.append(os.path.join(volume_path, scale_file.file_path))
+        return paths
+
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`
         """

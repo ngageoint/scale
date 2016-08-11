@@ -111,7 +111,7 @@ The host broker requires one additional field in its configuration:
     The *host_path* is a required string that specifies the absolute path of the host's local directory that should be
     mounted into a job's container in order to access the workspace's files.
 
-NFS Broker
+NFS Broker *(experimental)*
 ------------------------------------------------------------------------------------------------------------------------
 
 The NFS broker mounts a remote network file system volume into the job's container.

@@ -11,6 +11,7 @@ from rest_framework import status
 import ingest.test.utils as ingest_test_utils
 import storage.test.utils as storage_test_utils
 from ingest.models import Strike
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 
 
 class TestIngestsView(TestCase):
@@ -53,6 +54,17 @@ class TestIngestsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['status'], self.ingest1.status)
+
+    def test_strike_id(self):
+        """Tests successfully calling the ingests view filtered by strike processor."""
+
+        url = '/ingests/?strike_id=%i' % self.ingest1.strike.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
 
     def test_file_name(self):
         """Tests successfully calling the ingests view filtered by file name."""
@@ -336,6 +348,7 @@ class TestStrikeCreateView(TestCase):
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
+                'version': '1.0',
                 'mount': 'host:/my/path',
                 'transfer_suffix': '_tmp',
                 'files_to_ingest': [{
@@ -404,7 +417,7 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], self.strike.configuration)
+        self.assertDictEqual(result['configuration'], StrikeConfiguration(self.strike.configuration).get_dict())
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertEqual(strike.title, 'Title EDIT')
@@ -435,7 +448,7 @@ class TestStrikeDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], self.strike.title)
-        self.assertDictEqual(result['configuration'], config)
+        self.assertDictEqual(result['configuration'], StrikeConfiguration(config).get_dict())
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertEqual(strike.title, self.strike.title)
@@ -481,6 +494,7 @@ class TestStrikesValidationView(TestCase):
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': {
+                'version': '1.0',
                 'mount': 'host:/my/path',
                 'transfer_suffix': '_tmp',
                 'files_to_ingest': [{
@@ -545,38 +559,3 @@ class TestStrikesValidationView(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_warnings(self):
-        """Tests validating a new Strike process where the mount path is changed."""
-
-        configuration = {
-            'mount': 'host:/my/path',
-            'transfer_suffix': '_tmp',
-            'files_to_ingest': [{
-                'filename_regex': '.*txt',
-                'workspace_path': 'my/path',
-                'workspace_name': 'raw',
-            }],
-        }
-        ingest_test_utils.create_strike(name='strike-test', configuration=configuration)
-
-        url = '/strikes/validation/'
-        json_data = {
-            'name': 'strike-test',
-            'configuration': {
-                'mount': 'host:/my/new/path',
-                'transfer_suffix': '_tmp',
-                'files_to_ingest': [{
-                    'filename_regex': '.*txt',
-                    'workspace_path': 'my/path',
-                    'workspace_name': 'raw',
-                }],
-            },
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'mount_change')

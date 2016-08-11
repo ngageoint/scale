@@ -67,12 +67,6 @@ then
     gosu root /usr/sbin/httpd
 fi
 
-if [[ ${ENABLE_NFS} == 'true' ]]
-then
-   gosu root /usr/sbin/rpcbind
-   gosu root /usr/sbin/rpc.statd
-fi
-
 if [[ ${ENABLE_GUNICORN} == 'true' ]]
 then
     /usr/bin/gunicorn -D -b 0.0.0.0:8000 -w 4 scale.wsgi:application

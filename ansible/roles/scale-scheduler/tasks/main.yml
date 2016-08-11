@@ -20,8 +20,6 @@
     pull: always
     command: 'scale_scheduler'
     env:
-      ENABLE_GUNICORN: '1'
-      ENABLE_NFS: "true"
       ENABLE_GUNICORN: "true"
       ENABLE_HTTPD: "true"
       SCALE_DB_USER: "{{ db_username }}"

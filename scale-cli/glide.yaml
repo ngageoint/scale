@@ -6,6 +6,7 @@ import:
 - package: github.com/ghodss/yaml
 - package: github.com/cloudfoundry-incubator/candiedyaml
 - package: github.com/docker/docker
+  version: 9837ec4
   subpackages:
   - builder/dockerfile/parser
 - package: golang.org/x/net

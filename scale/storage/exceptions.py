@@ -17,13 +17,6 @@ class DeletedFile(Exception):
     pass
 
 
-class DuplicateFile(Exception):
-    """Exception indicating an attempt was made to store a file with a duplicate name
-    """
-
-    pass
-
-
 class FileDoesNotExist(Exception):
     """Exception indicating an attempt was made to access a file that no longer exists
     """

@@ -19,7 +19,7 @@
       "hostname": "node2",
       "port": 7651,
       "slave_id": "04baf16c-9462-4e92-9ed0-711f64c07be6",
-      "is_paused": false,
+      "is_paused": true,
       "is_paused_errors": false,
       "is_active": true,
       "created": "2015-12-22T09:39:55Z",
