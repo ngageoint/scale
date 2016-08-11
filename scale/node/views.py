@@ -113,7 +113,23 @@ class NodeDetailsView(GenericAPIView):
         Node.objects.update_node(dict(request.data), node_id=node_id)
         node = Node.objects.get(id=node_id)
         serializer = NodeSerializer(node)
-        return Response(serializer.data, status=status.HTTP_200_OK,
+        result = serializer.data
+
+        # Attempt to fetch resource usage for the node
+        resources = None
+        try:
+            sched = Scheduler.objects.get_master()
+            slave_info = mesos_api.get_slave(sched.master_hostname, sched.master_port, node.slave_id, True)
+            if slave_info and slave_info.total:
+                resources = slave_info.to_dict()['resources']
+        except:
+            logger.exception('Unable to fetch slave resource usage')
+        if resources:
+            result['resources'] = resources
+        else:
+            result['disconnected'] = True
+
+        return Response(result, status=status.HTTP_200_OK,
                         headers={'Location': request.build_absolute_uri()})
 
 
