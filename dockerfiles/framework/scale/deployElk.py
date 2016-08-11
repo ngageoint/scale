@@ -7,7 +7,7 @@ import requests, os, json, time
 
 def run():
     # get the elasticsearch API endpoints
-    es_url = os.environ.get('ELASTICSEARCH_URL', "http://elasticsearch.marathon.mesos:31105")
+    es_url = os.environ.get('SCALE_ELASTICSEARCH_URL', "http://elasticsearch.marathon.mesos:31105")
     endpoints = [x["http_address"] for x in json.loads(requests.get(es_url+"/v1/tasks").text)]
 
     marathon = '''
@@ -45,6 +45,7 @@ def run():
         time.sleep(5)
     logstashPort = json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasks'][0]['ports'][0]
     print("udp://scale-logstash.marathon.mesos:%s"%(logstashPort,))
+    print("http://%s" % endpoints[0])
 
 
 if __name__ == '__main__':

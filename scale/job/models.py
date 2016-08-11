@@ -1467,7 +1467,7 @@ class JobExecution(models.Model):
                 "query": {
                     "bool": {
                         "must": [
-                            {"match": {"tag": "%d_job" % job_exe.pk}}
+                            {"match": {"tag": "%d_job" % self.pk}}
                         ]
                     }
                 },
@@ -1483,7 +1483,7 @@ class JobExecution(models.Model):
             q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
 
         esr = urllib2.urlopen(
-            urllib2.Request(settings.ELASTICSEARCH_URL,
+            urllib2.Request(settings.ELASTICSEARCH_URL+"/_search",
                             data=json.dumps(q),
                             headers={"Accept": "application/json", "Content-type": "application/json"}))
 

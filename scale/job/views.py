@@ -687,7 +687,7 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         elif request.accepted_renderer.format == 'txt':
             logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, False)
         elif request.accepted_renderer.format == 'html':
-            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, False)
+            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, True)
             if logs is not None:
                 logs = '<html><head><style>.stdout {} .stderr {color: red;}</style></head><body>' + logs + '</body></html>'
         else:
