@@ -547,5 +547,5 @@ These services provide access to information about "all", "currently running" an
 | complete text from the requested timestamp or the complete log since start of execution by default.                       |
 | If *text/html* is requested as a valid encoding then each line of the log in the combined output will be wrapped in a     |
 | *div* element with a *class* of *stdout* or *stderr* as appropriate. This can be used to modify the color or rendering    |
-| style to distinguish error and standard output.                                                                            |
+| style to distinguish error and standard output.                                                                           |
 +---------------------------------------------------------------------------------------------------------------------------+

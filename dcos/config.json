@@ -57,6 +57,11 @@
           "description": "Deploy the dockerized logstash process (true or false). Elasticsearch must already be running via marathon. Marathon will be queried for the elasticsearch addresses.",
           "default": "true"
         },
+        "elasticsearch-url": {
+          "type": "string",
+          "description": "URL for the elasticsearch server",
+          "default": "http://elasticsearch.marathon.mesos:31105"
+        },
         "init-db": {
           "type": "string",
           "description": "Initialize the postgres DB (true or false). Must supply db-host, db-user, db-pass, and db-port",
