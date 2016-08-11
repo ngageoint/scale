@@ -13,7 +13,8 @@
             ingestsParams = {},
             nodesColDefs = [],
             nodeStatusParams = {},
-            showActiveWorkspaces = true;
+            showActiveWorkspaces = true,
+            nodesParams = {};
 
         var updateQuerystring = function (data) {
             // set defaults
@@ -93,6 +94,17 @@
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null
+            };
+        };
+
+        var initNodesParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['hostname'],
+                include_inactive: data.include_inactive ? data.include_inactive : null
             };
         };
 
@@ -203,6 +215,16 @@
             },
             setShowActiveWorkspaces: function (data) {
                 showActiveWorkspaces = data;
+            },
+            getNodesParams: function () {
+                if (_.keys(nodesParams).length === 0) {
+                    return initNodesParams($location.search());
+                }
+                return nodesParams;
+            },
+            setNodesParams: function (data) {
+                nodesParams = initNodesParams(data);
+                updateQuerystring(nodesParams);
             }
         };
     });
